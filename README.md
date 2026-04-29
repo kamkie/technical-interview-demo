@@ -218,7 +218,7 @@ Before finishing changes, run:
 
 ```powershell
 .\gradlew.bat spotlessCheck
-.\\gradlew.bat pmdMain
+.\gradlew.bat pmdMain
 .\gradlew.bat test
 ```
 
