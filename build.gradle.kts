@@ -27,6 +27,7 @@ description = "technical-interview-demo"
 val errorProneVersion = "2.44.0"
 val pmdVersion = "7.17.0"
 val gradleWrapperVersion = "9.5.0"
+val dockerImageName = providers.gradleProperty("dockerImageName").orElse("technical-interview-demo")
 
 java {
     toolchain {
@@ -79,6 +80,12 @@ tasks.bootJar {
     layered {
         enabled.set(true)
     }
+}
+
+tasks.register<Exec>("dockerBuild") {
+    group = "docker"
+    description = "Builds the Docker image for this project."
+    commandLine("docker", "build", "-t", dockerImageName.get(), ".")
 }
 
 tasks.withType<Test> {

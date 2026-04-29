@@ -45,6 +45,8 @@ Common commands:
 ```powershell
 .\gradlew.bat bootRun
 .\gradlew.bat test
+.\gradlew.bat dockerBuild
+.\gradlew.bat dockerBuild -PdockerImageName=my-app:dev
 docker build -t technical-interview-demo .
 docker run --rm -p 8080:8080 technical-interview-demo
 ```
@@ -181,4 +183,3 @@ A change is complete when:
 - `pmdMain` passes
 - tests pass
 - new behavior is covered by tests when practical
-

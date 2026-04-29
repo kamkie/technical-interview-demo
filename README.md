@@ -59,7 +59,16 @@ Useful local endpoints:
 
 ## Docker
 
-Build the image with:
+Build the image with Gradle:
+
+```powershell
+.\gradlew.bat dockerBuild
+.\gradlew.bat dockerBuild -PdockerImageName=my-app:dev
+```
+
+The default image name is `technical-interview-demo`.
+
+You can also build the image directly with Docker:
 
 ```powershell
 docker build -t technical-interview-demo .
@@ -239,4 +248,3 @@ A change is considered complete when:
 - `pmdMain` passes
 - tests pass
 - new endpoint or behavior changes are covered by tests when practical
-
