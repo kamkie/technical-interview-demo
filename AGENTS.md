@@ -137,7 +137,6 @@ Do not add heavy bootstrap logic unless explicitly requested.
 
 The current runtime configuration includes:
 
-- `DEBUG` logging for `org.springframework.web`
 - Hibernate SQL statement logging through `org.hibernate.SQL`
 - Hibernate statistics enabled through `hibernate.generate_statistics=true`
 - explicit logs for successful database-changing operations such as create, update, delete, and seed writes

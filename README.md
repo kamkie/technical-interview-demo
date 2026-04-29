@@ -163,7 +163,6 @@ The application includes:
 - OpenTelemetry-compatible tracing through Micrometer
 - `traceId` and `spanId` in console logs
 - `traceparent` response header on HTTP requests when tracing is active
-- `DEBUG` logging for `org.springframework.web`
 - request start and response completion logs for HTTP traffic
 - service-layer AOP logging with method parameters and execution time
 - redaction of common sensitive parameters and fields
