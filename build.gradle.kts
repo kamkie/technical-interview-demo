@@ -3,16 +3,20 @@ import org.gradle.api.plugins.quality.Pmd
 
 plugins {
     java
+    jacoco
     id("com.diffplug.spotless") version "8.4.0"
     id("net.ltgt.errorprone") version "5.1.0"
     pmd
     id("org.springframework.boot") version "4.0.6"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.asciidoctor.jvm.convert") version "4.0.5"
+    id("com.gorylenko.gradle-git-properties") version "2.5.7"
+    id("com.github.ben-manes.versions") version "0.54.0"
 }
 
 group = "team.jit"
-version = "0.0.1-SNAPSHOT"
+val gitVersion: groovy.lang.Closure<String> by extra
+version = gitVersion()
 description = "technical-interview-demo"
 
 val errorProneVersion = "2.44.0"
