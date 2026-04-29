@@ -42,6 +42,22 @@ Then run commands such as:
 .\gradlew.bat bootRun
 ```
 
+For formatting, the build uses Spotless. Java formatting is delegated to IntelliJ IDEA's formatter so the result stays as close as practical to IntelliJ defaults.
+
+If the IntelliJ formatter binary is not already available on `PATH`, provide it through one of:
+
+```powershell
+$env:IDEA_FORMATTER_BINARY='C:\Path\To\IntelliJ IDEA\bin\idea64.exe'
+```
+
+```powershell
+$env:IDEA_HOME='C:\Path\To\IntelliJ IDEA'
+```
+
+```powershell
+.\gradlew.bat spotlessApply -PideaFormatterBinary='C:\Path\To\IntelliJ IDEA\bin\idea64.exe'
+```
+
 ## Project Structure
 
 - `build.gradle.kts`: Gradle build and dependencies
@@ -96,6 +112,7 @@ Do not add heavy bootstrap logic unless explicitly requested.
 - Preserve the demo nature of the project. Prefer simple code over abstractions.
 - Keep package naming under `team.jit.technicalinterviewdemo`.
 - Use Lombok for routine Java boilerplate such as getters, setters, constructors, and builders when it keeps the code shorter and clearer.
+- Keep `.editorconfig` aligned with the intended IntelliJ formatting profile. That file is part of the formatter contract for this repository.
 - Log every operation that changes database state. For CRUD-style endpoints, emit at least one log entry for each successful create, update, delete, or seed write.
 - Keep non-trivial business logic in `@Service` beans. Service method calls are logged through Spring AOP, and logged parameters must redact common sensitive values.
 - Prefer Spring MVC controllers and Spring Data repositories for new demo endpoints.
@@ -111,6 +128,7 @@ Do not add heavy bootstrap logic unless explicitly requested.
 Before finishing changes, run:
 
 ```powershell
+.\gradlew.bat spotlessCheck
 .\gradlew.bat test
 ```
 
@@ -140,5 +158,6 @@ A change is considered complete when:
 
 - The code is consistent with the current simple demo architecture
 - The application still starts
+- `spotlessCheck` passes
 - Tests pass
 - Any new endpoint or behavior is covered by tests when practical

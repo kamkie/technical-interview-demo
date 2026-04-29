@@ -1,5 +1,6 @@
 plugins {
     java
+    id("com.diffplug.spotless") version "8.4.0"
     id("org.springframework.boot") version "4.0.6"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.asciidoctor.jvm.convert") version "4.0.5"
@@ -61,4 +62,43 @@ tasks.test {
 tasks.asciidoctor {
     inputs.dir(project.extra["snippetsDir"]!!)
     dependsOn(tasks.test)
+}
+
+val ideaFormatterBinary: String? =
+    providers.gradleProperty("ideaFormatterBinary")
+        .orElse(providers.environmentVariable("IDEA_FORMATTER_BINARY"))
+        .orElse(
+            providers.environmentVariable("IDEA_HOME").map { ideaHome ->
+                val executable = if (System.getProperty("os.name").startsWith("Windows")) "idea64.exe" else "idea"
+                file("$ideaHome/bin/$executable").absolutePath
+            }
+        )
+        .orNull
+
+spotless {
+    java {
+        target("src/main/java/**/*.java", "src/test/java/**/*.java")
+        importOrder()
+        removeUnusedImports()
+        idea().apply {
+            withDefaults(true)
+            if (ideaFormatterBinary != null) {
+                binaryPath(ideaFormatterBinary)
+            }
+        }
+    }
+
+    kotlinGradle {
+        target("*.gradle.kts", "gradle/**/*.gradle.kts")
+        ktlint().editorConfigOverride(
+            mapOf(
+                "ktlint_code_style" to "intellij_idea"
+            )
+        )
+    }
+
+    format("misc") {
+        target("*.md", ".gitignore", ".gitattributes", ".editorconfig", "src/**/*.properties")
+        trimTrailingWhitespace()
+    }
 }
