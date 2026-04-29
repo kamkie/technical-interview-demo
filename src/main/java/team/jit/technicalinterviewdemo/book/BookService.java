@@ -57,7 +57,7 @@ public class BookService {
         try {
             updatedBook = bookRepository.saveAndFlush(book);
         } catch (ObjectOptimisticLockingFailureException exception) {
-            throw new StaleBookVersionException(id, request.version(), book.getVersion());
+            throw new StaleBookVersionException(id, request.version(), book.getVersion(), exception);
         }
         log.info("Updated book id={} isbn={} title={}", updatedBook.getId(), updatedBook.getIsbn(), updatedBook.getTitle());
         return updatedBook;
