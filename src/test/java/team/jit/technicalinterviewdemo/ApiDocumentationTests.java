@@ -12,6 +12,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestB
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseBody;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -166,6 +167,63 @@ class ApiDocumentationTests {
     }
 
     @Test
+    void documentCreateBookValidationError() throws Exception {
+        mockMvc.perform(post("/api/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "title": "",
+                                  "author": " ",
+                                  "isbn": "",
+                                  "publicationYear": null
+                                }
+                                """))
+                .andExpect(status().isBadRequest())
+                .andExpect(header().exists("X-Request-Id"))
+                .andExpect(header().exists("traceparent"))
+                .andExpect(jsonPath("$.title").value("Validation Failed"))
+                .andDo(documentEndpoint(
+                        "errors/create-book-validation-failed",
+                        requestBody(),
+                        responseHeaders(commonResponseHeaders()),
+                        relaxedResponseFields(
+                                fieldWithPath("title").description("Problem title."),
+                                fieldWithPath("status").description("HTTP status code."),
+                                fieldWithPath("detail").description("Human-readable problem summary."),
+                                subsectionWithPath("fieldErrors").description("Validation errors keyed by request field name.")
+                        )
+                ));
+    }
+
+    @Test
+    void documentCreateBookDuplicateIsbnError() throws Exception {
+        mockMvc.perform(post("/api/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "title": "Another Clean Code",
+                                  "author": "Robert C. Martin",
+                                  "isbn": "9780132350884",
+                                  "publicationYear": 2009
+                                }
+                                """))
+                .andExpect(status().isConflict())
+                .andExpect(header().exists("X-Request-Id"))
+                .andExpect(header().exists("traceparent"))
+                .andExpect(jsonPath("$.title").value("Duplicate ISBN"))
+                .andDo(documentEndpoint(
+                        "errors/create-book-duplicate-isbn",
+                        requestBody(),
+                        responseHeaders(commonResponseHeaders()),
+                        relaxedResponseFields(
+                                fieldWithPath("title").description("Problem title."),
+                                fieldWithPath("status").description("HTTP status code."),
+                                fieldWithPath("detail").description("Human-readable problem summary.")
+                        )
+                ));
+    }
+
+    @Test
     void documentUpdateBookEndpoint() throws Exception {
         mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -197,6 +255,48 @@ class ApiDocumentationTests {
                                 fieldWithPath("author").description("Updated book author."),
                                 fieldWithPath("isbn").description("Original ISBN. ISBN is immutable after creation."),
                                 fieldWithPath("publicationYear").description("Updated publication year.")
+                        )
+                ));
+    }
+
+    @Test
+    void documentGetBookInvalidIdError() throws Exception {
+        mockMvc.perform(get("/api/books/{id}", "abc"))
+                .andExpect(status().isBadRequest())
+                .andExpect(header().exists("X-Request-Id"))
+                .andExpect(header().exists("traceparent"))
+                .andExpect(jsonPath("$.title").value("Invalid Parameter"))
+                .andDo(documentEndpoint(
+                        "errors/get-book-invalid-id",
+                        pathParameters(
+                                parameterWithName("id").description("Invalid book identifier value used in this example.")
+                        ),
+                        responseHeaders(commonResponseHeaders()),
+                        relaxedResponseFields(
+                                fieldWithPath("title").description("Problem title."),
+                                fieldWithPath("status").description("HTTP status code."),
+                                fieldWithPath("detail").description("Human-readable problem summary.")
+                        )
+                ));
+    }
+
+    @Test
+    void documentGetBookNotFoundError() throws Exception {
+        mockMvc.perform(get("/api/books/{id}", 9999))
+                .andExpect(status().isNotFound())
+                .andExpect(header().exists("X-Request-Id"))
+                .andExpect(header().exists("traceparent"))
+                .andExpect(jsonPath("$.title").value("Book Not Found"))
+                .andDo(documentEndpoint(
+                        "errors/get-book-not-found",
+                        pathParameters(
+                                parameterWithName("id").description("Book identifier that does not exist.")
+                        ),
+                        responseHeaders(commonResponseHeaders()),
+                        relaxedResponseFields(
+                                fieldWithPath("title").description("Problem title."),
+                                fieldWithPath("status").description("HTTP status code."),
+                                fieldWithPath("detail").description("Human-readable problem summary.")
                         )
                 ));
     }

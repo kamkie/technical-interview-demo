@@ -88,6 +88,54 @@ include::{snippets}/books/delete-book/path-parameters.adoc[]
 include::{snippets}/books/delete-book/http-response.adoc[]
 include::{snippets}/books/delete-book/response-headers.adoc[]
 
+== Error Response Examples
+
+Public API errors use Spring `ProblemDetail` responses. The examples below show the common error shape and a few endpoint-specific variants.
+
+=== `POST /api/books` validation failure
+
+Example response when required fields are missing or blank.
+
+include::{snippets}/errors/create-book-validation-failed/curl-request.adoc[]
+include::{snippets}/errors/create-book-validation-failed/http-request.adoc[]
+include::{snippets}/errors/create-book-validation-failed/request-body.adoc[]
+include::{snippets}/errors/create-book-validation-failed/http-response.adoc[]
+include::{snippets}/errors/create-book-validation-failed/response-headers.adoc[]
+include::{snippets}/errors/create-book-validation-failed/response-fields.adoc[]
+
+=== `POST /api/books` duplicate ISBN
+
+Example conflict response when a book with the same ISBN already exists.
+
+include::{snippets}/errors/create-book-duplicate-isbn/curl-request.adoc[]
+include::{snippets}/errors/create-book-duplicate-isbn/http-request.adoc[]
+include::{snippets}/errors/create-book-duplicate-isbn/request-body.adoc[]
+include::{snippets}/errors/create-book-duplicate-isbn/http-response.adoc[]
+include::{snippets}/errors/create-book-duplicate-isbn/response-headers.adoc[]
+include::{snippets}/errors/create-book-duplicate-isbn/response-fields.adoc[]
+
+=== `GET /api/books/{id}` invalid identifier
+
+Example bad-request response when the path parameter cannot be parsed as a numeric identifier.
+
+include::{snippets}/errors/get-book-invalid-id/curl-request.adoc[]
+include::{snippets}/errors/get-book-invalid-id/http-request.adoc[]
+include::{snippets}/errors/get-book-invalid-id/path-parameters.adoc[]
+include::{snippets}/errors/get-book-invalid-id/http-response.adoc[]
+include::{snippets}/errors/get-book-invalid-id/response-headers.adoc[]
+include::{snippets}/errors/get-book-invalid-id/response-fields.adoc[]
+
+=== `GET /api/books/{id}` missing book
+
+Example not-found response when the book identifier does not exist.
+
+include::{snippets}/errors/get-book-not-found/curl-request.adoc[]
+include::{snippets}/errors/get-book-not-found/http-request.adoc[]
+include::{snippets}/errors/get-book-not-found/path-parameters.adoc[]
+include::{snippets}/errors/get-book-not-found/http-response.adoc[]
+include::{snippets}/errors/get-book-not-found/response-headers.adoc[]
+include::{snippets}/errors/get-book-not-found/response-fields.adoc[]
+
 == Actuator Endpoints
 
 === `GET /actuator/info`

@@ -105,6 +105,7 @@ Packaging and runtime behavior:
 
 - `bootJar` bundles the generated HTML documentation into the runnable jar
 - the running application serves the documentation at `GET /docs`
+- the generated docs include example success and error responses captured from tests
 
 ## Project Structure
 
