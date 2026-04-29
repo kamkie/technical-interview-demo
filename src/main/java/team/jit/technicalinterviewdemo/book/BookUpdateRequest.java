@@ -8,6 +8,8 @@ public record BookUpdateRequest(
         String title,
         @NotBlank(message = "author is required")
         String author,
+        @NotNull(message = "version is required")
+        Long version,
         @NotNull(message = "publicationYear is required")
         Integer publicationYear
 ) {

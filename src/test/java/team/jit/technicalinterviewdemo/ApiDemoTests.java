@@ -65,11 +65,18 @@ class ApiDemoTests {
 
     @Test
     void listBooksReturnsSeededBooks() throws Exception {
-        mockMvc.perform(get("/api/books"))
+        mockMvc.perform(get("/api/books")
+                        .queryParam("page", "0")
+                        .queryParam("size", "1")
+                        .queryParam("sort", "id,asc"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].title").value("Clean Code"))
-                .andExpect(jsonPath("$[1].title").value("Effective Java"));
+                .andExpect(jsonPath("$.content.length()").value(1))
+                .andExpect(jsonPath("$.content[0].title").value("Clean Code"))
+                .andExpect(jsonPath("$.content[0].version").isNumber())
+                .andExpect(jsonPath("$.totalElements").value(2))
+                .andExpect(jsonPath("$.totalPages").value(2))
+                .andExpect(jsonPath("$.size").value(1))
+                .andExpect(jsonPath("$.number").value(0));
     }
 
     @Test
@@ -77,6 +84,7 @@ class ApiDemoTests {
         mockMvc.perform(get("/api/books/{id}", effectiveJava.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(effectiveJava.getId()))
+                .andExpect(jsonPath("$.version").value(effectiveJava.getVersion()))
                 .andExpect(jsonPath("$.title").value("Effective Java"))
                 .andExpect(jsonPath("$.author").value("Joshua Bloch"));
     }
@@ -95,6 +103,7 @@ class ApiDemoTests {
                                 """))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").isNumber())
+                .andExpect(jsonPath("$.version").isNumber())
                 .andExpect(jsonPath("$.title").value("Spring in Action"))
                 .andExpect(jsonPath("$.author").value("Craig Walls"))
                 .andExpect(jsonPath("$.isbn").value("9781617297571"))
@@ -224,11 +233,13 @@ class ApiDemoTests {
                                 {
                                   "title": "Clean Code Second Edition",
                                   "author": "Robert C. Martin",
+                                  "version": %d,
                                   "publicationYear": 2026
                                 }
-                                """))
+                                """.formatted(cleanCode.getVersion())))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(cleanCode.getId()))
+                .andExpect(jsonPath("$.version").value(cleanCode.getVersion() + 1))
                 .andExpect(jsonPath("$.title").value("Clean Code Second Edition"))
                 .andExpect(jsonPath("$.isbn").value("9780132350884"))
                 .andExpect(jsonPath("$.publicationYear").value(2026));
@@ -243,15 +254,50 @@ class ApiDemoTests {
                                   "title": "Clean Code Second Edition",
                                   "author": "Robert C. Martin",
                                   "isbn": "9780134685991",
+                                  "version": %d,
                                   "publicationYear": 2026
                                 }
-                                """))
+                                """.formatted(cleanCode.getVersion())))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.isbn").value("9780132350884"));
 
         mockMvc.perform(get("/api/books/{id}", cleanCode.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.isbn").value("9780132350884"));
+    }
+
+    @Test
+    void updateBookWithStaleVersionReturnsConflict() throws Exception {
+        long staleVersion = cleanCode.getVersion();
+
+        mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "title": "Clean Code Second Edition",
+                                  "author": "Robert C. Martin",
+                                  "version": %d,
+                                  "publicationYear": 2026
+                                }
+                                """.formatted(staleVersion)))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "title": "Clean Code Third Edition",
+                                  "author": "Robert C. Martin",
+                                  "version": %d,
+                                  "publicationYear": 2027
+                                }
+                                """.formatted(staleVersion)))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.title").value("Concurrent Modification"))
+                .andExpect(jsonPath("$.detail").value(
+                        "Book with id %d is at version %d. Retry the update with the latest version instead of %d."
+                                .formatted(cleanCode.getId(), staleVersion + 1, staleVersion)
+                ));
     }
 
     @Test

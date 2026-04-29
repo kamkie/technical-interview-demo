@@ -18,6 +18,10 @@ public class Book {
     @Setter(AccessLevel.NONE)
     private Long id;
 
+    @Version
+    @Setter(AccessLevel.NONE)
+    private Long version;
+
     @Column(nullable = false)
     private String title;
 

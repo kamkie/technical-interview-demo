@@ -12,6 +12,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -45,6 +46,20 @@ public class ApiExceptionHandler {
                 HttpStatus.CONFLICT,
                 "Duplicate ISBN",
                 exception.getMessage(),
+                request,
+                Map.of("exception", exception.getClass().getSimpleName())
+        );
+    }
+
+    @ExceptionHandler({StaleBookVersionException.class, ObjectOptimisticLockingFailureException.class})
+    ProblemDetail handleConcurrentModification(Exception exception, HttpServletRequest request) {
+        String detail = exception instanceof StaleBookVersionException
+                ? exception.getMessage()
+                : "Book state changed concurrently. Retry the request with the latest version.";
+        return logClientProblem(
+                HttpStatus.CONFLICT,
+                "Concurrent Modification",
+                detail,
                 request,
                 Map.of("exception", exception.getClass().getSimpleName())
         );

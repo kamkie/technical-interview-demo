@@ -15,6 +15,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -91,20 +92,39 @@ class ApiDocumentationTests {
 
     @Test
     void documentListBooksEndpoint() throws Exception {
-        mockMvc.perform(get("/api/books"))
+        mockMvc.perform(get("/api/books")
+                        .queryParam("page", "0")
+                        .queryParam("size", "20")
+                        .queryParam("sort", "id,asc"))
                 .andExpect(status().isOk())
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
-                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$.content.length()").value(2))
                 .andDo(documentEndpoint(
                         "books/list-books",
+                        queryParameters(
+                                parameterWithName("page").description("Zero-based page index."),
+                                parameterWithName("size").description("Page size capped by the server."),
+                                parameterWithName("sort").description("Sort expression in the form `property,direction`.")
+                        ),
                         responseHeaders(commonResponseHeaders()),
-                        responseFields(
-                                fieldWithPath("[].id").description("Book identifier."),
-                                fieldWithPath("[].title").description("Book title."),
-                                fieldWithPath("[].author").description("Book author."),
-                                fieldWithPath("[].isbn").description("Unique ISBN assigned when the book is created."),
-                                fieldWithPath("[].publicationYear").description("Publication year.")
+                        relaxedResponseFields(
+                                fieldWithPath("content[].id").description("Book identifier."),
+                                fieldWithPath("content[].version").description("Optimistic-locking version for the book."),
+                                fieldWithPath("content[].title").description("Book title."),
+                                fieldWithPath("content[].author").description("Book author."),
+                                fieldWithPath("content[].isbn").description("Unique ISBN assigned when the book is created."),
+                                fieldWithPath("content[].publicationYear").description("Publication year."),
+                                subsectionWithPath("pageable").description("Pagination request metadata."),
+                                subsectionWithPath("sort").description("Applied sort metadata."),
+                                fieldWithPath("totalPages").description("Total number of pages."),
+                                fieldWithPath("totalElements").description("Total number of books."),
+                                fieldWithPath("last").description("Whether this page is the last page."),
+                                fieldWithPath("size").description("Requested page size."),
+                                fieldWithPath("number").description("Current zero-based page index."),
+                                fieldWithPath("numberOfElements").description("Number of books returned in the current page."),
+                                fieldWithPath("first").description("Whether this page is the first page."),
+                                fieldWithPath("empty").description("Whether the page content is empty.")
                         )
                 ));
     }
@@ -123,6 +143,7 @@ class ApiDocumentationTests {
                         responseHeaders(commonResponseHeaders()),
                         responseFields(
                                 fieldWithPath("id").description("Book identifier."),
+                                fieldWithPath("version").description("Optimistic-locking version for the book."),
                                 fieldWithPath("title").description("Book title."),
                                 fieldWithPath("author").description("Book author."),
                                 fieldWithPath("isbn").description("Unique ISBN assigned when the book was created."),
@@ -158,6 +179,7 @@ class ApiDocumentationTests {
                         responseHeaders(commonResponseHeaders()),
                         responseFields(
                                 fieldWithPath("id").description("Created book identifier."),
+                                fieldWithPath("version").description("Initial optimistic-locking version for the book."),
                                 fieldWithPath("title").description("Book title."),
                                 fieldWithPath("author").description("Book author."),
                                 fieldWithPath("isbn").description("Unique ISBN assigned to the book."),
@@ -231,9 +253,10 @@ class ApiDocumentationTests {
                                 {
                                   "title": "Clean Code Second Edition",
                                   "author": "Robert C. Martin",
+                                  "version": %d,
                                   "publicationYear": 2026
                                 }
-                                """))
+                                """.formatted(cleanCode.getVersion())))
                 .andExpect(status().isOk())
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
@@ -246,15 +269,62 @@ class ApiDocumentationTests {
                         requestFields(
                                 fieldWithPath("title").description("Updated book title."),
                                 fieldWithPath("author").description("Updated book author."),
+                                fieldWithPath("version").description("Current optimistic-locking version required for the update."),
                                 fieldWithPath("publicationYear").description("Updated publication year.")
                         ),
                         responseHeaders(commonResponseHeaders()),
                         responseFields(
                                 fieldWithPath("id").description("Book identifier."),
+                                fieldWithPath("version").description("Incremented optimistic-locking version after the update."),
                                 fieldWithPath("title").description("Updated book title."),
                                 fieldWithPath("author").description("Updated book author."),
                                 fieldWithPath("isbn").description("Original ISBN. ISBN is immutable after creation."),
                                 fieldWithPath("publicationYear").description("Updated publication year.")
+                        )
+                ));
+    }
+
+    @Test
+    void documentUpdateBookStaleVersionError() throws Exception {
+        long staleVersion = cleanCode.getVersion();
+
+        mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "title": "Clean Code Second Edition",
+                                  "author": "Robert C. Martin",
+                                  "version": %d,
+                                  "publicationYear": 2026
+                                }
+                                """.formatted(staleVersion)))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "title": "Clean Code Third Edition",
+                                  "author": "Robert C. Martin",
+                                  "version": %d,
+                                  "publicationYear": 2027
+                                }
+                                """.formatted(staleVersion)))
+                .andExpect(status().isConflict())
+                .andExpect(header().exists("X-Request-Id"))
+                .andExpect(header().exists("traceparent"))
+                .andExpect(jsonPath("$.title").value("Concurrent Modification"))
+                .andDo(documentEndpoint(
+                        "errors/update-book-stale-version",
+                        pathParameters(
+                                parameterWithName("id").description("Book identifier being updated with an outdated version.")
+                        ),
+                        requestBody(),
+                        responseHeaders(commonResponseHeaders()),
+                        relaxedResponseFields(
+                                fieldWithPath("title").description("Problem title."),
+                                fieldWithPath("status").description("HTTP status code."),
+                                fieldWithPath("detail").description("Human-readable problem summary.")
                         )
                 ));
     }
@@ -348,6 +418,51 @@ class ApiDocumentationTests {
                                 fieldWithPath("status").description("Overall application health status."),
                                 fieldWithPath("groups").description("Health groups exposed by the actuator endpoint.")
                         )
+                ));
+    }
+
+    @Test
+    void documentActuatorLivenessEndpoint() throws Exception {
+        mockMvc.perform(get("/actuator/health/liveness"))
+                .andExpect(status().isOk())
+                .andExpect(header().exists("X-Request-Id"))
+                .andExpect(header().exists("traceparent"))
+                .andExpect(jsonPath("$.status").value("UP"))
+                .andDo(documentEndpoint(
+                        "actuator/get-health-liveness",
+                        responseHeaders(commonResponseHeaders()),
+                        relaxedResponseFields(
+                                fieldWithPath("status").description("Liveness status for the running application.")
+                        )
+                ));
+    }
+
+    @Test
+    void documentActuatorReadinessEndpoint() throws Exception {
+        mockMvc.perform(get("/actuator/health/readiness"))
+                .andExpect(status().isOk())
+                .andExpect(header().exists("X-Request-Id"))
+                .andExpect(header().exists("traceparent"))
+                .andExpect(jsonPath("$.status").value("UP"))
+                .andDo(documentEndpoint(
+                        "actuator/get-health-readiness",
+                        responseHeaders(commonResponseHeaders()),
+                        relaxedResponseFields(
+                                fieldWithPath("status").description("Readiness status for serving traffic.")
+                        )
+                ));
+    }
+
+    @Test
+    void documentActuatorPrometheusEndpoint() throws Exception {
+        mockMvc.perform(get("/actuator/prometheus"))
+                .andExpect(status().isOk())
+                .andExpect(header().exists("X-Request-Id"))
+                .andExpect(header().exists("traceparent"))
+                .andDo(documentEndpoint(
+                        "actuator/get-prometheus",
+                        responseHeaders(commonResponseHeaders()),
+                        responseBody()
                 ));
     }
 

@@ -34,10 +34,11 @@ include::{snippets}/hello/get-hello/response-body.adoc[]
 
 === `GET /api/books`
 
-Lists all books ordered by identifier.
+Lists books in a paginated response. Supports `page`, `size`, and `sort` query parameters.
 
 include::{snippets}/books/list-books/curl-request.adoc[]
 include::{snippets}/books/list-books/http-request.adoc[]
+include::{snippets}/books/list-books/request-parameters.adoc[]
 include::{snippets}/books/list-books/http-response.adoc[]
 include::{snippets}/books/list-books/response-headers.adoc[]
 include::{snippets}/books/list-books/response-fields.adoc[]
@@ -67,7 +68,7 @@ include::{snippets}/books/create-book/response-fields.adoc[]
 
 === `PUT /api/books/{id}`
 
-Updates title, author, and publication year. `isbn` is immutable after creation and is not part of the update request.
+Updates title, author, and publication year. `isbn` is immutable after creation and is not part of the update request. `version` is required for optimistic locking.
 
 include::{snippets}/books/update-book/curl-request.adoc[]
 include::{snippets}/books/update-book/http-request.adoc[]
@@ -136,6 +137,18 @@ include::{snippets}/errors/get-book-not-found/http-response.adoc[]
 include::{snippets}/errors/get-book-not-found/response-headers.adoc[]
 include::{snippets}/errors/get-book-not-found/response-fields.adoc[]
 
+=== `PUT /api/books/{id}` stale version
+
+Example conflict response when the update request uses an outdated book version.
+
+include::{snippets}/errors/update-book-stale-version/curl-request.adoc[]
+include::{snippets}/errors/update-book-stale-version/http-request.adoc[]
+include::{snippets}/errors/update-book-stale-version/path-parameters.adoc[]
+include::{snippets}/errors/update-book-stale-version/request-body.adoc[]
+include::{snippets}/errors/update-book-stale-version/http-response.adoc[]
+include::{snippets}/errors/update-book-stale-version/response-headers.adoc[]
+include::{snippets}/errors/update-book-stale-version/response-fields.adoc[]
+
 == Actuator Endpoints
 
 === `GET /actuator/info`
@@ -157,3 +170,33 @@ include::{snippets}/actuator/get-health/http-request.adoc[]
 include::{snippets}/actuator/get-health/http-response.adoc[]
 include::{snippets}/actuator/get-health/response-headers.adoc[]
 include::{snippets}/actuator/get-health/response-fields.adoc[]
+
+=== `GET /actuator/health/liveness`
+
+Returns the liveness probe status used to determine whether the process is still healthy.
+
+include::{snippets}/actuator/get-health-liveness/curl-request.adoc[]
+include::{snippets}/actuator/get-health-liveness/http-request.adoc[]
+include::{snippets}/actuator/get-health-liveness/http-response.adoc[]
+include::{snippets}/actuator/get-health-liveness/response-headers.adoc[]
+include::{snippets}/actuator/get-health-liveness/response-fields.adoc[]
+
+=== `GET /actuator/health/readiness`
+
+Returns the readiness probe status used to determine whether the application can serve traffic.
+
+include::{snippets}/actuator/get-health-readiness/curl-request.adoc[]
+include::{snippets}/actuator/get-health-readiness/http-request.adoc[]
+include::{snippets}/actuator/get-health-readiness/http-response.adoc[]
+include::{snippets}/actuator/get-health-readiness/response-headers.adoc[]
+include::{snippets}/actuator/get-health-readiness/response-fields.adoc[]
+
+=== `GET /actuator/prometheus`
+
+Returns Prometheus-formatted metrics for scraping.
+
+include::{snippets}/actuator/get-prometheus/curl-request.adoc[]
+include::{snippets}/actuator/get-prometheus/http-request.adoc[]
+include::{snippets}/actuator/get-prometheus/http-response.adoc[]
+include::{snippets}/actuator/get-prometheus/response-headers.adoc[]
+include::{snippets}/actuator/get-prometheus/response-body.adoc[]

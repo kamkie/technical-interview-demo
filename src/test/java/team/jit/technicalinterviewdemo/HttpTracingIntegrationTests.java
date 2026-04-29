@@ -91,6 +91,45 @@ class HttpTracingIntegrationTests {
     }
 
     @Test
+    void actuatorLivenessEndpointIsExposed() throws IOException, InterruptedException {
+        HttpResponse<String> response = send(HttpRequest.newBuilder()
+                .uri(uri("/actuator/health/liveness"))
+                .GET()
+                .build());
+
+        assertEquals(200, response.statusCode());
+        assertMatchesRequestId(response.headers().firstValue("X-Request-Id").orElse(null));
+        assertMatchesTraceparent(response.headers().firstValue("traceparent").orElse(null));
+        assertTrue(response.body().contains("\"status\":\"UP\""));
+    }
+
+    @Test
+    void actuatorReadinessEndpointIsExposed() throws IOException, InterruptedException {
+        HttpResponse<String> response = send(HttpRequest.newBuilder()
+                .uri(uri("/actuator/health/readiness"))
+                .GET()
+                .build());
+
+        assertEquals(200, response.statusCode());
+        assertMatchesRequestId(response.headers().firstValue("X-Request-Id").orElse(null));
+        assertMatchesTraceparent(response.headers().firstValue("traceparent").orElse(null));
+        assertTrue(response.body().contains("\"status\":\"UP\""));
+    }
+
+    @Test
+    void actuatorPrometheusEndpointIsExposed() throws IOException, InterruptedException {
+        HttpResponse<String> response = send(HttpRequest.newBuilder()
+                .uri(uri("/actuator/prometheus"))
+                .GET()
+                .build());
+
+        assertEquals(200, response.statusCode());
+        assertMatchesRequestId(response.headers().firstValue("X-Request-Id").orElse(null));
+        assertMatchesTraceparent(response.headers().firstValue("traceparent").orElse(null));
+        assertTrue(response.body().contains("# HELP"));
+    }
+
+    @Test
     void docsEndpointRedirectsToGeneratedDocumentation() throws IOException, InterruptedException {
         HttpResponse<String> response = send(HttpRequest.newBuilder()
                 .uri(uri("/docs"))
