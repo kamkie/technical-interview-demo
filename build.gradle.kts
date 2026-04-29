@@ -19,7 +19,15 @@ plugins {
 }
 
 val gitVersion: groovy.lang.Closure<String> by extra
-version = gitVersion()
+fun getProjectVersion(): String {
+    return try {
+        gitVersion()
+    } catch (e: Exception) {
+        "0.0.0-SNAPSHOT"
+    }
+}
+
+version = getProjectVersion()
 group = "team.jit"
 description = "technical-interview-demo"
 

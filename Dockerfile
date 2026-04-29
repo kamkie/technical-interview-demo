@@ -8,9 +8,9 @@ COPY gradlew build.gradle.kts settings.gradle.kts ./
 COPY gradle gradle
 
 RUN chmod +x gradlew
-RUN ./gradlew --no-daemon dependencies
+RUN GIT_VERSION=0.0.0 ./gradlew --no-daemon dependencies
 
-COPY .git .git
+COPY .git/ ./.git/
 COPY src src
 
 RUN ./gradlew --no-daemon bootJar

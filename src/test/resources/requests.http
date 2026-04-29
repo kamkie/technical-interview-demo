@@ -30,3 +30,9 @@ Content-Type: application/json
 
 ### delete book
 DELETE http://localhost:8080/api/books/3
+
+### actuator info
+GET http://localhost:8080/actuator/info
+
+### actuator health
+GET http://localhost:8080/actuator/health
