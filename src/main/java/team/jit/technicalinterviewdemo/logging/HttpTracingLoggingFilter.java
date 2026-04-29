@@ -9,9 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
@@ -51,11 +48,10 @@ public class HttpTracingLoggingFilter extends OncePerRequestFilter {
             setTraceparentHeaderIfTraceActive(response);
             if (shouldLog) {
                 log.info(
-                        "HTTP request started method={} path={} query={} params={} traceparent={}",
+                        "HTTP request started method={} path={} params={} traceparent={}",
                         request.getMethod(),
                         request.getRequestURI(),
-                        request.getQueryString(),
-                        sanitizeParameters(request.getParameterMap()),
+                        SensitiveDataSanitizer.sanitizeParameters(request.getParameterMap()),
                         response.getHeader(TRACEPARENT_HEADER)
                 );
             }
@@ -102,25 +98,6 @@ public class HttpTracingLoggingFilter extends OncePerRequestFilter {
 
     private long toDurationMillis(long startTimeNanos) {
         return (System.nanoTime() - startTimeNanos) / 1_000_000;
-    }
-
-    private Map<String, Object> sanitizeParameters(Map<String, String[]> parameterMap) {
-        Map<String, Object> sanitized = new LinkedHashMap<>();
-        parameterMap.forEach((name, values) -> sanitized.put(
-                name,
-                SensitiveDataSanitizer.isSensitiveName(name) ? SensitiveDataSanitizer.REDACTED : sanitizeValues(values)
-        ));
-        return sanitized;
-    }
-
-    private Object sanitizeValues(String[] values) {
-        if (values == null) {
-            return null;
-        }
-        if (values.length == 1) {
-            return values[0];
-        }
-        return Arrays.asList(values);
     }
 
     private boolean shouldLogRequest(HttpServletRequest request) {

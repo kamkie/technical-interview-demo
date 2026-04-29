@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+import team.jit.technicalinterviewdemo.logging.SensitiveDataSanitizer;
 
 @Slf4j
 @RestControllerAdvice
@@ -203,11 +204,11 @@ public class ApiExceptionHandler {
             Map<String, ?> context
     ) {
         log.warn(
-                "Handled client error status={} method={} path={} query={} title='{}' detail='{}' context={}",
+                "Handled client error status={} method={} path={} params={} title='{}' detail='{}' context={}",
                 status.value(),
                 request.getMethod(),
                 request.getRequestURI(),
-                request.getQueryString(),
+                SensitiveDataSanitizer.sanitizeParameters(request.getParameterMap()),
                 title,
                 detail,
                 context
@@ -224,11 +225,11 @@ public class ApiExceptionHandler {
             Exception exception
     ) {
         log.error(
-                "Handled server error status={} method={} path={} query={} title='{}' detail='{}' context={}",
+                "Handled server error status={} method={} path={} params={} title='{}' detail='{}' context={}",
                 status.value(),
                 request.getMethod(),
                 request.getRequestURI(),
-                request.getQueryString(),
+                SensitiveDataSanitizer.sanitizeParameters(request.getParameterMap()),
                 title,
                 detail,
                 context,

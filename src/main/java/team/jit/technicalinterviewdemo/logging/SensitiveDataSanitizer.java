@@ -1,6 +1,9 @@
 package team.jit.technicalinterviewdemo.logging;
 
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public final class SensitiveDataSanitizer {
 
@@ -39,6 +42,25 @@ public final class SensitiveDataSanitizer {
             }
         }
         return false;
+    }
+
+    public static Map<String, Object> sanitizeParameters(Map<String, String[]> parameterMap) {
+        Map<String, Object> sanitized = new LinkedHashMap<>();
+        parameterMap.forEach((name, values) -> sanitized.put(
+                name,
+                isSensitiveName(name) ? REDACTED : sanitizeValues(values)
+        ));
+        return sanitized;
+    }
+
+    private static Object sanitizeValues(String[] values) {
+        if (values == null) {
+            return null;
+        }
+        if (values.length == 1) {
+            return values[0];
+        }
+        return Arrays.asList(values);
     }
 
     private static String normalize(String value) {

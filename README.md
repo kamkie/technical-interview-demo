@@ -163,9 +163,11 @@ The application includes:
 - OpenTelemetry-compatible tracing through Micrometer
 - `traceId` and `spanId` in console logs
 - `traceparent` response header on HTTP requests when tracing is active
+- request and error logging redact sensitive query parameters before they reach the logs
 - request start and response completion logs for HTTP traffic
 - service-layer AOP logging with method parameters and execution time
 - redaction of common sensitive parameters and fields
+- optional `org.springframework.web` DEBUG logging is available as a commented property in `application.properties`
 - Hibernate SQL statement logging through `org.hibernate.SQL`
 - Hibernate statistics enabled through `hibernate.generate_statistics=true`
 - explicit logs for successful database-changing operations such as create, update, delete, and seed writes
@@ -218,8 +220,8 @@ Before finishing changes, run:
 
 ```powershell
 .\gradlew.bat spotlessCheck
-.\gradlew.bat pmdMain
-.\gradlew.bat test
+.\gradlew.bat --no-problems-report pmdMain
+.\gradlew.bat --no-problems-report test
 ```
 
 If tests require Java setup first, export `JAVA_HOME` to a compatible JDK in the same shell session.

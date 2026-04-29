@@ -14,7 +14,6 @@ plugins {
     id("net.ltgt.errorprone") version "5.1.0"
     id("org.springframework.boot") version "4.0.6"
     id("io.spring.dependency-management") version "1.1.7"
-    id("org.asciidoctor.jvm.convert") version "4.0.5"
     id("com.github.ben-manes.versions") version "0.54.0"
     id("com.palantir.git-version") version "5.0.0"
     id("com.adarshr.test-logger") version "4.0.0"
@@ -39,8 +38,6 @@ repositories {
     mavenCentral()
 }
 
-extra["snippetsDir"] = file("build/generated-snippets")
-
 dependencies {
     errorprone("com.google.errorprone:error_prone_core:$errorProneVersion")
     compileOnly("org.projectlombok:lombok")
@@ -51,9 +48,7 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-h2console")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-starter-restclient")
     implementation("org.springframework.boot:spring-boot-starter-aspectj")
     implementation("org.springframework.boot:spring-boot-micrometer-tracing-opentelemetry")
     implementation("org.springframework.boot:spring-boot-starter-validation")
@@ -67,13 +62,8 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testAnnotationProcessor("org.projectlombok:lombok")
 
-    testImplementation("org.springframework.boot:spring-boot-starter-actuator-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-data-jdbc-test")
     testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-restclient-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-restdocs")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
-    testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
 }
 
 springBoot {
@@ -119,15 +109,6 @@ pmd {
 tasks.withType<Pmd>().configureEach {
     isConsoleOutput = true
     exclude("**/build/generated/**")
-}
-
-tasks.test {
-    outputs.dir(project.extra["snippetsDir"]!!)
-}
-
-tasks.asciidoctor {
-    inputs.dir(project.extra["snippetsDir"]!!)
-    dependsOn(tasks.test)
 }
 
 val ideaFormatterBinaryCandidate: String? =

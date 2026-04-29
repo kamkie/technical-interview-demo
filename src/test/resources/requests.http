@@ -24,8 +24,7 @@ Content-Type: application/json
 
 {
   "title": "The Great Gatsby",
-  "author": "F. Scott Fitzgerald========",
-  "isbn": "978-0743273565",
+  "author": "F. Scott Fitzgerald",
   "publicationYear": 1926
 }
 

@@ -137,6 +137,8 @@ Do not add heavy bootstrap logic unless explicitly requested.
 
 The current runtime configuration includes:
 
+- request and error logging that redacts sensitive query parameters before they reach the logs
+- optional `org.springframework.web` DEBUG logging as a commented property in `application.properties`
 - Hibernate SQL statement logging through `org.hibernate.SQL`
 - Hibernate statistics enabled through `hibernate.generate_statistics=true`
 - explicit logs for successful database-changing operations such as create, update, delete, and seed writes
@@ -166,8 +168,8 @@ Before finishing changes, run:
 
 ```powershell
 .\gradlew.bat spotlessCheck
-.\gradlew.bat pmdMain
-.\gradlew.bat test
+.\gradlew.bat --no-problems-report pmdMain
+.\gradlew.bat --no-problems-report test
 ```
 
 If tests require Java setup first, export `JAVA_HOME` to a compatible JDK in the same shell session.

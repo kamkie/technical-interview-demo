@@ -1,5 +1,6 @@
 package team.jit.technicalinterviewdemo;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -16,8 +17,11 @@ import java.util.Comparator;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
@@ -25,6 +29,7 @@ import team.jit.technicalinterviewdemo.book.Book;
 import team.jit.technicalinterviewdemo.book.BookRepository;
 
 @SpringBootTest
+@ExtendWith(OutputCaptureExtension.class)
 class ApiDemoTests {
 
     @Autowired
@@ -162,6 +167,19 @@ class ApiDemoTests {
     }
 
     @Test
+    void requestLoggingRedactsSensitiveQueryParameters(CapturedOutput output) throws Exception {
+        String secret = "secret-log-token-123";
+
+        mockMvc.perform(get("/hello")
+                        .queryParam("token", secret)
+                        .queryParam("page", "1"))
+                .andExpect(status().isOk());
+
+        assertThat(output).contains("params={token=<redacted>, page=1}");
+        assertThat(output).doesNotContain(secret);
+    }
+
+    @Test
     void getBookByInvalidIdReturnsBadRequest() throws Exception {
         mockMvc.perform(get("/api/books/{id}", "abc"))
                 .andExpect(status().isBadRequest())
@@ -183,6 +201,19 @@ class ApiDemoTests {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.title").value("Resource Not Found"))
                 .andExpect(jsonPath("$.detail").value("Resource 'api/missing' was not found."));
+    }
+
+    @Test
+    void errorLoggingRedactsSensitiveQueryParameters(CapturedOutput output) throws Exception {
+        String secret = "Bearer raw-secret-value";
+
+        mockMvc.perform(get("/api/books/{id}", "abc")
+                        .queryParam("authorization", secret))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.title").value("Invalid Parameter"));
+
+        assertThat(output).contains("params={authorization=<redacted>}");
+        assertThat(output).doesNotContain(secret);
     }
 
     @Test
