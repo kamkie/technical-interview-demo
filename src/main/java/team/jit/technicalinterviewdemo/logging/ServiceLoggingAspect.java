@@ -57,9 +57,28 @@ public class ServiceLoggingAspect {
         String serviceName = signature.getDeclaringType().getSimpleName();
         String methodName = signature.getName();
         Map<String, Object> parameters = sanitizeArguments(signature.getParameterNames(), joinPoint.getArgs());
+        long startTimeNanos = System.nanoTime();
 
-        log.info("Service call {}.{} parameters={}", serviceName, methodName, parameters);
-        return joinPoint.proceed();
+        try {
+            Object result = joinPoint.proceed();
+            log.info(
+                    "Service call {}.{} parameters={} durationMs={}",
+                    serviceName,
+                    methodName,
+                    parameters,
+                    toDurationMillis(startTimeNanos)
+            );
+            return result;
+        } catch (Throwable exception) {
+            log.info(
+                    "Service call {}.{} parameters={} durationMs={} completedWithException=true",
+                    serviceName,
+                    methodName,
+                    parameters,
+                    toDurationMillis(startTimeNanos)
+            );
+            throw exception;
+        }
     }
 
     private Map<String, Object> sanitizeArguments(String[] parameterNames, Object[] arguments) {
@@ -220,5 +239,9 @@ public class ServiceLoggingAspect {
 
     private String normalize(String value) {
         return value.replaceAll("[^A-Za-z0-9]", "").toLowerCase();
+    }
+
+    private long toDurationMillis(long startTimeNanos) {
+        return (System.nanoTime() - startTimeNanos) / 1_000_000;
     }
 }
