@@ -2,62 +2,60 @@
 
 `README.md` is the human-facing counterpart of this file. Keep both files aligned when project setup, API behavior, formatter usage, logging/tracing behavior, or quality gates change.
 
-## Project Summary
+## Project Snapshot
 
-This repository is a small Spring Boot demo application built with Gradle Kotlin DSL.
+Small Spring Boot demo app for technical interview exercises.
 
-The current demo includes:
+Current scope:
 
-- `GET /hello` returning `Hello World!`
-- A simple REST API for `Book` under `/api/books`
-- In-memory H2 database configuration
-- Seed data loaded at startup
-- Basic integration-style MVC tests
+- `GET /hello` returns `Hello World!`
+- CRUD-style `Book` API under `/api/books`
+- H2 in-memory database
+- startup seed data
+- MVC/integration-style tests
+- request tracing and structured logging
 
-Primary goal: keep the project small, readable, and suitable for technical interview demos.
+Primary goal: keep the codebase small, readable, and easy to reason about.
 
-## Tech Stack
+## Stack
 
-- Java 25 toolchain
+- Java 25
 - Spring Boot 4.0.6
 - Spring Web MVC
 - Spring Data JPA
-- H2 in-memory database
+- H2
 - Gradle Wrapper
-- JUnit 5
+- Lombok
+- Spring AOP
+- Micrometer tracing with OpenTelemetry
 - Error Prone
 - PMD
 
-## Important Environment Detail
+## Environment
 
-The machine default `JAVA_HOME` may point to Java 11, which is too old for this build.
-
-Use a compatible JDK before running Gradle commands. Example for PowerShell:
+Default `JAVA_HOME` on this machine may point to Java 11. Use JDK 25 before running Gradle:
 
 ```powershell
 $env:JAVA_HOME='C:\Users\kamki\.jdks\azul-25.0.3'
 $env:Path="$env:JAVA_HOME\bin;$env:Path"
 ```
 
-Then run commands such as:
+Common commands:
 
 ```powershell
-.\gradlew.bat test
 .\gradlew.bat bootRun
-```
-
-The repository also includes a `Dockerfile` for containerized builds and local runs:
-
-```powershell
+.\gradlew.bat test
 docker build -t technical-interview-demo .
 docker run --rm -p 8080:8080 technical-interview-demo
 ```
 
-For formatting, the build uses Spotless. Java formatting is delegated to IntelliJ IDEA's formatter so the result stays as close as practical to IntelliJ defaults.
+## Formatter Contract
 
-If IntelliJ is not configured, Gradle build and test tasks must still pass. In that case, Spotless skips Java formatting tasks instead of failing the build.
+Spotless is the formatter entry point.
 
-If the IntelliJ formatter binary is not already available on `PATH`, provide it through one of:
+Java formatting uses IntelliJ IDEA's formatter when available. If IntelliJ is not configured, Java formatting is skipped rather than failing the build.
+
+Provide the formatter binary through one of:
 
 ```powershell
 $env:IDEA_FORMATTER_BINARY='C:\Path\To\IntelliJ IDEA\bin\idea64.exe'
@@ -71,62 +69,41 @@ $env:IDEA_HOME='C:\Path\To\IntelliJ IDEA'
 .\gradlew.bat spotlessApply -PideaFormatterBinary='C:\Path\To\IntelliJ IDEA\bin\idea64.exe'
 ```
 
-## Project Structure
+Keep `.editorconfig` aligned with the intended IntelliJ formatting profile.
 
-- `build.gradle.kts`: Gradle build and dependencies
-- `config/pmd/pmd-ruleset.xml`: curated PMD ruleset
-- `src/main/java/team/jit/technicalinterviewdemo/TechnicalInterviewDemoApplication.java`: app entry point
-- `src/main/java/team/jit/technicalinterviewdemo/HelloController.java`: hello-world endpoint
-- `src/main/java/team/jit/technicalinterviewdemo/book/`: `Book` domain and REST API
-- `src/main/resources/application.properties`: H2 and JPA configuration
-- `src/test/java/team/jit/technicalinterviewdemo/`: application and API tests
+## Project Map
 
-## API Overview
+- `build.gradle.kts`: build configuration and dependencies
+- `config/pmd/pmd-ruleset.xml`: curated PMD rules
+- `src/main/java/team/jit/technicalinterviewdemo/TechnicalInterviewDemoApplication.java`: app entry
+- `src/main/java/team/jit/technicalinterviewdemo/HelloController.java`: hello endpoint
+- `src/main/java/team/jit/technicalinterviewdemo/book/`: book entity, requests, repository, service, controller, seed data
+- `src/main/java/team/jit/technicalinterviewdemo/api/`: exception handling and custom exceptions
+- `src/main/java/team/jit/technicalinterviewdemo/logging/`: HTTP tracing/logging and service-call logging
+- `src/main/resources/application.properties`: runtime configuration
+- `src/test/java/team/jit/technicalinterviewdemo/`: application, API, and tracing tests
 
-### Hello endpoint
+## API Contract
+
+Endpoints:
 
 - `GET /hello`
-
-Response:
-
-```text
-Hello World!
-```
-
-### Book API
-
 - `GET /api/books`
 - `GET /api/books/{id}`
 - `POST /api/books`
 - `PUT /api/books/{id}`
 - `DELETE /api/books/{id}`
 
-Example create payload:
+Book rules:
 
-```json
-{
-  "title": "Spring in Action",
-  "author": "Craig Walls",
-  "isbn": "9781617297571",
-  "publicationYear": 2022
-}
-```
-
-Example update payload:
-
-```json
-{
-  "title": "Spring in Action, Second Edition",
-  "author": "Craig Walls",
-  "publicationYear": 2026
-}
-```
-
+- `title` is required
+- `author` is required
+- `isbn` is required on create
+- `publicationYear` is required
+- `isbn` must be unique
 - `isbn` is immutable after creation and is not updated by `PUT /api/books/{id}`
 
-## Seed Data
-
-On startup, the app inserts sample books if the table is empty:
+Seed data:
 
 - `Clean Code`
 - `Effective Java`
@@ -135,36 +112,43 @@ Do not add heavy bootstrap logic unless explicitly requested.
 
 ## Logging And Tracing
 
-The current runtime configuration includes:
+Current runtime behavior:
 
-- request and error logging that redacts sensitive query parameters before they reach the logs
-- optional `org.springframework.web` DEBUG logging as a commented property in `application.properties`
-- Hibernate SQL statement logging through `org.hibernate.SQL`
-- Hibernate statistics enabled through `hibernate.generate_statistics=true`
-- explicit logs for successful database-changing operations such as create, update, delete, and seed writes
+- request and error logs redact sensitive query parameters before they reach the logs
+- optional `org.springframework.web` DEBUG logging is available as a commented property in `application.properties`
+- Hibernate SQL logging is enabled through `org.hibernate.SQL`
+- Hibernate statistics are enabled through `hibernate.generate_statistics=true`
+- successful create, update, delete, and seed writes are logged
+- `/actuator/health` and subpaths are skipped by the HTTP tracing logger
 
-## Development Guidelines For AI
+## AI Development Rules
 
-- Preserve the demo nature of the project. Prefer simple code over abstractions.
-- Keep package naming under `team.jit.technicalinterviewdemo`.
-- Use Lombok for routine Java boilerplate such as getters, setters, constructors, and builders when it keeps the code shorter and clearer.
-- Keep `.editorconfig` aligned with the intended IntelliJ formatting profile. That file is part of the formatter contract for this repository.
-- Keep the code compatible with Error Prone checks that run during Java compilation.
-- Keep the code compatible with the curated PMD ruleset in `config/pmd/pmd-ruleset.xml`.
-- When returning `ResponseEntity`, assign the response payload to a local variable first so controller breakpoints can inspect it easily before returning.
-- Log every operation that changes database state. For CRUD-style endpoints, emit at least one log entry for each successful create, update, delete, or seed write.
-- Keep non-trivial business logic in `@Service` beans. Service method calls are logged through Spring AOP, and logged parameters must redact common sensitive values.
+- Preserve the demo nature of the project. Prefer direct code over abstraction.
+- Keep package names under `team.jit.technicalinterviewdemo`.
+- Use Lombok for routine boilerplate when it shortens the code clearly.
+- Keep code compatible with Error Prone and the curated PMD ruleset.
+- When returning `ResponseEntity`, assign the payload to a local variable first.
+- Log every successful operation that changes database state.
+- Keep non-trivial business logic in `@Service` beans. Service calls are logged and must keep sensitive values redacted.
 - Prefer Spring MVC controllers and Spring Data repositories for new demo endpoints.
-- Use H2/in-memory storage unless the task explicitly requires external infrastructure.
-- Avoid introducing security, messaging, Docker, or distributed components unless asked.
-- Avoid adding unnecessary libraries when Spring Boot already provides the needed feature.
-- Keep responses JSON-friendly for REST endpoints.
-- When adding new API behavior, add or update tests.
-- Do not remove the existing `hello` or `book` demo endpoints unless asked.
+- Use H2/in-memory storage unless external infrastructure is explicitly required.
+- Avoid security, messaging, distributed systems, or extra libraries unless requested.
+- Keep REST responses JSON-friendly.
+- Add or update tests when API behavior changes.
+- Do not remove the existing `hello` or `book` endpoints unless asked.
 
-## Testing Expectations
+## Typical Change Flow
 
-Before finishing changes, run:
+For `Book` API changes:
+
+1. Update the request/entity model.
+2. Update controller and service behavior.
+3. Keep persistence simple through `BookRepository`.
+4. Add or update MVC/integration tests.
+
+## Quality Gates
+
+Before finishing, run:
 
 ```powershell
 .\gradlew.bat spotlessCheck
@@ -172,37 +156,29 @@ Before finishing changes, run:
 .\gradlew.bat --no-problems-report test
 ```
 
-If tests require Java setup first, export `JAVA_HOME` to a compatible JDK in the same shell session.
+Notes:
 
-Error Prone runs as part of Java compilation, so `test` and `build` also execute static analysis for Java sources.
-PMD runs as part of `check` and `build`. Use `pmdMain` for the main application source set when you want a focused PMD run.
+- Export `JAVA_HOME` to JDK 25 in the same shell first.
+- Error Prone runs during Java compilation.
+- PMD also runs as part of `check` and `build`.
 
-## Common Changes
+## Avoid
 
-If extending the `Book` API, prefer this sequence:
-
-1. Update the request or entity model.
-2. Update controller behavior.
-3. Keep persistence simple through `BookRepository`.
-4. Add or update MVC/integration tests.
-
-## Things To Avoid
-
-- Overengineering service layers for trivial CRUD
-- Writing large amounts of manual Java boilerplate when Lombok would keep the demo simpler
-- Adding DTO mapping frameworks for small examples
-- Replacing H2 with an external database without a clear requirement
-- Breaking the existing test setup
-- Changing Java or Spring Boot versions unless requested
+- overengineered service layers for trivial CRUD
+- large amounts of manual boilerplate where Lombok keeps the demo simpler
+- DTO mapping frameworks for small examples
+- replacing H2 with an external database without a clear requirement
+- breaking the current test setup
+- changing Java or Spring Boot versions unless requested
 
 ## Definition Of Done
 
-A change is considered complete when:
+A change is complete when:
 
-- The code is consistent with the current simple demo architecture
-- The application still starts
+- the design remains consistent with the simple demo architecture
+- the application still starts
 - `spotlessCheck` passes
 - `pmdMain` passes
-- Tests pass
-- Any new endpoint or behavior is covered by tests when practical
+- tests pass
+- new behavior is covered by tests when practical
 
