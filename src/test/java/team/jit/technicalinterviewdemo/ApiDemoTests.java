@@ -12,6 +12,7 @@ import team.jit.technicalinterviewdemo.book.BookRepository;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -120,6 +121,53 @@ class ApiDemoTests {
                 .andExpect(jsonPath("$.fieldErrors.author").value("author is required"))
                 .andExpect(jsonPath("$.fieldErrors.isbn").value("isbn is required"))
                 .andExpect(jsonPath("$.fieldErrors.publicationYear").value("publicationYear is required"));
+    }
+
+    @Test
+    void createBookWithMalformedJsonReturnsBadRequest() throws Exception {
+        mockMvc.perform(post("/api/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "title": "Broken JSON",
+                                  "author": "Craig Walls",
+                                """))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.title").value("Malformed Request Body"))
+                .andExpect(jsonPath("$.detail").value("Request body is missing or malformed."));
+    }
+
+    @Test
+    void createBookWithUnsupportedMediaTypeReturnsUnsupportedMediaType() throws Exception {
+        mockMvc.perform(post("/api/books")
+                        .contentType(MediaType.TEXT_PLAIN)
+                        .content("not-json"))
+                .andExpect(status().isUnsupportedMediaType())
+                .andExpect(jsonPath("$.title").value("Unsupported Media Type"));
+    }
+
+    @Test
+    void getBookByInvalidIdReturnsBadRequest() throws Exception {
+        mockMvc.perform(get("/api/books/{id}", "abc"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.title").value("Invalid Parameter"))
+                .andExpect(jsonPath("$.detail").value("Parameter 'id' value 'abc' is invalid."));
+    }
+
+    @Test
+    void unsupportedMethodReturnsMethodNotAllowed() throws Exception {
+        mockMvc.perform(patch("/api/books"))
+                .andExpect(status().isMethodNotAllowed())
+                .andExpect(jsonPath("$.title").value("Method Not Allowed"))
+                .andExpect(jsonPath("$.detail").value("HTTP method 'PATCH' is not supported for this endpoint."));
+    }
+
+    @Test
+    void missingResourceReturnsNotFoundProblemDetail() throws Exception {
+        mockMvc.perform(get("/api/missing"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.title").value("Resource Not Found"))
+                .andExpect(jsonPath("$.detail").value("Resource 'api/missing' was not found."));
     }
 
     @Test
