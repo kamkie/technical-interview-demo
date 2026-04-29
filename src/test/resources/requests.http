@@ -1,4 +1,4 @@
-### GET hello worrld
+### GET hello world
 GET http://localhost:8080/hello
 
 ### list books
@@ -14,3 +14,20 @@ Content-Type: application/json
   "isbn": "978-0743273565",
   "publicationYear": 1925
 }
+
+### get book by id
+GET http://localhost:8080/api/books/1
+
+### update book
+PUT http://localhost:8080/api/books/1
+Content-Type: application/json
+
+{
+  "title": "The Great Gatsby",
+  "author": "F. Scott Fitzgerald",
+  "isbn": "978-0743273565",
+  "publicationYear": 1926
+}
+
+### delete book
+DELETE http://localhost:8080/api/books/1
