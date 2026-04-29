@@ -1,0 +1,142 @@
+# AI Project Instructions
+
+## Project Summary
+
+This repository is a small Spring Boot demo application built with Gradle Kotlin DSL.
+
+The current demo includes:
+
+- `GET /hello` returning `Hello World!`
+- A simple REST API for `Book` under `/api/books`
+- In-memory H2 database configuration
+- Seed data loaded at startup
+- Basic integration-style MVC tests
+
+Primary goal: keep the project small, readable, and suitable for technical interview demos.
+
+## Tech Stack
+
+- Java 25 toolchain
+- Spring Boot 4.0.6
+- Spring Web MVC
+- Spring Data JPA
+- H2 in-memory database
+- Gradle Wrapper
+- JUnit 5
+
+## Important Environment Detail
+
+The machine default `JAVA_HOME` may point to Java 11, which is too old for this build.
+
+Use a compatible JDK before running Gradle commands. Example for PowerShell:
+
+```powershell
+$env:JAVA_HOME='C:\Users\kamki\.jdks\azul-25.0.3'
+$env:Path="$env:JAVA_HOME\bin;$env:Path"
+```
+
+Then run commands such as:
+
+```powershell
+.\gradlew.bat test
+.\gradlew.bat bootRun
+```
+
+## Project Structure
+
+- `build.gradle.kts`: Gradle build and dependencies
+- `src/main/java/team/jit/technicalinterviewdemo/TechnicalInterviewDemoApplication.java`: app entry point
+- `src/main/java/team/jit/technicalinterviewdemo/HelloController.java`: hello-world endpoint
+- `src/main/java/team/jit/technicalinterviewdemo/book/`: `Book` domain and REST API
+- `src/main/resources/application.properties`: H2 and JPA configuration
+- `src/test/java/team/jit/technicalinterviewdemo/`: application and API tests
+
+## API Overview
+
+### Hello endpoint
+
+- `GET /hello`
+
+Response:
+
+```text
+Hello World!
+```
+
+### Book API
+
+- `GET /api/books`
+- `GET /api/books/{id}`
+- `POST /api/books`
+- `PUT /api/books/{id}`
+- `DELETE /api/books/{id}`
+
+Example create payload:
+
+```json
+{
+  "title": "Spring in Action",
+  "author": "Craig Walls",
+  "isbn": "9781617297571",
+  "publicationYear": 2022
+}
+```
+
+## Seed Data
+
+On startup, the app inserts sample books if the table is empty:
+
+- `Clean Code`
+- `Effective Java`
+
+Do not add heavy bootstrap logic unless explicitly requested.
+
+## Development Guidelines For AI
+
+- Preserve the demo nature of the project. Prefer simple code over abstractions.
+- Keep package naming under `team.jit.technicalinterviewdemo`.
+- Use Lombok for routine Java boilerplate such as getters, setters, constructors, and builders when it keeps the code shorter and clearer.
+- Prefer Spring MVC controllers and Spring Data repositories for new demo endpoints.
+- Use H2/in-memory storage unless the task explicitly requires external infrastructure.
+- Avoid introducing security, messaging, Docker, or distributed components unless asked.
+- Avoid adding unnecessary libraries when Spring Boot already provides the needed feature.
+- Keep responses JSON-friendly for REST endpoints.
+- When adding new API behavior, add or update tests.
+- Do not remove the existing `hello` or `book` demo endpoints unless asked.
+
+## Testing Expectations
+
+Before finishing changes, run:
+
+```powershell
+.\gradlew.bat test
+```
+
+If tests require Java setup first, export `JAVA_HOME` to a compatible JDK in the same shell session.
+
+## Common Changes
+
+If extending the `Book` API, prefer this sequence:
+
+1. Update the request or entity model.
+2. Update controller behavior.
+3. Keep persistence simple through `BookRepository`.
+4. Add or update MVC/integration tests.
+
+## Things To Avoid
+
+- Overengineering service layers for trivial CRUD
+- Writing large amounts of manual Java boilerplate when Lombok would keep the demo simpler
+- Adding DTO mapping frameworks for small examples
+- Replacing H2 with an external database without a clear requirement
+- Breaking the existing test setup
+- Changing Java or Spring Boot versions unless requested
+
+## Definition Of Done
+
+A change is considered complete when:
+
+- The code is consistent with the current simple demo architecture
+- The application still starts
+- Tests pass
+- Any new endpoint or behavior is covered by tests when practical
