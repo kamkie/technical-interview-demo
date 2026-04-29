@@ -10,8 +10,8 @@ Current scope:
 
 - `GET /docs` redirects to generated API documentation
 - `GET /hello` returns `Hello World!`
-- CRUD-style `Book` API under `/api/books`
-- actuator endpoints for `health` and `info`
+- CRUD-style `Book` API under `/api/books` with pagination and optimistic locking on updates
+- actuator endpoints for `health`, `info`, liveness/readiness probes, and Prometheus metrics
 - H2 in-memory database
 - startup seed data
 - MVC/integration-style tests
@@ -96,6 +96,7 @@ Packaging and runtime behavior:
 - `bootJar` bundles the generated HTML documentation into the runnable jar
 - the running application serves the documentation at `GET /docs`
 - the generated docs include example success and error responses captured from tests
+- the container image includes a health check against `GET /actuator/health/readiness`
 
 ## Project Map
 
@@ -117,11 +118,16 @@ Endpoints:
 
 - `GET /docs`
 - `GET /hello`
-- `GET /api/books`
+- `GET /api/books?page=0&size=20&sort=id,asc`
 - `GET /api/books/{id}`
 - `POST /api/books`
 - `PUT /api/books/{id}`
 - `DELETE /api/books/{id}`
+- `GET /actuator/info`
+- `GET /actuator/health`
+- `GET /actuator/health/liveness`
+- `GET /actuator/health/readiness`
+- `GET /actuator/prometheus`
 
 Book rules:
 
@@ -131,6 +137,8 @@ Book rules:
 - `publicationYear` is required
 - `isbn` must be unique
 - `isbn` is immutable after creation and is not updated by `PUT /api/books/{id}`
+- `GET /api/books` returns a paginated response
+- `version` is returned for each book and is required on `PUT /api/books/{id}` for optimistic locking
 
 Seed data:
 
@@ -148,6 +156,8 @@ Current runtime behavior:
 - Hibernate SQL logging is enabled through `org.hibernate.SQL`
 - Hibernate statistics are enabled through `hibernate.generate_statistics=true`
 - successful create, update, delete, and seed writes are logged
+- actuator exposes readiness and liveness probe endpoints
+- actuator exposes Prometheus metrics at `/actuator/prometheus`
 - `/actuator/health` and subpaths are skipped by the HTTP tracing logger
 
 ## AI Development Rules

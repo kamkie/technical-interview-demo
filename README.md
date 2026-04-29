@@ -59,6 +59,10 @@ Useful local endpoints:
 - `GET /hello`
 - `GET /api/books`
 - `GET /actuator/info`
+- `GET /actuator/health`
+- `GET /actuator/health/liveness`
+- `GET /actuator/health/readiness`
+- `GET /actuator/prometheus`
 - H2 console at `/h2-console`
 
 ## Docker
@@ -85,6 +89,7 @@ docker run --rm -p 8080:8080 technical-interview-demo
 ```
 
 The Docker image builds the Spring Boot fat jar in a separate build stage and runs it on Java 25.
+It also includes a container health check against `GET /actuator/health/readiness`.
 
 ## Documentation
 
@@ -141,11 +146,13 @@ Hello World!
 
 ### Book API
 
-- `GET /api/books`
+- `GET /api/books?page=0&size=20&sort=id,asc`
 - `GET /api/books/{id}`
 - `POST /api/books`
 - `PUT /api/books/{id}`
 - `DELETE /api/books/{id}`
+
+`GET /api/books` returns a paginated response instead of a raw array.
 
 Example create payload:
 
@@ -164,6 +171,7 @@ Example update payload:
 {
   "title": "Spring in Action, Second Edition",
   "author": "Craig Walls",
+  "version": 0,
   "publicationYear": 2026
 }
 ```
@@ -176,6 +184,15 @@ Validation rules:
 - `publicationYear` is required
 - `isbn` must be unique across books
 - `isbn` is immutable after creation and is not updated by `PUT /api/books/{id}`
+- `version` is returned for each book and required on `PUT /api/books/{id}` for optimistic locking
+
+Actuator endpoints:
+
+- `GET /actuator/info`
+- `GET /actuator/health`
+- `GET /actuator/health/liveness`
+- `GET /actuator/health/readiness`
+- `GET /actuator/prometheus`
 
 ## Seed Data
 
@@ -193,6 +210,7 @@ Current behavior:
 - expected client errors return sanitized messages
 - validation errors include field-level details
 - duplicate ISBN returns `409 Conflict`
+- stale update versions return `409 Conflict`
 - missing books return `404 Not Found`
 - unexpected server errors return a generic `500 Internal Server Error`
 
@@ -213,6 +231,8 @@ The application includes:
 - Hibernate SQL statement logging through `org.hibernate.SQL`
 - Hibernate statistics enabled through `hibernate.generate_statistics=true`
 - explicit logs for successful database-changing operations such as create, update, delete, and seed writes
+- readiness and liveness health probes through actuator
+- Prometheus metrics exposed through `/actuator/prometheus`
 
 The HTTP tracing logger intentionally skips `/actuator/health` and its subpaths.
 
