@@ -190,6 +190,7 @@ Keep `.editorconfig` aligned with the intended IntelliJ formatting profile.
 - Use Lombok for routine Java boilerplate when it keeps the code shorter and clearer.
 - Keep the project compatible with Error Prone checks that run during Java compilation.
 - Keep the project compatible with the curated PMD ruleset in `config/pmd/pmd-ruleset.xml`.
+- When returning `ResponseEntity`, assign the response payload to a local variable first so controller breakpoints can inspect it before the return.
 - Keep non-trivial business logic in `@Service` beans.
 - Prefer Spring MVC controllers and Spring Data repositories for new demo endpoints.
 - Use H2/in-memory storage unless the task explicitly requires external infrastructure.

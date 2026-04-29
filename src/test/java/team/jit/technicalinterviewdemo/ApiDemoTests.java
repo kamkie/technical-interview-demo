@@ -204,6 +204,23 @@ class ApiDemoTests {
     }
 
     @Test
+    void updateBookWithAnotherBooksIsbnReturnsConflict() throws Exception {
+        mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "title": "Clean Code Second Edition",
+                                  "author": "Robert C. Martin",
+                                  "isbn": "9780134685991",
+                                  "publicationYear": 2026
+                                }
+                                """))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.title").value("Duplicate ISBN"))
+                .andExpect(jsonPath("$.detail").value("Book with ISBN 9780134685991 already exists."));
+    }
+
+    @Test
     void deleteBookRemovesBook() throws Exception {
         mockMvc.perform(delete("/api/books/{id}", cleanCode.getId()))
                 .andExpect(status().isNoContent());

@@ -129,6 +129,7 @@ Do not add heavy bootstrap logic unless explicitly requested.
 - Keep `.editorconfig` aligned with the intended IntelliJ formatting profile. That file is part of the formatter contract for this repository.
 - Keep the code compatible with Error Prone checks that run during Java compilation.
 - Keep the code compatible with the curated PMD ruleset in `config/pmd/pmd-ruleset.xml`.
+- When returning `ResponseEntity`, assign the response payload to a local variable first so controller breakpoints can inspect it easily before returning.
 - Log every operation that changes database state. For CRUD-style endpoints, emit at least one log entry for each successful create, update, delete, or seed write.
 - Keep non-trivial business logic in `@Service` beans. Service method calls are logged through Spring AOP, and logged parameters must redact common sensitive values.
 - Prefer Spring MVC controllers and Spring Data repositories for new demo endpoints.

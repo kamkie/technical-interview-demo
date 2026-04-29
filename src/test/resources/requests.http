@@ -16,10 +16,10 @@ Content-Type: application/json
 }
 
 ### get book by id
-GET http://localhost:8080/api/books/1
+GET http://localhost:8080/api/books/3
 
 ### update book
-PUT http://localhost:8080/api/books/1
+PUT http://localhost:8080/api/books/3
 Content-Type: application/json
 
 {
@@ -30,4 +30,4 @@ Content-Type: application/json
 }
 
 ### delete book
-DELETE http://localhost:8080/api/books/1
+DELETE http://localhost:8080/api/books/3
