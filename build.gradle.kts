@@ -1,26 +1,28 @@
 import net.ltgt.gradle.errorprone.errorprone
-import org.gradle.api.plugins.quality.Pmd
 
 plugins {
     java
     jacoco
+    pmd
+    idea
+    id("com.gorylenko.gradle-git-properties") version "2.5.7"
     id("com.diffplug.spotless") version "8.4.0"
     id("net.ltgt.errorprone") version "5.1.0"
-    pmd
     id("org.springframework.boot") version "4.0.6"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.asciidoctor.jvm.convert") version "4.0.5"
-    id("com.gorylenko.gradle-git-properties") version "2.5.7"
     id("com.github.ben-manes.versions") version "0.54.0"
+    id("com.palantir.git-version") version "5.0.0"
 }
 
-group = "team.jit"
 val gitVersion: groovy.lang.Closure<String> by extra
 version = gitVersion()
+group = "team.jit"
 description = "technical-interview-demo"
 
 val errorProneVersion = "2.44.0"
 val pmdVersion = "7.17.0"
+val gradleWrapperVersion = "9.5.0"
 
 java {
     toolchain {
@@ -141,4 +143,9 @@ spotless {
         trimTrailingWhitespace()
         replaceRegex("normalize EOF newline", "\\s*\\z", "\n")
     }
+}
+
+tasks.wrapper {
+    gradleVersion = gradleWrapperVersion
+    distributionType = Wrapper.DistributionType.ALL
 }
