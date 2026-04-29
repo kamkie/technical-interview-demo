@@ -193,18 +193,18 @@ class ApiDemoTests {
                                 {
                                   "title": "Clean Code Second Edition",
                                   "author": "Robert C. Martin",
-                                  "isbn": "9780132350884",
                                   "publicationYear": 2026
                                 }
                                 """))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(cleanCode.getId()))
                 .andExpect(jsonPath("$.title").value("Clean Code Second Edition"))
+                .andExpect(jsonPath("$.isbn").value("9780132350884"))
                 .andExpect(jsonPath("$.publicationYear").value(2026));
     }
 
     @Test
-    void updateBookWithAnotherBooksIsbnReturnsConflict() throws Exception {
+    void updateBookIgnoresProvidedIsbn() throws Exception {
         mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -215,9 +215,12 @@ class ApiDemoTests {
                                   "publicationYear": 2026
                                 }
                                 """))
-                .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.title").value("Duplicate ISBN"))
-                .andExpect(jsonPath("$.detail").value("Book with ISBN 9780134685991 already exists."));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.isbn").value("9780132350884"));
+
+        mockMvc.perform(get("/api/books/{id}", cleanCode.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.isbn").value("9780132350884"));
     }
 
     @Test

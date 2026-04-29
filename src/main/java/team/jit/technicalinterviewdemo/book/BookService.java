@@ -24,21 +24,19 @@ public class BookService {
                 .orElseThrow(() -> new BookNotFoundException(id));
     }
 
-    public Book create(BookRequest request) {
-        validateUniqueIsbn(request.isbn(), null);
+    public Book create(BookCreateRequest request) {
+        validateUniqueIsbn(request.isbn());
         Book book = new Book(request.title(), request.author(), request.isbn(), request.publicationYear());
         Book savedBook = bookRepository.saveAndFlush(book);
         log.info("Created book id={} isbn={} title={}", savedBook.getId(), savedBook.getIsbn(), savedBook.getTitle());
         return savedBook;
     }
 
-    public Book update(Long id, BookRequest request) {
+    public Book update(Long id, BookUpdateRequest request) {
         Book book = findById(id);
 
-        validateUniqueIsbn(request.isbn(), id);
         book.setTitle(request.title());
         book.setAuthor(request.author());
-        book.setIsbn(request.isbn());
         book.setPublicationYear(request.publicationYear());
 
         Book updatedBook = bookRepository.saveAndFlush(book);
@@ -55,12 +53,8 @@ public class BookService {
         log.info("Deleted book id={}", id);
     }
 
-    private void validateUniqueIsbn(String isbn, Long currentBookId) {
-        boolean exists = currentBookId == null
-                ? bookRepository.existsByIsbn(isbn)
-                : bookRepository.existsByIsbnAndIdNot(isbn, currentBookId);
-
-        if (exists) {
+    private void validateUniqueIsbn(String isbn) {
+        if (bookRepository.existsByIsbn(isbn)) {
             throw new DuplicateIsbnException(isbn);
         }
     }

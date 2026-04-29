@@ -3,7 +3,7 @@ package team.jit.technicalinterviewdemo.book;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record BookRequest(
+public record BookCreateRequest(
         @NotBlank(message = "title is required")
         String title,
         @NotBlank(message = "author is required")

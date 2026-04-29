@@ -112,6 +112,18 @@ Example create payload:
 }
 ```
 
+Example update payload:
+
+```json
+{
+  "title": "Spring in Action, Second Edition",
+  "author": "Craig Walls",
+  "publicationYear": 2026
+}
+```
+
+- `isbn` is immutable after creation and is not updated by `PUT /api/books/{id}`
+
 ## Seed Data
 
 On startup, the app inserts sample books if the table is empty:

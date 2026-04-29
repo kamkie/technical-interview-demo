@@ -116,6 +116,16 @@ Example create payload:
 }
 ```
 
+Example update payload:
+
+```json
+{
+  "title": "Spring in Action, Second Edition",
+  "author": "Craig Walls",
+  "publicationYear": 2026
+}
+```
+
 Validation rules:
 
 - `title` is required
@@ -123,6 +133,7 @@ Validation rules:
 - `isbn` is required
 - `publicationYear` is required
 - `isbn` must be unique across books
+- `isbn` is immutable after creation and is not updated by `PUT /api/books/{id}`
 
 ## Seed Data
 
