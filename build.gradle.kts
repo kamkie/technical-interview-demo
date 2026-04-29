@@ -1,6 +1,9 @@
+import net.ltgt.gradle.errorprone.errorprone
+
 plugins {
     java
     id("com.diffplug.spotless") version "8.4.0"
+    id("net.ltgt.errorprone") version "5.1.0"
     id("org.springframework.boot") version "4.0.6"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.asciidoctor.jvm.convert") version "4.0.5"
@@ -9,6 +12,8 @@ plugins {
 group = "team.jit"
 version = "0.0.1-SNAPSHOT"
 description = "technical-interview-demo"
+
+val errorProneVersion = "2.44.0"
 
 java {
     toolchain {
@@ -23,6 +28,7 @@ repositories {
 extra["snippetsDir"] = file("build/generated-snippets")
 
 dependencies {
+    errorprone("com.google.errorprone:error_prone_core:$errorProneVersion")
     implementation("org.springframework.boot:spring-boot-h2console")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
@@ -53,6 +59,11 @@ dependencies {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    options.errorprone.disableWarningsInGeneratedCode.set(true)
+    options.errorprone.excludedPaths.set(".*/build/generated/.*")
 }
 
 tasks.test {

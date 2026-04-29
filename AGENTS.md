@@ -25,6 +25,7 @@ Primary goal: keep the project small, readable, and suitable for technical inter
 - H2 in-memory database
 - Gradle Wrapper
 - JUnit 5
+- Error Prone
 
 ## Important Environment Detail
 
@@ -124,6 +125,7 @@ Do not add heavy bootstrap logic unless explicitly requested.
 - Keep package naming under `team.jit.technicalinterviewdemo`.
 - Use Lombok for routine Java boilerplate such as getters, setters, constructors, and builders when it keeps the code shorter and clearer.
 - Keep `.editorconfig` aligned with the intended IntelliJ formatting profile. That file is part of the formatter contract for this repository.
+- Keep the code compatible with Error Prone checks that run during Java compilation.
 - Log every operation that changes database state. For CRUD-style endpoints, emit at least one log entry for each successful create, update, delete, or seed write.
 - Keep non-trivial business logic in `@Service` beans. Service method calls are logged through Spring AOP, and logged parameters must redact common sensitive values.
 - Prefer Spring MVC controllers and Spring Data repositories for new demo endpoints.
@@ -144,6 +146,8 @@ Before finishing changes, run:
 ```
 
 If tests require Java setup first, export `JAVA_HOME` to a compatible JDK in the same shell session.
+
+Error Prone runs as part of Java compilation, so `test` and `build` also execute static analysis for Java sources.
 
 ## Common Changes
 

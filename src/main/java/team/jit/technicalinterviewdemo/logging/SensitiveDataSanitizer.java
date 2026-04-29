@@ -1,5 +1,7 @@
 package team.jit.technicalinterviewdemo.logging;
 
+import java.util.Locale;
+
 public final class SensitiveDataSanitizer {
 
     public static final String REDACTED = "<redacted>";
@@ -40,6 +42,6 @@ public final class SensitiveDataSanitizer {
     }
 
     private static String normalize(String value) {
-        return value.replaceAll("[^A-Za-z0-9]", "").toLowerCase();
+        return value.replaceAll("[^A-Za-z0-9]", "").toLowerCase(Locale.ROOT);
     }
 }

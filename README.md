@@ -29,6 +29,7 @@ Primary goal: keep the project small, readable, and suitable for technical inter
 - Lombok
 - Spring AOP
 - Micrometer tracing with OpenTelemetry
+- Error Prone
 
 ## Requirements
 
@@ -185,6 +186,7 @@ Keep `.editorconfig` aligned with the intended IntelliJ formatting profile.
 - Preserve the demo nature of the project. Prefer simple code over abstractions.
 - Keep package naming under `team.jit.technicalinterviewdemo`.
 - Use Lombok for routine Java boilerplate when it keeps the code shorter and clearer.
+- Keep the project compatible with Error Prone checks that run during Java compilation.
 - Keep non-trivial business logic in `@Service` beans.
 - Prefer Spring MVC controllers and Spring Data repositories for new demo endpoints.
 - Use H2/in-memory storage unless the task explicitly requires external infrastructure.
@@ -203,6 +205,8 @@ Before finishing changes, run:
 ```
 
 If tests require Java setup first, export `JAVA_HOME` to a compatible JDK in the same shell session.
+
+Error Prone runs as part of Java compilation, so `test` and `build` also execute static analysis for Java sources.
 
 ## Definition Of Done
 

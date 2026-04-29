@@ -266,7 +266,7 @@ public class ApiExceptionHandler {
             return "unknown";
         }
 
-        String[] segments = propertyPath.split("\\.");
-        return segments[segments.length - 1];
+        int lastSeparatorIndex = propertyPath.lastIndexOf('.');
+        return lastSeparatorIndex >= 0 ? propertyPath.substring(lastSeparatorIndex + 1) : propertyPath;
     }
 }
