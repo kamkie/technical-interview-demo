@@ -100,7 +100,9 @@ class ApiDemoTests {
                                 """))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.title").value("Duplicate ISBN"))
-                .andExpect(jsonPath("$.detail").value("Book with ISBN 9780132350884 already exists."));
+                .andExpect(jsonPath("$.detail").value("Book with ISBN 9780132350884 already exists."))
+                .andExpect(jsonPath("$.exception").doesNotExist())
+                .andExpect(jsonPath("$.trace").doesNotExist());
     }
 
     @Test
@@ -120,7 +122,10 @@ class ApiDemoTests {
                 .andExpect(jsonPath("$.fieldErrors.title").value("title is required"))
                 .andExpect(jsonPath("$.fieldErrors.author").value("author is required"))
                 .andExpect(jsonPath("$.fieldErrors.isbn").value("isbn is required"))
-                .andExpect(jsonPath("$.fieldErrors.publicationYear").value("publicationYear is required"));
+                .andExpect(jsonPath("$.fieldErrors.publicationYear").value("publicationYear is required"))
+                .andExpect(jsonPath("$.fieldErrors['create.arg0.title']").doesNotExist())
+                .andExpect(jsonPath("$.exception").doesNotExist())
+                .andExpect(jsonPath("$.trace").doesNotExist());
     }
 
     @Test
@@ -196,6 +201,8 @@ class ApiDemoTests {
         mockMvc.perform(get("/api/books/{id}", cleanCode.getId()))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.title").value("Book Not Found"))
-                .andExpect(jsonPath("$.detail").value("Book with id %d was not found.".formatted(cleanCode.getId())));
+                .andExpect(jsonPath("$.detail").value("Book with id %d was not found.".formatted(cleanCode.getId())))
+                .andExpect(jsonPath("$.exception").doesNotExist())
+                .andExpect(jsonPath("$.trace").doesNotExist());
     }
 }

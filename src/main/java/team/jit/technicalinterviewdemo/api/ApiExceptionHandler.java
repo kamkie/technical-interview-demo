@@ -247,7 +247,7 @@ public class ApiExceptionHandler {
     private Map<String, String> extractViolations(ConstraintViolationException exception) {
         Map<String, String> violations = new LinkedHashMap<>();
         for (ConstraintViolation<?> violation : exception.getConstraintViolations()) {
-            violations.putIfAbsent(violation.getPropertyPath().toString(), violation.getMessage());
+            violations.putIfAbsent(sanitizePropertyPath(violation.getPropertyPath().toString()), violation.getMessage());
         }
         return violations;
     }
@@ -258,5 +258,14 @@ public class ApiExceptionHandler {
             rootCause = rootCause.getCause();
         }
         return rootCause.getMessage() == null ? "<no-message>" : rootCause.getMessage();
+    }
+
+    private String sanitizePropertyPath(String propertyPath) {
+        if (propertyPath == null || propertyPath.isBlank()) {
+            return "unknown";
+        }
+
+        String[] segments = propertyPath.split("\\.");
+        return segments[segments.length - 1];
     }
 }
