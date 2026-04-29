@@ -26,6 +26,7 @@ Primary goal: keep the project small, readable, and suitable for technical inter
 - Gradle Wrapper
 - JUnit 5
 - Error Prone
+- PMD
 
 ## Important Environment Detail
 
@@ -73,6 +74,7 @@ $env:IDEA_HOME='C:\Path\To\IntelliJ IDEA'
 ## Project Structure
 
 - `build.gradle.kts`: Gradle build and dependencies
+- `config/pmd/pmd-ruleset.xml`: curated PMD ruleset
 - `src/main/java/team/jit/technicalinterviewdemo/TechnicalInterviewDemoApplication.java`: app entry point
 - `src/main/java/team/jit/technicalinterviewdemo/HelloController.java`: hello-world endpoint
 - `src/main/java/team/jit/technicalinterviewdemo/book/`: `Book` domain and REST API
@@ -126,6 +128,7 @@ Do not add heavy bootstrap logic unless explicitly requested.
 - Use Lombok for routine Java boilerplate such as getters, setters, constructors, and builders when it keeps the code shorter and clearer.
 - Keep `.editorconfig` aligned with the intended IntelliJ formatting profile. That file is part of the formatter contract for this repository.
 - Keep the code compatible with Error Prone checks that run during Java compilation.
+- Keep the code compatible with the curated PMD ruleset in `config/pmd/pmd-ruleset.xml`.
 - Log every operation that changes database state. For CRUD-style endpoints, emit at least one log entry for each successful create, update, delete, or seed write.
 - Keep non-trivial business logic in `@Service` beans. Service method calls are logged through Spring AOP, and logged parameters must redact common sensitive values.
 - Prefer Spring MVC controllers and Spring Data repositories for new demo endpoints.
@@ -142,12 +145,14 @@ Before finishing changes, run:
 
 ```powershell
 .\gradlew.bat spotlessCheck
+.\\gradlew.bat pmdMain
 .\gradlew.bat test
 ```
 
 If tests require Java setup first, export `JAVA_HOME` to a compatible JDK in the same shell session.
 
 Error Prone runs as part of Java compilation, so `test` and `build` also execute static analysis for Java sources.
+PMD runs as part of `check` and `build`. Use `pmdMain` for the main application source set when you want a focused PMD run.
 
 ## Common Changes
 
@@ -174,6 +179,7 @@ A change is considered complete when:
 - The code is consistent with the current simple demo architecture
 - The application still starts
 - `spotlessCheck` passes
+- `pmdMain` passes
 - Tests pass
 - Any new endpoint or behavior is covered by tests when practical
 

@@ -1,9 +1,11 @@
 import net.ltgt.gradle.errorprone.errorprone
+import org.gradle.api.plugins.quality.Pmd
 
 plugins {
     java
     id("com.diffplug.spotless") version "8.4.0"
     id("net.ltgt.errorprone") version "5.1.0"
+    pmd
     id("org.springframework.boot") version "4.0.6"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.asciidoctor.jvm.convert") version "4.0.5"
@@ -14,6 +16,7 @@ version = "0.0.1-SNAPSHOT"
 description = "technical-interview-demo"
 
 val errorProneVersion = "2.44.0"
+val pmdVersion = "7.17.0"
 
 java {
     toolchain {
@@ -64,6 +67,17 @@ tasks.withType<Test> {
 tasks.withType<JavaCompile>().configureEach {
     options.errorprone.disableWarningsInGeneratedCode.set(true)
     options.errorprone.excludedPaths.set(".*/build/generated/.*")
+}
+
+pmd {
+    toolVersion = pmdVersion
+    ruleSets = emptyList()
+    ruleSetFiles = files("config/pmd/pmd-ruleset.xml")
+}
+
+tasks.withType<Pmd>().configureEach {
+    isConsoleOutput = true
+    exclude("**/build/generated/**")
 }
 
 tasks.test {

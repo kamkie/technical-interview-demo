@@ -30,6 +30,7 @@ Primary goal: keep the project small, readable, and suitable for technical inter
 - Spring AOP
 - Micrometer tracing with OpenTelemetry
 - Error Prone
+- PMD
 
 ## Requirements
 
@@ -75,6 +76,7 @@ The Docker image builds the Spring Boot fat jar in a separate build stage and ru
 ## Project Structure
 
 - `build.gradle.kts`: Gradle build and dependencies
+- `config/pmd/pmd-ruleset.xml`: curated PMD ruleset
 - `src/main/java/team/jit/technicalinterviewdemo/TechnicalInterviewDemoApplication.java`: app entry point
 - `src/main/java/team/jit/technicalinterviewdemo/HelloController.java`: hello-world endpoint
 - `src/main/java/team/jit/technicalinterviewdemo/book/`: `Book` domain, service, repository, and REST API
@@ -187,6 +189,7 @@ Keep `.editorconfig` aligned with the intended IntelliJ formatting profile.
 - Keep package naming under `team.jit.technicalinterviewdemo`.
 - Use Lombok for routine Java boilerplate when it keeps the code shorter and clearer.
 - Keep the project compatible with Error Prone checks that run during Java compilation.
+- Keep the project compatible with the curated PMD ruleset in `config/pmd/pmd-ruleset.xml`.
 - Keep non-trivial business logic in `@Service` beans.
 - Prefer Spring MVC controllers and Spring Data repositories for new demo endpoints.
 - Use H2/in-memory storage unless the task explicitly requires external infrastructure.
@@ -201,12 +204,14 @@ Before finishing changes, run:
 
 ```powershell
 .\gradlew.bat spotlessCheck
+.\\gradlew.bat pmdMain
 .\gradlew.bat test
 ```
 
 If tests require Java setup first, export `JAVA_HOME` to a compatible JDK in the same shell session.
 
 Error Prone runs as part of Java compilation, so `test` and `build` also execute static analysis for Java sources.
+PMD runs as part of `check` and `build`. Use `pmdMain` for the main application source set when you want a focused PMD run.
 
 ## Definition Of Done
 
@@ -215,6 +220,7 @@ A change is considered complete when:
 - the code remains consistent with the current simple demo architecture
 - the application still starts
 - `spotlessCheck` passes
+- `pmdMain` passes
 - tests pass
 - new endpoint or behavior changes are covered by tests when practical
 
