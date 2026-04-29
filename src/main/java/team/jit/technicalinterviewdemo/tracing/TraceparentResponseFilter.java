@@ -15,6 +15,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 @Slf4j
 @Component
@@ -23,6 +27,24 @@ import java.io.IOException;
 public class TraceparentResponseFilter extends OncePerRequestFilter {
 
     public static final String TRACEPARENT_HEADER = "traceparent";
+    private static final String REDACTED = "<redacted>";
+    private static final Set<String> SENSITIVE_TOKENS = Set.of(
+            "password",
+            "passwd",
+            "pwd",
+            "secret",
+            "token",
+            "authorization",
+            "credential",
+            "cookie",
+            "session",
+            "apikey",
+            "accesskey",
+            "privatekey",
+            "clientsecret",
+            "bearer",
+            "refreshtoken"
+    );
 
     private final Tracer tracer;
 
@@ -36,17 +58,25 @@ public class TraceparentResponseFilter extends OncePerRequestFilter {
 
         try {
             setTraceparentHeaderIfTraceActive(response);
+            log.info(
+                    "HTTP request started method={} path={} query={} params={} traceparent={}",
+                    request.getMethod(),
+                    request.getRequestURI(),
+                    request.getQueryString(),
+                    sanitizeParameters(request.getParameterMap()),
+                    response.getHeader(TRACEPARENT_HEADER)
+            );
             filterChain.doFilter(request, response);
         } finally {
             setTraceparentHeaderIfTraceActive(response);
 
             log.info(
-                    "HTTP request completed method={} path={} query={} status={} durationMs={}",
+                    "HTTP response completed method={} path={} status={} durationMs={} traceparent={}",
                     request.getMethod(),
                     request.getRequestURI(),
-                    request.getQueryString(),
                     response.getStatus(),
-                    toDurationMillis(startTimeNanos)
+                    toDurationMillis(startTimeNanos),
+                    response.getHeader(TRACEPARENT_HEADER)
             );
         }
     }
@@ -68,5 +98,42 @@ public class TraceparentResponseFilter extends OncePerRequestFilter {
 
     private long toDurationMillis(long startTimeNanos) {
         return (System.nanoTime() - startTimeNanos) / 1_000_000;
+    }
+
+    private Map<String, Object> sanitizeParameters(Map<String, String[]> parameterMap) {
+        Map<String, Object> sanitized = new LinkedHashMap<>();
+        parameterMap.forEach((name, values) -> sanitized.put(
+                name,
+                isSensitive(name) ? REDACTED : sanitizeValues(values)
+        ));
+        return sanitized;
+    }
+
+    private Object sanitizeValues(String[] values) {
+        if (values == null) {
+            return null;
+        }
+        if (values.length == 1) {
+            return values[0];
+        }
+        return Arrays.asList(values);
+    }
+
+    private boolean isSensitive(String name) {
+        if (name == null || name.isBlank()) {
+            return false;
+        }
+
+        String normalized = normalize(name);
+        for (String token : SENSITIVE_TOKENS) {
+            if (normalized.contains(normalize(token))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String normalize(String value) {
+        return value.replaceAll("[^A-Za-z0-9]", "").toLowerCase();
     }
 }
