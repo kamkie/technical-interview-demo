@@ -98,7 +98,8 @@ class ApiDemoTests {
                                 }
                                 """))
                 .andExpect(status().isConflict())
-                .andExpect(status().reason("ISBN already exists"));
+                .andExpect(jsonPath("$.title").value("Duplicate ISBN"))
+                .andExpect(jsonPath("$.detail").value("Book with ISBN 9780132350884 already exists."));
     }
 
     @Test
@@ -110,10 +111,15 @@ class ApiDemoTests {
                                   "title": "",
                                   "author": " ",
                                   "isbn": "",
-                                  "publicationYear": 0
+                                  "publicationYear": null
                                 }
                                 """))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.title").value("Validation Failed"))
+                .andExpect(jsonPath("$.fieldErrors.title").value("title is required"))
+                .andExpect(jsonPath("$.fieldErrors.author").value("author is required"))
+                .andExpect(jsonPath("$.fieldErrors.isbn").value("isbn is required"))
+                .andExpect(jsonPath("$.fieldErrors.publicationYear").value("publicationYear is required"));
     }
 
     @Test
@@ -140,6 +146,8 @@ class ApiDemoTests {
                 .andExpect(status().isNoContent());
 
         mockMvc.perform(get("/api/books/{id}", cleanCode.getId()))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.title").value("Book Not Found"))
+                .andExpect(jsonPath("$.detail").value("Book with id %d was not found.".formatted(cleanCode.getId())));
     }
 }
