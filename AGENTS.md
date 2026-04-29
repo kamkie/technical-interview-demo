@@ -10,6 +10,7 @@ Current scope:
 
 - `GET /hello` returns `Hello World!`
 - CRUD-style `Book` API under `/api/books`
+- actuator endpoints for `health` and `info`
 - H2 in-memory database
 - startup seed data
 - MVC/integration-style tests

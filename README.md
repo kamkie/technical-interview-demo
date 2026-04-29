@@ -55,6 +55,7 @@ Useful local endpoints:
 
 - `GET /hello`
 - `GET /api/books`
+- `GET /actuator/info`
 - H2 console at `/h2-console`
 
 ## Docker

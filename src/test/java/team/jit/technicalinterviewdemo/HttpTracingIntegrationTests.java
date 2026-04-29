@@ -77,6 +77,19 @@ class HttpTracingIntegrationTests {
         assertMatchesTraceparent(response.headers().firstValue("traceparent").orElse(null));
     }
 
+    @Test
+    void actuatorInfoEndpointIsExposed() throws IOException, InterruptedException {
+        HttpResponse<String> response = send(HttpRequest.newBuilder()
+                .uri(uri("/actuator/info"))
+                .GET()
+                .build());
+
+        assertEquals(200, response.statusCode());
+        assertMatchesRequestId(response.headers().firstValue("X-Request-Id").orElse(null));
+        assertMatchesTraceparent(response.headers().firstValue("traceparent").orElse(null));
+        assertTrue(response.body().startsWith("{"));
+    }
+
     private HttpResponse<String> send(HttpRequest request) throws IOException, InterruptedException {
         return HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
     }
