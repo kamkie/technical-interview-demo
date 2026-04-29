@@ -74,7 +74,9 @@ dependencies {
 tasks.withType<Test> {
     useJUnitPlatform()
     testLogging {
-        events = mutableSetOf(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED, /*TestLogEvent.STANDARD_OUT,*/ TestLogEvent.STANDARD_ERROR)
+        // add for debuging TestLogEvent.STANDARD_OUT
+        events =
+            mutableSetOf(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED, TestLogEvent.STANDARD_ERROR)
         showExceptions = true
         exceptionFormat = TestExceptionFormat.FULL
         showCauses = true
