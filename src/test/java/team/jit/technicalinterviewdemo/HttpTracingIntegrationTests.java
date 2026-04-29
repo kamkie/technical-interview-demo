@@ -31,6 +31,7 @@ class HttpTracingIntegrationTests {
 
         assertEquals(200, response.statusCode());
         assertEquals("Hello World!", response.body());
+        assertMatchesRequestId(response.headers().firstValue("X-Request-Id").orElse(null));
         assertMatchesTraceparent(response.headers().firstValue("traceparent").orElse(null));
     }
 
@@ -51,6 +52,20 @@ class HttpTracingIntegrationTests {
     }
 
     @Test
+    void incomingRequestIdIsReturnedInResponse() throws IOException, InterruptedException {
+        String incomingRequestId = "request-12345";
+
+        HttpResponse<String> response = send(HttpRequest.newBuilder()
+                .uri(uri("/hello"))
+                .header("X-Request-Id", incomingRequestId)
+                .GET()
+                .build());
+
+        assertEquals(200, response.statusCode());
+        assertEquals(incomingRequestId, response.headers().firstValue("X-Request-Id").orElse(null));
+    }
+
+    @Test
     void errorResponseIncludesTraceparent() throws IOException, InterruptedException {
         HttpResponse<String> response = send(HttpRequest.newBuilder()
                 .uri(uri("/api/missing"))
@@ -58,6 +73,7 @@ class HttpTracingIntegrationTests {
                 .build());
 
         assertEquals(404, response.statusCode());
+        assertMatchesRequestId(response.headers().firstValue("X-Request-Id").orElse(null));
         assertMatchesTraceparent(response.headers().firstValue("traceparent").orElse(null));
     }
 
@@ -72,5 +88,10 @@ class HttpTracingIntegrationTests {
     private void assertMatchesTraceparent(String traceparent) {
         assertNotNull(traceparent);
         assertTrue(traceparent.matches("00-[0-9a-f]{32}-[0-9a-f]{16}-0[01]"));
+    }
+
+    private void assertMatchesRequestId(String requestId) {
+        assertNotNull(requestId);
+        assertTrue(requestId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"));
     }
 }

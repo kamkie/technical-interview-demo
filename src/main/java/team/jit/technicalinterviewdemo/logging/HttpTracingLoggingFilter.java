@@ -12,9 +12,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -26,7 +28,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @RequiredArgsConstructor
 public class HttpTracingLoggingFilter extends OncePerRequestFilter {
 
+    public static final String REQUEST_ID_HEADER = "X-Request-Id";
     public static final String TRACEPARENT_HEADER = "traceparent";
+    private static final String REQUEST_ID_MDC_KEY = "rid";
     private static final String ACTUATOR_HEALTH_PATH = "/actuator/health";
 
     private final Tracer tracer;
@@ -39,8 +43,11 @@ public class HttpTracingLoggingFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         long startTimeNanos = System.nanoTime();
         boolean shouldLog = shouldLogRequest(request);
+        String requestId = resolveRequestId(request);
 
+        MDC.put(REQUEST_ID_MDC_KEY, requestId);
         try {
+            response.setHeader(REQUEST_ID_HEADER, requestId);
             setTraceparentHeaderIfTraceActive(response);
             if (shouldLog) {
                 log.info(
@@ -66,7 +73,16 @@ public class HttpTracingLoggingFilter extends OncePerRequestFilter {
                         response.getHeader(TRACEPARENT_HEADER)
                 );
             }
+            MDC.remove(REQUEST_ID_MDC_KEY);
         }
+    }
+
+    private String resolveRequestId(HttpServletRequest request) {
+        String requestId = request.getHeader(REQUEST_ID_HEADER);
+        if (requestId == null || requestId.isBlank()) {
+            return UUID.randomUUID().toString();
+        }
+        return requestId;
     }
 
     private String toTraceparent(TraceContext traceContext) {
