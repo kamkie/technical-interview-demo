@@ -44,6 +44,8 @@ Then run commands such as:
 
 For formatting, the build uses Spotless. Java formatting is delegated to IntelliJ IDEA's formatter so the result stays as close as practical to IntelliJ defaults.
 
+If IntelliJ is not configured, Gradle build and test tasks must still pass. In that case, Spotless skips Java formatting tasks instead of failing the build.
+
 If the IntelliJ formatter binary is not already available on `PATH`, provide it through one of:
 
 ```powershell

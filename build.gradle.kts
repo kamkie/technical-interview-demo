@@ -64,7 +64,7 @@ tasks.asciidoctor {
     dependsOn(tasks.test)
 }
 
-val ideaFormatterBinary: String? =
+val ideaFormatterBinaryCandidate: String? =
     providers.gradleProperty("ideaFormatterBinary")
         .orElse(providers.environmentVariable("IDEA_FORMATTER_BINARY"))
         .orElse(
@@ -75,14 +75,23 @@ val ideaFormatterBinary: String? =
         )
         .orNull
 
+val ideaFormatterBinary = ideaFormatterBinaryCandidate?.takeIf { file(it).isFile }
+
+if (ideaFormatterBinaryCandidate != null && ideaFormatterBinary == null) {
+    logger.warn(
+        "Spotless Java formatting is disabled because the IntelliJ formatter binary was not found at '{}'.",
+        ideaFormatterBinaryCandidate
+    )
+}
+
 spotless {
-    java {
-        target("src/main/java/**/*.java", "src/test/java/**/*.java")
-        importOrder()
-        removeUnusedImports()
-        idea().apply {
-            withDefaults(true)
-            if (ideaFormatterBinary != null) {
+    if (ideaFormatterBinary != null) {
+        java {
+            target("src/main/java/**/*.java", "src/test/java/**/*.java")
+            importOrder()
+            removeUnusedImports()
+            idea().apply {
+                withDefaults(true)
                 binaryPath(ideaFormatterBinary)
             }
         }
@@ -100,5 +109,6 @@ spotless {
     format("misc") {
         target("*.md", ".gitignore", ".gitattributes", ".editorconfig", "src/**/*.properties")
         trimTrailingWhitespace()
+        endWithNewline()
     }
 }
