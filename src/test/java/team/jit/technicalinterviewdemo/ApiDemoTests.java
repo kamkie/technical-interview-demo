@@ -9,12 +9,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import team.jit.technicalinterviewdemo.book.Book;
 import team.jit.technicalinterviewdemo.book.BookRepository;
+import team.jit.technicalinterviewdemo.tracing.HttpTracingFilter;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -29,13 +31,18 @@ class ApiDemoTests {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired
+    private HttpTracingFilter httpTracingFilter;
+
     private MockMvc mockMvc;
     private Book cleanCode;
     private Book effectiveJava;
 
     @BeforeEach
     void setUp() {
-        mockMvc = webAppContextSetup(webApplicationContext).build();
+        mockMvc = webAppContextSetup(webApplicationContext)
+                .addFilters(httpTracingFilter)
+                .build();
         bookRepository.deleteAll();
         cleanCode = bookRepository.saveAndFlush(new Book("Clean Code", "Robert C. Martin", "9780132350884", 2008));
         effectiveJava = bookRepository.saveAndFlush(new Book("Effective Java", "Joshua Bloch", "9780134685991", 2018));
@@ -45,7 +52,18 @@ class ApiDemoTests {
     void helloEndpointReturnsHelloWorld() throws Exception {
         mockMvc.perform(get("/hello"))
                 .andExpect(status().isOk())
+                .andExpect(header().string("traceparent", org.hamcrest.Matchers.matchesPattern("00-[0-9a-f]{32}-[0-9a-f]{16}-01")))
                 .andExpect(content().string("Hello World!"));
+    }
+
+    @Test
+    void requestWithIncomingTraceparentPropagatesTraceIdInResponse() throws Exception {
+        String incomingTraceparent = "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01";
+
+        mockMvc.perform(get("/hello")
+                        .header("traceparent", incomingTraceparent))
+                .andExpect(status().isOk())
+                .andExpect(header().string("traceparent", org.hamcrest.Matchers.matchesPattern("00-4bf92f3577b34da6a3ce929d0e0e4736-[0-9a-f]{16}-01")));
     }
 
     @Test
@@ -171,6 +189,7 @@ class ApiDemoTests {
     void missingResourceReturnsNotFoundProblemDetail() throws Exception {
         mockMvc.perform(get("/api/missing"))
                 .andExpect(status().isNotFound())
+                .andExpect(header().string("traceparent", org.hamcrest.Matchers.matchesPattern("00-[0-9a-f]{32}-[0-9a-f]{16}-01")))
                 .andExpect(jsonPath("$.title").value("Resource Not Found"))
                 .andExpect(jsonPath("$.detail").value("Resource 'api/missing' was not found."));
     }
