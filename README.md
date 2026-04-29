@@ -29,6 +29,8 @@ Primary goal: keep the project small, readable, and suitable for technical inter
 - Lombok
 - Spring AOP
 - Micrometer tracing with OpenTelemetry
+- Spring REST Docs
+- Asciidoctor
 - Error Prone
 - PMD
 
@@ -83,6 +85,21 @@ docker run --rm -p 8080:8080 technical-interview-demo
 
 The Docker image builds the Spring Boot fat jar in a separate build stage and runs it on Java 25.
 
+## Documentation
+
+API documentation is generated from tests using Spring REST Docs and assembled with Asciidoctor.
+
+Generate it with:
+
+```powershell
+.\gradlew.bat asciidoctor
+```
+
+Generated output:
+
+- snippets: `build/generated-snippets`
+- HTML docs: `build/docs/asciidoc/index.html`
+
 ## Project Structure
 
 - `build.gradle.kts`: Gradle build and dependencies
@@ -92,6 +109,7 @@ The Docker image builds the Spring Boot fat jar in a separate build stage and ru
 - `src/main/java/team/jit/technicalinterviewdemo/book/`: `Book` domain, service, repository, and REST API
 - `src/main/java/team/jit/technicalinterviewdemo/api/`: API exception handling and custom exceptions
 - `src/main/java/team/jit/technicalinterviewdemo/logging/`: HTTP tracing/logging and service-call logging
+- `src/docs/asciidoc/index.adoc`: assembled API documentation source
 - `src/main/resources/application.properties`: runtime configuration
 - `src/test/java/team/jit/technicalinterviewdemo/`: application and API tests
 
@@ -232,6 +250,7 @@ Before finishing changes, run:
 .\gradlew.bat spotlessCheck
 .\gradlew.bat --no-problems-report pmdMain
 .\gradlew.bat --no-problems-report test
+.\gradlew.bat asciidoctor
 ```
 
 If tests require Java setup first, export `JAVA_HOME` to a compatible JDK in the same shell session.

@@ -13,6 +13,7 @@ plugins {
     id("net.ltgt.errorprone") version "5.1.0"
     id("org.springframework.boot") version "4.0.6"
     id("io.spring.dependency-management") version "1.1.7"
+    id("org.asciidoctor.jvm.convert") version "4.0.5"
     id("com.github.ben-manes.versions") version "0.54.0"
     id("com.palantir.git-version") version "5.0.0"
     id("com.adarshr.test-logger") version "4.0.0"
@@ -33,6 +34,7 @@ val errorProneVersion = "2.44.0"
 val pmdVersion = "7.17.0"
 val gradleWrapperVersion = "9.5.0"
 val dockerImageName = providers.gradleProperty("dockerImageName").orElse("technical-interview-demo")
+val snippetsDir = layout.buildDirectory.dir("generated-snippets")
 
 java {
     toolchain {
@@ -69,7 +71,9 @@ dependencies {
     testAnnotationProcessor("org.projectlombok:lombok")
 
     testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-restdocs")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+    testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
 }
 
 springBoot {
@@ -96,6 +100,7 @@ tasks.register<Exec>("dockerBuild") {
 tasks.withType<Test> {
     useJUnitPlatform()
     jvmArgs("-XX:+EnableDynamicAgentLoading")
+    outputs.dir(snippetsDir)
     testLogging {
         // add for debuging TestLogEvent.STANDARD_OUT
         events =
@@ -133,6 +138,16 @@ pmd {
 tasks.withType<Pmd>().configureEach {
     isConsoleOutput = true
     exclude("**/build/generated/**")
+}
+
+tasks.named<org.asciidoctor.gradle.jvm.AsciidoctorTask>("asciidoctor") {
+    dependsOn(tasks.test)
+    inputs.dir(snippetsDir)
+    attributes(
+        mapOf(
+            "snippets" to snippetsDir.get().asFile
+        )
+    )
 }
 
 val ideaFormatterBinaryCandidate: String? =

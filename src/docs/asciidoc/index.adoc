@@ -1,0 +1,100 @@
+= Technical Interview Demo API
+:toc:
+:toclevels: 2
+:sectanchors:
+:source-highlighter: highlight.js
+:snippets: {snippets}
+
+This document is generated from integration tests using Spring REST Docs.
+
+== Hello Endpoint
+
+=== `GET /hello`
+
+Returns a plain text health-check style response.
+
+include::{snippets}/hello/get-hello/curl-request.adoc[]
+include::{snippets}/hello/get-hello/http-request.adoc[]
+include::{snippets}/hello/get-hello/http-response.adoc[]
+include::{snippets}/hello/get-hello/response-headers.adoc[]
+include::{snippets}/hello/get-hello/response-body.adoc[]
+
+== Book API
+
+=== `GET /api/books`
+
+Lists all books ordered by identifier.
+
+include::{snippets}/books/list-books/curl-request.adoc[]
+include::{snippets}/books/list-books/http-request.adoc[]
+include::{snippets}/books/list-books/http-response.adoc[]
+include::{snippets}/books/list-books/response-headers.adoc[]
+include::{snippets}/books/list-books/response-fields.adoc[]
+
+=== `GET /api/books/{id}`
+
+Returns a single book by identifier.
+
+include::{snippets}/books/get-book/curl-request.adoc[]
+include::{snippets}/books/get-book/http-request.adoc[]
+include::{snippets}/books/get-book/path-parameters.adoc[]
+include::{snippets}/books/get-book/http-response.adoc[]
+include::{snippets}/books/get-book/response-headers.adoc[]
+include::{snippets}/books/get-book/response-fields.adoc[]
+
+=== `POST /api/books`
+
+Creates a book.
+
+include::{snippets}/books/create-book/curl-request.adoc[]
+include::{snippets}/books/create-book/http-request.adoc[]
+include::{snippets}/books/create-book/request-body.adoc[]
+include::{snippets}/books/create-book/request-fields.adoc[]
+include::{snippets}/books/create-book/http-response.adoc[]
+include::{snippets}/books/create-book/response-headers.adoc[]
+include::{snippets}/books/create-book/response-fields.adoc[]
+
+=== `PUT /api/books/{id}`
+
+Updates title, author, and publication year. `isbn` is immutable after creation and is not part of the update request.
+
+include::{snippets}/books/update-book/curl-request.adoc[]
+include::{snippets}/books/update-book/http-request.adoc[]
+include::{snippets}/books/update-book/path-parameters.adoc[]
+include::{snippets}/books/update-book/request-body.adoc[]
+include::{snippets}/books/update-book/request-fields.adoc[]
+include::{snippets}/books/update-book/http-response.adoc[]
+include::{snippets}/books/update-book/response-headers.adoc[]
+include::{snippets}/books/update-book/response-fields.adoc[]
+
+=== `DELETE /api/books/{id}`
+
+Deletes a book by identifier.
+
+include::{snippets}/books/delete-book/curl-request.adoc[]
+include::{snippets}/books/delete-book/http-request.adoc[]
+include::{snippets}/books/delete-book/path-parameters.adoc[]
+include::{snippets}/books/delete-book/http-response.adoc[]
+include::{snippets}/books/delete-book/response-headers.adoc[]
+
+== Actuator Endpoints
+
+=== `GET /actuator/info`
+
+Returns build and git metadata generated during the build.
+
+include::{snippets}/actuator/get-info/curl-request.adoc[]
+include::{snippets}/actuator/get-info/http-request.adoc[]
+include::{snippets}/actuator/get-info/http-response.adoc[]
+include::{snippets}/actuator/get-info/response-headers.adoc[]
+include::{snippets}/actuator/get-info/response-fields.adoc[]
+
+=== `GET /actuator/health`
+
+Returns the overall application health status.
+
+include::{snippets}/actuator/get-health/curl-request.adoc[]
+include::{snippets}/actuator/get-health/http-request.adoc[]
+include::{snippets}/actuator/get-health/http-response.adoc[]
+include::{snippets}/actuator/get-health/response-headers.adoc[]
+include::{snippets}/actuator/get-health/response-fields.adoc[]

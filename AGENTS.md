@@ -29,6 +29,8 @@ Primary goal: keep the codebase small, readable, and easy to reason about.
 - Lombok
 - Spring AOP
 - Micrometer tracing with OpenTelemetry
+- Spring REST Docs
+- Asciidoctor
 - Error Prone
 - PMD
 
@@ -46,6 +48,7 @@ Common commands:
 ```powershell
 .\gradlew.bat bootRun
 .\gradlew.bat test
+.\gradlew.bat asciidoctor
 .\gradlew.bat dockerBuild
 .\gradlew.bat dockerBuild -PdockerImageName=my-app:dev
 docker build -t technical-interview-demo .
@@ -74,6 +77,19 @@ $env:IDEA_HOME='C:\Path\To\IntelliJ IDEA'
 
 Keep `.editorconfig` aligned with the intended IntelliJ formatting profile.
 
+## Generated Docs
+
+API documentation is generated from tests using Spring REST Docs and assembled with Asciidoctor.
+
+```powershell
+.\gradlew.bat asciidoctor
+```
+
+Outputs:
+
+- snippets in `build/generated-snippets`
+- HTML documentation in `build/docs/asciidoc/index.html`
+
 ## Project Map
 
 - `build.gradle.kts`: build configuration and dependencies
@@ -83,8 +99,9 @@ Keep `.editorconfig` aligned with the intended IntelliJ formatting profile.
 - `src/main/java/team/jit/technicalinterviewdemo/book/`: book entity, requests, repository, service, controller, seed data
 - `src/main/java/team/jit/technicalinterviewdemo/api/`: exception handling and custom exceptions
 - `src/main/java/team/jit/technicalinterviewdemo/logging/`: HTTP tracing/logging and service-call logging
+- `src/docs/asciidoc/index.adoc`: assembled API documentation source
 - `src/main/resources/application.properties`: runtime configuration
-- `src/test/java/team/jit/technicalinterviewdemo/`: application, API, and tracing tests
+- `src/test/java/team/jit/technicalinterviewdemo/`: application, API, tracing, and documentation tests
 
 ## API Contract
 
@@ -157,6 +174,7 @@ Before finishing, run:
 .\gradlew.bat spotlessCheck
 .\gradlew.bat --no-problems-report pmdMain
 .\gradlew.bat --no-problems-report test
+.\gradlew.bat asciidoctor
 ```
 
 Notes:
