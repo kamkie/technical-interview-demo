@@ -1,10 +1,6 @@
 package team.jit.technicalinterviewdemo.book;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "books")
@@ -16,6 +12,7 @@ public class Book {
 
     private String title;
     private String author;
+    @Column(unique = true)
     private String isbn;
     private Integer publicationYear;
 

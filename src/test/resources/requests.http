@@ -1,0 +1,16 @@
+### GET hello worrld
+GET http://localhost:8080/hello
+
+### list books
+GET http://localhost:8080/api/books
+
+### add book
+POST http://localhost:8080/api/books
+Content-Type: application/json
+
+{
+  "title": "The Great Gatsby",
+  "author": "F. Scott Fitzgerald",
+  "isbn": "978-0743273565",
+  "publicationYear": 1925
+}
