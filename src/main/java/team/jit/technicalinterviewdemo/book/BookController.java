@@ -2,6 +2,7 @@ package team.jit.technicalinterviewdemo.book;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/books")
@@ -43,7 +45,9 @@ public class BookController {
     public Book create(@Valid @RequestBody BookRequest request) {
         validateUniqueIsbn(request.isbn(), null);
         Book book = new Book(request.title(), request.author(), request.isbn(), request.publicationYear());
-        return bookRepository.saveAndFlush(book);
+        Book savedBook = bookRepository.saveAndFlush(book);
+        log.info("Created book id={} isbn={} title={}", savedBook.getId(), savedBook.getIsbn(), savedBook.getTitle());
+        return savedBook;
     }
 
     @PutMapping("/{id}")
@@ -57,7 +61,9 @@ public class BookController {
         book.setIsbn(request.isbn());
         book.setPublicationYear(request.publicationYear());
 
-        return bookRepository.saveAndFlush(book);
+        Book updatedBook = bookRepository.saveAndFlush(book);
+        log.info("Updated book id={} isbn={} title={}", updatedBook.getId(), updatedBook.getIsbn(), updatedBook.getTitle());
+        return updatedBook;
     }
 
     @DeleteMapping("/{id}")
@@ -68,6 +74,7 @@ public class BookController {
         }
 
         bookRepository.deleteById(id);
+        log.info("Deleted book id={}", id);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)

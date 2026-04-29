@@ -96,6 +96,7 @@ Do not add heavy bootstrap logic unless explicitly requested.
 - Preserve the demo nature of the project. Prefer simple code over abstractions.
 - Keep package naming under `team.jit.technicalinterviewdemo`.
 - Use Lombok for routine Java boilerplate such as getters, setters, constructors, and builders when it keeps the code shorter and clearer.
+- Log every operation that changes database state. For CRUD-style endpoints, emit at least one log entry for each successful create, update, delete, or seed write.
 - Prefer Spring MVC controllers and Spring Data repositories for new demo endpoints.
 - Use H2/in-memory storage unless the task explicitly requires external infrastructure.
 - Avoid introducing security, messaging, Docker, or distributed components unless asked.
