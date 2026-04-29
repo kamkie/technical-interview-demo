@@ -1,4 +1,8 @@
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import net.ltgt.gradle.errorprone.errorprone
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.gradle.kotlin.dsl.withType
 
 plugins {
     java
@@ -13,6 +17,7 @@ plugins {
     id("org.asciidoctor.jvm.convert") version "4.0.5"
     id("com.github.ben-manes.versions") version "0.54.0"
     id("com.palantir.git-version") version "5.0.0"
+    id("com.adarshr.test-logger") version "4.0.0"
 }
 
 val gitVersion: groovy.lang.Closure<String> by extra
@@ -68,6 +73,13 @@ dependencies {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    testLogging {
+        events = mutableSetOf(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED, /*TestLogEvent.STANDARD_OUT,*/ TestLogEvent.STANDARD_ERROR)
+        showExceptions = true
+        exceptionFormat = TestExceptionFormat.FULL
+        showCauses = true
+        showStackTraces = true
+    }
 }
 
 tasks.withType<JavaCompile>().configureEach {
@@ -143,6 +155,18 @@ spotless {
         trimTrailingWhitespace()
         replaceRegex("normalize EOF newline", "\\s*\\z", "\n")
     }
+}
+
+tasks.withType<DependencyUpdatesTask> {
+    rejectVersionIf { (candidate.group == "org.jacoco") && (candidate.version != currentVersion) }
+    rejectVersionIf { isNonStable(candidate.version) && !isNonStable(currentVersion) }
+}
+
+fun isNonStable(version: String): Boolean {
+    val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { version.uppercase().contains(it) }
+    val regex = "^[0-9,.v-]+(-r)?$".toRegex()
+    val isStable = stableKeyword || regex.matches(version)
+    return isStable.not()
 }
 
 tasks.wrapper {
