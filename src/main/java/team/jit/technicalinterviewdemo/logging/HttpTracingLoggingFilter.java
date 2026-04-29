@@ -1,4 +1,4 @@
-package team.jit.technicalinterviewdemo.tracing;
+package team.jit.technicalinterviewdemo.logging;
 
 import io.micrometer.tracing.Span;
 import io.micrometer.tracing.TraceContext;
@@ -18,33 +18,15 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 
 @Slf4j
 @Component
 @Order(Ordered.LOWEST_PRECEDENCE)
 @RequiredArgsConstructor
-public class TraceparentResponseFilter extends OncePerRequestFilter {
+public class HttpTracingLoggingFilter extends OncePerRequestFilter {
 
     public static final String TRACEPARENT_HEADER = "traceparent";
-    private static final String REDACTED = "<redacted>";
-    private static final Set<String> SENSITIVE_TOKENS = Set.of(
-            "password",
-            "passwd",
-            "pwd",
-            "secret",
-            "token",
-            "authorization",
-            "credential",
-            "cookie",
-            "session",
-            "apikey",
-            "accesskey",
-            "privatekey",
-            "clientsecret",
-            "bearer",
-            "refreshtoken"
-    );
+    private static final String ACTUATOR_HEALTH_PATH = "/actuator/health";
 
     private final Tracer tracer;
 
@@ -55,29 +37,34 @@ public class TraceparentResponseFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
         long startTimeNanos = System.nanoTime();
+        boolean shouldLog = shouldLogRequest(request);
 
         try {
             setTraceparentHeaderIfTraceActive(response);
-            log.info(
-                    "HTTP request started method={} path={} query={} params={} traceparent={}",
-                    request.getMethod(),
-                    request.getRequestURI(),
-                    request.getQueryString(),
-                    sanitizeParameters(request.getParameterMap()),
-                    response.getHeader(TRACEPARENT_HEADER)
-            );
+            if (shouldLog) {
+                log.info(
+                        "HTTP request started method={} path={} query={} params={} traceparent={}",
+                        request.getMethod(),
+                        request.getRequestURI(),
+                        request.getQueryString(),
+                        sanitizeParameters(request.getParameterMap()),
+                        response.getHeader(TRACEPARENT_HEADER)
+                );
+            }
             filterChain.doFilter(request, response);
         } finally {
             setTraceparentHeaderIfTraceActive(response);
 
-            log.info(
-                    "HTTP response completed method={} path={} status={} durationMs={} traceparent={}",
-                    request.getMethod(),
-                    request.getRequestURI(),
-                    response.getStatus(),
-                    toDurationMillis(startTimeNanos),
-                    response.getHeader(TRACEPARENT_HEADER)
-            );
+            if (shouldLog) {
+                log.info(
+                        "HTTP response completed method={} path={} status={} durationMs={} traceparent={}",
+                        request.getMethod(),
+                        request.getRequestURI(),
+                        response.getStatus(),
+                        toDurationMillis(startTimeNanos),
+                        response.getHeader(TRACEPARENT_HEADER)
+                );
+            }
         }
     }
 
@@ -104,7 +91,7 @@ public class TraceparentResponseFilter extends OncePerRequestFilter {
         Map<String, Object> sanitized = new LinkedHashMap<>();
         parameterMap.forEach((name, values) -> sanitized.put(
                 name,
-                isSensitive(name) ? REDACTED : sanitizeValues(values)
+                SensitiveDataSanitizer.isSensitiveName(name) ? SensitiveDataSanitizer.REDACTED : sanitizeValues(values)
         ));
         return sanitized;
     }
@@ -119,21 +106,7 @@ public class TraceparentResponseFilter extends OncePerRequestFilter {
         return Arrays.asList(values);
     }
 
-    private boolean isSensitive(String name) {
-        if (name == null || name.isBlank()) {
-            return false;
-        }
-
-        String normalized = normalize(name);
-        for (String token : SENSITIVE_TOKENS) {
-            if (normalized.contains(normalize(token))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private String normalize(String value) {
-        return value.replaceAll("[^A-Za-z0-9]", "").toLowerCase();
+    private boolean shouldLogRequest(HttpServletRequest request) {
+        return !ACTUATOR_HEALTH_PATH.equals(request.getRequestURI());
     }
 }

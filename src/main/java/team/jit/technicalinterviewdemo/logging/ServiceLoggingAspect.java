@@ -29,27 +29,9 @@ import java.util.*;
 @Component
 public class ServiceLoggingAspect {
 
-    private static final String REDACTED = "<redacted>";
     private static final String OMITTED = "<omitted>";
     private static final int MAX_DEPTH = 2;
     private static final int MAX_COLLECTION_ITEMS = 10;
-    private static final Set<String> SENSITIVE_TOKENS = Set.of(
-            "password",
-            "passwd",
-            "pwd",
-            "secret",
-            "token",
-            "authorization",
-            "credential",
-            "cookie",
-            "session",
-            "apikey",
-            "accesskey",
-            "privatekey",
-            "clientsecret",
-            "bearer",
-            "refreshtoken"
-    );
 
     @Around("@within(service)")
     public Object logServiceCall(ProceedingJoinPoint joinPoint, Service service) throws Throwable {
@@ -96,8 +78,8 @@ public class ServiceLoggingAspect {
     }
 
     private Object sanitizeValue(String name, Object value, int depth, IdentityHashMap<Object, Boolean> visited) {
-        if (isSensitive(name)) {
-            return REDACTED;
+        if (SensitiveDataSanitizer.isSensitiveName(name)) {
+            return SensitiveDataSanitizer.REDACTED;
         }
         if (value == null) {
             return null;
@@ -221,24 +203,6 @@ public class ServiceLoggingAspect {
                 || value instanceof Reader
                 || value instanceof Writer
                 || value instanceof Resource;
-    }
-
-    private boolean isSensitive(String name) {
-        if (name == null || name.isBlank()) {
-            return false;
-        }
-
-        String normalized = normalize(name);
-        for (String token : SENSITIVE_TOKENS) {
-            if (normalized.contains(normalize(token))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private String normalize(String value) {
-        return value.replaceAll("[^A-Za-z0-9]", "").toLowerCase();
     }
 
     private long toDurationMillis(long startTimeNanos) {
