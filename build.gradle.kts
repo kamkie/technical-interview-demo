@@ -73,6 +73,7 @@ dependencies {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    jvmArgs("-XX:+EnableDynamicAgentLoading")
     testLogging {
         // add for debuging TestLogEvent.STANDARD_OUT
         events =
