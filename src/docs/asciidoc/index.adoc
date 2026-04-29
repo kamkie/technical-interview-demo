@@ -38,7 +38,7 @@ Lists books in a paginated response. Supports `page`, `size`, and `sort` query p
 
 include::{snippets}/books/list-books/curl-request.adoc[]
 include::{snippets}/books/list-books/http-request.adoc[]
-include::{snippets}/books/list-books/request-parameters.adoc[]
+include::{snippets}/books/list-books/query-parameters.adoc[]
 include::{snippets}/books/list-books/http-response.adoc[]
 include::{snippets}/books/list-books/response-headers.adoc[]
 include::{snippets}/books/list-books/response-fields.adoc[]
