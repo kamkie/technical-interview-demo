@@ -76,6 +76,21 @@ dependencies {
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
 }
 
+springBoot {
+    buildInfo()
+}
+
+tasks.bootRun {
+    systemProperty("spring.output.ansi.enabled", "always")
+}
+
+tasks.bootJar {
+    archiveClassifier.set("boot")
+    layered {
+        enabled.set(true)
+    }
+}
+
 tasks.withType<Test> {
     useJUnitPlatform()
     jvmArgs("-XX:+EnableDynamicAgentLoading")
