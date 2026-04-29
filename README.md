@@ -55,6 +55,22 @@ Useful local endpoints:
 - `GET /api/books`
 - H2 console at `/h2-console`
 
+## Docker
+
+Build the image with:
+
+```powershell
+docker build -t technical-interview-demo .
+```
+
+Run the container with:
+
+```powershell
+docker run --rm -p 8080:8080 technical-interview-demo
+```
+
+The Docker image builds the Spring Boot fat jar in a separate build stage and runs it on Java 25.
+
 ## Project Structure
 
 - `build.gradle.kts`: Gradle build and dependencies

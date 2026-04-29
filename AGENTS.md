@@ -44,6 +44,13 @@ Then run commands such as:
 .\gradlew.bat bootRun
 ```
 
+The repository also includes a `Dockerfile` for containerized builds and local runs:
+
+```powershell
+docker build -t technical-interview-demo .
+docker run --rm -p 8080:8080 technical-interview-demo
+```
+
 For formatting, the build uses Spotless. Java formatting is delegated to IntelliJ IDEA's formatter so the result stays as close as practical to IntelliJ defaults.
 
 If IntelliJ is not configured, Gradle build and test tasks must still pass. In that case, Spotless skips Java formatting tasks instead of failing the build.
