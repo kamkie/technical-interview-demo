@@ -72,6 +72,23 @@ class ApiDocumentationTests {
     }
 
     @Test
+    void documentDocsEndpoint() throws Exception {
+        mockMvc.perform(get("/docs"))
+                .andExpect(status().isFound())
+                .andExpect(header().exists("X-Request-Id"))
+                .andExpect(header().exists("traceparent"))
+                .andExpect(header().string("Location", "/docs/index.html"))
+                .andDo(documentEndpoint(
+                        "docs/get-docs",
+                        responseHeaders(
+                                headerWithName("Location").description("Redirect target for the generated API documentation."),
+                                headerWithName("X-Request-Id").description("Request identifier returned on every public endpoint."),
+                                headerWithName("traceparent").description("Trace context header returned when tracing is active.")
+                        )
+                ));
+    }
+
+    @Test
     void documentListBooksEndpoint() throws Exception {
         mockMvc.perform(get("/api/books"))
                 .andExpect(status().isOk())

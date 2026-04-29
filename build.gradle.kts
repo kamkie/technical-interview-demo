@@ -35,6 +35,7 @@ val pmdVersion = "7.17.0"
 val gradleWrapperVersion = "9.5.0"
 val dockerImageName = providers.gradleProperty("dockerImageName").orElse("technical-interview-demo")
 val snippetsDir = layout.buildDirectory.dir("generated-snippets")
+val asciidoctorTask = tasks.named<org.asciidoctor.gradle.jvm.AsciidoctorTask>("asciidoctor")
 
 java {
     toolchain {
@@ -81,11 +82,16 @@ springBoot {
 }
 
 tasks.bootRun {
+    dependsOn(asciidoctorTask)
     systemProperty("spring.output.ansi.enabled", "always")
 }
 
 tasks.bootJar {
+    dependsOn(asciidoctorTask)
     archiveClassifier.set("boot")
+    from(asciidoctorTask) {
+        into("BOOT-INF/classes/static/docs")
+    }
     layered {
         enabled.set(true)
     }
@@ -140,7 +146,7 @@ tasks.withType<Pmd>().configureEach {
     exclude("**/build/generated/**")
 }
 
-tasks.named<org.asciidoctor.gradle.jvm.AsciidoctorTask>("asciidoctor") {
+asciidoctorTask {
     dependsOn(tasks.test)
     inputs.dir(snippetsDir)
     attributes(

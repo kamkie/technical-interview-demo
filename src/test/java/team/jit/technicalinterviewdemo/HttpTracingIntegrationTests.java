@@ -90,6 +90,20 @@ class HttpTracingIntegrationTests {
         assertTrue(response.body().startsWith("{"));
     }
 
+    @Test
+    void docsEndpointRedirectsToGeneratedDocumentation() throws IOException, InterruptedException {
+        HttpResponse<String> response = send(HttpRequest.newBuilder()
+                .uri(uri("/docs"))
+                .GET()
+                .build());
+
+        assertEquals(302, response.statusCode());
+        String location = response.headers().firstValue("location").orElseThrow();
+        assertTrue(location.endsWith("/docs/index.html"));
+        assertMatchesRequestId(response.headers().firstValue("X-Request-Id").orElse(null));
+        assertMatchesTraceparent(response.headers().firstValue("traceparent").orElse(null));
+    }
+
     private HttpResponse<String> send(HttpRequest request) throws IOException, InterruptedException {
         return HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
     }

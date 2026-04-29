@@ -8,6 +8,7 @@ Small Spring Boot demo app for technical interview exercises.
 
 Current scope:
 
+- `GET /docs` redirects to generated API documentation
 - `GET /hello` returns `Hello World!`
 - CRUD-style `Book` API under `/api/books`
 - actuator endpoints for `health` and `info`
@@ -90,6 +91,11 @@ Outputs:
 - snippets in `build/generated-snippets`
 - HTML documentation in `build/docs/asciidoc/index.html`
 
+Packaging and runtime behavior:
+
+- `bootJar` bundles the generated HTML documentation into the runnable jar
+- the running application serves the documentation at `GET /docs`
+
 ## Project Map
 
 - `build.gradle.kts`: build configuration and dependencies
@@ -98,6 +104,7 @@ Outputs:
 - `src/main/java/team/jit/technicalinterviewdemo/HelloController.java`: hello endpoint
 - `src/main/java/team/jit/technicalinterviewdemo/book/`: book entity, requests, repository, service, controller, seed data
 - `src/main/java/team/jit/technicalinterviewdemo/api/`: exception handling and custom exceptions
+- `src/main/java/team/jit/technicalinterviewdemo/docs/`: documentation endpoint and resource mapping
 - `src/main/java/team/jit/technicalinterviewdemo/logging/`: HTTP tracing/logging and service-call logging
 - `src/docs/asciidoc/index.adoc`: assembled API documentation source
 - `src/main/resources/application.properties`: runtime configuration
@@ -107,6 +114,7 @@ Outputs:
 
 Endpoints:
 
+- `GET /docs`
 - `GET /hello`
 - `GET /api/books`
 - `GET /api/books/{id}`

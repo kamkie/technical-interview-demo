@@ -7,6 +7,17 @@
 
 This document is generated from integration tests using Spring REST Docs.
 
+== Documentation Endpoint
+
+=== `GET /docs`
+
+Redirects to the generated HTML documentation bundled with the application.
+
+include::{snippets}/docs/get-docs/curl-request.adoc[]
+include::{snippets}/docs/get-docs/http-request.adoc[]
+include::{snippets}/docs/get-docs/http-response.adoc[]
+include::{snippets}/docs/get-docs/response-headers.adoc[]
+
 == Hello Endpoint
 
 === `GET /hello`

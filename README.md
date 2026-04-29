@@ -55,6 +55,7 @@ Start the application with:
 
 Useful local endpoints:
 
+- `GET /docs`
 - `GET /hello`
 - `GET /api/books`
 - `GET /actuator/info`
@@ -100,6 +101,11 @@ Generated output:
 - snippets: `build/generated-snippets`
 - HTML docs: `build/docs/asciidoc/index.html`
 
+Packaging and runtime behavior:
+
+- `bootJar` bundles the generated HTML documentation into the runnable jar
+- the running application serves the documentation at `GET /docs`
+
 ## Project Structure
 
 - `build.gradle.kts`: Gradle build and dependencies
@@ -108,12 +114,19 @@ Generated output:
 - `src/main/java/team/jit/technicalinterviewdemo/HelloController.java`: hello-world endpoint
 - `src/main/java/team/jit/technicalinterviewdemo/book/`: `Book` domain, service, repository, and REST API
 - `src/main/java/team/jit/technicalinterviewdemo/api/`: API exception handling and custom exceptions
+- `src/main/java/team/jit/technicalinterviewdemo/docs/`: documentation endpoint and resource mapping
 - `src/main/java/team/jit/technicalinterviewdemo/logging/`: HTTP tracing/logging and service-call logging
 - `src/docs/asciidoc/index.adoc`: assembled API documentation source
 - `src/main/resources/application.properties`: runtime configuration
 - `src/test/java/team/jit/technicalinterviewdemo/`: application and API tests
 
 ## API
+
+### Documentation Endpoint
+
+- `GET /docs`
+
+Redirects to the generated HTML API documentation served by the application.
 
 ### Hello Endpoint
 
