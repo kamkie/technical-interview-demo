@@ -1,5 +1,7 @@
 # AI Project Instructions
 
+`README.md` is the human-facing counterpart of this file. Keep both files aligned when project setup, API behavior, formatter usage, logging/tracing behavior, or quality gates change.
+
 ## Project Summary
 
 This repository is a small Spring Boot demo application built with Gradle Kotlin DSL.
