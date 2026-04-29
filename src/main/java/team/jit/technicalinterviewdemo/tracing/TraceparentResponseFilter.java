@@ -1,11 +1,14 @@
 package team.jit.technicalinterviewdemo.tracing;
 
+import io.micrometer.tracing.Span;
+import io.micrometer.tracing.TraceContext;
+import io.micrometer.tracing.Tracer;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -15,10 +18,13 @@ import java.io.IOException;
 
 @Slf4j
 @Component
-@Order(Ordered.HIGHEST_PRECEDENCE)
-public class HttpTracingFilter extends OncePerRequestFilter {
+@Order(Ordered.LOWEST_PRECEDENCE)
+@RequiredArgsConstructor
+public class TraceparentResponseFilter extends OncePerRequestFilter {
 
     public static final String TRACEPARENT_HEADER = "traceparent";
+
+    private final Tracer tracer;
 
     @Override
     protected void doFilterInternal(
@@ -26,28 +32,38 @@ public class HttpTracingFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
-        HttpTraceContext traceContext = HttpTraceContext.create(request.getHeader(TRACEPARENT_HEADER));
         long startTimeNanos = System.nanoTime();
 
-        request.setAttribute("traceId", traceContext.traceId());
-        request.setAttribute("spanId", traceContext.spanId());
-        request.setAttribute(TRACEPARENT_HEADER, traceContext.traceparent());
-        response.setHeader(TRACEPARENT_HEADER, traceContext.traceparent());
-
-        try (MDC.MDCCloseable traceId = MDC.putCloseable("traceId", traceContext.traceId());
-             MDC.MDCCloseable spanId = MDC.putCloseable("spanId", traceContext.spanId())) {
+        try {
+            setTraceparentHeaderIfTraceActive(response);
             filterChain.doFilter(request, response);
         } finally {
+            setTraceparentHeaderIfTraceActive(response);
+
             log.info(
-                    "HTTP request completed method={} path={} query={} status={} durationMs={} traceparent={}",
+                    "HTTP request completed method={} path={} query={} status={} durationMs={}",
                     request.getMethod(),
                     request.getRequestURI(),
                     request.getQueryString(),
                     response.getStatus(),
-                    toDurationMillis(startTimeNanos),
-                    traceContext.traceparent()
+                    toDurationMillis(startTimeNanos)
             );
         }
+    }
+
+    private String toTraceparent(TraceContext traceContext) {
+        String traceFlags = Boolean.TRUE.equals(traceContext.sampled()) ? "01" : "00";
+        return "00-%s-%s-%s".formatted(traceContext.traceId(), traceContext.spanId(), traceFlags);
+    }
+
+    private void setTraceparentHeaderIfTraceActive(HttpServletResponse response) {
+        Span currentSpan = tracer.currentSpan();
+        if (currentSpan == null) {
+            return;
+        }
+
+        TraceContext traceContext = currentSpan.context();
+        response.setHeader(TRACEPARENT_HEADER, toTraceparent(traceContext));
     }
 
     private long toDurationMillis(long startTimeNanos) {
