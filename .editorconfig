@@ -14,6 +14,18 @@ ij_smart_tabs = false
 ij_visual_guides =
 ij_wrap_on_typing = false
 
+[*.{md,properties}]
+insert_final_newline = true
+
+[.gitignore]
+insert_final_newline = true
+
+[.gitattributes]
+insert_final_newline = true
+
+[.editorconfig]
+insert_final_newline = true
+
 [*.css]
 ij_css_align_closing_brace_with_properties = false
 ij_css_blank_lines_around_nested_selector = 1
@@ -1441,3 +1453,4 @@ ij_yaml_sequence_on_new_line = false
 ij_yaml_space_before_colon = false
 ij_yaml_spaces_within_braces = true
 ij_yaml_spaces_within_brackets = true
+

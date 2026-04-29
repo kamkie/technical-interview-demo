@@ -104,11 +104,12 @@ spotless {
                 "ktlint_code_style" to "intellij_idea"
             )
         )
+        endWithNewline()
     }
 
     format("misc") {
         target("*.md", ".gitignore", ".gitattributes", ".editorconfig", "src/**/*.properties")
         trimTrailingWhitespace()
-        endWithNewline()
+        replaceRegex("normalize EOF newline", "\\s*\\z", "\n")
     }
 }
