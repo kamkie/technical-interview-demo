@@ -107,6 +107,12 @@ public class HttpTracingLoggingFilter extends OncePerRequestFilter {
     }
 
     private boolean shouldLogRequest(HttpServletRequest request) {
-        return !ACTUATOR_HEALTH_PATH.equals(request.getRequestURI());
+        String contextPath = request.getContextPath() == null ? "" : request.getContextPath();
+        String requestUri = request.getRequestURI();
+        String pathWithinApplication = requestUri.startsWith(contextPath)
+                ? requestUri.substring(contextPath.length())
+                : requestUri;
+
+        return !pathWithinApplication.startsWith(ACTUATOR_HEALTH_PATH);
     }
 }
