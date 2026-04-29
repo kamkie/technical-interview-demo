@@ -156,6 +156,7 @@ spotless {
 
     format("misc") {
         target("*.md", ".gitignore", ".gitattributes", ".editorconfig", "src/**/*.properties")
+        targetExclude("HELP.md")
         trimTrailingWhitespace()
         replaceRegex("normalize EOF newline", "\\s*\\z", "\n")
     }
