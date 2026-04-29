@@ -2,7 +2,6 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import net.ltgt.gradle.errorprone.errorprone
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
-import org.gradle.kotlin.dsl.withType
 
 plugins {
     java
@@ -100,6 +99,18 @@ tasks.withType<Test> {
         showCauses = true
         showStackTraces = true
     }
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+    sourceDirectories.setFrom(files("$projectDir/src/main/java"))
+    classDirectories.setFrom(sourceSets.main.get().output.asFileTree)
+    executionData.setFrom(fileTree(layout.buildDirectory.dir("jacoco")).include("*.exec"))
+    dependsOn(tasks.test)
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
 }
 
 tasks.withType<JavaCompile>().configureEach {
@@ -165,7 +176,7 @@ spotless {
         target("*.md", ".gitignore", ".gitattributes", ".editorconfig", "src/**/*.properties")
         targetExclude("HELP.md")
         trimTrailingWhitespace()
-        replaceRegex("normalize EOF newline", "\\s*\\z", "\n")
+        endWithNewline()
     }
 }
 
