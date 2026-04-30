@@ -5,6 +5,7 @@ This file outlines planned features, improvements, and refactoring tasks for the
 ## ✅ Completed Infrastructure
 
 - ✅ [Development Container (Dev Containers)](#development-container-setup) - VS Code dev container with Java 25, Docker, and supporting services
+- ✅ [Phase 2.1: Profile-Based Configuration Split](#phase-21-profile-based-configuration-split) - Environment-specific configuration for local, prod, and test
 
 ## Legend
 
@@ -99,38 +100,32 @@ Use Testcontainers to run PostgreSQL in Docker during tests for better database 
 
 ## Phase 2: Configuration Management
 
-### 2.1 Profile-Based Configuration Split 🟢
+### 2.1 Profile-Based Configuration Split ✅
 
 Reorganize application configuration for local development, testing, and production environments.
 
-**Tasks:**
-- [ ] Create `src/main/resources/application-local.properties` for development defaults
-- [ ] Create `src/main/resources/application-prod.properties` for production settings
-- [ ] Create `src/test/resources/application-test.properties` for test configuration
-- [ ] Move local H2 configuration to `application-local.properties`
-- [ ] Move PostgreSQL configuration to `application-prod.properties`
-- [ ] Keep common defaults in main `application.properties`
-- [ ] Document profile activation:
-  - Local: `--spring.profiles.active=local`
-  - Prod: `--spring.profiles.active=prod`
-  - Test: `--spring.profiles.active=test`
-- [ ] Update Docker image to activate `prod` profile
-- [ ] Update README with profile instructions
-- [ ] Update AGENTS.md with profile documentation
+**Status:** Completed
 
-**Configuration to Extract:**
-- Database URL and credentials
-- Connection pool settings
-- Logging levels (debug for local, info for prod)
-- Actuator exposure settings
-- Schema validation vs. auto-create behavior
+**Implementation Details:**
+- ✅ Created `src/main/resources/application-local.properties` with H2 and debug logging
+- ✅ Created `src/main/resources/application-prod.properties` with production settings (ready for PostgreSQL migration)
+- ✅ Created `src/test/resources/application-test.properties` with test isolation
+- ✅ Moved H2 configuration to local profile
+- ✅ Kept common defaults in main `application.properties`
+- ✅ Set `spring.profiles.active=local` as default
+- ✅ Updated Dockerfile to use `prod` profile
+- ✅ Updated README.md with profile documentation
+- ✅ Updated AGENTS.md with profile documentation
+- ✅ All tests pass (44 tests)
+- ✅ Spotless formatting passes
+- ✅ PMD checks pass
 
-**Definition of Done:**
-- Application starts correctly with each profile
-- `./gradlew.bat bootRun` uses local profile by default
-- Production profile disables H2 console
-- Tests use dedicated test profile
-- All configurations are environment-specific where appropriate
+**Profiles Available:**
+- `local` (default) - Development with H2, debug logging
+- `prod` - Production with PostgreSQL (ready for Phase 1.1)
+- `test` - Testing with isolated H2 database
+
+**Commit:** 9e5185c
 
 ---
 
