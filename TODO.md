@@ -31,7 +31,7 @@ Depends on: Core feature work stabilizing
 
 Tasks:
 - [x] Run and review JaCoCo reports regularly
-- [ ] Add tests for uncovered service and exception paths
+- [x] Add tests for uncovered service and exception paths
 - [ ] Add coverage thresholds to Gradle or CI
 - [ ] Document coverage expectations in `CONTRIBUTING.md`
 
