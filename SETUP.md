@@ -143,6 +143,8 @@ Useful endpoints once the app is running:
 - `GET /hello`
 - `GET /api/books`
 - `GET /docs`
+- `GET /v3/api-docs`
+- `GET /v3/api-docs.yaml`
 - `GET /actuator/info`
 - `GET /actuator/health`
 - `GET /actuator/health/liveness`
@@ -159,6 +161,17 @@ Set Java 25 in the same shell session first. Docker Desktop must also be running
 
 `build` now covers Spotless, PMD, tests, Asciidoctor generation, boot jar creation, and the Docker image build.
 Use focused commands such as `test`, `asciidoctor`, or `dockerBuild` only when you intentionally want a narrower loop.
+
+OpenAPI contract workflow:
+
+- review the live contract at `GET /v3/api-docs` or `GET /v3/api-docs.yaml`
+- the approved baseline is stored at `src/test/resources/openapi/approved-openapi.json`
+- normal `test` and `build` runs execute the compatibility gate and fail on breaking changes
+- refresh the approved baseline intentionally with:
+
+```powershell
+.\gradlew.bat refreshOpenApiBaseline
+```
 
 ## Building Docker Images
 
@@ -251,6 +264,19 @@ Fix:
 
 ```powershell
 .\gradlew.bat asciidoctor
+```
+
+### OpenAPI baseline needs intentional refresh
+
+Symptom:
+
+- OpenAPI compatibility tests fail after a reviewed API change
+
+Fix:
+
+```powershell
+.\gradlew.bat refreshOpenApiBaseline
+.\gradlew.bat test --tests team.jit.technicalinterviewdemo.OpenApiCompatibilityIntegrationTests
 ```
 
 ### PostgreSQL local profile will not start

@@ -43,6 +43,7 @@ The values below are loaded from `{build-info-path}` during the Asciidoctor buil
 - Read endpoints stay public, while state-changing book, category, and localization endpoints require an authenticated OAuth 2.0 session.
 - Interactive login is available at `/oauth2/authorization/github` when the optional `oauth` profile is active.
 - Authenticated browser sessions are persisted through Spring Session JDBC in PostgreSQL.
+- The machine-readable OpenAPI contract is available at `/v3/api-docs` and `/v3/api-docs.yaml`.
 - Collection endpoints use Spring pagination conventions such as `page`, `size`, and repeated `sort` parameters.
 - Update operations that modify books require a `version` field for optimistic locking.
 - Books can be filtered by repeated `category` query parameters and can carry multiple assigned categories.
@@ -62,3 +63,5 @@ The values below are loaded from `{build-info-path}` during the Asciidoctor buil
 - Build metadata is loaded from `/META-INF/build-info.properties` and rendered into this overview page.
 - Asciidoctor renders the linked HTML pages into `build/docs/asciidoc`.
 - The application serves the generated output from `/docs`, with `/docs` redirecting to `index.html`.
+- The approved OpenAPI baseline is stored at `src/test/resources/openapi/approved-openapi.json`.
+- Refresh the approved OpenAPI baseline intentionally with `./gradlew refreshOpenApiBaseline` or `.\gradlew.bat refreshOpenApiBaseline`.

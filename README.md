@@ -14,6 +14,7 @@ The demo currently includes:
 - A REST API for `LocalizationMessage` under `/api/localization-messages` with CRUD, pagination, and key/language lookup
 - A REST API for the authenticated user profile under `/api/users/me`
 - OAuth 2.0 protected write endpoints with JDBC-backed HTTP sessions for reviewer-friendly sign-in
+- An OpenAPI contract exposed at `/v3/api-docs` and `/v3/api-docs.yaml` with an approved-baseline compatibility gate
 - Append-only audit logging for state-changing `Book` and `LocalizationMessage` operations
 - Git tag based application versioning plus a human-readable `CHANGELOG.md`
 - PostgreSQL for local and production-style runtime profiles, plus Testcontainers-backed integration tests
@@ -224,6 +225,8 @@ docker-compose up -d
 Useful local endpoints:
 
 - `GET /docs`
+- `GET /v3/api-docs`
+- `GET /v3/api-docs.yaml`
 - `GET /hello`
 - `GET /api/books`
 - `GET /api/categories`
@@ -288,6 +291,25 @@ Packaging and runtime behavior:
 - the generated index page includes build metadata loaded from `/META-INF/build-info.properties`
 - the generated docs include example success and error responses captured from tests
 
+## OpenAPI Contract
+
+The application also publishes a machine-readable OpenAPI contract:
+
+- JSON: `GET /v3/api-docs`
+- YAML: `GET /v3/api-docs.yaml`
+
+Contract workflow:
+
+- the approved baseline is committed at `src/test/resources/openapi/approved-openapi.json`
+- normal verification runs `OpenApiCompatibilityIntegrationTests`, which compares the current contract to the approved baseline and fails on breaking changes
+- the emitted contract is normalized before comparison so build-version and generated local server URLs do not create false diffs
+
+To intentionally refresh the approved contract after reviewing an allowed API change:
+
+```powershell
+.\gradlew.bat refreshOpenApiBaseline
+```
+
 ## Versioning And Releases
 
 The application version is derived from the nearest reachable annotated git tag through the Gradle build.
@@ -323,6 +345,7 @@ Release policy:
 - `src/main/java/team/jit/technicalinterviewdemo/technical/logging/`: HTTP tracing/logging and service-call logging
 - `src/main/resources/db/migration/`: Flyway SQL migrations
 - `src/docs/asciidoc/`: documentation landing page plus per-controller and technical-endpoint Asciidoc sources
+- `src/test/resources/openapi/approved-openapi.json`: approved OpenAPI baseline used by the compatibility gate
 - `src/main/resources/application.properties`: runtime configuration
 - `src/test/java/team/jit/technicalinterviewdemo/`: application and API tests
 - `src/test/java/team/jit/technicalinterviewdemo/TestcontainersTest.java`: shared integration-test annotation for PostgreSQL-backed tests
@@ -636,6 +659,7 @@ If tests require Java setup first, export `JAVA_HOME` to a compatible JDK in the
 If `test` or `build` fails before application startup, confirm Docker Desktop is running because Testcontainers provisions PostgreSQL for the integration suite and `build` also runs the Docker image creation step.
 
 `build` now covers Spotless, PMD, tests, Asciidoctor generation, boot jar creation, and the Docker image build.
+The `test` and `build` flows also run the OpenAPI compatibility gate against `src/test/resources/openapi/approved-openapi.json`.
 Use focused commands such as `spotlessCheck`, `pmdMain`, `test`, or `asciidoctor` only when you intentionally want a narrower loop.
 
 ## Definition Of Done

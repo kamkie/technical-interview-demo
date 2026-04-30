@@ -15,6 +15,7 @@ Current scope:
 - CRUD-style `LocalizationMessage` API under `/api/localization-messages` with pagination and key/language lookup
 - authenticated-user profile API under `/api/users/me`
 - OAuth 2.0 protected write endpoints with JDBC-backed HTTP sessions
+- OpenAPI contract endpoints at `/v3/api-docs` and `/v3/api-docs.yaml` with an approved-baseline compatibility gate
 - append-only audit logging for state-changing `Book` and `LocalizationMessage` operations
 - git-tag-based application versioning with a human-readable `CHANGELOG.md`
 - actuator endpoints for `health`, `info`, liveness/readiness probes, and Prometheus metrics
@@ -179,6 +180,13 @@ Packaging and runtime behavior:
 - the container image packages the current versioned Gradle boot jar and includes a health check against `GET /actuator/health/readiness`
 - the container image uses Microsoft Build of OpenJDK and starts the app with `jaz`
 
+OpenAPI contract workflow:
+
+- the application exposes JSON at `GET /v3/api-docs` and YAML at `GET /v3/api-docs.yaml`
+- the approved baseline is stored at `src/test/resources/openapi/approved-openapi.json`
+- `OpenApiCompatibilityIntegrationTests` compares the current normalized contract to that baseline and fails on breaking changes
+- refresh the approved baseline intentionally with `.\gradlew.bat refreshOpenApiBaseline`
+
 ## Versioning & Releases
 
 The Gradle build version is derived from the nearest reachable annotated git tag.
@@ -214,6 +222,7 @@ Release policy:
 - `src/main/java/team/jit/technicalinterviewdemo/technical/logging/`: HTTP tracing/logging and service-call logging
 - `src/main/resources/db/migration/`: Flyway SQL migrations
 - `src/docs/asciidoc/`: documentation landing page plus per-controller and technical-endpoint Asciidoc sources
+- `src/test/resources/openapi/approved-openapi.json`: approved OpenAPI baseline used by the compatibility gate
 - `src/main/resources/application.properties`: runtime configuration
 - `src/test/java/team/jit/technicalinterviewdemo/`: application, API, tracing, and documentation tests
 - `src/test/java/team/jit/technicalinterviewdemo/TestcontainersTest.java`: shared meta-annotation for PostgreSQL-backed integration tests
@@ -403,6 +412,7 @@ Notes:
 - Export `JAVA_HOME` to JDK 25 in the same shell first.
 - Docker Desktop must be running for `test` and `build` because Testcontainers provisions PostgreSQL and `build` now includes the Docker image build.
 - `build` now covers Spotless, PMD, tests, Asciidoctor generation, boot jar creation, and the Docker image build.
+- `test` and `build` also include the OpenAPI compatibility gate against `src/test/resources/openapi/approved-openapi.json`.
 - Use focused commands such as `spotlessCheck`, `pmdMain`, `test`, or `asciidoctor` only when you intentionally want a narrower loop.
 
 ## Avoid

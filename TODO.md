@@ -18,7 +18,7 @@ The roadmap below is ordered to respect cross-phase dependencies.
 ## Current Priorities
 
 1. Start Phase 8.5 OpenAPI support and breaking-change compatibility checks now that the secured API surface and audit trail are in place.
-2. Close the remaining Phase 8.1 documentation follow-up once the OpenAPI contract and compatibility workflow are in place.
+2. Add CI wiring for the OpenAPI compatibility gate now that the contract workflow is documented locally.
 3. Revisit Phase 9 coverage and performance work after the near-term API-shape changes settle.
 4. Start Phase 10 CI/CD and deployment work once the API contract stabilizes.
 
@@ -60,7 +60,7 @@ Keep generated API docs and written setup guidance aligned with the implemented 
 Remaining tasks:
 - [x] Add documentation for the persisted user model, roles, and user-facing profile endpoints added in Phase 5.2
 - [x] Add security warnings and reviewer-facing setup guidance for the OAuth/session flow
-- [ ] Add documentation for the OpenAPI contract and compatibility-check workflow
+- [x] Add documentation for the OpenAPI contract and compatibility-check workflow
 
 Definition of done:
 - New behavior is documented from tests where practical
@@ -79,7 +79,7 @@ Tasks:
 - [x] Document public and secured endpoints, schemas, pagination, and auth requirements in the OpenAPI contract
 - [x] Decide how the approved OpenAPI baseline is stored and versioned
 - [x] Add a compatibility test that compares the current OpenAPI contract to the approved baseline and fails on breaking changes
-- [ ] Document how to intentionally refresh the approved contract
+- [x] Document how to intentionally refresh the approved contract
 - [ ] Add the compatibility check to local verification and CI
 
 Definition of done:
