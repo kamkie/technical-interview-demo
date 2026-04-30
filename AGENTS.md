@@ -32,6 +32,8 @@ Primary goal: keep the codebase small, readable, and easy to reason about.
 - Micrometer tracing with OpenTelemetry
 - Spring REST Docs
 - Asciidoctor
+- Flyway
+- Qodana
 - Error Prone
 - PMD
 
@@ -50,6 +52,7 @@ Common commands:
 .\gradlew.bat bootRun
 .\gradlew.bat test
 .\gradlew.bat asciidoctor
+.\\gradlew.bat qodanaScan
 .\gradlew.bat dockerBuild
 .\gradlew.bat dockerBuild -PdockerImageName=my-app:dev
 docker build -t technical-interview-demo .
@@ -97,6 +100,7 @@ Packaging and runtime behavior:
 - the running application serves the documentation at `GET /docs`
 - the generated docs include example success and error responses captured from tests
 - the container image includes a health check against `GET /actuator/health/readiness`
+- the container image uses Microsoft Build of OpenJDK and starts the app with `jaz`
 
 ## Project Map
 
@@ -108,6 +112,7 @@ Packaging and runtime behavior:
 - `src/main/java/team/jit/technicalinterviewdemo/api/`: exception handling and custom exceptions
 - `src/main/java/team/jit/technicalinterviewdemo/docs/`: documentation endpoint and resource mapping
 - `src/main/java/team/jit/technicalinterviewdemo/logging/`: HTTP tracing/logging and service-call logging
+- `src/main/resources/db/migration/`: Flyway SQL migrations
 - `src/docs/asciidoc/index.adoc`: assembled API documentation source
 - `src/main/resources/application.properties`: runtime configuration
 - `src/test/java/team/jit/technicalinterviewdemo/`: application, API, tracing, and documentation tests
@@ -158,6 +163,7 @@ Current runtime behavior:
 - successful create, update, delete, and seed writes are logged
 - actuator exposes readiness and liveness probe endpoints
 - actuator exposes Prometheus metrics at `/actuator/prometheus`
+- Flyway owns schema creation from SQL migrations and Hibernate validates the schema with `ddl-auto=validate`
 - `/actuator/health` and subpaths are skipped by the HTTP tracing logger
 
 ## AI Development Rules
@@ -194,6 +200,12 @@ Before finishing, run:
 .\gradlew.bat --no-problems-report pmdMain
 .\gradlew.bat --no-problems-report test
 .\gradlew.bat asciidoctor
+```
+
+Optional additional static analysis:
+
+```powershell
+.\gradlew.bat qodanaScan
 ```
 
 Notes:

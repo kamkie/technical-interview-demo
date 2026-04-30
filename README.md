@@ -31,6 +31,8 @@ Primary goal: keep the project small, readable, and suitable for technical inter
 - Micrometer tracing with OpenTelemetry
 - Spring REST Docs
 - Asciidoctor
+- Flyway
+- Qodana
 - Error Prone
 - PMD
 
@@ -90,6 +92,7 @@ docker run --rm -p 8080:8080 technical-interview-demo
 
 The Docker image builds the Spring Boot fat jar in a separate build stage and runs it on Java 25.
 It also includes a container health check against `GET /actuator/health/readiness`.
+The container uses Microsoft Build of OpenJDK and starts the app with `jaz`.
 
 ## Documentation
 
@@ -112,6 +115,12 @@ Packaging and runtime behavior:
 - the running application serves the documentation at `GET /docs`
 - the generated docs include example success and error responses captured from tests
 
+Qodana static analysis is available through Gradle:
+
+```powershell
+.\gradlew.bat qodanaScan
+```
+
 ## Project Structure
 
 - `build.gradle.kts`: Gradle build and dependencies
@@ -122,6 +131,7 @@ Packaging and runtime behavior:
 - `src/main/java/team/jit/technicalinterviewdemo/api/`: API exception handling and custom exceptions
 - `src/main/java/team/jit/technicalinterviewdemo/docs/`: documentation endpoint and resource mapping
 - `src/main/java/team/jit/technicalinterviewdemo/logging/`: HTTP tracing/logging and service-call logging
+- `src/main/resources/db/migration/`: Flyway SQL migrations
 - `src/docs/asciidoc/index.adoc`: assembled API documentation source
 - `src/main/resources/application.properties`: runtime configuration
 - `src/test/java/team/jit/technicalinterviewdemo/`: application and API tests
@@ -236,6 +246,12 @@ The application includes:
 
 The HTTP tracing logger intentionally skips `/actuator/health` and its subpaths.
 
+## Database Schema
+
+Flyway manages the schema from SQL migrations under `src/main/resources/db/migration`.
+
+Hibernate is configured with `spring.jpa.hibernate.ddl-auto=validate`, so the application validates the mapped schema instead of creating or updating it automatically.
+
 ## Formatting
 
 The build uses Spotless.
@@ -285,6 +301,12 @@ Before finishing changes, run:
 .\gradlew.bat --no-problems-report pmdMain
 .\gradlew.bat --no-problems-report test
 .\gradlew.bat asciidoctor
+```
+
+Optional additional static analysis:
+
+```powershell
+.\gradlew.bat qodanaScan
 ```
 
 If tests require Java setup first, export `JAVA_HOME` to a compatible JDK in the same shell session.
