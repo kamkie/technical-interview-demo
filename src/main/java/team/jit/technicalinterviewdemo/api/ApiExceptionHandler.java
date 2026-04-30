@@ -28,7 +28,6 @@ import team.jit.technicalinterviewdemo.logging.SensitiveDataSanitizer;
 import team.jit.technicalinterviewdemo.localization.DuplicateLocalizationMessageException;
 import team.jit.technicalinterviewdemo.localization.LocalizationMessageNotFoundException;
 import team.jit.technicalinterviewdemo.localization.LocalizationMessageService;
-import team.jit.technicalinterviewdemo.localization.RequestLanguageResolver;
 
 @Slf4j
 @RestControllerAdvice
@@ -36,7 +35,6 @@ import team.jit.technicalinterviewdemo.localization.RequestLanguageResolver;
 public class ApiExceptionHandler {
 
     private final LocalizationMessageService localizationMessageService;
-    private final RequestLanguageResolver requestLanguageResolver;
 
     @ExceptionHandler(BookNotFoundException.class)
     ProblemDetail handleBookNotFound(BookNotFoundException exception, HttpServletRequest request) {
@@ -284,7 +282,7 @@ public class ApiExceptionHandler {
             HttpServletRequest request,
             Map<String, ?> context
     ) {
-        LocalizedProblemMessage localizedMessage = resolveLocalizedProblemMessage(messageKey, request);
+        LocalizedProblemMessage localizedMessage = resolveLocalizedProblemMessage(messageKey);
         Map<String, Object> enrichedContext = new LinkedHashMap<>(context);
         enrichedContext.put("messageKey", localizedMessage.messageKey());
         enrichedContext.put("language", localizedMessage.language());
@@ -311,7 +309,7 @@ public class ApiExceptionHandler {
             Map<String, ?> context,
             Exception exception
     ) {
-        LocalizedProblemMessage localizedMessage = resolveLocalizedProblemMessage(messageKey, request);
+        LocalizedProblemMessage localizedMessage = resolveLocalizedProblemMessage(messageKey);
         Map<String, Object> enrichedContext = new LinkedHashMap<>(context);
         enrichedContext.put("messageKey", localizedMessage.messageKey());
         enrichedContext.put("language", localizedMessage.language());
@@ -363,14 +361,9 @@ public class ApiExceptionHandler {
         return lastSeparatorIndex >= 0 ? propertyPath.substring(lastSeparatorIndex + 1) : propertyPath;
     }
 
-    private LocalizedProblemMessage resolveLocalizedProblemMessage(String messageKey, HttpServletRequest request) {
-        String preferredLanguage = requestLanguageResolver.resolvePreferredLanguage(request);
+    private LocalizedProblemMessage resolveLocalizedProblemMessage(String messageKey) {
         team.jit.technicalinterviewdemo.localization.LocalizationMessage resolvedMessage =
-                localizationMessageService.findByMessageKeyAndLanguageWithFallback(
-                messageKey,
-                preferredLanguage,
-                RequestLanguageResolver.DEFAULT_LANGUAGE
-        );
+                localizationMessageService.findByMessageKeyForCurrentLanguageWithFallback(messageKey);
         return new LocalizedProblemMessage(messageKey, resolvedMessage.getMessageText(), resolvedMessage.getLanguage());
     }
 

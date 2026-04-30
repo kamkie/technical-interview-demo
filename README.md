@@ -345,7 +345,7 @@ Example create or update payload:
 Validation rules:
 
 - `messageKey` is required and must match `^[a-z0-9._-]+$`
-- `language` is required and must be a two-letter ISO 639-1 code
+- `language` is required and must be one of the supported two-letter ISO 639-1 codes: `en`, `es`, `de`, `fr`, `pl`, `uk`, `no`
 - `messageText` is required
 - `description` is optional
 - `(messageKey, language)` must be unique
@@ -405,6 +405,8 @@ Current behavior:
 - error responses also include `messageKey`, localized `message`, and resolved `language`
 - `Accept-Language` is used for browser-compatible language negotiation
 - query parameter `lang` overrides the browser preference and accepts values such as `pl` or `pl-PL`
+- cookie `language` is used as fallback when neither `lang` nor a supported `Accept-Language` value is available
+- request-scoped language resolution is captured once and reused during localized error handling
 - validation errors include field-level details
 - duplicate ISBN returns `409 Conflict`
 - stale update versions return `409 Conflict`

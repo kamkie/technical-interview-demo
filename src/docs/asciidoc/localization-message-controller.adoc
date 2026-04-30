@@ -89,7 +89,7 @@ include::{snippets}/localization/list-localization-messages-by-language/response
 
 == Error Response Examples
 
-Public localization API errors use Spring `ProblemDetail` responses. Each error response keeps the technical `detail` field, and also adds `messageKey`, localized `message`, and resolved `language`. `Accept-Language` is honored, and `lang` can override it per request.
+Public localization API errors use Spring `ProblemDetail` responses. Each error response keeps the technical `detail` field, and also adds `messageKey`, localized `message`, and resolved `language`. `Accept-Language` is honored, `lang` can override it per request, and cookie `language` is used as fallback. Supported languages are `en`, `es`, `de`, `fr`, `pl`, `uk`, and `no`.
 
 === `POST /api/localization-messages` validation failure
 
@@ -101,6 +101,17 @@ include::{snippets}/errors/create-localization-message-validation-failed/request
 include::{snippets}/errors/create-localization-message-validation-failed/http-response.adoc[]
 include::{snippets}/errors/create-localization-message-validation-failed/response-headers.adoc[]
 include::{snippets}/errors/create-localization-message-validation-failed/response-fields.adoc[]
+
+=== `POST /api/localization-messages` unsupported language
+
+Example bad-request response when the payload uses a language outside the supported application set.
+
+include::{snippets}/errors/create-localization-message-unsupported-language/curl-request.adoc[]
+include::{snippets}/errors/create-localization-message-unsupported-language/http-request.adoc[]
+include::{snippets}/errors/create-localization-message-unsupported-language/request-body.adoc[]
+include::{snippets}/errors/create-localization-message-unsupported-language/http-response.adoc[]
+include::{snippets}/errors/create-localization-message-unsupported-language/response-headers.adoc[]
+include::{snippets}/errors/create-localization-message-unsupported-language/response-fields.adoc[]
 
 === `POST /api/localization-messages` duplicate key and language
 

@@ -29,6 +29,7 @@ public class LocalizationMessageService {
     private static final Set<String> ALLOWED_SORT_FIELDS = Set.of("id", "messageKey", "language", "createdAt", "updatedAt");
 
     private final LocalizationMessageRepository localizationMessageRepository;
+    private final LocalizationContext localizationContext;
 
     public Page<LocalizationMessage> findAll(Pageable pageable) {
         Pageable effectivePageable = createEffectivePageable(pageable);
@@ -41,7 +42,7 @@ public class LocalizationMessageService {
     }
 
     public LocalizationMessage findByMessageKeyAndLanguage(String messageKey, String language) {
-        return findMessage(normalizeMessageKey(messageKey), normalizeLanguage(language))
+        return findMessage(normalizeMessageKey(messageKey), normalizeSupportedLanguage(language))
                 .orElseThrow(() -> new LocalizationMessageNotFoundException(messageKey, language));
     }
 
@@ -52,7 +53,7 @@ public class LocalizationMessageService {
     public LocalizationMessage findByMessageKeyAndLanguageWithFallback(String messageKey, String language, String fallbackLanguage) {
         String normalizedMessageKey = normalizeMessageKey(messageKey);
         String normalizedLanguage = normalizeLanguage(language);
-        String normalizedFallbackLanguage = normalizeLanguage(fallbackLanguage);
+        String normalizedFallbackLanguage = normalizeSupportedLanguage(fallbackLanguage);
 
         Optional<LocalizationMessage> requestedMessage = findMessage(normalizedMessageKey, normalizedLanguage);
         if (requestedMessage.isPresent()) {
@@ -67,22 +68,34 @@ public class LocalizationMessageService {
         return findByMessageKeyAndLanguageWithFallback(messageKey, language, fallbackLanguage).getMessageText();
     }
 
+    public LocalizationMessage findByMessageKeyForCurrentLanguageWithFallback(String messageKey) {
+        return findByMessageKeyAndLanguageWithFallback(
+                messageKey,
+                localizationContext.getCurrentLanguageOrDefault(),
+                RequestLanguageResolver.DEFAULT_LANGUAGE
+        );
+    }
+
+    public String getCurrentLanguageOrDefault() {
+        return localizationContext.getCurrentLanguageOrDefault();
+    }
+
     public Map<String, String> getAllMessages(String language) {
         Map<String, String> messagesByKey = new LinkedHashMap<>();
-        for (LocalizationMessage message : localizationMessageRepository.findAllByLanguageOrderByMessageKeyAsc(normalizeLanguage(language))) {
+        for (LocalizationMessage message : localizationMessageRepository.findAllByLanguageOrderByMessageKeyAsc(normalizeSupportedLanguage(language))) {
             messagesByKey.put(message.getMessageKey(), message.getMessageText());
         }
         return messagesByKey;
     }
 
     public List<LocalizationMessage> findAllByLanguage(String language) {
-        return localizationMessageRepository.findAllByLanguageOrderByMessageKeyAsc(normalizeLanguage(language));
+        return localizationMessageRepository.findAllByLanguageOrderByMessageKeyAsc(normalizeSupportedLanguage(language));
     }
 
     @Transactional
     public LocalizationMessage create(LocalizationMessageRequest request) {
         String messageKey = normalizeMessageKey(request.messageKey());
-        String language = normalizeLanguage(request.language());
+        String language = normalizeSupportedLanguage(request.language());
         validateUniqueMessage(messageKey, language, null);
 
         LocalizationMessage message = new LocalizationMessage(
@@ -105,7 +118,7 @@ public class LocalizationMessageService {
     public LocalizationMessage update(Long id, LocalizationMessageRequest request) {
         LocalizationMessage message = findById(id);
         String messageKey = normalizeMessageKey(request.messageKey());
-        String language = normalizeLanguage(request.language());
+        String language = normalizeSupportedLanguage(request.language());
         validateUniqueMessage(messageKey, language, id);
 
         message.setMessageKey(messageKey);
@@ -156,6 +169,14 @@ public class LocalizationMessageService {
         String normalizedLanguage = language.trim().toLowerCase(Locale.ROOT);
         if (!LANGUAGE_PATTERN.matcher(normalizedLanguage).matches()) {
             throw new InvalidRequestException("language must be a two-letter ISO 639-1 code.");
+        }
+        return normalizedLanguage;
+    }
+
+    private String normalizeSupportedLanguage(String language) {
+        String normalizedLanguage = normalizeLanguage(language);
+        if (!SupportedLanguages.isSupported(normalizedLanguage)) {
+            throw new InvalidRequestException("language must be one of: %s.".formatted(SupportedLanguages.description()));
         }
         return normalizedLanguage;
     }

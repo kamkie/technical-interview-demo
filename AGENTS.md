@@ -196,7 +196,7 @@ Book rules:
 Localization message rules:
 
 - `messageKey` is required and must match `^[a-z0-9._-]+$`
-- `language` is required and must be a two-letter ISO 639-1 code
+- `language` is required and must be one of the supported two-letter ISO 639-1 codes: `en`, `es`, `de`, `fr`, `pl`, `uk`, `no`
 - `messageText` is required
 - `description` is optional
 - `(messageKey, language)` must be unique
@@ -244,6 +244,8 @@ Current runtime behavior:
 - request and error logs redact sensitive query parameters before they reach the logs
 - error responses include `messageKey`, localized `message`, and resolved `language`
 - `Accept-Language` drives browser-compatible error-message localization and `lang` query parameter overrides it
+- cookie `language` is used as fallback when `lang` and supported `Accept-Language` values are absent
+- request-scoped language resolution is captured once and reused during localized error handling
 - optional `org.springframework.web` DEBUG logging is available as a commented property in `application.properties`
 - Hibernate SQL logging is enabled through `org.hibernate.SQL`
 - Hibernate statistics are enabled through `hibernate.generate_statistics=true`

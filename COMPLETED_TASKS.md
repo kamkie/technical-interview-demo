@@ -10,7 +10,7 @@ Use `TODO.md` for active planning and `COMPLETED_TASKS.md` for implementation hi
 - PostgreSQL-backed integration testing with Testcontainers
 - Profile-based configuration split for local, prod, and test
 - Localization message entity, service, REST API, and seed data
-- Localized error responses with browser-compatible preferred-language support
+- Localized error responses with browser-compatible preferred-language support, cookie fallback, and supported-language validation
 - Book search and filtering support
 - Developer setup and contribution guides
 
@@ -109,6 +109,19 @@ Summary:
 - Added and documented tests for header-based negotiation, explicit override, and English fallback.
 
 Commit: `8e99800`
+
+#### 4.2 Add Language Negotiation
+
+Status: Completed
+
+Summary:
+- Added cookie `language` fallback after `lang` and `Accept-Language`.
+- Added request-scoped localization context so resolved language is captured once per request and reused during error handling.
+- Added supported-language validation for managed localization API inputs.
+- Added tests for cookie fallback and unsupported-language validation.
+
+Note:
+- Authenticated user preference fallback belongs with user persistence and remains a Phase 5 concern.
 
 ### Phase 6: Enhanced Book API
 

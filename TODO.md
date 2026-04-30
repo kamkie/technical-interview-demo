@@ -9,54 +9,23 @@ The roadmap below is ordered to respect cross-phase dependencies.
 
 | Order | Theme | Status | Why it comes next |
 | --- | --- | --- | --- |
-| 1 | Phase 4: Finish language negotiation | In Progress | Builds directly on the completed localized error-response foundation |
-| 2 | Phase 5: Security and user model | Ready | Security should be in place before admin-only management and audit trails |
-| 3 | Phase 6.2: Book categories/tags | Ready | Extends the existing Book API after search/filtering is already complete |
-| 4 | Phase 7: Caching and application metrics | Blocked by 6.2 for category caching | Best added after the next major read-model features settle |
-| 5 | Phase 8.1: API and operations documentation gaps | Partially blocked by Phases 4 and 5 | Documentation should follow the feature set that actually exists |
-| 6 | Phase 9: Contract, coverage, and performance testing | Ready after core APIs stabilize | Better value once the near-term API and auth work are settled |
-| 7 | Phase 10: CI/CD and deployment assets | Ready | Depends mostly on the current quality gates and stable build outputs |
-| 8 | Phase 11: Optional future enhancements | Deferred | These are stretch items after the core demo is complete |
+| 1 | Phase 5: Security and user model | Ready | Security should be in place before admin-only management and audit trails |
+| 2 | Phase 6.2: Book categories/tags | Ready | Extends the existing Book API after search/filtering is already complete |
+| 3 | Phase 7: Caching and application metrics | Blocked by 6.2 for category caching | Best added after the next major read-model features settle |
+| 4 | Phase 8.1: API and operations documentation gaps | Partially blocked by Phase 5 | Documentation should follow the feature set that actually exists |
+| 5 | Phase 9: Contract, coverage, and performance testing | Ready after core APIs stabilize | Better value once the near-term API and auth work are settled |
+| 6 | Phase 10: CI/CD and deployment assets | Ready | Depends mostly on the current quality gates and stable build outputs |
+| 7 | Phase 11: Optional future enhancements | Deferred | These are stretch items after the core demo is complete |
 
 ## Current Priorities
 
-1. Finish Phase 4.2 language negotiation details: supported-language validation, optional request-scoped context, and cookie fallback.
-2. Close Phase 8.1 language-negotiation documentation after the remaining Phase 4.2 behavior is complete.
-3. Start Phase 5.1 Spring Security and OAuth 2.0 with a demo-friendly provider.
-4. Add Phase 5.2 user persistence and role handling.
-5. Add Phase 5.3 audit logging for state-changing operations.
+1. Start Phase 5.1 Spring Security and OAuth 2.0 with a demo-friendly provider.
+2. Add Phase 5.2 user persistence, role handling, and optional user language preference storage.
+3. Add Phase 5.3 audit logging for state-changing operations.
+4. Close Phase 8.1 documentation gaps for OAuth, user endpoints, and the now-completed language negotiation behavior.
+5. Start Phase 6.2 book categories/tags once security priorities are settled.
 
 ## Active Detailed Plan
-
-### Phase 4: Error Response Localization
-
-Status: In progress
-
-Completed in archive:
-- 4.1 Integrate Localization into Exception Handler
-
-#### 4.2 Add Language Negotiation
-
-Depends on: 4.1
-
-Goal:
-Allow clients to request localized error responses using browser-compatible preference negotiation and explicit overrides.
-
-Remaining tasks:
-- [ ] Add cookie `language` as fallback after `lang` and `Accept-Language`
-- [ ] Add user preference fallback if authentication is introduced later
-- [ ] Store the resolved language in request context or `ThreadLocal` if that reduces repeated resolution work cleanly
-- [ ] Update `LocalizationMessageService` to use request context language where that improves call sites without hiding behavior
-- [ ] Add validation for supported languages (`en`, `es`, `de`, `fr`, `pl`, `uk`, `no`)
-
-Definition of done:
-- `Accept-Language: es` returns Spanish messages
-- `?lang=de` returns German messages
-- Cookie fallback works when header and query override are absent
-- Invalid language codes fall back to English gracefully
-- Language preference is captured consistently for the full request lifecycle
-
----
 
 ### Phase 5: Security & OAuth Integration
 
@@ -95,6 +64,7 @@ Tasks:
 - [ ] Create repository and service for user lifecycle
 - [ ] Persist users on first login and update `lastLoginAt`
 - [ ] Add role support (`USER`, `ADMIN`)
+- [ ] Add optional preferred-language field or profile setting for authenticated-user localization fallback
 - [ ] Optionally expose user profile endpoints
 - [ ] Add tests for login persistence and role behavior
 
@@ -318,7 +288,7 @@ Status: Deferred
 
 ## Completed Work Archive
 
-See `COMPLETED_TASKS.md` for archived completed phases, implementation notes, and commit references.
+See `COMPLETED_TASKS.md` for archived completed phases, including finished Phase 4 language negotiation work.
 
 ## Quick Reference: Quality Gates
 

@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import jakarta.servlet.Filter;
+import jakarta.servlet.http.Cookie;
 
 import java.util.Comparator;
 
@@ -438,5 +439,35 @@ class ApiDemoTests {
                 .andExpect(jsonPath("$.messageKey").value("error.request.invalid_parameter"))
                 .andExpect(jsonPath("$.message").value("A request parameter has an invalid value."))
                 .andExpect(jsonPath("$.language").value("en"));
+    }
+
+    @Test
+    void languageCookieIsUsedWhenAcceptLanguageIsUnsupportedAndQueryOverrideIsAbsent() throws Exception {
+        mockMvc.perform(get("/api/books/{id}", 9999)
+                        .header("Accept-Language", "it-IT,it;q=0.9")
+                        .cookie(new Cookie("language", "pl-PL")))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.title").value("Book Not Found"))
+                .andExpect(jsonPath("$.detail").value("Book with id 9999 was not found."))
+                .andExpect(jsonPath("$.messageKey").value("error.book.not_found"))
+                .andExpect(jsonPath("$.message").value("Nie znaleziono zadanej ksiazki."))
+                .andExpect(jsonPath("$.language").value("pl"));
+    }
+
+    @Test
+    void unsupportedAcceptLanguageFallsBackToLanguageCookie() throws Exception {
+        mockMvc.perform(get("/api/books")
+                        .queryParam("year", "2018")
+                        .queryParam("yearFrom", "2000")
+                        .header("Accept-Language", "it-IT,it;q=0.9")
+                        .cookie(new Cookie("language", "no")))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.title").value("Invalid Request"))
+                .andExpect(jsonPath("$.detail").value(
+                        "Use either 'year' or the 'yearFrom'/'yearTo' range parameters, not both."
+                ))
+                .andExpect(jsonPath("$.messageKey").value("error.request.invalid"))
+                .andExpect(jsonPath("$.message").value("Foresporselen er ugyldig."))
+                .andExpect(jsonPath("$.language").value("no"));
     }
 }

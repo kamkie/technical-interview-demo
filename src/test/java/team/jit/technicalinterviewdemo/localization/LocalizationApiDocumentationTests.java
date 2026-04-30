@@ -124,7 +124,7 @@ class LocalizationApiDocumentationTests {
                         "localization/get-localization-message-by-key-and-language",
                         pathParameters(
                                 parameterWithName("messageKey").description("Stable localization message key."),
-                                parameterWithName("language").description("Two-letter ISO 639-1 language code.")
+                                parameterWithName("language").description("Supported two-letter ISO 639-1 language code. Current values: `en`, `es`, `de`, `fr`, `pl`, `uk`, `no`.")
                         ),
                         responseHeaders(commonResponseHeaders()),
                         responseFields(responseFieldDescriptors())
@@ -151,7 +151,7 @@ class LocalizationApiDocumentationTests {
                         requestBody(),
                         requestFields(
                                 fieldWithPath("messageKey").description("Stable localization message key."),
-                                fieldWithPath("language").description("Two-letter ISO 639-1 language code."),
+                                fieldWithPath("language").description("Supported two-letter ISO 639-1 language code. Current values: `en`, `es`, `de`, `fr`, `pl`, `uk`, `no`."),
                                 fieldWithPath("messageText").description("Localized message text."),
                                 fieldWithPath("description").description("Optional maintainer-facing description.")
                         ),
@@ -183,7 +183,7 @@ class LocalizationApiDocumentationTests {
                         requestBody(),
                         requestFields(
                                 fieldWithPath("messageKey").description("Stable localization message key."),
-                                fieldWithPath("language").description("Two-letter ISO 639-1 language code."),
+                                fieldWithPath("language").description("Supported two-letter ISO 639-1 language code. Current values: `en`, `es`, `de`, `fr`, `pl`, `uk`, `no`."),
                                 fieldWithPath("messageText").description("Updated localized message text."),
                                 fieldWithPath("description").description("Optional updated maintainer-facing description.")
                         ),
@@ -216,7 +216,7 @@ class LocalizationApiDocumentationTests {
                 .andDo(documentEndpoint(
                         "localization/list-localization-messages-by-language",
                         pathParameters(
-                                parameterWithName("language").description("Two-letter ISO 639-1 language code.")
+                                parameterWithName("language").description("Supported two-letter ISO 639-1 language code. Current values: `en`, `es`, `de`, `fr`, `pl`, `uk`, `no`.")
                         ),
                         responseHeaders(commonResponseHeaders()),
                         relaxedResponseFields(
@@ -251,6 +251,29 @@ class LocalizationApiDocumentationTests {
                         requestBody(),
                         responseHeaders(commonResponseHeaders()),
                         relaxedResponseFields(problemResponseFieldsWithFieldErrors())
+                ));
+    }
+
+    @Test
+    void documentCreateLocalizationMessageUnsupportedLanguageError() throws Exception {
+        mockMvc.perform(post("/api/localization-messages")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "messageKey": "info.book.created",
+                                  "language": "it",
+                                  "messageText": "Libro creato.",
+                                  "description": "Unsupported language."
+                                }
+                                """))
+                .andExpect(status().isBadRequest())
+                .andExpect(header().exists("X-Request-Id"))
+                .andExpect(header().exists("traceparent"))
+                .andDo(documentEndpoint(
+                        "errors/create-localization-message-unsupported-language",
+                        requestBody(),
+                        responseHeaders(commonResponseHeaders()),
+                        relaxedResponseFields(problemResponseFields())
                 ));
     }
 
@@ -315,7 +338,7 @@ class LocalizationApiDocumentationTests {
         return new org.springframework.restdocs.payload.FieldDescriptor[]{
                 fieldWithPath("id").description("Localization message identifier."),
                 fieldWithPath("messageKey").description("Stable localization message key."),
-                fieldWithPath("language").description("Two-letter ISO 639-1 language code."),
+                fieldWithPath("language").description("Supported two-letter ISO 639-1 language code. Current values: `en`, `es`, `de`, `fr`, `pl`, `uk`, `no`."),
                 fieldWithPath("messageText").description("Localized message text."),
                 fieldWithPath("description").description("Optional description for maintainers."),
                 fieldWithPath("createdAt").description("Creation timestamp in UTC."),

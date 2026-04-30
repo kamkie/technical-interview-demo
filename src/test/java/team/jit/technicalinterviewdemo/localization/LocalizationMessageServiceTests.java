@@ -21,10 +21,14 @@ class LocalizationMessageServiceTests {
     @Autowired
     private LocalizationMessageService localizationMessageService;
 
+    @Autowired
+    private LocalizationContext localizationContext;
+
     @BeforeEach
     void setUp() {
         localizationMessageRepository.deleteAll();
         localizationMessageRepository.saveAll(LocalizationMessageSeedData.defaultMessages());
+        localizationContext.clear();
     }
 
     @Test
@@ -54,6 +58,16 @@ class LocalizationMessageServiceTests {
     }
 
     @Test
+    void findMessageForCurrentLanguageUsesLocalizationContext() {
+        localizationContext.setCurrentLanguage("uk");
+
+        LocalizationMessage message = localizationMessageService.findByMessageKeyForCurrentLanguageWithFallback("error.request.invalid");
+
+        assertThat(message.getLanguage()).isEqualTo("uk");
+        assertThat(message.getMessageText()).isEqualTo("Zapyt ye nevalidnym.");
+    }
+
+    @Test
     void getAllMessagesReturnsMessagesForRequestedLanguage() {
         Map<String, String> messages = localizationMessageService.getAllMessages("pl");
 
@@ -76,5 +90,12 @@ class LocalizationMessageServiceTests {
         assertThatThrownBy(() -> localizationMessageService.getMessageWithFallback("error.unknown", "fr", "en"))
                 .isInstanceOf(LocalizationMessageNotFoundException.class)
                 .hasMessage("Localization message with key 'error.unknown' was not found for language 'fr' or fallback language 'en'.");
+    }
+
+    @Test
+    void getAllMessagesRejectsUnsupportedLanguage() {
+        assertThatThrownBy(() -> localizationMessageService.getAllMessages("it"))
+                .isInstanceOf(team.jit.technicalinterviewdemo.api.InvalidRequestException.class)
+                .hasMessage("language must be one of: en, es, de, fr, pl, uk, no.");
     }
 }

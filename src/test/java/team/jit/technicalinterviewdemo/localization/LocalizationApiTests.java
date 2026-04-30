@@ -167,6 +167,26 @@ class LocalizationApiTests {
     }
 
     @Test
+    void createLocalizationMessageWithUnsupportedLanguageReturnsBadRequest() throws Exception {
+        mockMvc.perform(post("/api/localization-messages")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "messageKey": "info.book.created",
+                                  "language": "it",
+                                  "messageText": "Libro creato.",
+                                  "description": "Unsupported language."
+                                }
+                                """))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.title").value("Invalid Request"))
+                .andExpect(jsonPath("$.detail").value("language must be one of: en, es, de, fr, pl, uk, no."))
+                .andExpect(jsonPath("$.messageKey").value("error.request.invalid"))
+                .andExpect(jsonPath("$.message").value("The request is invalid."))
+                .andExpect(jsonPath("$.language").value("en"));
+    }
+
+    @Test
     void updateLocalizationMessageReturnsUpdatedMessage() throws Exception {
         mockMvc.perform(put("/api/localization-messages/{id}", bookNotFoundEn.getId())
                         .contentType(MediaType.APPLICATION_JSON)
