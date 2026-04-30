@@ -14,7 +14,6 @@ This file outlines planned features, improvements, and refactoring tasks for the
 - ✅ [Phase 3.3: Seed Initial Localization Messages](#33-seed-initial-localization-messages) - localization message keys are documented and seeded for current errors in four languages
 - ✅ [Phase 3.2: Create Localization REST API](#32-create-localization-rest-api) - localization messages now have CRUD endpoints, validation, tests, and REST Docs coverage
 - ✅ [Phase 3.1: Create LocalizationMessage Entity](#31-create-localizationmessage-entity) - localization message storage, lookup service, and seed data are now in place
-- ✅ [Phase 1.2: Add Testcontainers for Integration Testing](#12-add-testcontainers-for-integration-testing) - integration tests now use PostgreSQL via Testcontainers and Flyway-managed schema validation
 - ✅ [Phase 6.1: Add Search & Filtering to Books](#61-add-search--filtering-to-books) - `GET /api/books` now supports filtering, sort validation, tests, and REST Docs updates
 - ✅ [Phase 8.2: Create Developer Setup Guide](#82-create-developer-setup-guide) - `SETUP.md` and `.env.example` now cover local onboarding
 - ✅ [Phase 8.3: Add Contribution Guidelines](#83-add-contribution-guidelines) - `CONTRIBUTING.md` and optional sample Git hooks are now in the repo
@@ -138,6 +137,8 @@ Use Testcontainers to run PostgreSQL in Docker during tests for better database 
 - Tests are reproducible across environments
 - `test` task passes successfully
 
+**Commit:** b543be1
+
 ---
 
 ## Phase 2: Configuration Management
@@ -185,7 +186,7 @@ Add a new entity to store localized error and info messages in the database for 
 - ✅ Added `LocalizationMessage` entity with composite uniqueness, timestamps, and normalized key/language fields
 - ✅ Added `LocalizationMessageRepository`, `LocalizationMessageService`, and `LocalizationMessageNotFoundException`
 - ✅ Added Flyway migration `V2__create_localization_messages_table.sql`
-- ✅ Added lightweight seed data for `error.book.not_found` and `error.request.invalid` in `en`, `es`, and `de`
+- ✅ Added the initial localization lookup model and service, with seed coverage expanded later in Phase 3.3
 - ✅ Reused the existing service AOP logging for localization lookups because `LocalizationMessageService` is a regular `@Service`
 - ✅ Added Spring Boot integration tests for message retrieval, fallback behavior, and language-specific lookups
 
@@ -218,7 +219,9 @@ Add a new entity to store localized error and info messages in the database for 
 - Migration creates table in both H2 and PostgreSQL
 - Service layer properly retrieves messages with fallback behavior
 - Tests verify message retrieval with fallback behavior
-- Seed data includes sample messages for en, es, de
+- Sample localization data exists for integration coverage
+
+**Commit:** 088b69d
 
 ---
 
@@ -269,6 +272,8 @@ Build a full REST API for managing localization messages.
 - No validation errors escape to the client
 - API can create, retrieve, update, delete messages
 
+**Commit:** 8365b65
+
 ---
 
 ### 3.3 Seed Initial Localization Messages ✅
@@ -307,6 +312,8 @@ Populate the database with initial localization messages for all current error s
 - Seed data covers at least 4 languages
 - Seed data loads on application startup
 - Teams can easily add new message keys
+
+**Commit:** 104c1ed
 
 ---
 
@@ -636,7 +643,7 @@ Depends on: Phases 3, 4, 5 completion
 Update Spring REST Docs and Asciidoctor documentation to reflect new features.
 
 **Tasks:**
-- [ ] Add documentation for LocalizationMessage API
+- [x] Add documentation for LocalizationMessage API
 - [ ] Add documentation for OAuth 2.0 flow and setup
 - [ ] Add documentation for User endpoints
 - [x] Add documentation for book search/filtering
@@ -938,8 +945,6 @@ Alternative to REST API for advanced use cases:
 - [ ] Add Spring GraphQL dependency
 - [ ] Define schema for books, users, localizations
 - [ ] Implement queries and mutations
-
----
 
 ---
 
