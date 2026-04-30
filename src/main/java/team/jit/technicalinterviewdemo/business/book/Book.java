@@ -1,5 +1,6 @@
 package team.jit.technicalinterviewdemo.business.book;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -27,27 +28,34 @@ import team.jit.technicalinterviewdemo.business.category.Category;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "books")
+@Schema(description = "Book resource returned by the API.")
 public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
+    @Schema(description = "Database identifier.", example = "1")
     private Long id;
 
     @Version
     @Setter(AccessLevel.NONE)
+    @Schema(description = "Optimistic-lock version used for updates.", example = "0")
     private Long version;
 
     @Column(nullable = false)
+    @Schema(description = "Book title.", example = "Effective Java")
     private String title;
 
     @Column(nullable = false)
+    @Schema(description = "Primary author.", example = "Joshua Bloch")
     private String author;
 
     @Column(nullable = false, unique = true)
+    @Schema(description = "Unique ISBN assigned at creation time.", example = "9780134685991")
     private String isbn;
 
     @Column(nullable = false)
+    @Schema(description = "Publication year.", example = "2018")
     private Integer publicationYear;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -57,6 +65,7 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     @OrderBy("name ASC")
+    @Schema(description = "Assigned categories ordered by name.")
     private Set<Category> categories = new LinkedHashSet<>();
 
     public Book(String title, String author, String isbn, Integer publicationYear) {
