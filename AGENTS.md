@@ -60,6 +60,27 @@ docker build -t technical-interview-demo .
 docker run --rm -p 8080:8080 technical-interview-demo
 ```
 
+## Spring Profiles
+
+The application uses Spring profiles for environment-specific configuration.
+
+**Available Profiles:**
+- `local` (default) - Development with H2 in-memory database, debug logging
+- `prod` - Production with PostgreSQL (after Phase 1.1), minimal logging
+- `test` - Testing with isolated H2 database, auto-activated by test framework
+
+**Profile Activation:**
+- Default: `spring.profiles.active=local` in `application.properties`
+- Override: `--spring.profiles.active=prod` on command line
+- Docker: Automatically uses `prod` profile (set in `Dockerfile`)
+- Tests: Automatically uses `test` profile (via `@SpringBootTest` annotations)
+
+**Configuration Files:**
+- `src/main/resources/application.properties` - common settings for all profiles
+- `src/main/resources/application-local.properties` - local development config
+- `src/main/resources/application-prod.properties` - production config (Future: PostgreSQL)
+- `src/test/resources/application-test.properties` - test config
+
 ## Formatter Contract
 
 Spotless is the formatter entry point.

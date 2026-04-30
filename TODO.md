@@ -8,10 +8,10 @@ This file outlines planned features, improvements, and refactoring tasks for the
 
 ## Legend
 
-- 🟢 **Ready** - No blocking dependencies  
-- 🟡 **Blocked** - Waiting for dependencies  
-- ✅ **Done** - Already implemented  
-- 📋 **In Progress** - Currently being worked on  
+- 🟢 **Ready** - No blocking dependencies
+- 🟡 **Blocked** - Waiting for dependencies
+- ✅ **Done** - Already implemented
+- 📋 **In Progress** - Currently being worked on
 
 ---
 

@@ -47,6 +47,45 @@ $env:JAVA_HOME='C:\Users\kamki\.jdks\azul-25.0.3'
 $env:Path="$env:JAVA_HOME\bin;$env:Path"
 ```
 
+## Spring Profiles
+
+The application uses Spring profiles to manage environment-specific configuration:
+
+### Available Profiles
+
+- **`local`** (default) - Development with H2 in-memory database
+  - H2 console enabled at `/h2-console`
+  - DEBUG logging for Hibernate and Spring Web
+  - Schema auto-creation with `create-drop`
+  - Used by default when running `./gradlew.bat bootRun`
+
+- **`prod`** - Production with PostgreSQL database (ready for Phase 1.1 migration)
+  - H2 console disabled
+  - Minimal logging (WARN level)
+  - Schema validation only (Flyway manages migrations)
+  - Used in Docker containers automatically
+
+- **`test`** - Testing with isolated H2 in-memory database
+  - Auto-activated by `@SpringBootTest` and similar annotations
+  - Schema auto-creation with `create-drop`
+  - Minimal logging to reduce noise during test runs
+
+### Activating Profiles
+
+```powershell
+# Run with local profile (default)
+.\gradlew.bat bootRun
+
+# Run with prod profile
+.\gradlew.bat bootRun --args='--spring.profiles.active=prod'
+
+# Build app for prod
+.\gradlew.bat bootJar -Dspring.profiles.active=prod
+
+# Docker container automatically uses prod profile
+docker run --rm -p 8080:8080 technical-interview-demo
+```
+
 ## Development Container (Dev Containers)
 
 This project includes a preconfigured dev container for VS Code's Remote - Containers extension.

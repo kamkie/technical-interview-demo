@@ -20,6 +20,7 @@ FROM mcr.microsoft.com/openjdk/jdk:25-ubuntu
 WORKDIR /home/app
 
 ENV JAVA_TOOL_OPTIONS="-XX:+UseContainerSupport -XX:InitialRAMPercentage=25.0 -XX:MaxRAMPercentage=75.0 -XX:+ExitOnOutOfMemoryError -Djava.security.egd=file:/dev/./urandom"
+ENV SPRING_PROFILES_ACTIVE=prod
 
 COPY --from=build --chown=app:app /workspace/build/libs/*.jar /home/app/app.jar
 
