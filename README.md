@@ -231,6 +231,7 @@ Qodana static analysis is available through Gradle:
 
 ## Project Structure
 
+- `CONTRIBUTING.md`: contribution workflow, review expectations, and quality gates
 - `SETUP.md`: developer onboarding and troubleshooting guide
 - `.env.example`: optional environment variable template for local shells or container tooling
 - `build.gradle.kts`: Gradle build and dependencies
@@ -401,6 +402,8 @@ Keep `.editorconfig` aligned with the intended IntelliJ formatting profile.
 - Keep REST responses JSON-friendly.
 - Add or update tests when API behavior changes.
 - Do not remove the existing `hello` or `book` demo endpoints unless intentionally changing the demo scope.
+
+For contribution workflow expectations, see `CONTRIBUTING.md`.
 
 ## Quality Checks
 

@@ -616,12 +616,14 @@ Step-by-step guide for new developers to get the project running locally.
 
 ---
 
-### 8.3 Add Contribution Guidelines 🟢
+### 8.3 Add Contribution Guidelines ✅
+
+**Status:** Completed
 
 Clear guidelines for contributing to the project.
 
 **Tasks:**
-- [ ] Create `CONTRIBUTING.md` with:
+- [x] Create `CONTRIBUTING.md` with:
   - Code style and formatting expectations
   - Branch naming conventions
   - Commit message conventions
@@ -629,8 +631,8 @@ Clear guidelines for contributing to the project.
   - Testing requirements
   - Documentation expectations
   - Quality gates (spotlessCheck, pmdMain, tests, asciidoctor)
-- [ ] Add pre-commit hooks (optional, improve DX)
-- [ ] Reference AGENTS.md as authoritative source for tech decisions
+- [x] Add pre-commit hooks (optional, improve DX)
+- [x] Reference AGENTS.md as authoritative source for tech decisions
 
 **Definition of Done:**
 - Clear expectations are documented

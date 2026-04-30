@@ -128,6 +128,7 @@ Packaging and runtime behavior:
 
 ## Project Map
 
+- `CONTRIBUTING.md`: contribution workflow, review expectations, and quality gates
 - `SETUP.md`: developer onboarding and troubleshooting guide
 - `.env.example`: optional environment variable template for local shells or container tooling
 - `build.gradle.kts`: build configuration and dependencies
@@ -207,6 +208,8 @@ Current runtime behavior:
 - Keep REST responses JSON-friendly.
 - Add or update tests when API behavior changes.
 - Do not remove the existing `hello` or `book` endpoints unless asked.
+
+Human contribution workflow expectations live in `CONTRIBUTING.md`.
 
 ## Typical Change Flow
 
