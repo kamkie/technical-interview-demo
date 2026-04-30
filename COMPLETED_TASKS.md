@@ -1,7 +1,7 @@
 # Completed Tasks Archive
 
 This file keeps the historical record for completed roadmap items that were moved out of `TODO.md`.
-Use `TODO.md` for active planning and `COMPLETED_TASKS.md` for implementation history, archived scope, and commit references.
+Use `TODO.md` for active planning and `COMPLETED_TASKS.md` for implementation history, archived scope, commit references, and release tags.
 
 ## Completed Highlights
 
@@ -13,6 +13,7 @@ Use `TODO.md` for active planning and `COMPLETED_TASKS.md` for implementation hi
 - Localized error responses with browser-compatible preferred-language support, cookie fallback, and supported-language validation
 - Book search and filtering support
 - Developer setup and contribution guides
+- Release versioning and changelog workflow
 
 ## Archived Completed Work
 
@@ -36,6 +37,7 @@ Summary:
 - Verified Flyway compatibility and documented the workflow.
 
 Commit: `4d99e58`
+Tag: `v0.1.0`
 
 #### 1.2 Add Testcontainers for Integration Testing
 
@@ -47,6 +49,7 @@ Summary:
 - Updated test configuration and team documentation.
 
 Commit: `b543be1`
+Tag: `v0.2.0`
 
 ### Phase 2: Configuration Management
 
@@ -60,6 +63,7 @@ Summary:
 - Updated Docker behavior to align with the production profile.
 
 Commit: `9e5185c`
+Tag: `v0.3.0`
 
 ### Phase 3: Internationalization (i18n) & Localization Messages
 
@@ -73,6 +77,7 @@ Summary:
 - Added integration coverage for lookup and fallback behavior.
 
 Commit: `088b69d`
+Tag: `v0.4.0`
 
 #### 3.2 Create Localization REST API
 
@@ -84,6 +89,7 @@ Summary:
 - Added integration tests and Spring REST Docs coverage.
 
 Commit: `8365b65`
+Tag: `v0.5.0`
 
 #### 3.3 Seed Initial Localization Messages
 
@@ -95,6 +101,7 @@ Summary:
 - Centralized seeded keys and added tests to verify coverage across supported languages.
 
 Commit: `104c1ed`
+Tag: `v0.6.0`
 
 ### Phase 4: Error Response Localization
 
@@ -109,6 +116,7 @@ Summary:
 - Added and documented tests for header-based negotiation, explicit override, and English fallback.
 
 Commit: `8e99800`
+Tag: `v0.7.0`
 
 #### 4.2 Add Language Negotiation
 
@@ -123,6 +131,9 @@ Summary:
 Note:
 - Authenticated user preference fallback belongs with user persistence and remains a Phase 5 concern.
 
+Commit: `a6708fd`
+Tag: `v0.8.0`
+
 ### Phase 6: Enhanced Book API
 
 #### 6.1 Add Search & Filtering to Books
@@ -135,6 +146,7 @@ Summary:
 - Updated generated API docs for the enhanced list endpoint.
 
 Commit: `a94abd0`
+Tag: `v0.9.0`
 
 ### Phase 8: Documentation & Developer Experience
 
@@ -148,6 +160,7 @@ Summary:
 - Added troubleshooting guidance and quick-start commands.
 
 Commit: `4df2e54`
+Tag: `v0.10.0`
 
 #### 8.3 Add Contribution Guidelines
 
@@ -159,9 +172,21 @@ Summary:
 - Declared `AGENTS.md` authoritative for technical constraints when docs diverge.
 
 Commit: `6ab4665`
+Tag: `v0.11.0`
+
+#### 8.4 Add Release Versioning & Changelog
+
+Status: Completed
+
+Summary:
+- Defined semantic version tags for completed roadmap phases and backfilled annotated tags for previously archived milestones.
+- Added `CHANGELOG.md` using a Keep a Changelog-style format.
+- Documented how roadmap phases, commits, and release tags align.
+
+Tag: `v0.12.0`
 
 ## Roadmap Maintenance Notes
 
 - Keep active work in `TODO.md`.
 - Move finished phases or milestones here once they are fully complete.
-- Preserve commit references when archiving completed work.
+- Preserve commit references and release tags when archiving completed work.

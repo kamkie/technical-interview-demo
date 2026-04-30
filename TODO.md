@@ -9,23 +9,22 @@ The roadmap below is ordered to respect cross-phase dependencies.
 
 | Order | Theme | Status | Why it comes next |
 | --- | --- | --- | --- |
-| 1 | Phase 8.4: Release versioning and changelog | Ready | Tagging and release history should be in place before more phases land |
-| 2 | Phase 5: Security and user model | Ready | Security should be in place before admin-only management and audit trails |
-| 3 | Phase 8.5: OpenAPI and compatibility gates | Ready after Phase 5.1 | The machine-readable contract should reflect the secured API surface |
-| 4 | Phase 6.2: Book categories/tags | Ready | Extends the existing Book API after search/filtering is already complete |
-| 5 | Phase 7: Caching and application metrics | Blocked by 6.2 for category caching | Best added after the next major read-model features settle |
-| 6 | Phase 8.1: API and operations documentation gaps | Partially blocked by Phases 5 and 8.5 | Documentation should follow the feature set that actually exists |
-| 7 | Phase 9: Coverage and performance testing | Ready after core APIs stabilize | Better value once the near-term API and auth work are settled |
-| 8 | Phase 10: CI/CD and deployment assets | Ready | Depends mostly on the current quality gates and stable build outputs |
-| 9 | Phase 11: Optional future enhancements | Deferred | These are stretch items after the core demo is complete |
+| 1 | Phase 5: Security and user model | Ready | Security should be in place before admin-only management and audit trails |
+| 2 | Phase 8.5: OpenAPI and compatibility gates | Ready after Phase 5.1 | The machine-readable contract should reflect the secured API surface |
+| 3 | Phase 6.2: Book categories/tags | Ready | Extends the existing Book API after search/filtering is already complete |
+| 4 | Phase 7: Caching and application metrics | Blocked by 6.2 for category caching | Best added after the next major read-model features settle |
+| 5 | Phase 8.1: API and operations documentation gaps | Partially blocked by Phases 5 and 8.5 | Documentation should follow the feature set that actually exists |
+| 6 | Phase 9: Coverage and performance testing | Ready after core APIs stabilize | Better value once the near-term API and auth work are settled |
+| 7 | Phase 10: CI/CD and deployment assets | Ready | Depends mostly on the current quality gates and stable build outputs |
+| 8 | Phase 11: Optional future enhancements | Deferred | These are stretch items after the core demo is complete |
 
 ## Current Priorities
 
-1. Start Phase 8.4 release versioning and changelog workflow, including annotated git tags after each completed phase.
-2. Start Phase 5.1 Spring Security and OAuth 2.0 with a demo-friendly provider and JDBC-backed sessions.
-3. Add Phase 5.2 user persistence, role handling, and optional user language preference storage.
-4. Add Phase 5.3 audit logging for state-changing operations.
-5. Start Phase 8.5 OpenAPI support and breaking-change compatibility checks after the initial auth surface is in place.
+1. Start Phase 5.1 Spring Security and OAuth 2.0 with a demo-friendly provider and JDBC-backed sessions.
+2. Add Phase 5.2 user persistence, role handling, and optional user language preference storage.
+3. Add Phase 5.3 audit logging for state-changing operations.
+4. Start Phase 8.5 OpenAPI support and breaking-change compatibility checks after the initial auth surface is in place.
+5. Start Phase 6.2 book categories/tags once the next security milestone is settled.
 
 ## Active Detailed Plan
 
@@ -185,25 +184,6 @@ Definition of done:
 - Security and localization flows are understandable to reviewers
 - Generated HTML docs build cleanly
 
-#### 8.4 Add Release Versioning & Changelog
-
-Depends on: None
-
-Goal:
-Create a lightweight release trail that maps completed roadmap phases to tagged versions and readable release notes.
-
-Tasks:
-- [ ] Define the application versioning and tag naming policy
-- [ ] Use annotated git tags for app versions after each completed roadmap phase
-- [ ] Add a human-readable `CHANGELOG.md` based on Keep a Changelog, Conventional Commits, or a similar format
-- [ ] Backfill completed phase releases from `COMPLETED_TASKS.md`
-- [ ] Document how completed phases map to changelog entries, commits, and tags
-
-Definition of done:
-- Every completed roadmap phase can be traced to a version tag
-- The changelog is readable by humans and aligned with tagged releases
-- The release workflow is documented clearly enough to repeat without guesswork
-
 #### 8.5 Add OpenAPI & Compatibility Gates
 
 Depends on: 5.1
@@ -323,7 +303,7 @@ Status: Deferred
 
 ## Completed Work Archive
 
-See `COMPLETED_TASKS.md` for archived completed phases, including finished Phase 4 language negotiation work.
+See `COMPLETED_TASKS.md` for archived completed phases, including finished Phase 4 language negotiation work and the completed release-versioning workflow.
 
 ## Quick Reference: Quality Gates
 

@@ -12,6 +12,7 @@ Current scope:
 - `GET /hello` returns `Hello World!`
 - CRUD-style `Book` API under `/api/books` with pagination, filtering, and optimistic locking on updates
 - CRUD-style `LocalizationMessage` API under `/api/localization-messages` with pagination and key/language lookup
+- git-tag-based application versioning with a human-readable `CHANGELOG.md`
 - actuator endpoints for `health`, `info`, liveness/readiness probes, and Prometheus metrics
 - H2 in-memory database for the default local profile
 - PostgreSQL-backed integration tests via Testcontainers
@@ -132,8 +133,20 @@ Packaging and runtime behavior:
 - the container image includes a health check against `GET /actuator/health/readiness`
 - the container image uses Microsoft Build of OpenJDK and starts the app with `jaz`
 
+## Versioning & Releases
+
+The Gradle build version is derived from the nearest reachable annotated git tag.
+
+Release policy:
+
+- use semantic version tags in the form `vMAJOR.MINOR.PATCH`
+- create an annotated git tag when a roadmap phase is completed
+- keep `CHANGELOG.md` aligned with release tags
+- keep `COMPLETED_TASKS.md` aligned with release tags and completion commits
+
 ## Project Map
 
+- `CHANGELOG.md`: human-readable release notes aligned with annotated phase-completion tags
 - `CONTRIBUTING.md`: contribution workflow, review expectations, and quality gates
 - `SETUP.md`: developer onboarding and troubleshooting guide
 - `.env.example`: optional environment variable template for local shells or container tooling

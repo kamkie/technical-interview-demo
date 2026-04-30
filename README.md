@@ -11,6 +11,7 @@ The demo currently includes:
 - `GET /hello` returning `Hello World!`
 - A REST API for `Book` under `/api/books` with pagination and filtering
 - A REST API for `LocalizationMessage` under `/api/localization-messages` with CRUD, pagination, and key/language lookup
+- Git tag based application versioning plus a human-readable `CHANGELOG.md`
 - H2 in-memory database for the default local profile
 - PostgreSQL configuration for the production profile and Testcontainers-backed integration tests
 - Seed data loaded at startup
@@ -235,8 +236,20 @@ Qodana static analysis is available through Gradle:
 .\gradlew.bat qodanaScan
 ```
 
+## Versioning And Releases
+
+The application version is derived from the nearest reachable annotated git tag through the Gradle build.
+
+Release policy:
+
+- use semantic version tags in the form `vMAJOR.MINOR.PATCH`
+- create an annotated git tag when a roadmap phase is completed
+- record the human-readable summary for that release in `CHANGELOG.md`
+- keep release tags aligned with `COMPLETED_TASKS.md`
+
 ## Project Structure
 
+- `CHANGELOG.md`: human-readable release notes aligned with roadmap-phase tags
 - `CONTRIBUTING.md`: contribution workflow, review expectations, and quality gates
 - `SETUP.md`: developer onboarding and troubleshooting guide
 - `.env.example`: optional environment variable template for local shells or container tooling
@@ -484,6 +497,7 @@ Keep `.editorconfig` aligned with the intended IntelliJ formatting profile.
 - Do not remove the existing `hello` or `book` demo endpoints unless intentionally changing the demo scope.
 
 For contribution workflow expectations, see `CONTRIBUTING.md`.
+For release history, see `CHANGELOG.md`.
 
 ## Quality Checks
 
