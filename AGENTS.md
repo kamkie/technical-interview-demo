@@ -59,6 +59,7 @@ $env:Path="$env:JAVA_HOME\bin;$env:Path"
 Common commands:
 
 ```powershell
+.\gradlew.bat build
 .\gradlew.bat bootRun
 .\gradlew.bat test
 .\gradlew.bat asciidoctor
@@ -71,7 +72,7 @@ docker run --rm -p 8080:8080 technical-interview-demo
 
 Developer onboarding lives in `SETUP.md`. An optional shell/env template is provided in `.env.example`.
 
-Docker Desktop is required for `.\gradlew.bat test` because the integration suite starts PostgreSQL through Testcontainers.
+Docker Desktop is required for `.\gradlew.bat test` and `.\gradlew.bat build` because the integration suite starts PostgreSQL through Testcontainers and the build lifecycle now includes Docker image creation.
 
 ## Spring Profiles
 
@@ -135,7 +136,7 @@ Packaging and runtime behavior:
 - the running application serves the documentation at `GET /docs`
 - the generated index page includes build metadata loaded from `/META-INF/build-info.properties`
 - the generated docs include example success and error responses captured from tests
-- the container image includes a health check against `GET /actuator/health/readiness`
+- the container image packages the prebuilt Gradle boot jar and includes a health check against `GET /actuator/health/readiness`
 - the container image uses Microsoft Build of OpenJDK and starts the app with `jaz`
 
 ## Versioning & Releases
@@ -346,7 +347,7 @@ Optional additional static analysis:
 Notes:
 
 - Export `JAVA_HOME` to JDK 25 in the same shell first.
-- Docker Desktop must be running for `test` because Testcontainers provisions PostgreSQL.
+- Docker Desktop must be running for `test` and `build` because Testcontainers provisions PostgreSQL and `build` now includes the Docker image build.
 - Error Prone runs during Java compilation.
 - PMD also runs as part of `check` and `build`.
 

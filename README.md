@@ -57,7 +57,7 @@ $env:Path="$env:JAVA_HOME\bin;$env:Path"
 
 For a full local onboarding flow, see `SETUP.md`. A starter environment template is available in `.env.example`.
 
-Docker Desktop is also required for `.\gradlew.bat test` because the test suite starts PostgreSQL through Testcontainers.
+Docker Desktop is also required for `.\gradlew.bat test` and `.\gradlew.bat build` because the test suite starts PostgreSQL through Testcontainers and the build lifecycle now includes Docker image creation.
 
 ## Spring Profiles
 
@@ -193,15 +193,18 @@ Useful local endpoints:
 Build the image with Gradle:
 
 ```powershell
+.\gradlew.bat build
 .\gradlew.bat dockerBuild
 .\gradlew.bat dockerBuild -PdockerImageName=my-app:dev
 ```
 
 The default image name is `technical-interview-demo`.
+`.\gradlew.bat build` now includes the Docker image build by default. Use `.\gradlew.bat build -x dockerBuild` only when you explicitly want to skip the image step.
 
 You can also build the image directly with Docker:
 
 ```powershell
+.\gradlew.bat bootJar
 docker build -t technical-interview-demo .
 ```
 
@@ -211,7 +214,7 @@ Run the container with:
 docker run --rm -p 8080:8080 technical-interview-demo
 ```
 
-The Docker image builds the Spring Boot fat jar in a separate build stage and runs it on Java 25.
+The Docker image packages the prebuilt Spring Boot fat jar produced by Gradle and runs it on Java 25.
 It also includes a container health check against `GET /actuator/health/readiness`.
 The container uses Microsoft Build of OpenJDK and starts the app with `jaz`.
 
@@ -562,7 +565,7 @@ Optional additional static analysis:
 
 If tests require Java setup first, export `JAVA_HOME` to a compatible JDK in the same shell session.
 
-If `test` fails before application startup, confirm Docker Desktop is running because Testcontainers provisions PostgreSQL for the integration suite.
+If `test` or `build` fails before application startup, confirm Docker Desktop is running because Testcontainers provisions PostgreSQL for the integration suite and `build` also runs the Docker image creation step.
 
 Error Prone runs as part of Java compilation, so `test` and `build` also execute static analysis for Java sources.
 PMD runs as part of `check` and `build`. Use `pmdMain` for the main application source set when you want a focused PMD run.

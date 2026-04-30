@@ -17,7 +17,7 @@ Install the tools that match your workflow:
 
 - Java 25
 - Git
-- Docker Desktop if you want PostgreSQL, container builds, the VS Code dev container, or to run the integration test suite
+- Docker Desktop if you want PostgreSQL, container builds, the VS Code dev container, or to run the integration test and build lifecycles
 - IntelliJ IDEA or VS Code if you want IDE support
 
 ## Quick Start
@@ -151,7 +151,7 @@ Useful endpoints once the app is running:
 
 ## Running Tests And Quality Checks
 
-Set Java 25 in the same shell session first. Docker Desktop must also be running because the `test` task starts PostgreSQL through Testcontainers.
+Set Java 25 in the same shell session first. Docker Desktop must also be running because the `test` task starts PostgreSQL through Testcontainers and `build` now also performs the Docker image build.
 
 ```powershell
 .\gradlew.bat spotlessCheck
@@ -171,13 +171,17 @@ Optional:
 Build with Gradle:
 
 ```powershell
+.\gradlew.bat build
 .\gradlew.bat dockerBuild
 .\gradlew.bat dockerBuild -PdockerImageName=my-app:dev
 ```
 
+`.\gradlew.bat build` now includes the Docker image build. If you only want the Gradle artifacts and checks, run `.\gradlew.bat build -x dockerBuild`.
+
 Build directly with Docker:
 
 ```powershell
+.\gradlew.bat bootJar
 docker build -t technical-interview-demo .
 docker run --rm -p 8080:8080 technical-interview-demo
 ```

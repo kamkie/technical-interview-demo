@@ -104,7 +104,7 @@ tasks.bootRun {
 
 tasks.bootJar {
     dependsOn(asciidoctorTask)
-    archiveClassifier.set("boot")
+    archiveFileName.set("technical-interview-demo-boot.jar")
     from(asciidoctorTask) {
         into("BOOT-INF/classes/static/docs")
     }
@@ -115,8 +115,13 @@ tasks.bootJar {
 
 tasks.register<Exec>("dockerBuild") {
     group = "docker"
-    description = "Builds the Docker image for this project."
+    description = "Builds the Docker image for this project. Also runs as part of the build lifecycle."
+    dependsOn(tasks.bootJar)
     commandLine("docker", "build", "-t", dockerImageName.get(), ".")
+}
+
+tasks.build {
+    dependsOn(tasks.named("dockerBuild"))
 }
 
 tasks.withType<Test> {

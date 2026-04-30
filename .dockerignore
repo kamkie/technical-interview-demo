@@ -2,6 +2,11 @@
 .gradle
 .idea
 build
+!build/
+build/*
+!build/libs/
+build/libs/*
+!build/libs/technical-interview-demo-boot.jar
 Default.xml
 README.md
 AGENTS.md
