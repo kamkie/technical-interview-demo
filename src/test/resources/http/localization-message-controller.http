@@ -15,6 +15,7 @@ Accept: application/json
 ### LocalizationMessageController - get a seeded message by key and language and capture its id
 GET {{baseUrl}}/api/localization-messages/key/error.book.not_found/lang/en
 Accept: application/json
+
 > {%
 if (response.status === 200) {
   client.global.set("localizationMessageId", String(response.body.id));

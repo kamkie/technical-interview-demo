@@ -23,6 +23,7 @@ Accept: application/json
 ### BookController - load one seeded book and capture its id/version for read examples
 GET {{baseUrl}}/api/books?page=0&size=1&sort=id,asc
 Accept: application/json
+
 > {%
 const books = response.body.content;
 if (books && books.length > 0) {
@@ -37,7 +38,7 @@ GET {{baseUrl}}/api/books/{{bookId}}
 Accept: application/json
 
 ### BookController - create book (authenticated + CSRF)
-POST {{baseUrl}}/api/books
+POST {{baseUrl}}/api/books?lang=pl
 Cookie: technical-interview-demo-session={{sessionCookie}}
 X-CSRF-TOKEN: {{csrfToken}}
 Content-Type: application/json
