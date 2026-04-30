@@ -8,24 +8,27 @@ This file outlines planned features, improvements, and refactoring tasks for the
 
 ## Legend
 
-- 🟢 **Ready** - No blocking dependencies
-- 🟡 **Blocked** - Waiting for dependencies
-- ✅ **Done** - Already implemented
-- 📋 **In Progress** - Currently being worked on
+- 🟢 **Ready** - No blocking dependencies  
+- 🟡 **Blocked** - Waiting for dependencies  
+- ✅ **Done** - Already implemented  
+- 📋 **In Progress** - Currently being worked on  
 
 ---
 
 ## Development Container Setup ✅
 
-A preconfigured dev container is available for VS Code Remote development with zero-friction setup.
+A comprehensive dev container setup is available for VS Code Remote development with zero-friction setup.
 
 **Included:**
-- Java 25 JDK
-- Gradle wrapper
-- Docker & Docker Compose
-- PostgreSQL service (optional)
-- Prometheus service (optional)
-- Preconfigured VS Code extensions
+- **Java 25 JDK** (official Microsoft dev container image)
+- **Gradle** (via wrapper)
+- **Docker & Docker Compose** (Docker-in-Docker)
+- **PostgreSQL service** (port 5432, auto-starts via docker-compose)
+- **Prometheus service** (port 9090, auto-starts via docker-compose)
+- **Preconfigured VS Code extensions** (Java Pack, Spring Boot, Docker, GitLens, SonarLint, Copilot)
+- **Helper commands** (20+ shortcuts via `.devcontainer/commands.sh`)
+- **Environment variables** (properly configured for all tools)
+- **Lifecycle scripts** (automatic setup, health checks, and cleanup)
 
 **Usage:**
 1. Install VS Code and "Dev Containers" extension
@@ -33,7 +36,16 @@ A preconfigured dev container is available for VS Code Remote development with z
 3. Press `Ctrl+Shift+P` → "Dev Containers: Reopen in Container"
 4. Wait for initialization (5-10 minutes first time)
 
-See [.devcontainer/README.md](.devcontainer/README.md) for complete documentation.
+**Key Features:**
+- **Zero local setup required** - Everything runs in containers
+- **Consistent environment** - All developers use identical tooling
+- **Isolated development** - No interference with local machine
+- **Auto-starting services** - PostgreSQL and Prometheus start automatically
+- **Helper scripts** - Convenient aliases for common Gradle tasks
+- **Pre-configured extensions** - Java, Spring Boot, Docker, and more
+- **Proper Java 25 support** - Official Microsoft image with latest JDK
+
+See [.devcontainer/README.md](.devcontainer/README.md) for complete documentation and [.devcontainer/QUICK_START.md](.devcontainer/QUICK_START.md) for a one-page reference.
 
 ---
 
