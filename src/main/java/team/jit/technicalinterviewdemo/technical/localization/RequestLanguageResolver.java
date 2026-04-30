@@ -1,4 +1,4 @@
-package team.jit.technicalinterviewdemo.business.localization;
+package team.jit.technicalinterviewdemo.technical.localization;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

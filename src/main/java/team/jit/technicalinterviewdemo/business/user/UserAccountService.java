@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import team.jit.technicalinterviewdemo.business.localization.SupportedLanguages;
 import team.jit.technicalinterviewdemo.technical.api.InvalidRequestException;
+import team.jit.technicalinterviewdemo.technical.localization.SupportedLanguages;
 import team.jit.technicalinterviewdemo.technical.metrics.ApplicationMetrics;
 import team.jit.technicalinterviewdemo.technical.security.AuthenticatedUserSecurityService;
 

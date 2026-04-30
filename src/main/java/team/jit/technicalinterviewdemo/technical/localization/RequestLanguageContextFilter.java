@@ -1,4 +1,4 @@
-package team.jit.technicalinterviewdemo.business.localization;
+package team.jit.technicalinterviewdemo.technical.localization;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

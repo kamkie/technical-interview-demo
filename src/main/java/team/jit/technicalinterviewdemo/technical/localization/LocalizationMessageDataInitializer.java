@@ -1,4 +1,4 @@
-package team.jit.technicalinterviewdemo.business.localization;
+package team.jit.technicalinterviewdemo.technical.localization;
 
 import java.util.List;
 
@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import team.jit.technicalinterviewdemo.business.localization.LocalizationMessage;
+import team.jit.technicalinterviewdemo.business.localization.LocalizationMessageRepository;
 
 @Slf4j
 @Configuration

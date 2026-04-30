@@ -1,9 +1,10 @@
-package team.jit.technicalinterviewdemo.business.localization;
+package team.jit.technicalinterviewdemo.technical.localization;
 
 import java.util.ArrayList;
 import java.util.List;
+import team.jit.technicalinterviewdemo.business.localization.LocalizationMessage;
 
-final class LocalizationMessageSeedData {
+public final class LocalizationMessageSeedData {
 
     private static final List<String> DOCUMENTED_KEYS = List.of(
             "error.book.isbn_duplicate",
@@ -31,15 +32,15 @@ final class LocalizationMessageSeedData {
     private LocalizationMessageSeedData() {
     }
 
-    static List<String> documentedKeys() {
+    public static List<String> documentedKeys() {
         return DOCUMENTED_KEYS;
     }
 
-    static List<String> supportedLanguages() {
+    public static List<String> supportedLanguages() {
         return SUPPORTED_LANGUAGES;
     }
 
-    static List<LocalizationMessage> defaultMessages() {
+    public static List<LocalizationMessage> defaultMessages() {
         List<LocalizationMessage> messages = new ArrayList<>();
         addTranslations(
                 messages,

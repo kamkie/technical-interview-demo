@@ -35,6 +35,7 @@ import org.springframework.restdocs.headers.HeaderDescriptor;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.MockMvc;
 import team.jit.technicalinterviewdemo.TestcontainersTest;
+import team.jit.technicalinterviewdemo.technical.localization.LocalizationMessageSeedData;
 
 @TestcontainersTest
 @SpringBootTest

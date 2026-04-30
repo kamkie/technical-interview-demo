@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import team.jit.technicalinterviewdemo.TestcontainersTest;
+import team.jit.technicalinterviewdemo.technical.localization.LocalizationContext;
+import team.jit.technicalinterviewdemo.technical.localization.LocalizationMessageSeedData;
 
 @TestcontainersTest
 @SpringBootTest

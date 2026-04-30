@@ -23,6 +23,9 @@ import team.jit.technicalinterviewdemo.business.audit.AuditLogService;
 import team.jit.technicalinterviewdemo.business.audit.AuditTargetType;
 import team.jit.technicalinterviewdemo.technical.api.InvalidRequestException;
 import team.jit.technicalinterviewdemo.technical.cache.CacheNames;
+import team.jit.technicalinterviewdemo.technical.localization.LocalizationContext;
+import team.jit.technicalinterviewdemo.technical.localization.RequestLanguageResolver;
+import team.jit.technicalinterviewdemo.technical.localization.SupportedLanguages;
 import team.jit.technicalinterviewdemo.technical.metrics.ApplicationMetrics;
 import team.jit.technicalinterviewdemo.technical.security.AuthenticatedUserSecurityService;
 import team.jit.technicalinterviewdemo.business.user.UserRole;
@@ -103,13 +106,13 @@ public class LocalizationMessageService {
     public LocalizationMessage findByMessageKeyForCurrentLanguageWithFallback(String messageKey) {
         return findByMessageKeyAndLanguageWithFallback(
                 messageKey,
-                resolveCurrentLanguageOrDefault(),
+                localizationContext.resolveCurrentLanguageOrDefault(),
                 RequestLanguageResolver.DEFAULT_LANGUAGE
         );
     }
 
     public String getCurrentLanguageOrDefault() {
-        return resolveCurrentLanguageOrDefault();
+        return localizationContext.resolveCurrentLanguageOrDefault();
     }
 
     public Map<String, String> getAllMessages(String language) {
@@ -314,11 +317,5 @@ public class LocalizationMessageService {
             throw new IllegalStateException("Cache '%s' is not configured.".formatted(cacheName));
         }
         return cache;
-    }
-
-    private String resolveCurrentLanguageOrDefault() {
-        return localizationContext.getCurrentLanguage()
-                .or(() -> authenticatedUserSecurityService.findCurrentUserPreferredLanguage())
-                .orElse(RequestLanguageResolver.DEFAULT_LANGUAGE);
     }
 }

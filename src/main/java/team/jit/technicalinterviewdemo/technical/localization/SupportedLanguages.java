@@ -1,4 +1,4 @@
-package team.jit.technicalinterviewdemo.business.localization;
+package team.jit.technicalinterviewdemo.technical.localization;
 
 import java.util.List;
 import java.util.Set;
