@@ -87,6 +87,9 @@ Additional expectations:
 - Keep the aggregate `build` clean
 - Do not skip documentation generation or the Docker image step when using the standard verification flow
 - Pull requests also run the dedicated OpenAPI compatibility GitHub Actions workflow against the approved baseline
+- Review the JaCoCo HTML output at `build/reports/jacoco/test/html/index.html` or run `.\gradlew.bat jacocoCoverageSummary` when coverage-sensitive changes land
+- `check` and `build` enforce minimum JaCoCo bundle coverage of 90% line coverage and 70% branch coverage
+- If a change legitimately needs a lower threshold, raise it explicitly in review instead of weakening the gate silently
 
 ## Documentation Expectations
 

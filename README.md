@@ -661,6 +661,8 @@ If `test` or `build` fails before application startup, confirm Docker Desktop is
 
 `build` now covers Spotless, PMD, tests, Asciidoctor generation, boot jar creation, and the Docker image build.
 The `test` and `build` flows also run the OpenAPI compatibility gate against `src/test/resources/openapi/approved-openapi.json`.
+`test` also prints a JaCoCo coverage summary and keeps the HTML report at `build/reports/jacoco/test/html/index.html`.
+`check` and `build` enforce minimum JaCoCo bundle coverage of 90% line coverage and 70% branch coverage.
 Use focused commands such as `spotlessCheck`, `pmdMain`, `test`, or `asciidoctor` only when you intentionally want a narrower loop.
 
 ## Definition Of Done

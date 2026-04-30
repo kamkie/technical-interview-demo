@@ -35,7 +35,7 @@ Tasks:
 - [x] Run and review JaCoCo reports regularly
 - [x] Add tests for uncovered service and exception paths
 - [x] Add coverage thresholds to Gradle or CI
-- [ ] Document coverage expectations in `CONTRIBUTING.md`
+- [x] Document coverage expectations in `CONTRIBUTING.md`
 
 #### 9.2 Add Load & Performance Testing
 

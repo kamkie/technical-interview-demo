@@ -414,6 +414,8 @@ Notes:
 - Docker Desktop must be running for `test` and `build` because Testcontainers provisions PostgreSQL and `build` now includes the Docker image build.
 - `build` now covers Spotless, PMD, tests, Asciidoctor generation, boot jar creation, and the Docker image build.
 - `test` and `build` also include the OpenAPI compatibility gate against `src/test/resources/openapi/approved-openapi.json`.
+- `test` also prints a JaCoCo coverage summary and keeps the HTML report at `build/reports/jacoco/test/html/index.html`.
+- `check` and `build` enforce minimum JaCoCo bundle coverage of 90% line coverage and 70% branch coverage.
 - Use focused commands such as `spotlessCheck`, `pmdMain`, `test`, or `asciidoctor` only when you intentionally want a narrower loop.
 
 ## Avoid
