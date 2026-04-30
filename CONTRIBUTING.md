@@ -86,6 +86,7 @@ Additional expectations:
 - Add or update tests when API behavior changes
 - Keep the aggregate `build` clean
 - Do not skip documentation generation or the Docker image step when using the standard verification flow
+- Pull requests also run the dedicated OpenAPI compatibility GitHub Actions workflow against the approved baseline
 
 ## Documentation Expectations
 

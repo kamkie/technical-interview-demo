@@ -17,10 +17,10 @@ The roadmap below is ordered to respect cross-phase dependencies.
 
 ## Current Priorities
 
-1. Start Phase 8.5 OpenAPI support and breaking-change compatibility checks now that the secured API surface and audit trail are in place.
-2. Add CI wiring for the OpenAPI compatibility gate now that the contract workflow is documented locally.
-3. Revisit Phase 9 coverage and performance work after the near-term API-shape changes settle.
-4. Start Phase 10 CI/CD and deployment work once the API contract stabilizes.
+1. Revisit Phase 9 coverage and performance work now that the OpenAPI contract and compatibility workflow are in place.
+2. Start Phase 10 CI/CD and deployment work once the API contract stabilizes.
+3. Choose CI/CD platform details for the broader verification and delivery pipeline.
+4. Keep Phase 11 as explicitly deferred stretch work after the core demo roadmap is complete.
 
 ## Active Detailed Plan
 
@@ -44,7 +44,7 @@ Completed in archive:
 
 ### Phase 8: Documentation & Developer Experience
 
-Status: Mostly complete
+Status: Completed
 
 Completed in archive:
 - 8.2 Create Developer Setup Guide
@@ -80,7 +80,7 @@ Tasks:
 - [x] Decide how the approved OpenAPI baseline is stored and versioned
 - [x] Add a compatibility test that compares the current OpenAPI contract to the approved baseline and fails on breaking changes
 - [x] Document how to intentionally refresh the approved contract
-- [ ] Add the compatibility check to local verification and CI
+- [x] Add the compatibility check to local verification and CI
 
 Definition of done:
 - The application publishes or generates an OpenAPI contract for the implemented API

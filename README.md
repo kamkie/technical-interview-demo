@@ -302,6 +302,7 @@ Contract workflow:
 
 - the approved baseline is committed at `src/test/resources/openapi/approved-openapi.json`
 - normal verification runs `OpenApiCompatibilityIntegrationTests`, which compares the current contract to the approved baseline and fails on breaking changes
+- GitHub Actions runs the same compatibility test on pushes to `main` and on pull requests
 - the emitted contract is normalized before comparison so build-version and generated local server URLs do not create false diffs
 
 To intentionally refresh the approved contract after reviewing an allowed API change:

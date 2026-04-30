@@ -185,6 +185,7 @@ OpenAPI contract workflow:
 - the application exposes JSON at `GET /v3/api-docs` and YAML at `GET /v3/api-docs.yaml`
 - the approved baseline is stored at `src/test/resources/openapi/approved-openapi.json`
 - `OpenApiCompatibilityIntegrationTests` compares the current normalized contract to that baseline and fails on breaking changes
+- GitHub Actions runs the same compatibility test on pushes to `main` and on pull requests
 - refresh the approved baseline intentionally with `.\gradlew.bat refreshOpenApiBaseline`
 
 ## Versioning & Releases
