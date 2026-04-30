@@ -1,4 +1,4 @@
-package team.jit.technicalinterviewdemo;
+package team.jit.technicalinterviewdemo.business.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -18,30 +18,22 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import team.jit.technicalinterviewdemo.business.audit.AuditLogRepository;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
 import team.jit.technicalinterviewdemo.technical.cache.CacheNames;
 import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
-import team.jit.technicalinterviewdemo.business.user.UserAccount;
-import team.jit.technicalinterviewdemo.business.user.UserAccountRepository;
-import team.jit.technicalinterviewdemo.business.user.UserRole;
+import team.jit.technicalinterviewdemo.technical.testing.AbstractMockMvcIntegrationTest;
+import team.jit.technicalinterviewdemo.technical.testing.CacheTestSupport;
+import team.jit.technicalinterviewdemo.technical.testing.MockMvcIntegrationSpringBootTest;
 
-@TestcontainersTest
-@SpringBootTest
-@AutoConfigureMockMvc
-class UserManagementIntegrationTests {
+@MockMvcIntegrationSpringBootTest
+class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     private static final String USER_OPERATIONS = "technical.interview.demo.users.operations";
     private static final String USER_TOTAL = "technical.interview.demo.users.total";
     private static final String ADMIN_TOTAL = "technical.interview.demo.users.admin.total";
-
-    @Autowired
-    private MockMvc mockMvc;
 
     @Autowired
     private UserAccountRepository userAccountRepository;
@@ -205,9 +197,7 @@ class UserManagementIntegrationTests {
     }
 
     private void clearCaches() {
-        for (String cacheName : List.of(CacheNames.CATEGORIES, CacheNames.CATEGORY_DIRECTORY)) {
-            cacheManager.getCache(cacheName).clear();
-        }
+        CacheTestSupport.clearCaches(cacheManager, List.of(CacheNames.CATEGORIES, CacheNames.CATEGORY_DIRECTORY));
     }
 
     private double counterValue(String meterName, String... tags) {

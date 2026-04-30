@@ -1,4 +1,4 @@
-package team.jit.technicalinterviewdemo;
+package team.jit.technicalinterviewdemo.technical.docs;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -7,29 +7,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
+import team.jit.technicalinterviewdemo.technical.testing.AbstractRandomPortIntegrationTest;
+import team.jit.technicalinterviewdemo.technical.testing.RandomPortIntegrationSpringBootTest;
 
-@TestcontainersTest
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class OpenApiIntegrationTests {
-
-    private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
+@RandomPortIntegrationSpringBootTest
+class OpenApiIntegrationTests extends AbstractRandomPortIntegrationTest {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
-    @LocalServerPort
-    private int port;
 
     @Test
     void openApiJsonEndpointIsExposed() throws IOException, InterruptedException {
-        HttpResponse<String> response = send("/v3/api-docs");
+        HttpResponse<String> response = get("/v3/api-docs");
 
         assertEquals(200, response.statusCode());
         assertTrue(response.headers().firstValue("content-type").orElse("").startsWith("application/json"));
@@ -39,7 +30,7 @@ class OpenApiIntegrationTests {
 
     @Test
     void openApiYamlEndpointIsExposed() throws IOException, InterruptedException {
-        HttpResponse<String> response = send("/v3/api-docs.yaml");
+        HttpResponse<String> response = get("/v3/api-docs.yaml");
 
         assertEquals(200, response.statusCode());
         assertTrue(response.headers().firstValue("content-type").orElse("").contains("openapi"));
@@ -90,16 +81,8 @@ class OpenApiIntegrationTests {
         assertFalse(openApi.at("/components/schemas/UserProfileResponse").isMissingNode());
     }
 
-    private HttpResponse<String> send(String path) throws IOException, InterruptedException {
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:" + port + path))
-                .GET()
-                .build();
-        return HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
-    }
-
     private JsonNode fetchOpenApiJson() throws IOException, InterruptedException {
-        HttpResponse<String> response = send("/v3/api-docs");
+        HttpResponse<String> response = get("/v3/api-docs");
         assertEquals(200, response.statusCode());
         return OBJECT_MAPPER.readTree(response.body());
     }

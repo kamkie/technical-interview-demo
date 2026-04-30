@@ -1,27 +1,19 @@
-package team.jit.technicalinterviewdemo;
+package team.jit.technicalinterviewdemo.technical.logging;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
+import team.jit.technicalinterviewdemo.technical.testing.AbstractRandomPortIntegrationTest;
+import team.jit.technicalinterviewdemo.technical.testing.RandomPortIntegrationSpringBootTest;
 
-@TestcontainersTest
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class HttpTracingIntegrationTests {
-
-    private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
-
-    @LocalServerPort
-    private int port;
+@RandomPortIntegrationSpringBootTest
+class HttpTracingIntegrationTests extends AbstractRandomPortIntegrationTest {
 
     @Test
     void helloResponseIncludesGeneratedTraceparent() throws IOException, InterruptedException {
@@ -80,10 +72,7 @@ class HttpTracingIntegrationTests {
 
     @Test
     void actuatorInfoEndpointIsExposed() throws IOException, InterruptedException {
-        HttpResponse<String> response = send(HttpRequest.newBuilder()
-                .uri(uri("/actuator/info"))
-                .GET()
-                .build());
+        HttpResponse<String> response = get("/actuator/info");
 
         assertEquals(200, response.statusCode());
         assertMatchesRequestId(response.headers().firstValue("X-Request-Id").orElse(null));
@@ -93,10 +82,7 @@ class HttpTracingIntegrationTests {
 
     @Test
     void actuatorLivenessEndpointIsExposed() throws IOException, InterruptedException {
-        HttpResponse<String> response = send(HttpRequest.newBuilder()
-                .uri(uri("/actuator/health/liveness"))
-                .GET()
-                .build());
+        HttpResponse<String> response = get("/actuator/health/liveness");
 
         assertEquals(200, response.statusCode());
         assertMatchesRequestId(response.headers().firstValue("X-Request-Id").orElse(null));
@@ -106,10 +92,7 @@ class HttpTracingIntegrationTests {
 
     @Test
     void actuatorReadinessEndpointIsExposed() throws IOException, InterruptedException {
-        HttpResponse<String> response = send(HttpRequest.newBuilder()
-                .uri(uri("/actuator/health/readiness"))
-                .GET()
-                .build());
+        HttpResponse<String> response = get("/actuator/health/readiness");
 
         assertEquals(200, response.statusCode());
         assertMatchesRequestId(response.headers().firstValue("X-Request-Id").orElse(null));
@@ -119,10 +102,7 @@ class HttpTracingIntegrationTests {
 
     @Test
     void actuatorPrometheusEndpointIsExposed() throws IOException, InterruptedException {
-        HttpResponse<String> response = send(HttpRequest.newBuilder()
-                .uri(uri("/actuator/prometheus"))
-                .GET()
-                .build());
+        HttpResponse<String> response = get("/actuator/prometheus");
 
         assertEquals(200, response.statusCode());
         assertMatchesRequestId(response.headers().firstValue("X-Request-Id").orElse(null));
@@ -132,33 +112,12 @@ class HttpTracingIntegrationTests {
 
     @Test
     void docsEndpointRedirectsToGeneratedDocumentation() throws IOException, InterruptedException {
-        HttpResponse<String> response = send(HttpRequest.newBuilder()
-                .uri(uri("/docs"))
-                .GET()
-                .build());
+        HttpResponse<String> response = get("/docs");
 
         assertEquals(302, response.statusCode());
         String location = response.headers().firstValue("location").orElseThrow();
         assertTrue(location.endsWith("/docs/index.html"));
         assertMatchesRequestId(response.headers().firstValue("X-Request-Id").orElse(null));
         assertMatchesTraceparent(response.headers().firstValue("traceparent").orElse(null));
-    }
-
-    private HttpResponse<String> send(HttpRequest request) throws IOException, InterruptedException {
-        return HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
-    }
-
-    private URI uri(String path) {
-        return URI.create("http://localhost:" + port + path);
-    }
-
-    private void assertMatchesTraceparent(String traceparent) {
-        assertNotNull(traceparent);
-        assertTrue(traceparent.matches("00-[0-9a-f]{32}-[0-9a-f]{16}-0[01]"));
-    }
-
-    private void assertMatchesRequestId(String requestId) {
-        assertNotNull(requestId);
-        assertTrue(requestId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"));
     }
 }

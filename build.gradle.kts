@@ -137,7 +137,7 @@ tasks.register<JavaExec>("refreshOpenApiBaseline") {
     description = "Refreshes the approved OpenAPI baseline from the current application contract."
     dependsOn(tasks.named("testClasses"))
     classpath = sourceSets.test.get().runtimeClasspath
-    mainClass.set("team.jit.technicalinterviewdemo.OpenApiBaselineGenerator")
+    mainClass.set("team.jit.technicalinterviewdemo.technical.docs.OpenApiBaselineGenerator")
     args(approvedOpenApiFile.asFile.absolutePath)
     jvmArgs("-XX:+EnableDynamicAgentLoading", "-Xshare:off")
 }

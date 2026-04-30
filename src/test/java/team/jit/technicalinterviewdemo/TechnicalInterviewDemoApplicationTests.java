@@ -1,10 +1,9 @@
 package team.jit.technicalinterviewdemo;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import team.jit.technicalinterviewdemo.technical.testing.IntegrationSpringBootTest;
 
-@TestcontainersTest
-@SpringBootTest
+@IntegrationSpringBootTest
 class TechnicalInterviewDemoApplicationTests {
 
     @Test

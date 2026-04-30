@@ -15,8 +15,7 @@ The roadmap below is ordered to respect cross-phase dependencies.
 ## Current Priorities
 
 1. Start Phase 10 CI/CD and deployment work now that the Phase 9 coverage and performance checks are in place.
-2. reorganize tests to improve maintainability and better match new application package structure, create base class for integration tests to enhance code reusability and test speed by running only one spring context. try to avoid testing the same things many times across different test classes.
-3. Keep Phase 11 explicitly deferred until the core roadmap is complete.
+2. Keep Phase 11 explicitly deferred until the core roadmap is complete.
 
 ## Active Detailed Plan
 

@@ -1,4 +1,4 @@
-package team.jit.technicalinterviewdemo;
+package team.jit.technicalinterviewdemo.technical.docs;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -11,6 +11,8 @@ import java.nio.file.Path;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.server.context.WebServerApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
+import team.jit.technicalinterviewdemo.PostgresTestcontainersConfiguration;
+import team.jit.technicalinterviewdemo.TechnicalInterviewDemoApplication;
 
 public final class OpenApiBaselineGenerator {
 

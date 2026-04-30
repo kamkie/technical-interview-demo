@@ -7,13 +7,11 @@ import static team.jit.technicalinterviewdemo.SecurityTestSupport.setAdminAuthen
 import io.micrometer.core.instrument.MeterRegistry;
 
 import java.util.List;
-import java.util.Set;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.PageRequest;
@@ -33,9 +31,11 @@ import team.jit.technicalinterviewdemo.business.localization.LocalizationMessage
 import team.jit.technicalinterviewdemo.business.localization.LocalizationMessageRequest;
 import team.jit.technicalinterviewdemo.business.localization.LocalizationMessageService;
 import team.jit.technicalinterviewdemo.business.user.UserAccountRepository;
+import team.jit.technicalinterviewdemo.technical.testing.BookCatalogTestData;
+import team.jit.technicalinterviewdemo.technical.testing.CacheTestSupport;
+import team.jit.technicalinterviewdemo.technical.testing.IntegrationSpringBootTest;
 
-@TestcontainersTest
-@SpringBootTest
+@IntegrationSpringBootTest
 class CachingAndMetricsTests {
 
     private static final String BOOK_OPERATIONS = "technical.interview.demo.books.operations";
@@ -77,35 +77,13 @@ class CachingAndMetricsTests {
     @Autowired
     private MeterRegistry meterRegistry;
 
-    private Category bestPractices;
-    private Category javaCategory;
-    private Category softwareEngineering;
-
     @BeforeEach
     void setUp() {
         clearAuthentication();
         auditLogRepository.deleteAll();
         userAccountRepository.deleteAll();
-        bookRepository.deleteAll();
-        categoryRepository.deleteAll();
         setAdminAuthenticatedUser();
-        bestPractices = categoryRepository.saveAndFlush(new Category("Best Practices"));
-        javaCategory = categoryRepository.saveAndFlush(new Category("Java"));
-        softwareEngineering = categoryRepository.saveAndFlush(new Category("Software Engineering"));
-        bookRepository.saveAndFlush(new Book(
-                "Clean Code",
-                "Robert C. Martin",
-                "9780132350884",
-                2008,
-                Set.of(bestPractices, softwareEngineering)
-        ));
-        bookRepository.saveAndFlush(new Book(
-                "Effective Java",
-                "Joshua Bloch",
-                "9780134685991",
-                2018,
-                Set.of(bestPractices, javaCategory)
-        ));
+        BookCatalogTestData.seedDefaultCatalog(bookRepository, categoryRepository, cacheManager);
 
         localizationMessageRepository.findByMessageKeyAndLanguage(CACHE_TEST_KEY, "en")
                 .ifPresent(localizationMessageRepository::delete);
@@ -230,21 +208,17 @@ class CachingAndMetricsTests {
     }
 
     private void clearCaches() {
-        for (String cacheName : List.of(
+        CacheTestSupport.clearCaches(cacheManager, List.of(
                 CacheNames.CATEGORIES,
                 CacheNames.CATEGORY_DIRECTORY,
                 CacheNames.LOCALIZATION_LOOKUPS,
                 CacheNames.LOCALIZATION_LISTS,
                 CacheNames.LOCALIZATION_MESSAGE_MAPS
-        )) {
-            cache(cacheName).clear();
-        }
+        ));
     }
 
     private Cache cache(String cacheName) {
-        Cache cache = cacheManager.getCache(cacheName);
-        assertThat(cache).isNotNull();
-        return cache;
+        return CacheTestSupport.cache(cacheManager, cacheName);
     }
 
     private double counterValue(String meterName, String... tags) {

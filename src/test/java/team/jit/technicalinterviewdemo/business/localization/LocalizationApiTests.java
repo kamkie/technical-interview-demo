@@ -14,20 +14,13 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import team.jit.technicalinterviewdemo.TestcontainersTest;
-import team.jit.technicalinterviewdemo.technical.localization.LocalizationMessageSeedData;
+import team.jit.technicalinterviewdemo.technical.testing.AbstractMockMvcIntegrationTest;
+import team.jit.technicalinterviewdemo.technical.testing.LocalizationMessageTestData;
+import team.jit.technicalinterviewdemo.technical.testing.MockMvcIntegrationSpringBootTest;
 
-@TestcontainersTest
-@SpringBootTest
-@AutoConfigureMockMvc
-class LocalizationApiTests {
-
-    @Autowired
-    private MockMvc mockMvc;
+@MockMvcIntegrationSpringBootTest
+class LocalizationApiTests extends AbstractMockMvcIntegrationTest {
 
     @Autowired
     private LocalizationMessageRepository localizationMessageRepository;
@@ -38,11 +31,11 @@ class LocalizationApiTests {
 
     @BeforeEach
     void setUp() {
-        localizationMessageRepository.deleteAll();
-        localizationMessageRepository.saveAll(LocalizationMessageSeedData.defaultMessages());
-        bookNotFoundEn = localizationMessageRepository.findByMessageKeyAndLanguage("error.book.not_found", "en").orElseThrow();
-        bookNotFoundEs = localizationMessageRepository.findByMessageKeyAndLanguage("error.book.not_found", "es").orElseThrow();
-        invalidRequestEn = localizationMessageRepository.findByMessageKeyAndLanguage("error.request.invalid", "en").orElseThrow();
+        LocalizationMessageTestData.DefaultLocalizationMessages messages =
+                LocalizationMessageTestData.reloadDefaultMessages(localizationMessageRepository);
+        bookNotFoundEn = messages.bookNotFoundEn();
+        bookNotFoundEs = messages.bookNotFoundEs();
+        invalidRequestEn = messages.invalidRequestEn();
     }
 
     @Test

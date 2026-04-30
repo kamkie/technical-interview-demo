@@ -8,13 +8,11 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.PersistenceUnitUtil;
 
 import java.lang.reflect.Field;
-import java.util.LinkedHashSet;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
@@ -27,9 +25,10 @@ import team.jit.technicalinterviewdemo.technical.cache.CacheNames;
 import team.jit.technicalinterviewdemo.business.category.Category;
 import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
 import team.jit.technicalinterviewdemo.technical.cache.CachingConfiguration;
+import team.jit.technicalinterviewdemo.technical.testing.BookCatalogTestData;
+import team.jit.technicalinterviewdemo.technical.testing.IntegrationSpringBootTest;
 
-@TestcontainersTest
-@SpringBootTest
+@IntegrationSpringBootTest
 class ArchitectureHardeningTests {
 
     @Autowired
@@ -48,27 +47,9 @@ class ArchitectureHardeningTests {
 
     @BeforeEach
     void setUp() {
-        bookRepository.deleteAll();
-        categoryRepository.deleteAll();
-
-        Category bestPractices = categoryRepository.saveAndFlush(new Category("Best Practices"));
-        Category javaCategory = categoryRepository.saveAndFlush(new Category("Java"));
-        Category softwareEngineering = categoryRepository.saveAndFlush(new Category("Software Engineering"));
-
-        bookRepository.saveAndFlush(new Book(
-                "Clean Code",
-                "Robert C. Martin",
-                "9780132350884",
-                2008,
-                new LinkedHashSet<>(List.of(bestPractices, softwareEngineering))
-        ));
-        effectiveJava = bookRepository.saveAndFlush(new Book(
-                "Effective Java",
-                "Joshua Bloch",
-                "9780134685991",
-                2018,
-                new LinkedHashSet<>(List.of(bestPractices, javaCategory))
-        ));
+        effectiveJava = BookCatalogTestData
+                .seedDefaultCatalog(bookRepository, categoryRepository, cacheManager)
+                .effectiveJava();
     }
 
     @Test

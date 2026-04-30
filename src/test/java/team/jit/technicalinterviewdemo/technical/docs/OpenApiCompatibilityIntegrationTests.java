@@ -1,29 +1,19 @@
-package team.jit.technicalinterviewdemo;
+package team.jit.technicalinterviewdemo.technical.docs;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
+import team.jit.technicalinterviewdemo.technical.testing.AbstractRandomPortIntegrationTest;
+import team.jit.technicalinterviewdemo.technical.testing.RandomPortIntegrationSpringBootTest;
 
-@TestcontainersTest
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class OpenApiCompatibilityIntegrationTests {
-
-    private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
-
-    @LocalServerPort
-    private int port;
+@RandomPortIntegrationSpringBootTest
+class OpenApiCompatibilityIntegrationTests extends AbstractRandomPortIntegrationTest {
 
     @Test
     void openApiContractRemainsBackwardCompatibleWithApprovedBaseline() throws Exception {
@@ -45,12 +35,7 @@ class OpenApiCompatibilityIntegrationTests {
     }
 
     private JsonNode fetchCurrentContract() throws Exception {
-        HttpResponse<String> response = HTTP_CLIENT.send(
-                HttpRequest.newBuilder(URI.create("http://localhost:" + port + "/v3/api-docs"))
-                        .GET()
-                        .build(),
-                HttpResponse.BodyHandlers.ofString()
-        );
+        var response = get("/v3/api-docs");
         assertEquals(200, response.statusCode());
         return OpenApiContractSupport.normalize(response.body());
     }

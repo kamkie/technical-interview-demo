@@ -1,11 +1,7 @@
-package team.jit.technicalinterviewdemo;
+package team.jit.technicalinterviewdemo.technical.docs;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.relaxedResponseFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestBody;
@@ -29,28 +25,18 @@ import static team.jit.technicalinterviewdemo.SecurityTestSupport.oauthUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.restdocs.test.autoconfigure.AutoConfigureRestDocs;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.headers.HeaderDescriptor;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
-import org.springframework.test.web.servlet.MockMvc;
 import team.jit.technicalinterviewdemo.business.book.Book;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
-import team.jit.technicalinterviewdemo.technical.cache.CacheNames;
 import team.jit.technicalinterviewdemo.business.category.Category;
 import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
+import team.jit.technicalinterviewdemo.technical.testing.AbstractDocumentationIntegrationTest;
+import team.jit.technicalinterviewdemo.technical.testing.BookCatalogTestData;
+import team.jit.technicalinterviewdemo.technical.testing.RestDocsIntegrationSpringBootTest;
 
-@TestcontainersTest
-@SpringBootTest
-@AutoConfigureMockMvc
-@AutoConfigureRestDocs(outputDir = "build/generated-snippets")
-class ApiDocumentationTests {
-
-    @Autowired
-    private MockMvc mockMvc;
+@RestDocsIntegrationSpringBootTest
+class ApiDocumentationTests extends AbstractDocumentationIntegrationTest {
 
     @Autowired
     private BookRepository bookRepository;
@@ -67,26 +53,11 @@ class ApiDocumentationTests {
 
     @BeforeEach
     void setUp() {
-        bookRepository.deleteAll();
-        categoryRepository.deleteAll();
-        bestPractices = categoryRepository.saveAndFlush(new Category("Best Practices"));
-        Category javaCategory = categoryRepository.saveAndFlush(new Category("Java"));
-        Category softwareEngineering = categoryRepository.saveAndFlush(new Category("Software Engineering"));
-        clearCategoryCaches();
-        cleanCode = bookRepository.saveAndFlush(new Book(
-                "Clean Code",
-                "Robert C. Martin",
-                "9780132350884",
-                2008,
-                new java.util.LinkedHashSet<>(java.util.List.of(bestPractices, softwareEngineering))
-        ));
-        effectiveJava = bookRepository.saveAndFlush(new Book(
-                "Effective Java",
-                "Joshua Bloch",
-                "9780134685991",
-                2018,
-                new java.util.LinkedHashSet<>(java.util.List.of(bestPractices, javaCategory))
-        ));
+        BookCatalogTestData.BookCatalog catalog =
+                BookCatalogTestData.seedDefaultCatalog(bookRepository, categoryRepository, cacheManager);
+        cleanCode = catalog.cleanCode();
+        effectiveJava = catalog.effectiveJava();
+        bestPractices = catalog.bestPractices();
     }
 
     @Test
@@ -545,50 +516,6 @@ class ApiDocumentationTests {
                         responseHeaders(commonResponseHeaders()),
                         responseBody()
                 ));
-    }
-
-    private RestDocumentationResultHandler documentEndpoint(String identifier, org.springframework.restdocs.snippet.Snippet... snippets) {
-        return document(
-                identifier,
-                preprocessRequest(prettyPrint()),
-                preprocessResponse(prettyPrint()),
-                snippets
-        );
-    }
-
-    private HeaderDescriptor[] commonResponseHeaders() {
-        return new HeaderDescriptor[]{
-                headerWithName("X-Request-Id").description("Request identifier returned on every public endpoint."),
-                headerWithName("traceparent").description("Trace context header returned when tracing is active.")
-        };
-    }
-
-    private org.springframework.restdocs.payload.FieldDescriptor[] problemResponseFields() {
-        return new org.springframework.restdocs.payload.FieldDescriptor[]{
-                fieldWithPath("title").description("Problem title."),
-                fieldWithPath("status").description("HTTP status code."),
-                fieldWithPath("detail").description("Technical problem detail kept stable for debugging and logs."),
-                fieldWithPath("messageKey").description("Stable localization key for the error type."),
-                fieldWithPath("message").description("Localized end-user message resolved from the request language."),
-                fieldWithPath("language").description("Two-letter ISO 639-1 language code actually used for the localized message.")
-        };
-    }
-
-    private org.springframework.restdocs.payload.FieldDescriptor[] problemResponseFieldsWithFieldErrors() {
-        return new org.springframework.restdocs.payload.FieldDescriptor[]{
-                fieldWithPath("title").description("Problem title."),
-                fieldWithPath("status").description("HTTP status code."),
-                fieldWithPath("detail").description("Technical problem detail kept stable for debugging and logs."),
-                fieldWithPath("messageKey").description("Stable localization key for the error type."),
-                fieldWithPath("message").description("Localized end-user message resolved from the request language."),
-                fieldWithPath("language").description("Two-letter ISO 639-1 language code actually used for the localized message."),
-                subsectionWithPath("fieldErrors").description("Validation errors keyed by request field name.")
-        };
-    }
-
-    private void clearCategoryCaches() {
-        cacheManager.getCache(CacheNames.CATEGORIES).clear();
-        cacheManager.getCache(CacheNames.CATEGORY_DIRECTORY).clear();
     }
 }
 

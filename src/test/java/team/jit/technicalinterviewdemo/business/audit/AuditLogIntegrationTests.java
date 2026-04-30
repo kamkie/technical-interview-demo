@@ -1,4 +1,4 @@
-package team.jit.technicalinterviewdemo;
+package team.jit.technicalinterviewdemo.business.audit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -13,30 +13,20 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import team.jit.technicalinterviewdemo.business.audit.AuditAction;
-import team.jit.technicalinterviewdemo.business.audit.AuditLog;
-import team.jit.technicalinterviewdemo.business.audit.AuditLogRepository;
-import team.jit.technicalinterviewdemo.business.audit.AuditTargetType;
 import team.jit.technicalinterviewdemo.business.book.Book;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
 import team.jit.technicalinterviewdemo.business.localization.LocalizationMessage;
 import team.jit.technicalinterviewdemo.business.localization.LocalizationMessageRepository;
 import team.jit.technicalinterviewdemo.business.user.UserAccountRepository;
+import team.jit.technicalinterviewdemo.technical.testing.AbstractMockMvcIntegrationTest;
+import team.jit.technicalinterviewdemo.technical.testing.MockMvcIntegrationSpringBootTest;
 
-@TestcontainersTest
-@SpringBootTest
-@AutoConfigureMockMvc
-class AuditLogIntegrationTests {
+@MockMvcIntegrationSpringBootTest
+class AuditLogIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     private static final String EXISTING_LOCALIZATION_KEY = "audit.localization.seed";
     private static final String CREATED_LOCALIZATION_KEY = "audit.localization.created";
-
-    @Autowired
-    private MockMvc mockMvc;
 
     @Autowired
     private AuditLogRepository auditLogRepository;

@@ -8,13 +8,12 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import team.jit.technicalinterviewdemo.TestcontainersTest;
 import team.jit.technicalinterviewdemo.technical.localization.LocalizationContext;
 import team.jit.technicalinterviewdemo.technical.localization.LocalizationMessageSeedData;
+import team.jit.technicalinterviewdemo.technical.testing.IntegrationSpringBootTest;
+import team.jit.technicalinterviewdemo.technical.testing.LocalizationMessageTestData;
 
-@TestcontainersTest
-@SpringBootTest
+@IntegrationSpringBootTest
 class LocalizationMessageServiceTests {
 
     @Autowired
@@ -28,8 +27,7 @@ class LocalizationMessageServiceTests {
 
     @BeforeEach
     void setUp() {
-        localizationMessageRepository.deleteAll();
-        localizationMessageRepository.saveAll(LocalizationMessageSeedData.defaultMessages());
+        LocalizationMessageTestData.reloadDefaultMessages(localizationMessageRepository);
         localizationContext.clear();
     }
 

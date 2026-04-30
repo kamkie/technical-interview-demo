@@ -1,10 +1,6 @@
 package team.jit.technicalinterviewdemo.business.localization;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.relaxedResponseFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestBody;
@@ -26,36 +22,26 @@ import static team.jit.technicalinterviewdemo.SecurityTestSupport.adminOauthUser
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.restdocs.test.autoconfigure.AutoConfigureRestDocs;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.headers.HeaderDescriptor;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
-import org.springframework.test.web.servlet.MockMvc;
-import team.jit.technicalinterviewdemo.TestcontainersTest;
-import team.jit.technicalinterviewdemo.technical.localization.LocalizationMessageSeedData;
+import team.jit.technicalinterviewdemo.technical.testing.AbstractDocumentationIntegrationTest;
+import team.jit.technicalinterviewdemo.technical.testing.LocalizationMessageTestData;
+import team.jit.technicalinterviewdemo.technical.testing.RestDocsIntegrationSpringBootTest;
 
-@TestcontainersTest
-@SpringBootTest
-@AutoConfigureMockMvc
-@AutoConfigureRestDocs(outputDir = "build/generated-snippets")
-class LocalizationApiDocumentationTests {
-
-    @Autowired
-    private MockMvc mockMvc;
+@RestDocsIntegrationSpringBootTest
+class LocalizationApiDocumentationTests extends AbstractDocumentationIntegrationTest {
 
     @Autowired
     private LocalizationMessageRepository localizationMessageRepository;
 
     private LocalizationMessage bookNotFoundEn;
     private LocalizationMessage bookNotFoundEs;
+
     @BeforeEach
     void setUp() {
-        localizationMessageRepository.deleteAll();
-        localizationMessageRepository.saveAll(LocalizationMessageSeedData.defaultMessages());
-        bookNotFoundEn = localizationMessageRepository.findByMessageKeyAndLanguage("error.book.not_found", "en").orElseThrow();
-        bookNotFoundEs = localizationMessageRepository.findByMessageKeyAndLanguage("error.book.not_found", "es").orElseThrow();
+        LocalizationMessageTestData.DefaultLocalizationMessages messages =
+                LocalizationMessageTestData.reloadDefaultMessages(localizationMessageRepository);
+        bookNotFoundEn = messages.bookNotFoundEn();
+        bookNotFoundEs = messages.bookNotFoundEs();
     }
 
     @Test
@@ -323,25 +309,6 @@ class LocalizationApiDocumentationTests {
                         relaxedResponseFields(problemResponseFields())
                 ));
     }
-
-    private RestDocumentationResultHandler documentEndpoint(String identifier, org.springframework.restdocs.snippet.Snippet... snippets) {
-        return document(
-                identifier,
-                preprocessRequest(prettyPrint()),
-                preprocessResponse(prettyPrint()),
-                snippets
-        );
-    }
-
-    private HeaderDescriptor[] commonResponseHeaders() {
-        return new HeaderDescriptor[]{
-                org.springframework.restdocs.headers.HeaderDocumentation.headerWithName("X-Request-Id")
-                        .description("Request identifier returned on every public endpoint."),
-                org.springframework.restdocs.headers.HeaderDocumentation.headerWithName("traceparent")
-                        .description("Trace context header returned when tracing is active.")
-        };
-    }
-
     private org.springframework.restdocs.payload.FieldDescriptor[] responseFieldDescriptors() {
         return new org.springframework.restdocs.payload.FieldDescriptor[]{
                 fieldWithPath("id").description("Localization message identifier."),
@@ -354,27 +321,5 @@ class LocalizationApiDocumentationTests {
         };
     }
 
-    private org.springframework.restdocs.payload.FieldDescriptor[] problemResponseFields() {
-        return new org.springframework.restdocs.payload.FieldDescriptor[]{
-                fieldWithPath("title").description("Problem title."),
-                fieldWithPath("status").description("HTTP status code."),
-                fieldWithPath("detail").description("Technical problem detail kept stable for debugging and logs."),
-                fieldWithPath("messageKey").description("Stable localization key for the error type."),
-                fieldWithPath("message").description("Localized end-user message resolved from the request language."),
-                fieldWithPath("language").description("Two-letter ISO 639-1 language code actually used for the localized message.")
-        };
-    }
-
-    private org.springframework.restdocs.payload.FieldDescriptor[] problemResponseFieldsWithFieldErrors() {
-        return new org.springframework.restdocs.payload.FieldDescriptor[]{
-                fieldWithPath("title").description("Problem title."),
-                fieldWithPath("status").description("HTTP status code."),
-                fieldWithPath("detail").description("Technical problem detail kept stable for debugging and logs."),
-                fieldWithPath("messageKey").description("Stable localization key for the error type."),
-                fieldWithPath("message").description("Localized end-user message resolved from the request language."),
-                fieldWithPath("language").description("Two-letter ISO 639-1 language code actually used for the localized message."),
-                subsectionWithPath("fieldErrors").description("Validation errors keyed by request field name.")
-        };
-    }
 }
 

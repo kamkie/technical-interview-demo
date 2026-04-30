@@ -9,39 +9,28 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 import static team.jit.technicalinterviewdemo.SecurityTestSupport.oauthUser;
 
-import jakarta.servlet.Filter;
 import jakarta.servlet.http.Cookie;
-
-import java.util.Comparator;
-import java.util.LinkedHashSet;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.WebApplicationContext;
 import team.jit.technicalinterviewdemo.business.book.Book;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
-import team.jit.technicalinterviewdemo.technical.cache.CacheNames;
-import team.jit.technicalinterviewdemo.business.category.Category;
 import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
+import team.jit.technicalinterviewdemo.technical.testing.AbstractMockMvcIntegrationTest;
+import team.jit.technicalinterviewdemo.technical.testing.BookCatalogTestData;
+import team.jit.technicalinterviewdemo.technical.testing.MockMvcIntegrationSpringBootTest;
 
-@TestcontainersTest
-@SpringBootTest
+@MockMvcIntegrationSpringBootTest
 @ExtendWith(OutputCaptureExtension.class)
-class ApiDemoTests {
-
-    @Autowired
-    private WebApplicationContext webApplicationContext;
+class ApiDemoTests extends AbstractMockMvcIntegrationTest {
 
     @Autowired
     private BookRepository bookRepository;
@@ -52,42 +41,15 @@ class ApiDemoTests {
     @Autowired
     private CacheManager cacheManager;
 
-    private MockMvc mockMvc;
     private Book cleanCode;
     private Book effectiveJava;
-    private Category bestPractices;
-    private Category javaCategory;
-    private Category softwareEngineering;
 
     @BeforeEach
     void setUp() {
-        Filter[] filters = webApplicationContext.getBeansOfType(Filter.class).values().stream()
-                .sorted(Comparator.comparing(filter -> filter.getClass().getName()))
-                .toArray(Filter[]::new);
-
-        mockMvc = webAppContextSetup(webApplicationContext)
-                .addFilters(filters)
-                .build();
-        bookRepository.deleteAll();
-        categoryRepository.deleteAll();
-        bestPractices = categoryRepository.saveAndFlush(new Category("Best Practices"));
-        javaCategory = categoryRepository.saveAndFlush(new Category("Java"));
-        softwareEngineering = categoryRepository.saveAndFlush(new Category("Software Engineering"));
-        clearCategoryCaches();
-        cleanCode = bookRepository.saveAndFlush(new Book(
-                "Clean Code",
-                "Robert C. Martin",
-                "9780132350884",
-                2008,
-                new LinkedHashSet<>(java.util.List.of(bestPractices, softwareEngineering))
-        ));
-        effectiveJava = bookRepository.saveAndFlush(new Book(
-                "Effective Java",
-                "Joshua Bloch",
-                "9780134685991",
-                2018,
-                new LinkedHashSet<>(java.util.List.of(bestPractices, javaCategory))
-        ));
+        BookCatalogTestData.BookCatalog catalog =
+                BookCatalogTestData.seedDefaultCatalog(bookRepository, categoryRepository, cacheManager);
+        cleanCode = catalog.cleanCode();
+        effectiveJava = catalog.effectiveJava();
     }
 
     @Test
@@ -606,9 +568,5 @@ class ApiDemoTests {
                 .andExpect(jsonPath("$.language").value("no"));
     }
 
-    private void clearCategoryCaches() {
-        cacheManager.getCache(CacheNames.CATEGORIES).clear();
-        cacheManager.getCache(CacheNames.CATEGORY_DIRECTORY).clear();
-    }
 }
 
