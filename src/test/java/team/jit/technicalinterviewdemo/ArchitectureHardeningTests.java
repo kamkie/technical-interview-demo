@@ -26,7 +26,7 @@ import team.jit.technicalinterviewdemo.business.book.BookSearchRequest;
 import team.jit.technicalinterviewdemo.technical.cache.CacheNames;
 import team.jit.technicalinterviewdemo.business.category.Category;
 import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
-import team.jit.technicalinterviewdemo.technical.config.CachingConfiguration;
+import team.jit.technicalinterviewdemo.technical.cache.CachingConfiguration;
 
 @TestcontainersTest
 @SpringBootTest

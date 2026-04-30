@@ -308,11 +308,11 @@ Release policy:
 - `.env.example`: optional environment variable template for local shells or container tooling
 - `build.gradle.kts`: Gradle build and dependencies
 - `config/pmd/pmd-ruleset.xml`: curated PMD ruleset
-- `src/main/java/team/jit/technicalinterviewdemo/technical/config/`: application configuration classes such as cache enablement
+- `src/main/java/team/jit/technicalinterviewdemo/technical/config/`: application configuration classes such as security and session setup
 - `src/main/java/team/jit/technicalinterviewdemo/TechnicalInterviewDemoApplication.java`: app entry point
 - `src/main/java/team/jit/technicalinterviewdemo/HelloController.java`: hello-world endpoint
 - `src/main/java/team/jit/technicalinterviewdemo/business/book/`: `Book` domain, service, repository, and REST API
-- `src/main/java/team/jit/technicalinterviewdemo/technical/cache/`: cache names and related cache constants
+- `src/main/java/team/jit/technicalinterviewdemo/technical/cache/`: cache names, cache enablement, and related cache constants
 - `src/main/java/team/jit/technicalinterviewdemo/business/category/`: category entity, repository, service, controller, and seed data
 - `src/main/java/team/jit/technicalinterviewdemo/business/localization/`: localization entity, repository, service, and seed data
 - `src/main/java/team/jit/technicalinterviewdemo/technical/metrics/`: application-specific Micrometer gauges and counters
