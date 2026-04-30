@@ -10,7 +10,8 @@ Current scope:
 
 - `GET /docs` redirects to generated API documentation
 - `GET /hello` returns `Hello World!`
-- CRUD-style `Book` API under `/api/books` with pagination, filtering, and optimistic locking on updates
+- CRUD-style `Book` API under `/api/books` with pagination, filtering, optimistic locking, and category assignment
+- `Category` API under `/api/categories`
 - CRUD-style `LocalizationMessage` API under `/api/localization-messages` with pagination and key/language lookup
 - git-tag-based application versioning with a human-readable `CHANGELOG.md`
 - actuator endpoints for `health`, `info`, liveness/readiness probes, and Prometheus metrics
@@ -155,6 +156,7 @@ Release policy:
 - `src/main/java/team/jit/technicalinterviewdemo/TechnicalInterviewDemoApplication.java`: app entry
 - `src/main/java/team/jit/technicalinterviewdemo/HelloController.java`: hello endpoint
 - `src/main/java/team/jit/technicalinterviewdemo/book/`: book entity, requests, repository, service, controller, seed data
+- `src/main/java/team/jit/technicalinterviewdemo/category/`: category entity, repository, service, controller, and seed data
 - `src/main/java/team/jit/technicalinterviewdemo/localization/`: localization entity, repository, service, exception, and seed data
 - `src/main/java/team/jit/technicalinterviewdemo/api/`: exception handling and custom exceptions
 - `src/main/java/team/jit/technicalinterviewdemo/docs/`: documentation endpoint and resource mapping
@@ -172,11 +174,13 @@ Endpoints:
 
 - `GET /docs`
 - `GET /hello`
-- `GET /api/books?page=0&size=20&sort=id,asc&title=clean&yearFrom=2000&yearTo=2020`
+- `GET /api/books?page=0&size=20&sort=id,asc&title=clean&category=java&yearFrom=2000&yearTo=2020`
 - `GET /api/books/{id}`
 - `POST /api/books`
 - `PUT /api/books/{id}`
 - `DELETE /api/books/{id}`
+- `GET /api/categories`
+- `POST /api/categories`
 - `GET /api/localization-messages?page=0&size=20&sort=id,asc`
 - `GET /api/localization-messages/{id}`
 - `GET /api/localization-messages/key/{messageKey}/lang/{language}`
@@ -200,11 +204,19 @@ Book rules:
 - `isbn` is immutable after creation and is not updated by `PUT /api/books/{id}`
 - `GET /api/books` returns a paginated response
 - `GET /api/books` supports optional `title`, `author`, and `isbn` substring filters
+- `GET /api/books` supports repeated `category` filters matched case-insensitively against assigned category names
 - `GET /api/books` supports `year` for exact publication year matching
 - `GET /api/books` supports `yearFrom` and `yearTo` for inclusive publication year ranges
 - `GET /api/books` supports repeated `sort` parameters such as `sort=title,asc&sort=year,desc`
 - `year` cannot be combined with `yearFrom` or `yearTo`
 - `version` is returned for each book and is required on `PUT /api/books/{id}` for optimistic locking
+- `categories` is optional on create and update, but every listed category must already exist
+
+Category rules:
+
+- `name` is required
+- category names are unique ignoring case
+- `GET /api/categories` returns categories ordered by `name`
 
 Localization message rules:
 
@@ -220,6 +232,9 @@ Seed data:
 
 - `Clean Code`
 - `Effective Java`
+- `Best Practices`
+- `Java`
+- `Software Engineering`
 - Localization error messages for current handler scenarios in `en`, `es`, `de`, `fr`, `pl`, `uk`, and `no`
 
 Localization message key convention:

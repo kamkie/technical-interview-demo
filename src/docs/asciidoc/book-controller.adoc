@@ -10,7 +10,7 @@ This page documents the CRUD and search endpoints exposed by `BookController`.
 
 == `GET /api/books`
 
-Lists books in a paginated response. Supports `page`, `size`, `sort`, `title`, `author`, `isbn`, `year`, `yearFrom`, and `yearTo` query parameters.
+Lists books in a paginated response. Supports `page`, `size`, `sort`, `title`, `author`, `isbn`, repeated `category`, `year`, `yearFrom`, and `yearTo` query parameters.
 
 include::{snippets}/books/list-books/curl-request.adoc[]
 include::{snippets}/books/list-books/http-request.adoc[]
@@ -32,7 +32,7 @@ include::{snippets}/books/get-book/response-fields.adoc[]
 
 == `POST /api/books`
 
-Creates a book.
+Creates a book. Optional `categories` must reference existing category names.
 
 include::{snippets}/books/create-book/curl-request.adoc[]
 include::{snippets}/books/create-book/http-request.adoc[]
@@ -44,7 +44,7 @@ include::{snippets}/books/create-book/response-fields.adoc[]
 
 == `PUT /api/books/{id}`
 
-Updates title, author, and publication year. `isbn` is immutable after creation and is not part of the update request. `version` is required for optimistic locking.
+Updates title, author, publication year, and category assignments. `isbn` is immutable after creation and is not part of the update request. `version` is required for optimistic locking.
 
 include::{snippets}/books/update-book/curl-request.adoc[]
 include::{snippets}/books/update-book/http-request.adoc[]

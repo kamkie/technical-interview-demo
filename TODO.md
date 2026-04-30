@@ -11,20 +11,19 @@ The roadmap below is ordered to respect cross-phase dependencies.
 | --- | --- | --- | --- |
 | 1 | Phase 5: Security and user model | Ready | Security should be in place before admin-only management and audit trails |
 | 2 | Phase 8.5: OpenAPI and compatibility gates | Ready after Phase 5.1 | The machine-readable contract should reflect the secured API surface |
-| 3 | Phase 6.2: Book categories/tags | Ready | Extends the existing Book API after search/filtering is already complete |
-| 4 | Phase 7: Caching and application metrics | Blocked by 6.2 for category caching | Best added after the next major read-model features settle |
-| 5 | Phase 8.1: API and operations documentation gaps | Partially blocked by Phases 5 and 8.5 | Documentation should follow the feature set that actually exists |
-| 6 | Phase 9: Coverage and performance testing | Ready after core APIs stabilize | Better value once the near-term API and auth work are settled |
-| 7 | Phase 10: CI/CD and deployment assets | Ready | Depends mostly on the current quality gates and stable build outputs |
-| 8 | Phase 11: Optional future enhancements | Deferred | These are stretch items after the core demo is complete |
+| 3 | Phase 7: Caching and application metrics | Ready | Categories are now in place, so cache and metric work can build on the settled read model |
+| 4 | Phase 8.1: API and operations documentation gaps | Partially blocked by Phases 5 and 8.5 | Documentation should follow the feature set that actually exists |
+| 5 | Phase 9: Coverage and performance testing | Ready after core APIs stabilize | Better value once the near-term API and auth work are settled |
+| 6 | Phase 10: CI/CD and deployment assets | Ready | Depends mostly on the current quality gates and stable build outputs |
+| 7 | Phase 11: Optional future enhancements | Deferred | These are stretch items after the core demo is complete |
 
 ## Current Priorities
 
-1. Start Phase 5.1 Spring Security and OAuth 2.0 with a demo-friendly provider and JDBC-backed sessions.
-2. Add Phase 5.2 user persistence, role handling, and optional user language preference storage.
-3. Add Phase 5.3 audit logging for state-changing operations.
-4. Start Phase 8.5 OpenAPI support and breaking-change compatibility checks after the initial auth surface is in place.
-5. Start Phase 6.2 book categories/tags once the next security milestone is settled.
+1. Start Phase 7 caching and application metrics while the new category model is still fresh.
+2. Start Phase 5.1 Spring Security and OAuth 2.0 with a demo-friendly provider and JDBC-backed sessions.
+3. Add Phase 5.2 user persistence, role handling, and optional user language preference storage.
+4. Add Phase 5.3 audit logging for state-changing operations.
+5. Start Phase 8.5 OpenAPI support and breaking-change compatibility checks after the initial auth surface is in place.
 
 ## Active Detailed Plan
 
@@ -105,29 +104,6 @@ Status: Partially complete
 
 Completed in archive:
 - 6.1 Add Search & Filtering to Books
-
-#### 6.2 Add Book Categories/Tags
-
-Depends on: 6.1
-
-Goal:
-Improve book organization and discovery without overcomplicating the existing CRUD demo.
-
-Tasks:
-- [ ] Create `Category` entity and relationship model for books
-- [ ] Add repository and service support
-- [ ] Extend create/update flows to assign categories
-- [ ] Add category endpoints
-- [ ] Add category filtering to `GET /api/books`
-- [ ] Seed a small default category set
-- [ ] Add tests and docs coverage
-
-Definition of done:
-- Books can be assigned to categories
-- Category-based filtering works
-- API and docs stay consistent with the simple demo architecture
-
----
 
 ### Phase 7: Performance & Monitoring
 
@@ -303,7 +279,7 @@ Status: Deferred
 
 ## Completed Work Archive
 
-See `COMPLETED_TASKS.md` for archived completed phases, including finished Phase 4 language negotiation work and the completed release-versioning workflow.
+See `COMPLETED_TASKS.md` for archived completed phases, including finished Phase 4 language negotiation work, the completed release-versioning workflow, and the completed category/tag enhancement phase.
 
 ## Quick Reference: Quality Gates
 

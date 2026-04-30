@@ -15,6 +15,7 @@ import jakarta.servlet.Filter;
 import jakarta.servlet.http.Cookie;
 
 import java.util.Comparator;
+import java.util.LinkedHashSet;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import team.jit.technicalinterviewdemo.book.Book;
 import team.jit.technicalinterviewdemo.book.BookRepository;
+import team.jit.technicalinterviewdemo.category.Category;
+import team.jit.technicalinterviewdemo.category.CategoryRepository;
 
 @TestcontainersTest
 @SpringBootTest
@@ -40,9 +43,15 @@ class ApiDemoTests {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     private MockMvc mockMvc;
     private Book cleanCode;
     private Book effectiveJava;
+    private Category bestPractices;
+    private Category javaCategory;
+    private Category softwareEngineering;
 
     @BeforeEach
     void setUp() {
@@ -54,8 +63,24 @@ class ApiDemoTests {
                 .addFilters(filters)
                 .build();
         bookRepository.deleteAll();
-        cleanCode = bookRepository.saveAndFlush(new Book("Clean Code", "Robert C. Martin", "9780132350884", 2008));
-        effectiveJava = bookRepository.saveAndFlush(new Book("Effective Java", "Joshua Bloch", "9780134685991", 2018));
+        categoryRepository.deleteAll();
+        bestPractices = categoryRepository.saveAndFlush(new Category("Best Practices"));
+        javaCategory = categoryRepository.saveAndFlush(new Category("Java"));
+        softwareEngineering = categoryRepository.saveAndFlush(new Category("Software Engineering"));
+        cleanCode = bookRepository.saveAndFlush(new Book(
+                "Clean Code",
+                "Robert C. Martin",
+                "9780132350884",
+                2008,
+                new LinkedHashSet<>(java.util.List.of(bestPractices, softwareEngineering))
+        ));
+        effectiveJava = bookRepository.saveAndFlush(new Book(
+                "Effective Java",
+                "Joshua Bloch",
+                "9780134685991",
+                2018,
+                new LinkedHashSet<>(java.util.List.of(bestPractices, javaCategory))
+        ));
     }
 
     @Test
@@ -74,6 +99,7 @@ class ApiDemoTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content.length()").value(1))
                 .andExpect(jsonPath("$.content[0].title").value("Clean Code"))
+                .andExpect(jsonPath("$.content[0].categories.length()").value(2))
                 .andExpect(jsonPath("$.content[0].version").isNumber())
                 .andExpect(jsonPath("$.totalElements").value(2))
                 .andExpect(jsonPath("$.totalPages").value(2))
@@ -109,6 +135,18 @@ class ApiDemoTests {
                 .andExpect(jsonPath("$.content.length()").value(1))
                 .andExpect(jsonPath("$.content[0].title").value("Effective Java"))
                 .andExpect(jsonPath("$.content[0].publicationYear").value(2018))
+                .andExpect(jsonPath("$.totalElements").value(1));
+    }
+
+    @Test
+    void listBooksFiltersByCategoryIgnoringCase() throws Exception {
+        mockMvc.perform(get("/api/books")
+                        .queryParam("category", "java"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.length()").value(1))
+                .andExpect(jsonPath("$.content[0].title").value("Effective Java"))
+                .andExpect(jsonPath("$.content[0].categories[0].name").value("Best Practices"))
+                .andExpect(jsonPath("$.content[0].categories[1].name").value("Java"))
                 .andExpect(jsonPath("$.totalElements").value(1));
     }
 
@@ -175,7 +213,8 @@ class ApiDemoTests {
                                   "title": "Spring in Action",
                                   "author": "Craig Walls",
                                   "isbn": "9781617297571",
-                                  "publicationYear": 2022
+                                  "publicationYear": 2022,
+                                  "categories": ["Java", "Best Practices"]
                                 }
                                 """))
                 .andExpect(status().isCreated())
@@ -184,7 +223,10 @@ class ApiDemoTests {
                 .andExpect(jsonPath("$.title").value("Spring in Action"))
                 .andExpect(jsonPath("$.author").value("Craig Walls"))
                 .andExpect(jsonPath("$.isbn").value("9781617297571"))
-                .andExpect(jsonPath("$.publicationYear").value(2022));
+                .andExpect(jsonPath("$.publicationYear").value(2022))
+                .andExpect(jsonPath("$.categories.length()").value(2))
+                .andExpect(jsonPath("$.categories[0].name").value("Best Practices"))
+                .andExpect(jsonPath("$.categories[1].name").value("Java"));
     }
 
     @Test
@@ -207,6 +249,26 @@ class ApiDemoTests {
                 .andExpect(jsonPath("$.language").value("en"))
                 .andExpect(jsonPath("$.exception").doesNotExist())
                 .andExpect(jsonPath("$.trace").doesNotExist());
+    }
+
+    @Test
+    void createBookWithUnknownCategoryReturnsBadRequest() throws Exception {
+        mockMvc.perform(post("/api/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "title": "Spring in Action",
+                                  "author": "Craig Walls",
+                                  "isbn": "9781617297571",
+                                  "publicationYear": 2022,
+                                  "categories": ["Missing Category"]
+                                }
+                                """))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.title").value("Invalid Request"))
+                .andExpect(jsonPath("$.detail").value("Unknown categories: Missing Category."))
+                .andExpect(jsonPath("$.messageKey").value("error.request.invalid"))
+                .andExpect(jsonPath("$.language").value("en"));
     }
 
     @Test
@@ -317,7 +379,8 @@ class ApiDemoTests {
                                   "title": "Clean Code Second Edition",
                                   "author": "Robert C. Martin",
                                   "version": %d,
-                                  "publicationYear": 2026
+                                  "publicationYear": 2026,
+                                  "categories": ["Java"]
                                 }
                                 """.formatted(cleanCode.getVersion())))
                 .andExpect(status().isOk())
@@ -325,7 +388,9 @@ class ApiDemoTests {
                 .andExpect(jsonPath("$.version").value(cleanCode.getVersion() + 1))
                 .andExpect(jsonPath("$.title").value("Clean Code Second Edition"))
                 .andExpect(jsonPath("$.isbn").value("9780132350884"))
-                .andExpect(jsonPath("$.publicationYear").value(2026));
+                .andExpect(jsonPath("$.publicationYear").value(2026))
+                .andExpect(jsonPath("$.categories.length()").value(1))
+                .andExpect(jsonPath("$.categories[0].name").value("Java"));
     }
 
     @Test

@@ -12,6 +12,7 @@ Use `TODO.md` for active planning and `COMPLETED_TASKS.md` for implementation hi
 - Localization message entity, service, REST API, and seed data
 - Localized error responses with browser-compatible preferred-language support, cookie fallback, and supported-language validation
 - Book search and filtering support
+- Book categories and category filtering
 - Developer setup and contribution guides
 - Release versioning and changelog workflow
 
@@ -147,6 +148,17 @@ Summary:
 
 Commit: `a94abd0`
 Tag: `v0.9.0`
+
+#### 6.2 Add Book Categories/Tags
+
+Status: Completed
+
+Summary:
+- Added the `Category` entity, repository, service, controller, migration, and startup seed data.
+- Extended book create and update flows to assign existing categories by name.
+- Added category filtering to `GET /api/books`, plus integration tests and Spring REST Docs coverage.
+
+Tag: `v0.13.0`
 
 ### Phase 8: Documentation & Developer Experience
 

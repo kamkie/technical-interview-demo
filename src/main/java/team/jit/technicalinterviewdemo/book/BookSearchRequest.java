@@ -1,5 +1,7 @@
 package team.jit.technicalinterviewdemo.book;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,4 +15,5 @@ public class BookSearchRequest {
     private Integer year;
     private Integer yearFrom;
     private Integer yearTo;
+    private List<String> category;
 }

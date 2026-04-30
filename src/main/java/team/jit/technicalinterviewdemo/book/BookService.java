@@ -3,6 +3,7 @@ package team.jit.technicalinterviewdemo.book;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,8 @@ import team.jit.technicalinterviewdemo.api.BookNotFoundException;
 import team.jit.technicalinterviewdemo.api.DuplicateIsbnException;
 import team.jit.technicalinterviewdemo.api.InvalidRequestException;
 import team.jit.technicalinterviewdemo.api.StaleBookVersionException;
+import team.jit.technicalinterviewdemo.category.Category;
+import team.jit.technicalinterviewdemo.category.CategoryService;
 
 @Slf4j
 @Service
@@ -28,6 +31,7 @@ public class BookService {
 
     private static final int MAX_TEXT_FILTER_LENGTH = 100;
     private static final int MAX_ISBN_FILTER_LENGTH = 32;
+    private static final int MAX_CATEGORY_FILTER_COUNT = 10;
     private static final int MIN_YEAR = 0;
     private static final int MAX_YEAR = 3000;
     private static final Pattern ISBN_FILTER_PATTERN = Pattern.compile("[0-9Xx-]+");
@@ -41,6 +45,7 @@ public class BookService {
     );
 
     private final BookRepository bookRepository;
+    private final CategoryService categoryService;
 
     public Page<Book> findAll(BookSearchRequest request, Pageable pageable) {
         validateSearchRequest(request);
@@ -57,7 +62,8 @@ public class BookService {
     @Transactional
     public Book create(BookCreateRequest request) {
         validateUniqueIsbn(request.isbn());
-        Book book = new Book(request.title(), request.author(), request.isbn(), request.publicationYear());
+        Set<Category> categories = categoryService.resolveForAssignment(request.categories());
+        Book book = new Book(request.title(), request.author(), request.isbn(), request.publicationYear(), categories);
         Book savedBook = bookRepository.saveAndFlush(book);
         log.info("Created book id={} isbn={} title={}", savedBook.getId(), savedBook.getIsbn(), savedBook.getTitle());
         return savedBook;
@@ -73,6 +79,7 @@ public class BookService {
         book.setTitle(request.title());
         book.setAuthor(request.author());
         book.setPublicationYear(request.publicationYear());
+        book.setCategories(categoryService.resolveForAssignment(request.categories()));
 
         Book updatedBook;
         try {
@@ -104,6 +111,7 @@ public class BookService {
         validateTextFilter("title", request.getTitle(), MAX_TEXT_FILTER_LENGTH);
         validateTextFilter("author", request.getAuthor(), MAX_TEXT_FILTER_LENGTH);
         validateIsbnFilter(request.getIsbn());
+        validateCategoryFilters(request.getCategory());
         validateYearFilter("year", request.getYear());
         validateYearFilter("yearFrom", request.getYearFrom());
         validateYearFilter("yearTo", request.getYearTo());
@@ -173,6 +181,21 @@ public class BookService {
             throw new InvalidRequestException(
                     "Filter '%s' must be between %d and %d.".formatted(fieldName, MIN_YEAR, MAX_YEAR)
             );
+        }
+    }
+
+    private void validateCategoryFilters(List<String> categories) {
+        if (categories == null || categories.isEmpty()) {
+            return;
+        }
+        if (categories.size() > MAX_CATEGORY_FILTER_COUNT) {
+            throw new InvalidRequestException(
+                    "At most %d category filters are supported.".formatted(MAX_CATEGORY_FILTER_COUNT)
+            );
+        }
+
+        for (String category : categories) {
+            validateTextFilter("category", category, MAX_TEXT_FILTER_LENGTH);
         }
     }
 }

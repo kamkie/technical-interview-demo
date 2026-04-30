@@ -3,6 +3,8 @@ package team.jit.technicalinterviewdemo.book;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.List;
+
 public record BookUpdateRequest(
         @NotBlank(message = "title is required")
         String title,
@@ -11,6 +13,7 @@ public record BookUpdateRequest(
         @NotNull(message = "version is required")
         Long version,
         @NotNull(message = "publicationYear is required")
-        Integer publicationYear
+        Integer publicationYear,
+        List<String> categories
 ) {
 }

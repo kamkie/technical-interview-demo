@@ -9,7 +9,7 @@ This documentation is generated from integration tests using Spring REST Docs.
 == Application Overview
 
 Technical Interview Demo is a small Spring Boot application intended for interview exercises.
-The current runtime surface includes a simple hello endpoint, a CRUD-style book API, a CRUD-style localization message API, and operational endpoints under `/docs` and `/actuator`.
+The current runtime surface includes a simple hello endpoint, a CRUD-style book API with category assignment, a category API, a CRUD-style localization message API, and operational endpoints under `/docs` and `/actuator`.
 
 == API Conventions
 
@@ -20,12 +20,14 @@ The current runtime surface includes a simple hello endpoint, a CRUD-style book 
 - Supported application languages are `en`, `es`, `de`, `fr`, `pl`, `uk`, and `no`.
 - Collection endpoints use Spring pagination conventions such as `page`, `size`, and repeated `sort` parameters.
 - Update operations that modify books require a `version` field for optimistic locking.
+- Books can be filtered by repeated `category` query parameters and can carry multiple assigned categories.
 - Responses may include tracing headers such as `X-Request-Id` and `traceparent`.
 
 == Documentation Pages
 
 - xref:hello-controller.adoc[HelloController API]
 - xref:book-controller.adoc[BookController API]
+- xref:category-controller.adoc[CategoryController API]
 - xref:localization-message-controller.adoc[LocalizationMessageController API]
 - xref:technical-endpoints.adoc[Technical Endpoints]
 

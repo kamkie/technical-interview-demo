@@ -1,0 +1,44 @@
+= CategoryController API
+:toc:
+:toclevels: 2
+:sectanchors:
+:source-highlighter: highlight.js
+
+xref:index.adoc[Back to API overview]
+
+This page documents the category endpoints exposed by `CategoryController`.
+
+== `GET /api/categories`
+
+Lists categories ordered by name.
+
+include::{snippets}/categories/list-categories/curl-request.adoc[]
+include::{snippets}/categories/list-categories/http-request.adoc[]
+include::{snippets}/categories/list-categories/http-response.adoc[]
+include::{snippets}/categories/list-categories/response-headers.adoc[]
+include::{snippets}/categories/list-categories/response-fields.adoc[]
+
+== `POST /api/categories`
+
+Creates a category that can later be assigned to books.
+
+include::{snippets}/categories/create-category/curl-request.adoc[]
+include::{snippets}/categories/create-category/http-request.adoc[]
+include::{snippets}/categories/create-category/request-body.adoc[]
+include::{snippets}/categories/create-category/request-fields.adoc[]
+include::{snippets}/categories/create-category/http-response.adoc[]
+include::{snippets}/categories/create-category/response-headers.adoc[]
+include::{snippets}/categories/create-category/response-fields.adoc[]
+
+== Error Response Example
+
+=== `POST /api/categories` duplicate name
+
+Example bad-request response when a category with the same name already exists.
+
+include::{snippets}/errors/create-category-duplicate/curl-request.adoc[]
+include::{snippets}/errors/create-category-duplicate/http-request.adoc[]
+include::{snippets}/errors/create-category-duplicate/request-body.adoc[]
+include::{snippets}/errors/create-category-duplicate/http-response.adoc[]
+include::{snippets}/errors/create-category-duplicate/response-headers.adoc[]
+include::{snippets}/errors/create-category-duplicate/response-fields.adoc[]

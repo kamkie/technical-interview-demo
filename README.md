@@ -9,7 +9,8 @@ This repository contains a small Spring Boot demo application built with Gradle 
 The demo currently includes:
 
 - `GET /hello` returning `Hello World!`
-- A REST API for `Book` under `/api/books` with pagination and filtering
+- A REST API for `Book` under `/api/books` with pagination, filtering, and category assignment
+- A REST API for `Category` under `/api/categories`
 - A REST API for `LocalizationMessage` under `/api/localization-messages` with CRUD, pagination, and key/language lookup
 - Git tag based application versioning plus a human-readable `CHANGELOG.md`
 - H2 in-memory database for the default local profile
@@ -175,6 +176,7 @@ Useful local endpoints:
 - `GET /docs`
 - `GET /hello`
 - `GET /api/books`
+- `GET /api/categories`
 - `GET /actuator/info`
 - `GET /actuator/health`
 - `GET /actuator/health/liveness`
@@ -258,6 +260,7 @@ Release policy:
 - `src/main/java/team/jit/technicalinterviewdemo/TechnicalInterviewDemoApplication.java`: app entry point
 - `src/main/java/team/jit/technicalinterviewdemo/HelloController.java`: hello-world endpoint
 - `src/main/java/team/jit/technicalinterviewdemo/book/`: `Book` domain, service, repository, and REST API
+- `src/main/java/team/jit/technicalinterviewdemo/category/`: category entity, repository, service, controller, and seed data
 - `src/main/java/team/jit/technicalinterviewdemo/localization/`: localization entity, repository, service, and seed data
 - `src/main/java/team/jit/technicalinterviewdemo/api/`: API exception handling and custom exceptions
 - `src/main/java/team/jit/technicalinterviewdemo/docs/`: documentation endpoint and resource mapping
@@ -289,7 +292,7 @@ Hello World!
 
 ### Book API
 
-- `GET /api/books?page=0&size=20&sort=id,asc&title=clean&yearFrom=2000&yearTo=2020`
+- `GET /api/books?page=0&size=20&sort=id,asc&title=clean&category=java&yearFrom=2000&yearTo=2020`
 - `GET /api/books/{id}`
 - `POST /api/books`
 - `PUT /api/books/{id}`
@@ -304,7 +307,8 @@ Example create payload:
   "title": "Spring in Action",
   "author": "Craig Walls",
   "isbn": "9781617297571",
-  "publicationYear": 2022
+  "publicationYear": 2022,
+  "categories": ["Java", "Best Practices"]
 }
 ```
 
@@ -315,7 +319,8 @@ Example update payload:
   "title": "Spring in Action, Second Edition",
   "author": "Craig Walls",
   "version": 0,
-  "publicationYear": 2026
+  "publicationYear": 2026,
+  "categories": ["Java"]
 }
 ```
 
@@ -329,10 +334,31 @@ Validation rules:
 - `isbn` is immutable after creation and is not updated by `PUT /api/books/{id}`
 - `version` is returned for each book and required on `PUT /api/books/{id}` for optimistic locking
 - `GET /api/books` supports optional `title`, `author`, and `isbn` substring filters
+- `GET /api/books` supports repeated `category` filters matched case-insensitively against assigned category names
 - `GET /api/books` supports `year` for exact publication year matching
 - `GET /api/books` supports `yearFrom` and `yearTo` for inclusive publication year ranges
 - `GET /api/books` supports repeated `sort` parameters such as `sort=title,asc&sort=year,desc`
 - `year` cannot be combined with `yearFrom` or `yearTo`
+- `categories` is optional on create and update, but every listed category must already exist
+
+### Category API
+
+- `GET /api/categories`
+- `POST /api/categories`
+
+Example create payload:
+
+```json
+{
+  "name": "Architecture"
+}
+```
+
+Validation rules:
+
+- `name` is required
+- category names are unique ignoring case
+- `GET /api/categories` returns categories ordered by `name`
 
 ### Localization API
 
@@ -377,6 +403,12 @@ On startup, the app inserts sample books if the table is empty:
 
 - `Clean Code`
 - `Effective Java`
+
+It also seeds a small category set:
+
+- `Best Practices`
+- `Java`
+- `Software Engineering`
 
 It also seeds localization messages for the current API error scenarios in `en`, `es`, `de`, `fr`, `pl`, `uk`, and `no`.
 

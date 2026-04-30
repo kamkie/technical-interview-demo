@@ -1,6 +1,11 @@
 package team.jit.technicalinterviewdemo.book;
 
+import jakarta.persistence.criteria.JoinType;
+
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Locale;
+
 import org.springframework.data.jpa.domain.Specification;
 
 public final class BookSpecifications {
@@ -13,6 +18,7 @@ public final class BookSpecifications {
         specification = and(specification, containsIgnoreCase("title", request.getTitle()));
         specification = and(specification, containsIgnoreCase("author", request.getAuthor()));
         specification = and(specification, containsIgnoreCase("isbn", request.getIsbn()));
+        specification = and(specification, hasCategoryName(request.getCategory()));
         specification = and(specification, publicationYearMatches(request.getYear(), request.getYearFrom(), request.getYearTo()));
         return specification == null ? (root, query, criteriaBuilder) -> criteriaBuilder.conjunction() : specification;
     }
@@ -43,6 +49,27 @@ public final class BookSpecifications {
                 return criteriaBuilder.greaterThanOrEqualTo(root.get("publicationYear"), yearFrom);
             }
             return criteriaBuilder.lessThanOrEqualTo(root.get("publicationYear"), yearTo);
+        };
+    }
+
+    private static Specification<Book> hasCategoryName(List<String> categories) {
+        if (categories == null || categories.isEmpty()) {
+            return null;
+        }
+
+        LinkedHashSet<String> normalizedCategories = new LinkedHashSet<>();
+        for (String category : categories) {
+            if (category != null && !category.isBlank()) {
+                normalizedCategories.add(category.trim().toLowerCase(Locale.ROOT));
+            }
+        }
+        if (normalizedCategories.isEmpty()) {
+            return null;
+        }
+
+        return (root, query, criteriaBuilder) -> {
+            query.distinct(true);
+            return criteriaBuilder.lower(root.join("categories", JoinType.LEFT).get("name")).in(normalizedCategories);
         };
     }
 

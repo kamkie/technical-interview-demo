@@ -37,6 +37,8 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.MockMvc;
 import team.jit.technicalinterviewdemo.book.Book;
 import team.jit.technicalinterviewdemo.book.BookRepository;
+import team.jit.technicalinterviewdemo.category.Category;
+import team.jit.technicalinterviewdemo.category.CategoryRepository;
 
 @TestcontainersTest
 @SpringBootTest
@@ -50,14 +52,34 @@ class ApiDocumentationTests {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     private Book cleanCode;
     private Book effectiveJava;
+    private Category bestPractices;
 
     @BeforeEach
     void setUp() {
         bookRepository.deleteAll();
-        cleanCode = bookRepository.saveAndFlush(new Book("Clean Code", "Robert C. Martin", "9780132350884", 2008));
-        effectiveJava = bookRepository.saveAndFlush(new Book("Effective Java", "Joshua Bloch", "9780134685991", 2018));
+        categoryRepository.deleteAll();
+        bestPractices = categoryRepository.saveAndFlush(new Category("Best Practices"));
+        Category javaCategory = categoryRepository.saveAndFlush(new Category("Java"));
+        Category softwareEngineering = categoryRepository.saveAndFlush(new Category("Software Engineering"));
+        cleanCode = bookRepository.saveAndFlush(new Book(
+                "Clean Code",
+                "Robert C. Martin",
+                "9780132350884",
+                2008,
+                new java.util.LinkedHashSet<>(java.util.List.of(bestPractices, softwareEngineering))
+        ));
+        effectiveJava = bookRepository.saveAndFlush(new Book(
+                "Effective Java",
+                "Joshua Bloch",
+                "9780134685991",
+                2018,
+                new java.util.LinkedHashSet<>(java.util.List.of(bestPractices, javaCategory))
+        ));
     }
 
     @Test
@@ -93,13 +115,21 @@ class ApiDocumentationTests {
 
     @Test
     void documentListBooksEndpoint() throws Exception {
-        bookRepository.saveAndFlush(new Book("Clean Architecture", "Robert C. Martin", "9780134494166", 2017));
+        Category architecture = categoryRepository.saveAndFlush(new Category("Architecture"));
+        bookRepository.saveAndFlush(new Book(
+                "Clean Architecture",
+                "Robert C. Martin",
+                "9780134494166",
+                2017,
+                new java.util.LinkedHashSet<>(java.util.List.of(architecture, bestPractices))
+        ));
 
         mockMvc.perform(get("/api/books")
                         .queryParam("page", "0")
                         .queryParam("size", "20")
                         .queryParam("title", "clean")
                         .queryParam("author", "martin")
+                        .queryParam("category", "Best Practices")
                         .queryParam("yearFrom", "2000")
                         .queryParam("yearTo", "2020")
                         .queryParam("sort", "title,asc")
@@ -119,6 +149,9 @@ class ApiDocumentationTests {
                                 parameterWithName("title").optional().description("Case-insensitive title substring filter."),
                                 parameterWithName("author").optional().description("Case-insensitive author substring filter."),
                                 parameterWithName("isbn").optional().description("Exact or partial ISBN filter."),
+                                parameterWithName("category").optional().description(
+                                        "Repeatable case-insensitive category-name filter. When multiple values are provided, books that match any requested category are returned."
+                                ),
                                 parameterWithName("year").optional().description("Exact publication year filter. Cannot be combined with `yearFrom` or `yearTo`."),
                                 parameterWithName("yearFrom").optional().description("Inclusive publication year lower bound."),
                                 parameterWithName("yearTo").optional().description("Inclusive publication year upper bound.")
@@ -131,6 +164,8 @@ class ApiDocumentationTests {
                                 fieldWithPath("content[].author").description("Book author."),
                                 fieldWithPath("content[].isbn").description("Unique ISBN assigned when the book is created."),
                                 fieldWithPath("content[].publicationYear").description("Publication year."),
+                                fieldWithPath("content[].categories[].id").description("Category identifier assigned to the book."),
+                                fieldWithPath("content[].categories[].name").description("Category name assigned to the book."),
                                 subsectionWithPath("pageable").description("Pagination request metadata."),
                                 subsectionWithPath("sort").description("Applied sort metadata."),
                                 fieldWithPath("totalPages").description("Total number of pages."),
@@ -183,7 +218,9 @@ class ApiDocumentationTests {
                                 fieldWithPath("title").description("Book title."),
                                 fieldWithPath("author").description("Book author."),
                                 fieldWithPath("isbn").description("Unique ISBN assigned when the book was created."),
-                                fieldWithPath("publicationYear").description("Publication year.")
+                                fieldWithPath("publicationYear").description("Publication year."),
+                                fieldWithPath("categories[].id").description("Category identifier assigned to the book."),
+                                fieldWithPath("categories[].name").description("Category name assigned to the book.")
                         )
                 ));
     }
@@ -197,7 +234,8 @@ class ApiDocumentationTests {
                                   "title": "Spring in Action",
                                   "author": "Craig Walls",
                                   "isbn": "9781617297571",
-                                  "publicationYear": 2022
+                                  "publicationYear": 2022,
+                                  "categories": ["Java", "Best Practices"]
                                 }
                                 """))
                 .andExpect(status().isCreated())
@@ -210,7 +248,9 @@ class ApiDocumentationTests {
                                 fieldWithPath("title").description("Book title."),
                                 fieldWithPath("author").description("Book author."),
                                 fieldWithPath("isbn").description("Unique ISBN for the new book."),
-                                fieldWithPath("publicationYear").description("Publication year.")
+                                fieldWithPath("publicationYear").description("Publication year."),
+                                fieldWithPath("categories").optional().description("Optional list of existing category names to assign to the book."),
+                                fieldWithPath("categories[]").optional().description("Existing category name.")
                         ),
                         responseHeaders(commonResponseHeaders()),
                         responseFields(
@@ -219,7 +259,9 @@ class ApiDocumentationTests {
                                 fieldWithPath("title").description("Book title."),
                                 fieldWithPath("author").description("Book author."),
                                 fieldWithPath("isbn").description("Unique ISBN assigned to the book."),
-                                fieldWithPath("publicationYear").description("Publication year.")
+                                fieldWithPath("publicationYear").description("Publication year."),
+                                fieldWithPath("categories[].id").description("Assigned category identifier."),
+                                fieldWithPath("categories[].name").description("Assigned category name.")
                         )
                 ));
     }
@@ -281,7 +323,8 @@ class ApiDocumentationTests {
                                   "title": "Clean Code Second Edition",
                                   "author": "Robert C. Martin",
                                   "version": %d,
-                                  "publicationYear": 2026
+                                  "publicationYear": 2026,
+                                  "categories": ["Java"]
                                 }
                                 """.formatted(cleanCode.getVersion())))
                 .andExpect(status().isOk())
@@ -297,7 +340,9 @@ class ApiDocumentationTests {
                                 fieldWithPath("title").description("Updated book title."),
                                 fieldWithPath("author").description("Updated book author."),
                                 fieldWithPath("version").description("Current optimistic-locking version required for the update."),
-                                fieldWithPath("publicationYear").description("Updated publication year.")
+                                fieldWithPath("publicationYear").description("Updated publication year."),
+                                fieldWithPath("categories").optional().description("Optional replacement list of existing category names."),
+                                fieldWithPath("categories[]").optional().description("Existing category name.")
                         ),
                         responseHeaders(commonResponseHeaders()),
                         responseFields(
@@ -306,7 +351,9 @@ class ApiDocumentationTests {
                                 fieldWithPath("title").description("Updated book title."),
                                 fieldWithPath("author").description("Updated book author."),
                                 fieldWithPath("isbn").description("Original ISBN. ISBN is immutable after creation."),
-                                fieldWithPath("publicationYear").description("Updated publication year.")
+                                fieldWithPath("publicationYear").description("Updated publication year."),
+                                fieldWithPath("categories[].id").description("Assigned category identifier."),
+                                fieldWithPath("categories[].name").description("Assigned category name.")
                         )
                 ));
     }
