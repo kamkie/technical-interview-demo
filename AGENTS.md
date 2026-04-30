@@ -271,6 +271,9 @@ Current runtime behavior:
 - Keep REST responses JSON-friendly.
 - Add or update tests when API behavior changes.
 - Do not remove the existing `hello` or `book` endpoints unless asked.
+- After completing a roadmap phase from `TODO.md`, create an annotated git tag for the resulting app version on the phase-completion commit.
+- Prefer semantic version tags such as `v0.5.0`; if the correct version bump is unclear, stop and ask before tagging.
+- Keep release tags aligned with `COMPLETED_TASKS.md` and the future `CHANGELOG.md` once it exists.
 
 Human contribution workflow expectations live in `CONTRIBUTING.md`.
 
