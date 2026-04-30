@@ -207,7 +207,7 @@ Seed data:
 
 - `Clean Code`
 - `Effective Java`
-- Localization error messages for current handler scenarios in `en`, `es`, `de`, and `fr`
+- Localization error messages for current handler scenarios in `en`, `es`, `de`, `fr`, `pl`, `uk`, and `no`
 
 Localization message key convention:
 

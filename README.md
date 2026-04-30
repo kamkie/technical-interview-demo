@@ -365,7 +365,7 @@ On startup, the app inserts sample books if the table is empty:
 - `Clean Code`
 - `Effective Java`
 
-It also seeds localization messages for the current API error scenarios in `en`, `es`, `de`, and `fr`.
+It also seeds localization messages for the current API error scenarios in `en`, `es`, `de`, `fr`, `pl`, `uk`, and `no`.
 
 ## Localization Message Keys
 

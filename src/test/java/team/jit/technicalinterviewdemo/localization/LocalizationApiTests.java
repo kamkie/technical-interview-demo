@@ -54,8 +54,8 @@ class LocalizationApiTests {
                 .andExpect(jsonPath("$.content[0].messageKey").value("error.book.isbn_duplicate"))
                 .andExpect(jsonPath("$.content[0].language").value("de"))
                 .andExpect(jsonPath("$.content[1].language").value("en"))
-                .andExpect(jsonPath("$.totalElements").value(60))
-                .andExpect(jsonPath("$.totalPages").value(30));
+                .andExpect(jsonPath("$.totalElements").value(105))
+                .andExpect(jsonPath("$.totalPages").value(53));
     }
 
     @Test

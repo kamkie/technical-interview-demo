@@ -47,10 +47,10 @@ class LocalizationMessageServiceTests {
 
     @Test
     void getAllMessagesReturnsMessagesForRequestedLanguage() {
-        Map<String, String> messages = localizationMessageService.getAllMessages("es");
+        Map<String, String> messages = localizationMessageService.getAllMessages("pl");
 
-        assertThat(messages).containsEntry("error.book.not_found", "No se encontro el libro solicitado.");
-        assertThat(messages).containsEntry("error.request.invalid", "La solicitud no es valida.");
+        assertThat(messages).containsEntry("error.book.not_found", "Nie znaleziono zadanej ksiazki.");
+        assertThat(messages).containsEntry("error.request.invalid", "Zadanie jest nieprawidlowe.");
     }
 
     @Test

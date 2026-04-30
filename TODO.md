@@ -11,7 +11,7 @@ This file outlines planned features, improvements, and refactoring tasks for the
 
 ## ✅ Recently Completed
 
-- ✅ [Phase 3.3: Seed Initial Localization Messages](#33-seed-initial-localization-messages) - localization message keys are documented and seeded for current errors in four languages
+- ✅ [Phase 3.3: Seed Initial Localization Messages](#33-seed-initial-localization-messages) - localization message keys are documented and seeded for current errors in seven languages
 - ✅ [Phase 3.2: Create Localization REST API](#32-create-localization-rest-api) - localization messages now have CRUD endpoints, validation, tests, and REST Docs coverage
 - ✅ [Phase 3.1: Create LocalizationMessage Entity](#31-create-localizationmessage-entity) - localization message storage, lookup service, and seed data are now in place
 - ✅ [Phase 6.1: Add Search & Filtering to Books](#61-add-search--filtering-to-books) - `GET /api/books` now supports filtering, sort validation, tests, and REST Docs updates
@@ -286,7 +286,7 @@ Populate the database with initial localization messages for all current error s
 
 **Implementation Details:**
 - ✅ Analyzed `ApiExceptionHandler` and defined a stable message key set for every current error response type
-- ✅ Expanded localization seed data to cover the current error scenarios in English, Spanish, German, and French
+- ✅ Expanded localization seed data to cover the current error scenarios in English, Spanish, German, French, Polish, Ukrainian, and Norwegian
 - ✅ Centralized the seed definitions so the runtime initializer and tests use the same key catalog
 - ✅ Updated the initializer to insert missing translations idempotently instead of seeding only an empty table
 - ✅ Added test coverage that verifies every documented key exists for all supported seed languages
@@ -303,13 +303,13 @@ Populate the database with initial localization messages for all current error s
   - Invalid request: `error.request.invalid`
   - Internal server error: `error.server.internal`
   - And any others discovered in step 1
-- [x] Provide messages in at least: English (en), Spanish (es), German (de), French (fr)
+- [x] Provide messages in at least: English (en), Spanish (es), German (de), French (fr), Polish (pl), Ukrainian (uk), Norwegian (no)
 - [x] Create Flyway or data loader for seed data
 - [x] Document message keys in AGENTS.md and README.md
 
 **Definition of Done:**
 - All error scenarios have localized message keys
-- Seed data covers at least 4 languages
+- Seed data covers at least 7 languages
 - Seed data loads on application startup
 - Teams can easily add new message keys
 
@@ -376,7 +376,7 @@ Allow clients to request responses in their preferred language.
 - [ ] Create `LanguageResolver` component to extract preferred language from request
 - [ ] Store language preference in `ThreadLocal` or Spring's `RequestContext`
 - [ ] Update `LocalizationMessageService` to use context language
-- [ ] Add validation for supported languages (en, es, de, fr)
+- [ ] Add validation for supported languages (en, es, de, fr, pl, uk, no)
 - [ ] Document language codes in API documentation
 - [ ] Add tests for all language negotiation scenarios
 
