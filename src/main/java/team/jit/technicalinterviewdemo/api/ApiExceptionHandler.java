@@ -7,6 +7,7 @@ import jakarta.validation.ConstraintViolationException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -26,10 +27,16 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import team.jit.technicalinterviewdemo.logging.SensitiveDataSanitizer;
 import team.jit.technicalinterviewdemo.localization.DuplicateLocalizationMessageException;
 import team.jit.technicalinterviewdemo.localization.LocalizationMessageNotFoundException;
+import team.jit.technicalinterviewdemo.localization.LocalizationMessageService;
+import team.jit.technicalinterviewdemo.localization.RequestLanguageResolver;
 
 @Slf4j
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class ApiExceptionHandler {
+
+    private final LocalizationMessageService localizationMessageService;
+    private final RequestLanguageResolver requestLanguageResolver;
 
     @ExceptionHandler(BookNotFoundException.class)
     ProblemDetail handleBookNotFound(BookNotFoundException exception, HttpServletRequest request) {
@@ -37,6 +44,7 @@ public class ApiExceptionHandler {
                 HttpStatus.NOT_FOUND,
                 "Book Not Found",
                 exception.getMessage(),
+                "error.book.not_found",
                 request,
                 Map.of("exception", exception.getClass().getSimpleName())
         );
@@ -48,6 +56,7 @@ public class ApiExceptionHandler {
                 HttpStatus.NOT_FOUND,
                 "Localization Message Not Found",
                 exception.getMessage(),
+                "error.localization.not_found",
                 request,
                 Map.of("exception", exception.getClass().getSimpleName())
         );
@@ -59,6 +68,7 @@ public class ApiExceptionHandler {
                 HttpStatus.CONFLICT,
                 "Duplicate ISBN",
                 exception.getMessage(),
+                "error.book.isbn_duplicate",
                 request,
                 Map.of("exception", exception.getClass().getSimpleName())
         );
@@ -73,6 +83,7 @@ public class ApiExceptionHandler {
                 HttpStatus.CONFLICT,
                 "Duplicate Localization Message",
                 exception.getMessage(),
+                "error.localization.duplicate",
                 request,
                 Map.of("exception", exception.getClass().getSimpleName())
         );
@@ -84,6 +95,7 @@ public class ApiExceptionHandler {
                 HttpStatus.BAD_REQUEST,
                 "Invalid Request",
                 exception.getMessage(),
+                "error.request.invalid",
                 request,
                 Map.of("exception", exception.getClass().getSimpleName())
         );
@@ -98,6 +110,7 @@ public class ApiExceptionHandler {
                 HttpStatus.CONFLICT,
                 "Concurrent Modification",
                 detail,
+                "error.book.stale_version",
                 request,
                 Map.of("exception", exception.getClass().getSimpleName())
         );
@@ -109,6 +122,7 @@ public class ApiExceptionHandler {
                 HttpStatus.BAD_REQUEST,
                 "Validation Failed",
                 "Request validation failed.",
+                "error.request.validation_failed",
                 request,
                 extractFieldErrors(exception)
         );
@@ -123,6 +137,7 @@ public class ApiExceptionHandler {
                 HttpStatus.BAD_REQUEST,
                 "Constraint Violation",
                 "Request validation failed.",
+                "error.request.constraint_violation",
                 request,
                 violations
         );
@@ -138,6 +153,7 @@ public class ApiExceptionHandler {
                 HttpStatus.BAD_REQUEST,
                 "Invalid Parameter",
                 "Parameter '%s' value '%s' is invalid.".formatted(parameterName, rejectedValue),
+                "error.request.invalid_parameter",
                 request,
                 Map.of(
                         "parameter", parameterName,
@@ -153,6 +169,7 @@ public class ApiExceptionHandler {
                 HttpStatus.BAD_REQUEST,
                 "Malformed Request Body",
                 "Request body is missing or malformed.",
+                "error.request.malformed_body",
                 request,
                 Map.of(
                         "exception", exception.getClass().getSimpleName(),
@@ -167,6 +184,7 @@ public class ApiExceptionHandler {
                 HttpStatus.BAD_REQUEST,
                 "Missing Request Parameter",
                 "Required request parameter '%s' is missing.".formatted(exception.getParameterName()),
+                "error.request.missing_parameter",
                 request,
                 Map.of("parameter", exception.getParameterName())
         );
@@ -178,6 +196,7 @@ public class ApiExceptionHandler {
                 HttpStatus.BAD_REQUEST,
                 "Missing Request Header",
                 "Required request header '%s' is missing.".formatted(exception.getHeaderName()),
+                "error.request.missing_header",
                 request,
                 Map.of("header", exception.getHeaderName())
         );
@@ -190,6 +209,7 @@ public class ApiExceptionHandler {
                 HttpStatus.UNSUPPORTED_MEDIA_TYPE,
                 "Unsupported Media Type",
                 "Content type '%s' is not supported.".formatted(contentType),
+                "error.request.unsupported_media_type",
                 request,
                 Map.of("contentType", contentType)
         );
@@ -201,6 +221,7 @@ public class ApiExceptionHandler {
                 HttpStatus.METHOD_NOT_ALLOWED,
                 "Method Not Allowed",
                 "HTTP method '%s' is not supported for this endpoint.".formatted(exception.getMethod()),
+                "error.request.method_not_allowed",
                 request,
                 Map.of("method", exception.getMethod())
         );
@@ -212,6 +233,7 @@ public class ApiExceptionHandler {
                 HttpStatus.NOT_FOUND,
                 "Resource Not Found",
                 "Resource '%s' was not found.".formatted(exception.getResourcePath()),
+                "error.request.resource_not_found",
                 request,
                 Map.of("resourcePath", exception.getResourcePath())
         );
@@ -223,6 +245,7 @@ public class ApiExceptionHandler {
                 HttpStatus.CONFLICT,
                 "Data Integrity Violation",
                 "Book data violates a database constraint.",
+                "error.data.integrity_violation",
                 request,
                 Map.of(
                         "exception", exception.getClass().getSimpleName(),
@@ -237,15 +260,19 @@ public class ApiExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 "Internal Server Error",
                 "An unexpected error occurred.",
+                "error.server.internal",
                 request,
                 Map.of("exception", exception.getClass().getName()),
                 exception
         );
     }
 
-    private ProblemDetail createProblemDetail(HttpStatus status, String title, String detail) {
+    private ProblemDetail createProblemDetail(HttpStatus status, String title, String detail, LocalizedProblemMessage localizedMessage) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
         problemDetail.setTitle(title);
+        problemDetail.setProperty("messageKey", localizedMessage.messageKey());
+        problemDetail.setProperty("message", localizedMessage.message());
+        problemDetail.setProperty("language", localizedMessage.language());
         return problemDetail;
     }
 
@@ -253,42 +280,54 @@ public class ApiExceptionHandler {
             HttpStatus status,
             String title,
             String detail,
+            String messageKey,
             HttpServletRequest request,
             Map<String, ?> context
     ) {
+        LocalizedProblemMessage localizedMessage = resolveLocalizedProblemMessage(messageKey, request);
+        Map<String, Object> enrichedContext = new LinkedHashMap<>(context);
+        enrichedContext.put("messageKey", localizedMessage.messageKey());
+        enrichedContext.put("language", localizedMessage.language());
         log.warn(
-                "Handled client error status={} method={} path={} params={} title='{}' detail='{}' context={}",
+                "Handled client error status={} method={} path={} params={} title='{}' detail='{}' localizedMessage='{}' context={}",
                 status.value(),
                 request.getMethod(),
                 request.getRequestURI(),
                 SensitiveDataSanitizer.sanitizeParameters(request.getParameterMap()),
                 title,
                 detail,
-                context
+                localizedMessage.message(),
+                enrichedContext
         );
-        return createProblemDetail(status, title, detail);
+        return createProblemDetail(status, title, detail, localizedMessage);
     }
 
     private ProblemDetail logServerProblem(
             HttpStatus status,
             String title,
             String detail,
+            String messageKey,
             HttpServletRequest request,
             Map<String, ?> context,
             Exception exception
     ) {
+        LocalizedProblemMessage localizedMessage = resolveLocalizedProblemMessage(messageKey, request);
+        Map<String, Object> enrichedContext = new LinkedHashMap<>(context);
+        enrichedContext.put("messageKey", localizedMessage.messageKey());
+        enrichedContext.put("language", localizedMessage.language());
         log.error(
-                "Handled server error status={} method={} path={} params={} title='{}' detail='{}' context={}",
+                "Handled server error status={} method={} path={} params={} title='{}' detail='{}' localizedMessage='{}' context={}",
                 status.value(),
                 request.getMethod(),
                 request.getRequestURI(),
                 SensitiveDataSanitizer.sanitizeParameters(request.getParameterMap()),
                 title,
                 detail,
-                context,
+                localizedMessage.message(),
+                enrichedContext,
                 exception
         );
-        return createProblemDetail(status, title, detail);
+        return createProblemDetail(status, title, detail, localizedMessage);
     }
 
     private Map<String, String> extractFieldErrors(MethodArgumentNotValidException exception) {
@@ -322,5 +361,19 @@ public class ApiExceptionHandler {
 
         int lastSeparatorIndex = propertyPath.lastIndexOf('.');
         return lastSeparatorIndex >= 0 ? propertyPath.substring(lastSeparatorIndex + 1) : propertyPath;
+    }
+
+    private LocalizedProblemMessage resolveLocalizedProblemMessage(String messageKey, HttpServletRequest request) {
+        String preferredLanguage = requestLanguageResolver.resolvePreferredLanguage(request);
+        team.jit.technicalinterviewdemo.localization.LocalizationMessage resolvedMessage =
+                localizationMessageService.findByMessageKeyAndLanguageWithFallback(
+                messageKey,
+                preferredLanguage,
+                RequestLanguageResolver.DEFAULT_LANGUAGE
+        );
+        return new LocalizedProblemMessage(messageKey, resolvedMessage.getMessageText(), resolvedMessage.getLanguage());
+    }
+
+    private record LocalizedProblemMessage(String messageKey, String message, String language) {
     }
 }

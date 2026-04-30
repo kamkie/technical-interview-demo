@@ -161,11 +161,7 @@ class ApiDocumentationTests {
                                 parameterWithName("yearFrom").description("Range filter that conflicts with `year` in this example.")
                         ),
                         responseHeaders(commonResponseHeaders()),
-                        relaxedResponseFields(
-                                fieldWithPath("title").description("Problem title."),
-                                fieldWithPath("status").description("HTTP status code."),
-                                fieldWithPath("detail").description("Human-readable problem summary.")
-                        )
+                        relaxedResponseFields(problemResponseFields())
                 ));
     }
 
@@ -248,12 +244,7 @@ class ApiDocumentationTests {
                         "errors/create-book-validation-failed",
                         requestBody(),
                         responseHeaders(commonResponseHeaders()),
-                        relaxedResponseFields(
-                                fieldWithPath("title").description("Problem title."),
-                                fieldWithPath("status").description("HTTP status code."),
-                                fieldWithPath("detail").description("Human-readable problem summary."),
-                                subsectionWithPath("fieldErrors").description("Validation errors keyed by request field name.")
-                        )
+                        relaxedResponseFields(problemResponseFieldsWithFieldErrors())
                 ));
     }
 
@@ -277,11 +268,7 @@ class ApiDocumentationTests {
                         "errors/create-book-duplicate-isbn",
                         requestBody(),
                         responseHeaders(commonResponseHeaders()),
-                        relaxedResponseFields(
-                                fieldWithPath("title").description("Problem title."),
-                                fieldWithPath("status").description("HTTP status code."),
-                                fieldWithPath("detail").description("Human-readable problem summary.")
-                        )
+                        relaxedResponseFields(problemResponseFields())
                 ));
     }
 
@@ -361,11 +348,7 @@ class ApiDocumentationTests {
                         ),
                         requestBody(),
                         responseHeaders(commonResponseHeaders()),
-                        relaxedResponseFields(
-                                fieldWithPath("title").description("Problem title."),
-                                fieldWithPath("status").description("HTTP status code."),
-                                fieldWithPath("detail").description("Human-readable problem summary.")
-                        )
+                        relaxedResponseFields(problemResponseFields())
                 ));
     }
 
@@ -382,32 +365,29 @@ class ApiDocumentationTests {
                                 parameterWithName("id").description("Invalid book identifier value used in this example.")
                         ),
                         responseHeaders(commonResponseHeaders()),
-                        relaxedResponseFields(
-                                fieldWithPath("title").description("Problem title."),
-                                fieldWithPath("status").description("HTTP status code."),
-                                fieldWithPath("detail").description("Human-readable problem summary.")
-                        )
+                        relaxedResponseFields(problemResponseFields())
                 ));
     }
 
     @Test
     void documentGetBookNotFoundError() throws Exception {
-        mockMvc.perform(get("/api/books/{id}", 9999))
+        mockMvc.perform(get("/api/books/{id}", 9999)
+                        .queryParam("lang", "es"))
                 .andExpect(status().isNotFound())
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
                 .andExpect(jsonPath("$.title").value("Book Not Found"))
+                .andExpect(jsonPath("$.message").value("No se encontro el libro solicitado."))
                 .andDo(documentEndpoint(
                         "errors/get-book-not-found",
                         pathParameters(
                                 parameterWithName("id").description("Book identifier that does not exist.")
                         ),
+                        queryParameters(
+                                parameterWithName("lang").optional().description("Optional language override for localized error messages. Browser-style values such as `es` or `es-ES` are accepted.")
+                        ),
                         responseHeaders(commonResponseHeaders()),
-                        relaxedResponseFields(
-                                fieldWithPath("title").description("Problem title."),
-                                fieldWithPath("status").description("HTTP status code."),
-                                fieldWithPath("detail").description("Human-readable problem summary.")
-                        )
+                        relaxedResponseFields(problemResponseFields())
                 ));
     }
 
@@ -519,6 +499,29 @@ class ApiDocumentationTests {
         return new HeaderDescriptor[]{
                 headerWithName("X-Request-Id").description("Request identifier returned on every public endpoint."),
                 headerWithName("traceparent").description("Trace context header returned when tracing is active.")
+        };
+    }
+
+    private org.springframework.restdocs.payload.FieldDescriptor[] problemResponseFields() {
+        return new org.springframework.restdocs.payload.FieldDescriptor[]{
+                fieldWithPath("title").description("Problem title."),
+                fieldWithPath("status").description("HTTP status code."),
+                fieldWithPath("detail").description("Technical problem detail kept stable for debugging and logs."),
+                fieldWithPath("messageKey").description("Stable localization key for the error type."),
+                fieldWithPath("message").description("Localized end-user message resolved from the request language."),
+                fieldWithPath("language").description("Two-letter ISO 639-1 language code actually used for the localized message.")
+        };
+    }
+
+    private org.springframework.restdocs.payload.FieldDescriptor[] problemResponseFieldsWithFieldErrors() {
+        return new org.springframework.restdocs.payload.FieldDescriptor[]{
+                fieldWithPath("title").description("Problem title."),
+                fieldWithPath("status").description("HTTP status code."),
+                fieldWithPath("detail").description("Technical problem detail kept stable for debugging and logs."),
+                fieldWithPath("messageKey").description("Stable localization key for the error type."),
+                fieldWithPath("message").description("Localized end-user message resolved from the request language."),
+                fieldWithPath("language").description("Two-letter ISO 639-1 language code actually used for the localized message."),
+                subsectionWithPath("fieldErrors").description("Validation errors keyed by request field name.")
         };
     }
 }

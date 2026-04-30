@@ -49,19 +49,22 @@ public class LocalizationMessageService {
         return findByMessageKeyAndLanguage(messageKey, language).getMessageText();
     }
 
-    public String getMessageWithFallback(String messageKey, String language, String fallbackLanguage) {
+    public LocalizationMessage findByMessageKeyAndLanguageWithFallback(String messageKey, String language, String fallbackLanguage) {
         String normalizedMessageKey = normalizeMessageKey(messageKey);
         String normalizedLanguage = normalizeLanguage(language);
         String normalizedFallbackLanguage = normalizeLanguage(fallbackLanguage);
 
         Optional<LocalizationMessage> requestedMessage = findMessage(normalizedMessageKey, normalizedLanguage);
         if (requestedMessage.isPresent()) {
-            return requestedMessage.get().getMessageText();
+            return requestedMessage.get();
         }
 
         return findMessage(normalizedMessageKey, normalizedFallbackLanguage)
-                .map(LocalizationMessage::getMessageText)
                 .orElseThrow(() -> new LocalizationMessageNotFoundException(messageKey, language, fallbackLanguage));
+    }
+
+    public String getMessageWithFallback(String messageKey, String language, String fallbackLanguage) {
+        return findByMessageKeyAndLanguageWithFallback(messageKey, language, fallbackLanguage).getMessageText();
     }
 
     public Map<String, String> getAllMessages(String language) {

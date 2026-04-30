@@ -373,7 +373,7 @@ Naming convention:
 
 - Use `error.<domain>.<condition>` for server-managed error messages
 - Keep keys stable even if the user-facing text changes
-- Reuse existing keys across handlers instead of minting near-duplicates
+- Prefer extending the existing domain groups (`book`, `localization`, `request`, `data`, `server`) before adding new ones
 
 Current seeded keys:
 
@@ -381,6 +381,8 @@ Current seeded keys:
 - `error.book.not_found`
 - `error.book.stale_version`
 - `error.data.integrity_violation`
+- `error.localization.duplicate`
+- `error.localization.not_found`
 - `error.request.constraint_violation`
 - `error.request.invalid`
 - `error.request.invalid_parameter`
@@ -400,6 +402,9 @@ The API uses `ProblemDetail` responses through centralized `@RestControllerAdvic
 Current behavior:
 
 - expected client errors return sanitized messages
+- error responses also include `messageKey`, localized `message`, and resolved `language`
+- `Accept-Language` is used for browser-compatible language negotiation
+- query parameter `lang` overrides the browser preference and accepts values such as `pl` or `pl-PL`
 - validation errors include field-level details
 - duplicate ISBN returns `409 Conflict`
 - stale update versions return `409 Conflict`

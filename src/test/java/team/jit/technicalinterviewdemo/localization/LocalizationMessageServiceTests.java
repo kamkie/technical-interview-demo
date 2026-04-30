@@ -46,6 +46,14 @@ class LocalizationMessageServiceTests {
     }
 
     @Test
+    void findMessageWithFallbackReturnsResolvedLanguage() {
+        LocalizationMessage message = localizationMessageService.findByMessageKeyAndLanguageWithFallback("error.request.invalid", "it", "en");
+
+        assertThat(message.getLanguage()).isEqualTo("en");
+        assertThat(message.getMessageText()).isEqualTo("The request is invalid.");
+    }
+
+    @Test
     void getAllMessagesReturnsMessagesForRequestedLanguage() {
         Map<String, String> messages = localizationMessageService.getAllMessages("pl");
 

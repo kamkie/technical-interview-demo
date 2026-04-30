@@ -10,6 +10,8 @@ final class LocalizationMessageSeedData {
             "error.book.not_found",
             "error.book.stale_version",
             "error.data.integrity_violation",
+            "error.localization.duplicate",
+            "error.localization.not_found",
             "error.request.constraint_violation",
             "error.request.invalid",
             "error.request.invalid_parameter",
@@ -81,6 +83,28 @@ final class LocalizationMessageSeedData {
                 "Dane zadania naruszaja ograniczenie bazy danych.",
                 "Dani zapytu porushuiut obmezhennia bazy danykh.",
                 "Foresporselsdataene bryter en databasebegrensning."
+        );
+        addTranslations(
+                messages,
+                "error.localization.duplicate",
+                "A localization message with the same key and language already exists.",
+                "Ya existe un mensaje de localizacion con la misma clave y el mismo idioma.",
+                "Eine Lokalisierungsnachricht mit demselben Schluessel und derselben Sprache existiert bereits.",
+                "Un message de localisation avec la meme cle et la meme langue existe deja.",
+                "Komunikat lokalizacyjny z tym samym kluczem i jezykiem juz istnieje.",
+                "Povidomlennia lokalizatsii z takym samym kliuchem i movoiu vzhe isnuie.",
+                "En lokaliseringsmelding med samme nokkel og sprak finnes allerede."
+        );
+        addTranslations(
+                messages,
+                "error.localization.not_found",
+                "The requested localization message was not found.",
+                "No se encontro el mensaje de localizacion solicitado.",
+                "Die angeforderte Lokalisierungsnachricht wurde nicht gefunden.",
+                "Le message de localisation demande est introuvable.",
+                "Nie znaleziono zadanego komunikatu lokalizacyjnego.",
+                "Zapytane povidomlennia lokalizatsii ne znaideno.",
+                "Den forespurte lokaliseringsmeldingen ble ikke funnet."
         );
         addTranslations(
                 messages,

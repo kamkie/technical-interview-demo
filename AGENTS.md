@@ -213,7 +213,7 @@ Localization message key convention:
 
 - Use `error.<domain>.<condition>` for application-managed error messages
 - Keep keys stable even if the localized text changes
-- Prefer extending the existing domain groups (`book`, `request`, `data`, `server`) before adding new ones
+- Prefer extending the existing domain groups (`book`, `localization`, `request`, `data`, `server`) before adding new ones
 
 Seeded localization message keys:
 
@@ -221,6 +221,8 @@ Seeded localization message keys:
 - `error.book.not_found`
 - `error.book.stale_version`
 - `error.data.integrity_violation`
+- `error.localization.duplicate`
+- `error.localization.not_found`
 - `error.request.constraint_violation`
 - `error.request.invalid`
 - `error.request.invalid_parameter`
@@ -240,6 +242,8 @@ Do not add heavy bootstrap logic unless explicitly requested.
 Current runtime behavior:
 
 - request and error logs redact sensitive query parameters before they reach the logs
+- error responses include `messageKey`, localized `message`, and resolved `language`
+- `Accept-Language` drives browser-compatible error-message localization and `lang` query parameter overrides it
 - optional `org.springframework.web` DEBUG logging is available as a commented property in `application.properties`
 - Hibernate SQL logging is enabled through `org.hibernate.SQL`
 - Hibernate statistics are enabled through `hibernate.generate_statistics=true`

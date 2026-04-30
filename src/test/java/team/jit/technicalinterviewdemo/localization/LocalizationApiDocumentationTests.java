@@ -250,12 +250,7 @@ class LocalizationApiDocumentationTests {
                         "errors/create-localization-message-validation-failed",
                         requestBody(),
                         responseHeaders(commonResponseHeaders()),
-                        relaxedResponseFields(
-                                fieldWithPath("title").description("Problem title."),
-                                fieldWithPath("status").description("HTTP status code."),
-                                fieldWithPath("detail").description("Human-readable problem summary."),
-                                subsectionWithPath("fieldErrors").description("Validation errors keyed by request field name.")
-                        )
+                        relaxedResponseFields(problemResponseFieldsWithFieldErrors())
                 ));
     }
 
@@ -278,11 +273,7 @@ class LocalizationApiDocumentationTests {
                         "errors/create-localization-message-duplicate",
                         requestBody(),
                         responseHeaders(commonResponseHeaders()),
-                        relaxedResponseFields(
-                                fieldWithPath("title").description("Problem title."),
-                                fieldWithPath("status").description("HTTP status code."),
-                                fieldWithPath("detail").description("Human-readable problem summary.")
-                        )
+                        relaxedResponseFields(problemResponseFields())
                 ));
     }
 
@@ -298,11 +289,7 @@ class LocalizationApiDocumentationTests {
                                 parameterWithName("id").description("Localization message identifier that does not exist.")
                         ),
                         responseHeaders(commonResponseHeaders()),
-                        relaxedResponseFields(
-                                fieldWithPath("title").description("Problem title."),
-                                fieldWithPath("status").description("HTTP status code."),
-                                fieldWithPath("detail").description("Human-readable problem summary.")
-                        )
+                        relaxedResponseFields(problemResponseFields())
                 ));
     }
 
@@ -333,6 +320,29 @@ class LocalizationApiDocumentationTests {
                 fieldWithPath("description").description("Optional description for maintainers."),
                 fieldWithPath("createdAt").description("Creation timestamp in UTC."),
                 fieldWithPath("updatedAt").description("Last update timestamp in UTC.")
+        };
+    }
+
+    private org.springframework.restdocs.payload.FieldDescriptor[] problemResponseFields() {
+        return new org.springframework.restdocs.payload.FieldDescriptor[]{
+                fieldWithPath("title").description("Problem title."),
+                fieldWithPath("status").description("HTTP status code."),
+                fieldWithPath("detail").description("Technical problem detail kept stable for debugging and logs."),
+                fieldWithPath("messageKey").description("Stable localization key for the error type."),
+                fieldWithPath("message").description("Localized end-user message resolved from the request language."),
+                fieldWithPath("language").description("Two-letter ISO 639-1 language code actually used for the localized message.")
+        };
+    }
+
+    private org.springframework.restdocs.payload.FieldDescriptor[] problemResponseFieldsWithFieldErrors() {
+        return new org.springframework.restdocs.payload.FieldDescriptor[]{
+                fieldWithPath("title").description("Problem title."),
+                fieldWithPath("status").description("HTTP status code."),
+                fieldWithPath("detail").description("Technical problem detail kept stable for debugging and logs."),
+                fieldWithPath("messageKey").description("Stable localization key for the error type."),
+                fieldWithPath("message").description("Localized end-user message resolved from the request language."),
+                fieldWithPath("language").description("Two-letter ISO 639-1 language code actually used for the localized message."),
+                subsectionWithPath("fieldErrors").description("Validation errors keyed by request field name.")
         };
     }
 }

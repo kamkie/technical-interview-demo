@@ -319,27 +319,30 @@ Populate the database with initial localization messages for all current error s
 
 ## Phase 4: Error Response Localization
 
-### 4.1 Integrate Localization into Exception Handler 🟢
+### 4.1 Integrate Localization into Exception Handler ✅
 
 Depends on: 3.3 (Seed data loaded)
 
 Refactor the existing exception handler to use localized messages from the database.
 
+**Status:** Completed
+
 **Tasks:**
-- [ ] Update `ApiExceptionHandler` to inject `LocalizationMessageService`
-- [ ] Add request context to capture client's preferred language (via header, cookie, or default)
+- [x] Update `ApiExceptionHandler` to inject `LocalizationMessageService`
+- [x] Add request context to capture client's preferred language (via header, query parameter, or default)
+- [x] Create `RequestLanguageResolver` component to manage language resolution per-request
 - [ ] Create `LocalizationContext` component to manage language per-request (optional but recommended)
-- [ ] Modify each exception handler method to:
-  - Extract the messageKey from the exception
+- [x] Modify each exception handler method to:
+  - Resolve the message key for the error type
   - Retrieve localized message via `LocalizationMessageService`
   - Fall back to English if translation not available
   - Include messageKey in error response for client-side lookup
-- [ ] Update `ProblemDetail` response to include:
+- [x] Update `ProblemDetail` response to include:
   - `messageKey`: identifier for the error (kept for debugging/analytics)
   - `message`: localized message text
   - `language`: the language code used for the message
-- [ ] Update error test cases to verify localized responses
-- [ ] Add new tests for multi-language error scenarios
+- [x] Update error test cases to verify localized responses
+- [x] Add new tests for multi-language error scenarios
 
 **Response Format Example:**
 ```json
@@ -347,6 +350,7 @@ Refactor the existing exception handler to use localized messages from the datab
   "type": "about:blank",
   "title": "Not Found",
   "status": 404,
+  "detail": "Book with id 42 was not found.",
   "messageKey": "error.book.not_found",
   "message": "El libro solicitado no fue encontrado.",
   "language": "es"
@@ -368,17 +372,16 @@ Depends on: 4.1 (Exception handler integrated)
 Allow clients to request responses in their preferred language.
 
 **Tasks:**
-- [ ] Add language detection from HTTP headers:
-  - `Accept-Language` header as primary source
-  - Query parameter `lang` as override: `?lang=es`
-  - Cookie `language` as fallback
-  - User preferences (if authentication is added later)
-- [ ] Create `LanguageResolver` component to extract preferred language from request
+- [x] Add language detection from `Accept-Language` header as primary source
+- [x] Add query parameter `lang` as override: `?lang=es`
+- [ ] Add cookie `language` as fallback
+- [ ] Add user preferences as fallback (if authentication is added later)
+- [x] Create `LanguageResolver` component to extract preferred language from request
 - [ ] Store language preference in `ThreadLocal` or Spring's `RequestContext`
 - [ ] Update `LocalizationMessageService` to use context language
 - [ ] Add validation for supported languages (en, es, de, fr, pl, uk, no)
-- [ ] Document language codes in API documentation
-- [ ] Add tests for all language negotiation scenarios
+- [x] Document language codes in API documentation
+- [x] Add tests for header, override, and fallback language negotiation scenarios
 
 **Definition of Done:**
 - `Accept-Language: es` returns Spanish messages

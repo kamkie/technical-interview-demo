@@ -54,8 +54,8 @@ class LocalizationApiTests {
                 .andExpect(jsonPath("$.content[0].messageKey").value("error.book.isbn_duplicate"))
                 .andExpect(jsonPath("$.content[0].language").value("de"))
                 .andExpect(jsonPath("$.content[1].language").value("en"))
-                .andExpect(jsonPath("$.totalElements").value(105))
-                .andExpect(jsonPath("$.totalPages").value(53));
+                .andExpect(jsonPath("$.totalElements").value(119))
+                .andExpect(jsonPath("$.totalPages").value(60));
     }
 
     @Test
@@ -84,7 +84,10 @@ class LocalizationApiTests {
         mockMvc.perform(get("/api/localization-messages/{id}", 9999))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.title").value("Localization Message Not Found"))
-                .andExpect(jsonPath("$.detail").value("Localization message with id 9999 was not found."));
+                .andExpect(jsonPath("$.detail").value("Localization message with id 9999 was not found."))
+                .andExpect(jsonPath("$.messageKey").value("error.localization.not_found"))
+                .andExpect(jsonPath("$.message").value("The requested localization message was not found."))
+                .andExpect(jsonPath("$.language").value("en"));
     }
 
     @Test
@@ -135,7 +138,10 @@ class LocalizationApiTests {
                 .andExpect(jsonPath("$.title").value("Duplicate Localization Message"))
                 .andExpect(jsonPath("$.detail").value(
                         "Localization message with key 'error.book.not_found' and language 'es' already exists."
-                ));
+                ))
+                .andExpect(jsonPath("$.messageKey").value("error.localization.duplicate"))
+                .andExpect(jsonPath("$.message").value("A localization message with the same key and language already exists."))
+                .andExpect(jsonPath("$.language").value("en"));
     }
 
     @Test
@@ -152,6 +158,9 @@ class LocalizationApiTests {
                                 """))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.title").value("Validation Failed"))
+                .andExpect(jsonPath("$.messageKey").value("error.request.validation_failed"))
+                .andExpect(jsonPath("$.message").value("Request body validation failed."))
+                .andExpect(jsonPath("$.language").value("en"))
                 .andExpect(jsonPath("$.fieldErrors.messageKey").value("messageKey must match ^[a-z0-9._-]+$"))
                 .andExpect(jsonPath("$.fieldErrors.language").value("language must be a two-letter ISO 639-1 code"))
                 .andExpect(jsonPath("$.fieldErrors.messageText").value("messageText is required"));
@@ -191,9 +200,9 @@ class LocalizationApiTests {
     void listLocalizationMessagesByLanguageReturnsMessagesForLanguage() throws Exception {
         mockMvc.perform(get("/api/localization-messages/language/{language}", "es"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(15))
+                .andExpect(jsonPath("$.length()").value(17))
                 .andExpect(jsonPath("$[0].language").value("es"))
                 .andExpect(jsonPath("$[0].messageKey").value("error.book.isbn_duplicate"))
-                .andExpect(jsonPath("$[14].messageKey").value("error.server.internal"));
+                .andExpect(jsonPath("$[16].messageKey").value("error.server.internal"));
     }
 }

@@ -201,6 +201,9 @@ class ApiDemoTests {
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.title").value("Duplicate ISBN"))
                 .andExpect(jsonPath("$.detail").value("Book with ISBN 9780132350884 already exists."))
+                .andExpect(jsonPath("$.messageKey").value("error.book.isbn_duplicate"))
+                .andExpect(jsonPath("$.message").value("A book with the same ISBN already exists."))
+                .andExpect(jsonPath("$.language").value("en"))
                 .andExpect(jsonPath("$.exception").doesNotExist())
                 .andExpect(jsonPath("$.trace").doesNotExist());
     }
@@ -285,7 +288,10 @@ class ApiDemoTests {
         mockMvc.perform(get("/api/missing"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.title").value("Resource Not Found"))
-                .andExpect(jsonPath("$.detail").value("Resource 'api/missing' was not found."));
+                .andExpect(jsonPath("$.detail").value("Resource 'api/missing' was not found."))
+                .andExpect(jsonPath("$.messageKey").value("error.request.resource_not_found"))
+                .andExpect(jsonPath("$.message").value("The requested resource was not found."))
+                .andExpect(jsonPath("$.language").value("en"));
     }
 
     @Test
@@ -385,7 +391,52 @@ class ApiDemoTests {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.title").value("Book Not Found"))
                 .andExpect(jsonPath("$.detail").value("Book with id %d was not found.".formatted(cleanCode.getId())))
+                .andExpect(jsonPath("$.messageKey").value("error.book.not_found"))
+                .andExpect(jsonPath("$.message").value("The requested book was not found."))
+                .andExpect(jsonPath("$.language").value("en"))
                 .andExpect(jsonPath("$.exception").doesNotExist())
                 .andExpect(jsonPath("$.trace").doesNotExist());
+    }
+
+    @Test
+    void acceptLanguageHeaderReturnsLocalizedErrorMessage() throws Exception {
+        mockMvc.perform(get("/api/books/{id}", 9999)
+                        .header("Accept-Language", "es-ES,es;q=0.9,en;q=0.8"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.title").value("Book Not Found"))
+                .andExpect(jsonPath("$.detail").value("Book with id 9999 was not found."))
+                .andExpect(jsonPath("$.messageKey").value("error.book.not_found"))
+                .andExpect(jsonPath("$.message").value("No se encontro el libro solicitado."))
+                .andExpect(jsonPath("$.language").value("es"));
+    }
+
+    @Test
+    void langQueryParameterOverridesAcceptLanguageHeader() throws Exception {
+        mockMvc.perform(get("/api/books")
+                        .queryParam("year", "2018")
+                        .queryParam("yearFrom", "2000")
+                        .queryParam("lang", "uk-UA")
+                        .header("Accept-Language", "es-ES,es;q=0.9"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.title").value("Invalid Request"))
+                .andExpect(jsonPath("$.detail").value(
+                        "Use either 'year' or the 'yearFrom'/'yearTo' range parameters, not both."
+                ))
+                .andExpect(jsonPath("$.messageKey").value("error.request.invalid"))
+                .andExpect(jsonPath("$.message").value("Zapyt ye nevalidnym."))
+                .andExpect(jsonPath("$.language").value("uk"));
+    }
+
+    @Test
+    void invalidLangQueryParameterFallsBackToEnglish() throws Exception {
+        mockMvc.perform(get("/api/books/{id}", "abc")
+                        .queryParam("lang", "zz-ZZ")
+                        .header("Accept-Language", "pl-PL,pl;q=0.9"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.title").value("Invalid Parameter"))
+                .andExpect(jsonPath("$.detail").value("Parameter 'id' value 'abc' is invalid."))
+                .andExpect(jsonPath("$.messageKey").value("error.request.invalid_parameter"))
+                .andExpect(jsonPath("$.message").value("A request parameter has an invalid value."))
+                .andExpect(jsonPath("$.language").value("en"));
     }
 }

@@ -67,7 +67,7 @@ include::{snippets}/books/delete-book/response-headers.adoc[]
 
 == Error Response Examples
 
-Public book API errors use Spring `ProblemDetail` responses.
+Public book API errors use Spring `ProblemDetail` responses. Each error response keeps the technical `detail` field, and also adds `messageKey`, localized `message`, and resolved `language`. `Accept-Language` is honored, and `lang` can override it per request.
 
 === `POST /api/books` validation failure
 

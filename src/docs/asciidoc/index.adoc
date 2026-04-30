@@ -15,6 +15,8 @@ The current runtime surface includes a simple hello endpoint, a CRUD-style book 
 
 - Public API endpoints return JSON unless the endpoint explicitly documents plain text or Prometheus output.
 - Error responses use Spring `ProblemDetail` payloads generated from the same MVC and integration tests that produce the success-path snippets.
+- Error payloads include a stable `messageKey`, a localized `message`, and the resolved `language`.
+- Browser-compatible localization uses `Accept-Language`, and the optional `lang` query parameter overrides it with values such as `pl` or `pl-PL`.
 - Collection endpoints use Spring pagination conventions such as `page`, `size`, and repeated `sort` parameters.
 - Update operations that modify books require a `version` field for optimistic locking.
 - Responses may include tracing headers such as `X-Request-Id` and `traceparent`.

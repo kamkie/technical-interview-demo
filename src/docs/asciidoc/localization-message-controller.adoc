@@ -89,7 +89,7 @@ include::{snippets}/localization/list-localization-messages-by-language/response
 
 == Error Response Examples
 
-Public localization API errors use Spring `ProblemDetail` responses.
+Public localization API errors use Spring `ProblemDetail` responses. Each error response keeps the technical `detail` field, and also adds `messageKey`, localized `message`, and resolved `language`. `Accept-Language` is honored, and `lang` can override it per request.
 
 === `POST /api/localization-messages` validation failure
 
