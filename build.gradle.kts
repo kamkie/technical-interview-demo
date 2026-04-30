@@ -66,6 +66,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
 
     runtimeOnly("com.h2database:h2")
+    runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("io.micrometer:micrometer-tracing-bridge-otel")
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
 

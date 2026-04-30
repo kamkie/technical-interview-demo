@@ -86,6 +86,43 @@ The application uses Spring profiles to manage environment-specific configuratio
 docker run --rm -p 8080:8080 technical-interview-demo
 ```
 
+### Running with PostgreSQL (Production Profile)
+
+For testing the production profile with PostgreSQL:
+
+```powershell
+# Start PostgreSQL container (requires Docker)
+docker-compose up -d
+
+# Wait for PostgreSQL to be ready (5-10 seconds)
+Start-Sleep -Seconds 3
+
+# Run the app with prod profile
+.\gradlew.bat bootRun --args='--spring.profiles.active=prod'
+
+# Stop PostgreSQL when done
+docker-compose down
+```
+
+**Database Connection Details:**
+- Host: `localhost`
+- Port: `5432`
+- Database: `technical_interview_demo`
+- User: `postgres`
+- Password: `changeme` (change in production!)
+
+**Environment Variables for Custom DB Configuration:**
+```powershell
+# Override default PostgreSQL configuration
+$env:DATABASE_HOST='myhost.com'
+$env:DATABASE_PORT='5433'
+$env:DATABASE_NAME='my_database'
+$env:DATABASE_USER='my_user'
+$env:DATABASE_PASSWORD='my_password'
+
+.\gradlew.bat bootRun --args='--spring.profiles.active=prod'
+```
+
 ## Development Container (Dev Containers)
 
 This project includes a preconfigured dev container for VS Code's Remote - Containers extension.
