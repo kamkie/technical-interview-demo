@@ -78,7 +78,7 @@ Tasks:
 - [x] Add OpenAPI support and expose the generated specification
 - [x] Document public and secured endpoints, schemas, pagination, and auth requirements in the OpenAPI contract
 - [x] Decide how the approved OpenAPI baseline is stored and versioned
-- [ ] Add a compatibility test that compares the current OpenAPI contract to the approved baseline and fails on breaking changes
+- [x] Add a compatibility test that compares the current OpenAPI contract to the approved baseline and fails on breaking changes
 - [ ] Document how to intentionally refresh the approved contract
 - [ ] Add the compatibility check to local verification and CI
 
