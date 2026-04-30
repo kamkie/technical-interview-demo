@@ -8,3 +8,11 @@ GET {{baseUrl}}/docs
 ### Documentation - generated docs index
 GET {{baseUrl}}/docs/index.html
 Accept: text/html
+
+### Documentation - OpenAPI contract JSON
+GET {{baseUrl}}/v3/api-docs
+Accept: application/json
+
+### Documentation - OpenAPI contract YAML
+GET {{baseUrl}}/v3/api-docs.yaml
+Accept: application/vnd.oai.openapi
