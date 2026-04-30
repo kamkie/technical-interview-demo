@@ -60,7 +60,7 @@ This project includes a preconfigured dev container for VS Code's Remote - Conta
 
 ### What's Included
 
-- Java 25 JDK
+- Java 25 JDK (official Microsoft dev container image)
 - Gradle (via wrapper)
 - Docker & Docker Compose (Docker-in-Docker)
 - Preconfigured VS Code extensions (Java, Spring Boot, Docker, etc.)

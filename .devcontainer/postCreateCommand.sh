@@ -14,12 +14,8 @@ apt-get install -y --no-install-recommends \
     postgresql-client \
     npm
 
-# Set Java 25 as default
-echo "☕ Configuring Java 25..."
-export JAVA_HOME="/usr/local/sdkman/candidates/java/current"
-export PATH="$JAVA_HOME/bin:$PATH"
-
-echo "✅ Java version:"
+# Java 25 is already included in the base image
+echo "☕ Java version:"
 java -version
 
 # Verify Gradle wrapper works
@@ -50,4 +46,3 @@ echo "  • ./gradlew.bat pmdMain          - Run PMD analysis"
 echo "  • ./gradlew.bat asciidoctor      - Generate API documentation"
 echo "  • ./gradlew.bat dockerBuild      - Build Docker image"
 echo ""
-

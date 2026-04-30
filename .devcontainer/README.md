@@ -45,11 +45,10 @@ docker ps
 
 ### Development Container Image
 - **Base Image:** Microsoft's official Java development container (Java 25)
-- **OS:** Debian Bullseye
+- **OS:** Debian Bookworm
 - **Pre-installed Tools:**
-  - Java 25 JDK
+  - Java 25 JDK (official Microsoft OpenJDK)
   - Gradle (via wrapper)
-  - Git
   - Docker & Docker Compose (Docker-in-Docker)
   - PostgreSQL client tools
   - Node.js/npm (for potential frontend work)
@@ -259,7 +258,7 @@ Make code changes, and the app will restart automatically (if DevTools is enable
 Key environment variables set in the container:
 
 ```
-JAVA_HOME=/usr/local/sdkman/candidates/java/current
+JAVA_HOME=/usr/lib/jvm/msopenjdk-current
 GRADLE_USER_HOME=/root/.gradle
 M2_HOME=/root/.m2
 TZ=UTC
@@ -361,4 +360,3 @@ For issues or questions:
 ---
 
 Happy coding! 🚀
-

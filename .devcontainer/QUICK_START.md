@@ -10,6 +10,16 @@
 ✓ Done! You're ready to develop
 ```
 
+## What's Included
+
+- **Java 25 JDK** (official Microsoft OpenJDK)
+- **Gradle** (via wrapper)
+- **Docker & Docker Compose** (Docker-in-Docker)
+- **PostgreSQL** (port 5432, auto-starts)
+- **Prometheus** (port 9090, auto-starts)
+- **VS Code extensions** (Java Pack, Spring Boot, Docker, etc.)
+- **Helper commands** (20+ shortcuts)
+
 ## Essential Commands
 
 | Task | Command |
@@ -115,4 +125,3 @@ docker system prune -a
 ---
 
 **For more details:** See `.devcontainer/README.md`
-

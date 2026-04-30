@@ -8,10 +8,10 @@ This file outlines planned features, improvements, and refactoring tasks for the
 
 ## Legend
 
-- 🟢 **Ready** - No blocking dependencies  
-- 🟡 **Blocked** - Waiting for dependencies  
-- ✅ **Done** - Already implemented  
-- 📋 **In Progress** - Currently being worked on  
+- 🟢 **Ready** - No blocking dependencies
+- 🟡 **Blocked** - Waiting for dependencies
+- ✅ **Done** - Already implemented
+- 📋 **In Progress** - Currently being worked on
 
 ---
 
@@ -852,4 +852,3 @@ $env:Path="$env:JAVA_HOME\bin;$env:Path"
 - Prefer incremental delivery where possible to gather feedback early.
 - Keep the project simple and focused on demo/interview purposes—avoid over-engineering.
 - Always maintain alignment between README.md and AGENTS.md when design changes occur.
-

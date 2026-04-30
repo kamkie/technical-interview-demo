@@ -1,6 +1,6 @@
 {
   "name": "Technical Interview Demo - Spring Boot Java 25",
-  "image": "mcr.microsoft.com/devcontainers/java:1-25-bullseye",
+  "image": "mcr.microsoft.com/devcontainers/java:dev-25-bookworm",
 
   // Features to add to the dev container
   "features": {
@@ -40,7 +40,7 @@
 
   // Environment variables
   "remoteEnv": {
-    "JAVA_HOME": "/usr/local/sdkman/candidates/java/current"
+    "JAVA_HOME": "/usr/lib/jvm/msopenjdk-current"
   },
 
   // Customize the shell prompt
@@ -68,8 +68,8 @@
         "GitHub.github-vscode-theme"
       ],
       "settings": {
-        "java.home": "/usr/local/sdkman/candidates/java/current",
-        "java.jdt.ls.java.home": "/usr/local/sdkman/candidates/java/current",
+        "java.home": "/usr/lib/jvm/msopenjdk-current",
+        "java.jdt.ls.java.home": "/usr/lib/jvm/msopenjdk-current",
         "[java]": {
           "editor.defaultFormatter": "redhat.java",
           "editor.formatOnSave": true,
@@ -81,8 +81,8 @@
           "**/.settings": true,
           "**/.factorypath": true
         },
-        "spring-boot.ls.java.home": "/usr/local/sdkman/candidates/java/current",
-        "gradle.javaPath": "/usr/local/sdkman/candidates/java/current",
+        "spring-boot.ls.java.home": "/usr/lib/jvm/msopenjdk-current",
+        "gradle.javaPath": "/usr/lib/jvm/msopenjdk-current",
         "editor.rulers": [
           100,
           120
@@ -103,4 +103,3 @@
   "postStartCommand": "./.devcontainer/postStartCommand.sh",
   "onCreateCommand": "./.devcontainer/onCreateCommand.sh"
 }
-
