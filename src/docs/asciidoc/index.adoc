@@ -11,6 +11,28 @@ This documentation is generated from integration tests using Spring REST Docs.
 Technical Interview Demo is a small Spring Boot application intended for interview exercises.
 The current runtime surface includes a simple hello endpoint, a CRUD-style book API with category assignment, a category API, a CRUD-style localization message API, and operational endpoints under `/docs` and `/actuator`.
 
+== Build Metadata
+
+The values below are loaded from `{build-info-path}` during the Asciidoctor build.
+
+[cols="1,3"]
+|===
+| Name
+| `{build-name}`
+
+| Group
+| `{build-group}`
+
+| Artifact
+| `{build-artifact}`
+
+| Version
+| `{build-version}`
+
+| Build Time
+| `{build-time}`
+|===
+
 == API Conventions
 
 - Public API endpoints return JSON unless the endpoint explicitly documents plain text or Prometheus output.
@@ -34,5 +56,6 @@ The current runtime surface includes a simple hello endpoint, a CRUD-style book 
 == Build And Runtime Notes
 
 - Generated snippets are written to `build/generated-snippets`.
+- Build metadata is loaded from `/META-INF/build-info.properties` and rendered into this overview page.
 - Asciidoctor renders the linked HTML pages into `build/docs/asciidoc`.
 - The application serves the generated output from `/docs`, with `/docs` redirecting to `index.html`.

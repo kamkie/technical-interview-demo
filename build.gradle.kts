@@ -2,6 +2,7 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import net.ltgt.gradle.errorprone.errorprone
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import java.util.Properties
 
 plugins {
     java
@@ -36,6 +37,7 @@ val pmdVersion = "7.17.0"
 val gradleWrapperVersion = "9.5.0"
 val dockerImageName = providers.gradleProperty("dockerImageName").orElse("technical-interview-demo")
 val snippetsDir = layout.buildDirectory.dir("generated-snippets")
+val buildInfoPropertiesFile = layout.buildDirectory.file("resources/main/META-INF/build-info.properties")
 val asciidoctorTask = tasks.named<org.asciidoctor.gradle.jvm.AsciidoctorTask>("asciidoctor")
 
 java {
@@ -163,13 +165,28 @@ tasks.withType<Pmd>().configureEach {
 }
 
 asciidoctorTask {
-    dependsOn(tasks.test)
+    dependsOn(tasks.named("bootBuildInfo"), tasks.test)
     inputs.dir(snippetsDir)
+    inputs.file(buildInfoPropertiesFile)
     attributes(
         mapOf(
             "snippets" to snippetsDir.get().asFile
         )
     )
+    doFirst {
+        val buildInfo = Properties()
+        buildInfoPropertiesFile.get().asFile.inputStream().use { buildInfo.load(it) }
+        attributes(
+            mapOf(
+                "build-info-path" to "/META-INF/build-info.properties",
+                "build-name" to buildInfo.getProperty("build.name", "unknown"),
+                "build-group" to buildInfo.getProperty("build.group", "unknown"),
+                "build-artifact" to buildInfo.getProperty("build.artifact", "unknown"),
+                "build-version" to buildInfo.getProperty("build.version", "unknown"),
+                "build-time" to buildInfo.getProperty("build.time", "unknown")
+            )
+        )
+    }
 }
 
 val ideaFormatterBinaryCandidate: String? =
