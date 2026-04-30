@@ -19,6 +19,7 @@ Use `TODO.md` for active planning and `COMPLETED_TASKS.md` for implementation hi
 - Persisted users, roles, and authenticated-user profile endpoints
 - Append-only audit logging for state-changing operations
 - Developer setup and contribution guides
+- OpenAPI contract publication and compatibility gating
 - Release versioning and changelog workflow
 
 ## Archived Completed Work
@@ -241,6 +242,18 @@ Tag: `v0.14.0`
 
 ### Phase 8: Documentation & Developer Experience
 
+#### 8.1 Update API Documentation
+
+Status: Completed
+
+Summary:
+- Documented the persisted user model, roles, and `/api/users/me` profile endpoints across the human-facing docs, AI instructions, and generated docs overview.
+- Added reviewer-facing OAuth/session guidance together with the OpenAPI contract and baseline refresh workflow.
+- Kept the roadmap notes aligned with the now-complete OpenAPI documentation work.
+
+Commit: `5124b37`
+Tag: `v0.19.0`
+
 #### 8.2 Create Developer Setup Guide
 
 Status: Completed
@@ -276,6 +289,18 @@ Summary:
 
 Commit: `5439bd2`
 Tag: `v0.12.0`
+
+#### 8.5 Add OpenAPI & Compatibility Gates
+
+Status: Completed
+
+Summary:
+- Exposed `/v3/api-docs` and `/v3/api-docs.yaml` and documented the implemented controllers, schemas, pagination rules, and session-cookie auth requirements in the generated contract.
+- Stored the approved contract baseline in `src/test/resources/openapi/approved-openapi.json`, added the refresh task, and enforced backward compatibility with dedicated integration coverage.
+- Added GitHub Actions CI wiring so the compatibility gate now runs on pull requests and pushes to `main`.
+
+Commit: `d582a38`
+Tag: `v0.20.0`
 
 #### 8.6 Architecture & Cache Hardening
 

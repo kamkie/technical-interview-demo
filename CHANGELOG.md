@@ -8,9 +8,21 @@ Historical `v0.0.x` releases were backfilled as annotated tags from mainline git
 
 ## [Unreleased]
 
+## [v0.20.0] - 2026-04-30
+
+### Added
+- Added a dedicated GitHub Actions workflow that runs the OpenAPI compatibility integration test on pull requests and pushes to `main`.
+
+### Changed
+- Updated the roadmap and contributor-facing documentation to reflect that the OpenAPI compatibility gate now runs in CI.
+
+## [v0.19.0] - 2026-04-30
+
 ### Added
 - Split the HTTP client examples into per-controller files, including a dedicated authentication collection and localized request examples.
 - Added reviewer-focused local auth examples for the GitHub OAuth flow plus local PostgreSQL run-configuration support.
+- Added OpenAPI contract endpoints at `/v3/api-docs` and `/v3/api-docs.yaml`.
+- Added an approved OpenAPI baseline, a contract refresh task, and a backward-compatibility integration test for the published API surface.
 
 ### Changed
 - Reorganized application packages around `business` and `technical` concerns, including the extraction of localization infrastructure into `technical.localization`.
@@ -18,9 +30,7 @@ Historical `v0.0.x` releases were backfilled as annotated tags from mainline git
 - Removed the obsolete language-resolution helper in favor of `LocalizationContext`.
 - Disabled CSRF protection for the demo's session-based authentication flow so authenticated write requests no longer require a CSRF token round-trip.
 - Refreshed the HTTP examples for GitHub OAuth placeholders, controller-specific requests, and expected 404 scenarios.
-
-### Planned
-- OpenAPI contract generation and breaking-change checks
+- Documented the OpenAPI contract, baseline refresh workflow, and reviewer-facing auth setup across the project docs.
 
 ## [v0.18.0] - 2026-04-30
 
