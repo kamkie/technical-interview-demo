@@ -8,6 +8,12 @@ This file outlines planned features, improvements, and refactoring tasks for the
 - ✅ [Phase 2.1: Profile-Based Configuration Split](#phase-21-profile-based-configuration-split) - Environment-specific configuration for local, prod, and test
 - ✅ [Phase 1.1: PostgreSQL Migration](#phase-11-migrate-from-h2-to-postgresql) - PostgreSQL driver and production configuration ready
 
+## ✅ Recently Completed
+
+- ✅ [Phase 6.1: Add Search & Filtering to Books](#61-add-search--filtering-to-books) - `GET /api/books` now supports filtering, sort validation, tests, and REST Docs updates
+- ✅ [Phase 8.2: Create Developer Setup Guide](#82-create-developer-setup-guide) - `SETUP.md` and `.env.example` now cover local onboarding
+- ✅ [Phase 8.3: Add Contribution Guidelines](#83-add-contribution-guidelines) - `CONTRIBUTING.md` and optional sample Git hooks are now in the repo
+
 ## Legend
 
 - 🟢 **Ready** - No blocking dependencies
@@ -234,7 +240,7 @@ Depends on: 3.2 (API created)
 Populate the database with initial localization messages for all current error scenarios.
 
 **Tasks:**
-- [ ] Analyze current `ExceptionHandler` and identify all error message keys
+- [ ] Analyze current `ApiExceptionHandler` and identify all error message keys
 - [ ] Create comprehensive message key naming convention documentation
 - [ ] Seed messages for:
   - Book not found: `error.book.not_found`
@@ -265,7 +271,7 @@ Depends on: 3.3 (Seed data loaded)
 Refactor the existing exception handler to use localized messages from the database.
 
 **Tasks:**
-- [ ] Update `GlobalExceptionHandler` to inject `LocalizationMessageService`
+- [ ] Update `ApiExceptionHandler` to inject `LocalizationMessageService`
 - [ ] Add request context to capture client's preferred language (via header, cookie, or default)
 - [ ] Create `LocalizationContext` component to manage language per-request (optional but recommended)
 - [ ] Modify each exception handler method to:
@@ -456,6 +462,17 @@ Track who made changes to what, when, and (optionally) why.
 
 **Status:** Completed
 
+**Implementation Details:**
+- ✅ Added `BookSearchRequest` request binding model for optional query filters
+- ✅ Added `BookSpecifications` and `JpaSpecificationExecutor` support in `BookRepository`
+- ✅ Added filter and sort validation in `BookService` to reject unsupported sort fields and conflicting year filters
+- ✅ Added `InvalidRequestException` handling so invalid search requests return `400 Bad Request`
+- ✅ Added MVC/integration coverage for filtering, multi-sort behavior, and invalid request scenarios
+- ✅ Updated Spring REST Docs and Asciidoctor content for the enhanced list endpoint
+- ✅ All current quality gates passed during completion, including `spotlessCheck`, `pmdMain`, `test`, and `asciidoctor`
+
+**Commit:** a94abd0
+
 Enhanced search capabilities for the book API without breaking existing endpoints.
 
 **Tasks:**
@@ -574,13 +591,13 @@ Update Spring REST Docs and Asciidoctor documentation to reflect new features.
 - [ ] Add documentation for LocalizationMessage API
 - [ ] Add documentation for OAuth 2.0 flow and setup
 - [ ] Add documentation for User endpoints
-- [ ] Add documentation for book search/filtering
+- [x] Add documentation for book search/filtering
 - [ ] Add documentation for language negotiation
 - [ ] Add security warnings and best practices
-- [ ] Update examples in `index.adoc`
+- [x] Update examples in `index.adoc`
 - [ ] Add internationalization section
 - [ ] Add deployment guide for different profiles (local, prod)
-- [ ] Generate HTML docs: `./gradlew.bat asciidoctor`
+- [x] Generate HTML docs: `./gradlew.bat asciidoctor`
 
 **Definition of Done:**
 - All new endpoints documented
@@ -593,6 +610,16 @@ Update Spring REST Docs and Asciidoctor documentation to reflect new features.
 ### 8.2 Create Developer Setup Guide ✅
 
 **Status:** Completed
+
+**Implementation Details:**
+- ✅ Added `SETUP.md` with PowerShell and Bash quick starts
+- ✅ Added `.env.example` for local shell and profile configuration
+- ✅ Documented local H2 and local PostgreSQL workflows
+- ✅ Documented IntelliJ IDEA, VS Code, and dev container setup paths
+- ✅ Added troubleshooting guidance for common Java, docs, and port issues
+- ✅ Linked the new setup materials from `README.md` and `AGENTS.md`
+
+**Commit:** 4df2e54
 
 Step-by-step guide for new developers to get the project running locally.
 
@@ -621,6 +648,14 @@ Step-by-step guide for new developers to get the project running locally.
 ### 8.3 Add Contribution Guidelines ✅
 
 **Status:** Completed
+
+**Implementation Details:**
+- ✅ Added `CONTRIBUTING.md` with branch naming, commit message, PR, testing, formatting, and documentation expectations
+- ✅ Added optional sample pre-commit hook at `.githooks/pre-commit.sample`
+- ✅ Linked contribution workflow guidance from `README.md` and `AGENTS.md`
+- ✅ Declared `AGENTS.md` as the authoritative source for technical constraints when documentation conflicts
+
+**Commit:** 6ab4665
 
 Clear guidelines for contributing to the project.
 
