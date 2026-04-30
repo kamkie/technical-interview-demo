@@ -1,0 +1,1106 @@
+{
+  "openapi" : "3.1.0",
+  "info" : {
+    "title" : "technical-interview-demo API",
+    "description" : "Machine-readable contract for the demo application's public and secured API surface. Read endpoints stay public, while protected operations require the session cookie created by the GitHub OAuth login flow.",
+    "version" : "APPROVED"
+  },
+  "tags" : [ {
+    "name" : "Books",
+    "description" : "Public book reads plus authenticated write operations."
+  }, {
+    "name" : "Categories",
+    "description" : "Public category reads with ADMIN-only category management."
+  }, {
+    "name" : "Users",
+    "description" : "Authenticated-user profile endpoints."
+  }, {
+    "name" : "Hello",
+    "description" : "Simple public smoke-test endpoint."
+  }, {
+    "name" : "Localization Messages",
+    "description" : "Public localization lookups with ADMIN-only management operations."
+  } ],
+  "paths" : {
+    "/api/users/me/preferred-language" : {
+      "put" : {
+        "tags" : [ "Users" ],
+        "summary" : "Update the current user's preferred language",
+        "description" : "Requires an authenticated session. Blank or null clears the preference.",
+        "operationId" : "updatePreferredLanguage",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UserLanguagePreferenceRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserProfileResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "sessionCookie" : [ ]
+        } ]
+      }
+    },
+    "/api/localization-messages/{id}" : {
+      "get" : {
+        "tags" : [ "Localization Messages" ],
+        "summary" : "Get a localization message by id",
+        "description" : "Public endpoint for a single localization message.",
+        "operationId" : "findById",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/LocalizationMessageResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Localization Messages" ],
+        "summary" : "Update a localization message",
+        "description" : "Requires an authenticated session with the ADMIN role.",
+        "operationId" : "update",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/LocalizationMessageRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/LocalizationMessageResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "sessionCookie" : [ ]
+        } ]
+      },
+      "delete" : {
+        "tags" : [ "Localization Messages" ],
+        "summary" : "Delete a localization message",
+        "description" : "Requires an authenticated session with the ADMIN role.",
+        "operationId" : "delete",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "security" : [ {
+          "sessionCookie" : [ ]
+        } ]
+      }
+    },
+    "/api/books/{id}" : {
+      "get" : {
+        "tags" : [ "Books" ],
+        "summary" : "Get a book by id",
+        "description" : "Public endpoint that returns a single book with its assigned categories.",
+        "operationId" : "findById_1",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Book"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Books" ],
+        "summary" : "Update a book",
+        "description" : "Requires an authenticated session and the current optimistic-lock version.",
+        "operationId" : "update_1",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/BookUpdateRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Book"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "sessionCookie" : [ ]
+        } ]
+      },
+      "delete" : {
+        "tags" : [ "Books" ],
+        "summary" : "Delete a book",
+        "description" : "Requires an authenticated session.",
+        "operationId" : "delete_1",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "security" : [ {
+          "sessionCookie" : [ ]
+        } ]
+      }
+    },
+    "/api/localization-messages" : {
+      "get" : {
+        "tags" : [ "Localization Messages" ],
+        "summary" : "List localization messages",
+        "description" : "Public endpoint with pageable localization-message results.",
+        "operationId" : "findAll",
+        "parameters" : [ {
+          "name" : "page",
+          "in" : "query",
+          "description" : "Zero-based page index (0..N)",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "default" : 0,
+            "minimum" : 0
+          }
+        }, {
+          "name" : "size",
+          "in" : "query",
+          "description" : "The size of the page to be returned",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "default" : 20,
+            "minimum" : 1
+          }
+        }, {
+          "name" : "sort",
+          "in" : "query",
+          "description" : "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "default" : [ "id,ASC" ],
+            "items" : {
+              "type" : "string"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PageLocalizationMessageResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Localization Messages" ],
+        "summary" : "Create a localization message",
+        "description" : "Requires an authenticated session with the ADMIN role.",
+        "operationId" : "create",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/LocalizationMessageRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/LocalizationMessageResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "sessionCookie" : [ ]
+        } ]
+      }
+    },
+    "/api/categories" : {
+      "get" : {
+        "tags" : [ "Categories" ],
+        "summary" : "List categories",
+        "description" : "Public endpoint that returns categories ordered by name.",
+        "operationId" : "findAll_1",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Category"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Categories" ],
+        "summary" : "Create a category",
+        "description" : "Requires an authenticated session with the ADMIN role.",
+        "operationId" : "create_1",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CategoryCreateRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Category"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "sessionCookie" : [ ]
+        } ]
+      }
+    },
+    "/api/books" : {
+      "get" : {
+        "tags" : [ "Books" ],
+        "summary" : "List books",
+        "description" : "Public endpoint with pagination, sorting, text filters, category filters, and publication-year filters.",
+        "operationId" : "findAll_2",
+        "parameters" : [ {
+          "name" : "title",
+          "in" : "query",
+          "description" : "Case-insensitive substring filter for the title.",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "description" : "Case-insensitive substring filter for the title.",
+            "example" : "clean"
+          },
+          "example" : "clean"
+        }, {
+          "name" : "author",
+          "in" : "query",
+          "description" : "Case-insensitive substring filter for the author.",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "description" : "Case-insensitive substring filter for the author.",
+            "example" : "bloch"
+          },
+          "example" : "bloch"
+        }, {
+          "name" : "isbn",
+          "in" : "query",
+          "description" : "Case-insensitive substring filter for the ISBN.",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "description" : "Case-insensitive substring filter for the ISBN.",
+            "example" : 978013
+          },
+          "example" : 978013
+        }, {
+          "name" : "year",
+          "in" : "query",
+          "description" : "Exact publication year. Cannot be combined with yearFrom or yearTo.",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "Exact publication year. Cannot be combined with yearFrom or yearTo.",
+            "example" : 2018
+          },
+          "example" : 2018
+        }, {
+          "name" : "yearFrom",
+          "in" : "query",
+          "description" : "Inclusive publication-year lower bound.",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "Inclusive publication-year lower bound.",
+            "example" : 2000
+          },
+          "example" : 2000
+        }, {
+          "name" : "yearTo",
+          "in" : "query",
+          "description" : "Inclusive publication-year upper bound.",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "Inclusive publication-year upper bound.",
+            "example" : 2020
+          },
+          "example" : 2020
+        }, {
+          "name" : "category",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "description" : "Repeat the parameter to match any of multiple categories.",
+            "items" : {
+              "type" : "string",
+              "description" : "Category filter value.",
+              "example" : "Java"
+            }
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "Zero-based page index (0..N)",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "default" : 0,
+            "minimum" : 0
+          }
+        }, {
+          "name" : "size",
+          "in" : "query",
+          "description" : "The size of the page to be returned",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "default" : 20,
+            "minimum" : 1
+          }
+        }, {
+          "name" : "sort",
+          "in" : "query",
+          "description" : "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "default" : [ "id,ASC" ],
+            "items" : {
+              "type" : "string"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PageBook"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Books" ],
+        "summary" : "Create a book",
+        "description" : "Requires an authenticated session established through the GitHub OAuth login flow.",
+        "operationId" : "create_2",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/BookCreateRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Book"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "sessionCookie" : [ ]
+        } ]
+      }
+    },
+    "/hello" : {
+      "get" : {
+        "tags" : [ "Hello" ],
+        "summary" : "Return Hello World",
+        "description" : "Public endpoint for quick smoke testing.",
+        "operationId" : "hello",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/me" : {
+      "get" : {
+        "tags" : [ "Users" ],
+        "summary" : "Get the current user profile",
+        "description" : "Requires an authenticated session and returns the persisted application user profile.",
+        "operationId" : "currentUser",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserProfileResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "sessionCookie" : [ ]
+        } ]
+      }
+    },
+    "/api/localization-messages/language/{language}" : {
+      "get" : {
+        "tags" : [ "Localization Messages" ],
+        "summary" : "List localization messages for one language",
+        "description" : "Public endpoint ordered by message key.",
+        "operationId" : "findAllByLanguage",
+        "parameters" : [ {
+          "name" : "language",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "pattern" : "^[a-zA-Z]{2}$"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/LocalizationMessageResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/localization-messages/key/{messageKey}/lang/{language}" : {
+      "get" : {
+        "tags" : [ "Localization Messages" ],
+        "summary" : "Lookup a localization message by key and language",
+        "description" : "Public exact-match lookup.",
+        "operationId" : "findByMessageKeyAndLanguage",
+        "parameters" : [ {
+          "name" : "messageKey",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "language",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "pattern" : "^[a-zA-Z]{2}$"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/LocalizationMessageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "UserLanguagePreferenceRequest" : {
+        "type" : "object",
+        "description" : "Payload for updating the current user's preferred language.",
+        "properties" : {
+          "preferredLanguage" : {
+            "type" : "string",
+            "description" : "Two-letter ISO 639-1 language code. Use null or blank to clear the preference.",
+            "example" : "pl"
+          }
+        }
+      },
+      "UserProfileResponse" : {
+        "type" : "object",
+        "description" : "Persisted application profile for the current authenticated user.",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64",
+            "description" : "Database identifier.",
+            "example" : 1
+          },
+          "provider" : {
+            "type" : "string",
+            "description" : "OAuth provider name.",
+            "example" : "github"
+          },
+          "login" : {
+            "type" : "string",
+            "description" : "GitHub login.",
+            "example" : "kamkie"
+          },
+          "displayName" : {
+            "type" : "string",
+            "description" : "Display name from the OAuth provider.",
+            "example" : "Kamil Kiewisz"
+          },
+          "email" : {
+            "type" : "string",
+            "description" : "Email address when available from the provider."
+          },
+          "preferredLanguage" : {
+            "type" : "string",
+            "description" : "Preferred two-letter language code used as the last localization fallback."
+          },
+          "roles" : {
+            "type" : "array",
+            "description" : "Roles assigned to the persisted user.",
+            "items" : {
+              "type" : "string",
+              "description" : "Granted role name.",
+              "example" : "USER"
+            }
+          },
+          "lastLoginAt" : {
+            "type" : "string",
+            "format" : "date-time",
+            "description" : "Timestamp of the latest authenticated request."
+          },
+          "createdAt" : {
+            "type" : "string",
+            "format" : "date-time",
+            "description" : "Creation timestamp."
+          },
+          "updatedAt" : {
+            "type" : "string",
+            "format" : "date-time",
+            "description" : "Last update timestamp."
+          }
+        }
+      },
+      "LocalizationMessageRequest" : {
+        "type" : "object",
+        "description" : "Payload for creating or updating a localization message.",
+        "properties" : {
+          "messageKey" : {
+            "type" : "string",
+            "description" : "Stable message key managed by the application.",
+            "example" : "error.request.resource_not_found",
+            "maxLength" : 150,
+            "minLength" : 0,
+            "pattern" : "^[a-z0-9._-]+$"
+          },
+          "language" : {
+            "type" : "string",
+            "description" : "Two-letter ISO 639-1 language code.",
+            "example" : "pl",
+            "minLength" : 1,
+            "pattern" : "^[a-zA-Z]{2}$"
+          },
+          "messageText" : {
+            "type" : "string",
+            "description" : "Localized message text.",
+            "example" : "Nie znaleziono zasobu.",
+            "maxLength" : 2000,
+            "minLength" : 0
+          },
+          "description" : {
+            "type" : "string",
+            "description" : "Optional reviewer-facing description.",
+            "example" : "Displayed when a requested resource does not exist.",
+            "maxLength" : 1000,
+            "minLength" : 0
+          }
+        },
+        "required" : [ "language", "messageKey", "messageText" ]
+      },
+      "LocalizationMessageResponse" : {
+        "type" : "object",
+        "description" : "Localization message returned by the API.",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64",
+            "description" : "Database identifier.",
+            "example" : 1
+          },
+          "messageKey" : {
+            "type" : "string",
+            "description" : "Stable message key.",
+            "example" : "error.request.resource_not_found"
+          },
+          "language" : {
+            "type" : "string",
+            "description" : "Two-letter ISO 639-1 language code.",
+            "example" : "en"
+          },
+          "messageText" : {
+            "type" : "string",
+            "description" : "Localized message text.",
+            "example" : "The requested resource was not found."
+          },
+          "description" : {
+            "type" : "string",
+            "description" : "Optional reviewer-facing description."
+          },
+          "createdAt" : {
+            "type" : "string",
+            "format" : "date-time",
+            "description" : "Creation timestamp."
+          },
+          "updatedAt" : {
+            "type" : "string",
+            "format" : "date-time",
+            "description" : "Last update timestamp."
+          }
+        }
+      },
+      "BookUpdateRequest" : {
+        "type" : "object",
+        "description" : "Payload for updating an existing book. ISBN remains immutable.",
+        "properties" : {
+          "title" : {
+            "type" : "string",
+            "description" : "Book title.",
+            "example" : "Effective Java, Third Edition",
+            "minLength" : 1
+          },
+          "author" : {
+            "type" : "string",
+            "description" : "Primary author.",
+            "example" : "Joshua Bloch",
+            "minLength" : 1
+          },
+          "version" : {
+            "type" : "integer",
+            "format" : "int64",
+            "description" : "Current optimistic-lock version.",
+            "example" : 0
+          },
+          "publicationYear" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "Publication year.",
+            "example" : 2018
+          },
+          "categories" : {
+            "type" : "array",
+            "description" : "Optional replacement list of existing category names.",
+            "items" : {
+              "type" : "string",
+              "description" : "Existing category name.",
+              "example" : "Java"
+            }
+          }
+        },
+        "required" : [ "author", "publicationYear", "title", "version" ]
+      },
+      "Book" : {
+        "type" : "object",
+        "description" : "Book resource returned by the API.",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64",
+            "description" : "Database identifier.",
+            "example" : 1
+          },
+          "version" : {
+            "type" : "integer",
+            "format" : "int64",
+            "description" : "Optimistic-lock version used for updates.",
+            "example" : 0
+          },
+          "title" : {
+            "type" : "string",
+            "description" : "Book title.",
+            "example" : "Effective Java"
+          },
+          "author" : {
+            "type" : "string",
+            "description" : "Primary author.",
+            "example" : "Joshua Bloch"
+          },
+          "isbn" : {
+            "type" : "string",
+            "description" : "Unique ISBN assigned at creation time.",
+            "example" : "9780134685991"
+          },
+          "publicationYear" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "Publication year.",
+            "example" : 2018
+          },
+          "categories" : {
+            "type" : "array",
+            "description" : "Assigned categories ordered by name.",
+            "items" : {
+              "$ref" : "#/components/schemas/Category"
+            },
+            "uniqueItems" : true
+          }
+        }
+      },
+      "Category" : {
+        "type" : "object",
+        "description" : "Book category.",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64",
+            "description" : "Database identifier.",
+            "example" : 1
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "Unique category name.",
+            "example" : "Java"
+          }
+        }
+      },
+      "CategoryCreateRequest" : {
+        "type" : "object",
+        "description" : "Payload for creating a category.",
+        "properties" : {
+          "name" : {
+            "type" : "string",
+            "description" : "Unique category name.",
+            "example" : "Software Engineering",
+            "minLength" : 1
+          }
+        },
+        "required" : [ "name" ]
+      },
+      "BookCreateRequest" : {
+        "type" : "object",
+        "description" : "Payload for creating a new book.",
+        "properties" : {
+          "title" : {
+            "type" : "string",
+            "description" : "Book title.",
+            "example" : "Effective Java",
+            "minLength" : 1
+          },
+          "author" : {
+            "type" : "string",
+            "description" : "Primary author.",
+            "example" : "Joshua Bloch",
+            "minLength" : 1
+          },
+          "isbn" : {
+            "type" : "string",
+            "description" : "Unique ISBN for the new book.",
+            "example" : "9780134685991",
+            "minLength" : 1
+          },
+          "publicationYear" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "Publication year.",
+            "example" : 2018
+          },
+          "categories" : {
+            "type" : "array",
+            "description" : "Optional list of existing category names.",
+            "items" : {
+              "type" : "string",
+              "description" : "Existing category name.",
+              "example" : "Java"
+            }
+          }
+        },
+        "required" : [ "author", "isbn", "publicationYear", "title" ]
+      },
+      "PageLocalizationMessageResponse" : {
+        "type" : "object",
+        "properties" : {
+          "totalElements" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "totalPages" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "size" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "content" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/LocalizationMessageResponse"
+            }
+          },
+          "number" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "first" : {
+            "type" : "boolean"
+          },
+          "last" : {
+            "type" : "boolean"
+          },
+          "numberOfElements" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "pageable" : {
+            "$ref" : "#/components/schemas/PageableObject"
+          },
+          "sort" : {
+            "$ref" : "#/components/schemas/SortObject"
+          },
+          "empty" : {
+            "type" : "boolean"
+          }
+        }
+      },
+      "PageableObject" : {
+        "type" : "object",
+        "properties" : {
+          "offset" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "pageSize" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "pageNumber" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "unpaged" : {
+            "type" : "boolean"
+          },
+          "sort" : {
+            "$ref" : "#/components/schemas/SortObject"
+          },
+          "paged" : {
+            "type" : "boolean"
+          }
+        }
+      },
+      "SortObject" : {
+        "type" : "object",
+        "properties" : {
+          "empty" : {
+            "type" : "boolean"
+          },
+          "unsorted" : {
+            "type" : "boolean"
+          },
+          "sorted" : {
+            "type" : "boolean"
+          }
+        }
+      },
+      "PageBook" : {
+        "type" : "object",
+        "properties" : {
+          "totalElements" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "totalPages" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "size" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "content" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Book"
+            }
+          },
+          "number" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "first" : {
+            "type" : "boolean"
+          },
+          "last" : {
+            "type" : "boolean"
+          },
+          "numberOfElements" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "pageable" : {
+            "$ref" : "#/components/schemas/PageableObject"
+          },
+          "sort" : {
+            "$ref" : "#/components/schemas/SortObject"
+          },
+          "empty" : {
+            "type" : "boolean"
+          }
+        }
+      }
+    },
+    "securitySchemes" : {
+      "sessionCookie" : {
+        "type" : "apiKey",
+        "description" : "Authenticated browser session established through GET /oauth2/authorization/github when the oauth profile is active.",
+        "name" : "technical-interview-demo-session",
+        "in" : "cookie"
+      }
+    }
+  }
+}

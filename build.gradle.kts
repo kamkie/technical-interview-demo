@@ -38,6 +38,7 @@ val springdocVersion = "3.0.3"
 val dockerImageName = providers.gradleProperty("dockerImageName").orElse("technical-interview-demo")
 val snippetsDir = layout.buildDirectory.dir("generated-snippets")
 val buildInfoPropertiesFile = layout.buildDirectory.file("resources/main/META-INF/build-info.properties")
+val approvedOpenApiFile = layout.projectDirectory.file("src/test/resources/openapi/approved-openapi.json")
 val asciidoctorTask = tasks.named<org.asciidoctor.gradle.jvm.AsciidoctorTask>("asciidoctor")
 
 java {
@@ -127,6 +128,16 @@ tasks.register<Exec>("dockerBuild") {
             "."
         )
     }
+}
+
+tasks.register<JavaExec>("refreshOpenApiBaseline") {
+    group = "documentation"
+    description = "Refreshes the approved OpenAPI baseline from the current application contract."
+    dependsOn(tasks.named("testClasses"))
+    classpath = sourceSets.test.get().runtimeClasspath
+    mainClass.set("team.jit.technicalinterviewdemo.OpenApiBaselineGenerator")
+    args(approvedOpenApiFile.asFile.absolutePath)
+    jvmArgs("-XX:+EnableDynamicAgentLoading", "-Xshare:off")
 }
 
 tasks.build {
