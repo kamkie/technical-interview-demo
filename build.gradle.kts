@@ -243,7 +243,12 @@ tasks.register("jacocoCoverageSummary") {
             (coveredLines.toDouble() * 100.0) / totalLines.toDouble()
         }
 
-        logger.lifecycle("JaCoCo line coverage: {}% (covered={}, missed={})", "%.1f".format(overallCoverage), coveredLines, missedLines)
+        logger.lifecycle(
+            "JaCoCo line coverage: {}% (covered={}, missed={})",
+            "%.1f".format(overallCoverage),
+            coveredLines,
+            missedLines
+        )
         logger.lifecycle("JaCoCo HTML report: {}", jacocoReportHtmlDir.get().asFile.absolutePath)
         logger.lifecycle("Lowest-covered classes:")
         classCoverage
@@ -266,7 +271,13 @@ tasks.register("jacocoCoverageSummary") {
                 } else {
                     (covered.toDouble() * 100.0) / total.toDouble()
                 }
-                logger.lifecycle(" - {}: {}% (covered={}, missed={})", className, "%.1f".format(coverage), covered, missed)
+                logger.lifecycle(
+                    " - {}: {}% (covered={}, missed={})",
+                    className,
+                    "%.1f".format(coverage),
+                    covered,
+                    missed
+                )
             }
     }
 }
