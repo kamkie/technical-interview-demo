@@ -175,6 +175,27 @@ tasks.jacocoTestReport {
     }
 }
 
+tasks.jacocoTestCoverageVerification {
+    dependsOn(tasks.test)
+    classDirectories.setFrom(sourceSets.main.get().output.asFileTree)
+    executionData.setFrom(fileTree(layout.buildDirectory.dir("jacoco")).include("*.exec"))
+    violationRules {
+        rule {
+            element = "BUNDLE"
+            limit {
+                counter = "LINE"
+                value = "COVEREDRATIO"
+                minimum = "0.90".toBigDecimal()
+            }
+            limit {
+                counter = "BRANCH"
+                value = "COVEREDRATIO"
+                minimum = "0.70".toBigDecimal()
+            }
+        }
+    }
+}
+
 tasks.register("jacocoCoverageSummary") {
     group = "verification"
     description = "Prints an overall JaCoCo summary and the lowest-covered classes from the latest report."
@@ -251,6 +272,10 @@ tasks.register("jacocoCoverageSummary") {
 
 tasks.test {
     finalizedBy(tasks.named("jacocoCoverageSummary"))
+}
+
+tasks.check {
+    dependsOn(tasks.jacocoTestCoverageVerification)
 }
 
 tasks.withType<JavaCompile>().configureEach {

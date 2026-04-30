@@ -16,8 +16,10 @@ The roadmap below is ordered to respect cross-phase dependencies.
 ## Current Priorities
 
 1. Start Phase 9 coverage hardening now that the secured API surface and OpenAPI workflow are in place.
-2. Revisit broader Phase 10 CI/CD and deployment work after the Phase 9 verification targets are clearer.
-3. Keep Phase 11 explicitly deferred until the core roadmap is complete.
+2. move complex build logic like `jacocoCoverageSummary` to buildSrc scripts to clean up `build.gradle` and make it easier to reuse in other projects. also consider adding a custom Gradle plugin if there are enough reusable tasks or configuration to justify it.
+3. reorganize tests to improve maintainability and better mach new application package structure, create base class for integration tests to enhance code reusability and test speed by running only one spring context. try to avoid testing the same things many times across different test classes.
+4. Revisit broader Phase 10 CI/CD and deployment work after the Phase 9 verification targets are clearer.
+5. Keep Phase 11 explicitly deferred until the core roadmap is complete.
 
 ## Active Detailed Plan
 
@@ -32,7 +34,7 @@ Depends on: Core feature work stabilizing
 Tasks:
 - [x] Run and review JaCoCo reports regularly
 - [x] Add tests for uncovered service and exception paths
-- [ ] Add coverage thresholds to Gradle or CI
+- [x] Add coverage thresholds to Gradle or CI
 - [ ] Document coverage expectations in `CONTRIBUTING.md`
 
 #### 9.2 Add Load & Performance Testing
