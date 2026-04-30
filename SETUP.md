@@ -179,7 +179,7 @@ Build with Gradle:
 Build directly with Docker:
 
 ```powershell
-.\gradlew.bat bootJar
+.\gradlew.bat prepareDockerContext
 docker build -t technical-interview-demo .
 docker run --rm -p 8080:8080 technical-interview-demo
 ```

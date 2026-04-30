@@ -204,7 +204,7 @@ The default image name is `technical-interview-demo`.
 You can also build the image directly with Docker:
 
 ```powershell
-.\gradlew.bat bootJar
+.\gradlew.bat prepareDockerContext
 docker build -t technical-interview-demo .
 ```
 
@@ -214,7 +214,7 @@ Run the container with:
 docker run --rm -p 8080:8080 technical-interview-demo
 ```
 
-The Docker image packages the prebuilt Spring Boot fat jar produced by Gradle and runs it on Java 25.
+The Docker image packages the current versioned Spring Boot fat jar produced by Gradle and runs it on Java 25.
 It also includes a container health check against `GET /actuator/health/readiness`.
 The container uses Microsoft Build of OpenJDK and starts the app with `jaz`.
 

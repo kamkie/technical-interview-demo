@@ -38,6 +38,7 @@ val gradleWrapperVersion = "9.5.0"
 val dockerImageName = providers.gradleProperty("dockerImageName").orElse("technical-interview-demo")
 val snippetsDir = layout.buildDirectory.dir("generated-snippets")
 val buildInfoPropertiesFile = layout.buildDirectory.file("resources/main/META-INF/build-info.properties")
+val dockerContextDir = layout.buildDirectory.dir("docker")
 val asciidoctorTask = tasks.named<org.asciidoctor.gradle.jvm.AsciidoctorTask>("asciidoctor")
 
 java {
@@ -104,7 +105,7 @@ tasks.bootRun {
 
 tasks.bootJar {
     dependsOn(asciidoctorTask)
-    archiveFileName.set("technical-interview-demo-boot.jar")
+    archiveClassifier.set("boot")
     from(asciidoctorTask) {
         into("BOOT-INF/classes/static/docs")
     }
@@ -113,10 +114,16 @@ tasks.bootJar {
     }
 }
 
+tasks.register<Sync>("prepareDockerContext") {
+    dependsOn(tasks.bootJar)
+    from(tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar").flatMap { it.archiveFile })
+    into(dockerContextDir)
+}
+
 tasks.register<Exec>("dockerBuild") {
     group = "docker"
     description = "Builds the Docker image for this project. Also runs as part of the build lifecycle."
-    dependsOn(tasks.bootJar)
+    dependsOn(tasks.named("prepareDockerContext"))
     commandLine("docker", "build", "-t", dockerImageName.get(), ".")
 }
 

@@ -136,7 +136,7 @@ Packaging and runtime behavior:
 - the running application serves the documentation at `GET /docs`
 - the generated index page includes build metadata loaded from `/META-INF/build-info.properties`
 - the generated docs include example success and error responses captured from tests
-- the container image packages the prebuilt Gradle boot jar and includes a health check against `GET /actuator/health/readiness`
+- the container image packages the current versioned Gradle boot jar and includes a health check against `GET /actuator/health/readiness`
 - the container image uses Microsoft Build of OpenJDK and starts the app with `jaz`
 
 ## Versioning & Releases

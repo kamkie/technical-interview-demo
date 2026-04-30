@@ -4,9 +4,9 @@
 build
 !build/
 build/*
-!build/libs/
-build/libs/*
-!build/libs/technical-interview-demo-boot.jar
+!build/docker/
+build/docker/*
+!build/docker/*.jar
 Default.xml
 README.md
 AGENTS.md

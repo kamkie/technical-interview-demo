@@ -7,7 +7,7 @@ WORKDIR /home/app
 ENV JAVA_TOOL_OPTIONS="-XX:+UseContainerSupport -XX:InitialRAMPercentage=25.0 -XX:MaxRAMPercentage=75.0 -XX:+ExitOnOutOfMemoryError -Djava.security.egd=file:/dev/./urandom"
 ENV SPRING_PROFILES_ACTIVE=prod
 
-COPY --chown=app:app build/libs/technical-interview-demo-boot.jar /home/app/app.jar
+COPY --chown=app:app build/docker/*.jar /home/app/app.jar
 
 USER app
 
