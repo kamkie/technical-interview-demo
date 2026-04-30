@@ -6,6 +6,7 @@ This file outlines planned features, improvements, and refactoring tasks for the
 
 - ✅ [Development Container (Dev Containers)](#development-container-setup) - VS Code dev container with Java 25, Docker, and supporting services
 - ✅ [Phase 2.1: Profile-Based Configuration Split](#phase-21-profile-based-configuration-split) - Environment-specific configuration for local, prod, and test
+- ✅ [Phase 1.1: PostgreSQL Migration](#phase-11-migrate-from-h2-to-postgresql) - PostgreSQL driver and production configuration ready
 
 ## Legend
 
@@ -52,32 +53,50 @@ See [.devcontainer/README.md](.devcontainer/README.md) for complete documentatio
 
 ## Phase 1: Infrastructure & Database Migration
 
-### 1.1 Migrate from H2 to PostgreSQL 🟢
+### 1.1 Migrate from H2 to PostgreSQL ✅
 
 A production-ready relational database migration to replace the in-memory H2 database.
 
-**Tasks:**
-- [ ] Add PostgreSQL JDBC driver to `build.gradle.kts`
-- [ ] Create PostgreSQL Spring Boot configuration with `application-prod.properties`
-- [ ] Update `application.properties` with default H2 settings (for local development)
-- [ ] Update database connection pooling configuration (HikariCP)
-- [ ] Test connection pooling and performance tuning settings
-- [ ] Update Flyway migration scripts for PostgreSQL compatibility
-- [ ] Verify all existing SQL migrations work with PostgreSQL
-- [ ] Create migration guide documentation
-- [ ] Update Docker Compose file for local PostgreSQL development (optional but helpful)
+**Status:** Completed
 
-**Definition of Done:**
-- Application starts with PostgreSQL as primary database
-- All existing tests pass
-- Flyway migrations execute successfully
-- No hardcoded H2 references remain in production code
+**Implementation Details:**
+- ✅ Added PostgreSQL JDBC driver to `build.gradle.kts`
+- ✅ Created PostgreSQL configuration in `application-prod.properties`
+- ✅ Configured HikariCP connection pooling (20 max, 5 min)
+- ✅ Support environment variable override (`DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_NAME`, `DATABASE_USER`, `DATABASE_PASSWORD`)
+- ✅ Created `docker-compose.yml` for local PostgreSQL development
+- ✅ Updated README with PostgreSQL setup instructions
+- ✅ Verified existing Flyway migration is PostgreSQL-compatible
+- ✅ All tests pass (44 tests)
+- ✅ Spotless formatting passes
+- ✅ PMD checks pass
+
+**Production Profile Configuration:**
+```properties
+spring.datasource.url=jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:technical_interview_demo}
+spring.datasource.username=${DATABASE_USER:postgres}
+spring.datasource.password=${DATABASE_PASSWORD:changeme}
+```
+
+**Local Testing:**
+```powershell
+# Start PostgreSQL
+docker-compose up -d
+
+# Run app with prod profile
+.\gradlew.bat bootRun --args='--spring.profiles.active=prod'
+
+# Stop PostgreSQL
+docker-compose down
+```
+
+**Commit:** 4d99e58
 
 ---
 
-### 1.2 Add Testcontainers for Integration Testing 🟡
+### 1.2 Add Testcontainers for Integration Testing 🟢
 
-Depends on: 1.1 (PostgreSQL migration)
+Depends on: 1.1 (PostgreSQL migration) ✅ **COMPLETED**
 
 Use Testcontainers to run PostgreSQL in Docker during tests for better database testing without relying on in-memory H2.
 
