@@ -144,6 +144,7 @@ Release policy:
 
 - use semantic version tags in the form `vMAJOR.MINOR.PATCH`
 - create an annotated git tag when a roadmap phase is completed
+- assign the next version number in `git log --first-parent` order so older mainline commits never receive a higher semantic version than newer ones
 - keep `CHANGELOG.md` aligned with release tags
 - keep `COMPLETED_TASKS.md` aligned with release tags and completion commits
 
@@ -309,6 +310,7 @@ Current runtime behavior:
 - Do not remove the existing `hello` or `book` endpoints unless asked.
 - After completing a roadmap phase from `TODO.md`, create an annotated git tag for the resulting app version on the phase-completion commit.
 - Prefer semantic version tags such as `v0.5.0`; if the correct version bump is unclear, stop and ask before tagging.
+- Version numbers must increase in `git log --first-parent` order; never backfill a lower semantic version onto a newer mainline commit or a higher semantic version onto an older one.
 - Keep release tags aligned with `COMPLETED_TASKS.md` and the future `CHANGELOG.md` once it exists.
 
 Human contribution workflow expectations live in `CONTRIBUTING.md`.

@@ -248,6 +248,7 @@ Release policy:
 
 - use semantic version tags in the form `vMAJOR.MINOR.PATCH`
 - create an annotated git tag when a roadmap phase is completed
+- assign the next version number in `git log --first-parent` order so older mainline commits never receive a higher semantic version than newer ones
 - record the human-readable summary for that release in `CHANGELOG.md`
 - keep release tags aligned with `COMPLETED_TASKS.md`
 

@@ -3,7 +3,7 @@
 All notable changes to this project are documented in this file.
 
 The format is based on Keep a Changelog and the project uses semantic version tags in the form `vMAJOR.MINOR.PATCH`.
-Each completed roadmap phase is released with an annotated git tag. The Gradle build version is derived from the nearest reachable git tag.
+Each completed roadmap phase is released with an annotated git tag. Release numbers must increase in `git log --first-parent` order, and the Gradle build version is derived from the nearest reachable git tag.
 Historical releases before `v0.1.0` are reconstructed from mainline git history using `v0.0.x` labels because annotated phase tags started at `v0.1.0`.
 
 ## [Unreleased]
@@ -50,28 +50,10 @@ Historical releases before `v0.1.0` are reconstructed from mainline git history 
 ## [v0.11.0] - 2026-04-30
 
 ### Added
-- Added `CONTRIBUTING.md` and contribution workflow guidance.
-- Documented testing expectations, quality gates, and collaboration rules.
-
-## [v0.10.0] - 2026-04-30
-
-### Added
-- Added `SETUP.md` and `.env.example`.
-- Documented local, PostgreSQL, IntelliJ, VS Code, and dev-container setup flows.
-
-## [v0.9.0] - 2026-04-30
-
-### Added
-- Added book search and filtering by title, author, ISBN, and publication year.
-- Documented the expanded list endpoint and invalid-filter behavior.
-
-## [v0.8.0] - 2026-04-30
-
-### Added
 - Added cookie-based language fallback for localized error responses.
 - Added request-scoped language resolution and supported-language validation.
 
-## [v0.7.0] - 2026-04-30
+## [v0.10.0] - 2026-04-30
 
 ### Added
 - Localized `ProblemDetail` responses with `messageKey`, localized `message`, and resolved `language`.
@@ -81,39 +63,57 @@ Historical releases before `v0.1.0` are reconstructed from mainline git history 
 ### Changed
 - Refactored Spring REST Docs into a multi-page structure with an indexed entry page, per-controller pages, and a dedicated technical-endpoints page.
 
-## [v0.6.0] - 2026-04-30
+## [v0.9.0] - 2026-04-30
 
 ### Added
 - Seeded localization messages for the current API error scenarios.
 - Added test coverage to keep seeded keys aligned across supported languages.
 
-## [v0.5.0] - 2026-04-30
+## [v0.8.0] - 2026-04-30
 
 ### Added
 - Added CRUD, lookup, pagination, and documentation coverage for localization messages.
 
-## [v0.4.0] - 2026-04-30
+## [v0.7.0] - 2026-04-30
 
 ### Added
 - Added the `LocalizationMessage` entity, repository, service, and Flyway migration.
 
-## [v0.3.0] - 2026-04-30
-
-### Changed
-- Split runtime configuration into `local`, `prod`, and `test` profiles.
-- Documented default profile behavior and container profile selection.
-
-## [v0.2.0] - 2026-04-30
+## [v0.6.0] - 2026-04-30
 
 ### Added
 - Added PostgreSQL-backed integration testing with Testcontainers.
 - Introduced shared test infrastructure for containerized database tests.
 
-## [v0.1.0] - 2026-04-30
+## [v0.5.0] - 2026-04-30
+
+### Added
+- Added book search and filtering by title, author, ISBN, and publication year.
+- Documented the expanded list endpoint and invalid-filter behavior.
+
+## [v0.4.0] - 2026-04-30
+
+### Added
+- Added `CONTRIBUTING.md` and contribution workflow guidance.
+- Documented testing expectations, quality gates, and collaboration rules.
+
+## [v0.3.0] - 2026-04-30
+
+### Added
+- Added `SETUP.md` and `.env.example`.
+- Documented local, PostgreSQL, IntelliJ, VS Code, and dev-container setup flows.
+
+## [v0.2.0] - 2026-04-30
 
 ### Added
 - Added PostgreSQL runtime support and production-oriented datasource configuration.
 - Added Docker Compose support for local PostgreSQL development.
+
+## [v0.1.0] - 2026-04-30
+
+### Changed
+- Split runtime configuration into `local`, `prod`, and `test` profiles.
+- Documented default profile behavior and container profile selection.
 
 ## [v0.0.6] - 2026-04-30
 
