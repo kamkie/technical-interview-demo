@@ -18,17 +18,17 @@ The roadmap below is ordered to respect cross-phase dependencies.
 
 ## Current Priorities
 
-1. Start Phase 5.1 Spring Security and OAuth 2.0 with a demo-friendly provider and JDBC-backed sessions.
-2. Add Phase 5.2 user persistence, role handling, optional user language preference storage, and user-specific metrics on top of the existing metrics registry.
-3. Add Phase 5.3 audit logging for state-changing operations.
-4. Start Phase 8.5 OpenAPI support and breaking-change compatibility checks after the initial auth surface is in place.
-5. Close the remaining Phase 8.1 documentation gaps for security and OpenAPI.
+1. Start Phase 5.2 user persistence, role handling, optional user language preference storage, and user-specific metrics on top of the existing metrics registry.
+2. Add Phase 5.3 audit logging for state-changing operations.
+3. Start Phase 8.5 OpenAPI support and breaking-change compatibility checks after the initial auth surface is in place.
+4. Close the remaining Phase 8.1 documentation gaps for security and OpenAPI.
+5. Revisit Phase 9 coverage and performance work after the auth model stabilizes.
 
 ## Active Detailed Plan
 
 ### Phase 5: Security & OAuth Integration
 
-Status: In Progress
+Status: In Progress (`5.1` complete, `5.2` next)
 
 #### 5.1 Add Spring Security with OAuth 2.0
 
@@ -40,13 +40,13 @@ Protect state-changing endpoints while keeping the demo simple and approachable.
 Tasks:
 - [x] Add Spring Security and OAuth 2.0 client dependencies
 - [x] Choose and document a demo-friendly OAuth provider for the demo
-- [ ] Create `SecurityConfig` with OAuth login and authorization rules
-- [ ] Add Spring Session JDBC and persist authenticated sessions in the database
-- [ ] Configure secure session handling for the OAuth login flow
-- [ ] Add `application-oauth.properties` and document required credentials
-- [ ] Protect localization management endpoints (`POST`, `PUT`, `DELETE`)
-- [ ] Protect book management endpoints as appropriate for the demo
-- [ ] Configure test support for secured endpoints
+- [x] Create `SecurityConfig` with OAuth login and authorization rules
+- [x] Add Spring Session JDBC and persist authenticated sessions in the database
+- [x] Configure secure session handling for the OAuth login flow
+- [x] Add `application-oauth.properties` and document required credentials
+- [x] Protect localization management endpoints (`POST`, `PUT`, `DELETE`)
+- [x] Protect book management endpoints as appropriate for the demo
+- [x] Configure test support for secured endpoints
 
 Definition of done:
 - Public read endpoints stay accessible

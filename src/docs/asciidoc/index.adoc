@@ -40,6 +40,9 @@ The values below are loaded from `{build-info-path}` during the Asciidoctor buil
 - Error payloads include a stable `messageKey`, a localized `message`, and the resolved `language`.
 - Browser-compatible localization uses `Accept-Language`, the optional `lang` query parameter overrides it with values such as `pl` or `pl-PL`, and cookie `language` is used as fallback.
 - Supported application languages are `en`, `es`, `de`, `fr`, `pl`, `uk`, and `no`.
+- Read endpoints stay public, while state-changing book, category, and localization endpoints require an authenticated OAuth 2.0 session.
+- Interactive login is available at `/oauth2/authorization/github` when the optional `oauth` profile is active.
+- Authenticated browser sessions are persisted through Spring Session JDBC in PostgreSQL.
 - Collection endpoints use Spring pagination conventions such as `page`, `size`, and repeated `sort` parameters.
 - Update operations that modify books require a `version` field for optimistic locking.
 - Books can be filtered by repeated `category` query parameters and can carry multiple assigned categories.

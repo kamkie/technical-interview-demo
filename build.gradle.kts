@@ -67,6 +67,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
+    implementation("org.springframework.session:spring-session-jdbc")
     implementation("com.github.ben-manes.caffeine:caffeine")
 
     runtimeOnly("org.flywaydb:flyway-database-postgresql")
@@ -82,6 +83,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-restdocs")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+    testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     testImplementation("org.testcontainers:testcontainers")
     testImplementation("org.testcontainers:testcontainers-postgresql")

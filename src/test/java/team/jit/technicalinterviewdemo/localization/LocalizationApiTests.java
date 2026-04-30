@@ -6,6 +6,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static team.jit.technicalinterviewdemo.SecurityTestSupport.csrfToken;
+import static team.jit.technicalinterviewdemo.SecurityTestSupport.oauthUser;
 
 import java.util.List;
 
@@ -103,6 +105,8 @@ class LocalizationApiTests {
     @Test
     void createLocalizationMessageReturnsCreatedMessage() throws Exception {
         mockMvc.perform(post("/api/localization-messages")
+                        .with(oauthUser())
+                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -123,8 +127,26 @@ class LocalizationApiTests {
     }
 
     @Test
+    void createLocalizationMessageWithoutAuthenticationReturnsUnauthorized() throws Exception {
+        mockMvc.perform(post("/api/localization-messages")
+                        .with(csrfToken())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "messageKey": "info.book.created",
+                                  "language": "fr",
+                                  "messageText": "Le livre a ete cree.",
+                                  "description": "French success message for new books."
+                                }
+                                """))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     void createLocalizationMessageWithDuplicateKeyAndLanguageReturnsConflict() throws Exception {
         mockMvc.perform(post("/api/localization-messages")
+                        .with(oauthUser())
+                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -147,6 +169,8 @@ class LocalizationApiTests {
     @Test
     void createLocalizationMessageWithInvalidPayloadReturnsBadRequest() throws Exception {
         mockMvc.perform(post("/api/localization-messages")
+                        .with(oauthUser())
+                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -169,6 +193,8 @@ class LocalizationApiTests {
     @Test
     void createLocalizationMessageWithUnsupportedLanguageReturnsBadRequest() throws Exception {
         mockMvc.perform(post("/api/localization-messages")
+                        .with(oauthUser())
+                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -189,6 +215,8 @@ class LocalizationApiTests {
     @Test
     void updateLocalizationMessageReturnsUpdatedMessage() throws Exception {
         mockMvc.perform(put("/api/localization-messages/{id}", bookNotFoundEn.getId())
+                        .with(oauthUser())
+                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -207,8 +235,17 @@ class LocalizationApiTests {
     }
 
     @Test
+    void deleteLocalizationMessageWithoutAuthenticationReturnsUnauthorized() throws Exception {
+        mockMvc.perform(delete("/api/localization-messages/{id}", bookNotFoundEn.getId())
+                        .with(csrfToken()))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     void deleteLocalizationMessageRemovesMessage() throws Exception {
-        mockMvc.perform(delete("/api/localization-messages/{id}", bookNotFoundEn.getId()))
+        mockMvc.perform(delete("/api/localization-messages/{id}", bookNotFoundEn.getId())
+                        .with(oauthUser())
+                        .with(csrfToken()))
                 .andExpect(status().isNoContent());
 
         mockMvc.perform(get("/api/localization-messages/{id}", bookNotFoundEn.getId()))

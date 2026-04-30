@@ -13,6 +13,7 @@ Current scope:
 - CRUD-style `Book` API under `/api/books` with pagination, filtering, optimistic locking, and category assignment
 - `Category` API under `/api/categories`
 - CRUD-style `LocalizationMessage` API under `/api/localization-messages` with pagination and key/language lookup
+- OAuth 2.0 protected write endpoints with JDBC-backed HTTP sessions
 - git-tag-based application versioning with a human-readable `CHANGELOG.md`
 - actuator endpoints for `health`, `info`, liveness/readiness probes, and Prometheus metrics
 - PostgreSQL for local and production-style runtime profiles
@@ -33,6 +34,7 @@ Primary goal: keep the codebase small, readable, and easy to reason about.
 - Spring Cache
 - Spring Security
 - Spring Security OAuth2 Client
+- Spring Session JDBC
 - PostgreSQL
 - Testcontainers
 - Caffeine
@@ -74,11 +76,32 @@ When building directly with Docker after `.\gradlew.bat bootJar`, prefer passing
 
 Docker Desktop is required for `.\gradlew.bat test` and `.\gradlew.bat build` because the integration suite starts PostgreSQL through Testcontainers and the build lifecycle now includes Docker image creation.
 
-## Planned OAuth Provider
+## OAuth Provider And Sessions
 
-Phase `5.1 Add Spring Security with OAuth 2.0` is planned around a GitHub OAuth App.
+The implemented OAuth provider is a GitHub OAuth App.
 
-Treat that provider choice as fixed unless the user explicitly asks to revisit it, and keep any future GitHub client credentials out of version control.
+Keep that provider choice fixed unless the user explicitly asks to revisit it, and keep GitHub client credentials out of version control.
+
+The OAuth flow is enabled only when the `oauth` profile is active.
+
+Local reviewer setup:
+
+```powershell
+$env:GITHUB_CLIENT_ID='your-github-client-id'
+$env:GITHUB_CLIENT_SECRET='your-github-client-secret'
+$env:SPRING_PROFILES_ACTIVE='local,oauth'
+
+.\gradlew.bat bootRun
+```
+
+Interactive login starts at `GET /oauth2/authorization/github`.
+
+Session rules:
+
+- authenticated sessions are stored in PostgreSQL through Spring Session JDBC
+- local and test profiles keep the session cookie non-secure for HTTP development
+- `prod` uses `SESSION_COOKIE_SECURE=true` by default unless explicitly overridden
+- the session cookie name is `technical-interview-demo-session`
 
 ## Spring Profiles
 
@@ -88,6 +111,7 @@ The application uses Spring profiles for environment-specific configuration.
 - `local` (default) - Development with PostgreSQL on localhost and debug logging
 - `prod` - Production with PostgreSQL, minimal logging
 - `test` - Testing with PostgreSQL via Testcontainers, activated by `@TestcontainersTest`
+- `oauth` - GitHub OAuth client registration for interactive login against protected write endpoints
 
 **Profile Activation:**
 - Default: `spring.profiles.active=local` in `application.properties`
@@ -98,6 +122,7 @@ The application uses Spring profiles for environment-specific configuration.
 **Configuration Files:**
 - `src/main/resources/application.properties` - common settings for all profiles
 - `src/main/resources/application-local.properties` - local PostgreSQL development config
+- `src/main/resources/application-oauth.properties` - GitHub OAuth client configuration
 - `src/main/resources/application-prod.properties` - production PostgreSQL config
 - `src/test/resources/application-test.properties` - test config
 
@@ -209,6 +234,14 @@ Endpoints:
 - `GET /actuator/health/readiness`
 - `GET /actuator/prometheus`
 
+Security rules:
+
+- public without authentication: `GET /hello`, `GET /docs`, `GET /api/**`, `GET /actuator/health`, `GET /actuator/health/**`, `GET /actuator/info`, and `GET /actuator/prometheus`
+- protected with authenticated session: `POST /api/books`, `PUT /api/books/{id}`, `DELETE /api/books/{id}`, `POST /api/categories`, `POST /api/localization-messages`, `PUT /api/localization-messages/{id}`, and `DELETE /api/localization-messages/{id}`
+- protected browser requests also require a valid CSRF token
+- interactive login is available at `GET /oauth2/authorization/github` when the `oauth` profile is active
+- authenticated HTTP sessions are stored in `SPRING_SESSION` and `SPRING_SESSION_ATTRIBUTES`
+
 Book rules:
 
 - `title` is required
@@ -299,6 +332,7 @@ Current runtime behavior:
 - custom Micrometer metrics are published under the `technical.interview.demo.*` prefix for book, category, localization, and cache activity
 - JPA fetch plans are controlled in repositories rather than through `FetchType.EAGER` on entities
 - Flyway owns schema creation from SQL migrations and Hibernate validates the schema with `ddl-auto=validate`
+- authenticated browser sessions are persisted through Spring Session JDBC
 - `/actuator/health` and subpaths are skipped by the HTTP tracing logger
 
 ## AI Development Rules

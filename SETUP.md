@@ -61,6 +61,7 @@ Variables you are most likely to need:
 - `IDEA_HOME` or `IDEA_FORMATTER_BINARY` for Spotless Java formatting
 - `SPRING_PROFILES_ACTIVE` if you want to override the default `local` profile
 - `DATABASE_*` variables when overriding the default PostgreSQL connection
+- `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` when enabling the optional `oauth` profile for authenticated write flows
 
 ## IDE Setup
 
@@ -181,13 +182,37 @@ docker run --rm -p 8080:8080 technical-interview-demo
 
 The container uses the `prod` profile by default.
 
-## OAuth Setup Status
+## OAuth Setup
 
-No OAuth flow is implemented in the current application yet.
+The application supports GitHub OAuth login behind the optional `oauth` profile.
 
-The selected provider for upcoming Phase `5.1 Add Spring Security with OAuth 2.0` work is a GitHub OAuth App.
+Use it when you want to exercise the protected write endpoints from a browser.
 
-When that phase is implemented, keep the GitHub client credentials out of version control and provide them through environment variables or a local non-committed properties file.
+### GitHub OAuth App
+
+Create a GitHub OAuth App with:
+
+- Homepage URL: `http://localhost:8080`
+- Authorization callback URL: `http://localhost:8080/login/oauth2/code/github`
+
+Then export the credentials and start the app with the extra profile:
+
+```powershell
+$env:GITHUB_CLIENT_ID='your-github-client-id'
+$env:GITHUB_CLIENT_SECRET='your-github-client-secret'
+$env:SPRING_PROFILES_ACTIVE='local,oauth'
+
+docker-compose up -d
+.\gradlew.bat bootRun
+```
+
+Start the login flow at:
+
+- `http://localhost:8080/oauth2/authorization/github`
+
+Protected browser requests also require a CSRF token, so use the generated HTML docs or a normal browser session rather than trying to replay state-changing requests without cookies and headers.
+
+Authenticated sessions are persisted in PostgreSQL through Spring Session JDBC, using tables `SPRING_SESSION` and `SPRING_SESSION_ATTRIBUTES`.
 
 ## Troubleshooting
 
@@ -244,6 +269,19 @@ Fix:
 2. Verify Docker is reachable with `docker ps`.
 3. Re-run `.\gradlew.bat --no-problems-report test`.
 4. If Docker is managed by corporate policy, make sure Linux containers are enabled and the current user can access Docker.
+
+### OAuth login does not start
+
+Symptom:
+
+- `/oauth2/authorization/github` returns an error or redirect loop
+
+Fix:
+
+1. Confirm `SPRING_PROFILES_ACTIVE` includes `oauth`.
+2. Confirm `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` are exported in the same shell or run configuration.
+3. Confirm the GitHub OAuth App callback URL is `http://localhost:8080/login/oauth2/code/github`.
+4. Re-run the app with `.\gradlew.bat bootRun`.
 
 ### Spotless skips Java formatting
 

@@ -10,6 +10,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+import static team.jit.technicalinterviewdemo.SecurityTestSupport.csrfToken;
+import static team.jit.technicalinterviewdemo.SecurityTestSupport.oauthUser;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.http.Cookie;
@@ -213,6 +215,8 @@ class ApiDemoTests {
     @Test
     void createBookReturnsCreatedBook() throws Exception {
         mockMvc.perform(post("/api/books")
+                        .with(oauthUser())
+                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -236,8 +240,42 @@ class ApiDemoTests {
     }
 
     @Test
+    void createBookWithoutAuthenticationReturnsUnauthorized() throws Exception {
+        mockMvc.perform(post("/api/books")
+                        .with(csrfToken())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "title": "Spring in Action",
+                                  "author": "Craig Walls",
+                                  "isbn": "9781617297571",
+                                  "publicationYear": 2022
+                                }
+                                """))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void createBookWithoutCsrfReturnsForbidden() throws Exception {
+        mockMvc.perform(post("/api/books")
+                        .with(oauthUser())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "title": "Spring in Action",
+                                  "author": "Craig Walls",
+                                  "isbn": "9781617297571",
+                                  "publicationYear": 2022
+                                }
+                                """))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     void createBookWithDuplicateIsbnReturnsConflict() throws Exception {
         mockMvc.perform(post("/api/books")
+                        .with(oauthUser())
+                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -260,6 +298,8 @@ class ApiDemoTests {
     @Test
     void createBookWithUnknownCategoryReturnsBadRequest() throws Exception {
         mockMvc.perform(post("/api/books")
+                        .with(oauthUser())
+                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -280,6 +320,8 @@ class ApiDemoTests {
     @Test
     void createBookWithInvalidPayloadReturnsBadRequest() throws Exception {
         mockMvc.perform(post("/api/books")
+                        .with(oauthUser())
+                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -303,6 +345,8 @@ class ApiDemoTests {
     @Test
     void createBookWithMalformedJsonReturnsBadRequest() throws Exception {
         mockMvc.perform(post("/api/books")
+                        .with(oauthUser())
+                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -317,6 +361,8 @@ class ApiDemoTests {
     @Test
     void createBookWithUnsupportedMediaTypeReturnsUnsupportedMediaType() throws Exception {
         mockMvc.perform(post("/api/books")
+                        .with(oauthUser())
+                        .with(csrfToken())
                         .contentType(MediaType.TEXT_PLAIN)
                         .content("not-json"))
                 .andExpect(status().isUnsupportedMediaType())
@@ -346,7 +392,8 @@ class ApiDemoTests {
 
     @Test
     void unsupportedMethodReturnsMethodNotAllowed() throws Exception {
-        mockMvc.perform(patch("/api/books"))
+        mockMvc.perform(patch("/api/books")
+                        .with(csrfToken()))
                 .andExpect(status().isMethodNotAllowed())
                 .andExpect(jsonPath("$.title").value("Method Not Allowed"))
                 .andExpect(jsonPath("$.detail").value("HTTP method 'PATCH' is not supported for this endpoint."));
@@ -379,6 +426,8 @@ class ApiDemoTests {
     @Test
     void updateBookReturnsUpdatedBook() throws Exception {
         mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
+                        .with(oauthUser())
+                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -402,6 +451,8 @@ class ApiDemoTests {
     @Test
     void updateBookIgnoresProvidedIsbn() throws Exception {
         mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
+                        .with(oauthUser())
+                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -421,10 +472,28 @@ class ApiDemoTests {
     }
 
     @Test
+    void updateBookWithoutAuthenticationReturnsUnauthorized() throws Exception {
+        mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
+                        .with(csrfToken())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "title": "Clean Code Second Edition",
+                                  "author": "Robert C. Martin",
+                                  "version": %d,
+                                  "publicationYear": 2026
+                                }
+                                """.formatted(cleanCode.getVersion())))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     void updateBookWithStaleVersionReturnsConflict() throws Exception {
         long staleVersion = cleanCode.getVersion();
 
         mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
+                        .with(oauthUser())
+                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -437,6 +506,8 @@ class ApiDemoTests {
                 .andExpect(status().isOk());
 
         mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
+                        .with(oauthUser())
+                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -456,7 +527,9 @@ class ApiDemoTests {
 
     @Test
     void deleteBookRemovesBook() throws Exception {
-        mockMvc.perform(delete("/api/books/{id}", cleanCode.getId()))
+        mockMvc.perform(delete("/api/books/{id}", cleanCode.getId())
+                        .with(oauthUser())
+                        .with(csrfToken()))
                 .andExpect(status().isNoContent());
 
         mockMvc.perform(get("/api/books/{id}", cleanCode.getId()))
@@ -468,6 +541,13 @@ class ApiDemoTests {
                 .andExpect(jsonPath("$.language").value("en"))
                 .andExpect(jsonPath("$.exception").doesNotExist())
                 .andExpect(jsonPath("$.trace").doesNotExist());
+    }
+
+    @Test
+    void deleteBookWithoutAuthenticationReturnsUnauthorized() throws Exception {
+        mockMvc.perform(delete("/api/books/{id}", cleanCode.getId())
+                        .with(csrfToken()))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test

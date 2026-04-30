@@ -4,6 +4,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static team.jit.technicalinterviewdemo.SecurityTestSupport.csrfToken;
+import static team.jit.technicalinterviewdemo.SecurityTestSupport.oauthUser;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,6 +57,8 @@ class CategoryApiTests {
     @Test
     void createCategoryReturnsCreatedCategory() throws Exception {
         mockMvc.perform(post("/api/categories")
+                        .with(oauthUser())
+                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -67,8 +71,23 @@ class CategoryApiTests {
     }
 
     @Test
+    void createCategoryWithoutAuthenticationReturnsUnauthorized() throws Exception {
+        mockMvc.perform(post("/api/categories")
+                        .with(csrfToken())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "name": "Architecture"
+                                }
+                                """))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     void createCategoryWithDuplicateNameReturnsBadRequest() throws Exception {
         mockMvc.perform(post("/api/categories")
+                        .with(oauthUser())
+                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {

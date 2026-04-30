@@ -12,6 +12,7 @@ The demo currently includes:
 - A REST API for `Book` under `/api/books` with pagination, filtering, and category assignment
 - A REST API for `Category` under `/api/categories`
 - A REST API for `LocalizationMessage` under `/api/localization-messages` with CRUD, pagination, and key/language lookup
+- OAuth 2.0 protected write endpoints with JDBC-backed HTTP sessions for reviewer-friendly sign-in
 - Git tag based application versioning plus a human-readable `CHANGELOG.md`
 - PostgreSQL for local and production-style runtime profiles, plus Testcontainers-backed integration tests
 - Seed data loaded at startup
@@ -29,6 +30,7 @@ Primary goal: keep the project small, readable, and suitable for technical inter
 - Spring Cache
 - Spring Security
 - Spring Security OAuth2 Client
+- Spring Session JDBC
 - PostgreSQL
 - Testcontainers
 - Caffeine
@@ -58,11 +60,30 @@ For a full local onboarding flow, see `SETUP.md`. A starter environment template
 
 Docker Desktop is also required for `.\gradlew.bat test` and `.\gradlew.bat build` because the test suite starts PostgreSQL through Testcontainers and the build lifecycle now includes Docker image creation.
 
-## Planned OAuth Provider
+## OAuth And Session Setup
 
-Phase `5.1 Add Spring Security with OAuth 2.0` will use a GitHub OAuth App.
+The implemented OAuth provider is a GitHub OAuth App.
 
-That provider has been selected for the demo because it keeps reviewer setup straightforward and avoids introducing extra infrastructure beyond a single provider registration and local client credentials.
+The OAuth flow is intentionally isolated behind the optional `oauth` Spring profile so the default local startup stays simple for read-only review.
+
+To enable authenticated write flows locally, provide GitHub credentials and activate the profile:
+
+```powershell
+$env:GITHUB_CLIENT_ID='your-github-client-id'
+$env:GITHUB_CLIENT_SECRET='your-github-client-secret'
+$env:SPRING_PROFILES_ACTIVE='local,oauth'
+
+.\gradlew.bat bootRun
+```
+
+After startup, begin the login flow at `GET /oauth2/authorization/github`.
+
+Session behavior:
+
+- authenticated sessions are stored in PostgreSQL through Spring Session JDBC
+- local and test profiles keep the session cookie non-secure for HTTP development
+- the `prod` profile uses `SESSION_COOKIE_SECURE=true` by default unless explicitly overridden
+- the session cookie name is `technical-interview-demo-session`
 
 ## Spring Profiles
 
@@ -81,6 +102,10 @@ The application uses Spring profiles to manage environment-specific configuratio
   - Schema validation only (Flyway manages migrations)
   - Used in Docker containers automatically
 
+- **`oauth`** - Enables GitHub OAuth client registration
+  - Requires `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`
+  - Enables interactive login for protected write endpoints
+
 - **`test`** - Testing with PostgreSQL via Testcontainers
   - Activated through the shared `@TestcontainersTest` meta-annotation used by integration-style tests
   - Flyway manages schema creation and Hibernate validates the mapping
@@ -97,6 +122,11 @@ docker-compose up -d
 
 # Run with prod profile
 .\gradlew.bat bootRun --args='--spring.profiles.active=prod'
+
+# Run with local database and GitHub OAuth login enabled
+$env:GITHUB_CLIENT_ID='your-github-client-id'
+$env:GITHUB_CLIENT_SECRET='your-github-client-secret'
+.\gradlew.bat bootRun --args='--spring.profiles.active=local,oauth'
 
 # Build app for prod
 .\gradlew.bat bootJar -Dspring.profiles.active=prod
@@ -187,6 +217,7 @@ Useful local endpoints:
 - `GET /hello`
 - `GET /api/books`
 - `GET /api/categories`
+- `GET /oauth2/authorization/github` when the `oauth` profile is active
 - `GET /actuator/info`
 - `GET /actuator/health`
 - `GET /actuator/health/liveness`
@@ -408,6 +439,16 @@ Actuator endpoints:
 - `GET /actuator/health/liveness`
 - `GET /actuator/health/readiness`
 - `GET /actuator/prometheus`
+
+### Security
+
+Authentication rules:
+
+- public without authentication: `GET /hello`, `GET /docs`, `GET /api/**`, `GET /actuator/health`, `GET /actuator/health/**`, `GET /actuator/info`, and `GET /actuator/prometheus`
+- protected with authenticated session: `POST /api/books`, `PUT /api/books/{id}`, `DELETE /api/books/{id}`, `POST /api/categories`, `POST /api/localization-messages`, `PUT /api/localization-messages/{id}`, and `DELETE /api/localization-messages/{id}`
+- protected browser requests also require a valid CSRF token
+- interactive login is available at `GET /oauth2/authorization/github` when the `oauth` profile is active
+- authenticated HTTP sessions are persisted in PostgreSQL tables `SPRING_SESSION` and `SPRING_SESSION_ATTRIBUTES`
 
 ## Seed Data
 
