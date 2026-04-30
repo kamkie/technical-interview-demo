@@ -42,7 +42,7 @@ Tasks:
 Depends on: 1.2
 
 Tasks:
-- [ ] Add JMeter or Gatling scenarios
+- [x] Add JMeter or Gatling scenarios
 - [ ] Benchmark list, search, localization lookup, and auth flows
 - [ ] Document baseline expectations and regression checks
 

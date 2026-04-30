@@ -11,6 +11,7 @@ plugins {
     jacoco
     pmd
     idea
+    id("io.gatling.gradle") version "3.15.0.1"
     id("com.gorylenko.gradle-git-properties") version "2.5.7"
     id("com.diffplug.spotless") version "8.4.0"
     id("net.ltgt.errorprone") version "5.1.0"
@@ -282,6 +283,12 @@ tasks.withType<JavaCompile>().configureEach {
     options.errorprone.disableWarningsInGeneratedCode.set(true)
     options.errorprone.excludedPaths.set(".*/build/generated/.*")
     options.forkOptions.jvmArgs?.add("--sun-misc-unsafe-memory-access=allow")
+}
+
+tasks.matching { it.name == "compileGatlingJava" }.configureEach {
+    if (this is JavaCompile) {
+        options.release.set(21)
+    }
 }
 
 pmd {
