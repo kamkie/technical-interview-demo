@@ -41,7 +41,7 @@
 | **API Docs** | http://localhost:8080/docs |
 | **Health** | http://localhost:8080/actuator/health |
 | **Prometheus** | http://localhost:9090 |
-| **H2 Console** | http://localhost:8080/h2-console |
+| **Readiness** | http://localhost:8080/actuator/health/readiness |
 
 ## Database Info
 

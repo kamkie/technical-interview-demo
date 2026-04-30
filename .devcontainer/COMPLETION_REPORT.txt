@@ -108,8 +108,8 @@ Inside Dev Container:
   • Spring Boot App:  http://localhost:8080
   • API Docs:         http://localhost:8080/docs
   • Health Check:     http://localhost:8080/actuator/health
+  • Readiness:        http://localhost:8080/actuator/health/readiness
   • Prometheus:       http://localhost:9090
-  • H2 Console:       http://localhost:8080/h2-console
   • PostgreSQL:       postgres://demo_user:demo_password@localhost:5432/technical_interview_demo
 
 ---
@@ -288,4 +288,3 @@ Source Code Modified: 0
 Gradle Dependencies Added: 0
 
 ✅ COMPLETE AND READY FOR USE
-

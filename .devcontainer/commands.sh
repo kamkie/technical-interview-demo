@@ -135,8 +135,8 @@ ${YELLOW}Application Access:${NC}
   • App:        http://localhost:8080
   • Docs:       http://localhost:8080/docs
   • Health:     http://localhost:8080/actuator/health
+  • Readiness:  http://localhost:8080/actuator/health/readiness
   • Prometheus: http://localhost:9090
-  • H2 Console: http://localhost:8080/h2-console
   • Books API:  http://localhost:8080/api/books
 
 ${BLUE}Tips:${NC}
@@ -154,4 +154,3 @@ if [ "${BASH_SOURCE[0]}" == "${0}" ]; then
 else
     print_success "Dev container shortcuts loaded! Type 'dev-help' for more info."
 fi
-

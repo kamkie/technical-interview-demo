@@ -122,8 +122,8 @@ The dev container forwards these ports to your host machine:
 | Spring Boot App | 8080 | http://localhost:8080 |
 | Prometheus | 9090 | http://localhost:9090 |
 | PostgreSQL | 5432 | postgresql://demo_user:demo_password@localhost:5432/technical_interview_demo |
-| H2 Console | 8080 | http://localhost:8080/h2-console |
 | API Docs | 8080 | http://localhost:8080/docs |
+| Readiness | 8080 | http://localhost:8080/actuator/health/readiness |
 
 ### PostgreSQL Connection
 

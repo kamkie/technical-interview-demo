@@ -10,7 +10,7 @@ Follow these project-level constraints first:
 - Prefer straightforward Spring MVC, Spring Data JPA, and `@Service` code over extra abstraction
 - Keep package names under `team.jit.technicalinterviewdemo`
 - Do not remove the existing `hello` or `book` endpoints unless the change explicitly requires it
-- Use H2 for local/demo defaults unless the task clearly calls for external infrastructure
+- Use PostgreSQL for runtime work and keep the local developer path Docker-friendly
 - Keep `README.md` and `AGENTS.md` aligned when project setup, API behavior, formatter usage, logging/tracing behavior, or quality gates change
 
 `AGENTS.md` is the authoritative source for technical constraints and architecture expectations. If this file and `AGENTS.md` ever conflict, update this file to match `AGENTS.md`.

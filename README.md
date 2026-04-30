@@ -13,8 +13,7 @@ The demo currently includes:
 - A REST API for `Category` under `/api/categories`
 - A REST API for `LocalizationMessage` under `/api/localization-messages` with CRUD, pagination, and key/language lookup
 - Git tag based application versioning plus a human-readable `CHANGELOG.md`
-- H2 in-memory database for the default local profile
-- PostgreSQL configuration for the production profile and Testcontainers-backed integration tests
+- PostgreSQL for local and production-style runtime profiles, plus Testcontainers-backed integration tests
 - Seed data loaded at startup
 - MVC and integration-style tests
 - Request tracing, structured application logging, in-memory lookup caches, and application-specific Prometheus metrics
@@ -30,7 +29,6 @@ Primary goal: keep the project small, readable, and suitable for technical inter
 - Spring Cache
 - Spring Security
 - Spring Security OAuth2 Client
-- H2 in-memory database
 - PostgreSQL
 - Testcontainers
 - Caffeine
@@ -67,14 +65,13 @@ The application uses Spring profiles to manage environment-specific configuratio
 
 ### Available Profiles
 
-- **`local`** (default) - Development with H2 in-memory database
-  - H2 console enabled at `/h2-console`
+- **`local`** (default) - Development with PostgreSQL on `localhost`
+  - Uses Docker Compose friendly defaults for `localhost:5432/technical_interview_demo`
   - DEBUG logging for Hibernate and Spring Web
-  - Schema auto-creation with `create-drop`
-  - Used by default when running `./gradlew.bat bootRun`
+  - Flyway manages schema creation and Hibernate validates the mapping
+  - Used by default when running `.\gradlew.bat bootRun`
 
 - **`prod`** - Production with PostgreSQL database
-  - H2 console disabled
   - Minimal logging (WARN level)
   - Schema validation only (Flyway manages migrations)
   - Used in Docker containers automatically
@@ -87,6 +84,9 @@ The application uses Spring profiles to manage environment-specific configuratio
 ### Activating Profiles
 
 ```powershell
+# Start PostgreSQL for local development
+docker-compose up -d
+
 # Run with local profile (default)
 .\gradlew.bat bootRun
 
@@ -100,19 +100,19 @@ The application uses Spring profiles to manage environment-specific configuratio
 docker run --rm -p 8080:8080 technical-interview-demo
 ```
 
-### Running with PostgreSQL (Production Profile)
+### Running PostgreSQL Locally With Docker
 
-For testing the production profile with PostgreSQL:
+Use the included `docker-compose.yml` for local development:
 
 ```powershell
-# Start PostgreSQL container (requires Docker)
+# Start PostgreSQL
 docker-compose up -d
 
 # Wait for PostgreSQL to be ready (5-10 seconds)
 Start-Sleep -Seconds 3
 
-# Run the app with prod profile
-.\gradlew.bat bootRun --args='--spring.profiles.active=prod'
+# Run the app with the default local profile
+.\gradlew.bat bootRun
 
 # Stop PostgreSQL when done
 docker-compose down
@@ -134,7 +134,7 @@ $env:DATABASE_NAME='my_database'
 $env:DATABASE_USER='my_user'
 $env:DATABASE_PASSWORD='my_password'
 
-.\gradlew.bat bootRun --args='--spring.profiles.active=prod'
+.\gradlew.bat bootRun
 ```
 
 ## Development Container (Dev Containers)
@@ -172,6 +172,7 @@ For detailed dev container documentation, see [.devcontainer/README.md](.devcont
 Start the application with:
 
 ```powershell
+docker-compose up -d
 .\gradlew.bat bootRun
 ```
 
@@ -186,7 +187,6 @@ Useful local endpoints:
 - `GET /actuator/health/liveness`
 - `GET /actuator/health/readiness`
 - `GET /actuator/prometheus`
-- H2 console at `/h2-console`
 
 ## Docker
 
@@ -534,7 +534,7 @@ Keep `.editorconfig` aligned with the intended IntelliJ formatting profile.
 - When returning `ResponseEntity`, assign the response payload to a local variable first so controller breakpoints can inspect it before the return.
 - Keep non-trivial business logic in `@Service` beans.
 - Prefer Spring MVC controllers and Spring Data repositories for new demo endpoints.
-- Use H2/in-memory storage unless the task explicitly requires external infrastructure.
+- Use PostgreSQL for runtime and keep local setup Docker-friendly.
 - Avoid adding unnecessary libraries when Spring Boot already provides the needed feature.
 - Keep REST responses JSON-friendly.
 - Add or update tests when API behavior changes.

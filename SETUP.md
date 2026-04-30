@@ -28,6 +28,7 @@ Install the tools that match your workflow:
 $env:JAVA_HOME='C:\Users\kamki\.jdks\azul-25.0.3'
 $env:Path="$env:JAVA_HOME\bin;$env:Path"
 
+docker-compose up -d
 .\gradlew.bat bootRun
 ```
 
@@ -40,12 +41,11 @@ export PATH="$JAVA_HOME/bin:$PATH"
 ./gradlew bootRun
 ```
 
-The default `local` profile starts the app with H2 in-memory storage. After startup, open:
+The default `local` profile expects PostgreSQL on `localhost:5432`. The included `docker-compose.yml` starts that database for you. After startup, open:
 
 - `http://localhost:8080/hello`
 - `http://localhost:8080/api/books`
 - `http://localhost:8080/docs`
-- `http://localhost:8080/h2-console`
 - `http://localhost:8080/actuator/health`
 
 ## Environment Variables
@@ -60,7 +60,7 @@ Variables you are most likely to need:
 - `JAVA_HOME` for Gradle and the toolchain
 - `IDEA_HOME` or `IDEA_FORMATTER_BINARY` for Spotless Java formatting
 - `SPRING_PROFILES_ACTIVE` if you want to override the default `local` profile
-- `DATABASE_*` variables when running the `prod` profile against PostgreSQL
+- `DATABASE_*` variables when overriding the default PostgreSQL connection
 
 ## IDE Setup
 
@@ -93,23 +93,9 @@ For the containerized path, use the dev container instructions in `.devcontainer
 
 ## Database Modes
 
-### Default Local Mode: H2
+### Default Local Mode: PostgreSQL
 
-No external database is required.
-
-- Active profile: `local`
-- JDBC URL: `jdbc:h2:mem:demo-db`
-- H2 console: `http://localhost:8080/h2-console`
-
-Run locally:
-
-```powershell
-.\gradlew.bat bootRun
-```
-
-### Production-Like Local Mode: PostgreSQL
-
-Use this when you want to exercise the `prod` profile.
+Use the included `docker-compose.yml` to run PostgreSQL locally.
 
 Start PostgreSQL:
 
@@ -117,13 +103,13 @@ Start PostgreSQL:
 docker-compose up -d
 ```
 
-Run the app with the production profile:
+Run the app with the default local profile:
 
 ```powershell
 $env:JAVA_HOME='C:\Users\kamki\.jdks\azul-25.0.3'
 $env:Path="$env:JAVA_HOME\bin;$env:Path"
 
-.\gradlew.bat bootRun --args='--spring.profiles.active=prod'
+.\gradlew.bat bootRun
 ```
 
 Default PostgreSQL settings:
@@ -145,6 +131,7 @@ docker-compose down
 Core commands:
 
 ```powershell
+docker-compose up -d
 .\gradlew.bat bootRun
 .\gradlew.bat test
 .\gradlew.bat asciidoctor
@@ -232,7 +219,7 @@ Fix:
 .\gradlew.bat asciidoctor
 ```
 
-### PostgreSQL prod profile will not start
+### PostgreSQL local profile will not start
 
 Symptom:
 
@@ -243,7 +230,7 @@ Fix:
 1. Confirm Docker Desktop is running.
 2. Run `docker-compose up -d`.
 3. Verify the database is healthy with `docker ps`.
-4. Re-run the app with `--spring.profiles.active=prod`.
+4. Re-run the app with `.\gradlew.bat bootRun`.
 
 ### Tests fail because Testcontainers cannot start PostgreSQL
 

@@ -15,7 +15,7 @@ Current scope:
 - CRUD-style `LocalizationMessage` API under `/api/localization-messages` with pagination and key/language lookup
 - git-tag-based application versioning with a human-readable `CHANGELOG.md`
 - actuator endpoints for `health`, `info`, liveness/readiness probes, and Prometheus metrics
-- H2 in-memory database for the default local profile
+- PostgreSQL for local and production-style runtime profiles
 - PostgreSQL-backed integration tests via Testcontainers
 - startup seed data
 - MVC/integration-style tests
@@ -33,7 +33,6 @@ Primary goal: keep the codebase small, readable, and easy to reason about.
 - Spring Cache
 - Spring Security
 - Spring Security OAuth2 Client
-- H2
 - PostgreSQL
 - Testcontainers
 - Caffeine
@@ -79,7 +78,7 @@ Docker Desktop is required for `.\gradlew.bat test` because the integration suit
 The application uses Spring profiles for environment-specific configuration.
 
 **Available Profiles:**
-- `local` (default) - Development with H2 in-memory database, debug logging
+- `local` (default) - Development with PostgreSQL on localhost and debug logging
 - `prod` - Production with PostgreSQL, minimal logging
 - `test` - Testing with PostgreSQL via Testcontainers, activated by `@TestcontainersTest`
 
@@ -91,7 +90,7 @@ The application uses Spring profiles for environment-specific configuration.
 
 **Configuration Files:**
 - `src/main/resources/application.properties` - common settings for all profiles
-- `src/main/resources/application-local.properties` - local development config
+- `src/main/resources/application-local.properties` - local PostgreSQL development config
 - `src/main/resources/application-prod.properties` - production PostgreSQL config
 - `src/test/resources/application-test.properties` - test config
 
@@ -305,8 +304,8 @@ Current runtime behavior:
 - Log every successful operation that changes database state.
 - Keep non-trivial business logic in `@Service` beans. Service calls are logged and must keep sensitive values redacted.
 - Prefer Spring MVC controllers and Spring Data repositories for new demo endpoints.
-- Use H2/in-memory storage unless external infrastructure is explicitly required.
-- Keep local runtime simple; the existing exception is the test suite, which now uses PostgreSQL via Testcontainers to validate Flyway-managed schema behavior.
+- Use PostgreSQL for runtime changes unless the user explicitly asks for something else.
+- Keep local runtime simple through the included Docker Compose PostgreSQL setup and Testcontainers-backed tests.
 - Avoid security, messaging, distributed systems, or extra libraries unless requested.
 - Keep REST responses JSON-friendly.
 - Add or update tests when API behavior changes.
@@ -356,7 +355,7 @@ Notes:
 - overengineered service layers for trivial CRUD
 - large amounts of manual boilerplate where Lombok keeps the demo simpler
 - DTO mapping frameworks for small examples
-- replacing H2 with an external database without a clear requirement
+- adding extra infrastructure beyond the existing PostgreSQL and Docker-based local setup without a clear requirement
 - breaking the current test setup
 - changing Java or Spring Boot versions unless requested
 
