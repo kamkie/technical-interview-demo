@@ -1,0 +1,15 @@
+# Dev container local files
+*.env.local
+.devcontainer/.env
+.devcontainer/local/
+
+# PostgreSQL data volumes (managed by Docker)
+postgres_data/
+
+# Prometheus data volumes (managed by Docker)
+prometheus_data/
+
+# Editor cache
+.vscode-server/
+.vscode-server-insiders/
+

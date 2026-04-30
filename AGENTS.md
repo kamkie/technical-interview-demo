@@ -16,6 +16,7 @@ Current scope:
 - startup seed data
 - MVC/integration-style tests
 - request tracing and structured logging
+- **Development Container (dev container) for VS Code with zero-friction setup**
 
 Primary goal: keep the codebase small, readable, and easy to reason about.
 
@@ -52,7 +53,7 @@ Common commands:
 .\gradlew.bat bootRun
 .\gradlew.bat test
 .\gradlew.bat asciidoctor
-.\\gradlew.bat qodanaScan
+.\gradlew.bat qodanaScan
 .\gradlew.bat dockerBuild
 .\gradlew.bat dockerBuild -PdockerImageName=my-app:dev
 docker build -t technical-interview-demo .

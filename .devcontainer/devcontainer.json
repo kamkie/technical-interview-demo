@@ -1,0 +1,106 @@
+{
+  "name": "Technical Interview Demo - Spring Boot Java 25",
+  "image": "mcr.microsoft.com/devcontainers/java:1-25-bullseye",
+
+  // Features to add to the dev container
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest",
+      "moby": true,
+      "dockerDashComposeVersion": "v2"
+    }
+  },
+
+  // Ports to expose
+  "forwardPorts": [
+    8080,
+    9090,
+    5432
+  ],
+  "portsAttributes": {
+    "8080": {
+      "label": "Spring Boot App",
+      "onAutoForward": "notify"
+    },
+    "9090": {
+      "label": "Prometheus",
+      "onAutoForward": "notify"
+    },
+    "5432": {
+      "label": "PostgreSQL",
+      "onAutoForward": "ignore"
+    }
+  },
+
+  // Mount points
+  "mounts": [
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.m2,target=/root/.m2,type=bind",
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.gradle,target=/root/.gradle,type=bind"
+  ],
+
+  // Environment variables
+  "remoteEnv": {
+    "JAVA_HOME": "/usr/local/sdkman/candidates/java/current"
+  },
+
+  // Customize the shell prompt
+  "remoteUser": "root",
+
+  // Run commands after container is created
+  "postCreateCommand": "./.devcontainer/postCreateCommand.sh",
+
+  // VS Code settings and extensions
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Extension Pack for Java",
+        "vscjava.vscode-spring-boot-dashboard",
+        "vscjava.vscode-gradle",
+        "vmware.vscode-boot-dev-pack",
+        "ms-azuretools.vscode-docker",
+        "ms-vscode.makefile-tools",
+        "GitHub.copilot",
+        "sonarsource.sonarlint-vscode",
+        "ms-vscode-remote.remote-containers",
+        "ms-vscode-remote.remote-ssh",
+        "ms-vscode-remote.remote-ssh-edit",
+        "eamodio.gitlens",
+        "GitHub.github-vscode-theme"
+      ],
+      "settings": {
+        "java.home": "/usr/local/sdkman/candidates/java/current",
+        "java.jdt.ls.java.home": "/usr/local/sdkman/candidates/java/current",
+        "[java]": {
+          "editor.defaultFormatter": "redhat.java",
+          "editor.formatOnSave": true,
+          "editor.formatOnPaste": true
+        },
+        "files.exclude": {
+          "**/.classpath": true,
+          "**/.project": true,
+          "**/.settings": true,
+          "**/.factorypath": true
+        },
+        "spring-boot.ls.java.home": "/usr/local/sdkman/candidates/java/current",
+        "gradle.javaPath": "/usr/local/sdkman/candidates/java/current",
+        "editor.rulers": [
+          100,
+          120
+        ],
+        "files.trimTrailingWhitespace": true,
+        "files.insertFinalNewline": true,
+        "editor.formatOnSave": true
+      }
+    }
+  },
+
+  // Docker-related features
+  "containerEnv": {
+    "TZ": "UTC"
+  },
+
+  // Lifecycle scripts
+  "postStartCommand": "./.devcontainer/postStartCommand.sh",
+  "onCreateCommand": "./.devcontainer/onCreateCommand.sh"
+}
+

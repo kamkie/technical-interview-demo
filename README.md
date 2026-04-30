@@ -47,6 +47,36 @@ $env:JAVA_HOME='C:\Users\kamki\.jdks\azul-25.0.3'
 $env:Path="$env:JAVA_HOME\bin;$env:Path"
 ```
 
+## Development Container (Dev Containers)
+
+This project includes a preconfigured dev container for VS Code's Remote - Containers extension.
+
+### Quick Start
+
+1. Install VS Code and the "Dev Containers" extension
+2. Open the project folder in VS Code
+3. Press `Ctrl+Shift+P` and select "Dev Containers: Reopen in Container"
+4. VS Code will build and start the container (5-10 minutes on first run)
+
+### What's Included
+
+- Java 25 JDK
+- Gradle (via wrapper)
+- Docker & Docker Compose (Docker-in-Docker)
+- Preconfigured VS Code extensions (Java, Spring Boot, Docker, etc.)
+- PostgreSQL service (optional, via Docker Compose)
+- Prometheus service (optional, for metrics)
+
+### Benefits
+
+- **Consistent environment:** All developers use identical tooling
+- **No local setup required:** Docker handles all dependencies
+- **Isolated:** Doesn't interfere with other local projects
+- **Easy cleanup:** Just delete the container
+- **One-command setup:** Automatic initialization scripts
+
+For detailed dev container documentation, see [.devcontainer/README.md](.devcontainer/README.md).
+
 ## Run The Application
 
 Start the application with:
