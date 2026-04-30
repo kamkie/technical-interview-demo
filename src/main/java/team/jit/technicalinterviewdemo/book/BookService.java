@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +45,8 @@ public class BookService {
     public Page<Book> findAll(BookSearchRequest request, Pageable pageable) {
         validateSearchRequest(request);
         Pageable effectivePageable = createEffectivePageable(pageable);
-        return bookRepository.findAll(BookSpecifications.fromSearchRequest(request), effectivePageable);
+        Specification<Book> searchSpecification = BookSpecifications.fromSearchRequest(request);
+        return bookRepository.findAll(searchSpecification, effectivePageable);
     }
 
     public Book findById(Long id) {
