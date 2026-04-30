@@ -12,7 +12,8 @@ Current scope:
 - `GET /hello` returns `Hello World!`
 - CRUD-style `Book` API under `/api/books` with pagination, filtering, and optimistic locking on updates
 - actuator endpoints for `health`, `info`, liveness/readiness probes, and Prometheus metrics
-- H2 in-memory database
+- H2 in-memory database for the default local profile
+- PostgreSQL-backed integration tests via Testcontainers
 - startup seed data
 - MVC/integration-style tests
 - request tracing and structured logging
@@ -27,6 +28,8 @@ Primary goal: keep the codebase small, readable, and easy to reason about.
 - Spring Web MVC
 - Spring Data JPA
 - H2
+- PostgreSQL
+- Testcontainers
 - Gradle Wrapper
 - Lombok
 - Spring AOP
@@ -62,25 +65,27 @@ docker run --rm -p 8080:8080 technical-interview-demo
 
 Developer onboarding lives in `SETUP.md`. An optional shell/env template is provided in `.env.example`.
 
+Docker Desktop is required for `.\gradlew.bat test` because the integration suite starts PostgreSQL through Testcontainers.
+
 ## Spring Profiles
 
 The application uses Spring profiles for environment-specific configuration.
 
 **Available Profiles:**
 - `local` (default) - Development with H2 in-memory database, debug logging
-- `prod` - Production with PostgreSQL (after Phase 1.1), minimal logging
-- `test` - Testing with isolated H2 database, auto-activated by test framework
+- `prod` - Production with PostgreSQL, minimal logging
+- `test` - Testing with PostgreSQL via Testcontainers, activated by `@TestcontainersTest`
 
 **Profile Activation:**
 - Default: `spring.profiles.active=local` in `application.properties`
 - Override: `--spring.profiles.active=prod` on command line
 - Docker: Automatically uses `prod` profile (set in `Dockerfile`)
-- Tests: Automatically uses `test` profile (via `@SpringBootTest` annotations)
+- Tests: Use `@TestcontainersTest` to activate the `test` profile and import the shared PostgreSQL container configuration
 
 **Configuration Files:**
 - `src/main/resources/application.properties` - common settings for all profiles
 - `src/main/resources/application-local.properties` - local development config
-- `src/main/resources/application-prod.properties` - production config (Future: PostgreSQL)
+- `src/main/resources/application-prod.properties` - production PostgreSQL config
 - `src/test/resources/application-test.properties` - test config
 
 ## Formatter Contract
@@ -143,6 +148,8 @@ Packaging and runtime behavior:
 - `src/docs/asciidoc/index.adoc`: assembled API documentation source
 - `src/main/resources/application.properties`: runtime configuration
 - `src/test/java/team/jit/technicalinterviewdemo/`: application, API, tracing, and documentation tests
+- `src/test/java/team/jit/technicalinterviewdemo/TestcontainersTest.java`: shared meta-annotation for PostgreSQL-backed integration tests
+- `src/test/java/team/jit/technicalinterviewdemo/PostgresTestcontainersConfiguration.java`: shared PostgreSQL Testcontainers setup
 
 ## API Contract
 
@@ -209,6 +216,7 @@ Current runtime behavior:
 - Keep non-trivial business logic in `@Service` beans. Service calls are logged and must keep sensitive values redacted.
 - Prefer Spring MVC controllers and Spring Data repositories for new demo endpoints.
 - Use H2/in-memory storage unless external infrastructure is explicitly required.
+- Keep local runtime simple; the existing exception is the test suite, which now uses PostgreSQL via Testcontainers to validate Flyway-managed schema behavior.
 - Avoid security, messaging, distributed systems, or extra libraries unless requested.
 - Keep REST responses JSON-friendly.
 - Add or update tests when API behavior changes.
@@ -245,6 +253,7 @@ Optional additional static analysis:
 Notes:
 
 - Export `JAVA_HOME` to JDK 25 in the same shell first.
+- Docker Desktop must be running for `test` because Testcontainers provisions PostgreSQL.
 - Error Prone runs during Java compilation.
 - PMD also runs as part of `check` and `build`.
 

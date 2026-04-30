@@ -38,6 +38,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import team.jit.technicalinterviewdemo.book.Book;
 import team.jit.technicalinterviewdemo.book.BookRepository;
 
+@TestcontainersTest
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs(outputDir = "build/generated-snippets")

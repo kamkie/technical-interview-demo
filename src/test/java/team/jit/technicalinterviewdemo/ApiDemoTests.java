@@ -28,6 +28,7 @@ import org.springframework.web.context.WebApplicationContext;
 import team.jit.technicalinterviewdemo.book.Book;
 import team.jit.technicalinterviewdemo.book.BookRepository;
 
+@TestcontainersTest
 @SpringBootTest
 @ExtendWith(OutputCaptureExtension.class)
 class ApiDemoTests {

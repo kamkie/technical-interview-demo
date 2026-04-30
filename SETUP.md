@@ -17,7 +17,7 @@ Install the tools that match your workflow:
 
 - Java 25
 - Git
-- Docker Desktop if you want PostgreSQL, container builds, or the VS Code dev container
+- Docker Desktop if you want PostgreSQL, container builds, the VS Code dev container, or to run the integration test suite
 - IntelliJ IDEA or VS Code if you want IDE support
 
 ## Quick Start
@@ -164,7 +164,7 @@ Useful endpoints once the app is running:
 
 ## Running Tests And Quality Checks
 
-Set Java 25 in the same shell session first, then run:
+Set Java 25 in the same shell session first. Docker Desktop must also be running because the `test` task starts PostgreSQL through Testcontainers.
 
 ```powershell
 .\gradlew.bat spotlessCheck
@@ -244,6 +244,20 @@ Fix:
 2. Run `docker-compose up -d`.
 3. Verify the database is healthy with `docker ps`.
 4. Re-run the app with `--spring.profiles.active=prod`.
+
+### Tests fail because Testcontainers cannot start PostgreSQL
+
+Symptom:
+
+- `.\gradlew.bat test` fails before the Spring context loads
+- the output mentions Docker, Testcontainers, or PostgreSQL container startup
+
+Fix:
+
+1. Confirm Docker Desktop is running.
+2. Verify Docker is reachable with `docker ps`.
+3. Re-run `.\gradlew.bat --no-problems-report test`.
+4. If Docker is managed by corporate policy, make sure Linux containers are enabled and the current user can access Docker.
 
 ### Spotless skips Java formatting
 

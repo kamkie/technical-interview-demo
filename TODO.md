@@ -7,9 +7,11 @@ This file outlines planned features, improvements, and refactoring tasks for the
 - ✅ [Development Container (Dev Containers)](#development-container-setup) - VS Code dev container with Java 25, Docker, and supporting services
 - ✅ [Phase 2.1: Profile-Based Configuration Split](#phase-21-profile-based-configuration-split) - Environment-specific configuration for local, prod, and test
 - ✅ [Phase 1.1: PostgreSQL Migration](#phase-11-migrate-from-h2-to-postgresql) - PostgreSQL driver and production configuration ready
+- ✅ [Phase 1.2: Add Testcontainers for Integration Testing](#12-add-testcontainers-for-integration-testing) - PostgreSQL-backed integration tests now run through Testcontainers
 
 ## ✅ Recently Completed
 
+- ✅ [Phase 1.2: Add Testcontainers for Integration Testing](#12-add-testcontainers-for-integration-testing) - integration tests now use PostgreSQL via Testcontainers and Flyway-managed schema validation
 - ✅ [Phase 6.1: Add Search & Filtering to Books](#61-add-search--filtering-to-books) - `GET /api/books` now supports filtering, sort validation, tests, and REST Docs updates
 - ✅ [Phase 8.2: Create Developer Setup Guide](#82-create-developer-setup-guide) - `SETUP.md` and `.env.example` now cover local onboarding
 - ✅ [Phase 8.3: Add Contribution Guidelines](#83-add-contribution-guidelines) - `CONTRIBUTING.md` and optional sample Git hooks are now in the repo
@@ -100,19 +102,31 @@ docker-compose down
 
 ---
 
-### 1.2 Add Testcontainers for Integration Testing 🟢
+### 1.2 Add Testcontainers for Integration Testing ✅
 
 Depends on: 1.1 (PostgreSQL migration) ✅ **COMPLETED**
 
 Use Testcontainers to run PostgreSQL in Docker during tests for better database testing without relying on in-memory H2.
 
+**Status:** Completed
+
+**Implementation Details:**
+- ✅ Added `spring-boot-testcontainers`, `testcontainers`, and `testcontainers-postgresql` test dependencies
+- ✅ Added Flyway PostgreSQL support so migrations run against the containerized database during tests
+- ✅ Created shared `@TestcontainersTest` annotation to activate the `test` profile and import PostgreSQL Testcontainers configuration
+- ✅ Added `PostgresTestcontainersConfiguration` using Spring Boot `@ServiceConnection` with a shared `PostgreSQLContainer`
+- ✅ Updated existing MVC/integration-style tests to use PostgreSQL Testcontainers
+- ✅ Switched `application-test.properties` to Flyway-managed PostgreSQL validation settings
+- ✅ Documented the Testcontainers and Docker requirement in `README.md`, `AGENTS.md`, and `SETUP.md`
+- ✅ All tests pass against PostgreSQL Testcontainers (50 tests)
+
 **Tasks:**
-- [ ] Add Testcontainers dependency to `build.gradle.kts` (`org.testcontainers:testcontainers`, `org.testcontainers:postgresql`)
-- [ ] Create a `@TestcontainersTest` annotation or base test class for database integration tests
-- [ ] Refactor existing database tests to use Testcontainers
-- [ ] Configure test profile (`application-test.properties`) to use Testcontainers PostgreSQL
-- [ ] Add Testcontainers initialization in test suite setup
-- [ ] Document the Testcontainers setup for team members
+- [x] Add Testcontainers dependency to `build.gradle.kts` (`org.testcontainers:testcontainers`, `org.testcontainers:testcontainers-postgresql`)
+- [x] Create a `@TestcontainersTest` annotation or base test class for database integration tests
+- [x] Refactor existing database tests to use Testcontainers
+- [x] Configure test profile (`application-test.properties`) to use Testcontainers PostgreSQL
+- [x] Add Testcontainers initialization in test suite setup
+- [x] Document the Testcontainers setup for team members
 - [ ] Optionally add Testcontainers support for other services (Redis, RabbitMQ if added later)
 
 **Definition of Done:**
@@ -133,7 +147,7 @@ Reorganize application configuration for local development, testing, and product
 
 **Implementation Details:**
 - ✅ Created `src/main/resources/application-local.properties` with H2 and debug logging
-- ✅ Created `src/main/resources/application-prod.properties` with production settings (ready for PostgreSQL migration)
+- ✅ Created `src/main/resources/application-prod.properties` with production PostgreSQL settings
 - ✅ Created `src/test/resources/application-test.properties` with test isolation
 - ✅ Moved H2 configuration to local profile
 - ✅ Kept common defaults in main `application.properties`
@@ -147,8 +161,8 @@ Reorganize application configuration for local development, testing, and product
 
 **Profiles Available:**
 - `local` (default) - Development with H2, debug logging
-- `prod` - Production with PostgreSQL (ready for Phase 1.1)
-- `test` - Testing with isolated H2 database
+- `prod` - Production with PostgreSQL
+- `test` - Testing with PostgreSQL via Testcontainers
 
 **Commit:** 9e5185c
 
@@ -156,7 +170,7 @@ Reorganize application configuration for local development, testing, and product
 
 ## Phase 3: Internationalization (i18n) & Localization Messages
 
-### 3.1 Create LocalizationMessage Entity 🟡
+### 3.1 Create LocalizationMessage Entity 🟢
 
 Depends on: 2.1 (Profiles ready) and 1.2 (Testcontainers ready—optional for testing)
 
@@ -335,7 +349,7 @@ Allow clients to request responses in their preferred language.
 
 ## Phase 5: Security & OAuth Integration
 
-### 5.1 Add Spring Security with OAuth 2.0 🟡
+### 5.1 Add Spring Security with OAuth 2.0 🟢
 
 Depends on: 2.1 (Profiles configured)
 
@@ -497,7 +511,7 @@ Enhanced search capabilities for the book API without breaking existing endpoint
 
 ---
 
-### 6.2 Add Book Categories/Tags 🟡
+### 6.2 Add Book Categories/Tags 🟢
 
 Depends on: 6.1 (Filtering)
 
@@ -727,7 +741,7 @@ Aim for higher test coverage (e.g., 80%+).
 
 ---
 
-### 9.3 Add Load & Performance Testing 🟡
+### 9.3 Add Load & Performance Testing 🟢
 
 Depends on: 1.2 (PostgreSQL/Testcontainers ready)
 
@@ -753,7 +767,7 @@ Benchmark application performance under load.
 
 ## Phase 10: DevOps & Deployment
 
-### 10.1 Add CI/CD Pipeline 🟡
+### 10.1 Add CI/CD Pipeline 🟢
 
 Depends on: Phase 1-2 complete (database, profiles)
 

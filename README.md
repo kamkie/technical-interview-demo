@@ -10,7 +10,8 @@ The demo currently includes:
 
 - `GET /hello` returning `Hello World!`
 - A REST API for `Book` under `/api/books` with pagination and filtering
-- In-memory H2 database configuration
+- H2 in-memory database for the default local profile
+- PostgreSQL configuration for the production profile and Testcontainers-backed integration tests
 - Seed data loaded at startup
 - MVC and integration-style tests
 - Request tracing and structured application logging
@@ -24,6 +25,8 @@ Primary goal: keep the project small, readable, and suitable for technical inter
 - Spring Web MVC
 - Spring Data JPA
 - H2 in-memory database
+- PostgreSQL
+- Testcontainers
 - Gradle Wrapper
 - JUnit 5
 - Lombok
@@ -49,6 +52,8 @@ $env:Path="$env:JAVA_HOME\bin;$env:Path"
 
 For a full local onboarding flow, see `SETUP.md`. A starter environment template is available in `.env.example`.
 
+Docker Desktop is also required for `.\gradlew.bat test` because the test suite starts PostgreSQL through Testcontainers.
+
 ## Spring Profiles
 
 The application uses Spring profiles to manage environment-specific configuration:
@@ -61,16 +66,16 @@ The application uses Spring profiles to manage environment-specific configuratio
   - Schema auto-creation with `create-drop`
   - Used by default when running `./gradlew.bat bootRun`
 
-- **`prod`** - Production with PostgreSQL database (ready for Phase 1.1 migration)
+- **`prod`** - Production with PostgreSQL database
   - H2 console disabled
   - Minimal logging (WARN level)
   - Schema validation only (Flyway manages migrations)
   - Used in Docker containers automatically
 
-- **`test`** - Testing with isolated H2 in-memory database
-  - Auto-activated by `@SpringBootTest` and similar annotations
-  - Schema auto-creation with `create-drop`
-  - Minimal logging to reduce noise during test runs
+- **`test`** - Testing with PostgreSQL via Testcontainers
+  - Activated through the shared `@TestcontainersTest` meta-annotation used by integration-style tests
+  - Flyway manages schema creation and Hibernate validates the mapping
+  - Docker must be available when running the test suite
 
 ### Activating Profiles
 
@@ -246,6 +251,8 @@ Qodana static analysis is available through Gradle:
 - `src/docs/asciidoc/index.adoc`: assembled API documentation source
 - `src/main/resources/application.properties`: runtime configuration
 - `src/test/java/team/jit/technicalinterviewdemo/`: application and API tests
+- `src/test/java/team/jit/technicalinterviewdemo/TestcontainersTest.java`: shared integration-test annotation for PostgreSQL-backed tests
+- `src/test/java/team/jit/technicalinterviewdemo/PostgresTestcontainersConfiguration.java`: shared PostgreSQL Testcontainers configuration
 
 ## API
 
@@ -368,6 +375,8 @@ Flyway manages the schema from SQL migrations under `src/main/resources/db/migra
 
 Hibernate is configured with `spring.jpa.hibernate.ddl-auto=validate`, so the application validates the mapped schema instead of creating or updating it automatically.
 
+The test suite uses the same Flyway migrations against PostgreSQL via Testcontainers to keep integration coverage closer to the production profile.
+
 ## Formatting
 
 The build uses Spotless.
@@ -428,6 +437,8 @@ Optional additional static analysis:
 ```
 
 If tests require Java setup first, export `JAVA_HOME` to a compatible JDK in the same shell session.
+
+If `test` fails before application startup, confirm Docker Desktop is running because Testcontainers provisions PostgreSQL for the integration suite.
 
 Error Prone runs as part of Java compilation, so `test` and `build` also execute static analysis for Java sources.
 PMD runs as part of `check` and `build`. Use `pmdMain` for the main application source set when you want a focused PMD run.
