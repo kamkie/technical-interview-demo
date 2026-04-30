@@ -1,0 +1,7 @@
+# IntelliJ HTTP Client examples for technical-interview-demo
+# Enable the oauth profile first, then open this request in a browser-capable client.
+
+@baseUrl = http://localhost:8080
+
+### Authentication - start GitHub OAuth login flow
+GET {{baseUrl}}/oauth2/authorization/github

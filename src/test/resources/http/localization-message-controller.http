@@ -1,0 +1,68 @@
+# IntelliJ HTTP Client examples for technical-interview-demo
+# Localization message writes require ADMIN, an authenticated session, and CSRF.
+
+@baseUrl = http://localhost:8080
+@sessionCookie = paste-technical-interview-demo-session-here
+@csrfToken = paste-x-csrf-token-here
+@localizationMessageId = 1
+@writeLocalizationMessageId = 0
+@demoMessageKey = info.book.created.demo-change-me-if-rerunning
+
+### LocalizationMessageController - list localization messages with pagination and sorting
+GET {{baseUrl}}/api/localization-messages?page=0&size=5&sort=messageKey,asc&sort=language,asc
+Accept: application/json
+
+### LocalizationMessageController - get a seeded message by key and language and capture its id
+GET {{baseUrl}}/api/localization-messages/key/error.book.not_found/lang/en
+Accept: application/json
+> {%
+if (response.status === 200) {
+  client.global.set("localizationMessageId", String(response.body.id));
+}
+%}
+
+### LocalizationMessageController - get localization message by id
+GET {{baseUrl}}/api/localization-messages/{{localizationMessageId}}
+Accept: application/json
+
+### LocalizationMessageController - list messages for one language
+GET {{baseUrl}}/api/localization-messages/language/es
+Accept: application/json
+
+### LocalizationMessageController - create localization message (ADMIN + authenticated + CSRF)
+POST {{baseUrl}}/api/localization-messages
+Cookie: technical-interview-demo-session={{sessionCookie}}
+X-CSRF-TOKEN: {{csrfToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "messageKey": "{{demoMessageKey}}",
+  "language": "fr",
+  "messageText": "Le livre a ete cree.",
+  "description": "French success message for demo requests."
+}
+> {%
+if (response.status === 201) {
+  client.global.set("writeLocalizationMessageId", String(response.body.id));
+}
+%}
+
+### LocalizationMessageController - update the localization message created above (run create first)
+PUT {{baseUrl}}/api/localization-messages/{{writeLocalizationMessageId}}
+Cookie: technical-interview-demo-session={{sessionCookie}}
+X-CSRF-TOKEN: {{csrfToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "messageKey": "{{demoMessageKey}}",
+  "language": "fr",
+  "messageText": "Le livre a ete cree avec succes.",
+  "description": "Updated French success message for demo requests."
+}
+
+### LocalizationMessageController - delete the localization message created above (run create first)
+DELETE {{baseUrl}}/api/localization-messages/{{writeLocalizationMessageId}}
+Cookie: technical-interview-demo-session={{sessionCookie}}
+X-CSRF-TOKEN: {{csrfToken}}

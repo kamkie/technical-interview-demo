@@ -1,0 +1,10 @@
+# IntelliJ HTTP Client examples for technical-interview-demo
+
+@baseUrl = http://localhost:8080
+
+### Documentation - redirect to generated API docs
+GET {{baseUrl}}/docs
+
+### Documentation - generated docs index
+GET {{baseUrl}}/docs/index.html
+Accept: text/html

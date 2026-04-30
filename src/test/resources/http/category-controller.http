@@ -1,0 +1,21 @@
+# IntelliJ HTTP Client examples for technical-interview-demo
+# Category creation requires ADMIN, an authenticated session, and CSRF.
+
+@baseUrl = http://localhost:8080
+@sessionCookie = paste-technical-interview-demo-session-here
+@csrfToken = paste-x-csrf-token-here
+
+### CategoryController - list categories
+GET {{baseUrl}}/api/categories
+Accept: application/json
+
+### CategoryController - create category (ADMIN + authenticated + CSRF)
+POST {{baseUrl}}/api/categories
+Cookie: technical-interview-demo-session={{sessionCookie}}
+X-CSRF-TOKEN: {{csrfToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Architecture"
+}

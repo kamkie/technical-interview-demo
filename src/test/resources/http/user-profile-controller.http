@@ -1,0 +1,22 @@
+# IntelliJ HTTP Client examples for technical-interview-demo
+# User profile requests require an authenticated session. Updates also require CSRF.
+
+@baseUrl = http://localhost:8080
+@sessionCookie = paste-technical-interview-demo-session-here
+@csrfToken = paste-x-csrf-token-here
+
+### UserProfileController - current authenticated user
+GET {{baseUrl}}/api/users/me
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/json
+
+### UserProfileController - update preferred language (authenticated + CSRF)
+PUT {{baseUrl}}/api/users/me/preferred-language
+Cookie: technical-interview-demo-session={{sessionCookie}}
+X-CSRF-TOKEN: {{csrfToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "preferredLanguage": "pl"
+}

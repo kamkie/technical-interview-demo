@@ -1,0 +1,23 @@
+# IntelliJ HTTP Client examples for technical-interview-demo
+
+@baseUrl = http://localhost:8080
+
+### Technical endpoints - actuator info
+GET {{baseUrl}}/actuator/info
+Accept: application/json
+
+### Technical endpoints - actuator health
+GET {{baseUrl}}/actuator/health
+Accept: application/json
+
+### Technical endpoints - actuator liveness
+GET {{baseUrl}}/actuator/health/liveness
+Accept: application/json
+
+### Technical endpoints - actuator readiness
+GET {{baseUrl}}/actuator/health/readiness
+Accept: application/json
+
+### Technical endpoints - Prometheus metrics
+GET {{baseUrl}}/actuator/prometheus
+Accept: text/plain
