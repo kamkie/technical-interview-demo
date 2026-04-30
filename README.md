@@ -58,6 +58,12 @@ For a full local onboarding flow, see `SETUP.md`. A starter environment template
 
 Docker Desktop is also required for `.\gradlew.bat test` and `.\gradlew.bat build` because the test suite starts PostgreSQL through Testcontainers and the build lifecycle now includes Docker image creation.
 
+## Planned OAuth Provider
+
+Phase `5.1 Add Spring Security with OAuth 2.0` will use a GitHub OAuth App.
+
+That provider has been selected for the demo because it keeps reviewer setup straightforward and avoids introducing extra infrastructure beyond a single provider registration and local client credentials.
+
 ## Spring Profiles
 
 The application uses Spring profiles to manage environment-specific configuration:

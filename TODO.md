@@ -39,7 +39,7 @@ Protect state-changing endpoints while keeping the demo simple and approachable.
 
 Tasks:
 - [x] Add Spring Security and OAuth 2.0 client dependencies
-- [ ] Choose and document a demo-friendly OAuth provider for the demo
+- [x] Choose and document a demo-friendly OAuth provider for the demo
 - [ ] Create `SecurityConfig` with OAuth login and authorization rules
 - [ ] Add Spring Session JDBC and persist authenticated sessions in the database
 - [ ] Configure secure session handling for the OAuth login flow
@@ -54,6 +54,9 @@ Definition of done:
 - JDBC-backed sessions work with the selected OAuth flow
 - The selected OAuth provider is simple for reviewers to configure locally
 - OAuth flow is documented and testable
+
+Selected provider:
+- GitHub OAuth App is the chosen Phase 5.1 provider because it keeps the demo setup small and familiar for local reviewers.
 
 #### 5.2 Add User Entity & Management
 

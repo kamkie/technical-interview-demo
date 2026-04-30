@@ -183,9 +183,11 @@ The container uses the `prod` profile by default.
 
 ## OAuth Setup Status
 
-No OAuth flow is implemented in the current application. There is nothing to register with GitHub, Google, or another provider yet.
+No OAuth flow is implemented in the current application yet.
 
-If Phase `5.1 Add Spring Security with OAuth 2.0` is implemented later, add the provider credentials through environment variables or a local non-committed properties file instead of hardcoding secrets.
+The selected provider for upcoming Phase `5.1 Add Spring Security with OAuth 2.0` work is a GitHub OAuth App.
+
+When that phase is implemented, keep the GitHub client credentials out of version control and provide them through environment variables or a local non-committed properties file.
 
 ## Troubleshooting
 

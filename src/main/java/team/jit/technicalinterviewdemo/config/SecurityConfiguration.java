@@ -11,7 +11,7 @@ public class SecurityConfiguration {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // Keep the existing demo surface public until the OAuth rules are added in a later Phase 5.1 task.
+        // Keep the existing demo surface public until the Phase 5.1 GitHub OAuth flow is implemented.
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)

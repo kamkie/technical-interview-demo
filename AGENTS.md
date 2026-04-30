@@ -74,6 +74,12 @@ When building directly with Docker after `.\gradlew.bat bootJar`, prefer passing
 
 Docker Desktop is required for `.\gradlew.bat test` and `.\gradlew.bat build` because the integration suite starts PostgreSQL through Testcontainers and the build lifecycle now includes Docker image creation.
 
+## Planned OAuth Provider
+
+Phase `5.1 Add Spring Security with OAuth 2.0` is planned around a GitHub OAuth App.
+
+Treat that provider choice as fixed unless the user explicitly asks to revisit it, and keep any future GitHub client credentials out of version control.
+
 ## Spring Profiles
 
 The application uses Spring profiles for environment-specific configuration.
