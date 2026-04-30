@@ -9,22 +9,46 @@ The roadmap below is ordered to respect cross-phase dependencies.
 
 | Order | Theme | Status | Why it comes next |
 | --- | --- | --- | --- |
-| 1 | Phase 5: Security and user model | Ready | Security should be in place before admin-only management and audit trails |
-| 2 | Phase 8.5: OpenAPI and compatibility gates | Ready after Phase 5.1 | The machine-readable contract should reflect the secured API surface |
-| 3 | Phase 8.1: API and operations documentation gaps | Partially blocked by Phases 5 and 8.5 | Documentation should follow the feature set that actually exists |
-| 4 | Phase 9: Coverage and performance testing | Ready after core APIs stabilize | Better value once the near-term API and auth work are settled |
-| 5 | Phase 10: CI/CD and deployment assets | Ready | Depends mostly on the current quality gates and stable build outputs |
-| 6 | Phase 11: Optional future enhancements | Deferred | These are stretch items after the core demo is complete |
+| 1 | Phase 8.6: Architecture and cache hardening | Ready | These guardrails should land before more feature work builds on the current patterns |
+| 2 | Phase 5: Security and user model | Ready | Security should be in place before admin-only management and audit trails |
+| 3 | Phase 8.5: OpenAPI and compatibility gates | Ready after Phase 5.1 | The machine-readable contract should reflect the secured API surface |
+| 4 | Phase 8.1: API and operations documentation gaps | Partially blocked by Phases 5 and 8.5 | Documentation should follow the feature set that actually exists |
+| 5 | Phase 9: Coverage and performance testing | Ready after core APIs stabilize | Better value once the near-term API and auth work are settled |
+| 6 | Phase 10: CI/CD and deployment assets | Ready | Depends mostly on the current quality gates and stable build outputs |
+| 7 | Phase 11: Optional future enhancements | Deferred | These are stretch items after the core demo is complete |
 
 ## Current Priorities
 
-1. Start Phase 5.1 Spring Security and OAuth 2.0 with a demo-friendly provider and JDBC-backed sessions.
-2. Add Phase 5.2 user persistence, role handling, optional user language preference storage, and user-specific metrics on top of the existing metrics registry.
-3. Add Phase 5.3 audit logging for state-changing operations.
-4. Start Phase 8.5 OpenAPI support and breaking-change compatibility checks after the initial auth surface is in place.
-5. Close the remaining Phase 8.1 documentation gaps for security and OpenAPI.
+1. Start Phase 8.6 architecture and cache hardening before more features depend on the current persistence and caching patterns.
+2. Start Phase 5.1 Spring Security and OAuth 2.0 with a demo-friendly provider and JDBC-backed sessions.
+3. Add Phase 5.2 user persistence, role handling, optional user language preference storage, and user-specific metrics on top of the existing metrics registry.
+4. Add Phase 5.3 audit logging for state-changing operations.
+5. Start Phase 8.5 OpenAPI support and breaking-change compatibility checks after the initial auth surface is in place.
 
 ## Active Detailed Plan
+
+### Phase 8.6: Architecture & Cache Hardening
+
+Status: Ready
+
+Goal:
+Tighten the persistence and runtime conventions before additional feature work reinforces patterns that the project should avoid.
+
+Tasks:
+- [ ] Replace every `FetchType.EAGER` mapping with lazy loading plus either `@EntityGraph` usage or explicit JPQL repository queries where eager fetch behavior is actually needed
+- [ ] Add tests that prove the replacement fetch strategy still covers the API and service flows that currently rely on eager loading
+- [ ] Replace the current simple in-memory cache implementation with Caffeine
+- [ ] Tune and document the Caffeine cache configuration for localization and category lookups
+- [ ] Remove `@Enable*` annotations from `TechnicalInterviewDemoApplication`
+- [ ] Add dedicated `config` package classes for runtime enablement such as caching instead of putting that wiring on the application entry point
+
+Definition of done:
+- No entity in the codebase uses `FetchType.EAGER`
+- Repositories explicitly control fetch shape through `@EntityGraph` or query methods where needed
+- In-memory caches use Caffeine
+- `TechnicalInterviewDemoApplication` stays focused on bootstrapping only
+
+---
 
 ### Phase 5: Security & OAuth Integration
 
