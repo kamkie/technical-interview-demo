@@ -11,6 +11,7 @@ This file outlines planned features, improvements, and refactoring tasks for the
 
 ## ✅ Recently Completed
 
+- ✅ [Phase 3.1: Create LocalizationMessage Entity](#31-create-localizationmessage-entity) - localization message storage, lookup service, and seed data are now in place
 - ✅ [Phase 1.2: Add Testcontainers for Integration Testing](#12-add-testcontainers-for-integration-testing) - integration tests now use PostgreSQL via Testcontainers and Flyway-managed schema validation
 - ✅ [Phase 6.1: Add Search & Filtering to Books](#61-add-search--filtering-to-books) - `GET /api/books` now supports filtering, sort validation, tests, and REST Docs updates
 - ✅ [Phase 8.2: Create Developer Setup Guide](#82-create-developer-setup-guide) - `SETUP.md` and `.env.example` now cover local onboarding
@@ -170,30 +171,40 @@ Reorganize application configuration for local development, testing, and product
 
 ## Phase 3: Internationalization (i18n) & Localization Messages
 
-### 3.1 Create LocalizationMessage Entity 🟢
+### 3.1 Create LocalizationMessage Entity ✅
 
 Depends on: 2.1 (Profiles ready) and 1.2 (Testcontainers ready—optional for testing)
 
 Add a new entity to store localized error and info messages in the database for multi-language support.
 
+**Status:** Completed
+
+**Implementation Details:**
+- ✅ Added `LocalizationMessage` entity with composite uniqueness, timestamps, and normalized key/language fields
+- ✅ Added `LocalizationMessageRepository`, `LocalizationMessageService`, and `LocalizationMessageNotFoundException`
+- ✅ Added Flyway migration `V2__create_localization_messages_table.sql`
+- ✅ Added lightweight seed data for `error.book.not_found` and `error.request.invalid` in `en`, `es`, and `de`
+- ✅ Reused the existing service AOP logging for localization lookups because `LocalizationMessageService` is a regular `@Service`
+- ✅ Added Spring Boot integration tests for message retrieval, fallback behavior, and language-specific lookups
+
 **Tasks:**
-- [ ] Create `LocalizationMessage` JPA entity with fields:
+- [x] Create `LocalizationMessage` JPA entity with fields:
   - `id` (Long, primary key, auto-generated)
-  - `messageKey` (String, unique, e.g., "error.book.not_found")
+  - `messageKey` (String, e.g., "error.book.not_found")
   - `language` (String, e.g., "en", "es", "de", "fr")
   - `messageText` (String or Text, the actual translated message)
   - `description` (optional, for documentation)
   - `createdAt` (Timestamp)
   - `updatedAt` (Timestamp)
-- [ ] Add composite unique constraint on `(messageKey, language)`
-- [ ] Create `LocalizationMessageRepository` extending `JpaRepository`
-- [ ] Create Flyway migration script to create `localization_messages` table
-- [ ] Create `LocalizationMessageService` with methods:
+- [x] Add composite unique constraint on `(messageKey, language)`
+- [x] Create `LocalizationMessageRepository` extending `JpaRepository`
+- [x] Create Flyway migration script to create `localization_messages` table
+- [x] Create `LocalizationMessageService` with methods:
   - `getMessage(messageKey: String, language: String): String`
   - `getMessageWithFallback(messageKey: String, language: String, fallbackLanguage: String): String`
   - `getAllMessages(language: String): Map<String, String>`
-- [ ] Add AOP logging for message retrieval (optional, for debugging)
-- [ ] Add test seed data: common error messages in English and another language
+- [x] Add AOP logging for message retrieval (optional, for debugging)
+- [x] Add test seed data: common error messages in English and another language
 
 **Entity Design Considerations:**
 - Consider lazy-loading or caching for performance
@@ -209,7 +220,7 @@ Add a new entity to store localized error and info messages in the database for 
 
 ---
 
-### 3.2 Create Localization REST API 🟡
+### 3.2 Create Localization REST API 🟢
 
 Depends on: 3.1 (LocalizationMessage entity)
 

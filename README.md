@@ -10,6 +10,7 @@ The demo currently includes:
 
 - `GET /hello` returning `Hello World!`
 - A REST API for `Book` under `/api/books` with pagination and filtering
+- A `LocalizationMessage` domain with database-backed lookup and fallback support
 - H2 in-memory database for the default local profile
 - PostgreSQL configuration for the production profile and Testcontainers-backed integration tests
 - Seed data loaded at startup
@@ -244,6 +245,7 @@ Qodana static analysis is available through Gradle:
 - `src/main/java/team/jit/technicalinterviewdemo/TechnicalInterviewDemoApplication.java`: app entry point
 - `src/main/java/team/jit/technicalinterviewdemo/HelloController.java`: hello-world endpoint
 - `src/main/java/team/jit/technicalinterviewdemo/book/`: `Book` domain, service, repository, and REST API
+- `src/main/java/team/jit/technicalinterviewdemo/localization/`: localization entity, repository, service, and seed data
 - `src/main/java/team/jit/technicalinterviewdemo/api/`: API exception handling and custom exceptions
 - `src/main/java/team/jit/technicalinterviewdemo/docs/`: documentation endpoint and resource mapping
 - `src/main/java/team/jit/technicalinterviewdemo/logging/`: HTTP tracing/logging and service-call logging
@@ -333,6 +335,8 @@ On startup, the app inserts sample books if the table is empty:
 
 - `Clean Code`
 - `Effective Java`
+
+It also seeds sample localization messages for `error.book.not_found` and `error.request.invalid` in `en`, `es`, and `de`.
 
 ## Error Handling
 

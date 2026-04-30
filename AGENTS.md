@@ -11,6 +11,7 @@ Current scope:
 - `GET /docs` redirects to generated API documentation
 - `GET /hello` returns `Hello World!`
 - CRUD-style `Book` API under `/api/books` with pagination, filtering, and optimistic locking on updates
+- `LocalizationMessage` entity and service for database-backed message lookup with fallback support
 - actuator endpoints for `health`, `info`, liveness/readiness probes, and Prometheus metrics
 - H2 in-memory database for the default local profile
 - PostgreSQL-backed integration tests via Testcontainers
@@ -141,6 +142,7 @@ Packaging and runtime behavior:
 - `src/main/java/team/jit/technicalinterviewdemo/TechnicalInterviewDemoApplication.java`: app entry
 - `src/main/java/team/jit/technicalinterviewdemo/HelloController.java`: hello endpoint
 - `src/main/java/team/jit/technicalinterviewdemo/book/`: book entity, requests, repository, service, controller, seed data
+- `src/main/java/team/jit/technicalinterviewdemo/localization/`: localization entity, repository, service, exception, and seed data
 - `src/main/java/team/jit/technicalinterviewdemo/api/`: exception handling and custom exceptions
 - `src/main/java/team/jit/technicalinterviewdemo/docs/`: documentation endpoint and resource mapping
 - `src/main/java/team/jit/technicalinterviewdemo/logging/`: HTTP tracing/logging and service-call logging
@@ -188,6 +190,8 @@ Seed data:
 
 - `Clean Code`
 - `Effective Java`
+- `error.book.not_found` in `en`, `es`, and `de`
+- `error.request.invalid` in `en`, `es`, and `de`
 
 Do not add heavy bootstrap logic unless explicitly requested.
 
