@@ -31,6 +31,9 @@ Summary:
 - Added a VS Code dev container with Java 25, Docker support, PostgreSQL, Prometheus, helper commands, and preconfigured extensions.
 - Added `.devcontainer` documentation for quick-start and detailed usage.
 
+Commit: `bef41b9`
+Tag: `v0.0.6`
+
 ### Phase 1: Infrastructure & Database Migration
 
 #### 1.1 Migrate from H2 to PostgreSQL
@@ -178,6 +181,7 @@ Summary:
 - Stored the acting persisted user, actor login snapshot, summary, and timestamp for each audited change.
 - Added integration tests covering audit-log creation for regular-user and admin write flows.
 
+Commit: `2748d3a`
 Tag: `v0.18.0`
 
 ### Phase 6: Enhanced Book API
@@ -203,6 +207,7 @@ Summary:
 - Extended book create and update flows to assign existing categories by name.
 - Added category filtering to `GET /api/books`, plus integration tests and Spring REST Docs coverage.
 
+Commit: `b38cc60`
 Tag: `v0.13.0`
 
 ### Phase 7: Performance & Monitoring
@@ -216,6 +221,9 @@ Summary:
 - Added explicit cache invalidation on localization and category writes.
 - Added cache-behavior integration tests and documented the cache strategy.
 
+Commit: `e49c4f6`
+Tag: `v0.14.0`
+
 #### 7.2 Enhance Prometheus Metrics
 
 Status: Completed
@@ -228,6 +236,7 @@ Summary:
 Note:
 - User-specific metrics now belong with Phase 5.2 when the user model exists.
 
+Commit: `e49c4f6`
 Tag: `v0.14.0`
 
 ### Phase 8: Documentation & Developer Experience
@@ -265,6 +274,7 @@ Summary:
 - Added `CHANGELOG.md` using a Keep a Changelog-style format.
 - Documented how roadmap phases, commits, and release tags align.
 
+Commit: `5439bd2`
 Tag: `v0.12.0`
 
 #### 8.6 Architecture & Cache Hardening
@@ -276,6 +286,7 @@ Summary:
 - Replaced the previous simple in-memory cache manager with Caffeine-backed caches.
 - Moved caching enablement into a dedicated configuration class under the `config` package and added hardening tests for the new conventions.
 
+Commit: `806641f`
 Tag: `v0.15.0`
 
 ## Roadmap Maintenance Notes

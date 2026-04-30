@@ -4,9 +4,20 @@ All notable changes to this project are documented in this file.
 
 The format is based on Keep a Changelog and the project uses semantic version tags in the form `vMAJOR.MINOR.PATCH`.
 Each completed roadmap phase is released with an annotated git tag. Release numbers must increase in `git log --first-parent` order, and the Gradle build version is derived from the nearest reachable git tag.
-Historical releases before `v0.1.0` are reconstructed from mainline git history using `v0.0.x` labels because annotated phase tags started at `v0.1.0`.
+Historical `v0.0.x` releases were backfilled as annotated tags from mainline git history to preserve the pre-phase milestones that landed before the roadmap-based release numbering stabilized.
 
 ## [Unreleased]
+
+### Added
+- Split the HTTP client examples into per-controller files, including a dedicated authentication collection and localized request examples.
+- Added reviewer-focused local auth examples for the GitHub OAuth flow plus local PostgreSQL run-configuration support.
+
+### Changed
+- Reorganized application packages around `business` and `technical` concerns, including the extraction of localization infrastructure into `technical.localization`.
+- Split user-facing business logic from security synchronization code and moved cache configuration into `technical.cache`.
+- Removed the obsolete language-resolution helper in favor of `LocalizationContext`.
+- Disabled CSRF protection for the demo's session-based authentication flow so authenticated write requests no longer require a CSRF token round-trip.
+- Refreshed the HTTP examples for GitHub OAuth placeholders, controller-specific requests, and expected 404 scenarios.
 
 ### Planned
 - OpenAPI contract generation and breaking-change checks

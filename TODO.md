@@ -18,7 +18,7 @@ The roadmap below is ordered to respect cross-phase dependencies.
 ## Current Priorities
 
 1. Start Phase 8.5 OpenAPI support and breaking-change compatibility checks now that the secured API surface and audit trail are in place.
-2. Close the remaining Phase 8.1 documentation gaps for user flows, security guidance, and OpenAPI.
+2. Close the remaining Phase 8.1 documentation follow-up once the OpenAPI contract and compatibility workflow are in place.
 3. Revisit Phase 9 coverage and performance work after the near-term API-shape changes settle.
 4. Start Phase 10 CI/CD and deployment work once the API contract stabilizes.
 
@@ -44,7 +44,7 @@ Completed in archive:
 
 ### Phase 8: Documentation & Developer Experience
 
-Status: Partially complete
+Status: Mostly complete
 
 Completed in archive:
 - 8.2 Create Developer Setup Guide
@@ -52,14 +52,14 @@ Completed in archive:
 
 #### 8.1 Update API Documentation
 
-Depends on: Phases 4, 5, and 8.5 for the remaining gaps
+Depends on: 8.5 for the remaining contract-focused follow-up
 
 Goal:
 Keep generated API docs and written setup guidance aligned with the implemented surface area.
 
 Remaining tasks:
-- [ ] Add documentation for the persisted user model, roles, and any user-facing profile endpoints added in Phase 5.2
-- [ ] Add security warnings and best practices
+- [x] Add documentation for the persisted user model, roles, and user-facing profile endpoints added in Phase 5.2
+- [x] Add security warnings and reviewer-facing setup guidance for the OAuth/session flow
 - [ ] Add documentation for the OpenAPI contract and compatibility-check workflow
 
 Definition of done:
