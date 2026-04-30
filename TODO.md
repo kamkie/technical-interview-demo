@@ -25,37 +25,38 @@ Status: Planned
 
 Goal: make the `1.0` boundary mean a stable, documented, and intentionally scoped demo application rather than only a feature-complete snapshot.
 
-#### 1. Define The 1.0 Contract
+#### Define The 1.0 Contract
 - [ ] Decide whether `1.0` means "stable interview-demo reference app" or "production-ready starter"
 - [ ] Document which endpoints and behaviors are part of the supported public contract
 - [ ] Document which endpoints are technical/demo-only convenience endpoints
 - [ ] Define the compatibility promise for future `1.x` releases
 
-#### 2. Stabilize The Public API Surface
+#### Stabilize The Public API Surface
 - [ ] Review endpoint naming, resource semantics, and response shapes before freezing the `1.0` contract
 - [ ] Stop returning JPA entities directly from public controllers where persistence shape leaks into the API
 - [ ] Standardize `401` and `403` responses so they follow the same documented `ProblemDetail` style as other API errors
 - [ ] Refresh the approved OpenAPI baseline only after the `1.0` surface is reviewed and accepted
 
-#### 3. Revisit The Production Security Posture
+#### Revisit The Production Security Posture
 - [ ] Remove insecure production-style defaults and fail fast when required secrets or database credentials are missing in `prod`
 - [ ] Re-evaluate session-based write security before `1.0`: either re-enable CSRF for browser-session writes or document the deliberate alternative
 - [ ] Review whether `/actuator/prometheus` and other technical endpoints should stay public in production or become deployment-specific
 - [ ] Document the intended production posture for session cookies, OAuth login, admin bootstrap, and trusted deployment topology
 
-#### 4. Add Release-Grade Runtime Verification
+#### Add Release-Grade Runtime Verification
 - [ ] Add a smoke test that verifies the packaged container starts successfully and reaches readiness
 - [ ] Add focused verification for the `prod` profile so release builds do not only prove the local/test profiles
 - [ ] Add a release checklist for Flyway migration review, OpenAPI compatibility, benchmark review, changelog update, and tagging
 
-#### 5. Tighten Operational Readiness
+#### Tighten Operational Readiness
 - [ ] Document what healthy runtime behavior looks like for health, readiness, metrics, and audit logging
 - [ ] Add deployment-oriented troubleshooting for OAuth setup, PostgreSQL connectivity, and session persistence failures
 - [ ] Document an upgrade and rollback flow for schema migrations and versioned container releases
 
-#### 6. Finish The Most Important Convention Fixes Before 1.0
+#### Finish The Most Important Convention Fixes Before 1.0
 - [ ] Complete the highest-value naming and package-cleanup items that would otherwise become long-lived `1.x` debt
 - [ ] Prioritize names and package placements that currently misdescribe responsibilities or mix business and technical concerns
+- [ ] Keep the cleanup focused on changes that improve clarity without reopening settled API behavior
 
 ---
 
@@ -63,25 +64,25 @@ Goal: make the `1.0` boundary mean a stable, documented, and intentionally scope
 
 Status: Ready after the pre-`1.0` release bar is explicit
 
-#### 10.1 CI/CD Pipeline
+#### CI/CD Pipeline
 - [ ] Choose the CI/CD platform
 - [ ] Automate `spotlessCheck`, `pmdMain`, `test`, and `asciidoctor`
 - [ ] Build the Docker image in CI
 - [ ] Document the pipeline and branch protections
 
-#### 10.2 Kubernetes Manifests
+#### Kubernetes Manifests
 - [ ] Create base manifests under `k8s/`
 - [ ] Externalize config and secrets correctly
 - [ ] Add resource requests, limits, and probes
 - [ ] Document deployment steps
 
-#### 10.3 Helm Chart
+#### Helm Chart
 - [ ] Create the Helm chart structure and values
 - [ ] Template deployment resources
 - [ ] Validate rendered manifests
 - [ ] Document Helm-based deployment
 
-#### 10.4 Monitoring & Alerting Setup
+#### Monitoring & Alerting Setup
 - [ ] Create a monitoring stack for Prometheus, Grafana, and Alertmanager
 - [ ] Add scrape config, dashboards, and alert rules
 - [ ] Document monitoring setup and expected alerts
@@ -95,17 +96,10 @@ Status: Planned
 Use this section when touching nearby code. Do not treat it as a blocker for unrelated feature work.
 
 ### Naming And Package Simplification
-- [ ] Rename `HelloController` to `TechnicalOverviewController`
-- [ ] Consider moving technical-overview classes into `technical.info` or `technical.overview`
-- [ ] Move book-specific exceptions out of `technical.api` and into `business.book`
-- [ ] Keep only cross-cutting HTTP and web-layer exceptions in `technical.api`
-- [ ] Pick one noun for the user area and apply it consistently, preferably `UserAccount*`
-- [ ] Rename `AuthenticatedUserSecurityService` to a name closer to its real responsibility
-- [ ] Keep `technical.localization` focused on request-language infrastructure only
-- [ ] Move localization-message seed/bootstrap classes into `business.localization` or `business.localization.seed`
-- [ ] Standardize initializer naming across features
-- [ ] Rename `BookSpecifications` to a more specific search-oriented name
-- [ ] Standardize API integration test naming such as `*ApiIntegrationTests`
+- [ ] Align technical overview naming, including renaming `HelloController` and placing overview classes under a clearer package such as `technical.info`
+- [ ] Move feature-specific exceptions and seed/bootstrap classes closer to their business packages, keeping only cross-cutting infrastructure in `technical.*`
+- [ ] Standardize user-area naming around one noun, preferably `UserAccount*`, and rename `AuthenticatedUserSecurityService` to match its real responsibility
+- [ ] Standardize initializer, search/specification, and API integration test naming so similar classes follow one pattern
 - [ ] Remove empty or unused package placeholders such as `technical.config`
 
 ---
@@ -116,20 +110,20 @@ Use this section when touching nearby code. Do not treat it as a blocker for unr
 
 Status: Deferred until the core roadmap is complete
 
-#### 11.1 Batch Processing
+#### Batch Processing
 - [ ] Add Spring Batch if bulk import/export becomes necessary
 - [ ] Add jobs for book import or audit cleanup
 
-#### 11.2 Async Message Processing
+#### Async Message Processing
 - [ ] Add RabbitMQ or Kafka if event-driven flows become necessary
 - [ ] Move notifications or audit fan-out to async processing
 
-#### 11.3 Full-Text Search
+#### Full-Text Search
 - [ ] Add Elasticsearch if search requirements outgrow the relational model
 - [ ] Index books and localization messages
 - [ ] Expose advanced search endpoints
 
-#### 11.4 GraphQL API
+#### GraphQL API
 - [ ] Add Spring GraphQL only if there is a real client need
 - [ ] Define schema for books, users, and localization data
 - [ ] Implement queries and mutations
