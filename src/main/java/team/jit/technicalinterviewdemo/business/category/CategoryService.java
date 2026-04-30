@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import team.jit.technicalinterviewdemo.technical.api.InvalidRequestException;
 import team.jit.technicalinterviewdemo.technical.cache.CacheNames;
 import team.jit.technicalinterviewdemo.technical.metrics.ApplicationMetrics;
-import team.jit.technicalinterviewdemo.business.user.UserAccountService;
+import team.jit.technicalinterviewdemo.technical.security.AuthenticatedUserSecurityService;
 import team.jit.technicalinterviewdemo.business.user.UserRole;
 
 @Slf4j
@@ -34,7 +34,7 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final CacheManager cacheManager;
     private final ApplicationMetrics applicationMetrics;
-    private final UserAccountService userAccountService;
+    private final AuthenticatedUserSecurityService authenticatedUserSecurityService;
 
     public List<Category> findAll() {
         applicationMetrics.recordCategoryOperation("list");
@@ -55,7 +55,7 @@ public class CategoryService {
 
     @Transactional
     public Category create(CategoryCreateRequest request) {
-        userAccountService.requireRole(UserRole.ADMIN, "Category management requires the ADMIN role.");
+        authenticatedUserSecurityService.requireRole(UserRole.ADMIN, "Category management requires the ADMIN role.");
         String normalizedName = normalizeName(request.name());
         if (categoryRepository.existsByNameIgnoreCase(normalizedName)) {
             throw new InvalidRequestException("Category '%s' already exists.".formatted(normalizedName));

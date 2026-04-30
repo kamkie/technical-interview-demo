@@ -1,4 +1,4 @@
-package team.jit.technicalinterviewdemo.technical.config;
+package team.jit.technicalinterviewdemo.technical.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession;

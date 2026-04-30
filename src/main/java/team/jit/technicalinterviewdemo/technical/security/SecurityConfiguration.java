@@ -1,4 +1,4 @@
-package team.jit.technicalinterviewdemo.technical.config;
+package team.jit.technicalinterviewdemo.technical.security;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
@@ -9,18 +9,18 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import team.jit.technicalinterviewdemo.business.user.AuthenticatedUserSynchronizationFilter;
-import team.jit.technicalinterviewdemo.business.user.UserAccountService;
 
 @Configuration
 public class SecurityConfiguration {
 
     @Bean
-    AuthenticatedUserSynchronizationFilter authenticatedUserSynchronizationFilter(UserAccountService userAccountService) {
-        return new AuthenticatedUserSynchronizationFilter(userAccountService);
+    AuthenticatedUserSynchronizationFilter authenticatedUserSynchronizationFilter(
+            AuthenticatedUserSecurityService authenticatedUserSecurityService
+    ) {
+        return new AuthenticatedUserSynchronizationFilter(authenticatedUserSecurityService);
     }
 
     @Bean

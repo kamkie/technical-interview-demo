@@ -1,4 +1,4 @@
-package team.jit.technicalinterviewdemo.business.user;
+package team.jit.technicalinterviewdemo.technical.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -16,7 +16,7 @@ public class AuthenticatedUserSynchronizationFilter extends OncePerRequestFilter
 
     private static final String SESSION_ATTRIBUTE = AuthenticatedUserSynchronizationFilter.class.getName() + ".syncedUser";
 
-    private final UserAccountService userAccountService;
+    private final AuthenticatedUserSecurityService authenticatedUserSecurityService;
 
     @Override
     protected void doFilterInternal(
@@ -24,7 +24,8 @@ public class AuthenticatedUserSynchronizationFilter extends OncePerRequestFilter
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
-        userAccountService.currentAuthenticatedUserKey().ifPresent(authenticatedUserKey -> synchronizeUser(request, authenticatedUserKey));
+        authenticatedUserSecurityService.currentAuthenticatedUserKey()
+                .ifPresent(authenticatedUserKey -> synchronizeUser(request, authenticatedUserKey));
         filterChain.doFilter(request, response);
     }
 
@@ -35,7 +36,7 @@ public class AuthenticatedUserSynchronizationFilter extends OncePerRequestFilter
             return;
         }
 
-        userAccountService.synchronizeCurrentAuthenticatedUser();
+        authenticatedUserSecurityService.synchronizeCurrentAuthenticatedUser();
         session.setAttribute(SESSION_ATTRIBUTE, authenticatedUserKey);
     }
 }

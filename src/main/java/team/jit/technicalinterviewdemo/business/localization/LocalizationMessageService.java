@@ -24,7 +24,7 @@ import team.jit.technicalinterviewdemo.business.audit.AuditTargetType;
 import team.jit.technicalinterviewdemo.technical.api.InvalidRequestException;
 import team.jit.technicalinterviewdemo.technical.cache.CacheNames;
 import team.jit.technicalinterviewdemo.technical.metrics.ApplicationMetrics;
-import team.jit.technicalinterviewdemo.business.user.UserAccountService;
+import team.jit.technicalinterviewdemo.technical.security.AuthenticatedUserSecurityService;
 import team.jit.technicalinterviewdemo.business.user.UserRole;
 
 @Slf4j
@@ -41,7 +41,7 @@ public class LocalizationMessageService {
     private final LocalizationContext localizationContext;
     private final CacheManager cacheManager;
     private final ApplicationMetrics applicationMetrics;
-    private final UserAccountService userAccountService;
+    private final AuthenticatedUserSecurityService authenticatedUserSecurityService;
     private final AuditLogService auditLogService;
 
     public Page<LocalizationMessage> findAll(Pageable pageable) {
@@ -153,7 +153,7 @@ public class LocalizationMessageService {
 
     @Transactional
     public LocalizationMessage create(LocalizationMessageRequest request) {
-        userAccountService.requireRole(UserRole.ADMIN, "Localization management requires the ADMIN role.");
+        authenticatedUserSecurityService.requireRole(UserRole.ADMIN, "Localization management requires the ADMIN role.");
         String messageKey = normalizeMessageKey(request.messageKey());
         String language = normalizeSupportedLanguage(request.language());
         validateUniqueMessage(messageKey, language, null);
@@ -185,7 +185,7 @@ public class LocalizationMessageService {
 
     @Transactional
     public LocalizationMessage update(Long id, LocalizationMessageRequest request) {
-        userAccountService.requireRole(UserRole.ADMIN, "Localization management requires the ADMIN role.");
+        authenticatedUserSecurityService.requireRole(UserRole.ADMIN, "Localization management requires the ADMIN role.");
         LocalizationMessage message = requireMessage(id);
         String messageKey = normalizeMessageKey(request.messageKey());
         String language = normalizeSupportedLanguage(request.language());
@@ -217,7 +217,7 @@ public class LocalizationMessageService {
 
     @Transactional
     public void delete(Long id) {
-        userAccountService.requireRole(UserRole.ADMIN, "Localization management requires the ADMIN role.");
+        authenticatedUserSecurityService.requireRole(UserRole.ADMIN, "Localization management requires the ADMIN role.");
         LocalizationMessage message = requireMessage(id);
         localizationMessageRepository.delete(message);
         evictLocalizationCaches();
@@ -318,7 +318,7 @@ public class LocalizationMessageService {
 
     private String resolveCurrentLanguageOrDefault() {
         return localizationContext.getCurrentLanguage()
-                .or(() -> userAccountService.findCurrentUserPreferredLanguage())
+                .or(() -> authenticatedUserSecurityService.findCurrentUserPreferredLanguage())
                 .orElse(RequestLanguageResolver.DEFAULT_LANGUAGE);
     }
 }
