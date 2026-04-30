@@ -31,6 +31,8 @@ Primary goal: keep the codebase small, readable, and easy to reason about.
 - Spring Web MVC
 - Spring Data JPA
 - Spring Cache
+- Spring Security
+- Spring Security OAuth2 Client
 - H2
 - PostgreSQL
 - Testcontainers

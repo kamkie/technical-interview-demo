@@ -28,6 +28,8 @@ Primary goal: keep the project small, readable, and suitable for technical inter
 - Spring Web MVC
 - Spring Data JPA
 - Spring Cache
+- Spring Security
+- Spring Security OAuth2 Client
 - H2 in-memory database
 - PostgreSQL
 - Testcontainers

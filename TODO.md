@@ -28,7 +28,7 @@ The roadmap below is ordered to respect cross-phase dependencies.
 
 ### Phase 5: Security & OAuth Integration
 
-Status: Ready
+Status: In Progress
 
 #### 5.1 Add Spring Security with OAuth 2.0
 
@@ -38,7 +38,7 @@ Goal:
 Protect state-changing endpoints while keeping the demo simple and approachable.
 
 Tasks:
-- [ ] Add Spring Security and OAuth 2.0 client dependencies
+- [x] Add Spring Security and OAuth 2.0 client dependencies
 - [ ] Choose and document a demo-friendly OAuth provider for the demo
 - [ ] Create `SecurityConfig` with OAuth login and authorization rules
 - [ ] Add Spring Session JDBC and persist authenticated sessions in the database
