@@ -28,10 +28,6 @@ public class LocalizationContext {
                 .orElse(RequestLanguageResolver.DEFAULT_LANGUAGE);
     }
 
-    public String getCurrentLanguageOrDefault() {
-        return resolveCurrentLanguageOrDefault();
-    }
-
     public void clear() {
         CURRENT_LANGUAGE.remove();
     }

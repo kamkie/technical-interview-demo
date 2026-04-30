@@ -1,6 +1,7 @@
 package team.jit.technicalinterviewdemo.business.book;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -23,10 +24,10 @@ public class BookDataInitializer {
             }
 
             LinkedHashSet<Category> cleanCodeCategories = new LinkedHashSet<>(categoryRepository.findAllByNormalizedNames(
-                    java.util.List.of("best practices", "software engineering")
+                    List.of("best practices", "software engineering")
             ));
             LinkedHashSet<Category> effectiveJavaCategories = new LinkedHashSet<>(categoryRepository.findAllByNormalizedNames(
-                    java.util.List.of("best practices", "java")
+                    List.of("best practices", "java")
             ));
 
             Book cleanCode = bookRepository.save(

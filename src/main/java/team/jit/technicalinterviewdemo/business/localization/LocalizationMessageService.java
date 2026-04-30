@@ -111,10 +111,6 @@ public class LocalizationMessageService {
         );
     }
 
-    public String getCurrentLanguageOrDefault() {
-        return localizationContext.resolveCurrentLanguageOrDefault();
-    }
-
     public Map<String, String> getAllMessages(String language) {
         applicationMetrics.recordLocalizationOperation("getAllMessages");
         String normalizedLanguage = normalizeSupportedLanguage(language);

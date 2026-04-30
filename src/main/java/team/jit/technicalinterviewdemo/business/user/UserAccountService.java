@@ -34,8 +34,7 @@ public class UserAccountService {
         UserAccount updatedUser = userAccountRepository.saveAndFlush(currentUser);
         applicationMetrics.recordUserOperation("updatePreferredLanguage");
         log.info(
-                "Updated user preferred language id={} login={} preferredLanguage={}"
-                ,
+                "Updated user preferred language id={} login={} preferredLanguage={}",
                 updatedUser.getId(),
                 updatedUser.getExternalLogin(),
                 updatedUser.getPreferredLanguage()
