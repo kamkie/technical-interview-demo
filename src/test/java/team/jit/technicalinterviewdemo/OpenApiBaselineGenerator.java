@@ -21,14 +21,12 @@ public final class OpenApiBaselineGenerator {
 
     public static void main(String[] args) throws Exception {
         Path outputPath = resolveOutputPath(args);
-        ConfigurableApplicationContext context = new SpringApplicationBuilder(
+        try (ConfigurableApplicationContext context = new SpringApplicationBuilder(
                 TechnicalInterviewDemoApplication.class,
                 PostgresTestcontainersConfiguration.class
         )
                 .profiles("test")
-                .run("--server.port=0");
-
-        try {
+                .run("--server.port=0")) {
             int port = ((WebServerApplicationContext) context).getWebServer().getPort();
             HttpResponse<String> response = HTTP_CLIENT.send(
                     HttpRequest.newBuilder(URI.create("http://localhost:" + port + "/v3/api-docs"))
@@ -46,8 +44,6 @@ public final class OpenApiBaselineGenerator {
                     OpenApiContractSupport.normalizeToPrettyJson(response.body()) + System.lineSeparator(),
                     StandardCharsets.UTF_8
             );
-        } finally {
-            context.close();
         }
     }
 
