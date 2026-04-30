@@ -11,7 +11,7 @@
 #@sessionCookie = paste-technical-interview-demo-session-here
 #@githubClientId = paste-github-client-id-here
 #@githubClientSecret = paste-github-client-secret-here
-#@githubAuthCode = 165e2647981786b0b2ff
+#@githubAuthCode = paste-github-auth-code-here
 #@githubAccessToken = paste-github-access-token-here
 
 ### App authentication - start GitHub OAuth login flow in a browser-capable client
@@ -20,20 +20,4 @@ GET {{baseUrl}}/oauth2/authorization/github
 ### App authentication - verify the authenticated app session cookie
 GET {{baseUrl}}/api/users/me
 Cookie: technical-interview-demo-session={{sessionCookie}}
-Accept: application/json
-
-### GitHub OAuth diagnostics - exchange authorization code for GitHub access token
-POST https://github.com/login/oauth/access_token
-Accept: application/json
-Content-Type: application/json
-
-{
-  "client_id": "{{githubClientId}}",
-  "client_secret": "{{githubClientSecret}}",
-  "code": "{{githubAuthCode}}"
-}
-
-### GitHub OAuth diagnostics - inspect the GitHub token against GitHub's user API
-GET https://api.github.com/user
-Authorization: Bearer {{githubAccessToken}}
 Accept: application/json

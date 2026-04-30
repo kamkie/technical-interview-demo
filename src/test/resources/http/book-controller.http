@@ -3,7 +3,7 @@
 # Protected requests require the app to run with the oauth profile and an authenticated session.
 
 @baseUrl = http://localhost:8080
-@sessionCookie = paste-technical-interview-demo-session-here
+#@sessionCookie = paste-technical-interview-demo-session-here
 @bookId = 1
 @bookVersion = 0
 @writeBookId = 0
@@ -76,4 +76,12 @@ if (response.status === 200) {
 
 ### BookController - delete the book created above (run create first)
 DELETE {{baseUrl}}/api/books/{{writeBookId}}
+Cookie: technical-interview-demo-session={{sessionCookie}}
+
+### BookController - delete not exiusting book to see 404 handling
+DELETE {{baseUrl}}/api/books/9999
+Cookie: technical-interview-demo-session={{sessionCookie}}
+
+### BookController - delete not exiusting book to see 404 handling with Polish localization (run with "pl" locale to see localized message)
+DELETE {{baseUrl}}/api/books/9999?lang=pl
 Cookie: technical-interview-demo-session={{sessionCookie}}
