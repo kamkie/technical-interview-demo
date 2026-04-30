@@ -65,6 +65,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-micrometer-tracing-opentelemetry")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
+    implementation("com.github.ben-manes.caffeine:caffeine")
 
     runtimeOnly("com.h2database:h2")
     runtimeOnly("org.flywaydb:flyway-database-postgresql")

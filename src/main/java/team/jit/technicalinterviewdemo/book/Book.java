@@ -50,7 +50,7 @@ public class Book {
     @Column(nullable = false)
     private Integer publicationYear;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "book_categories",
             joinColumns = @JoinColumn(name = "book_id"),

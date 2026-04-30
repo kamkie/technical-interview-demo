@@ -11,6 +11,13 @@ Each completed roadmap phase is released with an annotated git tag. The Gradle b
 - OAuth-based security and JDBC-backed sessions
 - OpenAPI contract generation and breaking-change checks
 
+## [v0.15.0] - 2026-04-30
+
+### Changed
+- Replaced entity-level eager fetching with repository-controlled fetch plans for books and categories.
+- Replaced the previous simple in-memory cache manager with Caffeine-backed caches.
+- Moved cache enablement out of `TechnicalInterviewDemoApplication` into a dedicated configuration class under the `config` package.
+
 ## [v0.12.0] - 2026-04-30
 
 ### Added

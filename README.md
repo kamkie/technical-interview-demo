@@ -31,6 +31,7 @@ Primary goal: keep the project small, readable, and suitable for technical inter
 - H2 in-memory database
 - PostgreSQL
 - Testcontainers
+- Caffeine
 - Gradle Wrapper
 - JUnit 5
 - Lombok
@@ -258,10 +259,11 @@ Release policy:
 - `.env.example`: optional environment variable template for local shells or container tooling
 - `build.gradle.kts`: Gradle build and dependencies
 - `config/pmd/pmd-ruleset.xml`: curated PMD ruleset
+- `src/main/java/team/jit/technicalinterviewdemo/config/`: application configuration classes such as cache enablement
 - `src/main/java/team/jit/technicalinterviewdemo/TechnicalInterviewDemoApplication.java`: app entry point
 - `src/main/java/team/jit/technicalinterviewdemo/HelloController.java`: hello-world endpoint
 - `src/main/java/team/jit/technicalinterviewdemo/book/`: `Book` domain, service, repository, and REST API
-- `src/main/java/team/jit/technicalinterviewdemo/cache/`: cache names and cache-manager configuration
+- `src/main/java/team/jit/technicalinterviewdemo/cache/`: cache names and related cache constants
 - `src/main/java/team/jit/technicalinterviewdemo/category/`: category entity, repository, service, controller, and seed data
 - `src/main/java/team/jit/technicalinterviewdemo/localization/`: localization entity, repository, service, and seed data
 - `src/main/java/team/jit/technicalinterviewdemo/metrics/`: application-specific Micrometer gauges and counters
@@ -470,7 +472,7 @@ The application includes:
 - OpenTelemetry-compatible tracing through Micrometer
 - `traceId` and `spanId` in console logs
 - `traceparent` response header on HTTP requests when tracing is active
-- simple in-memory caches are used for localization lookups, localization language views, category lists, and the category assignment directory
+- Caffeine-backed in-memory caches are used for localization lookups, localization language views, category lists, and the category assignment directory
 - request and error logging redact sensitive query parameters before they reach the logs
 - request start and response completion logs for HTTP traffic
 - service-layer AOP logging with method parameters and execution time
@@ -482,6 +484,7 @@ The application includes:
 - readiness and liveness health probes through actuator
 - Prometheus metrics exposed through `/actuator/prometheus`
 - custom Micrometer metrics are published under the `technical.interview.demo.*` prefix for book, category, localization, and cache activity
+- JPA fetch plans are controlled in repositories rather than through `FetchType.EAGER` on entities
 
 The HTTP tracing logger intentionally skips `/actuator/health` and its subpaths.
 

@@ -34,6 +34,7 @@ Primary goal: keep the codebase small, readable, and easy to reason about.
 - H2
 - PostgreSQL
 - Testcontainers
+- Caffeine
 - Gradle Wrapper
 - Lombok
 - Spring AOP
@@ -154,10 +155,11 @@ Release policy:
 - `.env.example`: optional environment variable template for local shells or container tooling
 - `build.gradle.kts`: build configuration and dependencies
 - `config/pmd/pmd-ruleset.xml`: curated PMD rules
+- `src/main/java/team/jit/technicalinterviewdemo/config/`: application configuration classes such as cache enablement
 - `src/main/java/team/jit/technicalinterviewdemo/TechnicalInterviewDemoApplication.java`: app entry
 - `src/main/java/team/jit/technicalinterviewdemo/HelloController.java`: hello endpoint
 - `src/main/java/team/jit/technicalinterviewdemo/book/`: book entity, requests, repository, service, controller, seed data
-- `src/main/java/team/jit/technicalinterviewdemo/cache/`: cache names and cache-manager configuration
+- `src/main/java/team/jit/technicalinterviewdemo/cache/`: cache names and related cache constants
 - `src/main/java/team/jit/technicalinterviewdemo/category/`: category entity, repository, service, controller, and seed data
 - `src/main/java/team/jit/technicalinterviewdemo/localization/`: localization entity, repository, service, exception, and seed data
 - `src/main/java/team/jit/technicalinterviewdemo/metrics/`: application-specific Micrometer gauges and counters
@@ -277,7 +279,7 @@ Current runtime behavior:
 - `Accept-Language` drives browser-compatible error-message localization and `lang` query parameter overrides it
 - cookie `language` is used as fallback when `lang` and supported `Accept-Language` values are absent
 - request-scoped language resolution is captured once and reused during localized error handling
-- simple in-memory caches are used for localization lookups, localization language views, category lists, and the category assignment directory
+- Caffeine-backed in-memory caches are used for localization lookups, localization language views, category lists, and the category assignment directory
 - optional `org.springframework.web` DEBUG logging is available as a commented property in `application.properties`
 - Hibernate SQL logging is enabled through `org.hibernate.SQL`
 - Hibernate statistics are enabled through `hibernate.generate_statistics=true`
@@ -285,6 +287,7 @@ Current runtime behavior:
 - actuator exposes readiness and liveness probe endpoints
 - actuator exposes Prometheus metrics at `/actuator/prometheus`
 - custom Micrometer metrics are published under the `technical.interview.demo.*` prefix for book, category, localization, and cache activity
+- JPA fetch plans are controlled in repositories rather than through `FetchType.EAGER` on entities
 - Flyway owns schema creation from SQL migrations and Hibernate validates the schema with `ddl-auto=validate`
 - `/actuator/health` and subpaths are skipped by the HTTP tracing logger
 

@@ -14,6 +14,7 @@ Use `TODO.md` for active planning and `COMPLETED_TASKS.md` for implementation hi
 - Book search and filtering support
 - Book categories and category filtering
 - In-memory caches and application-specific metrics
+- Architecture and cache hardening
 - Developer setup and contribution guides
 - Release versioning and changelog workflow
 
@@ -222,6 +223,17 @@ Summary:
 - Documented how roadmap phases, commits, and release tags align.
 
 Tag: `v0.12.0`
+
+#### 8.6 Architecture & Cache Hardening
+
+Status: Completed
+
+Summary:
+- Removed entity-level eager fetching and moved the required fetch shape into repository methods through `@EntityGraph`.
+- Replaced the previous simple in-memory cache manager with Caffeine-backed caches.
+- Moved caching enablement into a dedicated configuration class under the `config` package and added hardening tests for the new conventions.
+
+Tag: `v0.15.0`
 
 ## Roadmap Maintenance Notes
 
