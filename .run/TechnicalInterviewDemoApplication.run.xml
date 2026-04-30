@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="TechnicalInterviewDemoApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-    <option name="ACTIVE_PROFILES" value="local" />
+    <option name="ACTIVE_PROFILES" value="local,oauth" />
     <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
     <module name="technical-interview-demo.main" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="team.jit.technicalinterviewdemo.TechnicalInterviewDemoApplication" />

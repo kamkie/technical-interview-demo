@@ -1,7 +1,39 @@
 # IntelliJ HTTP Client examples for technical-interview-demo
-# Enable the oauth profile first, then open this request in a browser-capable client.
+# This app does not issue JWTs and does not accept Authorization: Bearer tokens.
+# Protected app requests use the GitHub OAuth login flow plus the
+# technical-interview-demo-session cookie created by Spring Session.
+#
+# The GitHub token exchange examples below are for diagnostics only.
+# GitHub returns an access token for GitHub APIs, not a JWT for this app,
+# and the app will not accept that token on /api/**.
 
 @baseUrl = http://localhost:8080
+#@sessionCookie = paste-technical-interview-demo-session-here
+#@githubClientId = paste-github-client-id-here
+#@githubClientSecret = paste-github-client-secret-here
+#@githubAuthCode = 165e2647981786b0b2ff
+#@githubAccessToken = paste-github-access-token-here
 
-### Authentication - start GitHub OAuth login flow
+### App authentication - start GitHub OAuth login flow in a browser-capable client
 GET {{baseUrl}}/oauth2/authorization/github
+
+### App authentication - verify the authenticated app session cookie
+GET {{baseUrl}}/api/users/me
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/json
+
+### GitHub OAuth diagnostics - exchange authorization code for GitHub access token
+POST https://github.com/login/oauth/access_token
+Accept: application/json
+Content-Type: application/json
+
+{
+  "client_id": "{{githubClientId}}",
+  "client_secret": "{{githubClientSecret}}",
+  "code": "{{githubAuthCode}}"
+}
+
+### GitHub OAuth diagnostics - inspect the GitHub token against GitHub's user API
+GET https://api.github.com/user
+Authorization: Bearer {{githubAccessToken}}
+Accept: application/json

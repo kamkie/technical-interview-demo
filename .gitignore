@@ -39,3 +39,4 @@ out/
 
 ### Local environment files ###
 .env
+/src/test/resources/http/http-client.private.env.json
