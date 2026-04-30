@@ -137,7 +137,7 @@ tasks.build {
 
 tasks.withType<Test> {
     useJUnitPlatform()
-    jvmArgs("-XX:+EnableDynamicAgentLoading")
+    jvmArgs("-XX:+EnableDynamicAgentLoading", "-Xshare:off")
     outputs.dir(snippetsDir)
     testLogging {
         // add for debuging TestLogEvent.STANDARD_OUT
@@ -165,6 +165,7 @@ tasks.jacocoTestReport {
 tasks.withType<JavaCompile>().configureEach {
     options.errorprone.disableWarningsInGeneratedCode.set(true)
     options.errorprone.excludedPaths.set(".*/build/generated/.*")
+    options.forkOptions.jvmArgs?.add("--sun-misc-unsafe-memory-access=allow")
 }
 
 pmd {
@@ -180,6 +181,16 @@ tasks.withType<Pmd>().configureEach {
 
 asciidoctorTask {
     dependsOn(tasks.named("bootBuildInfo"), tasks.test)
+    setExecutionMode("JAVA_EXEC")
+    jvm {
+        jvmArgs(
+            "--enable-native-access=ALL-UNNAMED",
+            "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
+            "--add-opens=java.base/java.io=ALL-UNNAMED",
+            "--sun-misc-unsafe-memory-access=allow",
+            "-Xshare:off"
+        )
+    }
     inputs.dir(snippetsDir)
     inputs.file(buildInfoPropertiesFile)
     attributes(
