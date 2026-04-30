@@ -10,13 +10,15 @@ The roadmap below is ordered to respect cross-phase dependencies.
 | Order | Theme | Status | Why it comes next |
 | --- | --- | --- | --- |
 | 1 | Phase 10: CI/CD and deployment assets | Ready | Depends on the now-stable quality gates and build outputs from Phase 9 |
-| 2 | Phase 11: Optional future enhancements | Deferred | These are stretch items after the core demo roadmap is complete |
+| 2 | Pre-1.0 release readiness | Planned | Defines what must be stabilized or hardened before the project should claim a `1.0` release |
+| 3 | Phase 11: Optional future enhancements | Deferred | These are stretch items after the core demo roadmap is complete |
 
 ## Current Priorities
 
 1. Start Phase 10 CI/CD and deployment work now that the Phase 9 coverage and performance checks are in place.
-2. Keep Phase 11 explicitly deferred until the core roadmap is complete.
-3. Keep the naming and package-convention cleanup plan ready for opportunistic refactors so new code does not introduce more exceptions.
+2. Shape the pre-`1.0` release gate now so Phase 10 outputs land against a clear definition of release readiness.
+3. Keep Phase 11 explicitly deferred until the core roadmap is complete.
+4. Keep the naming and package-convention cleanup plan ready for opportunistic refactors so new code does not introduce more exceptions.
 
 ## Active Detailed Plan
 
@@ -86,6 +88,49 @@ Status: Deferred
 - [ ] Add Spring GraphQL only if there is a real client need
 - [ ] Define schema for books, users, and localization data
 - [ ] Implement queries and mutations
+
+---
+
+## Pre-1.0 Release Readiness
+
+Status: Planned
+
+Goal: make the `1.0` boundary mean a stable, well-documented demo application with an explicit production posture rather than just a feature-complete snapshot.
+
+Execution rule:
+- Prefer adding only tasks that materially improve release confidence, API stability, operational clarity, or security posture.
+- Avoid bundling speculative stretch features into the `1.0` bar.
+
+### 12.1 Define The 1.0 Scope And Support Contract
+- [ ] Decide whether `1.0` means "stable interview-demo reference app" or "production-ready starter" and document that boundary explicitly
+- [ ] Document which endpoints and behaviors are part of the supported public contract versus technical/demo-only convenience endpoints
+- [ ] Define the compatibility promise for future releases so `1.x` changes have a clear bar for what counts as breaking
+
+### 12.2 Stabilize The Public API Surface
+- [ ] Review endpoint naming, resource semantics, and response shapes before freezing the `1.0` contract
+- [ ] Stop returning JPA entities directly from public controllers and introduce dedicated response DTOs where persistence shape leaks into the API
+- [ ] Standardize authentication and authorization failures so `401` and `403` responses follow the same documented `ProblemDetail` contract style as the rest of the API
+- [ ] Intentionally refresh the approved OpenAPI baseline only after the `1.0` surface is reviewed and accepted
+
+### 12.3 Revisit The Production Security Posture
+- [ ] Remove insecure production-style defaults and fail fast when required secrets or database credentials are missing in `prod`
+- [ ] Re-evaluate session-based write security before `1.0`: either re-enable CSRF protection for browser-session writes or document a deliberate alternative security model
+- [ ] Review whether `/actuator/prometheus` and other technical endpoints should remain publicly exposed in production or become profile-specific / deployment-only
+- [ ] Document the intended production posture for session cookies, OAuth login, admin bootstrap, and trusted deployment topology
+
+### 12.4 Add Release-Grade Runtime Verification
+- [ ] Add a smoke test that verifies the packaged container starts successfully and reaches readiness
+- [ ] Add focused verification for the `prod` profile so release builds do not only prove the local/test profiles
+- [ ] Add a release checklist covering Flyway migration execution, OpenAPI compatibility, benchmark review, changelog update, and release tagging
+
+### 12.5 Tighten Operational Readiness
+- [ ] Document expected operational signals for health, readiness, metrics, and audit behavior so reviewers know what "healthy" means
+- [ ] Add deployment-oriented troubleshooting notes for OAuth setup, PostgreSQL connectivity, and session persistence failures
+- [ ] Document an upgrade and rollback flow for schema migrations and versioned container releases
+
+### 12.6 Close The Most Important Naming And Packaging Exceptions Before 1.0
+- [ ] Complete the highest-value items from the convention-simplification backlog that would otherwise become long-lived `1.x` naming debt
+- [ ] Prioritize controller/service/package names that currently misdescribe responsibilities or mix business and technical concerns
 
 ---
 
