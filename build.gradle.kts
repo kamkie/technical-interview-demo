@@ -34,6 +34,7 @@ description = "technical-interview-demo"
 val errorProneVersion = "2.44.0"
 val pmdVersion = "7.17.0"
 val gradleWrapperVersion = "9.5.0"
+val springdocVersion = "3.0.3"
 val dockerImageName = providers.gradleProperty("dockerImageName").orElse("technical-interview-demo")
 val snippetsDir = layout.buildDirectory.dir("generated-snippets")
 val buildInfoPropertiesFile = layout.buildDirectory.file("resources/main/META-INF/build-info.properties")
@@ -67,6 +68,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-api:$springdocVersion")
     implementation("org.springframework.session:spring-session-jdbc")
     implementation("com.github.ben-manes.caffeine:caffeine")
 

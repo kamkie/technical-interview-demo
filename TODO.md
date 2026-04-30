@@ -75,7 +75,7 @@ Goal:
 Describe the API in a machine-readable way and fail the build when an unapproved breaking change is introduced.
 
 Tasks:
-- [ ] Add OpenAPI support and expose the generated specification
+- [x] Add OpenAPI support and expose the generated specification
 - [ ] Document public and secured endpoints, schemas, pagination, and auth requirements in the OpenAPI contract
 - [ ] Decide how the approved OpenAPI baseline is stored and versioned
 - [ ] Add a compatibility test that compares the current OpenAPI contract to the approved baseline and fails on breaking changes

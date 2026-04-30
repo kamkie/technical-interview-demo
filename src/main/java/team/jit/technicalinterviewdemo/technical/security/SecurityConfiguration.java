@@ -35,6 +35,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/error", "/docs", "/docs/**", "/hello").permitAll()
+                        .requestMatchers("/v3/api-docs", "/v3/api-docs/**", "/v3/api-docs.yaml").permitAll()
                         .requestMatchers("/oauth2/**", "/login/**").permitAll()
                         .requestMatchers("/api/users/me", "/api/users/me/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
