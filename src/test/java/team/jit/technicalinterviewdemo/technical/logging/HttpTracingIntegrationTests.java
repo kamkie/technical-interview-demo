@@ -81,6 +81,17 @@ class HttpTracingIntegrationTests extends AbstractRandomPortIntegrationTest {
     }
 
     @Test
+    void rootEndpointIsExposed() throws IOException, InterruptedException {
+        HttpResponse<String> response = get("/");
+
+        assertEquals(200, response.statusCode());
+        assertMatchesRequestId(response.headers().firstValue("X-Request-Id").orElse(null));
+        assertMatchesTraceparent(response.headers().firstValue("traceparent").orElse(null));
+        assertTrue(response.body().contains("\"build\""));
+        assertTrue(response.body().contains("\"dependencies\""));
+    }
+
+    @Test
     void actuatorLivenessEndpointIsExposed() throws IOException, InterruptedException {
         HttpResponse<String> response = get("/actuator/health/liveness");
 

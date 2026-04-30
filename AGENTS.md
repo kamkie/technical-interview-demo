@@ -9,6 +9,7 @@ Small Spring Boot demo app for technical interview exercises.
 Current scope:
 
 - `GET /docs` redirects to generated API documentation
+- `GET /` returns technical application details including build/git metadata, main dependency versions, and important runtime configuration
 - `GET /hello` returns `Hello World!`
 - CRUD-style `Book` API under `/api/books` with pagination, filtering, optimistic locking, and category assignment
 - `Category` API under `/api/categories`
@@ -213,7 +214,7 @@ Release policy:
 - `config/pmd/pmd-ruleset.xml`: curated PMD rules
 - `scripts/run-phase-9-benchmarks.ps1`: local benchmark runner that starts the app and refreshes the Phase 9 baseline
 - `src/main/java/team/jit/technicalinterviewdemo/TechnicalInterviewDemoApplication.java`: app entry
-- `src/main/java/team/jit/technicalinterviewdemo/HelloController.java`: hello endpoint
+- `src/main/java/team/jit/technicalinterviewdemo/technical/HelloController.java`: public technical-overview and hello endpoints
 - `src/main/java/team/jit/technicalinterviewdemo/business/book/`: book entity, requests, repository, service, controller, seed data
 - `src/main/java/team/jit/technicalinterviewdemo/technical/cache/`: cache names, cache enablement, and related cache constants
 - `src/main/java/team/jit/technicalinterviewdemo/technical/security/`: security filter-chain, session configuration, and authenticated-user synchronization
@@ -238,6 +239,7 @@ Release policy:
 Endpoints:
 
 - `GET /docs`
+- `GET /`
 - `GET /hello`
 - `GET /api/books?page=0&size=20&sort=id,asc&title=clean&category=java&yearFrom=2000&yearTo=2020`
 - `GET /api/books/{id}`
@@ -263,7 +265,7 @@ Endpoints:
 
 Security rules:
 
-- public without authentication: `GET /hello`, `GET /docs`, `GET /api/books/**`, `GET /api/categories`, `GET /api/localization-messages/**`, `GET /actuator/health`, `GET /actuator/health/**`, `GET /actuator/info`, and `GET /actuator/prometheus`
+- public without authentication: `GET /`, `GET /hello`, `GET /docs`, `GET /api/books/**`, `GET /api/categories`, `GET /api/localization-messages/**`, `GET /actuator/health`, `GET /actuator/health/**`, `GET /actuator/info`, and `GET /actuator/prometheus`
 - protected with authenticated session: `GET /api/users/me`, `PUT /api/users/me/preferred-language`, `POST /api/books`, `PUT /api/books/{id}`, `DELETE /api/books/{id}`, `POST /api/categories`, `POST /api/localization-messages`, `PUT /api/localization-messages/{id}`, and `DELETE /api/localization-messages/{id}`
 - role-restricted to `ADMIN`: category creation and localization-message create, update, and delete operations
 - interactive login is available at `GET /oauth2/authorization/github` when the `oauth` profile is active

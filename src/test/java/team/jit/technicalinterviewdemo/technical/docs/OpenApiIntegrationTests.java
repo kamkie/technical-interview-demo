@@ -43,6 +43,7 @@ class OpenApiIntegrationTests extends AbstractRandomPortIntegrationTest {
         JsonNode openApi = fetchOpenApiJson();
 
         assertEquals("technical-interview-demo API", openApi.at("/info/title").asText());
+        assertFalse(openApi.at("/paths/~1/get").isMissingNode());
         assertEquals("apiKey", openApi.at("/components/securitySchemes/sessionCookie/type").asText());
         assertEquals("cookie", openApi.at("/components/securitySchemes/sessionCookie/in").asText());
         assertEquals(

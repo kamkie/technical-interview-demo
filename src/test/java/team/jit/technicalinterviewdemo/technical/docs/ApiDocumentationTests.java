@@ -75,6 +75,58 @@ class ApiDocumentationTests extends AbstractDocumentationIntegrationTest {
     }
 
     @Test
+    void documentRootOverviewEndpoint() throws Exception {
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(header().exists("X-Request-Id"))
+                .andExpect(header().exists("traceparent"))
+                .andExpect(jsonPath("$.build").exists())
+                .andExpect(jsonPath("$.git").exists())
+                .andExpect(jsonPath("$.runtime").exists())
+                .andExpect(jsonPath("$.dependencies").exists())
+                .andExpect(jsonPath("$.configuration").exists())
+                .andDo(documentEndpoint(
+                        "technical/get-root",
+                        responseHeaders(commonResponseHeaders()),
+                        relaxedResponseFields(
+                                fieldWithPath("build.name").description("Build name from generated build metadata."),
+                                fieldWithPath("build.group").description("Build group from generated build metadata."),
+                                fieldWithPath("build.artifact").description("Build artifact from generated build metadata."),
+                                fieldWithPath("build.version").description("Application version derived from the nearest reachable git tag."),
+                                fieldWithPath("build.time").description("Build timestamp."),
+                                fieldWithPath("git.branch").description("Current git branch captured during the build."),
+                                fieldWithPath("git.commitId").description("Full git commit id captured during the build."),
+                                fieldWithPath("git.shortCommitId").description("Short git commit id captured during the build."),
+                                fieldWithPath("git.commitTime").description("Commit timestamp for the captured git revision."),
+                                fieldWithPath("runtime.applicationName").description("Spring application name."),
+                                fieldWithPath("runtime.javaVersion").description("Running JVM version."),
+                                fieldWithPath("runtime.javaVendor").description("Running JVM vendor."),
+                                fieldWithPath("runtime.activeProfiles").description("Currently active Spring profiles."),
+                                subsectionWithPath("dependencies").description("Selected runtime dependency versions for the main technical building blocks."),
+                                fieldWithPath("configuration.pagination.defaultPageSize").description("Default pageable page size."),
+                                fieldWithPath("configuration.pagination.maxPageSize").description("Maximum pageable page size."),
+                                fieldWithPath("configuration.session.storeType").description("Configured Spring Session store type."),
+                                fieldWithPath("configuration.session.timeout").description("HTTP session timeout."),
+                                fieldWithPath("configuration.session.cookieName").description("Session cookie name."),
+                                fieldWithPath("configuration.session.cookieHttpOnly").description("Whether the session cookie is HTTP-only."),
+                                fieldWithPath("configuration.session.cookieSameSite").description("Session cookie SameSite mode."),
+                                fieldWithPath("configuration.observability.exposedEndpoints").description("Actuator web endpoints exposed by configuration."),
+                                fieldWithPath("configuration.observability.healthProbesEnabled").description("Whether readiness/liveness probe groups are enabled."),
+                                fieldWithPath("configuration.observability.tracingSamplingProbability").description("Tracing sampling probability."),
+                                fieldWithPath("configuration.documentation.html").description("Bundled HTML documentation entry point."),
+                                fieldWithPath("configuration.documentation.openApiJson").description("OpenAPI JSON endpoint path."),
+                                fieldWithPath("configuration.documentation.openApiYaml").description("OpenAPI YAML endpoint path."),
+                                fieldWithPath("configuration.documentation.openApiVersion").description("Configured OpenAPI document dialect."),
+                                fieldWithPath("configuration.security.csrfEnabled").description("Whether CSRF protection is enabled for the application."),
+                                fieldWithPath("configuration.security.oauthProfileActive").description("Whether the optional oauth profile is currently active."),
+                                fieldWithPath("configuration.security.oauthLoginPath").description("Interactive GitHub OAuth login path when the oauth profile is active."),
+                                fieldWithPath("configuration.shutdown.serverShutdown").description("Server shutdown mode."),
+                                fieldWithPath("configuration.shutdown.timeoutPerShutdownPhase").description("Per-phase graceful shutdown timeout.")
+                        )
+                ));
+    }
+
+    @Test
     void documentDocsEndpoint() throws Exception {
         mockMvc.perform(get("/docs"))
                 .andExpect(status().isFound())
@@ -518,4 +570,3 @@ class ApiDocumentationTests extends AbstractDocumentationIntegrationTest {
                 ));
     }
 }
-

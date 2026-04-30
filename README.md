@@ -8,6 +8,7 @@ This repository contains a small Spring Boot demo application built with Gradle 
 
 The demo currently includes:
 
+- `GET /` returning technical application details including build/git metadata, main dependency versions, and important runtime configuration
 - `GET /hello` returning `Hello World!`
 - A REST API for `Book` under `/api/books` with pagination, filtering, and category assignment
 - A REST API for `Category` under `/api/categories`
@@ -229,6 +230,7 @@ Useful local endpoints:
 - `GET /docs`
 - `GET /v3/api-docs`
 - `GET /v3/api-docs.yaml`
+- `GET /`
 - `GET /hello`
 - `GET /api/books`
 - `GET /api/categories`
@@ -336,7 +338,7 @@ Release policy:
 - `config/pmd/pmd-ruleset.xml`: curated PMD ruleset
 - `scripts/run-phase-9-benchmarks.ps1`: local benchmark runner that starts the app and refreshes the Phase 9 baseline
 - `src/main/java/team/jit/technicalinterviewdemo/TechnicalInterviewDemoApplication.java`: app entry point
-- `src/main/java/team/jit/technicalinterviewdemo/HelloController.java`: hello-world endpoint
+- `src/main/java/team/jit/technicalinterviewdemo/technical/HelloController.java`: public technical-overview and hello-world endpoints
 - `src/main/java/team/jit/technicalinterviewdemo/business/book/`: `Book` domain, service, repository, and REST API
 - `src/main/java/team/jit/technicalinterviewdemo/technical/cache/`: cache names, cache enablement, and related cache constants
 - `src/main/java/team/jit/technicalinterviewdemo/technical/security/`: security filter-chain, session configuration, and authenticated-user synchronization
@@ -366,6 +368,7 @@ Redirects to the generated HTML API documentation served by the application.
 
 ### Hello Endpoint
 
+- `GET /`
 - `GET /hello`
 
 Response:
@@ -505,7 +508,7 @@ Actuator endpoints:
 
 Authentication rules:
 
-- public without authentication: `GET /hello`, `GET /docs`, `GET /api/books/**`, `GET /api/categories`, `GET /api/localization-messages/**`, `GET /actuator/health`, `GET /actuator/health/**`, `GET /actuator/info`, and `GET /actuator/prometheus`
+- public without authentication: `GET /`, `GET /hello`, `GET /docs`, `GET /api/books/**`, `GET /api/categories`, `GET /api/localization-messages/**`, `GET /actuator/health`, `GET /actuator/health/**`, `GET /actuator/info`, and `GET /actuator/prometheus`
 - protected with authenticated session: `GET /api/users/me`, `PUT /api/users/me/preferred-language`, `POST /api/books`, `PUT /api/books/{id}`, `DELETE /api/books/{id}`, `POST /api/categories`, `POST /api/localization-messages`, `PUT /api/localization-messages/{id}`, and `DELETE /api/localization-messages/{id}`
 - role-restricted to `ADMIN`: category creation and localization-message create, update, and delete operations
 - interactive login is available at `GET /oauth2/authorization/github` when the `oauth` profile is active

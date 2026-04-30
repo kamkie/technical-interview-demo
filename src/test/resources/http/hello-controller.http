@@ -2,6 +2,10 @@
 
 @baseUrl = http://localhost:8080
 
+### HelloController - technical overview
+GET {{baseUrl}}/
+Accept: application/json
+
 ### HelloController - hello world
 GET {{baseUrl}}/hello
 Accept: text/plain
