@@ -24,6 +24,7 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import team.jit.technicalinterviewdemo.audit.AuditLogRepository;
 import team.jit.technicalinterviewdemo.book.BookRepository;
 import team.jit.technicalinterviewdemo.cache.CacheNames;
 import team.jit.technicalinterviewdemo.category.CategoryRepository;
@@ -47,6 +48,9 @@ class UserManagementIntegrationTests {
     private UserAccountRepository userAccountRepository;
 
     @Autowired
+    private AuditLogRepository auditLogRepository;
+
+    @Autowired
     private BookRepository bookRepository;
 
     @Autowired
@@ -60,6 +64,7 @@ class UserManagementIntegrationTests {
 
     @BeforeEach
     void setUp() {
+        auditLogRepository.deleteAll();
         bookRepository.deleteAll();
         categoryRepository.deleteAll();
         userAccountRepository.deleteAll();
@@ -107,7 +112,7 @@ class UserManagementIntegrationTests {
         UserAccount userAccount = userAccountRepository.findByProviderAndExternalLogin("github", "admin-user")
                 .orElseThrow();
 
-        assertThat(userAccount.getRoles()).containsExactly(UserRole.USER, UserRole.ADMIN);
+        assertThat(userAccount.getRoles()).containsExactlyInAnyOrder(UserRole.USER, UserRole.ADMIN);
     }
 
     @Test

@@ -15,6 +15,7 @@ Current scope:
 - CRUD-style `LocalizationMessage` API under `/api/localization-messages` with pagination and key/language lookup
 - authenticated-user profile API under `/api/users/me`
 - OAuth 2.0 protected write endpoints with JDBC-backed HTTP sessions
+- append-only audit logging for state-changing `Book` and `LocalizationMessage` operations
 - git-tag-based application versioning with a human-readable `CHANGELOG.md`
 - actuator endpoints for `health`, `info`, liveness/readiness probes, and Prometheus metrics
 - PostgreSQL for local and production-style runtime profiles
@@ -206,6 +207,7 @@ Release policy:
 - `src/main/java/team/jit/technicalinterviewdemo/category/`: category entity, repository, service, controller, and seed data
 - `src/main/java/team/jit/technicalinterviewdemo/localization/`: localization entity, repository, service, exception, and seed data
 - `src/main/java/team/jit/technicalinterviewdemo/metrics/`: application-specific Micrometer gauges and counters
+- `src/main/java/team/jit/technicalinterviewdemo/audit/`: append-only audit-log entity, repository, and service
 - `src/main/java/team/jit/technicalinterviewdemo/user/`: persisted user model, profile endpoints, role handling, and authenticated-user synchronization
 - `src/main/java/team/jit/technicalinterviewdemo/api/`: exception handling and custom exceptions
 - `src/main/java/team/jit/technicalinterviewdemo/docs/`: documentation endpoint and resource mapping
@@ -348,6 +350,7 @@ Current runtime behavior:
 - Hibernate SQL logging is enabled through `org.hibernate.SQL`
 - Hibernate statistics are enabled through `hibernate.generate_statistics=true`
 - successful create, update, delete, and seed writes are logged
+- append-only audit records are persisted for book and localization-message create, update, and delete operations with the acting user snapshot when available
 - actuator exposes readiness and liveness probe endpoints
 - actuator exposes Prometheus metrics at `/actuator/prometheus`
 - custom Micrometer metrics are published under the `technical.interview.demo.*` prefix for book, category, localization, user, and cache activity

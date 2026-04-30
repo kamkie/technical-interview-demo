@@ -11,6 +11,27 @@ Historical releases before `v0.1.0` are reconstructed from mainline git history 
 ### Planned
 - OpenAPI contract generation and breaking-change checks
 
+## [v0.18.0] - 2026-04-30
+
+### Added
+- Added append-only audit-log persistence for `Book` and `LocalizationMessage` create, update, and delete operations.
+- Added a Flyway migration for the `audit_logs` table and integration coverage for audited write flows.
+
+### Changed
+- Recorded the acting persisted user and actor-login snapshot with each audited state-changing operation.
+- Updated roadmap and project documentation to reflect the completed audit-trail phase.
+
+## [v0.17.0] - 2026-04-30
+
+### Added
+- Added persisted application users with stored `USER` and `ADMIN` roles.
+- Added authenticated-user profile endpoints for reading the current profile and updating preferred language.
+- Added user-specific Micrometer metrics and authenticated-user synchronization on login.
+
+### Changed
+- Used persisted application roles to authorize category and localization-message management.
+- Used the authenticated user's preferred language as the final localized-error fallback when a request does not explicitly specify language.
+
 ## [v0.16.0] - 2026-04-30
 
 ### Added

@@ -1,6 +1,8 @@
 package team.jit.technicalinterviewdemo;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static team.jit.technicalinterviewdemo.SecurityTestSupport.clearAuthentication;
+import static team.jit.technicalinterviewdemo.SecurityTestSupport.setAdminAuthenticatedUser;
 
 import io.micrometer.core.instrument.MeterRegistry;
 
@@ -25,10 +27,12 @@ import team.jit.technicalinterviewdemo.category.Category;
 import team.jit.technicalinterviewdemo.category.CategoryCreateRequest;
 import team.jit.technicalinterviewdemo.category.CategoryRepository;
 import team.jit.technicalinterviewdemo.category.CategoryService;
+import team.jit.technicalinterviewdemo.audit.AuditLogRepository;
 import team.jit.technicalinterviewdemo.localization.LocalizationMessage;
 import team.jit.technicalinterviewdemo.localization.LocalizationMessageRepository;
 import team.jit.technicalinterviewdemo.localization.LocalizationMessageRequest;
 import team.jit.technicalinterviewdemo.localization.LocalizationMessageService;
+import team.jit.technicalinterviewdemo.user.UserAccountRepository;
 
 @TestcontainersTest
 @SpringBootTest
@@ -56,10 +60,16 @@ class CachingAndMetricsTests {
     private CategoryRepository categoryRepository;
 
     @Autowired
+    private AuditLogRepository auditLogRepository;
+
+    @Autowired
     private LocalizationMessageService localizationMessageService;
 
     @Autowired
     private LocalizationMessageRepository localizationMessageRepository;
+
+    @Autowired
+    private UserAccountRepository userAccountRepository;
 
     @Autowired
     private CacheManager cacheManager;
@@ -73,8 +83,12 @@ class CachingAndMetricsTests {
 
     @BeforeEach
     void setUp() {
+        clearAuthentication();
+        auditLogRepository.deleteAll();
+        userAccountRepository.deleteAll();
         bookRepository.deleteAll();
         categoryRepository.deleteAll();
+        setAdminAuthenticatedUser();
         bestPractices = categoryRepository.saveAndFlush(new Category("Best Practices"));
         javaCategory = categoryRepository.saveAndFlush(new Category("Java"));
         softwareEngineering = categoryRepository.saveAndFlush(new Category("Software Engineering"));
@@ -121,6 +135,9 @@ class CachingAndMetricsTests {
         localizationMessageRepository.findByMessageKeyAndLanguage(CACHE_TEST_KEY, "es")
                 .ifPresent(localizationMessageRepository::delete);
         localizationMessageRepository.flush();
+        auditLogRepository.deleteAll();
+        userAccountRepository.deleteAll();
+        clearAuthentication();
         clearCaches();
     }
 

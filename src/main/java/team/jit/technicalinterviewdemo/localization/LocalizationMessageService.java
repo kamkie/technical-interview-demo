@@ -18,6 +18,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import team.jit.technicalinterviewdemo.audit.AuditAction;
+import team.jit.technicalinterviewdemo.audit.AuditLogService;
+import team.jit.technicalinterviewdemo.audit.AuditTargetType;
 import team.jit.technicalinterviewdemo.api.InvalidRequestException;
 import team.jit.technicalinterviewdemo.cache.CacheNames;
 import team.jit.technicalinterviewdemo.metrics.ApplicationMetrics;
@@ -39,6 +42,7 @@ public class LocalizationMessageService {
     private final CacheManager cacheManager;
     private final ApplicationMetrics applicationMetrics;
     private final UserAccountService userAccountService;
+    private final AuditLogService auditLogService;
 
     public Page<LocalizationMessage> findAll(Pageable pageable) {
         applicationMetrics.recordLocalizationOperation("list");
@@ -163,6 +167,13 @@ public class LocalizationMessageService {
         LocalizationMessage savedMessage = localizationMessageRepository.saveAndFlush(message);
         evictLocalizationCaches();
         applicationMetrics.recordLocalizationOperation("create");
+        auditLogService.record(
+                AuditTargetType.LOCALIZATION_MESSAGE,
+                savedMessage.getId(),
+                AuditAction.CREATE,
+                "Created localization message '%s' in language %s."
+                        .formatted(savedMessage.getMessageKey(), savedMessage.getLanguage())
+        );
         log.info(
                 "Created localization message id={} key={} language={}",
                 savedMessage.getId(),
@@ -188,6 +199,13 @@ public class LocalizationMessageService {
         LocalizationMessage updatedMessage = localizationMessageRepository.saveAndFlush(message);
         evictLocalizationCaches();
         applicationMetrics.recordLocalizationOperation("update");
+        auditLogService.record(
+                AuditTargetType.LOCALIZATION_MESSAGE,
+                updatedMessage.getId(),
+                AuditAction.UPDATE,
+                "Updated localization message '%s' in language %s."
+                        .formatted(updatedMessage.getMessageKey(), updatedMessage.getLanguage())
+        );
         log.info(
                 "Updated localization message id={} key={} language={}",
                 updatedMessage.getId(),
@@ -204,6 +222,13 @@ public class LocalizationMessageService {
         localizationMessageRepository.delete(message);
         evictLocalizationCaches();
         applicationMetrics.recordLocalizationOperation("delete");
+        auditLogService.record(
+                AuditTargetType.LOCALIZATION_MESSAGE,
+                id,
+                AuditAction.DELETE,
+                "Deleted localization message '%s' in language %s."
+                        .formatted(message.getMessageKey(), message.getLanguage())
+        );
         log.info("Deleted localization message id={} key={} language={}", id, message.getMessageKey(), message.getLanguage());
     }
 

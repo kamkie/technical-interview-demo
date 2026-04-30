@@ -16,6 +16,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import team.jit.technicalinterviewdemo.audit.AuditAction;
+import team.jit.technicalinterviewdemo.audit.AuditLogService;
+import team.jit.technicalinterviewdemo.audit.AuditTargetType;
 import team.jit.technicalinterviewdemo.api.BookNotFoundException;
 import team.jit.technicalinterviewdemo.api.DuplicateIsbnException;
 import team.jit.technicalinterviewdemo.api.InvalidRequestException;
@@ -48,6 +51,7 @@ public class BookService {
     private final BookRepository bookRepository;
     private final CategoryService categoryService;
     private final ApplicationMetrics applicationMetrics;
+    private final AuditLogService auditLogService;
 
     public Page<Book> findAll(BookSearchRequest request, Pageable pageable) {
         applicationMetrics.recordBookOperation("list");
@@ -59,8 +63,7 @@ public class BookService {
 
     public Book findById(Long id) {
         applicationMetrics.recordBookOperation("get");
-        return bookRepository.findById(id)
-                .orElseThrow(() -> new BookNotFoundException(id));
+        return requireBook(id);
     }
 
     @Transactional
@@ -70,13 +73,19 @@ public class BookService {
         Book book = new Book(request.title(), request.author(), request.isbn(), request.publicationYear(), categories);
         Book savedBook = bookRepository.saveAndFlush(book);
         applicationMetrics.recordBookOperation("create");
+        auditLogService.record(
+                AuditTargetType.BOOK,
+                savedBook.getId(),
+                AuditAction.CREATE,
+                "Created book '%s' with ISBN %s.".formatted(savedBook.getTitle(), savedBook.getIsbn())
+        );
         log.info("Created book id={} isbn={} title={}", savedBook.getId(), savedBook.getIsbn(), savedBook.getTitle());
         return savedBook;
     }
 
     @Transactional
     public Book update(Long id, BookUpdateRequest request) {
-        Book book = findById(id);
+        Book book = requireBook(id);
         if (!book.getVersion().equals(request.version())) {
             throw new StaleBookVersionException(id, request.version(), book.getVersion());
         }
@@ -93,18 +102,27 @@ public class BookService {
             throw new StaleBookVersionException(id, request.version(), book.getVersion(), exception);
         }
         applicationMetrics.recordBookOperation("update");
+        auditLogService.record(
+                AuditTargetType.BOOK,
+                updatedBook.getId(),
+                AuditAction.UPDATE,
+                "Updated book '%s' with ISBN %s.".formatted(updatedBook.getTitle(), updatedBook.getIsbn())
+        );
         log.info("Updated book id={} isbn={} title={}", updatedBook.getId(), updatedBook.getIsbn(), updatedBook.getTitle());
         return updatedBook;
     }
 
     @Transactional
     public void delete(Long id) {
-        if (!bookRepository.existsById(id)) {
-            throw new BookNotFoundException(id);
-        }
-
-        bookRepository.deleteById(id);
+        Book book = requireBook(id);
+        bookRepository.delete(book);
         applicationMetrics.recordBookOperation("delete");
+        auditLogService.record(
+                AuditTargetType.BOOK,
+                id,
+                AuditAction.DELETE,
+                "Deleted book '%s' with ISBN %s.".formatted(book.getTitle(), book.getIsbn())
+        );
         log.info("Deleted book id={}", id);
     }
 
@@ -112,6 +130,11 @@ public class BookService {
         if (bookRepository.existsByIsbn(isbn)) {
             throw new DuplicateIsbnException(isbn);
         }
+    }
+
+    private Book requireBook(Long id) {
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new BookNotFoundException(id));
     }
 
     private void validateSearchRequest(BookSearchRequest request) {

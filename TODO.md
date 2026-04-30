@@ -9,70 +9,29 @@ The roadmap below is ordered to respect cross-phase dependencies.
 
 | Order | Theme | Status | Why it comes next |
 | --- | --- | --- | --- |
-| 1 | Phase 5.3: Audit trail | In Progress | Persisted users and roles now exist, so audit history is the next remaining security dependency |
-| 2 | Phase 8.5: OpenAPI and compatibility gates | Ready after Phase 5.1 | The machine-readable contract should reflect the secured API surface |
-| 3 | Phase 8.1: API and operations documentation gaps | Partially blocked by Phases 5.2 and 8.5 | The remaining docs should follow the persisted user model and final OpenAPI contract |
-| 4 | Phase 9: Coverage and performance testing | Ready after core APIs stabilize | Better value once the near-term API and auth work are settled |
-| 5 | Phase 10: CI/CD and deployment assets | Ready | Depends mostly on the current quality gates and stable build outputs |
-| 6 | Phase 11: Optional future enhancements | Deferred | These are stretch items after the core demo is complete |
+| 1 | Phase 8.5: OpenAPI and compatibility gates | Ready after Phase 5 | The machine-readable contract should reflect the secured API surface |
+| 2 | Phase 8.1: API and operations documentation gaps | Ready after Phases 5 and 8.5 | The remaining docs should follow the persisted user model and final OpenAPI contract |
+| 3 | Phase 9: Coverage and performance testing | Ready after core APIs stabilize | Better value once the near-term API and auth work are settled |
+| 4 | Phase 10: CI/CD and deployment assets | Ready | Depends mostly on the current quality gates and stable build outputs |
+| 5 | Phase 11: Optional future enhancements | Deferred | These are stretch items after the core demo is complete |
 
 ## Current Priorities
 
-1. Finish Phase 5.3 audit logging for state-changing operations.
-2. Start Phase 8.5 OpenAPI support and breaking-change compatibility checks after the initial auth surface is in place.
-3. Close the remaining Phase 8.1 documentation gaps for user flows, security guidance, and OpenAPI.
-4. Revisit Phase 9 coverage and performance work after the auth model stabilizes.
-5. Start Phase 10 CI/CD and deployment work once the API contract stabilizes.
+1. Start Phase 8.5 OpenAPI support and breaking-change compatibility checks now that the secured API surface and audit trail are in place.
+2. Close the remaining Phase 8.1 documentation gaps for user flows, security guidance, and OpenAPI.
+3. Revisit Phase 9 coverage and performance work after the near-term API-shape changes settle.
+4. Start Phase 10 CI/CD and deployment work once the API contract stabilizes.
 
 ## Active Detailed Plan
 
 ### Phase 5: Security & OAuth Integration
 
-Status: In Progress (`5.1` complete, `5.2` implemented, `5.3` next)
+Status: Completed
 
 Completed in archive:
 - 5.1 Add Spring Security with OAuth 2.0
-
-#### 5.2 Add User Entity & Management
-
-Depends on: 5.1
-
-Goal:
-Persist authenticated users and roles for authorization and future audit support.
-
-Tasks:
-- [x] Create `User` entity and Flyway migration
-- [x] Create repository and service for user lifecycle
-- [x] Persist users on first login and update `lastLoginAt`
-- [x] Add role support (`USER`, `ADMIN`)
-- [x] Add optional preferred-language field or profile setting for authenticated-user localization fallback
-- [x] Add user-specific Micrometer metrics on top of the existing metrics registry
-- [x] Optionally expose user profile endpoints
-- [x] Add tests for login persistence and role behavior
-
-Definition of done:
-- Users are persisted and updated on login
-- Roles are stored and enforceable
-- Admin and regular-user flows are distinguishable
-
-#### 5.3 Secure Audit Logging
-
-Depends on: 5.2
-
-Goal:
-Track who changed what and when for demo-safe accountability.
-
-Tasks:
-- [ ] Create `AuditLog` entity, migration, repository, and service
-- [ ] Capture create, update, and delete events for `Book` and `LocalizationMessage`
-- [ ] Record the acting user and timestamp
-- [ ] Optionally add an admin endpoint to browse audit logs
-- [ ] Add tests for audit-log creation
-
-Definition of done:
-- All state-changing operations are auditable
-- Current user context is recorded with each entry
-- Audit records are append-only in normal flows
+- 5.2 Add User Entity & Management
+- 5.3 Secure Audit Logging
 
 ---
 
@@ -226,7 +185,7 @@ Status: Deferred
 
 ## Completed Work Archive
 
-See `COMPLETED_TASKS.md` for archived completed phases, including finished Phase 4 language negotiation work, the completed release-versioning workflow, the completed category/tag enhancement phase, the completed caching/metrics phase, and the completed architecture hardening phase.
+See `COMPLETED_TASKS.md` for archived completed phases, including finished Phase 4 language negotiation work, the completed Phase 5 security and audit work, the completed release-versioning workflow, the completed category/tag enhancement phase, the completed caching/metrics phase, and the completed architecture hardening phase.
 
 ## Quick Reference: Quality Gates
 

@@ -16,6 +16,8 @@ Use `TODO.md` for active planning and `COMPLETED_TASKS.md` for implementation hi
 - In-memory caches and application-specific metrics
 - Architecture and cache hardening
 - OAuth 2.0 protected write endpoints with JDBC-backed sessions
+- Persisted users, roles, and authenticated-user profile endpoints
+- Append-only audit logging for state-changing operations
 - Developer setup and contribution guides
 - Release versioning and changelog workflow
 
@@ -152,6 +154,31 @@ Summary:
 
 Commit: `b783bf0`
 Tag: `v0.16.0`
+
+#### 5.2 Add User Entity & Management
+
+Status: Completed
+
+Summary:
+- Added persisted application users, role storage, and authenticated-user synchronization on login.
+- Added `GET /api/users/me` and `PUT /api/users/me/preferred-language`.
+- Added admin-role enforcement for category and localization management plus user-specific Micrometer metrics.
+- Updated localization fallback so persisted user preference is used when a request does not explicitly choose a language.
+
+Commit: `7f88845`
+Tag: `v0.17.0`
+
+#### 5.3 Secure Audit Logging
+
+Status: Completed
+
+Summary:
+- Added the append-only `AuditLog` entity, repository, service, and Flyway migration.
+- Recorded audit entries for `Book` and `LocalizationMessage` create, update, and delete operations.
+- Stored the acting persisted user, actor login snapshot, summary, and timestamp for each audited change.
+- Added integration tests covering audit-log creation for regular-user and admin write flows.
+
+Tag: `v0.18.0`
 
 ### Phase 6: Enhanced Book API
 

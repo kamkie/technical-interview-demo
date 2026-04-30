@@ -14,6 +14,7 @@ The demo currently includes:
 - A REST API for `LocalizationMessage` under `/api/localization-messages` with CRUD, pagination, and key/language lookup
 - A REST API for the authenticated user profile under `/api/users/me`
 - OAuth 2.0 protected write endpoints with JDBC-backed HTTP sessions for reviewer-friendly sign-in
+- Append-only audit logging for state-changing `Book` and `LocalizationMessage` operations
 - Git tag based application versioning plus a human-readable `CHANGELOG.md`
 - PostgreSQL for local and production-style runtime profiles, plus Testcontainers-backed integration tests
 - Seed data loaded at startup
@@ -315,6 +316,7 @@ Release policy:
 - `src/main/java/team/jit/technicalinterviewdemo/category/`: category entity, repository, service, controller, and seed data
 - `src/main/java/team/jit/technicalinterviewdemo/localization/`: localization entity, repository, service, and seed data
 - `src/main/java/team/jit/technicalinterviewdemo/metrics/`: application-specific Micrometer gauges and counters
+- `src/main/java/team/jit/technicalinterviewdemo/audit/`: append-only audit-log entity, repository, and service
 - `src/main/java/team/jit/technicalinterviewdemo/user/`: persisted user model, profile endpoints, role handling, and authenticated-user synchronization
 - `src/main/java/team/jit/technicalinterviewdemo/api/`: API exception handling and custom exceptions
 - `src/main/java/team/jit/technicalinterviewdemo/docs/`: documentation endpoint and resource mapping
@@ -563,6 +565,7 @@ The application includes:
 - Hibernate SQL statement logging through `org.hibernate.SQL`
 - Hibernate statistics enabled through `hibernate.generate_statistics=true`
 - explicit logs for successful database-changing operations such as create, update, delete, and seed writes
+- append-only audit records are persisted for book and localization-message create, update, and delete operations with the acting user snapshot when available
 - readiness and liveness health probes through actuator
 - Prometheus metrics exposed through `/actuator/prometheus`
 - custom Micrometer metrics are published under the `technical.interview.demo.*` prefix for book, category, localization, user, and cache activity

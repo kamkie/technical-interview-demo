@@ -5,6 +5,8 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 
 import java.util.Map;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -41,6 +43,31 @@ public final class SecurityTestSupport {
 
     public static RequestPostProcessor adminOauthUser() {
         return oauthUser("admin-user");
+    }
+
+    public static void setAuthenticatedUser(String login) {
+        SecurityContextHolder.getContext().setAuthentication(oauthAuthentication(login));
+    }
+
+    public static void setAdminAuthenticatedUser() {
+        setAuthenticatedUser("admin-user");
+    }
+
+    public static void clearAuthentication() {
+        SecurityContextHolder.clearContext();
+    }
+
+    private static OAuth2AuthenticationToken oauthAuthentication(String login) {
+        DefaultOAuth2User oauth2User = new DefaultOAuth2User(
+                AuthorityUtils.createAuthorityList("ROLE_USER"),
+                Map.of(
+                        "login", login,
+                        "name", login + " display",
+                        "email", login + "@example.test"
+                ),
+                "login"
+        );
+        return new OAuth2AuthenticationToken(oauth2User, oauth2User.getAuthorities(), "github");
     }
 
     private static ClientRegistration githubClientRegistration() {
