@@ -179,8 +179,9 @@ Build with Gradle:
 Build directly with Docker:
 
 ```powershell
-.\gradlew.bat prepareDockerContext
-docker build -t technical-interview-demo .
+.\gradlew.bat bootJar
+$jar = (Get-ChildItem build\libs\technical-interview-demo-*-boot.jar | Sort-Object LastWriteTimeUtc -Descending | Select-Object -First 1).Name
+docker build --build-arg JAR_FILE="build/libs/$jar" -t technical-interview-demo .
 docker run --rm -p 8080:8080 technical-interview-demo
 ```
 

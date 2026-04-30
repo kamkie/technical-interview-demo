@@ -72,6 +72,8 @@ docker run --rm -p 8080:8080 technical-interview-demo
 
 Developer onboarding lives in `SETUP.md`. An optional shell/env template is provided in `.env.example`.
 
+When building directly with Docker after `.\gradlew.bat bootJar`, prefer passing `--build-arg JAR_FILE=build/libs/<exact-boot-jar-name>` so Docker uses the current boot jar without relying on `clean` to remove older artifacts.
+
 Docker Desktop is required for `.\gradlew.bat test` and `.\gradlew.bat build` because the integration suite starts PostgreSQL through Testcontainers and the build lifecycle now includes Docker image creation.
 
 ## Spring Profiles

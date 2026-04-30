@@ -204,8 +204,9 @@ The default image name is `technical-interview-demo`.
 You can also build the image directly with Docker:
 
 ```powershell
-.\gradlew.bat prepareDockerContext
-docker build -t technical-interview-demo .
+.\gradlew.bat bootJar
+$jar = (Get-ChildItem build\libs\technical-interview-demo-*-boot.jar | Sort-Object LastWriteTimeUtc -Descending | Select-Object -First 1).Name
+docker build --build-arg JAR_FILE="build/libs/$jar" -t technical-interview-demo .
 ```
 
 Run the container with:
