@@ -2,7 +2,9 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import net.ltgt.gradle.errorprone.errorprone
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import java.nio.file.Files
 import java.util.Properties
+import javax.xml.parsers.DocumentBuilderFactory
 
 plugins {
     java
@@ -39,6 +41,8 @@ val dockerImageName = providers.gradleProperty("dockerImageName").orElse("techni
 val snippetsDir = layout.buildDirectory.dir("generated-snippets")
 val buildInfoPropertiesFile = layout.buildDirectory.file("resources/main/META-INF/build-info.properties")
 val approvedOpenApiFile = layout.projectDirectory.file("src/test/resources/openapi/approved-openapi.json")
+val jacocoReportXmlFile = layout.buildDirectory.file("reports/jacoco/test/jacocoTestReport.xml")
+val jacocoReportHtmlDir = layout.buildDirectory.dir("reports/jacoco/test/html")
 val asciidoctorTask = tasks.named<org.asciidoctor.gradle.jvm.AsciidoctorTask>("asciidoctor")
 
 java {
@@ -169,6 +173,84 @@ tasks.jacocoTestReport {
         xml.required.set(true)
         html.required.set(true)
     }
+}
+
+tasks.register("jacocoCoverageSummary") {
+    group = "verification"
+    description = "Prints an overall JaCoCo summary and the lowest-covered classes from the latest report."
+    dependsOn(tasks.jacocoTestReport)
+    inputs.file(jacocoReportXmlFile)
+    doLast {
+        val reportFile = jacocoReportXmlFile.get().asFile
+        check(Files.exists(reportFile.toPath())) {
+            "JaCoCo XML report not found at ${reportFile.absolutePath}. Run jacocoTestReport first."
+        }
+
+        val documentBuilderFactory = DocumentBuilderFactory.newInstance().apply {
+            isNamespaceAware = false
+            setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false)
+            setFeature("http://xml.org/sax/features/external-general-entities", false)
+            setFeature("http://xml.org/sax/features/external-parameter-entities", false)
+        }
+        val document = documentBuilderFactory.newDocumentBuilder().parse(reportFile)
+        val counterNodes = document.getElementsByTagName("counter")
+        var coveredLines = 0
+        var missedLines = 0
+        val classCoverage = mutableListOf<Triple<String, Int, Int>>()
+
+        for (i in 0 until counterNodes.length) {
+            val node = counterNodes.item(i)
+            val type = node.attributes.getNamedItem("type")?.nodeValue
+            val missed = node.attributes.getNamedItem("missed")?.nodeValue?.toInt() ?: 0
+            val covered = node.attributes.getNamedItem("covered")?.nodeValue?.toInt() ?: 0
+
+            if (node.parentNode.nodeName == "report" && type == "LINE") {
+                missedLines = missed
+                coveredLines = covered
+            }
+            if (node.parentNode.nodeName == "class" && type == "LINE") {
+                val className = node.parentNode.attributes.getNamedItem("name").nodeValue.replace('/', '.')
+                classCoverage.add(Triple(className, missed, covered))
+            }
+        }
+
+        val totalLines = coveredLines + missedLines
+        val overallCoverage = if (totalLines == 0) {
+            100.0
+        } else {
+            (coveredLines.toDouble() * 100.0) / totalLines.toDouble()
+        }
+
+        logger.lifecycle("JaCoCo line coverage: {}% (covered={}, missed={})", "%.1f".format(overallCoverage), coveredLines, missedLines)
+        logger.lifecycle("JaCoCo HTML report: {}", jacocoReportHtmlDir.get().asFile.absolutePath)
+        logger.lifecycle("Lowest-covered classes:")
+        classCoverage
+            .filter { (_, missed, covered) -> missed + covered > 0 }
+            .sortedWith(
+                compareBy<Triple<String, Int, Int>> {
+                    val total = it.second + it.third
+                    if (total == 0) {
+                        100.0
+                    } else {
+                        (it.third.toDouble() * 100.0) / total.toDouble()
+                    }
+                }.thenByDescending { it.second }
+            )
+            .take(10)
+            .forEach { (className, missed, covered) ->
+                val total = missed + covered
+                val coverage = if (total == 0) {
+                    100.0
+                } else {
+                    (covered.toDouble() * 100.0) / total.toDouble()
+                }
+                logger.lifecycle(" - {}: {}% (covered={}, missed={})", className, "%.1f".format(coverage), covered, missed)
+            }
+    }
+}
+
+tasks.test {
+    finalizedBy(tasks.named("jacocoCoverageSummary"))
 }
 
 tasks.withType<JavaCompile>().configureEach {
