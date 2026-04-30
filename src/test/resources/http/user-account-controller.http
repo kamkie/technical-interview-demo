@@ -1,0 +1,20 @@
+# IntelliJ HTTP Client examples for technical-interview-demo
+# User profile requests require an authenticated session.
+
+@baseUrl = http://localhost:8080
+@sessionCookie = paste-technical-interview-demo-session-here
+### UserAccountController - current authenticated user
+GET {{baseUrl}}/api/users/me
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/json
+
+### UserAccountController - update preferred language (authenticated session)
+PUT {{baseUrl}}/api/users/me/preferred-language
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "preferredLanguage": "pl"
+}
+

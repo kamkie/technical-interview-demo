@@ -1,0 +1,30 @@
+= TechnicalOverviewController API
+:toc:
+:toclevels: 2
+:sectanchors:
+:source-highlighter: highlight.js
+
+xref:index.adoc[Back to API overview]
+
+This page documents the public technical-overview and smoke-test endpoints exposed by `TechnicalOverviewController`.
+
+== `GET /`
+
+Returns a technical application overview that combines build metadata, git metadata, selected dependency versions, and important runtime configuration values.
+
+include::{snippets}/technical/get-root/curl-request.adoc[]
+include::{snippets}/technical/get-root/http-request.adoc[]
+include::{snippets}/technical/get-root/http-response.adoc[]
+include::{snippets}/technical/get-root/response-headers.adoc[]
+include::{snippets}/technical/get-root/response-fields.adoc[]
+
+== `GET /hello`
+
+Returns a plain text health-check style response.
+
+include::{snippets}/hello/get-hello/curl-request.adoc[]
+include::{snippets}/hello/get-hello/http-request.adoc[]
+include::{snippets}/hello/get-hello/http-response.adoc[]
+include::{snippets}/hello/get-hello/response-headers.adoc[]
+include::{snippets}/hello/get-hello/response-body.adoc[]
+

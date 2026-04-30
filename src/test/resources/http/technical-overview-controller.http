@@ -1,0 +1,12 @@
+# IntelliJ HTTP Client examples for technical-interview-demo
+
+@baseUrl = http://localhost:8080
+
+### TechnicalOverviewController - technical overview
+GET {{baseUrl}}/
+Accept: application/json
+
+### TechnicalOverviewController - hello world
+GET {{baseUrl}}/hello
+Accept: text/plain
+
