@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static team.jit.technicalinterviewdemo.SecurityTestSupport.adminOauthUser;
-import static team.jit.technicalinterviewdemo.SecurityTestSupport.csrfToken;
 import static team.jit.technicalinterviewdemo.SecurityTestSupport.oauthUser;
 
 import java.util.List;
@@ -108,7 +107,6 @@ class LocalizationApiTests {
     void createLocalizationMessageReturnsCreatedMessage() throws Exception {
         mockMvc.perform(post("/api/localization-messages")
                         .with(adminOauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -131,7 +129,6 @@ class LocalizationApiTests {
     @Test
     void createLocalizationMessageWithoutAuthenticationReturnsUnauthorized() throws Exception {
         mockMvc.perform(post("/api/localization-messages")
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -148,7 +145,6 @@ class LocalizationApiTests {
     void createLocalizationMessageWithDuplicateKeyAndLanguageReturnsConflict() throws Exception {
         mockMvc.perform(post("/api/localization-messages")
                         .with(adminOauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -172,7 +168,6 @@ class LocalizationApiTests {
     void createLocalizationMessageWithInvalidPayloadReturnsBadRequest() throws Exception {
         mockMvc.perform(post("/api/localization-messages")
                         .with(adminOauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -196,7 +191,6 @@ class LocalizationApiTests {
     void createLocalizationMessageWithUnsupportedLanguageReturnsBadRequest() throws Exception {
         mockMvc.perform(post("/api/localization-messages")
                         .with(adminOauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -218,7 +212,6 @@ class LocalizationApiTests {
     void updateLocalizationMessageReturnsUpdatedMessage() throws Exception {
         mockMvc.perform(put("/api/localization-messages/{id}", bookNotFoundEn.getId())
                         .with(adminOauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -238,16 +231,14 @@ class LocalizationApiTests {
 
     @Test
     void deleteLocalizationMessageWithoutAuthenticationReturnsUnauthorized() throws Exception {
-        mockMvc.perform(delete("/api/localization-messages/{id}", bookNotFoundEn.getId())
-                        .with(csrfToken()))
+        mockMvc.perform(delete("/api/localization-messages/{id}", bookNotFoundEn.getId()))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     void deleteLocalizationMessageRemovesMessage() throws Exception {
         mockMvc.perform(delete("/api/localization-messages/{id}", bookNotFoundEn.getId())
-                        .with(adminOauthUser())
-                        .with(csrfToken()))
+                        .with(adminOauthUser()))
                 .andExpect(status().isNoContent());
 
         mockMvc.perform(get("/api/localization-messages/{id}", bookNotFoundEn.getId()))
@@ -259,7 +250,6 @@ class LocalizationApiTests {
     void createLocalizationMessageAsRegularUserReturnsForbidden() throws Exception {
         mockMvc.perform(post("/api/localization-messages")
                         .with(oauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -286,3 +276,4 @@ class LocalizationApiTests {
                 .andExpect(jsonPath("$[17].messageKey").value("error.server.internal"));
     }
 }
+

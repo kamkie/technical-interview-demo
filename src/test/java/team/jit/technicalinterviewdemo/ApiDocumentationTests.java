@@ -24,7 +24,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static team.jit.technicalinterviewdemo.SecurityTestSupport.csrfToken;
 import static team.jit.technicalinterviewdemo.SecurityTestSupport.oauthUser;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -237,7 +236,6 @@ class ApiDocumentationTests {
     void documentCreateBookEndpoint() throws Exception {
         mockMvc.perform(post("/api/books")
                         .with(oauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -280,7 +278,6 @@ class ApiDocumentationTests {
     void documentCreateBookValidationError() throws Exception {
         mockMvc.perform(post("/api/books")
                         .with(oauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -306,7 +303,6 @@ class ApiDocumentationTests {
     void documentCreateBookDuplicateIsbnError() throws Exception {
         mockMvc.perform(post("/api/books")
                         .with(oauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -332,7 +328,6 @@ class ApiDocumentationTests {
     void documentUpdateBookEndpoint() throws Exception {
         mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
                         .with(oauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -380,7 +375,6 @@ class ApiDocumentationTests {
 
         mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
                         .with(oauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -394,7 +388,6 @@ class ApiDocumentationTests {
 
         mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
                         .with(oauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -461,8 +454,7 @@ class ApiDocumentationTests {
     @Test
     void documentDeleteBookEndpoint() throws Exception {
         mockMvc.perform(delete("/api/books/{id}", cleanCode.getId())
-                        .with(oauthUser())
-                        .with(csrfToken()))
+                        .with(oauthUser()))
                 .andExpect(status().isNoContent())
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
@@ -599,3 +591,4 @@ class ApiDocumentationTests {
         cacheManager.getCache(CacheNames.CATEGORY_DIRECTORY).clear();
     }
 }
+

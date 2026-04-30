@@ -10,7 +10,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
-import static team.jit.technicalinterviewdemo.SecurityTestSupport.csrfToken;
 import static team.jit.technicalinterviewdemo.SecurityTestSupport.oauthUser;
 
 import jakarta.servlet.Filter;
@@ -216,7 +215,6 @@ class ApiDemoTests {
     void createBookReturnsCreatedBook() throws Exception {
         mockMvc.perform(post("/api/books")
                         .with(oauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -242,7 +240,6 @@ class ApiDemoTests {
     @Test
     void createBookWithoutAuthenticationReturnsUnauthorized() throws Exception {
         mockMvc.perform(post("/api/books")
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -256,7 +253,7 @@ class ApiDemoTests {
     }
 
     @Test
-    void createBookWithoutCsrfReturnsForbidden() throws Exception {
+    void createBookWithoutCsrfStillSucceedsWhenAuthenticated() throws Exception {
         mockMvc.perform(post("/api/books")
                         .with(oauthUser())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -268,14 +265,13 @@ class ApiDemoTests {
                                   "publicationYear": 2022
                                 }
                                 """))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isCreated());
     }
 
     @Test
     void createBookWithDuplicateIsbnReturnsConflict() throws Exception {
         mockMvc.perform(post("/api/books")
                         .with(oauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -299,7 +295,6 @@ class ApiDemoTests {
     void createBookWithUnknownCategoryReturnsBadRequest() throws Exception {
         mockMvc.perform(post("/api/books")
                         .with(oauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -321,7 +316,6 @@ class ApiDemoTests {
     void createBookWithInvalidPayloadReturnsBadRequest() throws Exception {
         mockMvc.perform(post("/api/books")
                         .with(oauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -346,7 +340,6 @@ class ApiDemoTests {
     void createBookWithMalformedJsonReturnsBadRequest() throws Exception {
         mockMvc.perform(post("/api/books")
                         .with(oauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -362,7 +355,6 @@ class ApiDemoTests {
     void createBookWithUnsupportedMediaTypeReturnsUnsupportedMediaType() throws Exception {
         mockMvc.perform(post("/api/books")
                         .with(oauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.TEXT_PLAIN)
                         .content("not-json"))
                 .andExpect(status().isUnsupportedMediaType())
@@ -392,8 +384,7 @@ class ApiDemoTests {
 
     @Test
     void unsupportedMethodReturnsMethodNotAllowed() throws Exception {
-        mockMvc.perform(patch("/api/books")
-                        .with(csrfToken()))
+        mockMvc.perform(patch("/api/books"))
                 .andExpect(status().isMethodNotAllowed())
                 .andExpect(jsonPath("$.title").value("Method Not Allowed"))
                 .andExpect(jsonPath("$.detail").value("HTTP method 'PATCH' is not supported for this endpoint."));
@@ -427,7 +418,6 @@ class ApiDemoTests {
     void updateBookReturnsUpdatedBook() throws Exception {
         mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
                         .with(oauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -452,7 +442,6 @@ class ApiDemoTests {
     void updateBookIgnoresProvidedIsbn() throws Exception {
         mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
                         .with(oauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -474,7 +463,6 @@ class ApiDemoTests {
     @Test
     void updateBookWithoutAuthenticationReturnsUnauthorized() throws Exception {
         mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -493,7 +481,6 @@ class ApiDemoTests {
 
         mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
                         .with(oauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -507,7 +494,6 @@ class ApiDemoTests {
 
         mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
                         .with(oauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -528,8 +514,7 @@ class ApiDemoTests {
     @Test
     void deleteBookRemovesBook() throws Exception {
         mockMvc.perform(delete("/api/books/{id}", cleanCode.getId())
-                        .with(oauthUser())
-                        .with(csrfToken()))
+                        .with(oauthUser()))
                 .andExpect(status().isNoContent());
 
         mockMvc.perform(get("/api/books/{id}", cleanCode.getId()))
@@ -545,8 +530,7 @@ class ApiDemoTests {
 
     @Test
     void deleteBookWithoutAuthenticationReturnsUnauthorized() throws Exception {
-        mockMvc.perform(delete("/api/books/{id}", cleanCode.getId())
-                        .with(csrfToken()))
+        mockMvc.perform(delete("/api/books/{id}", cleanCode.getId()))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -627,3 +611,4 @@ class ApiDemoTests {
         cacheManager.getCache(CacheNames.CATEGORY_DIRECTORY).clear();
     }
 }
+

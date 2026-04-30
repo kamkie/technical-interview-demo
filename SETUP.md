@@ -212,7 +212,7 @@ Start the login flow at:
 
 - `http://localhost:8080/oauth2/authorization/github`
 
-Protected browser requests also require a CSRF token, so use the generated HTML docs or a normal browser session rather than trying to replay state-changing requests without cookies and headers.
+Protected requests use the authenticated session cookie, so you can replay state-changing requests from an HTTP client once you have signed in and captured `technical-interview-demo-session`.
 
 Authenticated sessions are persisted in PostgreSQL through Spring Session JDBC, using tables `SPRING_SESSION` and `SPRING_SESSION_ATTRIBUTES`.
 

@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static team.jit.technicalinterviewdemo.SecurityTestSupport.adminOauthUser;
-import static team.jit.technicalinterviewdemo.SecurityTestSupport.csrfToken;
 import static team.jit.technicalinterviewdemo.SecurityTestSupport.oauthUser;
 
 import io.micrometer.core.instrument.MeterRegistry;
@@ -75,7 +74,6 @@ class UserManagementIntegrationTests {
     void authenticatedBookWritePersistsUserWithDefaultUserRole() throws Exception {
         mockMvc.perform(post("/api/books")
                         .with(oauthUser("reader-user"))
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -100,7 +98,6 @@ class UserManagementIntegrationTests {
     void adminLoginGetsAdminRoleAndCanManageCategories() throws Exception {
         mockMvc.perform(post("/api/categories")
                         .with(adminOauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -131,7 +128,6 @@ class UserManagementIntegrationTests {
     void preferredLanguageIsStoredAndUsedAsFallbackForAuthenticatedErrors() throws Exception {
         mockMvc.perform(put("/api/users/me/preferred-language")
                         .with(oauthUser("reader-user"))
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -143,7 +139,6 @@ class UserManagementIntegrationTests {
 
         mockMvc.perform(post("/api/categories")
                         .with(oauthUser("reader-user"))
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -186,7 +181,6 @@ class UserManagementIntegrationTests {
                 .andExpect(status().isOk());
         mockMvc.perform(put("/api/users/me/preferred-language")
                         .with(oauthUser("reader-user"))
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -196,7 +190,6 @@ class UserManagementIntegrationTests {
                 .andExpect(status().isOk());
         mockMvc.perform(post("/api/categories")
                         .with(adminOauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -228,3 +221,4 @@ class UserManagementIntegrationTests {
         return gauge.value();
     }
 }
+

@@ -252,7 +252,6 @@ Security rules:
 - public without authentication: `GET /hello`, `GET /docs`, `GET /api/books/**`, `GET /api/categories`, `GET /api/localization-messages/**`, `GET /actuator/health`, `GET /actuator/health/**`, `GET /actuator/info`, and `GET /actuator/prometheus`
 - protected with authenticated session: `GET /api/users/me`, `PUT /api/users/me/preferred-language`, `POST /api/books`, `PUT /api/books/{id}`, `DELETE /api/books/{id}`, `POST /api/categories`, `POST /api/localization-messages`, `PUT /api/localization-messages/{id}`, and `DELETE /api/localization-messages/{id}`
 - role-restricted to `ADMIN`: category creation and localization-message create, update, and delete operations
-- protected browser requests also require a valid CSRF token
 - interactive login is available at `GET /oauth2/authorization/github` when the `oauth` profile is active
 - authenticated HTTP sessions are stored in `SPRING_SESSION` and `SPRING_SESSION_ATTRIBUTES`
 

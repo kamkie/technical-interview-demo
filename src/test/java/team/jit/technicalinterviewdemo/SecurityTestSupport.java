@@ -1,6 +1,5 @@
 package team.jit.technicalinterviewdemo;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
 
 import java.util.Map;
@@ -16,10 +15,6 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor;
 public final class SecurityTestSupport {
 
     private SecurityTestSupport() {
-    }
-
-    public static RequestPostProcessor csrfToken() {
-        return csrf();
     }
 
     public static RequestPostProcessor oauthUser() {
@@ -85,3 +80,4 @@ public final class SecurityTestSupport {
                 .build();
     }
 }
+

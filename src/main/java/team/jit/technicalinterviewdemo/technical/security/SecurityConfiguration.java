@@ -32,6 +32,7 @@ public class SecurityConfiguration {
         http
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/error", "/docs", "/docs/**", "/hello").permitAll()
                         .requestMatchers("/oauth2/**", "/login/**").permitAll()

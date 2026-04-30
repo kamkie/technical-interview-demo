@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static team.jit.technicalinterviewdemo.SecurityTestSupport.adminOauthUser;
-import static team.jit.technicalinterviewdemo.SecurityTestSupport.csrfToken;
 import static team.jit.technicalinterviewdemo.SecurityTestSupport.oauthUser;
 
 import java.util.List;
@@ -77,7 +76,6 @@ class AuditLogIntegrationTests {
     void bookCreateUpdateAndDeleteProduceAuditLogsWithActor() throws Exception {
         mockMvc.perform(post("/api/books")
                         .with(oauthUser("reader-user"))
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -96,7 +94,6 @@ class AuditLogIntegrationTests {
 
         mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
                         .with(oauthUser("reader-user"))
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -109,8 +106,7 @@ class AuditLogIntegrationTests {
                 .andExpect(status().isOk());
 
         mockMvc.perform(delete("/api/books/{id}", cleanCode.getId())
-                        .with(oauthUser("reader-user"))
-                        .with(csrfToken()))
+                        .with(oauthUser("reader-user")))
                 .andExpect(status().isNoContent());
 
         List<AuditLog> auditLogs = auditLogRepository.findAllByOrderByIdAsc();
@@ -135,7 +131,6 @@ class AuditLogIntegrationTests {
     void localizationCreateUpdateAndDeleteProduceAuditLogsWithAdminActor() throws Exception {
         mockMvc.perform(post("/api/localization-messages")
                         .with(adminOauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -153,7 +148,6 @@ class AuditLogIntegrationTests {
 
         mockMvc.perform(put("/api/localization-messages/{id}", bookNotFoundEn.getId())
                         .with(adminOauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -166,8 +160,7 @@ class AuditLogIntegrationTests {
                 .andExpect(status().isOk());
 
         mockMvc.perform(delete("/api/localization-messages/{id}", bookNotFoundEn.getId())
-                        .with(adminOauthUser())
-                        .with(csrfToken()))
+                        .with(adminOauthUser()))
                 .andExpect(status().isNoContent());
 
         List<AuditLog> auditLogs = auditLogRepository.findAllByOrderByIdAsc();
@@ -192,3 +185,4 @@ class AuditLogIntegrationTests {
         });
     }
 }
+

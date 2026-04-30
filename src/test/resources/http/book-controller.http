@@ -1,11 +1,9 @@
 # IntelliJ HTTP Client examples for technical-interview-demo
 # Public GET requests work as-is.
-# Protected requests require the app to run with the oauth profile, an authenticated session,
-# and a matching CSRF token from that same browser session.
+# Protected requests require the app to run with the oauth profile and an authenticated session.
 
 @baseUrl = http://localhost:8080
 @sessionCookie = paste-technical-interview-demo-session-here
-@csrfToken = paste-x-csrf-token-here
 @bookId = 1
 @bookVersion = 0
 @writeBookId = 0
@@ -37,10 +35,9 @@ if (books && books.length > 0) {
 GET {{baseUrl}}/api/books/{{bookId}}
 Accept: application/json
 
-### BookController - create book (authenticated + CSRF)
+### BookController - create book (authenticated session)
 POST {{baseUrl}}/api/books?lang=pl
 Cookie: technical-interview-demo-session={{sessionCookie}}
-X-CSRF-TOKEN: {{csrfToken}}
 Content-Type: application/json
 Accept: application/json
 
@@ -61,7 +58,6 @@ if (response.status === 201) {
 ### BookController - update the book created above (run create first)
 PUT {{baseUrl}}/api/books/{{writeBookId}}
 Cookie: technical-interview-demo-session={{sessionCookie}}
-X-CSRF-TOKEN: {{csrfToken}}
 Content-Type: application/json
 Accept: application/json
 
@@ -81,4 +77,3 @@ if (response.status === 200) {
 ### BookController - delete the book created above (run create first)
 DELETE {{baseUrl}}/api/books/{{writeBookId}}
 Cookie: technical-interview-demo-session={{sessionCookie}}
-X-CSRF-TOKEN: {{csrfToken}}

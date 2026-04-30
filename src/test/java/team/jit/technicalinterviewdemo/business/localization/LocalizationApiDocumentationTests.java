@@ -22,7 +22,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static team.jit.technicalinterviewdemo.SecurityTestSupport.adminOauthUser;
-import static team.jit.technicalinterviewdemo.SecurityTestSupport.csrfToken;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -138,7 +137,6 @@ class LocalizationApiDocumentationTests {
     void documentCreateLocalizationMessageEndpoint() throws Exception {
         mockMvc.perform(post("/api/localization-messages")
                         .with(adminOauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -169,7 +167,6 @@ class LocalizationApiDocumentationTests {
     void documentUpdateLocalizationMessageEndpoint() throws Exception {
         mockMvc.perform(put("/api/localization-messages/{id}", bookNotFoundEn.getId())
                         .with(adminOauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -202,8 +199,7 @@ class LocalizationApiDocumentationTests {
     @Test
     void documentDeleteLocalizationMessageEndpoint() throws Exception {
         mockMvc.perform(delete("/api/localization-messages/{id}", bookNotFoundEn.getId())
-                        .with(adminOauthUser())
-                        .with(csrfToken()))
+                        .with(adminOauthUser()))
                 .andExpect(status().isNoContent())
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
@@ -244,7 +240,6 @@ class LocalizationApiDocumentationTests {
     void documentCreateLocalizationMessageValidationError() throws Exception {
         mockMvc.perform(post("/api/localization-messages")
                         .with(adminOauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -269,7 +264,6 @@ class LocalizationApiDocumentationTests {
     void documentCreateLocalizationMessageUnsupportedLanguageError() throws Exception {
         mockMvc.perform(post("/api/localization-messages")
                         .with(adminOauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -294,7 +288,6 @@ class LocalizationApiDocumentationTests {
     void documentCreateLocalizationMessageDuplicateError() throws Exception {
         mockMvc.perform(post("/api/localization-messages")
                         .with(adminOauthUser())
-                        .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -384,3 +377,4 @@ class LocalizationApiDocumentationTests {
         };
     }
 }
+
