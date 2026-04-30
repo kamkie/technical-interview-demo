@@ -1,0 +1,68 @@
+= Technical Endpoints
+:toc:
+:toclevels: 2
+:sectanchors:
+:source-highlighter: highlight.js
+
+xref:index.adoc[Back to API overview]
+
+This page documents the operational and documentation endpoints exposed outside the business controllers.
+
+== `GET /docs`
+
+Redirects to the generated HTML documentation bundled with the application.
+
+include::{snippets}/docs/get-docs/curl-request.adoc[]
+include::{snippets}/docs/get-docs/http-request.adoc[]
+include::{snippets}/docs/get-docs/http-response.adoc[]
+include::{snippets}/docs/get-docs/response-headers.adoc[]
+
+== `GET /actuator/info`
+
+Returns build and git metadata generated during the build.
+
+include::{snippets}/actuator/get-info/curl-request.adoc[]
+include::{snippets}/actuator/get-info/http-request.adoc[]
+include::{snippets}/actuator/get-info/http-response.adoc[]
+include::{snippets}/actuator/get-info/response-headers.adoc[]
+include::{snippets}/actuator/get-info/response-fields.adoc[]
+
+== `GET /actuator/health`
+
+Returns the overall application health status.
+
+include::{snippets}/actuator/get-health/curl-request.adoc[]
+include::{snippets}/actuator/get-health/http-request.adoc[]
+include::{snippets}/actuator/get-health/http-response.adoc[]
+include::{snippets}/actuator/get-health/response-headers.adoc[]
+include::{snippets}/actuator/get-health/response-fields.adoc[]
+
+== `GET /actuator/health/liveness`
+
+Returns the liveness probe status used to determine whether the process is still healthy.
+
+include::{snippets}/actuator/get-health-liveness/curl-request.adoc[]
+include::{snippets}/actuator/get-health-liveness/http-request.adoc[]
+include::{snippets}/actuator/get-health-liveness/http-response.adoc[]
+include::{snippets}/actuator/get-health-liveness/response-headers.adoc[]
+include::{snippets}/actuator/get-health-liveness/response-fields.adoc[]
+
+== `GET /actuator/health/readiness`
+
+Returns the readiness probe status used to determine whether the application can serve traffic.
+
+include::{snippets}/actuator/get-health-readiness/curl-request.adoc[]
+include::{snippets}/actuator/get-health-readiness/http-request.adoc[]
+include::{snippets}/actuator/get-health-readiness/http-response.adoc[]
+include::{snippets}/actuator/get-health-readiness/response-headers.adoc[]
+include::{snippets}/actuator/get-health-readiness/response-fields.adoc[]
+
+== `GET /actuator/prometheus`
+
+Returns Prometheus-formatted metrics for scraping.
+
+include::{snippets}/actuator/get-prometheus/curl-request.adoc[]
+include::{snippets}/actuator/get-prometheus/http-request.adoc[]
+include::{snippets}/actuator/get-prometheus/http-response.adoc[]
+include::{snippets}/actuator/get-prometheus/response-headers.adoc[]
+include::{snippets}/actuator/get-prometheus/response-body.adoc[]

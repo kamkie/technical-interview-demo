@@ -221,7 +221,7 @@ Generate it with:
 Generated output:
 
 - snippets: `build/generated-snippets`
-- HTML docs: `build/docs/asciidoc/index.html`
+- HTML docs: `build/docs/asciidoc/index.html` with linked controller and technical-endpoint pages in the same directory
 
 Packaging and runtime behavior:
 
@@ -250,7 +250,7 @@ Qodana static analysis is available through Gradle:
 - `src/main/java/team/jit/technicalinterviewdemo/docs/`: documentation endpoint and resource mapping
 - `src/main/java/team/jit/technicalinterviewdemo/logging/`: HTTP tracing/logging and service-call logging
 - `src/main/resources/db/migration/`: Flyway SQL migrations
-- `src/docs/asciidoc/index.adoc`: assembled API documentation source
+- `src/docs/asciidoc/`: documentation landing page plus per-controller and technical-endpoint Asciidoc sources
 - `src/main/resources/application.properties`: runtime configuration
 - `src/test/java/team/jit/technicalinterviewdemo/`: application and API tests
 - `src/test/java/team/jit/technicalinterviewdemo/TestcontainersTest.java`: shared integration-test annotation for PostgreSQL-backed tests

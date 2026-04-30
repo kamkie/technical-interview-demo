@@ -1,0 +1,137 @@
+= BookController API
+:toc:
+:toclevels: 2
+:sectanchors:
+:source-highlighter: highlight.js
+
+xref:index.adoc[Back to API overview]
+
+This page documents the CRUD and search endpoints exposed by `BookController`.
+
+== `GET /api/books`
+
+Lists books in a paginated response. Supports `page`, `size`, `sort`, `title`, `author`, `isbn`, `year`, `yearFrom`, and `yearTo` query parameters.
+
+include::{snippets}/books/list-books/curl-request.adoc[]
+include::{snippets}/books/list-books/http-request.adoc[]
+include::{snippets}/books/list-books/query-parameters.adoc[]
+include::{snippets}/books/list-books/http-response.adoc[]
+include::{snippets}/books/list-books/response-headers.adoc[]
+include::{snippets}/books/list-books/response-fields.adoc[]
+
+== `GET /api/books/{id}`
+
+Returns a single book by identifier.
+
+include::{snippets}/books/get-book/curl-request.adoc[]
+include::{snippets}/books/get-book/http-request.adoc[]
+include::{snippets}/books/get-book/path-parameters.adoc[]
+include::{snippets}/books/get-book/http-response.adoc[]
+include::{snippets}/books/get-book/response-headers.adoc[]
+include::{snippets}/books/get-book/response-fields.adoc[]
+
+== `POST /api/books`
+
+Creates a book.
+
+include::{snippets}/books/create-book/curl-request.adoc[]
+include::{snippets}/books/create-book/http-request.adoc[]
+include::{snippets}/books/create-book/request-body.adoc[]
+include::{snippets}/books/create-book/request-fields.adoc[]
+include::{snippets}/books/create-book/http-response.adoc[]
+include::{snippets}/books/create-book/response-headers.adoc[]
+include::{snippets}/books/create-book/response-fields.adoc[]
+
+== `PUT /api/books/{id}`
+
+Updates title, author, and publication year. `isbn` is immutable after creation and is not part of the update request. `version` is required for optimistic locking.
+
+include::{snippets}/books/update-book/curl-request.adoc[]
+include::{snippets}/books/update-book/http-request.adoc[]
+include::{snippets}/books/update-book/path-parameters.adoc[]
+include::{snippets}/books/update-book/request-body.adoc[]
+include::{snippets}/books/update-book/request-fields.adoc[]
+include::{snippets}/books/update-book/http-response.adoc[]
+include::{snippets}/books/update-book/response-headers.adoc[]
+include::{snippets}/books/update-book/response-fields.adoc[]
+
+== `DELETE /api/books/{id}`
+
+Deletes a book by identifier.
+
+include::{snippets}/books/delete-book/curl-request.adoc[]
+include::{snippets}/books/delete-book/http-request.adoc[]
+include::{snippets}/books/delete-book/path-parameters.adoc[]
+include::{snippets}/books/delete-book/http-response.adoc[]
+include::{snippets}/books/delete-book/response-headers.adoc[]
+
+== Error Response Examples
+
+Public book API errors use Spring `ProblemDetail` responses.
+
+=== `POST /api/books` validation failure
+
+Example response when required fields are missing or blank.
+
+include::{snippets}/errors/create-book-validation-failed/curl-request.adoc[]
+include::{snippets}/errors/create-book-validation-failed/http-request.adoc[]
+include::{snippets}/errors/create-book-validation-failed/request-body.adoc[]
+include::{snippets}/errors/create-book-validation-failed/http-response.adoc[]
+include::{snippets}/errors/create-book-validation-failed/response-headers.adoc[]
+include::{snippets}/errors/create-book-validation-failed/response-fields.adoc[]
+
+=== `POST /api/books` duplicate ISBN
+
+Example conflict response when a book with the same ISBN already exists.
+
+include::{snippets}/errors/create-book-duplicate-isbn/curl-request.adoc[]
+include::{snippets}/errors/create-book-duplicate-isbn/http-request.adoc[]
+include::{snippets}/errors/create-book-duplicate-isbn/request-body.adoc[]
+include::{snippets}/errors/create-book-duplicate-isbn/http-response.adoc[]
+include::{snippets}/errors/create-book-duplicate-isbn/response-headers.adoc[]
+include::{snippets}/errors/create-book-duplicate-isbn/response-fields.adoc[]
+
+=== `GET /api/books` invalid filter request
+
+Example bad-request response when mutually exclusive year filters are combined.
+
+include::{snippets}/errors/list-books-invalid-request/curl-request.adoc[]
+include::{snippets}/errors/list-books-invalid-request/http-request.adoc[]
+include::{snippets}/errors/list-books-invalid-request/query-parameters.adoc[]
+include::{snippets}/errors/list-books-invalid-request/http-response.adoc[]
+include::{snippets}/errors/list-books-invalid-request/response-headers.adoc[]
+include::{snippets}/errors/list-books-invalid-request/response-fields.adoc[]
+
+=== `GET /api/books/{id}` invalid identifier
+
+Example bad-request response when the path parameter cannot be parsed as a numeric identifier.
+
+include::{snippets}/errors/get-book-invalid-id/curl-request.adoc[]
+include::{snippets}/errors/get-book-invalid-id/http-request.adoc[]
+include::{snippets}/errors/get-book-invalid-id/path-parameters.adoc[]
+include::{snippets}/errors/get-book-invalid-id/http-response.adoc[]
+include::{snippets}/errors/get-book-invalid-id/response-headers.adoc[]
+include::{snippets}/errors/get-book-invalid-id/response-fields.adoc[]
+
+=== `GET /api/books/{id}` missing book
+
+Example not-found response when the book identifier does not exist.
+
+include::{snippets}/errors/get-book-not-found/curl-request.adoc[]
+include::{snippets}/errors/get-book-not-found/http-request.adoc[]
+include::{snippets}/errors/get-book-not-found/path-parameters.adoc[]
+include::{snippets}/errors/get-book-not-found/http-response.adoc[]
+include::{snippets}/errors/get-book-not-found/response-headers.adoc[]
+include::{snippets}/errors/get-book-not-found/response-fields.adoc[]
+
+=== `PUT /api/books/{id}` stale version
+
+Example conflict response when the update request uses an outdated book version.
+
+include::{snippets}/errors/update-book-stale-version/curl-request.adoc[]
+include::{snippets}/errors/update-book-stale-version/http-request.adoc[]
+include::{snippets}/errors/update-book-stale-version/path-parameters.adoc[]
+include::{snippets}/errors/update-book-stale-version/request-body.adoc[]
+include::{snippets}/errors/update-book-stale-version/http-response.adoc[]
+include::{snippets}/errors/update-book-stale-version/response-headers.adoc[]
+include::{snippets}/errors/update-book-stale-version/response-fields.adoc[]

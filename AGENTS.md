@@ -122,7 +122,7 @@ API documentation is generated from tests using Spring REST Docs and assembled w
 Outputs:
 
 - snippets in `build/generated-snippets`
-- HTML documentation in `build/docs/asciidoc/index.html`
+- HTML documentation in `build/docs/asciidoc/index.html` with linked controller and technical-endpoint pages in the same directory
 
 Packaging and runtime behavior:
 
@@ -147,7 +147,7 @@ Packaging and runtime behavior:
 - `src/main/java/team/jit/technicalinterviewdemo/docs/`: documentation endpoint and resource mapping
 - `src/main/java/team/jit/technicalinterviewdemo/logging/`: HTTP tracing/logging and service-call logging
 - `src/main/resources/db/migration/`: Flyway SQL migrations
-- `src/docs/asciidoc/index.adoc`: assembled API documentation source
+- `src/docs/asciidoc/`: documentation landing page plus per-controller and technical-endpoint Asciidoc sources
 - `src/main/resources/application.properties`: runtime configuration
 - `src/test/java/team/jit/technicalinterviewdemo/`: application, API, tracing, and documentation tests
 - `src/test/java/team/jit/technicalinterviewdemo/TestcontainersTest.java`: shared meta-annotation for PostgreSQL-backed integration tests

@@ -1,0 +1,19 @@
+= HelloController API
+:toc:
+:toclevels: 2
+:sectanchors:
+:source-highlighter: highlight.js
+
+xref:index.adoc[Back to API overview]
+
+This page documents the small plain-text endpoint exposed by `HelloController`.
+
+== `GET /hello`
+
+Returns a plain text health-check style response.
+
+include::{snippets}/hello/get-hello/curl-request.adoc[]
+include::{snippets}/hello/get-hello/http-request.adoc[]
+include::{snippets}/hello/get-hello/http-response.adoc[]
+include::{snippets}/hello/get-hello/response-headers.adoc[]
+include::{snippets}/hello/get-hello/response-body.adoc[]
