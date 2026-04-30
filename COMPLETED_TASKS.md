@@ -318,4 +318,5 @@ Tag: `v0.15.0`
 
 - Keep active work in `TODO.md`.
 - Move finished phases or milestones here once they are fully complete.
+- Remove completed phases and completed checklist items from `TODO.md` once they are archived here.
 - Preserve commit references and release tags when archiving completed work.

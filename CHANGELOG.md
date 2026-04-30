@@ -8,6 +8,12 @@ Historical `v0.0.x` releases were backfilled as annotated tags from mainline git
 
 ## [Unreleased]
 
+### Added
+- Added OpenAPI JSON and YAML example requests to `src/test/resources/http/documentation.http`.
+
+### Changed
+- Updated `OpenApiBaselineGenerator` to use try-with-resources so the PMD-backed `build` verification stays clean.
+
 ## [v0.20.0] - 2026-04-30
 
 ### Added
