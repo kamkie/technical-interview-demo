@@ -133,9 +133,7 @@ Core commands:
 ```powershell
 docker-compose up -d
 .\gradlew.bat bootRun
-.\gradlew.bat test
-.\gradlew.bat asciidoctor
-.\gradlew.bat dockerBuild
+.\gradlew.bat build
 ```
 
 Useful endpoints once the app is running:
@@ -154,10 +152,7 @@ Useful endpoints once the app is running:
 Set Java 25 in the same shell session first. Docker Desktop must also be running because the `test` task starts PostgreSQL through Testcontainers and `build` now also performs the Docker image build.
 
 ```powershell
-.\gradlew.bat spotlessCheck
-.\gradlew.bat --no-problems-report pmdMain
-.\gradlew.bat --no-problems-report test
-.\gradlew.bat asciidoctor
+.\gradlew.bat build
 ```
 
 Optional:
@@ -165,6 +160,9 @@ Optional:
 ```powershell
 .\gradlew.bat qodanaScan
 ```
+
+`build` now covers Spotless, PMD, tests, Asciidoctor generation, boot jar creation, and the Docker image build.
+Use focused commands such as `test`, `asciidoctor`, or `dockerBuild` only when you intentionally want a narrower loop.
 
 ## Building Docker Images
 

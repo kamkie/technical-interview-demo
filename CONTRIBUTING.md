@@ -78,10 +78,7 @@ Run the required quality gates before asking for review:
 $env:JAVA_HOME='C:\Users\kamki\.jdks\azul-25.0.3'
 $env:Path="$env:JAVA_HOME\bin;$env:Path"
 
-.\gradlew.bat spotlessCheck
-.\gradlew.bat --no-problems-report pmdMain
-.\gradlew.bat --no-problems-report test
-.\gradlew.bat asciidoctor
+.\gradlew.bat build
 ```
 
 Optional:
@@ -93,8 +90,8 @@ Optional:
 Additional expectations:
 
 - Add or update tests when API behavior changes
-- Keep Error Prone and PMD clean
-- Do not skip documentation generation if REST Docs snippets changed
+- Keep the aggregate `build` clean
+- Do not skip documentation generation or the Docker image step when using the standard verification flow
 
 ## Documentation Expectations
 
@@ -142,8 +139,6 @@ chmod +x .githooks/pre-commit
 
 The sample runs:
 
-- `./gradlew spotlessCheck`
-- `./gradlew --no-problems-report pmdMain`
-- `./gradlew --no-problems-report test`
+- `./gradlew build`
 
 Keep hooks developer-local unless the team explicitly chooses to standardize them as a required workflow.

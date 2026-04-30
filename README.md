@@ -551,10 +551,7 @@ For release history, see `CHANGELOG.md`.
 Before finishing changes, run:
 
 ```powershell
-.\gradlew.bat spotlessCheck
-.\gradlew.bat --no-problems-report pmdMain
-.\gradlew.bat --no-problems-report test
-.\gradlew.bat asciidoctor
+.\gradlew.bat build
 ```
 
 Optional additional static analysis:
@@ -567,8 +564,8 @@ If tests require Java setup first, export `JAVA_HOME` to a compatible JDK in the
 
 If `test` or `build` fails before application startup, confirm Docker Desktop is running because Testcontainers provisions PostgreSQL for the integration suite and `build` also runs the Docker image creation step.
 
-Error Prone runs as part of Java compilation, so `test` and `build` also execute static analysis for Java sources.
-PMD runs as part of `check` and `build`. Use `pmdMain` for the main application source set when you want a focused PMD run.
+`build` now covers Spotless, PMD, tests, Asciidoctor generation, boot jar creation, and the Docker image build.
+Use focused commands such as `spotlessCheck`, `pmdMain`, `test`, or `asciidoctor` only when you intentionally want a narrower loop.
 
 ## Definition Of Done
 
@@ -576,7 +573,5 @@ A change is considered complete when:
 
 - the code remains consistent with the current simple demo architecture
 - the application still starts
-- `spotlessCheck` passes
-- `pmdMain` passes
-- tests pass
+- `.\gradlew.bat build` passes
 - new endpoint or behavior changes are covered by tests when practical

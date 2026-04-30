@@ -8,6 +8,4 @@ set -eu
 # Prerequisite:
 #   JAVA_HOME points to JDK 25 in the current shell environment.
 
-./gradlew spotlessCheck
-./gradlew --no-problems-report pmdMain
-./gradlew --no-problems-report test
+./gradlew build

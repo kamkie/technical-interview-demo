@@ -332,10 +332,7 @@ For `Book` API changes:
 Before finishing, run:
 
 ```powershell
-.\gradlew.bat spotlessCheck
-.\gradlew.bat --no-problems-report pmdMain
-.\gradlew.bat --no-problems-report test
-.\gradlew.bat asciidoctor
+.\gradlew.bat build
 ```
 
 Optional additional static analysis:
@@ -348,8 +345,8 @@ Notes:
 
 - Export `JAVA_HOME` to JDK 25 in the same shell first.
 - Docker Desktop must be running for `test` and `build` because Testcontainers provisions PostgreSQL and `build` now includes the Docker image build.
-- Error Prone runs during Java compilation.
-- PMD also runs as part of `check` and `build`.
+- `build` now covers Spotless, PMD, tests, Asciidoctor generation, boot jar creation, and the Docker image build.
+- Use focused commands such as `spotlessCheck`, `pmdMain`, `test`, or `asciidoctor` only when you intentionally want a narrower loop.
 
 ## Avoid
 
@@ -366,7 +363,5 @@ A change is complete when:
 
 - the design remains consistent with the simple demo architecture
 - the application still starts
-- `spotlessCheck` passes
-- `pmdMain` passes
-- tests pass
+- `.\gradlew.bat build` passes
 - new behavior is covered by tests when practical

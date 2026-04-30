@@ -262,10 +262,7 @@ Before completing a task, run:
 $env:JAVA_HOME='C:\Users\kamki\.jdks\azul-25.0.3'
 $env:Path="$env:JAVA_HOME\bin;$env:Path"
 
-.\gradlew.bat spotlessCheck
-.\gradlew.bat --no-problems-report pmdMain
-.\gradlew.bat --no-problems-report test
-.\gradlew.bat asciidoctor
+.\gradlew.bat build
 .\gradlew.bat qodanaScan  # Optional
 ```
 
