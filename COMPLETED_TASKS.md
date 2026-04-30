@@ -151,6 +151,7 @@ Summary:
 - Updated `README.md`, `SETUP.md`, `AGENTS.md`, and generated docs to explain OAuth setup and the secured API surface.
 
 Commit: `b783bf0`
+Tag: `v0.16.0`
 
 ### Phase 6: Enhanced Book API
 

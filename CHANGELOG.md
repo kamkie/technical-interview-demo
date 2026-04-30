@@ -9,8 +9,19 @@ Historical releases before `v0.1.0` are reconstructed from mainline git history 
 ## [Unreleased]
 
 ### Planned
-- OAuth-based security and JDBC-backed sessions
 - OpenAPI contract generation and breaking-change checks
+
+## [v0.16.0] - 2026-04-30
+
+### Added
+- Added Spring Security OAuth 2.0 support with GitHub as the demo-friendly provider.
+- Added PostgreSQL-backed Spring Session JDBC storage for authenticated browser sessions.
+- Added authentication and CSRF coverage for protected write endpoints, plus an integration test that verifies the JDBC session repository persists the security context.
+
+### Changed
+- Protected state-changing `book`, `category`, and `localization-message` endpoints while keeping public read endpoints open.
+- Added profile-specific OAuth and session-cookie configuration for local, test, and production-style environments.
+- Updated the setup guide, generated API docs, and project instructions to document the new OAuth login flow and secured API surface.
 
 ## [v0.15.0] - 2026-04-30
 
