@@ -60,6 +60,8 @@ docker build -t technical-interview-demo .
 docker run --rm -p 8080:8080 technical-interview-demo
 ```
 
+Developer onboarding lives in `SETUP.md`. An optional shell/env template is provided in `.env.example`.
+
 ## Spring Profiles
 
 The application uses Spring profiles for environment-specific configuration.
@@ -126,6 +128,8 @@ Packaging and runtime behavior:
 
 ## Project Map
 
+- `SETUP.md`: developer onboarding and troubleshooting guide
+- `.env.example`: optional environment variable template for local shells or container tooling
 - `build.gradle.kts`: build configuration and dependencies
 - `config/pmd/pmd-ruleset.xml`: curated PMD rules
 - `src/main/java/team/jit/technicalinterviewdemo/TechnicalInterviewDemoApplication.java`: app entry

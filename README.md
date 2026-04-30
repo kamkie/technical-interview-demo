@@ -47,6 +47,8 @@ $env:JAVA_HOME='C:\Users\kamki\.jdks\azul-25.0.3'
 $env:Path="$env:JAVA_HOME\bin;$env:Path"
 ```
 
+For a full local onboarding flow, see `SETUP.md`. A starter environment template is available in `.env.example`.
+
 ## Spring Profiles
 
 The application uses Spring profiles to manage environment-specific configuration:
@@ -229,6 +231,8 @@ Qodana static analysis is available through Gradle:
 
 ## Project Structure
 
+- `SETUP.md`: developer onboarding and troubleshooting guide
+- `.env.example`: optional environment variable template for local shells or container tooling
 - `build.gradle.kts`: Gradle build and dependencies
 - `config/pmd/pmd-ruleset.xml`: curated PMD ruleset
 - `src/main/java/team/jit/technicalinterviewdemo/TechnicalInterviewDemoApplication.java`: app entry point

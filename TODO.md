@@ -588,12 +588,14 @@ Update Spring REST Docs and Asciidoctor documentation to reflect new features.
 
 ---
 
-### 8.2 Create Developer Setup Guide 🟢
+### 8.2 Create Developer Setup Guide ✅
+
+**Status:** Completed
 
 Step-by-step guide for new developers to get the project running locally.
 
 **Tasks:**
-- [ ] Create `SETUP.md` or expand README with:
+- [x] Create `SETUP.md` or expand README with:
   - Environment prerequisites (Java 25, Docker, etc.)
   - IDE setup (IntelliJ, VS Code, etc.)
   - Local database setup (H2 vs. Docker PostgreSQL)
@@ -603,9 +605,9 @@ Step-by-step guide for new developers to get the project running locally.
   - Running tests
   - Building Docker images
   - Accessing H2 console, Prometheus, etc.
-- [ ] Create `.env.example` file with template
-- [ ] Document troubleshooting section (common issues)
-- [ ] Add quick-start commands for bash and PowerShell
+- [x] Create `.env.example` file with template
+- [x] Document troubleshooting section (common issues)
+- [x] Add quick-start commands for bash and PowerShell
 
 **Definition of Done:**
 - New developers can follow guide and run app in < 15 minutes
