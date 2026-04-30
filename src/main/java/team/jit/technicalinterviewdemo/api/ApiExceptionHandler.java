@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import team.jit.technicalinterviewdemo.logging.SensitiveDataSanitizer;
+import team.jit.technicalinterviewdemo.localization.DuplicateLocalizationMessageException;
+import team.jit.technicalinterviewdemo.localization.LocalizationMessageNotFoundException;
 
 @Slf4j
 @RestControllerAdvice
@@ -40,11 +42,36 @@ public class ApiExceptionHandler {
         );
     }
 
+    @ExceptionHandler(LocalizationMessageNotFoundException.class)
+    ProblemDetail handleLocalizationMessageNotFound(LocalizationMessageNotFoundException exception, HttpServletRequest request) {
+        return logClientProblem(
+                HttpStatus.NOT_FOUND,
+                "Localization Message Not Found",
+                exception.getMessage(),
+                request,
+                Map.of("exception", exception.getClass().getSimpleName())
+        );
+    }
+
     @ExceptionHandler(DuplicateIsbnException.class)
     ProblemDetail handleDuplicateIsbn(DuplicateIsbnException exception, HttpServletRequest request) {
         return logClientProblem(
                 HttpStatus.CONFLICT,
                 "Duplicate ISBN",
+                exception.getMessage(),
+                request,
+                Map.of("exception", exception.getClass().getSimpleName())
+        );
+    }
+
+    @ExceptionHandler(DuplicateLocalizationMessageException.class)
+    ProblemDetail handleDuplicateLocalizationMessage(
+            DuplicateLocalizationMessageException exception,
+            HttpServletRequest request
+    ) {
+        return logClientProblem(
+                HttpStatus.CONFLICT,
+                "Duplicate Localization Message",
                 exception.getMessage(),
                 request,
                 Map.of("exception", exception.getClass().getSimpleName())

@@ -10,7 +10,7 @@ The demo currently includes:
 
 - `GET /hello` returning `Hello World!`
 - A REST API for `Book` under `/api/books` with pagination and filtering
-- A `LocalizationMessage` domain with database-backed lookup and fallback support
+- A REST API for `LocalizationMessage` under `/api/localization-messages` with CRUD, pagination, and key/language lookup
 - H2 in-memory database for the default local profile
 - PostgreSQL configuration for the production profile and Testcontainers-backed integration tests
 - Seed data loaded at startup
@@ -320,6 +320,35 @@ Validation rules:
 - `GET /api/books` supports `yearFrom` and `yearTo` for inclusive publication year ranges
 - `GET /api/books` supports repeated `sort` parameters such as `sort=title,asc&sort=year,desc`
 - `year` cannot be combined with `yearFrom` or `yearTo`
+
+### Localization API
+
+- `GET /api/localization-messages?page=0&size=20&sort=id,asc`
+- `GET /api/localization-messages/{id}`
+- `GET /api/localization-messages/key/{messageKey}/lang/{language}`
+- `GET /api/localization-messages/language/{language}`
+- `POST /api/localization-messages`
+- `PUT /api/localization-messages/{id}`
+- `DELETE /api/localization-messages/{id}`
+
+Example create or update payload:
+
+```json
+{
+  "messageKey": "error.book.not_found",
+  "language": "en",
+  "messageText": "The requested book was not found.",
+  "description": "English message for missing book errors."
+}
+```
+
+Validation rules:
+
+- `messageKey` is required and must match `^[a-z0-9._-]+$`
+- `language` is required and must be a two-letter ISO 639-1 code
+- `messageText` is required
+- `description` is optional
+- `(messageKey, language)` must be unique
 
 Actuator endpoints:
 

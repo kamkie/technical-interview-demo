@@ -11,6 +11,7 @@ This file outlines planned features, improvements, and refactoring tasks for the
 
 ## ✅ Recently Completed
 
+- ✅ [Phase 3.2: Create Localization REST API](#32-create-localization-rest-api) - localization messages now have CRUD endpoints, validation, tests, and REST Docs coverage
 - ✅ [Phase 3.1: Create LocalizationMessage Entity](#31-create-localizationmessage-entity) - localization message storage, lookup service, and seed data are now in place
 - ✅ [Phase 1.2: Add Testcontainers for Integration Testing](#12-add-testcontainers-for-integration-testing) - integration tests now use PostgreSQL via Testcontainers and Flyway-managed schema validation
 - ✅ [Phase 6.1: Add Search & Filtering to Books](#61-add-search--filtering-to-books) - `GET /api/books` now supports filtering, sort validation, tests, and REST Docs updates
@@ -214,22 +215,33 @@ Add a new entity to store localized error and info messages in the database for 
 **Definition of Done:**
 - Entity compiles and passes Error Prone checks
 - Migration creates table in both H2 and PostgreSQL
-- Service layer properly retrieves and caches messages
+- Service layer properly retrieves messages with fallback behavior
 - Tests verify message retrieval with fallback behavior
 - Seed data includes sample messages for en, es, de
 
 ---
 
-### 3.2 Create Localization REST API 🟢
+### 3.2 Create Localization REST API ✅
 
 Depends on: 3.1 (LocalizationMessage entity)
 
 Build a full REST API for managing localization messages.
 
+**Status:** Completed
+
+**Implementation Details:**
+- ✅ Added `LocalizationMessageRequest` and `LocalizationMessageResponse` DTOs
+- ✅ Added `LocalizationMessageController` with list, get-by-id, get-by-key/language, create, update, delete, and list-by-language endpoints
+- ✅ Added request validation for message keys, language codes, and message text
+- ✅ Added duplicate and not-found exception handling for localization messages in `ApiExceptionHandler`
+- ✅ Added pagination and sort validation for `GET /api/localization-messages`
+- ✅ Added integration tests for CRUD, list, language lookup, validation failures, duplicate conflicts, and not-found responses
+- ✅ Added Spring REST Docs coverage and Asciidoctor content for all localization endpoints
+
 **Tasks:**
-- [ ] Create `LocalizationMessageRequest` DTO with fields: `messageKey`, `language`, `messageText`, `description`
-- [ ] Create `LocalizationMessageResponse` DTO with fields: `id`, `messageKey`, `language`, `messageText`, `description`, `createdAt`, `updatedAt`
-- [ ] Create `LocalizationMessageController` with endpoints:
+- [x] Create `LocalizationMessageRequest` DTO with fields: `messageKey`, `language`, `messageText`, `description`
+- [x] Create `LocalizationMessageResponse` DTO with fields: `id`, `messageKey`, `language`, `messageText`, `description`, `createdAt`, `updatedAt`
+- [x] Create `LocalizationMessageController` with endpoints:
   - `GET /api/localization-messages` (list all, paginated)
   - `GET /api/localization-messages/{id}`
   - `GET /api/localization-messages/key/{messageKey}/lang/{language}` (get by key and language)
@@ -237,14 +249,14 @@ Build a full REST API for managing localization messages.
   - `PUT /api/localization-messages/{id}` (update message)
   - `DELETE /api/localization-messages/{id}`
   - `GET /api/localization-messages/language/{language}` (get all messages for a language)
-- [ ] Add validation:
+- [x] Add validation:
   - `messageKey` is required and must match pattern `^[a-z0-9._-]+$`
   - `language` is required and must be ISO 639-1 code (en, es, de, fr, etc.)
   - `messageText` is required and length > 0
-- [ ] Implement pagination and sorting
-- [ ] Add Spring REST Docs tests for all endpoints
-- [ ] Add integration tests for CRUD operations
-- [ ] Add error handling:
+- [x] Implement pagination and sorting
+- [x] Add Spring REST Docs tests for all endpoints
+- [x] Add integration tests for CRUD operations
+- [x] Add error handling:
   - `404` when message not found
   - `409` when duplicate `(messageKey, language)` on create
   - `400` for validation failures
@@ -258,7 +270,7 @@ Build a full REST API for managing localization messages.
 
 ---
 
-### 3.3 Seed Initial Localization Messages 🟡
+### 3.3 Seed Initial Localization Messages 🟢
 
 Depends on: 3.2 (API created)
 

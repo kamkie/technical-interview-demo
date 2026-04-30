@@ -11,7 +11,7 @@ Current scope:
 - `GET /docs` redirects to generated API documentation
 - `GET /hello` returns `Hello World!`
 - CRUD-style `Book` API under `/api/books` with pagination, filtering, and optimistic locking on updates
-- `LocalizationMessage` entity and service for database-backed message lookup with fallback support
+- CRUD-style `LocalizationMessage` API under `/api/localization-messages` with pagination and key/language lookup
 - actuator endpoints for `health`, `info`, liveness/readiness probes, and Prometheus metrics
 - H2 in-memory database for the default local profile
 - PostgreSQL-backed integration tests via Testcontainers
@@ -164,6 +164,13 @@ Endpoints:
 - `POST /api/books`
 - `PUT /api/books/{id}`
 - `DELETE /api/books/{id}`
+- `GET /api/localization-messages?page=0&size=20&sort=id,asc`
+- `GET /api/localization-messages/{id}`
+- `GET /api/localization-messages/key/{messageKey}/lang/{language}`
+- `GET /api/localization-messages/language/{language}`
+- `POST /api/localization-messages`
+- `PUT /api/localization-messages/{id}`
+- `DELETE /api/localization-messages/{id}`
 - `GET /actuator/info`
 - `GET /actuator/health`
 - `GET /actuator/health/liveness`
@@ -185,6 +192,16 @@ Book rules:
 - `GET /api/books` supports repeated `sort` parameters such as `sort=title,asc&sort=year,desc`
 - `year` cannot be combined with `yearFrom` or `yearTo`
 - `version` is returned for each book and is required on `PUT /api/books/{id}` for optimistic locking
+
+Localization message rules:
+
+- `messageKey` is required and must match `^[a-z0-9._-]+$`
+- `language` is required and must be a two-letter ISO 639-1 code
+- `messageText` is required
+- `description` is optional
+- `(messageKey, language)` must be unique
+- `GET /api/localization-messages` returns a paginated response
+- `GET /api/localization-messages/language/{language}` returns the messages for a single language ordered by `messageKey`
 
 Seed data:
 

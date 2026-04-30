@@ -10,4 +10,8 @@ public interface LocalizationMessageRepository extends JpaRepository<Localizatio
     Optional<LocalizationMessage> findByMessageKeyAndLanguage(String messageKey, String language);
 
     List<LocalizationMessage> findAllByLanguageOrderByMessageKeyAsc(String language);
+
+    boolean existsByMessageKeyAndLanguage(String messageKey, String language);
+
+    boolean existsByMessageKeyAndLanguageAndIdNot(String messageKey, String language, Long id);
 }

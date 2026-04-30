@@ -89,6 +89,87 @@ include::{snippets}/books/delete-book/path-parameters.adoc[]
 include::{snippets}/books/delete-book/http-response.adoc[]
 include::{snippets}/books/delete-book/response-headers.adoc[]
 
+== Localization API
+
+=== `GET /api/localization-messages`
+
+Lists localization messages in a paginated response. Supports `page`, `size`, and repeated `sort` query parameters.
+
+include::{snippets}/localization/list-localization-messages/curl-request.adoc[]
+include::{snippets}/localization/list-localization-messages/http-request.adoc[]
+include::{snippets}/localization/list-localization-messages/query-parameters.adoc[]
+include::{snippets}/localization/list-localization-messages/http-response.adoc[]
+include::{snippets}/localization/list-localization-messages/response-headers.adoc[]
+include::{snippets}/localization/list-localization-messages/response-fields.adoc[]
+
+=== `GET /api/localization-messages/{id}`
+
+Returns a single localization message by identifier.
+
+include::{snippets}/localization/get-localization-message/curl-request.adoc[]
+include::{snippets}/localization/get-localization-message/http-request.adoc[]
+include::{snippets}/localization/get-localization-message/path-parameters.adoc[]
+include::{snippets}/localization/get-localization-message/http-response.adoc[]
+include::{snippets}/localization/get-localization-message/response-headers.adoc[]
+include::{snippets}/localization/get-localization-message/response-fields.adoc[]
+
+=== `GET /api/localization-messages/key/{messageKey}/lang/{language}`
+
+Returns a localization message by key and language code.
+
+include::{snippets}/localization/get-localization-message-by-key-and-language/curl-request.adoc[]
+include::{snippets}/localization/get-localization-message-by-key-and-language/http-request.adoc[]
+include::{snippets}/localization/get-localization-message-by-key-and-language/path-parameters.adoc[]
+include::{snippets}/localization/get-localization-message-by-key-and-language/http-response.adoc[]
+include::{snippets}/localization/get-localization-message-by-key-and-language/response-headers.adoc[]
+include::{snippets}/localization/get-localization-message-by-key-and-language/response-fields.adoc[]
+
+=== `POST /api/localization-messages`
+
+Creates a localization message.
+
+include::{snippets}/localization/create-localization-message/curl-request.adoc[]
+include::{snippets}/localization/create-localization-message/http-request.adoc[]
+include::{snippets}/localization/create-localization-message/request-body.adoc[]
+include::{snippets}/localization/create-localization-message/request-fields.adoc[]
+include::{snippets}/localization/create-localization-message/http-response.adoc[]
+include::{snippets}/localization/create-localization-message/response-headers.adoc[]
+include::{snippets}/localization/create-localization-message/response-fields.adoc[]
+
+=== `PUT /api/localization-messages/{id}`
+
+Updates a localization message by identifier.
+
+include::{snippets}/localization/update-localization-message/curl-request.adoc[]
+include::{snippets}/localization/update-localization-message/http-request.adoc[]
+include::{snippets}/localization/update-localization-message/path-parameters.adoc[]
+include::{snippets}/localization/update-localization-message/request-body.adoc[]
+include::{snippets}/localization/update-localization-message/request-fields.adoc[]
+include::{snippets}/localization/update-localization-message/http-response.adoc[]
+include::{snippets}/localization/update-localization-message/response-headers.adoc[]
+include::{snippets}/localization/update-localization-message/response-fields.adoc[]
+
+=== `DELETE /api/localization-messages/{id}`
+
+Deletes a localization message by identifier.
+
+include::{snippets}/localization/delete-localization-message/curl-request.adoc[]
+include::{snippets}/localization/delete-localization-message/http-request.adoc[]
+include::{snippets}/localization/delete-localization-message/path-parameters.adoc[]
+include::{snippets}/localization/delete-localization-message/http-response.adoc[]
+include::{snippets}/localization/delete-localization-message/response-headers.adoc[]
+
+=== `GET /api/localization-messages/language/{language}`
+
+Lists localization messages for a single language code.
+
+include::{snippets}/localization/list-localization-messages-by-language/curl-request.adoc[]
+include::{snippets}/localization/list-localization-messages-by-language/http-request.adoc[]
+include::{snippets}/localization/list-localization-messages-by-language/path-parameters.adoc[]
+include::{snippets}/localization/list-localization-messages-by-language/http-response.adoc[]
+include::{snippets}/localization/list-localization-messages-by-language/response-headers.adoc[]
+include::{snippets}/localization/list-localization-messages-by-language/response-fields.adoc[]
+
 == Error Response Examples
 
 Public API errors use Spring `ProblemDetail` responses. The examples below show the common error shape and a few endpoint-specific variants.
@@ -159,6 +240,39 @@ include::{snippets}/errors/update-book-stale-version/request-body.adoc[]
 include::{snippets}/errors/update-book-stale-version/http-response.adoc[]
 include::{snippets}/errors/update-book-stale-version/response-headers.adoc[]
 include::{snippets}/errors/update-book-stale-version/response-fields.adoc[]
+
+=== `POST /api/localization-messages` validation failure
+
+Example bad-request response when the localization payload contains invalid fields.
+
+include::{snippets}/errors/create-localization-message-validation-failed/curl-request.adoc[]
+include::{snippets}/errors/create-localization-message-validation-failed/http-request.adoc[]
+include::{snippets}/errors/create-localization-message-validation-failed/request-body.adoc[]
+include::{snippets}/errors/create-localization-message-validation-failed/http-response.adoc[]
+include::{snippets}/errors/create-localization-message-validation-failed/response-headers.adoc[]
+include::{snippets}/errors/create-localization-message-validation-failed/response-fields.adoc[]
+
+=== `POST /api/localization-messages` duplicate key and language
+
+Example conflict response when a localization message with the same key and language already exists.
+
+include::{snippets}/errors/create-localization-message-duplicate/curl-request.adoc[]
+include::{snippets}/errors/create-localization-message-duplicate/http-request.adoc[]
+include::{snippets}/errors/create-localization-message-duplicate/request-body.adoc[]
+include::{snippets}/errors/create-localization-message-duplicate/http-response.adoc[]
+include::{snippets}/errors/create-localization-message-duplicate/response-headers.adoc[]
+include::{snippets}/errors/create-localization-message-duplicate/response-fields.adoc[]
+
+=== `GET /api/localization-messages/{id}` missing localization message
+
+Example not-found response when the localization message identifier does not exist.
+
+include::{snippets}/errors/get-localization-message-not-found/curl-request.adoc[]
+include::{snippets}/errors/get-localization-message-not-found/http-request.adoc[]
+include::{snippets}/errors/get-localization-message-not-found/path-parameters.adoc[]
+include::{snippets}/errors/get-localization-message-not-found/http-response.adoc[]
+include::{snippets}/errors/get-localization-message-not-found/response-headers.adoc[]
+include::{snippets}/errors/get-localization-message-not-found/response-fields.adoc[]
 
 == Actuator Endpoints
 
