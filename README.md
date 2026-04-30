@@ -15,6 +15,7 @@ The demo currently includes:
 - A REST API for the authenticated user profile under `/api/users/me`
 - OAuth 2.0 protected write endpoints with JDBC-backed HTTP sessions for reviewer-friendly sign-in
 - An OpenAPI contract exposed at `/v3/api-docs` and `/v3/api-docs.yaml` with an approved-baseline compatibility gate
+- Gatling performance scenarios with a tracked local baseline for public reads and OAuth redirect startup
 - Append-only audit logging for state-changing `Book` and `LocalizationMessage` operations
 - Git tag based application versioning plus a human-readable `CHANGELOG.md`
 - PostgreSQL for local and production-style runtime profiles, plus Testcontainers-backed integration tests
@@ -36,6 +37,7 @@ Primary goal: keep the project small, readable, and suitable for technical inter
 - Spring Session JDBC
 - PostgreSQL
 - Testcontainers
+- Gatling
 - Caffeine
 - Gradle Wrapper
 - JUnit 5
@@ -330,7 +332,9 @@ Release policy:
 - `SETUP.md`: developer onboarding and troubleshooting guide
 - `.env.example`: optional environment variable template for local shells or container tooling
 - `build.gradle.kts`: Gradle build and dependencies
+- `performance/baselines/phase-9-local.json`: tracked local Gatling baseline for Phase 9 public-read and auth-redirect flows
 - `config/pmd/pmd-ruleset.xml`: curated PMD ruleset
+- `scripts/run-phase-9-benchmarks.ps1`: local benchmark runner that starts the app and refreshes the Phase 9 baseline
 - `src/main/java/team/jit/technicalinterviewdemo/TechnicalInterviewDemoApplication.java`: app entry point
 - `src/main/java/team/jit/technicalinterviewdemo/HelloController.java`: hello-world endpoint
 - `src/main/java/team/jit/technicalinterviewdemo/business/book/`: `Book` domain, service, repository, and REST API
@@ -646,6 +650,40 @@ Keep `.editorconfig` aligned with the intended IntelliJ formatting profile.
 
 For contribution workflow expectations, see `CONTRIBUTING.md`.
 For release history, see `CHANGELOG.md`.
+
+## Performance Benchmarks
+
+Use the Phase 9 benchmark runner to measure the public read flow and the OAuth redirect start flow against a local app instance:
+
+```powershell
+.\scripts\run-phase-9-benchmarks.ps1
+```
+
+The runner:
+
+- starts local PostgreSQL with `docker-compose`
+- starts the current boot jar with `local,oauth`
+- uses dummy GitHub OAuth credentials so `/oauth2/authorization/github` can return a real redirect without requiring an external login
+- runs `PublicApiSimulation` and `AuthenticationRedirectSimulation`
+- rewrites `performance/baselines/phase-9-local.json` with the latest local measurements
+
+Current tracked local baseline from `performance/baselines/phase-9-local.json`:
+
+| Request | p95 | Mean | Success rate |
+| --- | --- | --- | --- |
+| `list-books` | 17 ms | 15 ms | 100% |
+| `search-books` | 14 ms | 10 ms | 100% |
+| `lookup-localization-message` | 11 ms | 8 ms | 100% |
+| `oauth2-github-redirect` | 15 ms | 12 ms | 100% |
+
+Regression checks:
+
+- keep request success at or above 99% and investigate any failed requests immediately
+- treat a sustained increase greater than 25% in p95 or mean response time versus the tracked baseline as a regression until explained
+- rerun once before concluding there is a regression if the local machine was under unusual load
+- update `performance/baselines/phase-9-local.json` intentionally when the scenario shape or expected performance changes for a good reason
+
+`AuthenticatedUserProfileSimulation` remains available for ad hoc checks, but it is not part of the automated baseline because it requires a real `technical-interview-demo-session` cookie from an interactive login.
 
 ## Quality Checks
 

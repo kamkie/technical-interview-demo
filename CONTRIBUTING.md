@@ -89,6 +89,8 @@ Additional expectations:
 - Pull requests also run the dedicated OpenAPI compatibility GitHub Actions workflow against the approved baseline
 - Review the JaCoCo HTML output at `build/reports/jacoco/test/html/index.html` or run `.\gradlew.bat jacocoCoverageSummary` when coverage-sensitive changes land
 - `check` and `build` enforce minimum JaCoCo bundle coverage of 90% line coverage and 70% branch coverage
+- Rerun `.\scripts\run-phase-9-benchmarks.ps1` when changing book list/search queries, localization lookup behavior, or the OAuth/session startup flow
+- Compare the results with `performance/baselines/phase-9-local.json` and call out any sustained increase above 25% in p95 or mean response time, or any success rate below 99%
 - If a change legitimately needs a lower threshold, raise it explicitly in review instead of weakening the gate silently
 
 ## Documentation Expectations

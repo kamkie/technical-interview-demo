@@ -16,6 +16,7 @@ Current scope:
 - authenticated-user profile API under `/api/users/me`
 - OAuth 2.0 protected write endpoints with JDBC-backed HTTP sessions
 - OpenAPI contract endpoints at `/v3/api-docs` and `/v3/api-docs.yaml` with an approved-baseline compatibility gate
+- Gatling performance scenarios with a tracked local baseline for public reads and OAuth redirect startup
 - append-only audit logging for state-changing `Book` and `LocalizationMessage` operations
 - git-tag-based application versioning with a human-readable `CHANGELOG.md`
 - actuator endpoints for `health`, `info`, liveness/readiness probes, and Prometheus metrics
@@ -40,6 +41,7 @@ Primary goal: keep the codebase small, readable, and easy to reason about.
 - Spring Session JDBC
 - PostgreSQL
 - Testcontainers
+- Gatling
 - Caffeine
 - Gradle Wrapper
 - Lombok
@@ -207,7 +209,9 @@ Release policy:
 - `SETUP.md`: developer onboarding and troubleshooting guide
 - `.env.example`: optional environment variable template for local shells or container tooling
 - `build.gradle.kts`: build configuration and dependencies
+- `performance/baselines/phase-9-local.json`: tracked local Gatling baseline for Phase 9 public-read and auth-redirect flows
 - `config/pmd/pmd-ruleset.xml`: curated PMD rules
+- `scripts/run-phase-9-benchmarks.ps1`: local benchmark runner that starts the app and refreshes the Phase 9 baseline
 - `src/main/java/team/jit/technicalinterviewdemo/TechnicalInterviewDemoApplication.java`: app entry
 - `src/main/java/team/jit/technicalinterviewdemo/HelloController.java`: hello endpoint
 - `src/main/java/team/jit/technicalinterviewdemo/business/book/`: book entity, requests, repository, service, controller, seed data
@@ -416,6 +420,8 @@ Notes:
 - `test` and `build` also include the OpenAPI compatibility gate against `src/test/resources/openapi/approved-openapi.json`.
 - `test` also prints a JaCoCo coverage summary and keeps the HTML report at `build/reports/jacoco/test/html/index.html`.
 - `check` and `build` enforce minimum JaCoCo bundle coverage of 90% line coverage and 70% branch coverage.
+- Rerun `.\scripts\run-phase-9-benchmarks.ps1` when changing book list/search queries, localization lookup behavior, or the OAuth/session startup flow.
+- Compare the results with `performance/baselines/phase-9-local.json`; treat any failed requests, success below 99%, or a sustained increase above 25% in p95 or mean response time as a regression until explained.
 - Use focused commands such as `spotlessCheck`, `pmdMain`, `test`, or `asciidoctor` only when you intentionally want a narrower loop.
 
 ## Avoid
