@@ -9,11 +9,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import team.jit.technicalinterviewdemo.TestcontainersTest;
 import team.jit.technicalinterviewdemo.book.BookRepository;
+import team.jit.technicalinterviewdemo.cache.CacheNames;
 
 @TestcontainersTest
 @SpringBootTest
@@ -29,12 +31,17 @@ class CategoryApiTests {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired
+    private CacheManager cacheManager;
+
     @BeforeEach
     void setUp() {
         bookRepository.deleteAll();
         categoryRepository.deleteAll();
         categoryRepository.saveAndFlush(new Category("Best Practices"));
         categoryRepository.saveAndFlush(new Category("Java"));
+        cacheManager.getCache(CacheNames.CATEGORIES).clear();
+        cacheManager.getCache(CacheNames.CATEGORY_DIRECTORY).clear();
     }
 
     @Test

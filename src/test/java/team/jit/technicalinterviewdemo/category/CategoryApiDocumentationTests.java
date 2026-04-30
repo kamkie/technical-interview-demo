@@ -25,12 +25,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.restdocs.test.autoconfigure.AutoConfigureRestDocs;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.headers.HeaderDescriptor;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.MockMvc;
 import team.jit.technicalinterviewdemo.TestcontainersTest;
 import team.jit.technicalinterviewdemo.book.BookRepository;
+import team.jit.technicalinterviewdemo.cache.CacheNames;
 
 @TestcontainersTest
 @SpringBootTest
@@ -47,12 +49,17 @@ class CategoryApiDocumentationTests {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired
+    private CacheManager cacheManager;
+
     @BeforeEach
     void setUp() {
         bookRepository.deleteAll();
         categoryRepository.deleteAll();
         categoryRepository.saveAndFlush(new Category("Best Practices"));
         categoryRepository.saveAndFlush(new Category("Java"));
+        cacheManager.getCache(CacheNames.CATEGORIES).clear();
+        cacheManager.getCache(CacheNames.CATEGORY_DIRECTORY).clear();
     }
 
     @Test

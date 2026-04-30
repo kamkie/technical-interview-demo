@@ -17,7 +17,7 @@ The demo currently includes:
 - PostgreSQL configuration for the production profile and Testcontainers-backed integration tests
 - Seed data loaded at startup
 - MVC and integration-style tests
-- Request tracing and structured application logging
+- Request tracing, structured application logging, in-memory lookup caches, and application-specific Prometheus metrics
 
 Primary goal: keep the project small, readable, and suitable for technical interview demos.
 
@@ -27,6 +27,7 @@ Primary goal: keep the project small, readable, and suitable for technical inter
 - Spring Boot 4.0.6
 - Spring Web MVC
 - Spring Data JPA
+- Spring Cache
 - H2 in-memory database
 - PostgreSQL
 - Testcontainers
@@ -260,8 +261,10 @@ Release policy:
 - `src/main/java/team/jit/technicalinterviewdemo/TechnicalInterviewDemoApplication.java`: app entry point
 - `src/main/java/team/jit/technicalinterviewdemo/HelloController.java`: hello-world endpoint
 - `src/main/java/team/jit/technicalinterviewdemo/book/`: `Book` domain, service, repository, and REST API
+- `src/main/java/team/jit/technicalinterviewdemo/cache/`: cache names and cache-manager configuration
 - `src/main/java/team/jit/technicalinterviewdemo/category/`: category entity, repository, service, controller, and seed data
 - `src/main/java/team/jit/technicalinterviewdemo/localization/`: localization entity, repository, service, and seed data
+- `src/main/java/team/jit/technicalinterviewdemo/metrics/`: application-specific Micrometer gauges and counters
 - `src/main/java/team/jit/technicalinterviewdemo/api/`: API exception handling and custom exceptions
 - `src/main/java/team/jit/technicalinterviewdemo/docs/`: documentation endpoint and resource mapping
 - `src/main/java/team/jit/technicalinterviewdemo/logging/`: HTTP tracing/logging and service-call logging
@@ -467,6 +470,7 @@ The application includes:
 - OpenTelemetry-compatible tracing through Micrometer
 - `traceId` and `spanId` in console logs
 - `traceparent` response header on HTTP requests when tracing is active
+- simple in-memory caches are used for localization lookups, localization language views, category lists, and the category assignment directory
 - request and error logging redact sensitive query parameters before they reach the logs
 - request start and response completion logs for HTTP traffic
 - service-layer AOP logging with method parameters and execution time
@@ -477,6 +481,7 @@ The application includes:
 - explicit logs for successful database-changing operations such as create, update, delete, and seed writes
 - readiness and liveness health probes through actuator
 - Prometheus metrics exposed through `/actuator/prometheus`
+- custom Micrometer metrics are published under the `technical.interview.demo.*` prefix for book, category, localization, and cache activity
 
 The HTTP tracing logger intentionally skips `/actuator/health` and its subpaths.
 

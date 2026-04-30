@@ -19,7 +19,7 @@ Current scope:
 - PostgreSQL-backed integration tests via Testcontainers
 - startup seed data
 - MVC/integration-style tests
-- request tracing and structured logging
+- request tracing, structured logging, in-memory lookup caches, and application-specific Prometheus metrics
 - **Development Container (dev container) for VS Code with zero-friction setup**
 
 Primary goal: keep the codebase small, readable, and easy to reason about.
@@ -30,6 +30,7 @@ Primary goal: keep the codebase small, readable, and easy to reason about.
 - Spring Boot 4.0.6
 - Spring Web MVC
 - Spring Data JPA
+- Spring Cache
 - H2
 - PostgreSQL
 - Testcontainers
@@ -156,8 +157,10 @@ Release policy:
 - `src/main/java/team/jit/technicalinterviewdemo/TechnicalInterviewDemoApplication.java`: app entry
 - `src/main/java/team/jit/technicalinterviewdemo/HelloController.java`: hello endpoint
 - `src/main/java/team/jit/technicalinterviewdemo/book/`: book entity, requests, repository, service, controller, seed data
+- `src/main/java/team/jit/technicalinterviewdemo/cache/`: cache names and cache-manager configuration
 - `src/main/java/team/jit/technicalinterviewdemo/category/`: category entity, repository, service, controller, and seed data
 - `src/main/java/team/jit/technicalinterviewdemo/localization/`: localization entity, repository, service, exception, and seed data
+- `src/main/java/team/jit/technicalinterviewdemo/metrics/`: application-specific Micrometer gauges and counters
 - `src/main/java/team/jit/technicalinterviewdemo/api/`: exception handling and custom exceptions
 - `src/main/java/team/jit/technicalinterviewdemo/docs/`: documentation endpoint and resource mapping
 - `src/main/java/team/jit/technicalinterviewdemo/logging/`: HTTP tracing/logging and service-call logging
@@ -274,12 +277,14 @@ Current runtime behavior:
 - `Accept-Language` drives browser-compatible error-message localization and `lang` query parameter overrides it
 - cookie `language` is used as fallback when `lang` and supported `Accept-Language` values are absent
 - request-scoped language resolution is captured once and reused during localized error handling
+- simple in-memory caches are used for localization lookups, localization language views, category lists, and the category assignment directory
 - optional `org.springframework.web` DEBUG logging is available as a commented property in `application.properties`
 - Hibernate SQL logging is enabled through `org.hibernate.SQL`
 - Hibernate statistics are enabled through `hibernate.generate_statistics=true`
 - successful create, update, delete, and seed writes are logged
 - actuator exposes readiness and liveness probe endpoints
 - actuator exposes Prometheus metrics at `/actuator/prometheus`
+- custom Micrometer metrics are published under the `technical.interview.demo.*` prefix for book, category, localization, and cache activity
 - Flyway owns schema creation from SQL migrations and Hibernate validates the schema with `ddl-auto=validate`
 - `/actuator/health` and subpaths are skipped by the HTTP tracing logger
 

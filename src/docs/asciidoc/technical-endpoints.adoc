@@ -59,7 +59,7 @@ include::{snippets}/actuator/get-health-readiness/response-fields.adoc[]
 
 == `GET /actuator/prometheus`
 
-Returns Prometheus-formatted metrics for scraping.
+Returns Prometheus-formatted metrics for scraping. This includes the default Spring and JVM meters, cache activity meters for the in-memory caches, and custom application meters under the `technical.interview.demo.*` prefix.
 
 include::{snippets}/actuator/get-prometheus/curl-request.adoc[]
 include::{snippets}/actuator/get-prometheus/http-request.adoc[]

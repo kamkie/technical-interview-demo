@@ -24,11 +24,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import team.jit.technicalinterviewdemo.book.Book;
 import team.jit.technicalinterviewdemo.book.BookRepository;
+import team.jit.technicalinterviewdemo.cache.CacheNames;
 import team.jit.technicalinterviewdemo.category.Category;
 import team.jit.technicalinterviewdemo.category.CategoryRepository;
 
@@ -45,6 +47,9 @@ class ApiDemoTests {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private CacheManager cacheManager;
 
     private MockMvc mockMvc;
     private Book cleanCode;
@@ -67,6 +72,7 @@ class ApiDemoTests {
         bestPractices = categoryRepository.saveAndFlush(new Category("Best Practices"));
         javaCategory = categoryRepository.saveAndFlush(new Category("Java"));
         softwareEngineering = categoryRepository.saveAndFlush(new Category("Software Engineering"));
+        clearCategoryCaches();
         cleanCode = bookRepository.saveAndFlush(new Book(
                 "Clean Code",
                 "Robert C. Martin",
@@ -534,5 +540,10 @@ class ApiDemoTests {
                 .andExpect(jsonPath("$.messageKey").value("error.request.invalid"))
                 .andExpect(jsonPath("$.message").value("Foresporselen er ugyldig."))
                 .andExpect(jsonPath("$.language").value("no"));
+    }
+
+    private void clearCategoryCaches() {
+        cacheManager.getCache(CacheNames.CATEGORIES).clear();
+        cacheManager.getCache(CacheNames.CATEGORY_DIRECTORY).clear();
     }
 }

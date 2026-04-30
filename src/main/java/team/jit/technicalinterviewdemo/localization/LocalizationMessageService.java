@@ -10,6 +10,8 @@ import java.util.regex.Pattern;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +19,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team.jit.technicalinterviewdemo.api.InvalidRequestException;
+import team.jit.technicalinterviewdemo.cache.CacheNames;
+import team.jit.technicalinterviewdemo.metrics.ApplicationMetrics;
 
 @Slf4j
 @Service
@@ -30,18 +34,23 @@ public class LocalizationMessageService {
 
     private final LocalizationMessageRepository localizationMessageRepository;
     private final LocalizationContext localizationContext;
+    private final CacheManager cacheManager;
+    private final ApplicationMetrics applicationMetrics;
 
     public Page<LocalizationMessage> findAll(Pageable pageable) {
+        applicationMetrics.recordLocalizationOperation("list");
         Pageable effectivePageable = createEffectivePageable(pageable);
         return localizationMessageRepository.findAll(effectivePageable);
     }
 
     public LocalizationMessage findById(Long id) {
+        applicationMetrics.recordLocalizationOperation("get");
         return localizationMessageRepository.findById(id)
                 .orElseThrow(() -> new LocalizationMessageNotFoundException(id));
     }
 
     public LocalizationMessage findByMessageKeyAndLanguage(String messageKey, String language) {
+        applicationMetrics.recordLocalizationOperation("lookupExact");
         return findMessage(normalizeMessageKey(messageKey), normalizeSupportedLanguage(language))
                 .orElseThrow(() -> new LocalizationMessageNotFoundException(messageKey, language));
     }
@@ -54,14 +63,30 @@ public class LocalizationMessageService {
         String normalizedMessageKey = normalizeMessageKey(messageKey);
         String normalizedLanguage = normalizeLanguage(language);
         String normalizedFallbackLanguage = normalizeSupportedLanguage(fallbackLanguage);
+        String lookupCacheKey = "%s::%s::%s".formatted(normalizedMessageKey, normalizedLanguage, normalizedFallbackLanguage);
+        applicationMetrics.recordLocalizationOperation("lookupWithFallback");
+
+        Cache localizationLookupCache = requireCache(CacheNames.LOCALIZATION_LOOKUPS);
+        LocalizationMessage cachedMessage = localizationLookupCache.get(lookupCacheKey, LocalizationMessage.class);
+        if (cachedMessage != null) {
+            applicationMetrics.recordCacheEvent(CacheNames.LOCALIZATION_LOOKUPS, "hit");
+            return cachedMessage;
+        }
+
+        applicationMetrics.recordCacheEvent(CacheNames.LOCALIZATION_LOOKUPS, "miss");
 
         Optional<LocalizationMessage> requestedMessage = findMessage(normalizedMessageKey, normalizedLanguage);
         if (requestedMessage.isPresent()) {
+            localizationLookupCache.put(lookupCacheKey, requestedMessage.get());
+            applicationMetrics.recordCacheEvent(CacheNames.LOCALIZATION_LOOKUPS, "put");
             return requestedMessage.get();
         }
 
-        return findMessage(normalizedMessageKey, normalizedFallbackLanguage)
+        LocalizationMessage resolvedMessage = findMessage(normalizedMessageKey, normalizedFallbackLanguage)
                 .orElseThrow(() -> new LocalizationMessageNotFoundException(messageKey, language, fallbackLanguage));
+        localizationLookupCache.put(lookupCacheKey, resolvedMessage);
+        applicationMetrics.recordCacheEvent(CacheNames.LOCALIZATION_LOOKUPS, "put");
+        return resolvedMessage;
     }
 
     public String getMessageWithFallback(String messageKey, String language, String fallbackLanguage) {
@@ -81,15 +106,42 @@ public class LocalizationMessageService {
     }
 
     public Map<String, String> getAllMessages(String language) {
+        applicationMetrics.recordLocalizationOperation("getAllMessages");
+        String normalizedLanguage = normalizeSupportedLanguage(language);
+        Cache localizationMessageMapsCache = requireCache(CacheNames.LOCALIZATION_MESSAGE_MAPS);
+        @SuppressWarnings("unchecked")
+        Map<String, String> cachedMessages = localizationMessageMapsCache.get(normalizedLanguage, Map.class);
+        if (cachedMessages != null) {
+            applicationMetrics.recordCacheEvent(CacheNames.LOCALIZATION_MESSAGE_MAPS, "hit");
+            return cachedMessages;
+        }
+
+        applicationMetrics.recordCacheEvent(CacheNames.LOCALIZATION_MESSAGE_MAPS, "miss");
         Map<String, String> messagesByKey = new LinkedHashMap<>();
-        for (LocalizationMessage message : localizationMessageRepository.findAllByLanguageOrderByMessageKeyAsc(normalizeSupportedLanguage(language))) {
+        for (LocalizationMessage message : localizationMessageRepository.findAllByLanguageOrderByMessageKeyAsc(normalizedLanguage)) {
             messagesByKey.put(message.getMessageKey(), message.getMessageText());
         }
+        localizationMessageMapsCache.put(normalizedLanguage, messagesByKey);
+        applicationMetrics.recordCacheEvent(CacheNames.LOCALIZATION_MESSAGE_MAPS, "put");
         return messagesByKey;
     }
 
     public List<LocalizationMessage> findAllByLanguage(String language) {
-        return localizationMessageRepository.findAllByLanguageOrderByMessageKeyAsc(normalizeSupportedLanguage(language));
+        applicationMetrics.recordLocalizationOperation("listByLanguage");
+        String normalizedLanguage = normalizeSupportedLanguage(language);
+        Cache localizationListsCache = requireCache(CacheNames.LOCALIZATION_LISTS);
+        @SuppressWarnings("unchecked")
+        List<LocalizationMessage> cachedMessages = localizationListsCache.get(normalizedLanguage, List.class);
+        if (cachedMessages != null) {
+            applicationMetrics.recordCacheEvent(CacheNames.LOCALIZATION_LISTS, "hit");
+            return cachedMessages;
+        }
+
+        applicationMetrics.recordCacheEvent(CacheNames.LOCALIZATION_LISTS, "miss");
+        List<LocalizationMessage> messages = localizationMessageRepository.findAllByLanguageOrderByMessageKeyAsc(normalizedLanguage);
+        localizationListsCache.put(normalizedLanguage, messages);
+        applicationMetrics.recordCacheEvent(CacheNames.LOCALIZATION_LISTS, "put");
+        return messages;
     }
 
     @Transactional
@@ -105,6 +157,8 @@ public class LocalizationMessageService {
                 request.description()
         );
         LocalizationMessage savedMessage = localizationMessageRepository.saveAndFlush(message);
+        evictLocalizationCaches();
+        applicationMetrics.recordLocalizationOperation("create");
         log.info(
                 "Created localization message id={} key={} language={}",
                 savedMessage.getId(),
@@ -127,6 +181,8 @@ public class LocalizationMessageService {
         message.setDescription(request.description());
 
         LocalizationMessage updatedMessage = localizationMessageRepository.saveAndFlush(message);
+        evictLocalizationCaches();
+        applicationMetrics.recordLocalizationOperation("update");
         log.info(
                 "Updated localization message id={} key={} language={}",
                 updatedMessage.getId(),
@@ -142,6 +198,8 @@ public class LocalizationMessageService {
             throw new LocalizationMessageNotFoundException(id);
         }
         localizationMessageRepository.deleteById(id);
+        evictLocalizationCaches();
+        applicationMetrics.recordLocalizationOperation("delete");
         log.info("Deleted localization message id={}", id);
     }
 
@@ -205,5 +263,22 @@ public class LocalizationMessageService {
         if (exists) {
             throw new DuplicateLocalizationMessageException(messageKey, language);
         }
+    }
+
+    private void evictLocalizationCaches() {
+        requireCache(CacheNames.LOCALIZATION_LOOKUPS).clear();
+        applicationMetrics.recordCacheEvent(CacheNames.LOCALIZATION_LOOKUPS, "evict");
+        requireCache(CacheNames.LOCALIZATION_LISTS).clear();
+        applicationMetrics.recordCacheEvent(CacheNames.LOCALIZATION_LISTS, "evict");
+        requireCache(CacheNames.LOCALIZATION_MESSAGE_MAPS).clear();
+        applicationMetrics.recordCacheEvent(CacheNames.LOCALIZATION_MESSAGE_MAPS, "evict");
+    }
+
+    private Cache requireCache(String cacheName) {
+        Cache cache = cacheManager.getCache(cacheName);
+        if (cache == null) {
+            throw new IllegalStateException("Cache '%s' is not configured.".formatted(cacheName));
+        }
+        return cache;
     }
 }

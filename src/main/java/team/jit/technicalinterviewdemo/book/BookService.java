@@ -22,6 +22,7 @@ import team.jit.technicalinterviewdemo.api.InvalidRequestException;
 import team.jit.technicalinterviewdemo.api.StaleBookVersionException;
 import team.jit.technicalinterviewdemo.category.Category;
 import team.jit.technicalinterviewdemo.category.CategoryService;
+import team.jit.technicalinterviewdemo.metrics.ApplicationMetrics;
 
 @Slf4j
 @Service
@@ -46,8 +47,10 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final CategoryService categoryService;
+    private final ApplicationMetrics applicationMetrics;
 
     public Page<Book> findAll(BookSearchRequest request, Pageable pageable) {
+        applicationMetrics.recordBookOperation("list");
         validateSearchRequest(request);
         Pageable effectivePageable = createEffectivePageable(pageable);
         Specification<Book> searchSpecification = BookSpecifications.fromSearchRequest(request);
@@ -55,6 +58,7 @@ public class BookService {
     }
 
     public Book findById(Long id) {
+        applicationMetrics.recordBookOperation("get");
         return bookRepository.findById(id)
                 .orElseThrow(() -> new BookNotFoundException(id));
     }
@@ -65,6 +69,7 @@ public class BookService {
         Set<Category> categories = categoryService.resolveForAssignment(request.categories());
         Book book = new Book(request.title(), request.author(), request.isbn(), request.publicationYear(), categories);
         Book savedBook = bookRepository.saveAndFlush(book);
+        applicationMetrics.recordBookOperation("create");
         log.info("Created book id={} isbn={} title={}", savedBook.getId(), savedBook.getIsbn(), savedBook.getTitle());
         return savedBook;
     }
@@ -87,6 +92,7 @@ public class BookService {
         } catch (ObjectOptimisticLockingFailureException exception) {
             throw new StaleBookVersionException(id, request.version(), book.getVersion(), exception);
         }
+        applicationMetrics.recordBookOperation("update");
         log.info("Updated book id={} isbn={} title={}", updatedBook.getId(), updatedBook.getIsbn(), updatedBook.getTitle());
         return updatedBook;
     }
@@ -98,6 +104,7 @@ public class BookService {
         }
 
         bookRepository.deleteById(id);
+        applicationMetrics.recordBookOperation("delete");
         log.info("Deleted book id={}", id);
     }
 

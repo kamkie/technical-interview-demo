@@ -13,6 +13,7 @@ Use `TODO.md` for active planning and `COMPLETED_TASKS.md` for implementation hi
 - Localized error responses with browser-compatible preferred-language support, cookie fallback, and supported-language validation
 - Book search and filtering support
 - Book categories and category filtering
+- In-memory caches and application-specific metrics
 - Developer setup and contribution guides
 - Release versioning and changelog workflow
 
@@ -159,6 +160,31 @@ Summary:
 - Added category filtering to `GET /api/books`, plus integration tests and Spring REST Docs coverage.
 
 Tag: `v0.13.0`
+
+### Phase 7: Performance & Monitoring
+
+#### 7.1 Add Caching Layer
+
+Status: Completed
+
+Summary:
+- Added simple in-memory caches for localization lookups, localization language views, category lists, and the category assignment directory.
+- Added explicit cache invalidation on localization and category writes.
+- Added cache-behavior integration tests and documented the cache strategy.
+
+#### 7.2 Enhance Prometheus Metrics
+
+Status: Completed
+
+Summary:
+- Added Micrometer counters and gauges for book, category, localization, and cache activity.
+- Recorded metrics directly in service methods and documented the custom metric prefix.
+- Added metrics-focused integration tests.
+
+Note:
+- User-specific metrics now belong with Phase 5.2 when the user model exists.
+
+Tag: `v0.14.0`
 
 ### Phase 8: Documentation & Developer Experience
 

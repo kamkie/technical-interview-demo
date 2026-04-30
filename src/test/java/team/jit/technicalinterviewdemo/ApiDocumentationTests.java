@@ -31,12 +31,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.restdocs.test.autoconfigure.AutoConfigureRestDocs;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.headers.HeaderDescriptor;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.MockMvc;
 import team.jit.technicalinterviewdemo.book.Book;
 import team.jit.technicalinterviewdemo.book.BookRepository;
+import team.jit.technicalinterviewdemo.cache.CacheNames;
 import team.jit.technicalinterviewdemo.category.Category;
 import team.jit.technicalinterviewdemo.category.CategoryRepository;
 
@@ -55,6 +57,9 @@ class ApiDocumentationTests {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private CacheManager cacheManager;
+
     private Book cleanCode;
     private Book effectiveJava;
     private Category bestPractices;
@@ -66,6 +71,7 @@ class ApiDocumentationTests {
         bestPractices = categoryRepository.saveAndFlush(new Category("Best Practices"));
         Category javaCategory = categoryRepository.saveAndFlush(new Category("Java"));
         Category softwareEngineering = categoryRepository.saveAndFlush(new Category("Software Engineering"));
+        clearCategoryCaches();
         cleanCode = bookRepository.saveAndFlush(new Book(
                 "Clean Code",
                 "Robert C. Martin",
@@ -570,5 +576,10 @@ class ApiDocumentationTests {
                 fieldWithPath("language").description("Two-letter ISO 639-1 language code actually used for the localized message."),
                 subsectionWithPath("fieldErrors").description("Validation errors keyed by request field name.")
         };
+    }
+
+    private void clearCategoryCaches() {
+        cacheManager.getCache(CacheNames.CATEGORIES).clear();
+        cacheManager.getCache(CacheNames.CATEGORY_DIRECTORY).clear();
     }
 }
