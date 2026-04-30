@@ -8,11 +8,17 @@ Historical `v0.0.x` releases were backfilled as annotated tags from mainline git
 
 ## [Unreleased]
 
+## [v0.21.0] - 2026-04-30
+
 ### Added
 - Added OpenAPI JSON and YAML example requests to `src/test/resources/http/documentation.http`.
+- Added a JaCoCo coverage summary task, focused service/exception-path tests, and enforced coverage thresholds of 90% line coverage and 70% branch coverage.
+- Added Gatling performance scenarios together with a tracked local baseline and a benchmark runner for public reads and OAuth redirect startup.
 
 ### Changed
 - Updated `OpenApiBaselineGenerator` to use try-with-resources so the PMD-backed `build` verification stays clean.
+- Documented the coverage workflow and the local performance regression checks across the project docs.
+- Reduced Gatling benchmark log noise and aligned the Gradle build formatting with Spotless.
 
 ## [v0.20.0] - 2026-04-30
 

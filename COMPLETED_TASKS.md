@@ -314,6 +314,32 @@ Summary:
 Commit: `806641f`
 Tag: `v0.15.0`
 
+### Phase 9: Testing & Quality
+
+#### 9.1 Increase Test Coverage Target
+
+Status: Completed
+
+Summary:
+- Added `jacocoCoverageSummary` so test runs print overall line coverage and the lowest-covered classes from the latest report.
+- Added focused service and exception-path tests for `BookService`, `UserAccountService`, and `ApiExceptionHandler`.
+- Enforced JaCoCo bundle coverage thresholds of 90% line coverage and 70% branch coverage and documented the workflow in the contributor-facing docs.
+
+Commit: `210df88`
+Tag: `v0.21.0`
+
+#### 9.2 Add Load & Performance Testing
+
+Status: Completed
+
+Summary:
+- Added Gatling scenarios for public book listing/search, localization lookup, and GitHub OAuth redirect startup.
+- Added `scripts/run-phase-9-benchmarks.ps1` to run the local benchmark flow end to end and refresh `performance/baselines/phase-9-local.json`.
+- Documented the tracked local baseline together with the regression rule for failed requests, success below 99%, and sustained p95/mean increases above 25%.
+
+Commit: `8bf223a`
+Tag: `v0.21.0`
+
 ## Roadmap Maintenance Notes
 
 - Keep active work in `TODO.md`.
