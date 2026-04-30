@@ -15,7 +15,6 @@ plugins {
     id("org.springframework.boot") version "4.0.6"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.asciidoctor.jvm.convert") version "4.0.5"
-    id("org.jetbrains.qodana") version "2026.1.0"
     id("com.github.ben-manes.versions") version "0.54.0"
     id("com.palantir.git-version") version "5.0.0"
     id("com.adarshr.test-logger") version "4.0.0"
@@ -90,11 +89,6 @@ dependencies {
 
 springBoot {
     buildInfo()
-}
-
-qodana {
-    resultsPath.set(layout.buildDirectory.dir("qodana/results").map { it.asFile.absolutePath })
-    cachePath.set(layout.buildDirectory.dir("qodana/cache").map { it.asFile.absolutePath })
 }
 
 tasks.bootRun {

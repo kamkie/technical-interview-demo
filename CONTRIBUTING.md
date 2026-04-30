@@ -81,12 +81,6 @@ $env:Path="$env:JAVA_HOME\bin;$env:Path"
 .\gradlew.bat build
 ```
 
-Optional:
-
-```powershell
-.\gradlew.bat qodanaScan
-```
-
 Additional expectations:
 
 - Add or update tests when API behavior changes

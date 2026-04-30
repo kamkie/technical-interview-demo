@@ -43,7 +43,6 @@ Primary goal: keep the codebase small, readable, and easy to reason about.
 - Spring REST Docs
 - Asciidoctor
 - Flyway
-- Qodana
 - Error Prone
 - PMD
 
@@ -63,7 +62,6 @@ Common commands:
 .\gradlew.bat bootRun
 .\gradlew.bat test
 .\gradlew.bat asciidoctor
-.\gradlew.bat qodanaScan
 .\gradlew.bat dockerBuild
 .\gradlew.bat dockerBuild -PdockerImageName=my-app:dev
 docker build -t technical-interview-demo .
@@ -335,12 +333,6 @@ Before finishing, run:
 
 ```powershell
 .\gradlew.bat build
-```
-
-Optional additional static analysis:
-
-```powershell
-.\gradlew.bat qodanaScan
 ```
 
 Notes:

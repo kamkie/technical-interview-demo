@@ -155,12 +155,6 @@ Set Java 25 in the same shell session first. Docker Desktop must also be running
 .\gradlew.bat build
 ```
 
-Optional:
-
-```powershell
-.\gradlew.bat qodanaScan
-```
-
 `build` now covers Spotless, PMD, tests, Asciidoctor generation, boot jar creation, and the Docker image build.
 Use focused commands such as `test`, `asciidoctor`, or `dockerBuild` only when you intentionally want a narrower loop.
 

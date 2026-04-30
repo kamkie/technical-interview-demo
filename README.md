@@ -40,7 +40,6 @@ Primary goal: keep the project small, readable, and suitable for technical inter
 - Spring REST Docs
 - Asciidoctor
 - Flyway
-- Qodana
 - Error Prone
 - PMD
 
@@ -240,12 +239,6 @@ Packaging and runtime behavior:
 - the running application serves the documentation at `GET /docs`
 - the generated index page includes build metadata loaded from `/META-INF/build-info.properties`
 - the generated docs include example success and error responses captured from tests
-
-Qodana static analysis is available through Gradle:
-
-```powershell
-.\gradlew.bat qodanaScan
-```
 
 ## Versioning And Releases
 
@@ -553,12 +546,6 @@ Before finishing changes, run:
 
 ```powershell
 .\gradlew.bat build
-```
-
-Optional additional static analysis:
-
-```powershell
-.\gradlew.bat qodanaScan
 ```
 
 If tests require Java setup first, export `JAVA_HOME` to a compatible JDK in the same shell session.

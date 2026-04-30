@@ -191,7 +191,6 @@ Depends on: Current quality gates staying stable
 Tasks:
 - [ ] Choose CI/CD platform
 - [ ] Automate `spotlessCheck`, `pmdMain`, `test`, and `asciidoctor`
-- [ ] Optionally run `qodanaScan`
 - [ ] Build Docker image in CI
 - [ ] Document the pipeline and branch protections
 
@@ -263,7 +262,6 @@ $env:JAVA_HOME='C:\Users\kamki\.jdks\azul-25.0.3'
 $env:Path="$env:JAVA_HOME\bin;$env:Path"
 
 .\gradlew.bat build
-.\gradlew.bat qodanaScan  # Optional
 ```
 
 ## Notes
