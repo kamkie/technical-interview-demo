@@ -18,15 +18,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import team.jit.technicalinterviewdemo.audit.AuditAction;
-import team.jit.technicalinterviewdemo.audit.AuditLog;
-import team.jit.technicalinterviewdemo.audit.AuditLogRepository;
-import team.jit.technicalinterviewdemo.audit.AuditTargetType;
-import team.jit.technicalinterviewdemo.book.Book;
-import team.jit.technicalinterviewdemo.book.BookRepository;
-import team.jit.technicalinterviewdemo.localization.LocalizationMessage;
-import team.jit.technicalinterviewdemo.localization.LocalizationMessageRepository;
-import team.jit.technicalinterviewdemo.user.UserAccountRepository;
+import team.jit.technicalinterviewdemo.business.audit.AuditAction;
+import team.jit.technicalinterviewdemo.business.audit.AuditLog;
+import team.jit.technicalinterviewdemo.business.audit.AuditLogRepository;
+import team.jit.technicalinterviewdemo.business.audit.AuditTargetType;
+import team.jit.technicalinterviewdemo.business.book.Book;
+import team.jit.technicalinterviewdemo.business.book.BookRepository;
+import team.jit.technicalinterviewdemo.business.localization.LocalizationMessage;
+import team.jit.technicalinterviewdemo.business.localization.LocalizationMessageRepository;
+import team.jit.technicalinterviewdemo.business.user.UserAccountRepository;
 
 @TestcontainersTest
 @SpringBootTest

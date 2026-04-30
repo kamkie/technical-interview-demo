@@ -24,13 +24,13 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import team.jit.technicalinterviewdemo.audit.AuditLogRepository;
-import team.jit.technicalinterviewdemo.book.BookRepository;
-import team.jit.technicalinterviewdemo.cache.CacheNames;
-import team.jit.technicalinterviewdemo.category.CategoryRepository;
-import team.jit.technicalinterviewdemo.user.UserAccount;
-import team.jit.technicalinterviewdemo.user.UserAccountRepository;
-import team.jit.technicalinterviewdemo.user.UserRole;
+import team.jit.technicalinterviewdemo.business.audit.AuditLogRepository;
+import team.jit.technicalinterviewdemo.business.book.BookRepository;
+import team.jit.technicalinterviewdemo.technical.cache.CacheNames;
+import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
+import team.jit.technicalinterviewdemo.business.user.UserAccount;
+import team.jit.technicalinterviewdemo.business.user.UserAccountRepository;
+import team.jit.technicalinterviewdemo.business.user.UserRole;
 
 @TestcontainersTest
 @SpringBootTest

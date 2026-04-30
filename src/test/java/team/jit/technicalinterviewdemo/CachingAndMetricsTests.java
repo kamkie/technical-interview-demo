@@ -17,22 +17,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.PageRequest;
-import team.jit.technicalinterviewdemo.book.Book;
-import team.jit.technicalinterviewdemo.book.BookCreateRequest;
-import team.jit.technicalinterviewdemo.book.BookRepository;
-import team.jit.technicalinterviewdemo.book.BookSearchRequest;
-import team.jit.technicalinterviewdemo.book.BookService;
-import team.jit.technicalinterviewdemo.cache.CacheNames;
-import team.jit.technicalinterviewdemo.category.Category;
-import team.jit.technicalinterviewdemo.category.CategoryCreateRequest;
-import team.jit.technicalinterviewdemo.category.CategoryRepository;
-import team.jit.technicalinterviewdemo.category.CategoryService;
-import team.jit.technicalinterviewdemo.audit.AuditLogRepository;
-import team.jit.technicalinterviewdemo.localization.LocalizationMessage;
-import team.jit.technicalinterviewdemo.localization.LocalizationMessageRepository;
-import team.jit.technicalinterviewdemo.localization.LocalizationMessageRequest;
-import team.jit.technicalinterviewdemo.localization.LocalizationMessageService;
-import team.jit.technicalinterviewdemo.user.UserAccountRepository;
+import team.jit.technicalinterviewdemo.business.book.Book;
+import team.jit.technicalinterviewdemo.business.book.BookCreateRequest;
+import team.jit.technicalinterviewdemo.business.book.BookRepository;
+import team.jit.technicalinterviewdemo.business.book.BookSearchRequest;
+import team.jit.technicalinterviewdemo.business.book.BookService;
+import team.jit.technicalinterviewdemo.technical.cache.CacheNames;
+import team.jit.technicalinterviewdemo.business.category.Category;
+import team.jit.technicalinterviewdemo.business.category.CategoryCreateRequest;
+import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
+import team.jit.technicalinterviewdemo.business.category.CategoryService;
+import team.jit.technicalinterviewdemo.business.audit.AuditLogRepository;
+import team.jit.technicalinterviewdemo.business.localization.LocalizationMessage;
+import team.jit.technicalinterviewdemo.business.localization.LocalizationMessageRepository;
+import team.jit.technicalinterviewdemo.business.localization.LocalizationMessageRequest;
+import team.jit.technicalinterviewdemo.business.localization.LocalizationMessageService;
+import team.jit.technicalinterviewdemo.business.user.UserAccountRepository;
 
 @TestcontainersTest
 @SpringBootTest

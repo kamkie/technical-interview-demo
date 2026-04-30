@@ -308,19 +308,19 @@ Release policy:
 - `.env.example`: optional environment variable template for local shells or container tooling
 - `build.gradle.kts`: Gradle build and dependencies
 - `config/pmd/pmd-ruleset.xml`: curated PMD ruleset
-- `src/main/java/team/jit/technicalinterviewdemo/config/`: application configuration classes such as cache enablement
+- `src/main/java/team/jit/technicalinterviewdemo/technical/config/`: application configuration classes such as cache enablement
 - `src/main/java/team/jit/technicalinterviewdemo/TechnicalInterviewDemoApplication.java`: app entry point
 - `src/main/java/team/jit/technicalinterviewdemo/HelloController.java`: hello-world endpoint
-- `src/main/java/team/jit/technicalinterviewdemo/book/`: `Book` domain, service, repository, and REST API
-- `src/main/java/team/jit/technicalinterviewdemo/cache/`: cache names and related cache constants
-- `src/main/java/team/jit/technicalinterviewdemo/category/`: category entity, repository, service, controller, and seed data
-- `src/main/java/team/jit/technicalinterviewdemo/localization/`: localization entity, repository, service, and seed data
-- `src/main/java/team/jit/technicalinterviewdemo/metrics/`: application-specific Micrometer gauges and counters
-- `src/main/java/team/jit/technicalinterviewdemo/audit/`: append-only audit-log entity, repository, and service
-- `src/main/java/team/jit/technicalinterviewdemo/user/`: persisted user model, profile endpoints, role handling, and authenticated-user synchronization
-- `src/main/java/team/jit/technicalinterviewdemo/api/`: API exception handling and custom exceptions
-- `src/main/java/team/jit/technicalinterviewdemo/docs/`: documentation endpoint and resource mapping
-- `src/main/java/team/jit/technicalinterviewdemo/logging/`: HTTP tracing/logging and service-call logging
+- `src/main/java/team/jit/technicalinterviewdemo/business/book/`: `Book` domain, service, repository, and REST API
+- `src/main/java/team/jit/technicalinterviewdemo/technical/cache/`: cache names and related cache constants
+- `src/main/java/team/jit/technicalinterviewdemo/business/category/`: category entity, repository, service, controller, and seed data
+- `src/main/java/team/jit/technicalinterviewdemo/business/localization/`: localization entity, repository, service, and seed data
+- `src/main/java/team/jit/technicalinterviewdemo/technical/metrics/`: application-specific Micrometer gauges and counters
+- `src/main/java/team/jit/technicalinterviewdemo/business/audit/`: append-only audit-log entity, repository, and service
+- `src/main/java/team/jit/technicalinterviewdemo/business/user/`: persisted user model, profile endpoints, role handling, and authenticated-user synchronization
+- `src/main/java/team/jit/technicalinterviewdemo/technical/api/`: API exception handling and custom exceptions
+- `src/main/java/team/jit/technicalinterviewdemo/technical/docs/`: documentation endpoint and resource mapping
+- `src/main/java/team/jit/technicalinterviewdemo/technical/logging/`: HTTP tracing/logging and service-call logging
 - `src/main/resources/db/migration/`: Flyway SQL migrations
 - `src/docs/asciidoc/`: documentation landing page plus per-controller and technical-endpoint Asciidoc sources
 - `src/main/resources/application.properties`: runtime configuration

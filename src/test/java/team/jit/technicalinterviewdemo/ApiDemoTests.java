@@ -30,11 +30,11 @@ import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
-import team.jit.technicalinterviewdemo.book.Book;
-import team.jit.technicalinterviewdemo.book.BookRepository;
-import team.jit.technicalinterviewdemo.cache.CacheNames;
-import team.jit.technicalinterviewdemo.category.Category;
-import team.jit.technicalinterviewdemo.category.CategoryRepository;
+import team.jit.technicalinterviewdemo.business.book.Book;
+import team.jit.technicalinterviewdemo.business.book.BookRepository;
+import team.jit.technicalinterviewdemo.technical.cache.CacheNames;
+import team.jit.technicalinterviewdemo.business.category.Category;
+import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
 
 @TestcontainersTest
 @SpringBootTest

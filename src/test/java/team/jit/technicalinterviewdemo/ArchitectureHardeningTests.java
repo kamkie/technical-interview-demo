@@ -20,13 +20,13 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import team.jit.technicalinterviewdemo.book.Book;
-import team.jit.technicalinterviewdemo.book.BookRepository;
-import team.jit.technicalinterviewdemo.book.BookSearchRequest;
-import team.jit.technicalinterviewdemo.cache.CacheNames;
-import team.jit.technicalinterviewdemo.category.Category;
-import team.jit.technicalinterviewdemo.category.CategoryRepository;
-import team.jit.technicalinterviewdemo.config.CachingConfiguration;
+import team.jit.technicalinterviewdemo.business.book.Book;
+import team.jit.technicalinterviewdemo.business.book.BookRepository;
+import team.jit.technicalinterviewdemo.business.book.BookSearchRequest;
+import team.jit.technicalinterviewdemo.technical.cache.CacheNames;
+import team.jit.technicalinterviewdemo.business.category.Category;
+import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
+import team.jit.technicalinterviewdemo.technical.config.CachingConfiguration;
 
 @TestcontainersTest
 @SpringBootTest
@@ -112,7 +112,7 @@ class ArchitectureHardeningTests {
         request.setCategory(List.of("java"));
 
         Page<Book> books = bookRepository.findAll(
-                team.jit.technicalinterviewdemo.book.BookSpecifications.fromSearchRequest(request),
+                team.jit.technicalinterviewdemo.business.book.BookSpecifications.fromSearchRequest(request),
                 PageRequest.of(0, 20)
         );
 
