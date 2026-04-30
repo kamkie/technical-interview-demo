@@ -6,18 +6,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static team.jit.technicalinterviewdemo.SecurityTestSupport.adminOauthUser;
-import static team.jit.technicalinterviewdemo.SecurityTestSupport.oauthUser;
-
-import java.util.List;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminOauthUser;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.oauthUser;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import team.jit.technicalinterviewdemo.technical.testing.AbstractMockMvcIntegrationTest;
-import team.jit.technicalinterviewdemo.technical.testing.LocalizationMessageTestData;
-import team.jit.technicalinterviewdemo.technical.testing.MockMvcIntegrationSpringBootTest;
+import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
+import team.jit.technicalinterviewdemo.testing.LocalizationMessageTestData;
+import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
 
 @MockMvcIntegrationSpringBootTest
 class LocalizationApiTests extends AbstractMockMvcIntegrationTest {

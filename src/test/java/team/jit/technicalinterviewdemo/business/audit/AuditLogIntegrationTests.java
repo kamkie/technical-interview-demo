@@ -5,8 +5,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static team.jit.technicalinterviewdemo.SecurityTestSupport.adminOauthUser;
-import static team.jit.technicalinterviewdemo.SecurityTestSupport.oauthUser;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminOauthUser;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.oauthUser;
 
 import java.util.List;
 
@@ -19,8 +19,8 @@ import team.jit.technicalinterviewdemo.business.book.BookRepository;
 import team.jit.technicalinterviewdemo.business.localization.LocalizationMessage;
 import team.jit.technicalinterviewdemo.business.localization.LocalizationMessageRepository;
 import team.jit.technicalinterviewdemo.business.user.UserAccountRepository;
-import team.jit.technicalinterviewdemo.technical.testing.AbstractMockMvcIntegrationTest;
-import team.jit.technicalinterviewdemo.technical.testing.MockMvcIntegrationSpringBootTest;
+import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
+import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
 
 @MockMvcIntegrationSpringBootTest
 class AuditLogIntegrationTests extends AbstractMockMvcIntegrationTest {

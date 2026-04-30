@@ -1,4 +1,4 @@
-package team.jit.technicalinterviewdemo;
+package team.jit.technicalinterviewdemo.testing;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
 

@@ -1,4 +1,4 @@
-package team.jit.technicalinterviewdemo;
+package team.jit.technicalinterviewdemo.testing;
 
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;

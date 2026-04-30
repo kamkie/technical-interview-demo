@@ -4,8 +4,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static team.jit.technicalinterviewdemo.SecurityTestSupport.adminOauthUser;
-import static team.jit.technicalinterviewdemo.SecurityTestSupport.oauthUser;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminOauthUser;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.oauthUser;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,9 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
-import team.jit.technicalinterviewdemo.technical.testing.AbstractMockMvcIntegrationTest;
-import team.jit.technicalinterviewdemo.technical.testing.BookCatalogTestData;
-import team.jit.technicalinterviewdemo.technical.testing.MockMvcIntegrationSpringBootTest;
+import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
+import team.jit.technicalinterviewdemo.testing.BookCatalogTestData;
+import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
 
 @MockMvcIntegrationSpringBootTest
 class CategoryApiTests extends AbstractMockMvcIntegrationTest {

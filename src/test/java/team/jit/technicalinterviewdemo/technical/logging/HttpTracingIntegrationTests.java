@@ -9,8 +9,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 import org.junit.jupiter.api.Test;
-import team.jit.technicalinterviewdemo.technical.testing.AbstractRandomPortIntegrationTest;
-import team.jit.technicalinterviewdemo.technical.testing.RandomPortIntegrationSpringBootTest;
+import team.jit.technicalinterviewdemo.testing.AbstractRandomPortIntegrationTest;
+import team.jit.technicalinterviewdemo.testing.RandomPortIntegrationSpringBootTest;
 
 @RandomPortIntegrationSpringBootTest
 class HttpTracingIntegrationTests extends AbstractRandomPortIntegrationTest {

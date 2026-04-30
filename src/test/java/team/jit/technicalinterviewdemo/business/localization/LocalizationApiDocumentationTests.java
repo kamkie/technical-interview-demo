@@ -17,15 +17,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static team.jit.technicalinterviewdemo.SecurityTestSupport.adminOauthUser;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminOauthUser;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import team.jit.technicalinterviewdemo.technical.testing.AbstractDocumentationIntegrationTest;
-import team.jit.technicalinterviewdemo.technical.testing.LocalizationMessageTestData;
-import team.jit.technicalinterviewdemo.technical.testing.RestDocsIntegrationSpringBootTest;
+import team.jit.technicalinterviewdemo.testing.AbstractDocumentationIntegrationTest;
+import team.jit.technicalinterviewdemo.testing.LocalizationMessageTestData;
+import team.jit.technicalinterviewdemo.testing.RestDocsIntegrationSpringBootTest;
 
 @RestDocsIntegrationSpringBootTest
 class LocalizationApiDocumentationTests extends AbstractDocumentationIntegrationTest {

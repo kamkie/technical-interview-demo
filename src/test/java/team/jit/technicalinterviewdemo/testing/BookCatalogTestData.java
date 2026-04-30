@@ -1,4 +1,4 @@
-package team.jit.technicalinterviewdemo.technical.testing;
+package team.jit.technicalinterviewdemo.testing;
 
 import java.util.LinkedHashSet;
 import java.util.List;

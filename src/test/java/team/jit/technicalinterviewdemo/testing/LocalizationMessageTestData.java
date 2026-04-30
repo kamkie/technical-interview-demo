@@ -1,4 +1,4 @@
-package team.jit.technicalinterviewdemo.technical.testing;
+package team.jit.technicalinterviewdemo.testing;
 
 import team.jit.technicalinterviewdemo.business.localization.LocalizationMessage;
 import team.jit.technicalinterviewdemo.business.localization.LocalizationMessageRepository;

@@ -1,4 +1,4 @@
-package team.jit.technicalinterviewdemo.technical.testing;
+package team.jit.technicalinterviewdemo.testing;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -7,14 +7,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.springframework.boot.test.context.SpringBootTest;
-import team.jit.technicalinterviewdemo.TestcontainersTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@TestcontainersTest
-@SpringBootTest
-public @interface IntegrationSpringBootTest {
+@ActiveProfiles("test")
+@Import(PostgresTestcontainersConfiguration.class)
+public @interface TestcontainersTest {
 }

@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import team.jit.technicalinterviewdemo.technical.localization.LocalizationContext;
 import team.jit.technicalinterviewdemo.technical.localization.LocalizationMessageSeedData;
-import team.jit.technicalinterviewdemo.technical.testing.IntegrationSpringBootTest;
-import team.jit.technicalinterviewdemo.technical.testing.LocalizationMessageTestData;
+import team.jit.technicalinterviewdemo.testing.IntegrationSpringBootTest;
+import team.jit.technicalinterviewdemo.testing.LocalizationMessageTestData;
 
 @IntegrationSpringBootTest
 class LocalizationMessageServiceTests {

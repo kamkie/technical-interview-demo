@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static team.jit.technicalinterviewdemo.SecurityTestSupport.oauthUser;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.oauthUser;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,9 +31,9 @@ import team.jit.technicalinterviewdemo.business.book.Book;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
 import team.jit.technicalinterviewdemo.business.category.Category;
 import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
-import team.jit.technicalinterviewdemo.technical.testing.AbstractDocumentationIntegrationTest;
-import team.jit.technicalinterviewdemo.technical.testing.BookCatalogTestData;
-import team.jit.technicalinterviewdemo.technical.testing.RestDocsIntegrationSpringBootTest;
+import team.jit.technicalinterviewdemo.testing.AbstractDocumentationIntegrationTest;
+import team.jit.technicalinterviewdemo.testing.BookCatalogTestData;
+import team.jit.technicalinterviewdemo.testing.RestDocsIntegrationSpringBootTest;
 
 @RestDocsIntegrationSpringBootTest
 class ApiDocumentationTests extends AbstractDocumentationIntegrationTest {

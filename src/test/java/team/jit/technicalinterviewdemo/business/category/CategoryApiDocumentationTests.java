@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static team.jit.technicalinterviewdemo.SecurityTestSupport.adminOauthUser;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminOauthUser;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,9 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
-import team.jit.technicalinterviewdemo.technical.testing.AbstractDocumentationIntegrationTest;
-import team.jit.technicalinterviewdemo.technical.testing.BookCatalogTestData;
-import team.jit.technicalinterviewdemo.technical.testing.RestDocsIntegrationSpringBootTest;
+import team.jit.technicalinterviewdemo.testing.AbstractDocumentationIntegrationTest;
+import team.jit.technicalinterviewdemo.testing.BookCatalogTestData;
+import team.jit.technicalinterviewdemo.testing.RestDocsIntegrationSpringBootTest;
 
 @RestDocsIntegrationSpringBootTest
 class CategoryApiDocumentationTests extends AbstractDocumentationIntegrationTest {

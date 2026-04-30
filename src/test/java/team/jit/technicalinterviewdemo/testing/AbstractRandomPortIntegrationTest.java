@@ -1,4 +1,4 @@
-package team.jit.technicalinterviewdemo.technical.testing;
+package team.jit.technicalinterviewdemo.testing;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;

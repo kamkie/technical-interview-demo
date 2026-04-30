@@ -1,4 +1,4 @@
-package team.jit.technicalinterviewdemo.technical.testing;
+package team.jit.technicalinterviewdemo.testing;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -7,13 +7,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@IntegrationSpringBootTest
-@AutoConfigureMockMvc
-public @interface MockMvcIntegrationSpringBootTest {
+@TestcontainersTest
+@SpringBootTest
+public @interface IntegrationSpringBootTest {
 }

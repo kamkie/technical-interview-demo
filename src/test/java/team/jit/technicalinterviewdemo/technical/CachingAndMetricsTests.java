@@ -1,8 +1,8 @@
-package team.jit.technicalinterviewdemo;
+package team.jit.technicalinterviewdemo.technical;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static team.jit.technicalinterviewdemo.SecurityTestSupport.clearAuthentication;
-import static team.jit.technicalinterviewdemo.SecurityTestSupport.setAdminAuthenticatedUser;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.clearAuthentication;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.setAdminAuthenticatedUser;
 
 import io.micrometer.core.instrument.MeterRegistry;
 
@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.PageRequest;
-import team.jit.technicalinterviewdemo.business.book.Book;
 import team.jit.technicalinterviewdemo.business.book.BookCreateRequest;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
 import team.jit.technicalinterviewdemo.business.book.BookSearchRequest;
@@ -31,9 +30,9 @@ import team.jit.technicalinterviewdemo.business.localization.LocalizationMessage
 import team.jit.technicalinterviewdemo.business.localization.LocalizationMessageRequest;
 import team.jit.technicalinterviewdemo.business.localization.LocalizationMessageService;
 import team.jit.technicalinterviewdemo.business.user.UserAccountRepository;
-import team.jit.technicalinterviewdemo.technical.testing.BookCatalogTestData;
-import team.jit.technicalinterviewdemo.technical.testing.CacheTestSupport;
-import team.jit.technicalinterviewdemo.technical.testing.IntegrationSpringBootTest;
+import team.jit.technicalinterviewdemo.testing.BookCatalogTestData;
+import team.jit.technicalinterviewdemo.testing.CacheTestSupport;
+import team.jit.technicalinterviewdemo.testing.IntegrationSpringBootTest;
 
 @IntegrationSpringBootTest
 class CachingAndMetricsTests {

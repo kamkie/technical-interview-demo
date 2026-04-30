@@ -1,4 +1,4 @@
-package team.jit.technicalinterviewdemo;
+package team.jit.technicalinterviewdemo.technical;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,6 +18,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import team.jit.technicalinterviewdemo.TechnicalInterviewDemoApplication;
 import team.jit.technicalinterviewdemo.business.book.Book;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
 import team.jit.technicalinterviewdemo.business.book.BookSearchRequest;
@@ -25,8 +26,8 @@ import team.jit.technicalinterviewdemo.technical.cache.CacheNames;
 import team.jit.technicalinterviewdemo.business.category.Category;
 import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
 import team.jit.technicalinterviewdemo.technical.cache.CachingConfiguration;
-import team.jit.technicalinterviewdemo.technical.testing.BookCatalogTestData;
-import team.jit.technicalinterviewdemo.technical.testing.IntegrationSpringBootTest;
+import team.jit.technicalinterviewdemo.testing.BookCatalogTestData;
+import team.jit.technicalinterviewdemo.testing.IntegrationSpringBootTest;
 
 @IntegrationSpringBootTest
 class ArchitectureHardeningTests {

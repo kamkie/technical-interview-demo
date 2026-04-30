@@ -6,8 +6,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static team.jit.technicalinterviewdemo.SecurityTestSupport.adminOauthUser;
-import static team.jit.technicalinterviewdemo.SecurityTestSupport.oauthUser;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminOauthUser;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.oauthUser;
 
 import io.micrometer.core.instrument.MeterRegistry;
 
@@ -24,9 +24,9 @@ import team.jit.technicalinterviewdemo.business.audit.AuditLogRepository;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
 import team.jit.technicalinterviewdemo.technical.cache.CacheNames;
 import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
-import team.jit.technicalinterviewdemo.technical.testing.AbstractMockMvcIntegrationTest;
-import team.jit.technicalinterviewdemo.technical.testing.CacheTestSupport;
-import team.jit.technicalinterviewdemo.technical.testing.MockMvcIntegrationSpringBootTest;
+import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
+import team.jit.technicalinterviewdemo.testing.CacheTestSupport;
+import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
 
 @MockMvcIntegrationSpringBootTest
 class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {

@@ -17,7 +17,7 @@ import org.springframework.session.Session;
 import org.springframework.session.SessionRepository;
 import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import team.jit.technicalinterviewdemo.technical.testing.IntegrationSpringBootTest;
+import team.jit.technicalinterviewdemo.testing.IntegrationSpringBootTest;
 
 @IntegrationSpringBootTest
 class SecurityIntegrationTests {

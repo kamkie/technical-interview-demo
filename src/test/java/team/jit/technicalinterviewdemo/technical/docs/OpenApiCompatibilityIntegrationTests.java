@@ -9,8 +9,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import team.jit.technicalinterviewdemo.technical.testing.AbstractRandomPortIntegrationTest;
-import team.jit.technicalinterviewdemo.technical.testing.RandomPortIntegrationSpringBootTest;
+import team.jit.technicalinterviewdemo.testing.AbstractRandomPortIntegrationTest;
+import team.jit.technicalinterviewdemo.testing.RandomPortIntegrationSpringBootTest;
 
 @RandomPortIntegrationSpringBootTest
 class OpenApiCompatibilityIntegrationTests extends AbstractRandomPortIntegrationTest {
