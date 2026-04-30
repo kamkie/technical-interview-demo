@@ -9,7 +9,7 @@ This repository contains a small Spring Boot demo application built with Gradle 
 The demo currently includes:
 
 - `GET /hello` returning `Hello World!`
-- A REST API for `Book` under `/api/books`
+- A REST API for `Book` under `/api/books` with pagination and filtering
 - In-memory H2 database configuration
 - Seed data loaded at startup
 - MVC and integration-style tests
@@ -267,7 +267,7 @@ Hello World!
 
 ### Book API
 
-- `GET /api/books?page=0&size=20&sort=id,asc`
+- `GET /api/books?page=0&size=20&sort=id,asc&title=clean&yearFrom=2000&yearTo=2020`
 - `GET /api/books/{id}`
 - `POST /api/books`
 - `PUT /api/books/{id}`
@@ -306,6 +306,11 @@ Validation rules:
 - `isbn` must be unique across books
 - `isbn` is immutable after creation and is not updated by `PUT /api/books/{id}`
 - `version` is returned for each book and required on `PUT /api/books/{id}` for optimistic locking
+- `GET /api/books` supports optional `title`, `author`, and `isbn` substring filters
+- `GET /api/books` supports `year` for exact publication year matching
+- `GET /api/books` supports `yearFrom` and `yearTo` for inclusive publication year ranges
+- `GET /api/books` supports repeated `sort` parameters such as `sort=title,asc&sort=year,desc`
+- `year` cannot be combined with `yearFrom` or `yearTo`
 
 Actuator endpoints:
 

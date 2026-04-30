@@ -34,7 +34,7 @@ include::{snippets}/hello/get-hello/response-body.adoc[]
 
 === `GET /api/books`
 
-Lists books in a paginated response. Supports `page`, `size`, and `sort` query parameters.
+Lists books in a paginated response. Supports `page`, `size`, `sort`, `title`, `author`, `isbn`, `year`, `yearFrom`, and `yearTo` query parameters.
 
 include::{snippets}/books/list-books/curl-request.adoc[]
 include::{snippets}/books/list-books/http-request.adoc[]
@@ -114,6 +114,17 @@ include::{snippets}/errors/create-book-duplicate-isbn/request-body.adoc[]
 include::{snippets}/errors/create-book-duplicate-isbn/http-response.adoc[]
 include::{snippets}/errors/create-book-duplicate-isbn/response-headers.adoc[]
 include::{snippets}/errors/create-book-duplicate-isbn/response-fields.adoc[]
+
+=== `GET /api/books` invalid filter request
+
+Example bad-request response when mutually exclusive year filters are combined.
+
+include::{snippets}/errors/list-books-invalid-request/curl-request.adoc[]
+include::{snippets}/errors/list-books-invalid-request/http-request.adoc[]
+include::{snippets}/errors/list-books-invalid-request/query-parameters.adoc[]
+include::{snippets}/errors/list-books-invalid-request/http-response.adoc[]
+include::{snippets}/errors/list-books-invalid-request/response-headers.adoc[]
+include::{snippets}/errors/list-books-invalid-request/response-fields.adoc[]
 
 === `GET /api/books/{id}` invalid identifier
 

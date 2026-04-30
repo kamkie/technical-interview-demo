@@ -92,10 +92,17 @@ class ApiDocumentationTests {
 
     @Test
     void documentListBooksEndpoint() throws Exception {
+        bookRepository.saveAndFlush(new Book("Clean Architecture", "Robert C. Martin", "9780134494166", 2017));
+
         mockMvc.perform(get("/api/books")
                         .queryParam("page", "0")
                         .queryParam("size", "20")
-                        .queryParam("sort", "id,asc"))
+                        .queryParam("title", "clean")
+                        .queryParam("author", "martin")
+                        .queryParam("yearFrom", "2000")
+                        .queryParam("yearTo", "2020")
+                        .queryParam("sort", "title,asc")
+                        .queryParam("sort", "year,desc"))
                 .andExpect(status().isOk())
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
@@ -103,9 +110,17 @@ class ApiDocumentationTests {
                 .andDo(documentEndpoint(
                         "books/list-books",
                         queryParameters(
-                                parameterWithName("page").description("Zero-based page index."),
-                                parameterWithName("size").description("Page size capped by the server."),
-                                parameterWithName("sort").description("Sort expression in the form `property,direction`.")
+                                parameterWithName("page").optional().description("Zero-based page index."),
+                                parameterWithName("size").optional().description("Page size capped by the server."),
+                                parameterWithName("sort").optional().description(
+                                        "Sort expression in the form `property,direction`. Repeat the parameter for multiple sort fields. Supported properties: `id`, `title`, `author`, `isbn`, `year`."
+                                ),
+                                parameterWithName("title").optional().description("Case-insensitive title substring filter."),
+                                parameterWithName("author").optional().description("Case-insensitive author substring filter."),
+                                parameterWithName("isbn").optional().description("Exact or partial ISBN filter."),
+                                parameterWithName("year").optional().description("Exact publication year filter. Cannot be combined with `yearFrom` or `yearTo`."),
+                                parameterWithName("yearFrom").optional().description("Inclusive publication year lower bound."),
+                                parameterWithName("yearTo").optional().description("Inclusive publication year upper bound.")
                         ),
                         responseHeaders(commonResponseHeaders()),
                         relaxedResponseFields(
@@ -125,6 +140,30 @@ class ApiDocumentationTests {
                                 fieldWithPath("numberOfElements").description("Number of books returned in the current page."),
                                 fieldWithPath("first").description("Whether this page is the first page."),
                                 fieldWithPath("empty").description("Whether the page content is empty.")
+                        )
+                ));
+    }
+
+    @Test
+    void documentListBooksInvalidRequestError() throws Exception {
+        mockMvc.perform(get("/api/books")
+                        .queryParam("year", "2018")
+                        .queryParam("yearFrom", "2000"))
+                .andExpect(status().isBadRequest())
+                .andExpect(header().exists("X-Request-Id"))
+                .andExpect(header().exists("traceparent"))
+                .andExpect(jsonPath("$.title").value("Invalid Request"))
+                .andDo(documentEndpoint(
+                        "errors/list-books-invalid-request",
+                        queryParameters(
+                                parameterWithName("year").description("Exact publication year filter used in the invalid request."),
+                                parameterWithName("yearFrom").description("Range filter that conflicts with `year` in this example.")
+                        ),
+                        responseHeaders(commonResponseHeaders()),
+                        relaxedResponseFields(
+                                fieldWithPath("title").description("Problem title."),
+                                fieldWithPath("status").description("HTTP status code."),
+                                fieldWithPath("detail").description("Human-readable problem summary.")
                         )
                 ));
     }

@@ -452,23 +452,25 @@ Track who made changes to what, when, and (optionally) why.
 
 ## Phase 6: Enhanced Book API
 
-### 6.1 Add Search & Filtering to Books 🟢
+### 6.1 Add Search & Filtering to Books ✅
+
+**Status:** Completed
 
 Enhanced search capabilities for the book API without breaking existing endpoints.
 
 **Tasks:**
-- [ ] Enhance `GET /api/books` to support filtering:
+- [x] Enhance `GET /api/books` to support filtering:
   - `?title=*search*` - filter by title (case-insensitive contains)
   - `?author=*search*` - filter by author (case-insensitive contains)
   - `?isbn=*search*` - filter by ISBN (exact or partial)
   - `?year=2022` or `?yearFrom=2020&yearTo=2023` - filter by publication year
   - `?sort=title,asc&sort=year,desc` - multiple sort fields
-- [ ] Implement filtering at repository layer (using `Specification<Book>` or custom query)
-- [ ] Update `BookRepository` with filtering methods
-- [ ] Add validation to prevent SQL injection or abuse
-- [ ] Document new query parameters in API docs
-- [ ] Add tests for filtering scenarios
-- [ ] Add tests for sorting combinations
+- [x] Implement filtering at repository layer (using `Specification<Book>` or custom query)
+- [x] Update `BookRepository` with filtering methods
+- [x] Add validation to prevent SQL injection or abuse
+- [x] Document new query parameters in API docs
+- [x] Add tests for filtering scenarios
+- [x] Add tests for sorting combinations
 
 **Definition of Done:**
 - Filtering works without breaking existing `?sort=id,asc` API

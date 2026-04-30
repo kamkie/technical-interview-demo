@@ -51,6 +51,17 @@ public class ApiExceptionHandler {
         );
     }
 
+    @ExceptionHandler(InvalidRequestException.class)
+    ProblemDetail handleInvalidRequest(InvalidRequestException exception, HttpServletRequest request) {
+        return logClientProblem(
+                HttpStatus.BAD_REQUEST,
+                "Invalid Request",
+                exception.getMessage(),
+                request,
+                Map.of("exception", exception.getClass().getSimpleName())
+        );
+    }
+
     @ExceptionHandler({StaleBookVersionException.class, ObjectOptimisticLockingFailureException.class})
     ProblemDetail handleConcurrentModification(Exception exception, HttpServletRequest request) {
         String detail = exception instanceof StaleBookVersionException

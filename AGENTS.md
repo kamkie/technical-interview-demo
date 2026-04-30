@@ -10,7 +10,7 @@ Current scope:
 
 - `GET /docs` redirects to generated API documentation
 - `GET /hello` returns `Hello World!`
-- CRUD-style `Book` API under `/api/books` with pagination and optimistic locking on updates
+- CRUD-style `Book` API under `/api/books` with pagination, filtering, and optimistic locking on updates
 - actuator endpoints for `health`, `info`, liveness/readiness probes, and Prometheus metrics
 - H2 in-memory database
 - startup seed data
@@ -150,7 +150,7 @@ Endpoints:
 
 - `GET /docs`
 - `GET /hello`
-- `GET /api/books?page=0&size=20&sort=id,asc`
+- `GET /api/books?page=0&size=20&sort=id,asc&title=clean&yearFrom=2000&yearTo=2020`
 - `GET /api/books/{id}`
 - `POST /api/books`
 - `PUT /api/books/{id}`
@@ -170,6 +170,11 @@ Book rules:
 - `isbn` must be unique
 - `isbn` is immutable after creation and is not updated by `PUT /api/books/{id}`
 - `GET /api/books` returns a paginated response
+- `GET /api/books` supports optional `title`, `author`, and `isbn` substring filters
+- `GET /api/books` supports `year` for exact publication year matching
+- `GET /api/books` supports `yearFrom` and `yearTo` for inclusive publication year ranges
+- `GET /api/books` supports repeated `sort` parameters such as `sort=title,asc&sort=year,desc`
+- `year` cannot be combined with `yearFrom` or `yearTo`
 - `version` is returned for each book and is required on `PUT /api/books/{id}` for optimistic locking
 
 Seed data:

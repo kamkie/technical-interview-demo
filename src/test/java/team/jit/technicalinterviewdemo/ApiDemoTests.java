@@ -80,6 +80,81 @@ class ApiDemoTests {
     }
 
     @Test
+    void listBooksFiltersByTitleAndAuthorIgnoringCase() throws Exception {
+        bookRepository.saveAndFlush(new Book("Clean Architecture", "Robert C. Martin", "9780134494166", 2017));
+        bookRepository.saveAndFlush(new Book("Code Complete", "Steve McConnell", "9780735619678", 2004));
+
+        mockMvc.perform(get("/api/books")
+                        .queryParam("title", "CLEAN")
+                        .queryParam("author", "martin")
+                        .queryParam("sort", "year,desc"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.length()").value(2))
+                .andExpect(jsonPath("$.content[0].title").value("Clean Architecture"))
+                .andExpect(jsonPath("$.content[0].publicationYear").value(2017))
+                .andExpect(jsonPath("$.content[1].title").value("Clean Code"))
+                .andExpect(jsonPath("$.content[1].publicationYear").value(2008))
+                .andExpect(jsonPath("$.totalElements").value(2));
+    }
+
+    @Test
+    void listBooksFiltersByExactPublicationYear() throws Exception {
+        bookRepository.saveAndFlush(new Book("Domain-Driven Design", "Eric Evans", "9780321125217", 2003));
+
+        mockMvc.perform(get("/api/books")
+                        .queryParam("year", "2018"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.length()").value(1))
+                .andExpect(jsonPath("$.content[0].title").value("Effective Java"))
+                .andExpect(jsonPath("$.content[0].publicationYear").value(2018))
+                .andExpect(jsonPath("$.totalElements").value(1));
+    }
+
+    @Test
+    void listBooksFiltersByIsbnAndYearRangeAndSupportsMultipleSortFields() throws Exception {
+        bookRepository.saveAndFlush(new Book("Refactoring", "Martin Fowler", "9780201485677", 1999));
+        bookRepository.saveAndFlush(new Book("Refactoring", "Martin Fowler", "9780134757599", 2018));
+
+        mockMvc.perform(get("/api/books")
+                        .queryParam("isbn", "9780")
+                        .queryParam("yearFrom", "1990")
+                        .queryParam("yearTo", "2020")
+                        .queryParam("author", "fowler")
+                        .queryParam("sort", "title,asc")
+                        .queryParam("sort", "year,desc"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.length()").value(2))
+                .andExpect(jsonPath("$.content[0].title").value("Refactoring"))
+                .andExpect(jsonPath("$.content[0].publicationYear").value(2018))
+                .andExpect(jsonPath("$.content[1].title").value("Refactoring"))
+                .andExpect(jsonPath("$.content[1].publicationYear").value(1999))
+                .andExpect(jsonPath("$.totalElements").value(2));
+    }
+
+    @Test
+    void listBooksWithConflictingYearFiltersReturnsBadRequest() throws Exception {
+        mockMvc.perform(get("/api/books")
+                        .queryParam("year", "2018")
+                        .queryParam("yearFrom", "2000"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.title").value("Invalid Request"))
+                .andExpect(jsonPath("$.detail").value(
+                        "Use either 'year' or the 'yearFrom'/'yearTo' range parameters, not both."
+                ));
+    }
+
+    @Test
+    void listBooksWithUnsupportedSortReturnsBadRequest() throws Exception {
+        mockMvc.perform(get("/api/books")
+                        .queryParam("sort", "dropTable,asc"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.title").value("Invalid Request"))
+                .andExpect(jsonPath("$.detail").value(
+                        "Sort field 'dropTable' is not supported. Use one of: id, title, author, isbn, year."
+                ));
+    }
+
+    @Test
     void getBookByIdReturnsRequestedBook() throws Exception {
         mockMvc.perform(get("/api/books/{id}", effectiveJava.getId()))
                 .andExpect(status().isOk())

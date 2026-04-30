@@ -24,8 +24,11 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping
-    public ResponseEntity<Page<Book>> findAll(@PageableDefault(size = 20, sort = "id") Pageable pageable) {
-        Page<Book> payload = bookService.findAll(pageable);
+    public ResponseEntity<Page<Book>> findAll(
+            BookSearchRequest request,
+            @PageableDefault(size = 20, sort = "id") Pageable pageable
+    ) {
+        Page<Book> payload = bookService.findAll(request, pageable);
         return ResponseEntity.ok(payload);
     }
 
