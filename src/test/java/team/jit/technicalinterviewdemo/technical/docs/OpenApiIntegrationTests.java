@@ -88,3 +88,4 @@ class OpenApiIntegrationTests extends AbstractRandomPortIntegrationTest {
         return OBJECT_MAPPER.readTree(response.body());
     }
 }
+

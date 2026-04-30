@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import team.jit.technicalinterviewdemo.technical.security.AuthenticatedUserSecurityService;
+import team.jit.technicalinterviewdemo.business.user.CurrentUserAccountService;
 
 @Component
 @RequiredArgsConstructor
@@ -12,7 +12,7 @@ public class LocalizationContext {
 
     private static final ThreadLocal<String> CURRENT_LANGUAGE = new ThreadLocal<>();
 
-    private final AuthenticatedUserSecurityService authenticatedUserSecurityService;
+    private final CurrentUserAccountService currentUserAccountService;
 
     public void setCurrentLanguage(String language) {
         CURRENT_LANGUAGE.set(language);
@@ -24,7 +24,7 @@ public class LocalizationContext {
 
     public String resolveCurrentLanguageOrDefault() {
         return getCurrentLanguage()
-                .or(() -> authenticatedUserSecurityService.findCurrentUserPreferredLanguage())
+                .or(() -> currentUserAccountService.findCurrentUserPreferredLanguage())
                 .orElse(RequestLanguageResolver.DEFAULT_LANGUAGE);
     }
 
@@ -32,3 +32,4 @@ public class LocalizationContext {
         CURRENT_LANGUAGE.remove();
     }
 }
+

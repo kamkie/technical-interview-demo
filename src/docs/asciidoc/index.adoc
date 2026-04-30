@@ -51,7 +51,7 @@ The values below are loaded from `{build-info-path}` during the Asciidoctor buil
 
 == Documentation Pages
 
-- xref:hello-controller.adoc[HelloController API]
+- xref:technical-overview-controller.adoc[TechnicalOverviewController API]
 - xref:book-controller.adoc[BookController API]
 - xref:category-controller.adoc[CategoryController API]
 - xref:localization-message-controller.adoc[LocalizationMessageController API]
@@ -65,3 +65,4 @@ The values below are loaded from `{build-info-path}` during the Asciidoctor buil
 - The application serves the generated output from `/docs`, with `/docs` redirecting to `index.html`.
 - The approved OpenAPI baseline is stored at `src/test/resources/openapi/approved-openapi.json`.
 - Refresh the approved OpenAPI baseline intentionally with `./gradlew refreshOpenApiBaseline` or `.\gradlew.bat refreshOpenApiBaseline`.
+

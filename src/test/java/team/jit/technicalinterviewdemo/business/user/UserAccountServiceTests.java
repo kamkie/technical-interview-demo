@@ -16,13 +16,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import team.jit.technicalinterviewdemo.technical.api.InvalidRequestException;
 import team.jit.technicalinterviewdemo.technical.metrics.ApplicationMetrics;
-import team.jit.technicalinterviewdemo.technical.security.AuthenticatedUserSecurityService;
 
 @ExtendWith(MockitoExtension.class)
 class UserAccountServiceTests {
 
     @Mock
-    private AuthenticatedUserSecurityService authenticatedUserSecurityService;
+    private CurrentUserAccountService currentUserAccountService;
 
     @Mock
     private UserAccountRepository userAccountRepository;
@@ -35,7 +34,7 @@ class UserAccountServiceTests {
     @BeforeEach
     void setUp() {
         userAccountService = new UserAccountService(
-                authenticatedUserSecurityService,
+                currentUserAccountService,
                 userAccountRepository,
                 applicationMetrics
         );
@@ -45,10 +44,10 @@ class UserAccountServiceTests {
     void updatePreferredLanguageClearsBlankValue() {
         UserAccount currentUser = testUserAccount();
         currentUser.setPreferredLanguage("pl");
-        when(authenticatedUserSecurityService.getCurrentUserOrSynchronize()).thenReturn(currentUser);
+        when(currentUserAccountService.getCurrentUserOrSynchronize()).thenReturn(currentUser);
         when(userAccountRepository.saveAndFlush(currentUser)).thenReturn(currentUser);
 
-        UserProfileResponse response = userAccountService.updatePreferredLanguage("   ");
+        UserAccountResponse response = userAccountService.updatePreferredLanguage("   ");
 
         assertThat(response.preferredLanguage()).isNull();
         verify(userAccountRepository).saveAndFlush(currentUser);
@@ -56,7 +55,7 @@ class UserAccountServiceTests {
 
     @Test
     void updatePreferredLanguageRejectsInvalidFormat() {
-        when(authenticatedUserSecurityService.getCurrentUserOrSynchronize()).thenReturn(testUserAccount());
+        when(currentUserAccountService.getCurrentUserOrSynchronize()).thenReturn(testUserAccount());
 
         assertThatThrownBy(() -> userAccountService.updatePreferredLanguage("pol"))
                 .isInstanceOf(InvalidRequestException.class)
@@ -67,7 +66,7 @@ class UserAccountServiceTests {
 
     @Test
     void updatePreferredLanguageRejectsUnsupportedLanguage() {
-        when(authenticatedUserSecurityService.getCurrentUserOrSynchronize()).thenReturn(testUserAccount());
+        when(currentUserAccountService.getCurrentUserOrSynchronize()).thenReturn(testUserAccount());
 
         assertThatThrownBy(() -> userAccountService.updatePreferredLanguage("it"))
                 .isInstanceOf(InvalidRequestException.class)
@@ -77,7 +76,7 @@ class UserAccountServiceTests {
     }
 
     @Test
-    void getCurrentUserProfileSortsRolesAlphabetically() {
+    void getCurrentUserAccountSortsRolesAlphabetically() {
         UserAccount currentUser = new UserAccount(
                 "github",
                 "kamkie",
@@ -87,9 +86,9 @@ class UserAccountServiceTests {
                 LocalDateTime.of(2026, 4, 30, 20, 0),
                 Set.of(UserRole.USER, UserRole.ADMIN)
         );
-        when(authenticatedUserSecurityService.getCurrentUserOrSynchronize()).thenReturn(currentUser);
+        when(currentUserAccountService.getCurrentUserOrSynchronize()).thenReturn(currentUser);
 
-        UserProfileResponse response = userAccountService.getCurrentUserProfile();
+        UserAccountResponse response = userAccountService.getCurrentUserAccount();
 
         assertThat(response.roles()).containsExactly("ADMIN", "USER");
     }
@@ -106,3 +105,4 @@ class UserAccountServiceTests {
         );
     }
 }
+

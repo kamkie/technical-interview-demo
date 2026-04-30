@@ -6,10 +6,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import team.jit.technicalinterviewdemo.business.localization.SupportedLanguages;
 import team.jit.technicalinterviewdemo.technical.api.InvalidRequestException;
-import team.jit.technicalinterviewdemo.technical.localization.SupportedLanguages;
 import team.jit.technicalinterviewdemo.technical.metrics.ApplicationMetrics;
-import team.jit.technicalinterviewdemo.technical.security.AuthenticatedUserSecurityService;
 
 @Slf4j
 @Service
@@ -17,19 +16,19 @@ import team.jit.technicalinterviewdemo.technical.security.AuthenticatedUserSecur
 @RequiredArgsConstructor
 public class UserAccountService {
 
-    private final AuthenticatedUserSecurityService authenticatedUserSecurityService;
+    private final CurrentUserAccountService currentUserAccountService;
     private final UserAccountRepository userAccountRepository;
     private final ApplicationMetrics applicationMetrics;
 
-    public UserProfileResponse getCurrentUserProfile() {
-        UserAccount currentUser = authenticatedUserSecurityService.getCurrentUserOrSynchronize();
+    public UserAccountResponse getCurrentUserAccount() {
+        UserAccount currentUser = currentUserAccountService.getCurrentUserOrSynchronize();
         applicationMetrics.recordUserOperation("getCurrentProfile");
-        return UserProfileResponse.from(currentUser);
+        return UserAccountResponse.from(currentUser);
     }
 
     @Transactional
-    public UserProfileResponse updatePreferredLanguage(String preferredLanguage) {
-        UserAccount currentUser = authenticatedUserSecurityService.getCurrentUserOrSynchronize();
+    public UserAccountResponse updatePreferredLanguage(String preferredLanguage) {
+        UserAccount currentUser = currentUserAccountService.getCurrentUserOrSynchronize();
         currentUser.setPreferredLanguage(normalizePreferredLanguage(preferredLanguage));
         UserAccount updatedUser = userAccountRepository.saveAndFlush(currentUser);
         applicationMetrics.recordUserOperation("updatePreferredLanguage");
@@ -39,7 +38,7 @@ public class UserAccountService {
                 updatedUser.getExternalLogin(),
                 updatedUser.getPreferredLanguage()
         );
-        return UserProfileResponse.from(updatedUser);
+        return UserAccountResponse.from(updatedUser);
     }
 
     private String normalizePreferredLanguage(String preferredLanguage) {
@@ -59,3 +58,4 @@ public class UserAccountService {
         return normalizedPreferredLanguage;
     }
 }
+

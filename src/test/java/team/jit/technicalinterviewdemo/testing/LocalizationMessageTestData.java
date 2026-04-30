@@ -2,7 +2,7 @@ package team.jit.technicalinterviewdemo.testing;
 
 import team.jit.technicalinterviewdemo.business.localization.LocalizationMessage;
 import team.jit.technicalinterviewdemo.business.localization.LocalizationMessageRepository;
-import team.jit.technicalinterviewdemo.technical.localization.LocalizationMessageSeedData;
+import team.jit.technicalinterviewdemo.business.localization.seed.LocalizationMessageSeedData;
 
 public final class LocalizationMessageTestData {
 

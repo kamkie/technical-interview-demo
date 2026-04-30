@@ -96,11 +96,11 @@ Status: Planned
 Use this section when touching nearby code. Do not treat it as a blocker for unrelated feature work.
 
 ### Naming And Package Simplification
-- [ ] Align technical overview naming, including renaming `HelloController` and placing overview classes under a clearer package such as `technical.info`
-- [ ] Move feature-specific exceptions and seed/bootstrap classes closer to their business packages, keeping only cross-cutting infrastructure in `technical.*`
-- [ ] Standardize user-area naming around one noun, preferably `UserAccount*`, and rename `AuthenticatedUserSecurityService` to match its real responsibility
-- [ ] Standardize initializer, search/specification, and API integration test naming so similar classes follow one pattern
-- [ ] Remove empty or unused package placeholders such as `technical.config`
+- [x] Align technical overview naming by renaming `HelloController` to `TechnicalOverviewController` and moving overview classes under `technical.info`
+- [x] Move feature-specific exceptions and seed/bootstrap classes closer to their business packages, keeping only cross-cutting infrastructure in `technical.*`
+- [x] Standardize user-area naming around `UserAccount*` and rename `AuthenticatedUserSecurityService` to `CurrentUserAccountService`
+- [x] Standardize initializer, search/specification, and API integration test naming so similar classes follow one pattern
+- [x] Remove empty or unused package placeholders such as `technical.config`
 
 ---
 

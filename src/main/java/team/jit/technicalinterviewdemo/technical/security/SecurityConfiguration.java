@@ -1,5 +1,6 @@
 package team.jit.technicalinterviewdemo.technical.security;
 
+import team.jit.technicalinterviewdemo.business.user.CurrentUserAccountService;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,9 +19,9 @@ public class SecurityConfiguration {
 
     @Bean
     AuthenticatedUserSynchronizationFilter authenticatedUserSynchronizationFilter(
-            AuthenticatedUserSecurityService authenticatedUserSecurityService
+            CurrentUserAccountService currentUserAccountService
     ) {
-        return new AuthenticatedUserSynchronizationFilter(authenticatedUserSecurityService);
+        return new AuthenticatedUserSynchronizationFilter(currentUserAccountService);
     }
 
     @Bean
@@ -64,3 +65,4 @@ public class SecurityConfiguration {
         return http.build();
     }
 }
+

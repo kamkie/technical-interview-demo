@@ -8,8 +8,8 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import team.jit.technicalinterviewdemo.business.localization.seed.LocalizationMessageSeedData;
 import team.jit.technicalinterviewdemo.technical.localization.LocalizationContext;
-import team.jit.technicalinterviewdemo.technical.localization.LocalizationMessageSeedData;
 import team.jit.technicalinterviewdemo.testing.IntegrationSpringBootTest;
 import team.jit.technicalinterviewdemo.testing.LocalizationMessageTestData;
 

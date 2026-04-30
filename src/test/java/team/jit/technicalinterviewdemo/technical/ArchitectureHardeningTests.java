@@ -94,7 +94,7 @@ class ArchitectureHardeningTests {
         request.setCategory(List.of("java"));
 
         Page<Book> books = bookRepository.findAll(
-                team.jit.technicalinterviewdemo.business.book.BookSpecifications.fromSearchRequest(request),
+                team.jit.technicalinterviewdemo.business.book.BookSearchSpecifications.fromSearchRequest(request),
                 PageRequest.of(0, 20)
         );
 
@@ -106,3 +106,4 @@ class ArchitectureHardeningTests {
                 .containsExactly("Best Practices", "Java");
     }
 }
+

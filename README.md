@@ -338,7 +338,7 @@ Release policy:
 - `config/pmd/pmd-ruleset.xml`: curated PMD ruleset
 - `scripts/run-phase-9-benchmarks.ps1`: local benchmark runner that starts the app and refreshes the Phase 9 baseline
 - `src/main/java/team/jit/technicalinterviewdemo/TechnicalInterviewDemoApplication.java`: app entry point
-- `src/main/java/team/jit/technicalinterviewdemo/technical/HelloController.java`: public technical-overview and hello-world endpoints
+- `src/main/java/team/jit/technicalinterviewdemo/technical/info/TechnicalOverviewController.java`: public technical-overview and hello-world endpoints
 - `src/main/java/team/jit/technicalinterviewdemo/business/book/`: `Book` domain, service, repository, and REST API
 - `src/main/java/team/jit/technicalinterviewdemo/technical/cache/`: cache names, cache enablement, and related cache constants
 - `src/main/java/team/jit/technicalinterviewdemo/technical/security/`: security filter-chain, session configuration, and authenticated-user synchronization

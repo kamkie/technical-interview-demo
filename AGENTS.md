@@ -214,7 +214,7 @@ Release policy:
 - `config/pmd/pmd-ruleset.xml`: curated PMD rules
 - `scripts/run-phase-9-benchmarks.ps1`: local benchmark runner that starts the app and refreshes the Phase 9 baseline
 - `src/main/java/team/jit/technicalinterviewdemo/TechnicalInterviewDemoApplication.java`: app entry
-- `src/main/java/team/jit/technicalinterviewdemo/technical/HelloController.java`: public technical-overview and hello endpoints
+- `src/main/java/team/jit/technicalinterviewdemo/technical/info/TechnicalOverviewController.java`: public technical-overview and hello endpoints
 - `src/main/java/team/jit/technicalinterviewdemo/business/book/`: book entity, requests, repository, service, controller, seed data
 - `src/main/java/team/jit/technicalinterviewdemo/technical/cache/`: cache names, cache enablement, and related cache constants
 - `src/main/java/team/jit/technicalinterviewdemo/technical/security/`: security filter-chain, session configuration, and authenticated-user synchronization
@@ -442,4 +442,4 @@ A change is complete when:
 - the design remains consistent with the simple demo architecture
 - the application still starts
 - `.\gradlew.bat build` passes
-- new behavior is covered by tests when practical
+- tests cover new behavior when practical

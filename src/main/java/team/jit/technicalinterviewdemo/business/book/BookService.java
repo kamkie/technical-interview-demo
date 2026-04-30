@@ -19,12 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 import team.jit.technicalinterviewdemo.business.audit.AuditAction;
 import team.jit.technicalinterviewdemo.business.audit.AuditLogService;
 import team.jit.technicalinterviewdemo.business.audit.AuditTargetType;
-import team.jit.technicalinterviewdemo.technical.api.BookNotFoundException;
-import team.jit.technicalinterviewdemo.technical.api.DuplicateIsbnException;
-import team.jit.technicalinterviewdemo.technical.api.InvalidRequestException;
-import team.jit.technicalinterviewdemo.technical.api.StaleBookVersionException;
 import team.jit.technicalinterviewdemo.business.category.Category;
 import team.jit.technicalinterviewdemo.business.category.CategoryService;
+import team.jit.technicalinterviewdemo.technical.api.InvalidRequestException;
 import team.jit.technicalinterviewdemo.technical.metrics.ApplicationMetrics;
 
 @Slf4j
@@ -57,7 +54,7 @@ public class BookService {
         applicationMetrics.recordBookOperation("list");
         validateSearchRequest(request);
         Pageable effectivePageable = createEffectivePageable(pageable);
-        Specification<Book> searchSpecification = BookSpecifications.fromSearchRequest(request);
+        Specification<Book> searchSpecification = BookSearchSpecifications.fromSearchRequest(request);
         return bookRepository.findAll(searchSpecification, effectivePageable);
     }
 
@@ -229,3 +226,4 @@ public class BookService {
         }
     }
 }
+

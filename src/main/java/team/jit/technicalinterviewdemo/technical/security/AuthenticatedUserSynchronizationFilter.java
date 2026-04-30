@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
 import lombok.RequiredArgsConstructor;
+import team.jit.technicalinterviewdemo.business.user.CurrentUserAccountService;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @RequiredArgsConstructor
@@ -16,7 +17,7 @@ public class AuthenticatedUserSynchronizationFilter extends OncePerRequestFilter
 
     private static final String SESSION_ATTRIBUTE = AuthenticatedUserSynchronizationFilter.class.getName() + ".syncedUser";
 
-    private final AuthenticatedUserSecurityService authenticatedUserSecurityService;
+    private final CurrentUserAccountService currentUserAccountService;
 
     @Override
     protected void doFilterInternal(
@@ -24,7 +25,7 @@ public class AuthenticatedUserSynchronizationFilter extends OncePerRequestFilter
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
-        authenticatedUserSecurityService.currentAuthenticatedUserKey()
+        currentUserAccountService.currentAuthenticatedUserKey()
                 .ifPresent(authenticatedUserKey -> synchronizeUser(request, authenticatedUserKey));
         filterChain.doFilter(request, response);
     }
@@ -36,7 +37,7 @@ public class AuthenticatedUserSynchronizationFilter extends OncePerRequestFilter
             return;
         }
 
-        authenticatedUserSecurityService.synchronizeCurrentAuthenticatedUser();
+        currentUserAccountService.synchronizeCurrentAuthenticatedUser();
         session.setAttribute(SESSION_ATTRIBUTE, authenticatedUserKey);
     }
 }
