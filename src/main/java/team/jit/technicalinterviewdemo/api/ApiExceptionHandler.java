@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -249,6 +250,18 @@ public class ApiExceptionHandler {
                         "exception", exception.getClass().getSimpleName(),
                         "cause", rootCauseMessage(exception)
                 )
+        );
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    ProblemDetail handleAccessDenied(AccessDeniedException exception, HttpServletRequest request) {
+        return logClientProblem(
+                HttpStatus.FORBIDDEN,
+                "Forbidden",
+                exception.getMessage(),
+                "error.request.forbidden",
+                request,
+                Map.of("exception", exception.getClass().getSimpleName())
         );
     }
 

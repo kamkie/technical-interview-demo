@@ -9,7 +9,7 @@ The roadmap below is ordered to respect cross-phase dependencies.
 
 | Order | Theme | Status | Why it comes next |
 | --- | --- | --- | --- |
-| 1 | Phase 5.2-5.3: User model and audit trail | In Progress | OAuth/session groundwork is done, so persisted users and audit history are the next dependency chain |
+| 1 | Phase 5.3: Audit trail | In Progress | Persisted users and roles now exist, so audit history is the next remaining security dependency |
 | 2 | Phase 8.5: OpenAPI and compatibility gates | Ready after Phase 5.1 | The machine-readable contract should reflect the secured API surface |
 | 3 | Phase 8.1: API and operations documentation gaps | Partially blocked by Phases 5.2 and 8.5 | The remaining docs should follow the persisted user model and final OpenAPI contract |
 | 4 | Phase 9: Coverage and performance testing | Ready after core APIs stabilize | Better value once the near-term API and auth work are settled |
@@ -18,17 +18,17 @@ The roadmap below is ordered to respect cross-phase dependencies.
 
 ## Current Priorities
 
-1. Finish Phase 5.2 user persistence, role handling, optional user language preference storage, and user-specific metrics on top of the existing metrics registry.
-2. Finish Phase 5.3 audit logging for state-changing operations.
-3. Start Phase 8.5 OpenAPI support and breaking-change compatibility checks after the initial auth surface is in place.
-4. Close the remaining Phase 8.1 documentation gaps for user flows, security guidance, and OpenAPI.
-5. Revisit Phase 9 coverage and performance work after the auth model stabilizes.
+1. Finish Phase 5.3 audit logging for state-changing operations.
+2. Start Phase 8.5 OpenAPI support and breaking-change compatibility checks after the initial auth surface is in place.
+3. Close the remaining Phase 8.1 documentation gaps for user flows, security guidance, and OpenAPI.
+4. Revisit Phase 9 coverage and performance work after the auth model stabilizes.
+5. Start Phase 10 CI/CD and deployment work once the API contract stabilizes.
 
 ## Active Detailed Plan
 
 ### Phase 5: Security & OAuth Integration
 
-Status: In Progress (`5.1` archived, `5.2` next)
+Status: In Progress (`5.1` complete, `5.2` implemented, `5.3` next)
 
 Completed in archive:
 - 5.1 Add Spring Security with OAuth 2.0
@@ -41,14 +41,14 @@ Goal:
 Persist authenticated users and roles for authorization and future audit support.
 
 Tasks:
-- [ ] Create `User` entity and Flyway migration
-- [ ] Create repository and service for user lifecycle
-- [ ] Persist users on first login and update `lastLoginAt`
-- [ ] Add role support (`USER`, `ADMIN`)
-- [ ] Add optional preferred-language field or profile setting for authenticated-user localization fallback
-- [ ] Add user-specific Micrometer metrics on top of the existing metrics registry
-- [ ] Optionally expose user profile endpoints
-- [ ] Add tests for login persistence and role behavior
+- [x] Create `User` entity and Flyway migration
+- [x] Create repository and service for user lifecycle
+- [x] Persist users on first login and update `lastLoginAt`
+- [x] Add role support (`USER`, `ADMIN`)
+- [x] Add optional preferred-language field or profile setting for authenticated-user localization fallback
+- [x] Add user-specific Micrometer metrics on top of the existing metrics registry
+- [x] Optionally expose user profile endpoints
+- [x] Add tests for login persistence and role behavior
 
 Definition of done:
 - Users are persisted and updated on login

@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static team.jit.technicalinterviewdemo.SecurityTestSupport.adminOauthUser;
 import static team.jit.technicalinterviewdemo.SecurityTestSupport.csrfToken;
 import static team.jit.technicalinterviewdemo.SecurityTestSupport.oauthUser;
 
@@ -56,8 +57,8 @@ class LocalizationApiTests {
                 .andExpect(jsonPath("$.content[0].messageKey").value("error.book.isbn_duplicate"))
                 .andExpect(jsonPath("$.content[0].language").value("de"))
                 .andExpect(jsonPath("$.content[1].language").value("en"))
-                .andExpect(jsonPath("$.totalElements").value(119))
-                .andExpect(jsonPath("$.totalPages").value(60));
+                .andExpect(jsonPath("$.totalElements").value(126))
+                .andExpect(jsonPath("$.totalPages").value(63));
     }
 
     @Test
@@ -105,7 +106,7 @@ class LocalizationApiTests {
     @Test
     void createLocalizationMessageReturnsCreatedMessage() throws Exception {
         mockMvc.perform(post("/api/localization-messages")
-                        .with(oauthUser())
+                        .with(adminOauthUser())
                         .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -145,7 +146,7 @@ class LocalizationApiTests {
     @Test
     void createLocalizationMessageWithDuplicateKeyAndLanguageReturnsConflict() throws Exception {
         mockMvc.perform(post("/api/localization-messages")
-                        .with(oauthUser())
+                        .with(adminOauthUser())
                         .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -169,7 +170,7 @@ class LocalizationApiTests {
     @Test
     void createLocalizationMessageWithInvalidPayloadReturnsBadRequest() throws Exception {
         mockMvc.perform(post("/api/localization-messages")
-                        .with(oauthUser())
+                        .with(adminOauthUser())
                         .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -193,7 +194,7 @@ class LocalizationApiTests {
     @Test
     void createLocalizationMessageWithUnsupportedLanguageReturnsBadRequest() throws Exception {
         mockMvc.perform(post("/api/localization-messages")
-                        .with(oauthUser())
+                        .with(adminOauthUser())
                         .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -215,7 +216,7 @@ class LocalizationApiTests {
     @Test
     void updateLocalizationMessageReturnsUpdatedMessage() throws Exception {
         mockMvc.perform(put("/api/localization-messages/{id}", bookNotFoundEn.getId())
-                        .with(oauthUser())
+                        .with(adminOauthUser())
                         .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -244,7 +245,7 @@ class LocalizationApiTests {
     @Test
     void deleteLocalizationMessageRemovesMessage() throws Exception {
         mockMvc.perform(delete("/api/localization-messages/{id}", bookNotFoundEn.getId())
-                        .with(oauthUser())
+                        .with(adminOauthUser())
                         .with(csrfToken()))
                 .andExpect(status().isNoContent());
 
@@ -254,12 +255,33 @@ class LocalizationApiTests {
     }
 
     @Test
+    void createLocalizationMessageAsRegularUserReturnsForbidden() throws Exception {
+        mockMvc.perform(post("/api/localization-messages")
+                        .with(oauthUser())
+                        .with(csrfToken())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "messageKey": "info.book.created",
+                                  "language": "fr",
+                                  "messageText": "Le livre a ete cree.",
+                                  "description": "French success message for new books."
+                                }
+                                """))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.title").value("Forbidden"))
+                .andExpect(jsonPath("$.detail").value("Localization management requires the ADMIN role."))
+                .andExpect(jsonPath("$.messageKey").value("error.request.forbidden"))
+                .andExpect(jsonPath("$.language").value("en"));
+    }
+
+    @Test
     void listLocalizationMessagesByLanguageReturnsMessagesForLanguage() throws Exception {
         mockMvc.perform(get("/api/localization-messages/language/{language}", "es"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(17))
+                .andExpect(jsonPath("$.length()").value(18))
                 .andExpect(jsonPath("$[0].language").value("es"))
                 .andExpect(jsonPath("$[0].messageKey").value("error.book.isbn_duplicate"))
-                .andExpect(jsonPath("$[16].messageKey").value("error.server.internal"));
+                .andExpect(jsonPath("$[17].messageKey").value("error.server.internal"));
     }
 }

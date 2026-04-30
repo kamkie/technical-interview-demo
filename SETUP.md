@@ -62,6 +62,7 @@ Variables you are most likely to need:
 - `SPRING_PROFILES_ACTIVE` if you want to override the default `local` profile
 - `DATABASE_*` variables when overriding the default PostgreSQL connection
 - `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` when enabling the optional `oauth` profile for authenticated write flows
+- `ADMIN_LOGINS` when you want one or more GitHub logins to receive the persisted `ADMIN` role
 
 ## IDE Setup
 
@@ -200,6 +201,7 @@ Then export the credentials and start the app with the extra profile:
 ```powershell
 $env:GITHUB_CLIENT_ID='your-github-client-id'
 $env:GITHUB_CLIENT_SECRET='your-github-client-secret'
+$env:ADMIN_LOGINS='your-github-login'
 $env:SPRING_PROFILES_ACTIVE='local,oauth'
 
 docker-compose up -d
@@ -213,6 +215,14 @@ Start the login flow at:
 Protected browser requests also require a CSRF token, so use the generated HTML docs or a normal browser session rather than trying to replay state-changing requests without cookies and headers.
 
 Authenticated sessions are persisted in PostgreSQL through Spring Session JDBC, using tables `SPRING_SESSION` and `SPRING_SESSION_ATTRIBUTES`.
+
+Role behavior:
+
+- every authenticated GitHub login is persisted as an application user with the `USER` role
+- logins listed in `ADMIN_LOGINS` also receive the `ADMIN` role
+- category creation and localization-message management require `ADMIN`
+- the current persisted user profile is available at `GET /api/users/me`
+- preferred-language updates are available at `PUT /api/users/me/preferred-language`
 
 ## Troubleshooting
 

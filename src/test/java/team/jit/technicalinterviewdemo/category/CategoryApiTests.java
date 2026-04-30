@@ -4,6 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static team.jit.technicalinterviewdemo.SecurityTestSupport.adminOauthUser;
 import static team.jit.technicalinterviewdemo.SecurityTestSupport.csrfToken;
 import static team.jit.technicalinterviewdemo.SecurityTestSupport.oauthUser;
 
@@ -57,7 +58,7 @@ class CategoryApiTests {
     @Test
     void createCategoryReturnsCreatedCategory() throws Exception {
         mockMvc.perform(post("/api/categories")
-                        .with(oauthUser())
+                        .with(adminOauthUser())
                         .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -68,6 +69,24 @@ class CategoryApiTests {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.name").value("Architecture"));
+    }
+
+    @Test
+    void createCategoryAsRegularUserReturnsForbidden() throws Exception {
+        mockMvc.perform(post("/api/categories")
+                        .with(oauthUser())
+                        .with(csrfToken())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "name": "Architecture"
+                                }
+                                """))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.title").value("Forbidden"))
+                .andExpect(jsonPath("$.detail").value("Category management requires the ADMIN role."))
+                .andExpect(jsonPath("$.messageKey").value("error.request.forbidden"))
+                .andExpect(jsonPath("$.language").value("en"));
     }
 
     @Test
@@ -86,7 +105,7 @@ class CategoryApiTests {
     @Test
     void createCategoryWithDuplicateNameReturnsBadRequest() throws Exception {
         mockMvc.perform(post("/api/categories")
-                        .with(oauthUser())
+                        .with(adminOauthUser())
                         .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""

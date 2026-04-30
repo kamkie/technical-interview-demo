@@ -21,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import team.jit.technicalinterviewdemo.api.InvalidRequestException;
 import team.jit.technicalinterviewdemo.cache.CacheNames;
 import team.jit.technicalinterviewdemo.metrics.ApplicationMetrics;
+import team.jit.technicalinterviewdemo.user.UserAccountService;
+import team.jit.technicalinterviewdemo.user.UserRole;
 
 @Slf4j
 @Service
@@ -36,6 +38,7 @@ public class LocalizationMessageService {
     private final LocalizationContext localizationContext;
     private final CacheManager cacheManager;
     private final ApplicationMetrics applicationMetrics;
+    private final UserAccountService userAccountService;
 
     public Page<LocalizationMessage> findAll(Pageable pageable) {
         applicationMetrics.recordLocalizationOperation("list");
@@ -96,13 +99,13 @@ public class LocalizationMessageService {
     public LocalizationMessage findByMessageKeyForCurrentLanguageWithFallback(String messageKey) {
         return findByMessageKeyAndLanguageWithFallback(
                 messageKey,
-                localizationContext.getCurrentLanguageOrDefault(),
+                resolveCurrentLanguageOrDefault(),
                 RequestLanguageResolver.DEFAULT_LANGUAGE
         );
     }
 
     public String getCurrentLanguageOrDefault() {
-        return localizationContext.getCurrentLanguageOrDefault();
+        return resolveCurrentLanguageOrDefault();
     }
 
     public Map<String, String> getAllMessages(String language) {
@@ -146,6 +149,7 @@ public class LocalizationMessageService {
 
     @Transactional
     public LocalizationMessage create(LocalizationMessageRequest request) {
+        userAccountService.requireRole(UserRole.ADMIN, "Localization management requires the ADMIN role.");
         String messageKey = normalizeMessageKey(request.messageKey());
         String language = normalizeSupportedLanguage(request.language());
         validateUniqueMessage(messageKey, language, null);
@@ -170,7 +174,8 @@ public class LocalizationMessageService {
 
     @Transactional
     public LocalizationMessage update(Long id, LocalizationMessageRequest request) {
-        LocalizationMessage message = findById(id);
+        userAccountService.requireRole(UserRole.ADMIN, "Localization management requires the ADMIN role.");
+        LocalizationMessage message = requireMessage(id);
         String messageKey = normalizeMessageKey(request.messageKey());
         String language = normalizeSupportedLanguage(request.language());
         validateUniqueMessage(messageKey, language, id);
@@ -194,17 +199,21 @@ public class LocalizationMessageService {
 
     @Transactional
     public void delete(Long id) {
-        if (!localizationMessageRepository.existsById(id)) {
-            throw new LocalizationMessageNotFoundException(id);
-        }
-        localizationMessageRepository.deleteById(id);
+        userAccountService.requireRole(UserRole.ADMIN, "Localization management requires the ADMIN role.");
+        LocalizationMessage message = requireMessage(id);
+        localizationMessageRepository.delete(message);
         evictLocalizationCaches();
         applicationMetrics.recordLocalizationOperation("delete");
-        log.info("Deleted localization message id={}", id);
+        log.info("Deleted localization message id={} key={} language={}", id, message.getMessageKey(), message.getLanguage());
     }
 
     private Optional<LocalizationMessage> findMessage(String messageKey, String language) {
         return localizationMessageRepository.findByMessageKeyAndLanguage(messageKey, language);
+    }
+
+    private LocalizationMessage requireMessage(Long id) {
+        return localizationMessageRepository.findById(id)
+                .orElseThrow(() -> new LocalizationMessageNotFoundException(id));
     }
 
     private String normalizeMessageKey(String messageKey) {
@@ -280,5 +289,11 @@ public class LocalizationMessageService {
             throw new IllegalStateException("Cache '%s' is not configured.".formatted(cacheName));
         }
         return cache;
+    }
+
+    private String resolveCurrentLanguageOrDefault() {
+        return localizationContext.getCurrentLanguage()
+                .or(() -> userAccountService.findCurrentUserPreferredLanguage())
+                .orElse(RequestLanguageResolver.DEFAULT_LANGUAGE);
     }
 }

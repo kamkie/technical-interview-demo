@@ -5,21 +5,29 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import team.jit.technicalinterviewdemo.user.AuthenticatedUserSynchronizationFilter;
+import team.jit.technicalinterviewdemo.user.UserAccountService;
 
 @Configuration
 public class SecurityConfiguration {
 
     @Bean
+    AuthenticatedUserSynchronizationFilter authenticatedUserSynchronizationFilter(UserAccountService userAccountService) {
+        return new AuthenticatedUserSynchronizationFilter(userAccountService);
+    }
+
+    @Bean
     SecurityFilterChain securityFilterChain(
             HttpSecurity http,
-            ObjectProvider<ClientRegistrationRepository> clientRegistrationRepository
+            ObjectProvider<ClientRegistrationRepository> clientRegistrationRepository,
+            AuthenticatedUserSynchronizationFilter authenticatedUserSynchronizationFilter
     ) throws Exception {
         http
                 .formLogin(AbstractHttpConfigurer::disable)
@@ -27,6 +35,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/error", "/docs", "/docs/**", "/hello").permitAll()
                         .requestMatchers("/oauth2/**", "/login/**").permitAll()
+                        .requestMatchers("/api/users/me", "/api/users/me/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/actuator/health", "/actuator/health/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/actuator/info", "/actuator/prometheus").permitAll()
@@ -43,7 +52,8 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                         .sessionFixation(sessionFixation -> sessionFixation.migrateSession())
-                );
+                )
+                .addFilterAfter(authenticatedUserSynchronizationFilter, AuthorizationFilter.class);
 
         if (clientRegistrationRepository.getIfAvailable() != null) {
             http.oauth2Login(oauth2 -> oauth2.loginPage("/oauth2/authorization/github"));

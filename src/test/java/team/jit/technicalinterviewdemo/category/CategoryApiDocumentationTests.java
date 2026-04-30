@@ -18,8 +18,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static team.jit.technicalinterviewdemo.SecurityTestSupport.adminOauthUser;
 import static team.jit.technicalinterviewdemo.SecurityTestSupport.csrfToken;
-import static team.jit.technicalinterviewdemo.SecurityTestSupport.oauthUser;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -83,7 +83,7 @@ class CategoryApiDocumentationTests {
     @Test
     void documentCreateCategoryEndpoint() throws Exception {
         mockMvc.perform(post("/api/categories")
-                        .with(oauthUser())
+                        .with(adminOauthUser())
                         .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -111,7 +111,7 @@ class CategoryApiDocumentationTests {
     @Test
     void documentCreateCategoryDuplicateError() throws Exception {
         mockMvc.perform(post("/api/categories")
-                        .with(oauthUser())
+                        .with(adminOauthUser())
                         .with(csrfToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""

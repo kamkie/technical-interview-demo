@@ -27,7 +27,12 @@ public class RequestLanguageContextFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
-        localizationContext.setCurrentLanguage(requestLanguageResolver.resolvePreferredLanguage(request));
+        String resolvedLanguage = requestLanguageResolver.resolvePreferredLanguage(request);
+        if (resolvedLanguage != null) {
+            localizationContext.setCurrentLanguage(resolvedLanguage);
+        } else {
+            localizationContext.clear();
+        }
         try {
             filterChain.doFilter(request, response);
         } finally {

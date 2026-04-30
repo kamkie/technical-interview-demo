@@ -13,6 +13,7 @@ final class LocalizationMessageSeedData {
             "error.localization.duplicate",
             "error.localization.not_found",
             "error.request.constraint_violation",
+            "error.request.forbidden",
             "error.request.invalid",
             "error.request.invalid_parameter",
             "error.request.malformed_body",
@@ -116,6 +117,17 @@ final class LocalizationMessageSeedData {
                 "Naruszono ograniczenia walidacji zadania.",
                 "Porusheno obmezhennia validatsii zapytu.",
                 "Valideringsregler for foresporselen ble brutt."
+        );
+        addTranslations(
+                messages,
+                "error.request.forbidden",
+                "You do not have permission to perform this operation.",
+                "No tiene permiso para realizar esta operacion.",
+                "Sie haben keine Berechtigung, diesen Vorgang auszufuehren.",
+                "Vous n'avez pas la permission d'effectuer cette operation.",
+                "Nie masz uprawnien do wykonania tej operacji.",
+                "Vy ne maiete dozvolu vykonuvaty tsiu operatsiiu.",
+                "Du har ikke tillatelse til aa utfore denne operasjonen."
         );
         addTranslations(
                 messages,

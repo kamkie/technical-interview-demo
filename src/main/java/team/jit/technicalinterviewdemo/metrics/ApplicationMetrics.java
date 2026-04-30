@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import team.jit.technicalinterviewdemo.book.BookRepository;
 import team.jit.technicalinterviewdemo.category.CategoryRepository;
 import team.jit.technicalinterviewdemo.localization.LocalizationMessageRepository;
+import team.jit.technicalinterviewdemo.user.UserAccountRepository;
+import team.jit.technicalinterviewdemo.user.UserRole;
 
 @Slf4j
 @Component
@@ -18,6 +20,9 @@ public class ApplicationMetrics {
     private static final String CATEGORY_TOTAL = "technical.interview.demo.categories.total";
     private static final String LOCALIZATION_OPERATIONS = "technical.interview.demo.localization.operations";
     private static final String LOCALIZATION_TOTAL = "technical.interview.demo.localization.total";
+    private static final String USER_OPERATIONS = "technical.interview.demo.users.operations";
+    private static final String USER_TOTAL = "technical.interview.demo.users.total";
+    private static final String ADMIN_TOTAL = "technical.interview.demo.users.admin.total";
     private static final String CACHE_EVENTS = "technical.interview.demo.cache.events";
 
     private final MeterRegistry meterRegistry;
@@ -26,7 +31,8 @@ public class ApplicationMetrics {
             MeterRegistry meterRegistry,
             BookRepository bookRepository,
             CategoryRepository categoryRepository,
-            LocalizationMessageRepository localizationMessageRepository
+            LocalizationMessageRepository localizationMessageRepository,
+            UserAccountRepository userAccountRepository
     ) {
         this.meterRegistry = meterRegistry;
         Gauge.builder(BOOK_TOTAL, bookRepository, BookRepository::count)
@@ -38,7 +44,13 @@ public class ApplicationMetrics {
         Gauge.builder(LOCALIZATION_TOTAL, localizationMessageRepository, LocalizationMessageRepository::count)
                 .description("Current number of localization messages.")
                 .register(meterRegistry);
-        log.debug("Registered application gauges for books, categories, and localization messages.");
+        Gauge.builder(USER_TOTAL, userAccountRepository, UserAccountRepository::count)
+                .description("Current number of persisted application users.")
+                .register(meterRegistry);
+        Gauge.builder(ADMIN_TOTAL, userAccountRepository, repository -> repository.countByRole(UserRole.ADMIN))
+                .description("Current number of persisted admin users.")
+                .register(meterRegistry);
+        log.debug("Registered application gauges for books, categories, localization messages, and users.");
     }
 
     public void recordBookOperation(String operation) {
@@ -51,6 +63,10 @@ public class ApplicationMetrics {
 
     public void recordLocalizationOperation(String operation) {
         meterRegistry.counter(LOCALIZATION_OPERATIONS, "operation", operation).increment();
+    }
+
+    public void recordUserOperation(String operation) {
+        meterRegistry.counter(USER_OPERATIONS, "operation", operation).increment();
     }
 
     public void recordCacheEvent(String cacheName, String event) {

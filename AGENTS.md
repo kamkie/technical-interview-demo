@@ -13,6 +13,7 @@ Current scope:
 - CRUD-style `Book` API under `/api/books` with pagination, filtering, optimistic locking, and category assignment
 - `Category` API under `/api/categories`
 - CRUD-style `LocalizationMessage` API under `/api/localization-messages` with pagination and key/language lookup
+- authenticated-user profile API under `/api/users/me`
 - OAuth 2.0 protected write endpoints with JDBC-backed HTTP sessions
 - git-tag-based application versioning with a human-readable `CHANGELOG.md`
 - actuator endpoints for `health`, `info`, liveness/readiness probes, and Prometheus metrics
@@ -102,6 +103,13 @@ Session rules:
 - local and test profiles keep the session cookie non-secure for HTTP development
 - `prod` uses `SESSION_COOKIE_SECURE=true` by default unless explicitly overridden
 - the session cookie name is `technical-interview-demo-session`
+
+Role rules:
+
+- every authenticated GitHub login is persisted as an application user
+- every persisted user receives the `USER` role
+- logins listed in `ADMIN_LOGINS` also receive the `ADMIN` role
+- category management and localization-message management are restricted to `ADMIN`
 
 ## Spring Profiles
 
@@ -198,6 +206,7 @@ Release policy:
 - `src/main/java/team/jit/technicalinterviewdemo/category/`: category entity, repository, service, controller, and seed data
 - `src/main/java/team/jit/technicalinterviewdemo/localization/`: localization entity, repository, service, exception, and seed data
 - `src/main/java/team/jit/technicalinterviewdemo/metrics/`: application-specific Micrometer gauges and counters
+- `src/main/java/team/jit/technicalinterviewdemo/user/`: persisted user model, profile endpoints, role handling, and authenticated-user synchronization
 - `src/main/java/team/jit/technicalinterviewdemo/api/`: exception handling and custom exceptions
 - `src/main/java/team/jit/technicalinterviewdemo/docs/`: documentation endpoint and resource mapping
 - `src/main/java/team/jit/technicalinterviewdemo/logging/`: HTTP tracing/logging and service-call logging
@@ -228,6 +237,8 @@ Endpoints:
 - `POST /api/localization-messages`
 - `PUT /api/localization-messages/{id}`
 - `DELETE /api/localization-messages/{id}`
+- `GET /api/users/me`
+- `PUT /api/users/me/preferred-language`
 - `GET /actuator/info`
 - `GET /actuator/health`
 - `GET /actuator/health/liveness`
@@ -236,8 +247,9 @@ Endpoints:
 
 Security rules:
 
-- public without authentication: `GET /hello`, `GET /docs`, `GET /api/**`, `GET /actuator/health`, `GET /actuator/health/**`, `GET /actuator/info`, and `GET /actuator/prometheus`
-- protected with authenticated session: `POST /api/books`, `PUT /api/books/{id}`, `DELETE /api/books/{id}`, `POST /api/categories`, `POST /api/localization-messages`, `PUT /api/localization-messages/{id}`, and `DELETE /api/localization-messages/{id}`
+- public without authentication: `GET /hello`, `GET /docs`, `GET /api/books/**`, `GET /api/categories`, `GET /api/localization-messages/**`, `GET /actuator/health`, `GET /actuator/health/**`, `GET /actuator/info`, and `GET /actuator/prometheus`
+- protected with authenticated session: `GET /api/users/me`, `PUT /api/users/me/preferred-language`, `POST /api/books`, `PUT /api/books/{id}`, `DELETE /api/books/{id}`, `POST /api/categories`, `POST /api/localization-messages`, `PUT /api/localization-messages/{id}`, and `DELETE /api/localization-messages/{id}`
+- role-restricted to `ADMIN`: category creation and localization-message create, update, and delete operations
 - protected browser requests also require a valid CSRF token
 - interactive login is available at `GET /oauth2/authorization/github` when the `oauth` profile is active
 - authenticated HTTP sessions are stored in `SPRING_SESSION` and `SPRING_SESSION_ATTRIBUTES`
@@ -276,6 +288,13 @@ Localization message rules:
 - `GET /api/localization-messages` returns a paginated response
 - `GET /api/localization-messages/language/{language}` returns the messages for a single language ordered by `messageKey`
 
+User rules:
+
+- the current authenticated GitHub user is persisted on the first authenticated request
+- `GET /api/users/me` returns the persisted application user, roles, and timestamps
+- `PUT /api/users/me/preferred-language` stores an optional supported two-letter language code or clears it when blank or null
+- localized error handling falls back to the persisted user preference when the request does not specify language through `lang`, `Accept-Language`, or cookie `language`
+
 Seed data:
 
 - `Clean Code`
@@ -300,6 +319,7 @@ Seeded localization message keys:
 - `error.localization.duplicate`
 - `error.localization.not_found`
 - `error.request.constraint_violation`
+- `error.request.forbidden`
 - `error.request.invalid`
 - `error.request.invalid_parameter`
 - `error.request.malformed_body`
@@ -321,6 +341,7 @@ Current runtime behavior:
 - error responses include `messageKey`, localized `message`, and resolved `language`
 - `Accept-Language` drives browser-compatible error-message localization and `lang` query parameter overrides it
 - cookie `language` is used as fallback when `lang` and supported `Accept-Language` values are absent
+- authenticated user preference is used as the last localized-error fallback before English when no explicit request preference is present
 - request-scoped language resolution is captured once and reused during localized error handling
 - Caffeine-backed in-memory caches are used for localization lookups, localization language views, category lists, and the category assignment directory
 - optional `org.springframework.web` DEBUG logging is available as a commented property in `application.properties`
@@ -329,7 +350,7 @@ Current runtime behavior:
 - successful create, update, delete, and seed writes are logged
 - actuator exposes readiness and liveness probe endpoints
 - actuator exposes Prometheus metrics at `/actuator/prometheus`
-- custom Micrometer metrics are published under the `technical.interview.demo.*` prefix for book, category, localization, and cache activity
+- custom Micrometer metrics are published under the `technical.interview.demo.*` prefix for book, category, localization, user, and cache activity
 - JPA fetch plans are controlled in repositories rather than through `FetchType.EAGER` on entities
 - Flyway owns schema creation from SQL migrations and Hibernate validates the schema with `ddl-auto=validate`
 - authenticated browser sessions are persisted through Spring Session JDBC

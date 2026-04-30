@@ -27,11 +27,14 @@ public class RequestLanguageResolver {
                     .orElse(DEFAULT_LANGUAGE);
         }
 
-        Enumeration<Locale> locales = request.getLocales();
-        while (locales.hasMoreElements()) {
-            String candidateLanguage = locales.nextElement().getLanguage();
-            if (SupportedLanguages.isSupported(candidateLanguage)) {
-                return candidateLanguage;
+        String acceptLanguageHeader = request.getHeader("Accept-Language");
+        if (acceptLanguageHeader != null && !acceptLanguageHeader.isBlank()) {
+            Enumeration<Locale> locales = request.getLocales();
+            while (locales.hasMoreElements()) {
+                String candidateLanguage = locales.nextElement().getLanguage();
+                if (SupportedLanguages.isSupported(candidateLanguage)) {
+                    return candidateLanguage;
+                }
             }
         }
 
@@ -43,7 +46,7 @@ public class RequestLanguageResolver {
             }
         }
 
-        return DEFAULT_LANGUAGE;
+        return null;
     }
 
     private Optional<String> normalizeRequestedLanguage(String requestedLanguage) {

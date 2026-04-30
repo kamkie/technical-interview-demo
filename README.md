@@ -12,6 +12,7 @@ The demo currently includes:
 - A REST API for `Book` under `/api/books` with pagination, filtering, and category assignment
 - A REST API for `Category` under `/api/categories`
 - A REST API for `LocalizationMessage` under `/api/localization-messages` with CRUD, pagination, and key/language lookup
+- A REST API for the authenticated user profile under `/api/users/me`
 - OAuth 2.0 protected write endpoints with JDBC-backed HTTP sessions for reviewer-friendly sign-in
 - Git tag based application versioning plus a human-readable `CHANGELOG.md`
 - PostgreSQL for local and production-style runtime profiles, plus Testcontainers-backed integration tests
@@ -85,6 +86,13 @@ Session behavior:
 - the `prod` profile uses `SESSION_COOKIE_SECURE=true` by default unless explicitly overridden
 - the session cookie name is `technical-interview-demo-session`
 
+Role behavior:
+
+- every authenticated GitHub login is persisted as an application user
+- every persisted user receives the `USER` role
+- logins listed in `ADMIN_LOGINS` also receive the `ADMIN` role
+- category and localization-message management are restricted to `ADMIN`
+
 ## Spring Profiles
 
 The application uses Spring profiles to manage environment-specific configuration:
@@ -126,6 +134,7 @@ docker-compose up -d
 # Run with local database and GitHub OAuth login enabled
 $env:GITHUB_CLIENT_ID='your-github-client-id'
 $env:GITHUB_CLIENT_SECRET='your-github-client-secret'
+$env:ADMIN_LOGINS='your-github-login'
 .\gradlew.bat bootRun --args='--spring.profiles.active=local,oauth'
 
 # Build app for prod
@@ -217,6 +226,7 @@ Useful local endpoints:
 - `GET /hello`
 - `GET /api/books`
 - `GET /api/categories`
+- `GET /api/users/me` after login
 - `GET /oauth2/authorization/github` when the `oauth` profile is active
 - `GET /actuator/info`
 - `GET /actuator/health`
@@ -305,6 +315,7 @@ Release policy:
 - `src/main/java/team/jit/technicalinterviewdemo/category/`: category entity, repository, service, controller, and seed data
 - `src/main/java/team/jit/technicalinterviewdemo/localization/`: localization entity, repository, service, and seed data
 - `src/main/java/team/jit/technicalinterviewdemo/metrics/`: application-specific Micrometer gauges and counters
+- `src/main/java/team/jit/technicalinterviewdemo/user/`: persisted user model, profile endpoints, role handling, and authenticated-user synchronization
 - `src/main/java/team/jit/technicalinterviewdemo/api/`: API exception handling and custom exceptions
 - `src/main/java/team/jit/technicalinterviewdemo/docs/`: documentation endpoint and resource mapping
 - `src/main/java/team/jit/technicalinterviewdemo/logging/`: HTTP tracing/logging and service-call logging
@@ -432,6 +443,26 @@ Validation rules:
 - `description` is optional
 - `(messageKey, language)` must be unique
 
+### User Profile API
+
+- `GET /api/users/me`
+- `PUT /api/users/me/preferred-language`
+
+Example preferred-language update payload:
+
+```json
+{
+  "preferredLanguage": "pl"
+}
+```
+
+Behavior:
+
+- the current authenticated GitHub user is persisted on the first authenticated request
+- `GET /api/users/me` returns the persisted application user, roles, and timestamps
+- `PUT /api/users/me/preferred-language` stores an optional two-letter supported language code or clears it when the value is blank or null
+- when no `lang`, supported `Accept-Language`, or `language` cookie is present, localized error responses fall back to the authenticated user's preferred language before defaulting to English
+
 Actuator endpoints:
 
 - `GET /actuator/info`
@@ -444,8 +475,9 @@ Actuator endpoints:
 
 Authentication rules:
 
-- public without authentication: `GET /hello`, `GET /docs`, `GET /api/**`, `GET /actuator/health`, `GET /actuator/health/**`, `GET /actuator/info`, and `GET /actuator/prometheus`
-- protected with authenticated session: `POST /api/books`, `PUT /api/books/{id}`, `DELETE /api/books/{id}`, `POST /api/categories`, `POST /api/localization-messages`, `PUT /api/localization-messages/{id}`, and `DELETE /api/localization-messages/{id}`
+- public without authentication: `GET /hello`, `GET /docs`, `GET /api/books/**`, `GET /api/categories`, `GET /api/localization-messages/**`, `GET /actuator/health`, `GET /actuator/health/**`, `GET /actuator/info`, and `GET /actuator/prometheus`
+- protected with authenticated session: `GET /api/users/me`, `PUT /api/users/me/preferred-language`, `POST /api/books`, `PUT /api/books/{id}`, `DELETE /api/books/{id}`, `POST /api/categories`, `POST /api/localization-messages`, `PUT /api/localization-messages/{id}`, and `DELETE /api/localization-messages/{id}`
+- role-restricted to `ADMIN`: category creation and localization-message create, update, and delete operations
 - protected browser requests also require a valid CSRF token
 - interactive login is available at `GET /oauth2/authorization/github` when the `oauth` profile is active
 - authenticated HTTP sessions are persisted in PostgreSQL tables `SPRING_SESSION` and `SPRING_SESSION_ATTRIBUTES`
@@ -482,6 +514,7 @@ Current seeded keys:
 - `error.localization.duplicate`
 - `error.localization.not_found`
 - `error.request.constraint_violation`
+- `error.request.forbidden`
 - `error.request.invalid`
 - `error.request.invalid_parameter`
 - `error.request.malformed_body`
@@ -504,6 +537,7 @@ Current behavior:
 - `Accept-Language` is used for browser-compatible language negotiation
 - query parameter `lang` overrides the browser preference and accepts values such as `pl` or `pl-PL`
 - cookie `language` is used as fallback when neither `lang` nor a supported `Accept-Language` value is available
+- authenticated user preference is used as a final localized-error fallback before English when no explicit request preference is present
 - request-scoped language resolution is captured once and reused during localized error handling
 - validation errors include field-level details
 - duplicate ISBN returns `409 Conflict`
@@ -531,7 +565,7 @@ The application includes:
 - explicit logs for successful database-changing operations such as create, update, delete, and seed writes
 - readiness and liveness health probes through actuator
 - Prometheus metrics exposed through `/actuator/prometheus`
-- custom Micrometer metrics are published under the `technical.interview.demo.*` prefix for book, category, localization, and cache activity
+- custom Micrometer metrics are published under the `technical.interview.demo.*` prefix for book, category, localization, user, and cache activity
 - JPA fetch plans are controlled in repositories rather than through `FetchType.EAGER` on entities
 
 The HTTP tracing logger intentionally skips `/actuator/health` and its subpaths.
