@@ -15,6 +15,7 @@ Use `TODO.md` for active planning and `COMPLETED_TASKS.md` for implementation hi
 - Book categories and category filtering
 - In-memory caches and application-specific metrics
 - Architecture and cache hardening
+- OAuth 2.0 protected write endpoints with JDBC-backed sessions
 - Developer setup and contribution guides
 - Release versioning and changelog workflow
 
@@ -136,6 +137,20 @@ Note:
 
 Commit: `a6708fd`
 Tag: `v0.11.0`
+
+### Phase 5: Security & OAuth Integration
+
+#### 5.1 Add Spring Security with OAuth 2.0
+
+Status: Completed
+
+Summary:
+- Added Spring Security, GitHub OAuth App login, and authorization rules that keep read endpoints public while protecting state-changing API operations.
+- Added Spring Session JDBC with PostgreSQL-backed `SPRING_SESSION` tables and secure profile-specific session-cookie settings.
+- Added secured-endpoint test support, authentication and CSRF coverage, and an integration test proving the JDBC session repository persists the security context.
+- Updated `README.md`, `SETUP.md`, `AGENTS.md`, and generated docs to explain OAuth setup and the secured API surface.
+
+Commit: `b783bf0`
 
 ### Phase 6: Enhanced Book API
 

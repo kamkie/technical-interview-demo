@@ -9,54 +9,29 @@ The roadmap below is ordered to respect cross-phase dependencies.
 
 | Order | Theme | Status | Why it comes next |
 | --- | --- | --- | --- |
-| 1 | Phase 5: Security and user model | Ready | Security should be in place before admin-only management and audit trails |
+| 1 | Phase 5.2-5.3: User model and audit trail | In Progress | OAuth/session groundwork is done, so persisted users and audit history are the next dependency chain |
 | 2 | Phase 8.5: OpenAPI and compatibility gates | Ready after Phase 5.1 | The machine-readable contract should reflect the secured API surface |
-| 3 | Phase 8.1: API and operations documentation gaps | Partially blocked by Phases 5 and 8.5 | Documentation should follow the feature set that actually exists |
+| 3 | Phase 8.1: API and operations documentation gaps | Partially blocked by Phases 5.2 and 8.5 | The remaining docs should follow the persisted user model and final OpenAPI contract |
 | 4 | Phase 9: Coverage and performance testing | Ready after core APIs stabilize | Better value once the near-term API and auth work are settled |
 | 5 | Phase 10: CI/CD and deployment assets | Ready | Depends mostly on the current quality gates and stable build outputs |
 | 6 | Phase 11: Optional future enhancements | Deferred | These are stretch items after the core demo is complete |
 
 ## Current Priorities
 
-1. Start Phase 5.2 user persistence, role handling, optional user language preference storage, and user-specific metrics on top of the existing metrics registry.
-2. Add Phase 5.3 audit logging for state-changing operations.
+1. Finish Phase 5.2 user persistence, role handling, optional user language preference storage, and user-specific metrics on top of the existing metrics registry.
+2. Finish Phase 5.3 audit logging for state-changing operations.
 3. Start Phase 8.5 OpenAPI support and breaking-change compatibility checks after the initial auth surface is in place.
-4. Close the remaining Phase 8.1 documentation gaps for security and OpenAPI.
+4. Close the remaining Phase 8.1 documentation gaps for user flows, security guidance, and OpenAPI.
 5. Revisit Phase 9 coverage and performance work after the auth model stabilizes.
 
 ## Active Detailed Plan
 
 ### Phase 5: Security & OAuth Integration
 
-Status: In Progress (`5.1` complete, `5.2` next)
+Status: In Progress (`5.1` archived, `5.2` next)
 
-#### 5.1 Add Spring Security with OAuth 2.0
-
-Depends on: 2.1
-
-Goal:
-Protect state-changing endpoints while keeping the demo simple and approachable.
-
-Tasks:
-- [x] Add Spring Security and OAuth 2.0 client dependencies
-- [x] Choose and document a demo-friendly OAuth provider for the demo
-- [x] Create `SecurityConfig` with OAuth login and authorization rules
-- [x] Add Spring Session JDBC and persist authenticated sessions in the database
-- [x] Configure secure session handling for the OAuth login flow
-- [x] Add `application-oauth.properties` and document required credentials
-- [x] Protect localization management endpoints (`POST`, `PUT`, `DELETE`)
-- [x] Protect book management endpoints as appropriate for the demo
-- [x] Configure test support for secured endpoints
-
-Definition of done:
-- Public read endpoints stay accessible
-- Protected endpoints require authentication
-- JDBC-backed sessions work with the selected OAuth flow
-- The selected OAuth provider is simple for reviewers to configure locally
-- OAuth flow is documented and testable
-
-Selected provider:
-- GitHub OAuth App is the chosen Phase 5.1 provider because it keeps the demo setup small and familiar for local reviewers.
+Completed in archive:
+- 5.1 Add Spring Security with OAuth 2.0
 
 #### 5.2 Add User Entity & Management
 
@@ -124,12 +99,9 @@ Goal:
 Keep generated API docs and written setup guidance aligned with the implemented surface area.
 
 Remaining tasks:
-- [ ] Add documentation for OAuth 2.0 flow and setup
-- [ ] Add documentation for user endpoints
+- [ ] Add documentation for the persisted user model, roles, and any user-facing profile endpoints added in Phase 5.2
 - [ ] Add security warnings and best practices
-- [ ] Add an internationalization section that links the implemented language negotiation behavior
 - [ ] Add documentation for the OpenAPI contract and compatibility-check workflow
-- [ ] Add deployment guidance for local and prod profiles
 
 Definition of done:
 - New behavior is documented from tests where practical
