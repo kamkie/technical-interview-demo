@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.Map;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,6 +21,12 @@ class LocalizationMessageServiceTests {
     @Autowired
     private LocalizationMessageService localizationMessageService;
 
+    @BeforeEach
+    void setUp() {
+        localizationMessageRepository.deleteAll();
+        localizationMessageRepository.saveAll(LocalizationMessageSeedData.defaultMessages());
+    }
+
     @Test
     void getMessageReturnsSeededMessageForRequestedLanguage() {
         String message = localizationMessageService.getMessage("error.book.not_found", "EN");
@@ -33,7 +40,7 @@ class LocalizationMessageServiceTests {
 
     @Test
     void getMessageWithFallbackReturnsFallbackWhenRequestedLanguageIsMissing() {
-        String message = localizationMessageService.getMessageWithFallback("error.request.invalid", "fr", "en");
+        String message = localizationMessageService.getMessageWithFallback("error.request.invalid", "it", "en");
 
         assertThat(message).isEqualTo("The request is invalid.");
     }
@@ -44,6 +51,16 @@ class LocalizationMessageServiceTests {
 
         assertThat(messages).containsEntry("error.book.not_found", "No se encontro el libro solicitado.");
         assertThat(messages).containsEntry("error.request.invalid", "La solicitud no es valida.");
+    }
+
+    @Test
+    void seedDataIncludesAllDocumentedKeysForAllSupportedLanguages() {
+        for (String language : LocalizationMessageSeedData.supportedLanguages()) {
+            Map<String, String> messages = localizationMessageService.getAllMessages(language);
+
+            assertThat(messages.keySet()).containsAll(LocalizationMessageSeedData.documentedKeys());
+            assertThat(messages).hasSize(LocalizationMessageSeedData.documentedKeys().size());
+        }
     }
 
     @Test

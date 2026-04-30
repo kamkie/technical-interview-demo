@@ -207,8 +207,31 @@ Seed data:
 
 - `Clean Code`
 - `Effective Java`
-- `error.book.not_found` in `en`, `es`, and `de`
-- `error.request.invalid` in `en`, `es`, and `de`
+- Localization error messages for current handler scenarios in `en`, `es`, `de`, and `fr`
+
+Localization message key convention:
+
+- Use `error.<domain>.<condition>` for application-managed error messages
+- Keep keys stable even if the localized text changes
+- Prefer extending the existing domain groups (`book`, `request`, `data`, `server`) before adding new ones
+
+Seeded localization message keys:
+
+- `error.book.isbn_duplicate`
+- `error.book.not_found`
+- `error.book.stale_version`
+- `error.data.integrity_violation`
+- `error.request.constraint_violation`
+- `error.request.invalid`
+- `error.request.invalid_parameter`
+- `error.request.malformed_body`
+- `error.request.method_not_allowed`
+- `error.request.missing_header`
+- `error.request.missing_parameter`
+- `error.request.resource_not_found`
+- `error.request.unsupported_media_type`
+- `error.request.validation_failed`
+- `error.server.internal`
 
 Do not add heavy bootstrap logic unless explicitly requested.
 

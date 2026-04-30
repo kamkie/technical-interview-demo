@@ -365,7 +365,33 @@ On startup, the app inserts sample books if the table is empty:
 - `Clean Code`
 - `Effective Java`
 
-It also seeds sample localization messages for `error.book.not_found` and `error.request.invalid` in `en`, `es`, and `de`.
+It also seeds localization messages for the current API error scenarios in `en`, `es`, `de`, and `fr`.
+
+## Localization Message Keys
+
+Naming convention:
+
+- Use `error.<domain>.<condition>` for server-managed error messages
+- Keep keys stable even if the user-facing text changes
+- Reuse existing keys across handlers instead of minting near-duplicates
+
+Current seeded keys:
+
+- `error.book.isbn_duplicate`
+- `error.book.not_found`
+- `error.book.stale_version`
+- `error.data.integrity_violation`
+- `error.request.constraint_violation`
+- `error.request.invalid`
+- `error.request.invalid_parameter`
+- `error.request.malformed_body`
+- `error.request.method_not_allowed`
+- `error.request.missing_header`
+- `error.request.missing_parameter`
+- `error.request.resource_not_found`
+- `error.request.unsupported_media_type`
+- `error.request.validation_failed`
+- `error.server.internal`
 
 ## Error Handling
 

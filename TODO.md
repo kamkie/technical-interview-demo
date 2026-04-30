@@ -11,6 +11,7 @@ This file outlines planned features, improvements, and refactoring tasks for the
 
 ## ✅ Recently Completed
 
+- ✅ [Phase 3.3: Seed Initial Localization Messages](#33-seed-initial-localization-messages) - localization message keys are documented and seeded for current errors in four languages
 - ✅ [Phase 3.2: Create Localization REST API](#32-create-localization-rest-api) - localization messages now have CRUD endpoints, validation, tests, and REST Docs coverage
 - ✅ [Phase 3.1: Create LocalizationMessage Entity](#31-create-localizationmessage-entity) - localization message storage, lookup service, and seed data are now in place
 - ✅ [Phase 1.2: Add Testcontainers for Integration Testing](#12-add-testcontainers-for-integration-testing) - integration tests now use PostgreSQL via Testcontainers and Flyway-managed schema validation
@@ -270,26 +271,36 @@ Build a full REST API for managing localization messages.
 
 ---
 
-### 3.3 Seed Initial Localization Messages 🟢
+### 3.3 Seed Initial Localization Messages ✅
 
 Depends on: 3.2 (API created)
 
 Populate the database with initial localization messages for all current error scenarios.
 
+**Status:** Completed
+
+**Implementation Details:**
+- ✅ Analyzed `ApiExceptionHandler` and defined a stable message key set for every current error response type
+- ✅ Expanded localization seed data to cover the current error scenarios in English, Spanish, German, and French
+- ✅ Centralized the seed definitions so the runtime initializer and tests use the same key catalog
+- ✅ Updated the initializer to insert missing translations idempotently instead of seeding only an empty table
+- ✅ Added test coverage that verifies every documented key exists for all supported seed languages
+- ✅ Documented the naming convention and seeded message keys in `README.md` and `AGENTS.md`
+
 **Tasks:**
-- [ ] Analyze current `ApiExceptionHandler` and identify all error message keys
-- [ ] Create comprehensive message key naming convention documentation
-- [ ] Seed messages for:
+- [x] Analyze current `ApiExceptionHandler` and identify all error message keys
+- [x] Create comprehensive message key naming convention documentation
+- [x] Seed messages for:
   - Book not found: `error.book.not_found`
   - Duplicate ISBN: `error.book.isbn_duplicate`
-  - Validation failures: `error.validation.field`
+  - Validation failures: `error.request.validation_failed` and `error.request.constraint_violation`
   - Stale update: `error.book.stale_version`
   - Invalid request: `error.request.invalid`
   - Internal server error: `error.server.internal`
   - And any others discovered in step 1
-- [ ] Provide messages in at least: English (en), Spanish (es), German (de), French (fr)
-- [ ] Create Flyway or data loader for seed data
-- [ ] Document message keys in AGENTS.md and README.md
+- [x] Provide messages in at least: English (en), Spanish (es), German (de), French (fr)
+- [x] Create Flyway or data loader for seed data
+- [x] Document message keys in AGENTS.md and README.md
 
 **Definition of Done:**
 - All error scenarios have localized message keys
@@ -301,7 +312,7 @@ Populate the database with initial localization messages for all current error s
 
 ## Phase 4: Error Response Localization
 
-### 4.1 Integrate Localization into Exception Handler 🟡
+### 4.1 Integrate Localization into Exception Handler 🟢
 
 Depends on: 3.3 (Seed data loaded)
 
@@ -563,7 +574,7 @@ Allow books to be organized by category and tagged for better discovery.
 
 ## Phase 7: Performance & Monitoring
 
-### 7.1 Add Caching Layer 🟡
+### 7.1 Add Caching Layer 🟢
 
 Depends on: 3.3 (Localization loaded)
 

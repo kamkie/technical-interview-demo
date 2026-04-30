@@ -36,47 +36,10 @@ class LocalizationApiTests {
     @BeforeEach
     void setUp() {
         localizationMessageRepository.deleteAll();
-        List<LocalizationMessage> savedMessages = localizationMessageRepository.saveAll(List.of(
-                new LocalizationMessage(
-                        "error.book.not_found",
-                        "en",
-                        "The requested book was not found.",
-                        "English message for missing book errors."
-                ),
-                new LocalizationMessage(
-                        "error.book.not_found",
-                        "es",
-                        "No se encontro el libro solicitado.",
-                        "Spanish message for missing book errors."
-                ),
-                new LocalizationMessage(
-                        "error.book.not_found",
-                        "de",
-                        "Das angeforderte Buch wurde nicht gefunden.",
-                        "German message for missing book errors."
-                ),
-                new LocalizationMessage(
-                        "error.request.invalid",
-                        "en",
-                        "The request is invalid.",
-                        "English message for invalid request errors."
-                ),
-                new LocalizationMessage(
-                        "error.request.invalid",
-                        "es",
-                        "La solicitud no es valida.",
-                        "Spanish message for invalid request errors."
-                ),
-                new LocalizationMessage(
-                        "error.request.invalid",
-                        "de",
-                        "Die Anfrage ist ungueltig.",
-                        "German message for invalid request errors."
-                )
-        ));
-        bookNotFoundEn = savedMessages.get(0);
-        bookNotFoundEs = savedMessages.get(1);
-        invalidRequestEn = savedMessages.get(3);
+        localizationMessageRepository.saveAll(LocalizationMessageSeedData.defaultMessages());
+        bookNotFoundEn = localizationMessageRepository.findByMessageKeyAndLanguage("error.book.not_found", "en").orElseThrow();
+        bookNotFoundEs = localizationMessageRepository.findByMessageKeyAndLanguage("error.book.not_found", "es").orElseThrow();
+        invalidRequestEn = localizationMessageRepository.findByMessageKeyAndLanguage("error.request.invalid", "en").orElseThrow();
     }
 
     @Test
@@ -88,11 +51,11 @@ class LocalizationApiTests {
                         .queryParam("sort", "language,asc"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content.length()").value(2))
-                .andExpect(jsonPath("$.content[0].messageKey").value("error.book.not_found"))
+                .andExpect(jsonPath("$.content[0].messageKey").value("error.book.isbn_duplicate"))
                 .andExpect(jsonPath("$.content[0].language").value("de"))
                 .andExpect(jsonPath("$.content[1].language").value("en"))
-                .andExpect(jsonPath("$.totalElements").value(6))
-                .andExpect(jsonPath("$.totalPages").value(3));
+                .andExpect(jsonPath("$.totalElements").value(60))
+                .andExpect(jsonPath("$.totalPages").value(30));
     }
 
     @Test
@@ -200,7 +163,7 @@ class LocalizationApiTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
-                                  "messageKey": "error.book.not_found",
+                                  "messageKey": "error.book.not_found_custom",
                                   "language": "fr",
                                   "messageText": "Le livre demande est introuvable.",
                                   "description": "French message for missing book errors."
@@ -208,6 +171,7 @@ class LocalizationApiTests {
                                 """))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(bookNotFoundEn.getId()))
+                .andExpect(jsonPath("$.messageKey").value("error.book.not_found_custom"))
                 .andExpect(jsonPath("$.language").value("fr"))
                 .andExpect(jsonPath("$.messageText").value("Le livre demande est introuvable."))
                 .andExpect(jsonPath("$.description").value("French message for missing book errors."));
@@ -227,9 +191,9 @@ class LocalizationApiTests {
     void listLocalizationMessagesByLanguageReturnsMessagesForLanguage() throws Exception {
         mockMvc.perform(get("/api/localization-messages/language/{language}", "es"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$.length()").value(15))
                 .andExpect(jsonPath("$[0].language").value("es"))
-                .andExpect(jsonPath("$[0].messageKey").value("error.book.not_found"))
-                .andExpect(jsonPath("$[1].messageKey").value("error.request.invalid"));
+                .andExpect(jsonPath("$[0].messageKey").value("error.book.isbn_duplicate"))
+                .andExpect(jsonPath("$[14].messageKey").value("error.server.internal"));
     }
 }

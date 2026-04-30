@@ -22,8 +22,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,46 +51,9 @@ class LocalizationApiDocumentationTests {
     @BeforeEach
     void setUp() {
         localizationMessageRepository.deleteAll();
-        List<LocalizationMessage> savedMessages = localizationMessageRepository.saveAll(List.of(
-                new LocalizationMessage(
-                        "error.book.not_found",
-                        "en",
-                        "The requested book was not found.",
-                        "English message for missing book errors."
-                ),
-                new LocalizationMessage(
-                        "error.book.not_found",
-                        "es",
-                        "No se encontro el libro solicitado.",
-                        "Spanish message for missing book errors."
-                ),
-                new LocalizationMessage(
-                        "error.book.not_found",
-                        "de",
-                        "Das angeforderte Buch wurde nicht gefunden.",
-                        "German message for missing book errors."
-                ),
-                new LocalizationMessage(
-                        "error.request.invalid",
-                        "en",
-                        "The request is invalid.",
-                        "English message for invalid request errors."
-                ),
-                new LocalizationMessage(
-                        "error.request.invalid",
-                        "es",
-                        "La solicitud no es valida.",
-                        "Spanish message for invalid request errors."
-                ),
-                new LocalizationMessage(
-                        "error.request.invalid",
-                        "de",
-                        "Die Anfrage ist ungueltig.",
-                        "German message for invalid request errors."
-                )
-        ));
-        bookNotFoundEn = savedMessages.get(0);
-        bookNotFoundEs = savedMessages.get(1);
+        localizationMessageRepository.saveAll(LocalizationMessageSeedData.defaultMessages());
+        bookNotFoundEn = localizationMessageRepository.findByMessageKeyAndLanguage("error.book.not_found", "en").orElseThrow();
+        bookNotFoundEs = localizationMessageRepository.findByMessageKeyAndLanguage("error.book.not_found", "es").orElseThrow();
     }
 
     @Test
@@ -205,7 +166,7 @@ class LocalizationApiDocumentationTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
-                                  "messageKey": "error.book.not_found",
+                                  "messageKey": "error.book.not_found_custom",
                                   "language": "fr",
                                   "messageText": "Le livre demande est introuvable.",
                                   "description": "French message for missing book errors."
