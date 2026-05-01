@@ -12,12 +12,39 @@ Keep this file focused on work that is still planned or in progress.
 
 ## Current Priorities
 
-1. Finish the pre-`1.0` release-readiness work so the project has a clear, defensible definition of what `1.0` means.
-2. Complete the CI/CD and deployment assets after the `1.0` release bar is explicit.
+1. Complete the CI/CD and deployment assets after the `1.0` release bar is explicit.
+2. Finish the pre-`1.0` release-readiness work so the project has a clear, defensible definition of what `1.0` means.
 3. Keep the public API stable after the last pre-`1.0` simplification pass unless a release-blocking clarity issue is still found.
-4. Keep Phase 11 explicitly deferred until the core roadmap is complete.
+4. Keep Milestone 11 explicitly deferred until the core roadmap is complete.
 
 ## Ordered Plan
+
+### Next: Milestone 10 CI/CD & Deployment
+
+Status: Ready after the pre-`1.0` release bar is explicit
+
+#### CI/CD Pipeline
+- [ ] Choose the CI/CD platform
+- [ ] Automate `spotlessCheck`, `pmdMain`, `test`, and `asciidoctor`
+- [ ] Build the Docker image in CI
+- [ ] Document the pipeline and branch protections
+
+#### Kubernetes Manifests
+- [ ] Create base manifests under `k8s/`
+- [ ] Externalize config and secrets correctly
+- [ ] Add resource requests, limits, and probes
+- [ ] Document deployment steps
+
+#### Helm Chart
+- [ ] Create the Helm chart structure and values
+- [ ] Template deployment resources
+- [ ] Validate rendered manifests
+- [ ] Document Helm-based deployment
+
+#### Monitoring & Alerting Setup
+- [ ] Create a monitoring stack for Prometheus, Grafana, and Alertmanager
+- [ ] Add scrape config, dashboards, and alert rules
+- [ ] Document monitoring setup and expected alerts
 
 ### Now: Pre-1.0 Release Readiness
 
@@ -53,38 +80,11 @@ Goal: make the `1.0` boundary mean a stable, documented, and intentionally scope
 - [ ] Add deployment-oriented troubleshooting for OAuth setup, PostgreSQL connectivity, and session persistence failures
 - [ ] Document an upgrade and rollback flow for schema migrations and versioned container releases
 
-### Next: Phase 10 CI/CD & Deployment
-
-Status: Ready after the pre-`1.0` release bar is explicit
-
-#### CI/CD Pipeline
-- [ ] Choose the CI/CD platform
-- [ ] Automate `spotlessCheck`, `pmdMain`, `test`, and `asciidoctor`
-- [ ] Build the Docker image in CI
-- [ ] Document the pipeline and branch protections
-
-#### Kubernetes Manifests
-- [ ] Create base manifests under `k8s/`
-- [ ] Externalize config and secrets correctly
-- [ ] Add resource requests, limits, and probes
-- [ ] Document deployment steps
-
-#### Helm Chart
-- [ ] Create the Helm chart structure and values
-- [ ] Template deployment resources
-- [ ] Validate rendered manifests
-- [ ] Document Helm-based deployment
-
-#### Monitoring & Alerting Setup
-- [ ] Create a monitoring stack for Prometheus, Grafana, and Alertmanager
-- [ ] Add scrape config, dashboards, and alert rules
-- [ ] Document monitoring setup and expected alerts
-
 ---
 
 ## Deferred
 
-### Phase 11: Optional Future Enhancements
+### Milestone 11: Optional Future Enhancements
 
 Status: Deferred until the core roadmap is complete
 
