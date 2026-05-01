@@ -215,12 +215,7 @@ Prepare a release for the completed plan `<plan_file>`.
 
 Follow `ai/RELEASES.md`.
 Read the executed plan, `CHANGELOG.md`, and any changed contract docs first.
-
-Choose the next semantic version deliberately.
-Update `CHANGELOG.md`.
-Follow the release cleanup and archival steps from `ai/RELEASES.md`.
-Create the release commit using the repository commit message pattern.
-Create the annotated tag.
+Apply the full release flow from `ai/RELEASES.md`, including version choice, release metadata updates, cleanup, and verification.
 
 Do not push unless I ask.
 ```
@@ -232,15 +227,7 @@ Prepare and execute the release for `<plan_file>`.
 
 Before releasing, confirm the plan is fully implemented, all intended changes are integrated onto `main`, the plan's `Validation Results` are up to date, and the required validation has passed on `main`.
 Follow `ai/RELEASES.md`.
-
-Choose the next semantic version deliberately.
-Update `CHANGELOG.md`.
-Follow the release cleanup and archival steps from `ai/RELEASES.md`.
-Create the release commit using the repository commit message pattern.
-Create the annotated tag.
-Push the release commit on `main` to GitHub.
-Push the annotated tag to GitHub.
-Verify that the remote accepted both the branch update and the tag.
+Apply the full release flow from `ai/RELEASES.md`, including version choice, release metadata updates, push behavior, cleanup, and verification.
 Summarize exactly what was published.
 ```
 
@@ -322,7 +309,7 @@ Act as coordinator.
 Keep shared integration files such as `CHANGELOG.md` and the plan's `Validation Results` under coordinator ownership.
 Integrate completed work back onto `main`.
 Run final validation on `main`.
-After the whole plan is complete and validated, follow `ai/RELEASES.md` to prepare the release from `main`.
+After the whole plan is complete and validated, follow `ai/RELEASES.md` to execute the release from `main`.
 Do not push unless I explicitly ask for remote publication.
 ```
 

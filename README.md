@@ -114,7 +114,7 @@ Additional change-sensitive checks:
 - use semantic version tags in the form `vMAJOR.MINOR.PATCH`
 - keep release numbers increasing in `git log --first-parent` order
 - record human-facing release history in `CHANGELOG.md`
-- use the matching `CHANGELOG.md` version section as the source of truth for published GitHub Release notes
+- tag-driven releases publish the matching `CHANGELOG.md` version section as GitHub Release notes
 
 ## CI/CD And Deployment
 
@@ -151,13 +151,6 @@ Pre-`1.0` production-default blockers still under active roadmap review:
 - whether the `oauth` profile is enabled by default in deployed environments
 - whether browser-session write flows need CSRF posture changes before `1.0`
 
-Branch protection recommendation for the default branch:
-
-- require `CI` to pass before merge
-- require at least one reviewer on pull requests
-- prefer squash merges so release tags map cleanly onto reviewed changes
-- restrict `vMAJOR.MINOR.PATCH` tag creation to maintainers who also own release validation
-
 Use the raw manifests under `k8s/` when you want explicit repo-owned YAML. Use the Helm chart under `helm/technical-interview-demo` when you want the same deployment contract packaged behind values files.
 
 Monitoring support uses the upstream `kube-prometheus-stack` Helm chart plus repo-owned ServiceMonitor, alert-rule, Grafana dashboard, and Alertmanager example assets under `k8s/monitoring` and `monitoring/`.
@@ -165,6 +158,7 @@ Monitoring support uses the upstream `kube-prometheus-stack` Helm chart plus rep
 ## Project Map
 
 - `SETUP.md`: developer onboarding, local environment setup, OAuth setup, Docker workflow, and troubleshooting
+- `ai/PROMPTS.md`: reusable prompt library for repository-specific planning, implementation, release, and multi-agent requests
 - `ai/WORKFLOW.md`: Codex multi-agent workflow, task integration, and release handoff rules for this repository
 - `AGENTS.md`: AI-facing project rules and spec-driven working contract
 - `ROADMAP.md`: active roadmap only
