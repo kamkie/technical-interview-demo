@@ -23,6 +23,15 @@ Current scope:
 
 Primary goal: keep the codebase small, readable, and easy to reason about.
 
+## 1.0 Promise
+
+`1.0` means a stable interview-demo reference app.
+
+It does **not** mean a production-ready starter platform with every security and deployment concern solved in-app.
+
+The `1.x` compatibility promise applies to the documented supported contract in this file, the generated docs, the HTTP examples, and the approved OpenAPI baseline where applicable.
+It does not extend to deployment-specific exposure choices outside that supported contract.
+
 ## Spec-Driven Development
 
 This project should be changed spec-first, not implementation-first.
@@ -49,36 +58,54 @@ What that means in practice:
 - If a refactor should not change behavior, the existing specs should keep passing without contract edits.
 - If the intended behavior is unclear, define the missing spec first or stop and clarify it before coding.
 
-## Public API Summary
+## Supported Contract
 
-Endpoints:
+Stable `1.x` contract:
 
-- `GET /docs`
-- `GET /`
-- `GET /hello`
-- `GET /api/books`
-- `GET /api/books/{id}`
-- `POST /api/books`
-- `PUT /api/books/{id}`
-- `DELETE /api/books/{id}`
-- `GET /api/categories`
-- `POST /api/categories`
-- `GET /api/localizations`
-- `GET /api/localizations/{id}`
-- `POST /api/localizations`
-- `PUT /api/localizations/{id}`
-- `DELETE /api/localizations/{id}`
-- `GET /api/account`
-- `PUT /api/account/language`
-- `GET /actuator/info`
-- `GET /actuator/health`
-- `GET /actuator/health/liveness`
-- `GET /actuator/health/readiness`
+- user-facing and documentation endpoints:
+  - `GET /`
+  - `GET /hello`
+  - `GET /docs`
+  - `GET /v3/api-docs`
+  - `GET /v3/api-docs.yaml`
+  - `GET /api/books`
+  - `GET /api/books/{id}`
+  - `POST /api/books`
+  - `PUT /api/books/{id}`
+  - `DELETE /api/books/{id}`
+  - `GET /api/categories`
+  - `POST /api/categories`
+  - `GET /api/localizations`
+  - `GET /api/localizations/{id}`
+  - `POST /api/localizations`
+  - `PUT /api/localizations/{id}`
+  - `DELETE /api/localizations/{id}`
+  - `GET /api/account`
+  - `PUT /api/account/language`
+- supported operational endpoints:
+  - `GET /actuator/info`
+  - `GET /actuator/health`
+  - `GET /actuator/health/liveness`
+  - `GET /actuator/health/readiness`
+
+Deployment-scoped technical surface:
+
 - `GET /actuator/prometheus`
+  - supported for trusted deployment scraping and monitoring integration
+  - not part of the internet-public contract
+
+Remaining demo-only convenience endpoints:
+
+- none intentionally excluded from the stable `1.x` contract at this stage
+
+Supported technical bootstrap:
+
+- `GET /oauth2/authorization/github`
+  - interactive login entry point when the optional `oauth` profile is active
 
 Security summary:
 
-- public reads: `/`, `/hello`, `/docs`, `GET /api/books/**`, `GET /api/categories`, `GET /api/localizations/**`, actuator health/info/prometheus, and OpenAPI docs
+- public supported reads: `/`, `/hello`, `/docs`, OpenAPI docs, `GET /api/books/**`, `GET /api/categories`, `GET /api/localizations/**`, actuator health endpoints, and actuator info
 - authenticated session required: account endpoints and all write endpoints
 - `ADMIN` role required: category creation and localization create/update/delete
 - interactive login starts at `GET /oauth2/authorization/github` when the `oauth` profile is active
@@ -145,11 +172,19 @@ Optional deployment environment variables:
 - `GITHUB_CLIENT_SECRET`
 - `ADMIN_LOGINS`
 
-Pre-`1.0` production-default blockers still under active roadmap review:
+Frozen `1.0` production posture:
 
-- whether `GET /actuator/prometheus` remains public in deployed environments
-- whether the `oauth` profile is enabled by default in deployed environments
-- whether browser-session write flows need CSRF posture changes before `1.0`
+- `prod` remains the deployment profile baseline
+- OAuth login remains opt-in through the `oauth` profile plus `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`
+- `ADMIN_LOGINS` remains the environment-driven admin bootstrap mechanism
+- `SESSION_COOKIE_SECURE` remains optional with a secure-by-default value of `true`
+- browser-session write flows keep CSRF disabled as a deliberate demo tradeoff for reviewer-friendly session-based API exercise flows
+- `GET /actuator/prometheus` remains available for trusted deployment scraping, but it is not part of the internet-public contract
+
+Trusted deployment topology assumption:
+
+- health, readiness, and info endpoints are safe to expose as operational endpoints
+- Prometheus scraping is expected to happen from trusted internal infrastructure such as cluster-local monitoring, not from arbitrary public clients
 
 Use the raw manifests under `k8s/` when you want explicit repo-owned YAML. Use the Helm chart under `helm/technical-interview-demo` when you want the same deployment contract packaged behind values files.
 
