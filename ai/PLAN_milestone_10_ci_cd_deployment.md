@@ -356,6 +356,16 @@
   - verification:
     - `helm lint helm/technical-interview-demo` passed locally
     - `helm template technical-interview-demo helm/technical-interview-demo -f helm/technical-interview-demo/values-local.yaml` passed locally
+- Milestone 6:
+  - chose upstream `kube-prometheus-stack` installation with repo-owned monitoring assets layered on top
+  - added `k8s/monitoring/` with a ServiceMonitor and PrometheusRule for raw-manifest deployments
+  - added `monitoring/grafana/` dashboard assets, `monitoring/kube-prometheus-stack-values.yaml`, and `monitoring/alertmanager/config-example.yaml`
+  - updated `README.md` and `SETUP.md` with monitoring install, apply, and verification steps
+  - verification:
+    - `kubectl kustomize k8s/monitoring` passed locally
+    - `kubectl kustomize monitoring/grafana` passed locally
+    - `kubectl apply --dry-run=client -k k8s/monitoring` passed locally
+    - `kubectl apply --dry-run=client -k monitoring/grafana` passed locally
 
 ## User Validation
 - Review the plan against `ROADMAP.md` and confirm the chosen defaults:

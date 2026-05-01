@@ -319,6 +319,39 @@ The chart mirrors the raw manifest contract:
 - `values-local.yaml` matches the local overlay assumptions: single replica, local image tag, `postgres` service host, and non-secure session cookie for HTTP testing
 - ServiceMonitor rendering is optional and stays disabled until the monitoring stack is installed
 
+## Monitoring And Alerting
+
+The repository does not vendor the monitoring stack itself. Instead, it assumes the upstream `kube-prometheus-stack` Helm chart and adds repo-owned assets for the app scrape config, alert rules, Grafana dashboard, and Alertmanager examples.
+
+Install the upstream monitoring stack for a local/demo cluster:
+
+```powershell
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+helm upgrade --install monitoring prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace -f monitoring/kube-prometheus-stack-values.yaml
+```
+
+Apply the application monitoring assets:
+
+```powershell
+kubectl apply -k k8s/monitoring
+kubectl apply -k monitoring/grafana
+```
+
+What the monitoring assets provide:
+
+- `k8s/monitoring/servicemonitor.yaml` scrapes `GET /actuator/prometheus`
+- `k8s/monitoring/prometheus-rule.yaml` adds alerts for target-down, readiness failures, repeated restarts, and elevated 5xx rates
+- `monitoring/grafana/dashboards/technical-interview-demo.json` adds starter panels for JVM memory, CPU, request throughput/latency, cache events, and domain totals
+- `monitoring/alertmanager/config-example.yaml` is a starting Alertmanager route/receiver config that you should adapt before using real notifications
+
+Verify the monitoring setup:
+
+1. Confirm the app target appears in Prometheus and reaches `UP`.
+2. Port-forward the Grafana service and open the `Technical Interview Demo` dashboard.
+3. Confirm the `technical_interview_demo_*` metrics and HTTP metrics are visible.
+4. Review the loaded Prometheus rules and make sure Alertmanager shows the configured receivers.
+
 ## OAuth Setup
 
 The application supports GitHub OAuth login behind the optional `oauth` profile.

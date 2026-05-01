@@ -1,0 +1,44 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: technical-interview-demo
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: technical-interview-demo
+    app.kubernetes.io/component: monitoring
+spec:
+  groups:
+    - name: technical-interview-demo.rules
+      rules:
+        - alert: TechnicalInterviewDemoTargetDown
+          expr: absent(up{namespace="technical-interview-demo",service="technical-interview-demo"}) or max(up{namespace="technical-interview-demo",service="technical-interview-demo"}) < 1
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: technical-interview-demo target is down
+            description: Prometheus has not been able to scrape the technical-interview-demo service for at least 5 minutes.
+        - alert: TechnicalInterviewDemoReadinessFailing
+          expr: max(kube_pod_status_ready{namespace="technical-interview-demo",condition="true",pod=~"technical-interview-demo.*"}) < 1
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: technical-interview-demo pods are not ready
+            description: One or more technical-interview-demo pods have been unready for at least 10 minutes.
+        - alert: TechnicalInterviewDemoRestartingFrequently
+          expr: sum(increase(kube_pod_container_status_restarts_total{namespace="technical-interview-demo",pod=~"technical-interview-demo.*"}[15m])) > 2
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: technical-interview-demo pods are restarting
+            description: technical-interview-demo containers restarted more than twice in the last 15 minutes.
+        - alert: TechnicalInterviewDemoHighServerErrorRate
+          expr: sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo",status=~"5.."}[5m])) / clamp_min(sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo"}[5m])), 0.001) > 0.05
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: technical-interview-demo is returning elevated 5xx errors
+            description: More than 5% of technical-interview-demo HTTP requests have been returning 5xx responses for 10 minutes.

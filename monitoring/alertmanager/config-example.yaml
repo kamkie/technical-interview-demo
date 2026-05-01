@@ -1,0 +1,19 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: team-jit-default
+  group_by:
+    - alertname
+    - namespace
+    - service
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+
+receivers:
+  - name: team-jit-default
+  - name: team-jit-webhook
+    webhook_configs:
+      - url: https://alerts.example.invalid/hooks/technical-interview-demo
+        send_resolved: true
