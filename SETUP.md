@@ -301,6 +301,50 @@ What the smoke validation proves:
 - `GET /actuator/health/readiness` returns `HTTP 200` with `status=UP`
 - Flyway migrations complete against PostgreSQL
 
+## Healthy Runtime Expectations
+
+For this repository, a healthy runtime means the existing operational signals line up across health probes, metrics, audit writes, and authenticated session persistence.
+
+Operational endpoint expectations:
+
+- `GET /actuator/health`, `GET /actuator/health/liveness`, and `GET /actuator/health/readiness` should all return `HTTP 200` with `status=UP`
+- treat `GET /actuator/health/readiness` as the authoritative rollout and smoke-check signal for container and cluster startup
+- `GET /actuator/info` should return build and git metadata for the running build
+
+Metrics expectations:
+
+- `GET /actuator/prometheus` is available for trusted local inspection or deployment scraping
+- the metrics payload should include both the default Spring/JVM meters and the application-specific `technical_interview_demo_*` meters
+- the Grafana dashboard and Prometheus rules under `monitoring/` and `k8s/monitoring/` assume those metrics stay visible
+
+Audit logging expectations:
+
+- successful create, update, and delete operations for `Book` and `Localization` write an append-only row to `audit_logs`
+- healthy audit rows include a target type, target id, action, actor login, summary, and creation timestamp
+- if state-changing requests succeed but `audit_logs` stays empty, treat that as a runtime problem rather than a documentation gap
+
+Session persistence expectations:
+
+- authenticated browser sessions use Spring Session JDBC with the `technical-interview-demo-session` cookie
+- healthy authenticated-session behavior means rows appear in `SPRING_SESSION` and `SPRING_SESSION_ATTRIBUTES` after a successful login flow
+- if `/api/account` starts returning unauthorized responses for an otherwise valid login, inspect those tables before assuming an OAuth redirect problem
+
+Quick verification sequence:
+
+```powershell
+Invoke-WebRequest http://127.0.0.1:8080/actuator/health/readiness
+Invoke-WebRequest http://127.0.0.1:8080/actuator/info
+Invoke-WebRequest http://127.0.0.1:8080/actuator/prometheus
+```
+
+Database checks after authenticated or state-changing exercise flows:
+
+```sql
+select count(*) from audit_logs;
+select count(*) from spring_session;
+select count(*) from spring_session_attributes;
+```
+
 ## Kubernetes Deployment
 
 The raw Kubernetes baseline lives under `k8s/base`. The local demo overlay lives under `k8s/overlays/local`.

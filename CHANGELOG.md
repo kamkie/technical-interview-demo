@@ -9,6 +9,7 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ### Changed
 - Added a concrete post-`1.0` maintainer release checklist across the AI release workflow, contributor guidance, and the human-facing release model, including Flyway review, benchmark-decision guidance, and verification of the immutable short-SHA image tag.
+- Documented the current healthy-runtime expectations for readiness, operational metadata, Prometheus metrics, append-only audit logging, and JDBC-backed authenticated sessions.
 
 ## [v1.0.0] - 2026-05-02
 
