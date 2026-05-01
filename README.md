@@ -130,6 +130,13 @@ Use `SETUP.md` for environment prerequisites and local tooling details.
 
 The standard build includes Spotless, PMD, tests, JaCoCo thresholds, REST Docs generation, OpenAPI compatibility verification, boot jar creation, and Docker image build.
 
+Supply-chain verification is part of the standard build:
+
+- `.\gradlew.bat build` also runs Gradle-owned dependency and Docker-image vulnerability scans
+- scan reports are written under `build/reports/security/`
+- unsuppressed `HIGH` and `CRITICAL` findings fail the relevant scan task and therefore fail the build
+- suppressions must be explicit and reviewable through `config/security/trivy.ignore`
+
 Additional change-sensitive checks:
 
 - refresh the approved OpenAPI baseline intentionally with `./gradlew refreshOpenApiBaseline` only when the reviewed API contract changed
@@ -153,7 +160,8 @@ Supported delivery path:
 - GitHub Actions is the repository CI/CD platform
 - pull requests to `main` and pushes to `main` run the `CI` workflow, which executes `./gradlew build` and `./gradlew externalSmokeTest`
 - Dependabot opens grouped weekly update PRs for Gradle, GitHub Actions, and Docker, and those PRs are expected to pass the same `CI` workflow before merge
-- semantic version tags trigger the `Release` workflow, which builds the tagged image with Gradle, validates it with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry as `ghcr.io/<owner>/<repo>:<tag>` and `ghcr.io/<owner>/<repo>:sha-<12-char-commit>`, then creates the matching GitHub Release from `CHANGELOG.md`
+- the `CI` workflow uploads the generated vulnerability scan artifacts from `build/reports/security/` so blocked runs remain reviewable
+- semantic version tags trigger the `Release` workflow, which builds and scans the tagged image with Gradle, validates it with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry as `ghcr.io/<owner>/<repo>:<tag>` and `ghcr.io/<owner>/<repo>:sha-<12-char-commit>`, then creates the matching GitHub Release from `CHANGELOG.md`
 - deployment artifacts are provided as:
   - Docker image
   - vendor-neutral Kubernetes manifests under `k8s/base` with a local overlay under `k8s/overlays/local`

@@ -1,0 +1,20 @@
+# Trivy vulnerability suppressions for `dependencyVulnerabilityScan` and `imageVulnerabilityScan`.
+#
+# Keep this file narrow.
+# Do not add suppressions without a concrete rationale and a revalidation date.
+#
+# Required block format for every suppression:
+#   reason: <why the finding is accepted temporarily>
+#   scope: dependency|image|both
+#   review-by: YYYY-MM-DD
+#   reference: <issue, PR, advisory discussion, or release note>
+#   added-by: <name or automation context>
+#   vulnerability-id on its own line below the metadata block
+#
+# Example:
+# reason: awaiting upstream base-image fix in the next patch release
+# scope: image
+# review-by: 2026-06-01
+# reference: GH-1234
+# added-by: codex
+# CVE-2026-12345

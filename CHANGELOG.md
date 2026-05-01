@@ -10,6 +10,7 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 ### Changed
 - Cleaned up AI and setup guidance drift so planning, workflow, and prompt docs consistently require `CHANGELOG.md` updates with each completed milestone commit, use the Gradle `gatlingBenchmark` task instead of the removed benchmark script, and no longer describe a manual post-tag GitHub Release flow that the repository does not use.
 - Fixed setup and architecture documentation drift by restoring the missing Bash PostgreSQL startup step, correcting the OpenAPI compatibility test command, and updating the architecture guide to reflect the current DTO-backed public controller responses.
+- Defined the internal supply-chain scanning contract in `README.md`, including stable report locations under `build/reports/security/`, the unsuppressed `HIGH`/`CRITICAL` failure threshold, CI artifact expectations, and the checked-in Trivy suppression policy file.
 
 ## [v1.0.1] - 2026-05-02
 
