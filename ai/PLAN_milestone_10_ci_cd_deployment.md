@@ -34,7 +34,7 @@
   - production security posture is not fully locked yet for metrics exposure, OAuth defaults, CSRF posture, and fail-fast secret handling
 - Relevant existing specs and code:
   - roadmap source: `ROADMAP.md`
-  - planning rules: `PLAN.md`
+  - planning rules: `ai/PLAN.md`
   - repo rules: `AGENTS.md`
   - developer/deployment runbook: `SETUP.md`
   - human-facing project contract: `README.md`
@@ -87,7 +87,7 @@
 - Goal:
   - define the minimum supported deployment story so the remaining work has a stable target
 - Files to update:
-  - `PLAN_milestone_10_ci_cd_deployment.md`
+  - `ai/PLAN_milestone_10_ci_cd_deployment.md`
   - `ROADMAP.md` only if execution sequencing must be clarified
   - `README.md`
   - `SETUP.md`

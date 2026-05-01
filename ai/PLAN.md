@@ -1,6 +1,6 @@
 # Planning Guide For AI Agents
 
-`PLAN.md` explains how AI agents should produce implementation plans in this repository.
+`ai/PLAN.md` explains how AI agents should produce implementation plans in this repository.
 
 Use this file when the user asks for a plan, milestone, execution document, milestone breakdown, or a detailed change strategy.
 Do not use `ROADMAP.md` as a substitute for a real plan. `ROADMAP.md` is the roadmap. A plan is a self-contained handoff document for a concrete piece of work.
@@ -109,7 +109,7 @@ If the work is a refactor with no contract change, the plan should preserve exis
 
 ### Setup or environment changes
 
-If the work changes onboarding, tools, Java, Docker, formatter setup, or local runbooks, update `SETUP.md`. Do not move setup detail into `AGENTS.md` or `PLAN.md`.
+If the work changes onboarding, tools, Java, Docker, formatter setup, or local runbooks, update `SETUP.md`. Do not move setup detail into `AGENTS.md` or `ai/PLAN.md`.
 
 ### Roadmap work
 
@@ -117,7 +117,7 @@ If the task is only reprioritization or scope management, update `ROADMAP.md`. D
 
 ## Plan Output Format
 
-When the user asks for a concrete execution plan, create a new file in the repo root named `PLAN_<topic>.md`.
+When the user asks for a concrete execution plan, create a new file under `ai/` named `PLAN_<topic>.md`.
 Use short lowercase topic names with underscores, for example `PLAN_book_api_error_shape.md`.
 
 Use this structure:
@@ -247,7 +247,7 @@ A good plan would:
 
 If the user later asks you to execute a plan:
 
-1. Re-read `PLAN.md`, `AGENTS.md`, and the target `PLAN_<topic>.md` file.
+1. Re-read `ai/PLAN.md`, `AGENTS.md`, and the target `ai/PLAN_<topic>.md` file.
 2. Implement the smallest change that satisfies the plan.
 3. Update the `Validation Results` section in the plan document with what you actually ran and what passed or failed.
 4. If execution discovers a missing decision, stop and ask unless the plan already recorded an explicit fallback assumption.
