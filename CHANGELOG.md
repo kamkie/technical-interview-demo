@@ -12,6 +12,7 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ### Changed
 - Switched CI, release validation, and repository guidance to use Gradle-owned `externalSmokeTest` and `gatlingBenchmark` tasks as the source of truth for external smoke and benchmark verification.
+- Replaced the script-owned benchmark orchestration with `buildSrc` Gradle tasks that run the packaged Docker image plus Dockerized PostgreSQL, use fake OAuth client settings for redirect coverage, and log progress through provisioning, readiness, simulations, baseline handling, and teardown.
 
 ## [v0.24.1] - 2026-05-01
 

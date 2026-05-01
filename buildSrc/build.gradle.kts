@@ -8,8 +8,16 @@ repositories {
     mavenCentral()
 }
 
+dependencies {
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.20.1")
+}
+
 gradlePlugin {
     plugins {
+        register("externalTestingConventions") {
+            id = "technical-interview-demo.external-testing-conventions"
+            implementationClass = "team.jit.technicalinterviewdemo.build.ExternalTestingConventionsPlugin"
+        }
         register("jacocoCoverageConventions") {
             id = "technical-interview-demo.jacoco-conventions"
             implementationClass = "team.jit.technicalinterviewdemo.build.JacocoCoverageConventionsPlugin"

@@ -10,6 +10,7 @@ plugins {
     pmd
     idea
     id("technical-interview-demo.jacoco-conventions")
+    id("technical-interview-demo.external-testing-conventions")
     id("io.gatling.gradle") version "3.15.0.1"
     id("com.gorylenko.gradle-git-properties") version "2.5.7"
     id("com.diffplug.spotless") version "8.4.0"

@@ -39,7 +39,7 @@ public class PublicApiSimulation extends Simulation {
             )
             .pause(Duration.ofMillis(200))
             .exec(
-                    http("filter-localizations")
+                    http("lookup-localization-message")
                             .get("/api/localizations?messageKey=error.request.invalid&language=pl")
                             .check(status().is(200))
                             .check(headerRegex("Content-Type", "application/json.*"))
@@ -58,7 +58,7 @@ public class PublicApiSimulation extends Simulation {
                         global().successfulRequests().percent().gte(99.0),
                         details("list-books").responseTime().percentile3().lt(800),
                         details("search-books").responseTime().percentile3().lt(900),
-                        details("filter-localizations").responseTime().percentile3().lt(500)
+                        details("lookup-localization-message").responseTime().percentile3().lt(500)
                 );
     }
 }
