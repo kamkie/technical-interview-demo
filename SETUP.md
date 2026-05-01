@@ -63,6 +63,39 @@ Variables you are most likely to need:
 - `DATABASE_*` variables when overriding the default PostgreSQL connection
 - `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` when enabling the optional `oauth` profile for authenticated write flows
 - `ADMIN_LOGINS` when you want one or more GitHub logins to receive the persisted `ADMIN` role
+- `SESSION_COOKIE_SECURE` when you want the `prod` profile session cookie behavior to match local HTTP testing or HTTPS deployment
+
+## Deployment Contract
+
+Milestone 10 standardizes the deployment story around these artifacts:
+
+- GitHub Actions workflows for CI validation and tag-based release publishing
+- a Docker image built from the packaged Spring Boot boot jar
+- vendor-neutral Kubernetes manifests under `k8s/`
+- a matching Helm chart under `helm/technical-interview-demo`
+- monitoring and alerting assets for Prometheus, Grafana, and Alertmanager
+
+Required runtime environment variables for deployed environments:
+
+- `DATABASE_HOST`
+- `DATABASE_PORT`
+- `DATABASE_NAME`
+- `DATABASE_USER`
+- `DATABASE_PASSWORD`
+- `SESSION_COOKIE_SECURE`
+
+Optional runtime environment variables:
+
+- `GITHUB_CLIENT_ID`
+- `GITHUB_CLIENT_SECRET`
+- `ADMIN_LOGINS`
+
+Deployment defaults that are intentionally not frozen yet because they belong to the pre-`1.0` release-readiness work:
+
+- whether `/actuator/prometheus` stays publicly reachable in deployed environments
+- whether OAuth login is enabled in deployed environments by default
+- whether the `prod` profile must fail fast when required secrets are missing
+- whether browser-session write flows require CSRF changes before `1.0`
 
 ## IDE Setup
 

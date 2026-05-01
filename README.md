@@ -114,6 +114,41 @@ Additional change-sensitive checks:
 - keep release numbers increasing in `git log --first-parent` order
 - record human-facing release history in `CHANGELOG.md`
 
+## CI/CD And Deployment
+
+Supported delivery path:
+
+- GitHub Actions is the repository CI/CD platform
+- pull requests and protected branches run the full repository verification flow
+- tagged releases build a publishable container image
+- deployment artifacts are provided as:
+  - Docker image
+  - vendor-neutral Kubernetes manifests under `k8s/`
+  - Helm chart under `helm/`
+  - monitoring and alerting assets for Prometheus, Grafana, and Alertmanager
+
+Required deployment environment variables:
+
+- `DATABASE_HOST`
+- `DATABASE_PORT`
+- `DATABASE_NAME`
+- `DATABASE_USER`
+- `DATABASE_PASSWORD`
+- `SESSION_COOKIE_SECURE`
+
+Optional deployment environment variables:
+
+- `GITHUB_CLIENT_ID`
+- `GITHUB_CLIENT_SECRET`
+- `ADMIN_LOGINS`
+
+Pre-`1.0` production-default blockers still under active roadmap review:
+
+- whether `GET /actuator/prometheus` remains public in deployed environments
+- whether the `oauth` profile is enabled by default in deployed environments
+- whether the `prod` profile should fail fast on missing database and OAuth secrets instead of using fallback defaults
+- whether browser-session write flows need CSRF posture changes before `1.0`
+
 ## Project Map
 
 - `SETUP.md`: developer onboarding, local environment setup, OAuth setup, Docker workflow, and troubleshooting

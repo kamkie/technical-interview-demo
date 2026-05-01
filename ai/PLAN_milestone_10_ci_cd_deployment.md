@@ -321,7 +321,11 @@
 - Prefer upstream monitoring packaging over checking in large generated manifests. The repo should explain how to compose the stack, not vendor thousands of lines of opaque YAML.
 
 ## Validation Results
-- To be filled in during execution.
+- Milestone 1:
+  - updated `README.md` to lock GitHub Actions as the CI/CD platform and define the supported deployment artifacts
+  - updated `SETUP.md` to document required and optional deployment environment variables
+  - documented unresolved pre-`1.0` production-default blockers without changing runtime behavior
+  - verification: documentation/spec review only; no code or contract execution changes yet
 
 ## User Validation
 - Review the plan against `ROADMAP.md` and confirm the chosen defaults:
