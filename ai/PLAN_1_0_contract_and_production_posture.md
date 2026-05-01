@@ -198,6 +198,75 @@
   - adjust only the YAML values, comments, or surrounding docs that currently contradict the frozen posture
   - if no YAML behavior change is required after review, still update the surrounding docs so reviewers can see that the deployment assets were intentionally accepted
 
+## Execution Task Split
+- Coordinator ownership on `codex/1_0_contract_and_production_posture`:
+  - shared integration files:
+    - `README.md`
+    - `CHANGELOG.md`
+    - `ai/PLAN_1_0_contract_and_production_posture.md`
+    - release-only cleanup files such as `ROADMAP.md` and `ai/archive/PLAN_1_0_contract_and_production_posture.md`
+  - responsibilities:
+    - keep the execution plan aligned with user decisions and worker task ownership
+    - review worker results and cherry-pick completed task commits onto the coordinator branch
+    - integrate the shared `README.md` contract changes after the worker branches are ready
+    - update `CHANGELOG.md` under `## [Unreleased]` only after the whole plan is complete and ready to land together
+    - update the plan `Validation Results`
+    - integrate the completed plan onto `main`
+    - run final validation on `main`
+    - create the release from `main`
+- Worker 1 task: Freeze contract narrative and OpenAPI wording
+  - branch/worktree:
+    - branch: `codex/1_0_contract_docs`
+    - worktree: `..\technical-interview-demo-1-0-contract-docs`
+  - owned files:
+    - `ai/DESIGN.md`
+    - `src/docs/asciidoc/index.adoc`
+    - `src/main/java/team/jit/technicalinterviewdemo/technical/docs/OpenApiConfiguration.java`
+    - `src/test/java/team/jit/technicalinterviewdemo/technical/docs/OpenApiIntegrationTests.java`
+    - `src/test/resources/openapi/approved-openapi.json` only if the contract review intentionally changes generated OpenAPI output
+  - validation scope:
+    - targeted OpenAPI/documentation verification relevant to wording or schema-description changes
+    - `.\gradlew.bat build` if the worker change ends up requiring a baseline refresh or broader doc generation check
+- Worker 2 task: Freeze runtime posture and technical spec coverage
+  - branch/worktree:
+    - branch: `codex/1_0_runtime_posture`
+    - worktree: `..\technical-interview-demo-1-0-runtime-posture`
+  - owned files:
+    - `src/main/java/team/jit/technicalinterviewdemo/technical/security/SecurityConfiguration.java`
+    - `src/main/java/team/jit/technicalinterviewdemo/technical/info/TechnicalOverviewService.java`
+    - `src/main/java/team/jit/technicalinterviewdemo/technical/info/TechnicalOverviewResponse.java`
+    - `src/test/java/team/jit/technicalinterviewdemo/technical/info/TechnicalOverviewControllerIntegrationTests.java`
+    - `src/test/java/team/jit/technicalinterviewdemo/technical/logging/HttpTracingIntegrationTests.java`
+    - `src/test/java/team/jit/technicalinterviewdemo/technical/docs/ApiDocumentationTests.java`
+    - any new focused test added for runtime posture or technical endpoint exposure
+  - validation scope:
+    - targeted integration tests covering technical overview, tracing exposure, and REST Docs generation for the affected endpoints
+    - `.\gradlew.bat build` if the worker changes runtime exposure or shared generated snippets in a way that needs full verification
+- Worker 3 task: Align setup, HTTP examples, and deployment assets
+  - branch/worktree:
+    - branch: `codex/1_0_deployment_alignment`
+    - worktree: `..\technical-interview-demo-1-0-deployment-alignment`
+  - owned files:
+    - `SETUP.md`
+    - `src/docs/asciidoc/technical-endpoints.adoc`
+    - `src/test/resources/http/technical-endpoints.http`
+    - `src/test/resources/http/authentication.http`
+    - `src/test/resources/http/technical-overview-controller.http`
+    - `k8s/base/configmap.yaml`
+    - `k8s/base/deployment.yaml`
+    - `k8s/monitoring/servicemonitor.yaml`
+    - `helm/technical-interview-demo/values.yaml`
+    - `helm/technical-interview-demo/templates/deployment.yaml`
+  - validation scope:
+    - `helm lint helm/technical-interview-demo` if Helm files change
+    - `helm template technical-interview-demo helm/technical-interview-demo -f helm/technical-interview-demo/values-local.yaml` if Helm files change
+    - manual verification that setup/deployment guidance and reviewer HTTP examples match the intended posture
+
+Coordinator integration notes:
+- Workers must not edit `README.md`, `CHANGELOG.md`, or `ai/PLAN_1_0_contract_and_production_posture.md`.
+- Workers are not alone in the codebase. They must stay within their owned files, avoid reverting changes made by others, and adjust to coordinator-merged changes when asked.
+- Final repository validation and the release happen only after all worker commits are integrated onto the coordinator branch and then onto `main`.
+
 ## Edge Cases And Failure Modes
 - If the docs leave `/` or `/hello` outside the stable `1.x` contract after the user explicitly included them, the plan execution will violate a locked product decision.
 - If `/actuator/prometheus` is documented as deployment-scoped but tests, examples, or runtime metadata still present it as a normal public endpoint, the contract becomes self-contradictory.
