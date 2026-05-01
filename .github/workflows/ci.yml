@@ -1,4 +1,4 @@
-name: OpenAPI Compatibility
+name: CI
 
 on:
   pull_request:
@@ -9,8 +9,12 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  compatibility:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,10 +27,13 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '25'
+          java-version: "25"
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Verify OpenAPI compatibility
-        run: ./gradlew test --tests team.jit.technicalinterviewdemo.OpenApiCompatibilityIntegrationTests --no-daemon
+      - name: Verify Docker availability
+        run: docker version
+
+      - name: Run full build
+        run: ./gradlew build --no-daemon

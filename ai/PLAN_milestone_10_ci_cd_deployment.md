@@ -326,6 +326,12 @@
   - updated `SETUP.md` to document required and optional deployment environment variables
   - documented unresolved pre-`1.0` production-default blockers without changing runtime behavior
   - verification: documentation/spec review only; no code or contract execution changes yet
+- Milestone 2:
+  - added `.github/workflows/ci.yml` for pull request and `main` branch validation with Java 25, Gradle caching, Docker availability checks, and `./gradlew build`
+  - added `.github/workflows/release.yml` for tag-driven GitHub Container Registry publishing with semantic tag and immutable commit-SHA tags
+  - removed the now-redundant standalone OpenAPI workflow because the `CI` build already enforces the compatibility gate
+  - updated `README.md` and `SETUP.md` with release registry and branch-protection expectations
+  - verification pending in later milestones with the full repository build and workflow review
 
 ## User Validation
 - Review the plan against `ROADMAP.md` and confirm the chosen defaults:

@@ -119,8 +119,8 @@ Additional change-sensitive checks:
 Supported delivery path:
 
 - GitHub Actions is the repository CI/CD platform
-- pull requests and protected branches run the full repository verification flow
-- tagged releases build a publishable container image
+- pull requests and protected branches run the `CI` workflow, which executes the full repository verification flow
+- semantic version tags trigger the `Release` workflow, which publishes the Docker image to GitHub Container Registry as `ghcr.io/<owner>/<repo>:<tag>` and `ghcr.io/<owner>/<repo>:sha-<commit>`
 - deployment artifacts are provided as:
   - Docker image
   - vendor-neutral Kubernetes manifests under `k8s/`
@@ -148,6 +148,13 @@ Pre-`1.0` production-default blockers still under active roadmap review:
 - whether the `oauth` profile is enabled by default in deployed environments
 - whether the `prod` profile should fail fast on missing database and OAuth secrets instead of using fallback defaults
 - whether browser-session write flows need CSRF posture changes before `1.0`
+
+Branch protection recommendation for the default branch:
+
+- require `CI` to pass before merge
+- require at least one reviewer on pull requests
+- prefer squash merges so release tags map cleanly onto reviewed changes
+- restrict `vMAJOR.MINOR.PATCH` tag creation to maintainers who also own release validation
 
 ## Project Map
 

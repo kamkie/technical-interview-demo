@@ -90,6 +90,13 @@ Optional runtime environment variables:
 - `GITHUB_CLIENT_SECRET`
 - `ADMIN_LOGINS`
 
+CI and release workflow expectations:
+
+- `CI` runs on pull requests and pushes to `main`
+- `CI` uses JDK 25, Gradle dependency caching, explicit Docker availability checks, and `./gradlew build`
+- `Release` runs on `vMAJOR.MINOR.PATCH` tags, rebuilds the image through Gradle, and publishes it to GitHub Container Registry
+- recommended branch protection requires `CI`, at least one reviewer, and a squash-merge or equivalent linear-history policy
+
 Deployment defaults that are intentionally not frozen yet because they belong to the pre-`1.0` release-readiness work:
 
 - whether `/actuator/prometheus` stays publicly reachable in deployed environments
