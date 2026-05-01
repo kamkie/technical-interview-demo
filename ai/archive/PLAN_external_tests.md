@@ -55,7 +55,7 @@
 ## Locked Decisions And Assumptions
 - User decisions:
   - plan the roadmap work for external smoke tests, dedicated Gradle benchmarks, and packaged-image smoke-validation alignment only
-  - create the plan in `ai/PLAN_external_tests.md`
+  - create the plan in `ai/archive/PLAN_external_tests.md`
 - Planning assumptions that the executor should not revisit:
   - preserve the current public API contract; this is internal verification and build-workflow work, not an API redesign
   - use a new `externalTest` source set for the external smoke tests
@@ -233,6 +233,7 @@
 - `2026-05-01`: `.\gradlew.bat build --no-daemon` passed on `main`.
 - `2026-05-01`: `.\gradlew.bat externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo --no-daemon` passed again on `main` as final integrated smoke validation.
 - `2026-05-01`: `.\gradlew.bat gatlingBenchmark --no-daemon` passed on `main`, kept the refreshed baseline within tolerance, and wrote the latest result to `build/performance/phase-9-latest.json`.
+- `2026-05-01`: `.\gradlew.bat build --no-daemon` passed again on `main` after release metadata preparation and before tagging.
 
 ## User Validation
 - Run `.\gradlew.bat externalSmokeTest` and confirm it starts Dockerized PostgreSQL plus the packaged app, then produces a separate smoke-test report without changing the normal `build` lifecycle.
