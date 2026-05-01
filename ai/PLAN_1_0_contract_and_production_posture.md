@@ -2,14 +2,14 @@
 
 ## Summary
 - Define `1.0` as a stable interview-demo reference application, not a production-ready starter template.
-- Freeze the `1.x` compatibility surface by explicitly separating supported contract endpoints from deployment-scoped technical endpoints and demo-only convenience endpoints.
+- Freeze the `1.x` compatibility surface by explicitly separating supported contract endpoints from deployment-scoped technical endpoints, while keeping room to mark any truly non-contract convenience endpoints explicitly if they still exist after review.
 - Align runtime metadata, published docs, HTTP examples, and deployment assets with that frozen posture so the repository stops advertising unresolved pre-`1.0` choices.
 - Success is measured by: one consistent `1.0` promise across repo docs and generated docs, no unresolved pre-`1.0` blockers left in the supported-contract narrative, and passing repo validation.
 
 ## Scope
 - In scope:
   - locking the `1.0` product promise and the intended `1.x` compatibility promise
-  - classifying the current endpoint surface into supported contract, deployment-scoped technical surface, and demo-only convenience surface
+  - classifying the current endpoint surface into supported contract, deployment-scoped technical surface, and any remaining demo-only convenience surface
   - reviewing endpoint naming, resource semantics, and response-shape documentation before declaring the surface frozen
   - documenting the intended production posture for CSRF, session cookies, optional OAuth login, admin bootstrap, and trusted deployment topology
   - aligning technical overview metadata, REST Docs pages, HTTP examples, README guidance, setup/deployment guidance, and design guidance with the frozen posture
@@ -52,15 +52,17 @@
 
 ## Locked Decisions And Assumptions
 - User decisions:
-  - none yet; this plan locks the recommended defaults so execution can proceed without inventing missing product decisions
+  - `1.0` means a stable interview-demo reference app, not a production-ready starter
+  - `GET /actuator/prometheus` is supported for trusted deployment scraping, but not as an internet-public endpoint
+  - CSRF remains disabled for browser-session writes in `1.0` and must be documented as a deliberate demo tradeoff
+  - `GET /` and `GET /hello` are part of the stable supported `1.x` contract
 - Planning assumptions that the executor should not revisit:
   - `1.0` means “stable interview-demo reference app”, not “production-ready starter”; if the user wants starter-grade security/platform guarantees, stop and revise the roadmap scope before implementation
   - the `1.x` compatibility promise applies to the documented supported contract, not to every convenience endpoint that happens to exist in the running demo
   - supported contract for `1.0` includes:
-    - business/documentation surface: `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, `/api/books...`, `/api/categories`, `/api/localizations...`, `/api/account...`
+    - business/documentation surface: `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, `/api/books...`, `/api/categories`, `/api/localizations...`, `/api/account...`
     - supported operational surface: `/actuator/health`, `/actuator/health/liveness`, `/actuator/health/readiness`, `/actuator/info`
   - deployment-scoped technical surface includes `/actuator/prometheus`; it remains supported for trusted deployment scraping, but it is not part of the internet-public contract
-  - demo-only convenience surface includes `/` and `/hello`; keep them available, but document them as convenience endpoints outside the `1.x` compatibility promise
   - `/oauth2/authorization/github` remains the supported interactive login bootstrap path only when the optional `oauth` profile is active; it is a technical auth bootstrap endpoint, not part of the business API surface
   - CSRF stays disabled for `1.0`, but the docs must explicitly frame that as a deliberate demo tradeoff for reviewer-oriented session workflows rather than leaving it as an unresolved pre-`1.0` question
   - deployed defaults continue to keep OAuth opt-in through the `oauth` profile and environment-provided GitHub secrets; bare `prod` must not start requiring OAuth credentials
@@ -123,7 +125,7 @@
     - supported business/documentation endpoints
     - supported operational endpoints
     - deployment-scoped technical endpoints
-    - demo-only convenience endpoints
+    - demo-only convenience endpoints, only if any remain after the freeze review
   - update `ai/DESIGN.md` so the design guidance no longer presents the `1.0` identity as unresolved
   - update the generated docs overview pages to use the same classification language instead of implying every endpoint is part of one uniform public contract
 
@@ -138,7 +140,7 @@
   - `src/test/resources/openapi/approved-openapi.json` only after intentional contract review
 - Behavior to preserve:
   - the currently documented `/api` path structure, pagination/filter behavior, localized `ProblemDetail` error shape, and authenticated-session requirements remain stable unless the review exposes a true contract bug
-  - do not remove `/` or `/hello`; classify them instead of turning this milestone into a breaking-removal exercise
+  - keep `/` and `/hello` in the supported contract and do not turn their review into a breaking-removal exercise
 - Exact deliverables:
   - audit the current endpoint names, resource semantics, and response-model labels against the existing contract docs and tests
   - fix only contract/documentation mismatches that are small enough to stay within the freeze scope
@@ -197,7 +199,7 @@
   - if no YAML behavior change is required after review, still update the surrounding docs so reviewers can see that the deployment assets were intentionally accepted
 
 ## Edge Cases And Failure Modes
-- If the docs freeze `/` or `/hello` as part of the stable `1.x` contract by accident, the repo inherits unnecessary compatibility burden for demo-only endpoints.
+- If the docs leave `/` or `/hello` outside the stable `1.x` contract after the user explicitly included them, the plan execution will violate a locked product decision.
 - If `/actuator/prometheus` is documented as deployment-scoped but tests, examples, or runtime metadata still present it as a normal public endpoint, the contract becomes self-contradictory.
 - Any runtime restriction added to `/actuator/prometheus` can break `k8s/monitoring/servicemonitor.yaml` unless the deployment story is updated in the same change.
 - Changing health/info access rules would affect smoke checks, readiness assumptions, and generated documentation, so those endpoints should remain stable unless the user explicitly asks for tighter lockdown.
@@ -239,5 +241,5 @@
   - What does `1.0` mean for this project?
   - Which endpoints are part of the stable supported contract?
   - Which endpoints are deployment-scoped technical surfaces?
-  - Which endpoints are demo conveniences only?
+  - Which endpoints, if any, remain demo conveniences only?
   - What is the intended `1.0` posture for CSRF, optional OAuth, session cookies, admin bootstrap, and Prometheus scraping?
