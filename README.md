@@ -114,14 +114,16 @@ Additional change-sensitive checks:
 - use semantic version tags in the form `vMAJOR.MINOR.PATCH`
 - keep release numbers increasing in `git log --first-parent` order
 - record human-facing release history in `CHANGELOG.md`
+- use the matching `CHANGELOG.md` version section as the source of truth for published GitHub Release notes
 
 ## CI/CD And Deployment
 
 Supported delivery path:
 
 - GitHub Actions is the repository CI/CD platform
-- pull requests and protected branches run the `CI` workflow, which executes the full repository verification flow
-- semantic version tags trigger the `Release` workflow, which publishes the Docker image to GitHub Container Registry as `ghcr.io/<owner>/<repo>:<tag>` and `ghcr.io/<owner>/<repo>:sha-<commit>`
+- pull requests to `main` and pushes to `main` run the `CI` workflow, which executes the full repository verification flow
+- Dependabot opens grouped weekly update PRs for Gradle, GitHub Actions, and Docker, and those PRs are expected to pass the same `CI` workflow before merge
+- semantic version tags trigger the `Release` workflow, which publishes the Docker image to GitHub Container Registry as `ghcr.io/<owner>/<repo>:<tag>` and `ghcr.io/<owner>/<repo>:sha-<commit>`, then creates the matching GitHub Release from `CHANGELOG.md`
 - deployment artifacts are provided as:
   - Docker image
   - vendor-neutral Kubernetes manifests under `k8s/base` with a local overlay under `k8s/overlays/local`
@@ -135,10 +137,10 @@ Required deployment environment variables:
 - `DATABASE_NAME`
 - `DATABASE_USER`
 - `DATABASE_PASSWORD`
-- `SESSION_COOKIE_SECURE`
 
 Optional deployment environment variables:
 
+- `SESSION_COOKIE_SECURE` with a secure-by-default value of `true`
 - `GITHUB_CLIENT_ID`
 - `GITHUB_CLIENT_SECRET`
 - `ADMIN_LOGINS`
@@ -147,7 +149,6 @@ Pre-`1.0` production-default blockers still under active roadmap review:
 
 - whether `GET /actuator/prometheus` remains public in deployed environments
 - whether the `oauth` profile is enabled by default in deployed environments
-- whether the `prod` profile should fail fast on missing database and OAuth secrets instead of using fallback defaults
 - whether browser-session write flows need CSRF posture changes before `1.0`
 
 Branch protection recommendation for the default branch:

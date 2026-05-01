@@ -292,6 +292,20 @@ Implement `ai/PLAN_selected_release_readiness_tasks.md`.
 Do not release yet.
 ```
 
+### Example: Implement And Release In One Go
+
+```text
+Implement `ai/PLAN_selected_release_readiness_tasks.md`.
+
+Use the multi-agent workflow from `ai/WORKFLOW.md`.
+Act as coordinator.
+Keep shared integration files such as `CHANGELOG.md` and the plan's `Validation Results` under coordinator ownership.
+Integrate completed work back onto `main`.
+Run final validation on `main`.
+After the whole plan is complete and validated, follow `ai/RELEASES.md` to prepare the release from `main`.
+Do not push unless I explicitly ask for remote publication.
+```
+
 ### Example: Prepare The Release After Implementation
 
 ```text

@@ -25,7 +25,7 @@ Install the tools that match your workflow:
 ### PowerShell
 
 ```powershell
-$env:JAVA_HOME='C:\Users\kamki\.jdks\azul-25.0.3'
+$env:JAVA_HOME='<path-to-jdk-25>'
 $env:Path="$env:JAVA_HOME\bin;$env:Path"
 
 docker-compose up -d
@@ -35,7 +35,7 @@ docker-compose up -d
 ### Bash
 
 ```bash
-export JAVA_HOME=/path/to/jdk-25
+export JAVA_HOME='<path-to-jdk-25>'
 export PATH="$JAVA_HOME/bin:$PATH"
 
 ./gradlew bootRun
@@ -55,6 +55,8 @@ The default `local` profile expects PostgreSQL on `localhost:5432`. The included
 1. Copy `.env.example` to `.env` if you want a private local reference file.
 2. Export the values in your shell, IDE run configuration, or Docker Compose environment.
 
+Placeholder values such as `<path-to-jdk-25>` in `.env.example` should be replaced with paths from your own machine.
+
 Variables you are most likely to need:
 
 - `JAVA_HOME` for Gradle and the toolchain
@@ -63,7 +65,7 @@ Variables you are most likely to need:
 - `DATABASE_*` variables when overriding the default PostgreSQL connection
 - `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` when enabling the optional `oauth` profile for authenticated write flows
 - `ADMIN_LOGINS` when you want one or more GitHub logins to receive the persisted `ADMIN` role
-- `SESSION_COOKIE_SECURE` when you want the `prod` profile session cookie behavior to match local HTTP testing or HTTPS deployment
+- `SESSION_COOKIE_SECURE` when you want to override the `prod` profile session-cookie default of `true` for local HTTP testing or a specific deployment environment
 
 ## Deployment Contract
 
@@ -82,26 +84,26 @@ Required runtime environment variables for deployed environments:
 - `DATABASE_NAME`
 - `DATABASE_USER`
 - `DATABASE_PASSWORD`
-- `SESSION_COOKIE_SECURE`
 
 Optional runtime environment variables:
 
-- `GITHUB_CLIENT_ID`
-- `GITHUB_CLIENT_SECRET`
+- `SESSION_COOKIE_SECURE` with a secure-by-default value of `true`
+- `GITHUB_CLIENT_ID` when the `oauth` profile is active
+- `GITHUB_CLIENT_SECRET` when the `oauth` profile is active
 - `ADMIN_LOGINS`
 
 CI and release workflow expectations:
 
-- `CI` runs on pull requests and pushes to `main`
+- `CI` runs on pull requests to `main` and pushes to `main`
+- Dependabot opens grouped weekly pull requests for Gradle, GitHub Actions, and Docker, and those PRs use the same `CI` workflow as human-authored PRs
 - `CI` uses JDK 25, Gradle dependency caching, explicit Docker availability checks, and `./gradlew build`
-- `Release` runs on `vMAJOR.MINOR.PATCH` tags, rebuilds the image through Gradle, and publishes it to GitHub Container Registry
+- `Release` runs on `vMAJOR.MINOR.PATCH` tags, rebuilds the image through Gradle, publishes it to GitHub Container Registry, and then creates a GitHub Release from the exact matching `CHANGELOG.md` section
 - recommended branch protection requires `CI`, at least one reviewer, and a squash-merge or equivalent linear-history policy
 
 Deployment defaults that are intentionally not frozen yet because they belong to the pre-`1.0` release-readiness work:
 
 - whether `/actuator/prometheus` stays publicly reachable in deployed environments
 - whether OAuth login is enabled in deployed environments by default
-- whether the `prod` profile must fail fast when required secrets are missing
 - whether browser-session write flows require CSRF changes before `1.0`
 
 ## IDE Setup
@@ -116,11 +118,11 @@ Recommended baseline:
 4. If you want Spotless to delegate Java formatting to IntelliJ, export one of:
 
 ```powershell
-$env:IDEA_FORMATTER_BINARY='C:\Path\To\IntelliJ IDEA\bin\idea64.exe'
+$env:IDEA_FORMATTER_BINARY='<path-to-intellij>\bin\idea64.exe'
 ```
 
 ```powershell
-$env:IDEA_HOME='C:\Path\To\IntelliJ IDEA'
+$env:IDEA_HOME='<path-to-intellij>'
 ```
 
 ### VS Code
@@ -148,7 +150,7 @@ docker-compose up -d
 Run the app with the default local profile:
 
 ```powershell
-$env:JAVA_HOME='C:\Users\kamki\.jdks\azul-25.0.3'
+$env:JAVA_HOME='<path-to-jdk-25>'
 $env:Path="$env:JAVA_HOME\bin;$env:Path"
 
 .\gradlew.bat bootRun
@@ -235,6 +237,16 @@ kubectl kustomize k8s/monitoring
 kubectl kustomize monitoring/grafana
 kubectl apply --dry-run=client -k k8s/monitoring
 kubectl apply --dry-run=client -k monitoring/grafana
+```
+
+Dry-run the release-notes helper against an existing changelog section:
+
+```powershell
+.\scripts\release\render-release-notes.ps1 `
+  -Tag v0.24.0 `
+  -TagImageReference ghcr.io/example-owner/technical-interview-demo:v0.24.0 `
+  -ShaImageReference ghcr.io/example-owner/technical-interview-demo:sha-example123456 `
+  -PackagePageUrl https://github.com/example-owner/technical-interview-demo/pkgs/container/technical-interview-demo
 ```
 
 ## Building Docker Images
@@ -428,7 +440,7 @@ Symptom:
 Fix:
 
 ```powershell
-$env:JAVA_HOME='C:\Users\kamki\.jdks\azul-25.0.3'
+$env:JAVA_HOME='<path-to-jdk-25>'
 $env:Path="$env:JAVA_HOME\bin;$env:Path"
 java -version
 ```
