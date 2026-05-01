@@ -7,9 +7,23 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+## [v0.23.0] - 2026-05-01
+
+### Added
+- Added a GitHub Actions `CI` workflow that runs the full Gradle build, Helm validation, and container smoke validation.
+- Added a tag-based `Release` workflow that publishes container images to GitHub Container Registry with semantic-version and commit-SHA tags.
+- Added production-profile container smoke validation for the packaged Docker image.
+- Added vendor-neutral Kubernetes deployment manifests under `k8s/` together with a local Kustomize overlay.
+- Added a Helm chart under `helm/technical-interview-demo` for the application deployment contract.
+- Added monitoring assets for Prometheus, Grafana, and Alertmanager, including a ServiceMonitor, alert rules, dashboard, and upstream stack values.
+
 ### Changed
-- Reworked project documentation around a Spec-Driven Development workflow.
-- Made `SETUP.md` the sole detailed onboarding and troubleshooting guide.
+- Reworked the repository docs around a Spec-Driven Development workflow and aligned `README.md`, `SETUP.md`, `CONTRIBUTING.md`, and `AGENTS.md`.
+- Made `SETUP.md` the sole detailed onboarding, deployment, and troubleshooting guide.
+- Replaced the standalone OpenAPI compatibility workflow with the consolidated `CI` workflow.
+- Updated `ROADMAP.md` so completed Milestone 10 work no longer appears as active planned work.
+
+### Removed
 - Removed `COMPLETED_TASKS.md` so released human history now lives only in `CHANGELOG.md`.
 
 ## [v0.22.0] - 2026-05-01

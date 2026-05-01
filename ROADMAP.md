@@ -12,39 +12,11 @@ Keep this file focused on work that is still planned or in progress.
 
 ## Current Priorities
 
-1. Complete the CI/CD and deployment assets after the `1.0` release bar is explicit.
-2. Finish the pre-`1.0` release-readiness work so the project has a clear, defensible definition of what `1.0` means.
-3. Keep the public API stable after the last pre-`1.0` simplification pass unless a release-blocking clarity issue is still found.
-4. Keep Milestone X explicitly deferred until the core roadmap is complete.
+1. Finish the pre-`1.0` release-readiness work so the project has a clear, defensible definition of what `1.0` means.
+2. Keep the public API stable after the last pre-`1.0` simplification pass unless a release-blocking clarity issue is still found.
+3. Keep optional future enhancements explicitly deferred until the core roadmap is complete.
 
 ## Ordered Plan
-
-### Next: Milestone 10 CI/CD & Deployment
-
-Status: Ready after the pre-`1.0` release bar is explicit
-
-#### CI/CD Pipeline
-- [ ] Choose the CI/CD platform
-- [ ] Automate `spotlessCheck`, `pmdMain`, `test`, and `asciidoctor`
-- [ ] Build the Docker image in CI
-- [ ] Document the pipeline and branch protections
-
-#### Kubernetes Manifests
-- [ ] Create base manifests under `k8s/`
-- [ ] Externalize config and secrets correctly
-- [ ] Add resource requests, limits, and probes
-- [ ] Document deployment steps
-
-#### Helm Chart
-- [ ] Create the Helm chart structure and values
-- [ ] Template deployment resources
-- [ ] Validate rendered manifests
-- [ ] Document Helm-based deployment
-
-#### Monitoring & Alerting Setup
-- [ ] Create a monitoring stack for Prometheus, Grafana, and Alertmanager
-- [ ] Add scrape config, dashboards, and alert rules
-- [ ] Document monitoring setup and expected alerts
 
 ### Now: Pre-1.0 Release Readiness
 
@@ -71,8 +43,8 @@ Goal: make the `1.0` boundary mean a stable, documented, and intentionally scope
 - [ ] Document the intended production posture for session cookies, OAuth login, admin bootstrap, and trusted deployment topology
 
 #### Add Release-Grade Runtime Verification
-- [ ] Add a smoke test that verifies the packaged container starts successfully and reaches readiness
-- [ ] Add focused verification for the `prod` profile so release builds do not only prove the local/test profiles
+- [ ] Review the new container smoke validation and keep it aligned with release expectations for the packaged image
+- [ ] Review the new deployment manifests, Helm chart, and monitoring assets against the final `1.0` security and operational defaults
 - [ ] Add a release checklist for Flyway migration review, OpenAPI compatibility, benchmark review, changelog update, and tagging
 
 #### Tighten Operational Readiness
