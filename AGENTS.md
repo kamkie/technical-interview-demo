@@ -201,6 +201,7 @@ Additional verification expectations:
 - create releases only from `main` after all intended changes are integrated there
 - create annotated tags for intentional releases
 - keep `CHANGELOG.md` aligned with releases
+- update `ROADMAP.md` after each release so completed items are removed and only active work remains
 - do not introduce another human-facing completion archive file
 
 ## Definition Of Done

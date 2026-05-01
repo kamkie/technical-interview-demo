@@ -218,6 +218,7 @@ Read the executed plan, `CHANGELOG.md`, and any changed contract docs first.
 
 Choose the next semantic version deliberately.
 Update `CHANGELOG.md`.
+Update `ROADMAP.md` so the released work is no longer listed as active roadmap work.
 Archive the executed plan file under `ai/archive/` and update any moved-path references in the same change.
 Create the release commit using the repository commit message pattern.
 Create the annotated tag.
@@ -235,6 +236,7 @@ Follow `ai/RELEASES.md`.
 
 Choose the next semantic version deliberately.
 Update `CHANGELOG.md`.
+Update `ROADMAP.md` so the released work is no longer listed as active roadmap work.
 Archive the executed plan file under `ai/archive/` and update any moved-path references in the same change.
 Create the release commit using the repository commit message pattern.
 Create the annotated tag.
@@ -324,6 +326,7 @@ Keep shared integration files such as `CHANGELOG.md` and the plan's `Validation 
 Integrate completed work back onto `main`.
 Run final validation on `main`.
 After the whole plan is complete and validated, follow `ai/RELEASES.md` to prepare the release from `main`.
+Update `ROADMAP.md` so the completed work is removed from the active roadmap as part of the release change.
 Archive the executed plan file under `ai/archive/` as part of the release change.
 After the release is pushed and verified, clean up the temporary execution worktrees and branches for that plan.
 Do not push unless I explicitly ask for remote publication.

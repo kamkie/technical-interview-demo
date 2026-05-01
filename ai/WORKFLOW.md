@@ -77,7 +77,7 @@ Shared files should stay under coordinator ownership unless there is a strong re
 8. After each integrated task, the coordinator updates the plan state as needed and keeps progress moving.
 9. After the whole plan is complete, the coordinator updates the plan's `Validation Results`.
 10. The coordinator runs `.\gradlew.bat build` on `main`.
-11. The coordinator creates the release from `main` by following `ai/RELEASES.md`, including plan archival and post-release cleanup of temporary execution worktrees and branches.
+11. The coordinator creates the release from `main` by following `ai/RELEASES.md`, including `ROADMAP.md` cleanup, plan archival, and post-release cleanup of temporary execution worktrees and branches.
 
 ## Worktree Rules
 
@@ -139,6 +139,7 @@ After the whole plan is complete:
 
 - make sure all intended changes are already on `main`
 - keep `CHANGELOG.md` aligned with the completed work
+- update `ROADMAP.md` so released work is no longer tracked as active roadmap work
 - create the release only from `main`
 - use semantic version tags in the form `vMAJOR.MINOR.PATCH`
 - create an annotated tag

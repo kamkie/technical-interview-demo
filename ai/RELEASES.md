@@ -13,6 +13,7 @@ A release in this repository means:
 - all intended release changes are integrated on `main`
 - the governing specs and published contract artifacts are aligned
 - `CHANGELOG.md` has a new released version entry
+- `ROADMAP.md` has been updated so newly completed work is no longer tracked as active roadmap work
 - the release commit is tagged with an annotated semantic version tag
 - pushing that annotated tag may publish the container image and create the GitHub Release artifact
 
@@ -38,6 +39,7 @@ Inspect repository state before editing release metadata:
 - confirm the target plan's `Validation Results` section reflects what actually ran
 - confirm `.\gradlew.bat build` passed for the release candidate
 - confirm OpenAPI, REST Docs, HTTP examples, and `README.md` were updated when the change required them
+- confirm `ROADMAP.md` was updated to remove work completed by the release from the active roadmap
 - confirm the worktree is in the expected state before creating the release commit
 
 If the implementation is incomplete, specs are not aligned, the build is failing, or the release candidate is not on `main`, do not make a release.
@@ -65,10 +67,11 @@ Do not reuse or skip to a lower version than an already published first-parent r
 Start by syncing your local `main` checkout to the intended integrated state. If required work is still sitting on another branch, integrate it first and only then prepare the release from `main`.
 
 1. Move the relevant `CHANGELOG.md` content from `## [Unreleased]` into a new version section using the chosen tag and the release date in `YYYY-MM-DD` format.
-2. Keep the changelog human-readable and limited to released user-visible changes. Do not add plan-completion notes, agent notes, or internal transcript detail.
-3. Leave a fresh `## [Unreleased]` section at the top.
-4. Review the release diff to ensure it contains only intended implementation, spec, and release metadata changes.
-5. Run `.\gradlew.bat build` again if release metadata edits could have invalidated generated artifacts or if the earlier validation result is stale.
+2. Update `ROADMAP.md` so completed items released in this version are removed from active roadmap sections.
+3. Keep the changelog human-readable and limited to released user-visible changes. Do not add plan-completion notes, agent notes, or internal transcript detail.
+4. Leave a fresh `## [Unreleased]` section at the top.
+5. Review the release diff to ensure it contains only intended implementation, spec, roadmap, and release metadata changes.
+6. Run `.\gradlew.bat build` again if release metadata edits could have invalidated generated artifacts or if the earlier validation result is stale.
 
 The release commit message should match the existing repository pattern:
 
@@ -96,6 +99,7 @@ Before reporting completion, verify:
 - `git status --short` is clean
 - `git log --first-parent --decorate --oneline -n 5` shows the release commit and tag in the expected place
 - `CHANGELOG.md` matches the chosen tag and date
+- `ROADMAP.md` no longer lists the released work as active
 - the target plan's `Validation Results` section still reflects the final verified state
 - the executed plan file has been moved to `ai/archive/` and any moved-path references were updated in the same change
 
@@ -132,10 +136,11 @@ The automated GitHub Release body is sourced from the exact matching `CHANGELOG.
 1. Execute the target plan.
 2. Integrate all intended changes onto `main` and switch to `main`.
 3. Update the plan's `Validation Results`.
-4. Move the executed `ai/PLAN_*.md` file to `ai/archive/` and update moved-path references in the same change.
-5. Run `.\gradlew.bat build`.
-6. Update `CHANGELOG.md` for the chosen version.
-7. Commit with `Prepare vMAJOR.MINOR.PATCH release`.
-8. Create an annotated tag `vMAJOR.MINOR.PATCH`.
-9. Push the release commit and annotated tag when requested, verify remote publication, and then clean up temporary execution worktrees and branches.
-10. Verify clean status, branch, tag placement, changelog alignment, and plan archival.
+4. Update `ROADMAP.md` to remove work completed by the release from the active roadmap.
+5. Move the executed `ai/PLAN_*.md` file to `ai/archive/` and update moved-path references in the same change.
+6. Run `.\gradlew.bat build`.
+7. Update `CHANGELOG.md` for the chosen version.
+8. Commit with `Prepare vMAJOR.MINOR.PATCH release`.
+9. Create an annotated tag `vMAJOR.MINOR.PATCH`.
+10. Push the release commit and annotated tag when requested, verify remote publication, and then clean up temporary execution worktrees and branches.
+11. Verify clean status, branch, tag placement, changelog alignment, roadmap cleanup, and plan archival.
