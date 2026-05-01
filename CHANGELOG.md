@@ -7,6 +7,9 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Changed
+- Replaced workstation-specific `.env.example` path examples with portable placeholders for JDK and IntelliJ configuration.
+
 ## [v0.24.0] - 2026-05-01
 
 ### Added
