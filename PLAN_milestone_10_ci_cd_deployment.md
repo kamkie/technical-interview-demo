@@ -30,10 +30,10 @@
   - `application-oauth.properties` already externalizes GitHub OAuth credentials.
 - Current constraints:
   - the project goal is still a small, readable interview-demo application, so deployment assets must stay understandable and not balloon into platform engineering sprawl
-  - Milestone 10 is explicitly downstream of the pre-`1.0` release-readiness work in `TODO.md`
+  - Milestone 10 is explicitly downstream of the pre-`1.0` release-readiness work in `ROADMAP.md`
   - production security posture is not fully locked yet for metrics exposure, OAuth defaults, CSRF posture, and fail-fast secret handling
 - Relevant existing specs and code:
-  - roadmap source: `TODO.md`
+  - roadmap source: `ROADMAP.md`
   - planning rules: `PLAN.md`
   - repo rules: `AGENTS.md`
   - developer/deployment runbook: `SETUP.md`
@@ -88,7 +88,7 @@
   - define the minimum supported deployment story so the remaining work has a stable target
 - Files to update:
   - `PLAN_milestone_10_ci_cd_deployment.md`
-  - `TODO.md` only if execution sequencing must be clarified
+  - `ROADMAP.md` only if execution sequencing must be clarified
   - `README.md`
   - `SETUP.md`
 - Behavior to preserve:
@@ -324,7 +324,7 @@
 - To be filled in during execution.
 
 ## User Validation
-- Review the plan against `TODO.md` and confirm the chosen defaults:
+- Review the plan against `ROADMAP.md` and confirm the chosen defaults:
   - GitHub Actions as the CI/CD platform
   - vendor-neutral Kubernetes deployment assets
   - Helm chart for the application

@@ -33,7 +33,7 @@ Relevant spec artifacts include:
 - approved OpenAPI baseline at `src/test/resources/openapi/approved-openapi.json`
 - runnable HTTP examples under `src/test/resources/http/`
 - `README.md` for public human-facing contract
-- `TODO.md` for active planned work
+- `ROADMAP.md` for active planned work
 - `CHANGELOG.md` for released history
 
 ## Branch Naming
@@ -119,7 +119,7 @@ Update the relevant files when behavior changes:
 - `README.md` for supported human-facing behavior and contract changes
 - `AGENTS.md` for engineering rules and AI-facing project constraints
 - `SETUP.md` for onboarding, environment, and troubleshooting changes
-- `TODO.md` when active roadmap items are added, removed, or materially re-scoped
+- `ROADMAP.md` when active roadmap items are added, removed, or materially re-scoped
 - `CHANGELOG.md` when preparing or documenting a release
 - `src/docs/asciidoc/` and related REST Docs tests when public API behavior changes
 - `src/test/resources/http/` when reviewer-facing request examples change

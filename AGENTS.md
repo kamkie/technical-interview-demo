@@ -37,7 +37,7 @@ When resolving truth, use this order:
 1. explicit user request in the current task
 2. executable specs: integration tests, REST Docs tests, OpenAPI compatibility tests, benchmark checks
 3. published contract docs: `README.md`, `src/docs/asciidoc/`, HTTP example collections
-4. active planning in `TODO.md`
+4. active planning in `ROADMAP.md`
 5. historical release notes in `CHANGELOG.md`
 
 ## Authoritative Spec Artifacts
@@ -49,7 +49,7 @@ Use these artifacts deliberately:
 - `src/test/resources/openapi/approved-openapi.json`: approved machine-readable public API contract
 - `src/test/resources/http/`: reviewer-facing runnable request examples
 - `README.md`: supported human-facing contract summary
-- `TODO.md`: active roadmap only, not historical archive
+- `ROADMAP.md`: active roadmap only, not historical archive
 - `CHANGELOG.md`: release history only
 - `SETUP.md`: local environment and troubleshooting only
 
@@ -80,7 +80,7 @@ Update all affected artifacts in the same change:
 
 ### Roadmap change
 
-- update `TODO.md`
+- update `ROADMAP.md`
 - remove completed items instead of archiving them elsewhere
 - do not recreate a second human history file; released history belongs in `CHANGELOG.md`
 

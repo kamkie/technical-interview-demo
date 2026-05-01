@@ -8,7 +8,7 @@ Keep this file focused on work that is still planned or in progress.
 - Keep only active or planned work here.
 - Keep items short so they are easy to reorder and edit.
 - Remove completed items instead of turning this file into a historical archive.
-- Use `CHANGELOG.md` for released history, not `TODO.md`.
+- Use `CHANGELOG.md` for released history, not `ROADMAP.md`.
 
 ## Current Priorities
 
@@ -121,5 +121,5 @@ Use `SETUP.md` for environment prerequisites and local verification setup.
 ## Notes
 
 - Keep the roadmap dependency-ordered so the next implementable task is obvious.
-- Keep `TODO.md` focused on active work only.
+- Keep `ROADMAP.md` focused on active work only.
 - Maintain alignment between `README.md`, `AGENTS.md`, and `SETUP.md` when project behavior, working rules, or setup guidance change.

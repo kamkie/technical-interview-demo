@@ -40,7 +40,7 @@ Authoritative spec artifacts:
 - approved OpenAPI baseline at `src/test/resources/openapi/approved-openapi.json`
 - HTTP example collections under `src/test/resources/http/`
 - this `README.md` for the supported human-facing API/runtime contract
-- `TODO.md` for planned work that is not yet part of the contract
+- `ROADMAP.md` for planned work that is not yet part of the contract
 - `CHANGELOG.md` for released history
 
 What that means in practice:
@@ -118,7 +118,7 @@ Additional change-sensitive checks:
 
 - `SETUP.md`: developer onboarding, local environment setup, OAuth setup, Docker workflow, and troubleshooting
 - `AGENTS.md`: AI-facing project rules and spec-driven working contract
-- `TODO.md`: active roadmap only
+- `ROADMAP.md`: active roadmap only
 - `CHANGELOG.md`: released history only
 - `CONTRIBUTING.md`: contributor workflow and review expectations
 - `src/docs/asciidoc/`: generated-doc source pages

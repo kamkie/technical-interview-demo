@@ -3,7 +3,7 @@
 `PLAN.md` explains how AI agents should produce implementation plans in this repository.
 
 Use this file when the user asks for a plan, milestone, execution document, milestone breakdown, or a detailed change strategy.
-Do not use `TODO.md` as a substitute for a real plan. `TODO.md` is the roadmap. A plan is a self-contained handoff document for a concrete piece of work.
+Do not use `ROADMAP.md` as a substitute for a real plan. `ROADMAP.md` is the roadmap. A plan is a self-contained handoff document for a concrete piece of work.
 
 ## Planning Goals
 
@@ -30,7 +30,7 @@ At minimum, inspect:
 
 - `AGENTS.md`
 - `README.md`
-- `TODO.md` if the work touches roadmap sequencing
+- `ROADMAP.md` if the work touches roadmap sequencing
 - relevant tests under `src/test/java/`
 - relevant docs under `src/docs/asciidoc/`
 - `src/test/resources/openapi/approved-openapi.json` if API behavior may change
@@ -113,7 +113,7 @@ If the work changes onboarding, tools, Java, Docker, formatter setup, or local r
 
 ### Roadmap work
 
-If the task is only reprioritization or scope management, update `TODO.md`. Do not write a fake execution plan when the work is not ready to implement.
+If the task is only reprioritization or scope management, update `ROADMAP.md`. Do not write a fake execution plan when the work is not ready to implement.
 
 ## Plan Output Format
 
