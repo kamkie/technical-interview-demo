@@ -53,6 +53,7 @@ Goal: make the `1.0` boundary mean a stable, documented, and intentionally scope
 #### Tighten Operational Readiness
 - [ ] Document what healthy runtime behavior looks like for health, readiness, metrics, and audit logging
 - [ ] Add deployment-oriented troubleshooting for OAuth setup, PostgreSQL connectivity, and session persistence failures
+- [ ] Remove machine-specific local paths and personal workstation details from `SETUP.md` and replace them with portable examples and placeholders
 - [ ] Document an upgrade and rollback flow for schema migrations and versioned container releases
 
 ---
