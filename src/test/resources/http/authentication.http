@@ -18,6 +18,6 @@
 GET {{baseUrl}}/oauth2/authorization/github
 
 ### App authentication - verify the authenticated app session cookie
-GET {{baseUrl}}/api/users/me
+GET {{baseUrl}}/api/account
 Cookie: technical-interview-demo-session={{sessionCookie}}
 Accept: application/json

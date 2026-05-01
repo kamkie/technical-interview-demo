@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
-@Schema(name = "UserProfileResponse", description = "Persisted application profile for the current authenticated user.")
+@Schema(name = "UserAccountResponse", description = "Persisted application profile for the current authenticated user.")
 public record UserAccountResponse(
         @Schema(description = "Database identifier.", example = "1")
         Long id,

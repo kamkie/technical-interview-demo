@@ -1,0 +1,136 @@
+= LocalizationController API
+:toc:
+:toclevels: 2
+:sectanchors:
+:source-highlighter: highlight.js
+
+xref:index.adoc[Back to API overview]
+
+This page documents the CRUD and filter endpoints exposed by `LocalizationController`.
+
+== `GET /api/localizations`
+
+Lists localizations in a paginated response. Supports optional `messageKey` and `language` filters, plus `page`, `size`, and repeated `sort` query parameters.
+
+include::{snippets}/localization/list-localizations/curl-request.adoc[]
+include::{snippets}/localization/list-localizations/http-request.adoc[]
+include::{snippets}/localization/list-localizations/query-parameters.adoc[]
+include::{snippets}/localization/list-localizations/http-response.adoc[]
+include::{snippets}/localization/list-localizations/response-headers.adoc[]
+include::{snippets}/localization/list-localizations/response-fields.adoc[]
+
+== `GET /api/localizations/{id}`
+
+Returns a single localization by identifier.
+
+include::{snippets}/localization/get-localization/curl-request.adoc[]
+include::{snippets}/localization/get-localization/http-request.adoc[]
+include::{snippets}/localization/get-localization/path-parameters.adoc[]
+include::{snippets}/localization/get-localization/http-response.adoc[]
+include::{snippets}/localization/get-localization/response-headers.adoc[]
+include::{snippets}/localization/get-localization/response-fields.adoc[]
+
+== `GET /api/localizations?messageKey={messageKey}&language={language}`
+
+Filters the collection down to an exact key and language match.
+
+include::{snippets}/localization/list-localizations-filtered/curl-request.adoc[]
+include::{snippets}/localization/list-localizations-filtered/http-request.adoc[]
+include::{snippets}/localization/list-localizations-filtered/query-parameters.adoc[]
+include::{snippets}/localization/list-localizations-filtered/http-response.adoc[]
+include::{snippets}/localization/list-localizations-filtered/response-headers.adoc[]
+include::{snippets}/localization/list-localizations-filtered/response-fields.adoc[]
+
+== `POST /api/localizations`
+
+Creates a localization.
+
+include::{snippets}/localization/create-localization/curl-request.adoc[]
+include::{snippets}/localization/create-localization/http-request.adoc[]
+include::{snippets}/localization/create-localization/request-body.adoc[]
+include::{snippets}/localization/create-localization/request-fields.adoc[]
+include::{snippets}/localization/create-localization/http-response.adoc[]
+include::{snippets}/localization/create-localization/response-headers.adoc[]
+include::{snippets}/localization/create-localization/response-fields.adoc[]
+
+== `PUT /api/localizations/{id}`
+
+Updates a localization by identifier.
+
+include::{snippets}/localization/update-localization/curl-request.adoc[]
+include::{snippets}/localization/update-localization/http-request.adoc[]
+include::{snippets}/localization/update-localization/path-parameters.adoc[]
+include::{snippets}/localization/update-localization/request-body.adoc[]
+include::{snippets}/localization/update-localization/request-fields.adoc[]
+include::{snippets}/localization/update-localization/http-response.adoc[]
+include::{snippets}/localization/update-localization/response-headers.adoc[]
+include::{snippets}/localization/update-localization/response-fields.adoc[]
+
+== `DELETE /api/localizations/{id}`
+
+Deletes a localization by identifier.
+
+include::{snippets}/localization/delete-localization/curl-request.adoc[]
+include::{snippets}/localization/delete-localization/http-request.adoc[]
+include::{snippets}/localization/delete-localization/path-parameters.adoc[]
+include::{snippets}/localization/delete-localization/http-response.adoc[]
+include::{snippets}/localization/delete-localization/response-headers.adoc[]
+
+== `GET /api/localizations?language={language}`
+
+Lists localizations for a single language code using the same collection endpoint.
+
+include::{snippets}/localization/list-localizations-by-language/curl-request.adoc[]
+include::{snippets}/localization/list-localizations-by-language/http-request.adoc[]
+include::{snippets}/localization/list-localizations-by-language/query-parameters.adoc[]
+include::{snippets}/localization/list-localizations-by-language/http-response.adoc[]
+include::{snippets}/localization/list-localizations-by-language/response-headers.adoc[]
+include::{snippets}/localization/list-localizations-by-language/response-fields.adoc[]
+
+== Error Response Examples
+
+Public localization API errors use Spring `ProblemDetail` responses. Each error response keeps the technical `detail` field, and also adds `messageKey`, localized `message`, and resolved `language`. `Accept-Language` is honored, `lang` can override it per request, and cookie `language` is used as fallback. Supported languages are `en`, `es`, `de`, `fr`, `pl`, `uk`, and `no`.
+
+=== `POST /api/localizations` validation failure
+
+Example bad-request response when the localization payload contains invalid fields.
+
+include::{snippets}/errors/create-localization-validation-failed/curl-request.adoc[]
+include::{snippets}/errors/create-localization-validation-failed/http-request.adoc[]
+include::{snippets}/errors/create-localization-validation-failed/request-body.adoc[]
+include::{snippets}/errors/create-localization-validation-failed/http-response.adoc[]
+include::{snippets}/errors/create-localization-validation-failed/response-headers.adoc[]
+include::{snippets}/errors/create-localization-validation-failed/response-fields.adoc[]
+
+=== `POST /api/localizations` unsupported language
+
+Example bad-request response when the payload uses a language outside the supported application set.
+
+include::{snippets}/errors/create-localization-unsupported-language/curl-request.adoc[]
+include::{snippets}/errors/create-localization-unsupported-language/http-request.adoc[]
+include::{snippets}/errors/create-localization-unsupported-language/request-body.adoc[]
+include::{snippets}/errors/create-localization-unsupported-language/http-response.adoc[]
+include::{snippets}/errors/create-localization-unsupported-language/response-headers.adoc[]
+include::{snippets}/errors/create-localization-unsupported-language/response-fields.adoc[]
+
+=== `POST /api/localizations` duplicate key and language
+
+Example conflict response when a localization with the same key and language already exists.
+
+include::{snippets}/errors/create-localization-duplicate/curl-request.adoc[]
+include::{snippets}/errors/create-localization-duplicate/http-request.adoc[]
+include::{snippets}/errors/create-localization-duplicate/request-body.adoc[]
+include::{snippets}/errors/create-localization-duplicate/http-response.adoc[]
+include::{snippets}/errors/create-localization-duplicate/response-headers.adoc[]
+include::{snippets}/errors/create-localization-duplicate/response-fields.adoc[]
+
+=== `GET /api/localizations/{id}` missing localization
+
+Example not-found response when the localization identifier does not exist.
+
+include::{snippets}/errors/get-localization-not-found/curl-request.adoc[]
+include::{snippets}/errors/get-localization-not-found/http-request.adoc[]
+include::{snippets}/errors/get-localization-not-found/path-parameters.adoc[]
+include::{snippets}/errors/get-localization-not-found/http-response.adoc[]
+include::{snippets}/errors/get-localization-not-found/response-headers.adoc[]
+include::{snippets}/errors/get-localization-not-found/response-fields.adoc[]

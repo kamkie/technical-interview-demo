@@ -29,16 +29,16 @@ import team.jit.technicalinterviewdemo.business.book.BookNotFoundException;
 import team.jit.technicalinterviewdemo.business.book.DuplicateIsbnException;
 import team.jit.technicalinterviewdemo.business.book.StaleBookVersionException;
 import team.jit.technicalinterviewdemo.technical.logging.SensitiveDataSanitizer;
-import team.jit.technicalinterviewdemo.business.localization.DuplicateLocalizationMessageException;
-import team.jit.technicalinterviewdemo.business.localization.LocalizationMessageNotFoundException;
-import team.jit.technicalinterviewdemo.business.localization.LocalizationMessageService;
+import team.jit.technicalinterviewdemo.business.localization.DuplicateLocalizationException;
+import team.jit.technicalinterviewdemo.business.localization.LocalizationNotFoundException;
+import team.jit.technicalinterviewdemo.business.localization.LocalizationService;
 
 @Slf4j
 @RestControllerAdvice
 @RequiredArgsConstructor
 public class ApiExceptionHandler {
 
-    private final LocalizationMessageService localizationMessageService;
+    private final LocalizationService localizationService;
 
     @ExceptionHandler(BookNotFoundException.class)
     ProblemDetail handleBookNotFound(BookNotFoundException exception, HttpServletRequest request) {
@@ -52,11 +52,11 @@ public class ApiExceptionHandler {
         );
     }
 
-    @ExceptionHandler(LocalizationMessageNotFoundException.class)
-    ProblemDetail handleLocalizationMessageNotFound(LocalizationMessageNotFoundException exception, HttpServletRequest request) {
+    @ExceptionHandler(LocalizationNotFoundException.class)
+    ProblemDetail handleLocalizationNotFound(LocalizationNotFoundException exception, HttpServletRequest request) {
         return logClientProblem(
                 HttpStatus.NOT_FOUND,
-                "Localization Message Not Found",
+                "Localization Not Found",
                 exception.getMessage(),
                 "error.localization.not_found",
                 request,
@@ -76,14 +76,14 @@ public class ApiExceptionHandler {
         );
     }
 
-    @ExceptionHandler(DuplicateLocalizationMessageException.class)
-    ProblemDetail handleDuplicateLocalizationMessage(
-            DuplicateLocalizationMessageException exception,
+    @ExceptionHandler(DuplicateLocalizationException.class)
+    ProblemDetail handleDuplicateLocalization(
+            DuplicateLocalizationException exception,
             HttpServletRequest request
     ) {
         return logClientProblem(
                 HttpStatus.CONFLICT,
-                "Duplicate Localization Message",
+                "Duplicate Localization",
                 exception.getMessage(),
                 "error.localization.duplicate",
                 request,
@@ -378,8 +378,8 @@ public class ApiExceptionHandler {
     }
 
     private LocalizedProblemMessage resolveLocalizedProblemMessage(String messageKey) {
-        team.jit.technicalinterviewdemo.business.localization.LocalizationMessage resolvedMessage =
-                localizationMessageService.findByMessageKeyForCurrentLanguageWithFallback(messageKey);
+        team.jit.technicalinterviewdemo.business.localization.Localization resolvedMessage =
+                localizationService.findByMessageKeyForCurrentLanguageWithFallback(messageKey);
         return new LocalizedProblemMessage(messageKey, resolvedMessage.getMessageText(), resolvedMessage.getLanguage());
     }
 

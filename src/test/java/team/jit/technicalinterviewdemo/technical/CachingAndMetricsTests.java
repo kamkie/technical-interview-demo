@@ -25,10 +25,10 @@ import team.jit.technicalinterviewdemo.business.category.CategoryCreateRequest;
 import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
 import team.jit.technicalinterviewdemo.business.category.CategoryService;
 import team.jit.technicalinterviewdemo.business.audit.AuditLogRepository;
-import team.jit.technicalinterviewdemo.business.localization.LocalizationMessage;
-import team.jit.technicalinterviewdemo.business.localization.LocalizationMessageRepository;
-import team.jit.technicalinterviewdemo.business.localization.LocalizationMessageRequest;
-import team.jit.technicalinterviewdemo.business.localization.LocalizationMessageService;
+import team.jit.technicalinterviewdemo.business.localization.Localization;
+import team.jit.technicalinterviewdemo.business.localization.LocalizationRepository;
+import team.jit.technicalinterviewdemo.business.localization.LocalizationRequest;
+import team.jit.technicalinterviewdemo.business.localization.LocalizationService;
 import team.jit.technicalinterviewdemo.business.user.UserAccountRepository;
 import team.jit.technicalinterviewdemo.testing.BookCatalogTestData;
 import team.jit.technicalinterviewdemo.testing.CacheTestSupport;
@@ -62,10 +62,10 @@ class CachingAndMetricsTests {
     private AuditLogRepository auditLogRepository;
 
     @Autowired
-    private LocalizationMessageService localizationMessageService;
+    private LocalizationService localizationMessageService;
 
     @Autowired
-    private LocalizationMessageRepository localizationMessageRepository;
+    private LocalizationRepository localizationMessageRepository;
 
     @Autowired
     private UserAccountRepository userAccountRepository;
@@ -89,13 +89,13 @@ class CachingAndMetricsTests {
         localizationMessageRepository.findByMessageKeyAndLanguage(CACHE_TEST_KEY, "es")
                 .ifPresent(localizationMessageRepository::delete);
         localizationMessageRepository.flush();
-        localizationMessageService.create(new LocalizationMessageRequest(
+        localizationMessageService.create(new LocalizationRequest(
                 CACHE_TEST_KEY,
                 "en",
                 "Cache EN",
                 "English cache test message."
         ));
-        localizationMessageService.create(new LocalizationMessageRequest(
+        localizationMessageService.create(new LocalizationRequest(
                 CACHE_TEST_KEY,
                 "es",
                 "Cache ES",
@@ -134,8 +134,8 @@ class CachingAndMetricsTests {
         assertThat(counterValue(CACHE_EVENTS, "cache", CacheNames.LOCALIZATION_LOOKUPS, "event", "hit") - hitBefore).isEqualTo(1.0d);
         assertThat(counterValue(CACHE_EVENTS, "cache", CacheNames.LOCALIZATION_LOOKUPS, "event", "put") - putBefore).isEqualTo(1.0d);
 
-        LocalizationMessage message = localizationMessageService.findByMessageKeyAndLanguage(CACHE_TEST_KEY, "es");
-        localizationMessageService.update(message.getId(), new LocalizationMessageRequest(
+        Localization message = localizationMessageService.findByMessageKeyAndLanguage(CACHE_TEST_KEY, "es");
+        localizationMessageService.update(message.getId(), new LocalizationRequest(
                 CACHE_TEST_KEY,
                 "es",
                 "Cache ES Updated",

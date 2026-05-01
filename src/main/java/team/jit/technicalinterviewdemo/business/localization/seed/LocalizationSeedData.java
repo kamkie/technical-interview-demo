@@ -2,9 +2,9 @@ package team.jit.technicalinterviewdemo.business.localization.seed;
 
 import java.util.ArrayList;
 import java.util.List;
-import team.jit.technicalinterviewdemo.business.localization.LocalizationMessage;
+import team.jit.technicalinterviewdemo.business.localization.Localization;
 
-public final class LocalizationMessageSeedData {
+public final class LocalizationSeedData {
 
     private static final List<String> DOCUMENTED_KEYS = List.of(
             "error.book.isbn_duplicate",
@@ -29,7 +29,7 @@ public final class LocalizationMessageSeedData {
 
     private static final List<String> SUPPORTED_LANGUAGES = List.of("en", "es", "de", "fr", "pl", "uk", "no");
 
-    private LocalizationMessageSeedData() {
+    private LocalizationSeedData() {
     }
 
     public static List<String> documentedKeys() {
@@ -40,8 +40,8 @@ public final class LocalizationMessageSeedData {
         return SUPPORTED_LANGUAGES;
     }
 
-    public static List<LocalizationMessage> defaultMessages() {
-        List<LocalizationMessage> messages = new ArrayList<>();
+    public static List<Localization> defaultMessages() {
+        List<Localization> messages = new ArrayList<>();
         addTranslations(
                 messages,
                 "error.book.isbn_duplicate",
@@ -244,7 +244,7 @@ public final class LocalizationMessageSeedData {
     }
 
     private static void addTranslations(
-            List<LocalizationMessage> messages,
+            List<Localization> messages,
             String messageKey,
             String english,
             String spanish,
@@ -254,13 +254,13 @@ public final class LocalizationMessageSeedData {
             String ukrainian,
             String norwegian
     ) {
-        messages.add(new LocalizationMessage(messageKey, "en", english, description(messageKey, "en")));
-        messages.add(new LocalizationMessage(messageKey, "es", spanish, description(messageKey, "es")));
-        messages.add(new LocalizationMessage(messageKey, "de", german, description(messageKey, "de")));
-        messages.add(new LocalizationMessage(messageKey, "fr", french, description(messageKey, "fr")));
-        messages.add(new LocalizationMessage(messageKey, "pl", polish, description(messageKey, "pl")));
-        messages.add(new LocalizationMessage(messageKey, "uk", ukrainian, description(messageKey, "uk")));
-        messages.add(new LocalizationMessage(messageKey, "no", norwegian, description(messageKey, "no")));
+        messages.add(new Localization(messageKey, "en", english, description(messageKey, "en")));
+        messages.add(new Localization(messageKey, "es", spanish, description(messageKey, "es")));
+        messages.add(new Localization(messageKey, "de", german, description(messageKey, "de")));
+        messages.add(new Localization(messageKey, "fr", french, description(messageKey, "fr")));
+        messages.add(new Localization(messageKey, "pl", polish, description(messageKey, "pl")));
+        messages.add(new Localization(messageKey, "uk", ukrainian, description(messageKey, "uk")));
+        messages.add(new Localization(messageKey, "no", norwegian, description(messageKey, "no")));
     }
 
     private static String description(String messageKey, String language) {

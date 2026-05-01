@@ -33,42 +33,58 @@ import team.jit.technicalinterviewdemo.technical.metrics.ApplicationMetrics;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class LocalizationMessageService {
+public class LocalizationService {
 
     private static final Pattern MESSAGE_KEY_PATTERN = Pattern.compile("^[a-z0-9._-]+$");
     private static final Pattern LANGUAGE_PATTERN = Pattern.compile("^[a-zA-Z]{2}$");
     private static final Set<String> ALLOWED_SORT_FIELDS = Set.of("id", "messageKey", "language", "createdAt", "updatedAt");
 
-    private final LocalizationMessageRepository localizationMessageRepository;
+    private final LocalizationRepository localizationRepository;
     private final LocalizationContext localizationContext;
     private final CacheManager cacheManager;
     private final ApplicationMetrics applicationMetrics;
     private final CurrentUserAccountService currentUserAccountService;
     private final AuditLogService auditLogService;
 
-    public Page<LocalizationMessage> findAll(Pageable pageable) {
-        applicationMetrics.recordLocalizationOperation("list");
+    public Page<Localization> findAll(Pageable pageable, String messageKey, String language) {
         Pageable effectivePageable = createEffectivePageable(pageable);
-        return localizationMessageRepository.findAll(effectivePageable);
+        String normalizedMessageKey = messageKey == null ? null : normalizeMessageKey(messageKey);
+        String normalizedLanguage = language == null ? null : normalizeSupportedLanguage(language);
+
+        if (normalizedMessageKey != null && normalizedLanguage != null) {
+            applicationMetrics.recordLocalizationOperation("listFiltered");
+            return localizationRepository.findAllByMessageKeyAndLanguage(normalizedMessageKey, normalizedLanguage, effectivePageable);
+        }
+        if (normalizedMessageKey != null) {
+            applicationMetrics.recordLocalizationOperation("listFiltered");
+            return localizationRepository.findAllByMessageKey(normalizedMessageKey, effectivePageable);
+        }
+        if (normalizedLanguage != null) {
+            applicationMetrics.recordLocalizationOperation("listFiltered");
+            return localizationRepository.findAllByLanguage(normalizedLanguage, effectivePageable);
+        }
+
+        applicationMetrics.recordLocalizationOperation("list");
+        return localizationRepository.findAll(effectivePageable);
     }
 
-    public LocalizationMessage findById(Long id) {
+    public Localization findById(Long id) {
         applicationMetrics.recordLocalizationOperation("get");
-        return localizationMessageRepository.findById(id)
-                .orElseThrow(() -> new LocalizationMessageNotFoundException(id));
+        return localizationRepository.findById(id)
+                .orElseThrow(() -> new LocalizationNotFoundException(id));
     }
 
-    public LocalizationMessage findByMessageKeyAndLanguage(String messageKey, String language) {
+    public Localization findByMessageKeyAndLanguage(String messageKey, String language) {
         applicationMetrics.recordLocalizationOperation("lookupExact");
         return findMessage(normalizeMessageKey(messageKey), normalizeSupportedLanguage(language))
-                .orElseThrow(() -> new LocalizationMessageNotFoundException(messageKey, language));
+                .orElseThrow(() -> new LocalizationNotFoundException(messageKey, language));
     }
 
     public String getMessage(String messageKey, String language) {
         return findByMessageKeyAndLanguage(messageKey, language).getMessageText();
     }
 
-    public LocalizationMessage findByMessageKeyAndLanguageWithFallback(String messageKey, String language, String fallbackLanguage) {
+    public Localization findByMessageKeyAndLanguageWithFallback(String messageKey, String language, String fallbackLanguage) {
         String normalizedMessageKey = normalizeMessageKey(messageKey);
         String normalizedLanguage = normalizeLanguage(language);
         String normalizedFallbackLanguage = normalizeSupportedLanguage(fallbackLanguage);
@@ -76,7 +92,7 @@ public class LocalizationMessageService {
         applicationMetrics.recordLocalizationOperation("lookupWithFallback");
 
         Cache localizationLookupCache = requireCache(CacheNames.LOCALIZATION_LOOKUPS);
-        LocalizationMessage cachedMessage = localizationLookupCache.get(lookupCacheKey, LocalizationMessage.class);
+        Localization cachedMessage = localizationLookupCache.get(lookupCacheKey, Localization.class);
         if (cachedMessage != null) {
             applicationMetrics.recordCacheEvent(CacheNames.LOCALIZATION_LOOKUPS, "hit");
             return cachedMessage;
@@ -84,15 +100,15 @@ public class LocalizationMessageService {
 
         applicationMetrics.recordCacheEvent(CacheNames.LOCALIZATION_LOOKUPS, "miss");
 
-        Optional<LocalizationMessage> requestedMessage = findMessage(normalizedMessageKey, normalizedLanguage);
+        Optional<Localization> requestedMessage = findMessage(normalizedMessageKey, normalizedLanguage);
         if (requestedMessage.isPresent()) {
             localizationLookupCache.put(lookupCacheKey, requestedMessage.get());
             applicationMetrics.recordCacheEvent(CacheNames.LOCALIZATION_LOOKUPS, "put");
             return requestedMessage.get();
         }
 
-        LocalizationMessage resolvedMessage = findMessage(normalizedMessageKey, normalizedFallbackLanguage)
-                .orElseThrow(() -> new LocalizationMessageNotFoundException(messageKey, language, fallbackLanguage));
+        Localization resolvedMessage = findMessage(normalizedMessageKey, normalizedFallbackLanguage)
+                .orElseThrow(() -> new LocalizationNotFoundException(messageKey, language, fallbackLanguage));
         localizationLookupCache.put(lookupCacheKey, resolvedMessage);
         applicationMetrics.recordCacheEvent(CacheNames.LOCALIZATION_LOOKUPS, "put");
         return resolvedMessage;
@@ -102,7 +118,7 @@ public class LocalizationMessageService {
         return findByMessageKeyAndLanguageWithFallback(messageKey, language, fallbackLanguage).getMessageText();
     }
 
-    public LocalizationMessage findByMessageKeyForCurrentLanguageWithFallback(String messageKey) {
+    public Localization findByMessageKeyForCurrentLanguageWithFallback(String messageKey) {
         return findByMessageKeyAndLanguageWithFallback(
                 messageKey,
                 localizationContext.resolveCurrentLanguageOrDefault(),
@@ -123,7 +139,7 @@ public class LocalizationMessageService {
 
         applicationMetrics.recordCacheEvent(CacheNames.LOCALIZATION_MESSAGE_MAPS, "miss");
         Map<String, String> messagesByKey = new LinkedHashMap<>();
-        for (LocalizationMessage message : localizationMessageRepository.findAllByLanguageOrderByMessageKeyAsc(normalizedLanguage)) {
+        for (Localization message : localizationRepository.findAllByLanguageOrderByMessageKeyAsc(normalizedLanguage)) {
             messagesByKey.put(message.getMessageKey(), message.getMessageText());
         }
         localizationMessageMapsCache.put(normalizedLanguage, messagesByKey);
@@ -131,38 +147,38 @@ public class LocalizationMessageService {
         return messagesByKey;
     }
 
-    public List<LocalizationMessage> findAllByLanguage(String language) {
+    public List<Localization> findAllByLanguage(String language) {
         applicationMetrics.recordLocalizationOperation("listByLanguage");
         String normalizedLanguage = normalizeSupportedLanguage(language);
         Cache localizationListsCache = requireCache(CacheNames.LOCALIZATION_LISTS);
         @SuppressWarnings("unchecked")
-        List<LocalizationMessage> cachedMessages = localizationListsCache.get(normalizedLanguage, List.class);
+        List<Localization> cachedMessages = localizationListsCache.get(normalizedLanguage, List.class);
         if (cachedMessages != null) {
             applicationMetrics.recordCacheEvent(CacheNames.LOCALIZATION_LISTS, "hit");
             return cachedMessages;
         }
 
         applicationMetrics.recordCacheEvent(CacheNames.LOCALIZATION_LISTS, "miss");
-        List<LocalizationMessage> messages = localizationMessageRepository.findAllByLanguageOrderByMessageKeyAsc(normalizedLanguage);
+        List<Localization> messages = localizationRepository.findAllByLanguageOrderByMessageKeyAsc(normalizedLanguage);
         localizationListsCache.put(normalizedLanguage, messages);
         applicationMetrics.recordCacheEvent(CacheNames.LOCALIZATION_LISTS, "put");
         return messages;
     }
 
     @Transactional
-    public LocalizationMessage create(LocalizationMessageRequest request) {
+    public Localization create(LocalizationRequest request) {
         currentUserAccountService.requireRole(UserRole.ADMIN, "Localization management requires the ADMIN role.");
         String messageKey = normalizeMessageKey(request.messageKey());
         String language = normalizeSupportedLanguage(request.language());
         validateUniqueMessage(messageKey, language, null);
 
-        LocalizationMessage message = new LocalizationMessage(
+        Localization message = new Localization(
                 messageKey,
                 language,
                 request.messageText(),
                 request.description()
         );
-        LocalizationMessage savedMessage = localizationMessageRepository.saveAndFlush(message);
+        Localization savedMessage = localizationRepository.saveAndFlush(message);
         evictLocalizationCaches();
         applicationMetrics.recordLocalizationOperation("create");
         auditLogService.record(
@@ -182,9 +198,9 @@ public class LocalizationMessageService {
     }
 
     @Transactional
-    public LocalizationMessage update(Long id, LocalizationMessageRequest request) {
+    public Localization update(Long id, LocalizationRequest request) {
         currentUserAccountService.requireRole(UserRole.ADMIN, "Localization management requires the ADMIN role.");
-        LocalizationMessage message = requireMessage(id);
+        Localization message = requireMessage(id);
         String messageKey = normalizeMessageKey(request.messageKey());
         String language = normalizeSupportedLanguage(request.language());
         validateUniqueMessage(messageKey, language, id);
@@ -194,7 +210,7 @@ public class LocalizationMessageService {
         message.setMessageText(request.messageText());
         message.setDescription(request.description());
 
-        LocalizationMessage updatedMessage = localizationMessageRepository.saveAndFlush(message);
+        Localization updatedMessage = localizationRepository.saveAndFlush(message);
         evictLocalizationCaches();
         applicationMetrics.recordLocalizationOperation("update");
         auditLogService.record(
@@ -216,8 +232,8 @@ public class LocalizationMessageService {
     @Transactional
     public void delete(Long id) {
         currentUserAccountService.requireRole(UserRole.ADMIN, "Localization management requires the ADMIN role.");
-        LocalizationMessage message = requireMessage(id);
-        localizationMessageRepository.delete(message);
+        Localization message = requireMessage(id);
+        localizationRepository.delete(message);
         evictLocalizationCaches();
         applicationMetrics.recordLocalizationOperation("delete");
         auditLogService.record(
@@ -230,13 +246,13 @@ public class LocalizationMessageService {
         log.info("Deleted localization message id={} key={} language={}", id, message.getMessageKey(), message.getLanguage());
     }
 
-    private Optional<LocalizationMessage> findMessage(String messageKey, String language) {
-        return localizationMessageRepository.findByMessageKeyAndLanguage(messageKey, language);
+    private Optional<Localization> findMessage(String messageKey, String language) {
+        return localizationRepository.findByMessageKeyAndLanguage(messageKey, language);
     }
 
-    private LocalizationMessage requireMessage(Long id) {
-        return localizationMessageRepository.findById(id)
-                .orElseThrow(() -> new LocalizationMessageNotFoundException(id));
+    private Localization requireMessage(Long id) {
+        return localizationRepository.findById(id)
+                .orElseThrow(() -> new LocalizationNotFoundException(id));
     }
 
     private String normalizeMessageKey(String messageKey) {
@@ -290,10 +306,10 @@ public class LocalizationMessageService {
 
     private void validateUniqueMessage(String messageKey, String language, Long id) {
         boolean exists = id == null
-                ? localizationMessageRepository.existsByMessageKeyAndLanguage(messageKey, language)
-                : localizationMessageRepository.existsByMessageKeyAndLanguageAndIdNot(messageKey, language, id);
+                ? localizationRepository.existsByMessageKeyAndLanguage(messageKey, language)
+                : localizationRepository.existsByMessageKeyAndLanguageAndIdNot(messageKey, language, id);
         if (exists) {
-            throw new DuplicateLocalizationMessageException(messageKey, language);
+            throw new DuplicateLocalizationException(messageKey, language);
         }
     }
 

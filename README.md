@@ -12,12 +12,12 @@ The demo currently includes:
 - `GET /hello` returning `Hello World!`
 - A REST API for `Book` under `/api/books` with pagination, filtering, and category assignment
 - A REST API for `Category` under `/api/categories`
-- A REST API for `LocalizationMessage` under `/api/localization-messages` with CRUD, pagination, and key/language lookup
-- A REST API for the authenticated user profile under `/api/users/me`
+- A REST API for `Localization` under `/api/localizations` with CRUD, pagination, and collection filtering by `messageKey` and `language`
+- A REST API for the authenticated user profile under `/api/account`
 - OAuth 2.0 protected write endpoints with JDBC-backed HTTP sessions for reviewer-friendly sign-in
 - An OpenAPI contract exposed at `/v3/api-docs` and `/v3/api-docs.yaml` with an approved-baseline compatibility gate
 - Gatling performance scenarios with a tracked local baseline for public reads and OAuth redirect startup
-- Append-only audit logging for state-changing `Book` and `LocalizationMessage` operations
+- Append-only audit logging for state-changing `Book` and `Localization` operations
 - Git tag based application versioning plus a human-readable `CHANGELOG.md`
 - PostgreSQL for local and production-style runtime profiles, plus Testcontainers-backed integration tests
 - Seed data loaded at startup
@@ -234,7 +234,7 @@ Useful local endpoints:
 - `GET /hello`
 - `GET /api/books`
 - `GET /api/categories`
-- `GET /api/users/me` after login
+- `GET /api/account` after login
 - `GET /oauth2/authorization/github` when the `oauth` profile is active
 - `GET /actuator/info`
 - `GET /actuator/health`
@@ -449,13 +449,13 @@ Validation rules:
 
 ### Localization API
 
-- `GET /api/localization-messages?page=0&size=20&sort=id,asc`
-- `GET /api/localization-messages/{id}`
-- `GET /api/localization-messages/key/{messageKey}/lang/{language}`
-- `GET /api/localization-messages/language/{language}`
-- `POST /api/localization-messages`
-- `PUT /api/localization-messages/{id}`
-- `DELETE /api/localization-messages/{id}`
+- `GET /api/localizations?page=0&size=20&sort=id,asc`
+- `GET /api/localizations/{id}`
+- `GET /api/localizations?messageKey=error.request.invalid&language=en`
+- `GET /api/localizations?language=pl&sort=messageKey,asc`
+- `POST /api/localizations`
+- `PUT /api/localizations/{id}`
+- `DELETE /api/localizations/{id}`
 
 Example create or update payload:
 
@@ -478,8 +478,8 @@ Validation rules:
 
 ### User Profile API
 
-- `GET /api/users/me`
-- `PUT /api/users/me/preferred-language`
+- `GET /api/account`
+- `PUT /api/account/language`
 
 Example preferred-language update payload:
 
@@ -492,8 +492,8 @@ Example preferred-language update payload:
 Behavior:
 
 - the current authenticated GitHub user is persisted on the first authenticated request
-- `GET /api/users/me` returns the persisted application user, roles, and timestamps
-- `PUT /api/users/me/preferred-language` stores an optional two-letter supported language code or clears it when the value is blank or null
+- `GET /api/account` returns the persisted application user, roles, and timestamps
+- `PUT /api/account/language` stores an optional two-letter supported language code or clears it when the value is blank or null
 - when no `lang`, supported `Accept-Language`, or `language` cookie is present, localized error responses fall back to the authenticated user's preferred language before defaulting to English
 
 Actuator endpoints:
@@ -508,8 +508,8 @@ Actuator endpoints:
 
 Authentication rules:
 
-- public without authentication: `GET /`, `GET /hello`, `GET /docs`, `GET /api/books/**`, `GET /api/categories`, `GET /api/localization-messages/**`, `GET /actuator/health`, `GET /actuator/health/**`, `GET /actuator/info`, and `GET /actuator/prometheus`
-- protected with authenticated session: `GET /api/users/me`, `PUT /api/users/me/preferred-language`, `POST /api/books`, `PUT /api/books/{id}`, `DELETE /api/books/{id}`, `POST /api/categories`, `POST /api/localization-messages`, `PUT /api/localization-messages/{id}`, and `DELETE /api/localization-messages/{id}`
+- public without authentication: `GET /`, `GET /hello`, `GET /docs`, `GET /api/books/**`, `GET /api/categories`, `GET /api/localizations/**`, `GET /actuator/health`, `GET /actuator/health/**`, `GET /actuator/info`, and `GET /actuator/prometheus`
+- protected with authenticated session: `GET /api/account`, `PUT /api/account/language`, `POST /api/books`, `PUT /api/books/{id}`, `DELETE /api/books/{id}`, `POST /api/categories`, `POST /api/localizations`, `PUT /api/localizations/{id}`, and `DELETE /api/localizations/{id}`
 - role-restricted to `ADMIN`: category creation and localization-message create, update, and delete operations
 - interactive login is available at `GET /oauth2/authorization/github` when the `oauth` profile is active
 - authenticated HTTP sessions are persisted in PostgreSQL tables `SPRING_SESSION` and `SPRING_SESSION_ATTRIBUTES`
@@ -676,7 +676,7 @@ Current tracked local baseline from `performance/baselines/phase-9-local.json`:
 | --- | --- | --- | --- |
 | `list-books` | 17 ms | 15 ms | 100% |
 | `search-books` | 14 ms | 10 ms | 100% |
-| `lookup-localization-message` | 11 ms | 8 ms | 100% |
+| `filter-localizations` | 11 ms | 8 ms | 100% |
 | `oauth2-github-redirect` | 15 ms | 12 ms | 100% |
 
 Regression checks:

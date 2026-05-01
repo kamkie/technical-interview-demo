@@ -29,7 +29,7 @@ import lombok.Setter;
                 columnNames = {"message_key", "language"}
         )
 )
-public class LocalizationMessage {
+public class Localization {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,7 +56,7 @@ public class LocalizationMessage {
     @Setter(AccessLevel.NONE)
     private LocalDateTime updatedAt;
 
-    public LocalizationMessage(String messageKey, String language, String messageText, String description) {
+    public Localization(String messageKey, String language, String messageText, String description) {
         setMessageKey(messageKey);
         setLanguage(language);
         setMessageText(messageText);

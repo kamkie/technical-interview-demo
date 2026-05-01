@@ -14,31 +14,31 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
-import team.jit.technicalinterviewdemo.testing.LocalizationMessageTestData;
+import team.jit.technicalinterviewdemo.testing.LocalizationTestData;
 import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
 
 @MockMvcIntegrationSpringBootTest
 class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Autowired
-    private LocalizationMessageRepository localizationMessageRepository;
+    private LocalizationRepository localizationRepository;
 
-    private LocalizationMessage bookNotFoundEn;
-    private LocalizationMessage bookNotFoundEs;
-    private LocalizationMessage invalidRequestEn;
+    private Localization bookNotFoundEn;
+    private Localization bookNotFoundEs;
+    private Localization invalidRequestEn;
 
     @BeforeEach
     void setUp() {
-        LocalizationMessageTestData.DefaultLocalizationMessages messages =
-                LocalizationMessageTestData.reloadDefaultMessages(localizationMessageRepository);
+        LocalizationTestData.DefaultLocalizations messages =
+                LocalizationTestData.reloadDefaultMessages(localizationRepository);
         bookNotFoundEn = messages.bookNotFoundEn();
         bookNotFoundEs = messages.bookNotFoundEs();
         invalidRequestEn = messages.invalidRequestEn();
     }
 
     @Test
-    void listLocalizationMessagesReturnsPaginatedResponse() throws Exception {
-        mockMvc.perform(get("/api/localization-messages")
+    void listLocalizationsReturnsPaginatedResponse() throws Exception {
+        mockMvc.perform(get("/api/localizations")
                         .queryParam("page", "0")
                         .queryParam("size", "2")
                         .queryParam("sort", "messageKey,asc")
@@ -53,8 +53,8 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
     }
 
     @Test
-    void listLocalizationMessagesWithUnsupportedSortReturnsBadRequest() throws Exception {
-        mockMvc.perform(get("/api/localization-messages")
+    void listLocalizationsWithUnsupportedSortReturnsBadRequest() throws Exception {
+        mockMvc.perform(get("/api/localizations")
                         .queryParam("sort", "dropTable,asc"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.title").value("Invalid Request"))
@@ -64,8 +64,8 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
     }
 
     @Test
-    void getLocalizationMessageByIdReturnsRequestedMessage() throws Exception {
-        mockMvc.perform(get("/api/localization-messages/{id}", bookNotFoundEs.getId()))
+    void getLocalizationByIdReturnsRequestedMessage() throws Exception {
+        mockMvc.perform(get("/api/localizations/{id}", bookNotFoundEs.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(bookNotFoundEs.getId()))
                 .andExpect(jsonPath("$.messageKey").value("error.book.not_found"))
@@ -74,29 +74,34 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
     }
 
     @Test
-    void getLocalizationMessageByIdReturnsNotFoundWhenMissing() throws Exception {
-        mockMvc.perform(get("/api/localization-messages/{id}", 9999))
+    void getLocalizationByIdReturnsNotFoundWhenMissing() throws Exception {
+        mockMvc.perform(get("/api/localizations/{id}", 9999))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.title").value("Localization Message Not Found"))
-                .andExpect(jsonPath("$.detail").value("Localization message with id 9999 was not found."))
+                .andExpect(jsonPath("$.title").value("Localization Not Found"))
+                .andExpect(jsonPath("$.detail").value("Localization with id 9999 was not found."))
                 .andExpect(jsonPath("$.messageKey").value("error.localization.not_found"))
                 .andExpect(jsonPath("$.message").value("The requested localization message was not found."))
                 .andExpect(jsonPath("$.language").value("en"));
     }
 
     @Test
-    void getLocalizationMessageByKeyAndLanguageReturnsRequestedMessage() throws Exception {
-        mockMvc.perform(get("/api/localization-messages/key/{messageKey}/lang/{language}", "error.request.invalid", "EN"))
+    void listLocalizationsCanFilterByMessageKeyAndLanguage() throws Exception {
+        mockMvc.perform(get("/api/localizations")
+                        .queryParam("messageKey", "error.request.invalid")
+                        .queryParam("language", "EN"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(invalidRequestEn.getId()))
-                .andExpect(jsonPath("$.messageKey").value("error.request.invalid"))
-                .andExpect(jsonPath("$.language").value("en"))
-                .andExpect(jsonPath("$.messageText").value("The request is invalid."));
+                .andExpect(jsonPath("$.content.length()").value(1))
+                .andExpect(jsonPath("$.content[0].id").value(invalidRequestEn.getId()))
+                .andExpect(jsonPath("$.content[0].messageKey").value("error.request.invalid"))
+                .andExpect(jsonPath("$.content[0].language").value("en"))
+                .andExpect(jsonPath("$.content[0].messageText").value("The request is invalid."))
+                .andExpect(jsonPath("$.totalElements").value(1))
+                .andExpect(jsonPath("$.totalPages").value(1));
     }
 
     @Test
-    void createLocalizationMessageReturnsCreatedMessage() throws Exception {
-        mockMvc.perform(post("/api/localization-messages")
+    void createLocalizationReturnsCreatedMessage() throws Exception {
+        mockMvc.perform(post("/api/localizations")
                         .with(adminOauthUser())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -118,8 +123,8 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
     }
 
     @Test
-    void createLocalizationMessageWithoutAuthenticationReturnsUnauthorized() throws Exception {
-        mockMvc.perform(post("/api/localization-messages")
+    void createLocalizationWithoutAuthenticationReturnsUnauthorized() throws Exception {
+        mockMvc.perform(post("/api/localizations")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -133,8 +138,8 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
     }
 
     @Test
-    void createLocalizationMessageWithDuplicateKeyAndLanguageReturnsConflict() throws Exception {
-        mockMvc.perform(post("/api/localization-messages")
+    void createLocalizationWithDuplicateKeyAndLanguageReturnsConflict() throws Exception {
+        mockMvc.perform(post("/api/localizations")
                         .with(adminOauthUser())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -146,18 +151,16 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                                 }
                                 """))
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.title").value("Duplicate Localization Message"))
-                .andExpect(jsonPath("$.detail").value(
-                        "Localization message with key 'error.book.not_found' and language 'es' already exists."
-                ))
+                .andExpect(jsonPath("$.title").value("Duplicate Localization"))
+                .andExpect(jsonPath("$.detail").value("Localization with key 'error.book.not_found' and language 'es' already exists."))
                 .andExpect(jsonPath("$.messageKey").value("error.localization.duplicate"))
                 .andExpect(jsonPath("$.message").value("A localization message with the same key and language already exists."))
                 .andExpect(jsonPath("$.language").value("en"));
     }
 
     @Test
-    void createLocalizationMessageWithInvalidPayloadReturnsBadRequest() throws Exception {
-        mockMvc.perform(post("/api/localization-messages")
+    void createLocalizationWithInvalidPayloadReturnsBadRequest() throws Exception {
+        mockMvc.perform(post("/api/localizations")
                         .with(adminOauthUser())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -179,8 +182,8 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
     }
 
     @Test
-    void createLocalizationMessageWithUnsupportedLanguageReturnsBadRequest() throws Exception {
-        mockMvc.perform(post("/api/localization-messages")
+    void createLocalizationWithUnsupportedLanguageReturnsBadRequest() throws Exception {
+        mockMvc.perform(post("/api/localizations")
                         .with(adminOauthUser())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -200,8 +203,8 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
     }
 
     @Test
-    void updateLocalizationMessageReturnsUpdatedMessage() throws Exception {
-        mockMvc.perform(put("/api/localization-messages/{id}", bookNotFoundEn.getId())
+    void updateLocalizationReturnsUpdatedMessage() throws Exception {
+        mockMvc.perform(put("/api/localizations/{id}", bookNotFoundEn.getId())
                         .with(adminOauthUser())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -221,25 +224,25 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
     }
 
     @Test
-    void deleteLocalizationMessageWithoutAuthenticationReturnsUnauthorized() throws Exception {
-        mockMvc.perform(delete("/api/localization-messages/{id}", bookNotFoundEn.getId()))
+    void deleteLocalizationWithoutAuthenticationReturnsUnauthorized() throws Exception {
+        mockMvc.perform(delete("/api/localizations/{id}", bookNotFoundEn.getId()))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void deleteLocalizationMessageRemovesMessage() throws Exception {
-        mockMvc.perform(delete("/api/localization-messages/{id}", bookNotFoundEn.getId())
+    void deleteLocalizationRemovesMessage() throws Exception {
+        mockMvc.perform(delete("/api/localizations/{id}", bookNotFoundEn.getId())
                         .with(adminOauthUser()))
                 .andExpect(status().isNoContent());
 
-        mockMvc.perform(get("/api/localization-messages/{id}", bookNotFoundEn.getId()))
+        mockMvc.perform(get("/api/localizations/{id}", bookNotFoundEn.getId()))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.title").value("Localization Message Not Found"));
+                .andExpect(jsonPath("$.title").value("Localization Not Found"));
     }
 
     @Test
-    void createLocalizationMessageAsRegularUserReturnsForbidden() throws Exception {
-        mockMvc.perform(post("/api/localization-messages")
+    void createLocalizationAsRegularUserReturnsForbidden() throws Exception {
+        mockMvc.perform(post("/api/localizations")
                         .with(oauthUser())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -258,12 +261,16 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
     }
 
     @Test
-    void listLocalizationMessagesByLanguageReturnsMessagesForLanguage() throws Exception {
-        mockMvc.perform(get("/api/localization-messages/language/{language}", "es"))
+    void listLocalizationsCanFilterByLanguage() throws Exception {
+        mockMvc.perform(get("/api/localizations")
+                        .queryParam("language", "es")
+                        .queryParam("sort", "messageKey,asc"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(18))
-                .andExpect(jsonPath("$[0].language").value("es"))
-                .andExpect(jsonPath("$[0].messageKey").value("error.book.isbn_duplicate"))
-                .andExpect(jsonPath("$[17].messageKey").value("error.server.internal"));
+                .andExpect(jsonPath("$.content.length()").value(18))
+                .andExpect(jsonPath("$.content[0].language").value("es"))
+                .andExpect(jsonPath("$.content[0].messageKey").value("error.book.isbn_duplicate"))
+                .andExpect(jsonPath("$.content[17].messageKey").value("error.server.internal"))
+                .andExpect(jsonPath("$.totalElements").value(18))
+                .andExpect(jsonPath("$.totalPages").value(1));
     }
 }

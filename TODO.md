@@ -14,7 +14,7 @@ Completed work has been moved to `COMPLETED_TASKS.md` so this file stays focused
 
 1. Finish the pre-`1.0` release-readiness work so the project has a clear, defensible definition of what `1.0` means.
 2. Complete the CI/CD and deployment assets after the `1.0` release bar is explicit.
-3. Apply naming and package cleanup opportunistically when touching nearby code.
+3. Keep the public API stable after the last pre-`1.0` simplification pass unless a release-blocking clarity issue is still found.
 4. Keep Phase 11 explicitly deferred until the core roadmap is complete.
 
 ## Ordered Plan
@@ -53,13 +53,6 @@ Goal: make the `1.0` boundary mean a stable, documented, and intentionally scope
 - [ ] Add deployment-oriented troubleshooting for OAuth setup, PostgreSQL connectivity, and session persistence failures
 - [ ] Document an upgrade and rollback flow for schema migrations and versioned container releases
 
-#### Finish The Most Important Convention Fixes Before 1.0
-- [ ] Complete the highest-value naming and package-cleanup items that would otherwise become long-lived `1.x` debt
-- [ ] Prioritize names and package placements that currently misdescribe responsibilities or mix business and technical concerns
-- [ ] Keep the cleanup focused on changes that improve clarity without reopening settled API behavior
-
----
-
 ### Next: Phase 10 CI/CD & Deployment
 
 Status: Ready after the pre-`1.0` release bar is explicit
@@ -86,21 +79,6 @@ Status: Ready after the pre-`1.0` release bar is explicit
 - [ ] Create a monitoring stack for Prometheus, Grafana, and Alertmanager
 - [ ] Add scrape config, dashboards, and alert rules
 - [ ] Document monitoring setup and expected alerts
-
----
-
-## Opportunistic Cleanup
-
-Status: Planned
-
-Use this section when touching nearby code. Do not treat it as a blocker for unrelated feature work.
-
-### Naming And Package Simplification
-- [x] Align technical overview naming by renaming `HelloController` to `TechnicalOverviewController` and moving overview classes under `technical.info`
-- [x] Move feature-specific exceptions and seed/bootstrap classes closer to their business packages, keeping only cross-cutting infrastructure in `technical.*`
-- [x] Standardize user-area naming around `UserAccount*` and rename `AuthenticatedUserSecurityService` to `CurrentUserAccountService`
-- [x] Standardize initializer, search/specification, and API integration test naming so similar classes follow one pattern
-- [x] Remove empty or unused package placeholders such as `technical.config`
 
 ---
 
@@ -132,7 +110,7 @@ Status: Deferred until the core roadmap is complete
 
 ## Completed Work Archive
 
-See `COMPLETED_TASKS.md` for archived completed phases, including the completed Phase 4 language negotiation work, the completed Phase 5 security and audit work, the completed Phase 6 book API expansion, the completed Phase 7 caching and metrics work, the completed Phase 8 documentation and OpenAPI work, the completed Phase 9 coverage/performance work, the completed release-versioning workflow, and the completed architecture hardening phase.
+See `COMPLETED_TASKS.md` for archived completed phases, including the completed Phase 4 language negotiation work, the completed Phase 5 security and audit work, the completed Phase 6 book API expansion, the completed Phase 7 caching and metrics work, the completed Phase 8 documentation and OpenAPI work, the completed Phase 9 coverage/performance work, the completed release-versioning workflow, the completed architecture hardening phase, and the completed pre-`1.0` naming/API simplification pass.
 
 ## Quick Reference: Quality Gates
 

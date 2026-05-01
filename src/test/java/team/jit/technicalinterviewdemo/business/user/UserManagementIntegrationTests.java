@@ -106,7 +106,7 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
     void currentUserEndpointReturnsPersistedProfile() throws Exception {
-        mockMvc.perform(get("/api/users/me")
+        mockMvc.perform(get("/api/account")
                         .with(oauthUser("reader-user")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.provider").value("github"))
@@ -118,7 +118,7 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
     void preferredLanguageIsStoredAndUsedAsFallbackForAuthenticatedErrors() throws Exception {
-        mockMvc.perform(put("/api/users/me/preferred-language")
+        mockMvc.perform(put("/api/account/language")
                         .with(oauthUser("reader-user"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -145,7 +145,7 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
     void repeatedAuthenticatedRequestsRefreshLastLoginTimestamp() throws Exception {
-        mockMvc.perform(get("/api/users/me")
+        mockMvc.perform(get("/api/account")
                         .with(oauthUser("reader-user")))
                 .andExpect(status().isOk());
 
@@ -154,7 +154,7 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
         storedUser.setLastLoginAt(LocalDateTime.now(ZoneOffset.UTC).minusDays(2));
         userAccountRepository.saveAndFlush(storedUser);
 
-        mockMvc.perform(get("/api/users/me")
+        mockMvc.perform(get("/api/account")
                         .with(oauthUser("reader-user")))
                 .andExpect(status().isOk());
 
@@ -168,10 +168,10 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
         double createBefore = counterValue(USER_OPERATIONS, "operation", "create");
         double updatePreferenceBefore = counterValue(USER_OPERATIONS, "operation", "updatePreferredLanguage");
 
-        mockMvc.perform(get("/api/users/me")
+        mockMvc.perform(get("/api/account")
                         .with(oauthUser("reader-user")))
                 .andExpect(status().isOk());
-        mockMvc.perform(put("/api/users/me/preferred-language")
+        mockMvc.perform(put("/api/account/language")
                         .with(oauthUser("reader-user"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""

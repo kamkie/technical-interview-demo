@@ -16,8 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import team.jit.technicalinterviewdemo.business.book.Book;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
-import team.jit.technicalinterviewdemo.business.localization.LocalizationMessage;
-import team.jit.technicalinterviewdemo.business.localization.LocalizationMessageRepository;
+import team.jit.technicalinterviewdemo.business.localization.Localization;
+import team.jit.technicalinterviewdemo.business.localization.LocalizationRepository;
 import team.jit.technicalinterviewdemo.business.user.UserAccountRepository;
 import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
 import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
@@ -38,10 +38,10 @@ class AuditLogIntegrationTests extends AbstractMockMvcIntegrationTest {
     private BookRepository bookRepository;
 
     @Autowired
-    private LocalizationMessageRepository localizationMessageRepository;
+    private LocalizationRepository localizationMessageRepository;
 
     private Book cleanCode;
-    private LocalizationMessage bookNotFoundEn;
+    private Localization bookNotFoundEn;
 
     @BeforeEach
     void setUp() {
@@ -54,7 +54,7 @@ class AuditLogIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .ifPresent(localizationMessageRepository::delete);
 
         cleanCode = bookRepository.saveAndFlush(new Book("Clean Code", "Robert C. Martin", "9780132350884", 2008));
-        bookNotFoundEn = localizationMessageRepository.saveAndFlush(new LocalizationMessage(
+        bookNotFoundEn = localizationMessageRepository.saveAndFlush(new Localization(
                 EXISTING_LOCALIZATION_KEY,
                 "en",
                 "Seeded audit message.",
@@ -119,7 +119,7 @@ class AuditLogIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
     void localizationCreateUpdateAndDeleteProduceAuditLogsWithAdminActor() throws Exception {
-        mockMvc.perform(post("/api/localization-messages")
+        mockMvc.perform(post("/api/localizations")
                         .with(adminOauthUser())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -132,11 +132,11 @@ class AuditLogIntegrationTests extends AbstractMockMvcIntegrationTest {
                                 """.formatted(CREATED_LOCALIZATION_KEY)))
                 .andExpect(status().isCreated());
 
-        LocalizationMessage createdMessage = localizationMessageRepository
+        Localization createdMessage = localizationMessageRepository
                 .findByMessageKeyAndLanguage(CREATED_LOCALIZATION_KEY, "fr")
                 .orElseThrow();
 
-        mockMvc.perform(put("/api/localization-messages/{id}", bookNotFoundEn.getId())
+        mockMvc.perform(put("/api/localizations/{id}", bookNotFoundEn.getId())
                         .with(adminOauthUser())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -149,7 +149,7 @@ class AuditLogIntegrationTests extends AbstractMockMvcIntegrationTest {
                                 """))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(delete("/api/localization-messages/{id}", bookNotFoundEn.getId())
+        mockMvc.perform(delete("/api/localizations/{id}", bookNotFoundEn.getId())
                         .with(adminOauthUser()))
                 .andExpect(status().isNoContent());
 

@@ -8,6 +8,21 @@ Historical `v0.0.x` releases were backfilled as annotated tags from mainline git
 
 ## [Unreleased]
 
+## [v0.22.0] - 2026-05-01
+
+### Added
+- Added `GET /` as the public technical overview endpoint with build, dependency, runtime, and important configuration details.
+- Added collection-style localization filtering through `GET /api/localizations?messageKey=...&language=...`.
+
+### Changed
+- Renamed `HelloController` to `TechnicalOverviewController` and aligned the technical overview package structure around `technical.info`.
+- Renamed the authenticated-user singleton API from `/api/users/me` to `/api/account` and the language update route to `/api/account/language`.
+- Renamed the localization slice from `LocalizationMessage*` to `Localization*` across the codebase, tests, docs, and HTTP example collections.
+- Refreshed the generated documentation, approved OpenAPI baseline, and Gatling scenarios to match the simplified pre-`1.0` naming conventions.
+
+### Removed
+- Removed the specialized localization lookup routes `/api/localizations/key/{messageKey}/lang/{language}` and `/api/localizations/language/{language}` in favor of collection filters on `/api/localizations`.
+
 ## [v0.21.0] - 2026-04-30
 
 ### Added
@@ -47,7 +62,7 @@ Historical `v0.0.x` releases were backfilled as annotated tags from mainline git
 ## [v0.18.0] - 2026-04-30
 
 ### Added
-- Added append-only audit-log persistence for `Book` and `LocalizationMessage` create, update, and delete operations.
+- Added append-only audit-log persistence for `Book` and `Localization` create, update, and delete operations.
 - Added a Flyway migration for the `audit_logs` table and integration coverage for audited write flows.
 
 ### Changed
@@ -142,7 +157,7 @@ Historical `v0.0.x` releases were backfilled as annotated tags from mainline git
 ## [v0.7.0] - 2026-04-30
 
 ### Added
-- Added the `LocalizationMessage` entity, repository, service, and Flyway migration.
+- Added the `Localization` entity, repository, service, and Flyway migration.
 
 ## [v0.6.0] - 2026-04-30
 

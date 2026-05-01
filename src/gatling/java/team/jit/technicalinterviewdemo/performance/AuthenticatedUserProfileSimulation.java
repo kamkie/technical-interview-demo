@@ -27,7 +27,7 @@ public class AuthenticatedUserProfileSimulation extends Simulation {
     private final ScenarioBuilder scenarioBuilder = scenario("authenticated-user-profile")
             .exec(
                     http("current-user-profile")
-                            .get("/api/users/me")
+                            .get("/api/account")
                             .check(status().is(200))
                             .check(headerRegex("Content-Type", "application/json.*"))
             );

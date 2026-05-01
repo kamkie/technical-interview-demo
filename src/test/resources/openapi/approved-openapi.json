@@ -12,54 +12,21 @@
     "name" : "Categories",
     "description" : "Public category reads with ADMIN-only category management."
   }, {
-    "name" : "Users",
-    "description" : "Authenticated-user profile endpoints."
+    "name" : "Account",
+    "description" : "Authenticated account endpoints."
   }, {
-    "name" : "Hello",
-    "description" : "Simple public smoke-test endpoint."
+    "name" : "Localizations",
+    "description" : "Public localization reads with ADMIN-only management operations."
   }, {
-    "name" : "Localization Messages",
-    "description" : "Public localization lookups with ADMIN-only management operations."
+    "name" : "Technical",
+    "description" : "Public technical overview and smoke-test endpoints."
   } ],
   "paths" : {
-    "/api/users/me/preferred-language" : {
-      "put" : {
-        "tags" : [ "Users" ],
-        "summary" : "Update the current user's preferred language",
-        "description" : "Requires an authenticated session. Blank or null clears the preference.",
-        "operationId" : "updatePreferredLanguage",
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/UserLanguagePreferenceRequest"
-              }
-            }
-          },
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "*/*" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/UserProfileResponse"
-                }
-              }
-            }
-          }
-        },
-        "security" : [ {
-          "sessionCookie" : [ ]
-        } ]
-      }
-    },
-    "/api/localization-messages/{id}" : {
+    "/api/localizations/{id}" : {
       "get" : {
-        "tags" : [ "Localization Messages" ],
-        "summary" : "Get a localization message by id",
-        "description" : "Public endpoint for a single localization message.",
+        "tags" : [ "Localizations" ],
+        "summary" : "Get a localization by id",
+        "description" : "Public endpoint for a single localization.",
         "operationId" : "findById",
         "parameters" : [ {
           "name" : "id",
@@ -76,7 +43,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/LocalizationMessageResponse"
+                  "$ref" : "#/components/schemas/LocalizationResponse"
                 }
               }
             }
@@ -84,8 +51,8 @@
         }
       },
       "put" : {
-        "tags" : [ "Localization Messages" ],
-        "summary" : "Update a localization message",
+        "tags" : [ "Localizations" ],
+        "summary" : "Update a localization",
         "description" : "Requires an authenticated session with the ADMIN role.",
         "operationId" : "update",
         "parameters" : [ {
@@ -101,7 +68,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/LocalizationMessageRequest"
+                "$ref" : "#/components/schemas/LocalizationRequest"
               }
             }
           },
@@ -113,7 +80,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/LocalizationMessageResponse"
+                  "$ref" : "#/components/schemas/LocalizationResponse"
                 }
               }
             }
@@ -124,8 +91,8 @@
         } ]
       },
       "delete" : {
-        "tags" : [ "Localization Messages" ],
-        "summary" : "Delete a localization message",
+        "tags" : [ "Localizations" ],
+        "summary" : "Delete a localization",
         "description" : "Requires an authenticated session with the ADMIN role.",
         "operationId" : "delete",
         "parameters" : [ {
@@ -239,13 +206,61 @@
         } ]
       }
     },
-    "/api/localization-messages" : {
+    "/api/account/language" : {
+      "put" : {
+        "tags" : [ "Account" ],
+        "summary" : "Update the account language",
+        "description" : "Requires an authenticated session. Blank or null clears the preference.",
+        "operationId" : "updatePreferredLanguage",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UserAccountLanguageRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserAccountResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "sessionCookie" : [ ]
+        } ]
+      }
+    },
+    "/api/localizations" : {
       "get" : {
-        "tags" : [ "Localization Messages" ],
-        "summary" : "List localization messages",
-        "description" : "Public endpoint with pageable localization-message results.",
+        "tags" : [ "Localizations" ],
+        "summary" : "List localizations",
+        "description" : "Public endpoint with pageable results. Optional messageKey and language filters narrow the collection.",
         "operationId" : "findAll",
         "parameters" : [ {
+          "name" : "messageKey",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "language",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "pattern" : "^[a-zA-Z]{2}$",
+            "type" : "string"
+          }
+        }, {
           "name" : "page",
           "in" : "query",
           "description" : "Zero-based page index (0..N)",
@@ -284,7 +299,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/PageLocalizationMessageResponse"
+                  "$ref" : "#/components/schemas/PageLocalizationResponse"
                 }
               }
             }
@@ -292,15 +307,15 @@
         }
       },
       "post" : {
-        "tags" : [ "Localization Messages" ],
-        "summary" : "Create a localization message",
+        "tags" : [ "Localizations" ],
+        "summary" : "Create a localization",
         "description" : "Requires an authenticated session with the ADMIN role.",
         "operationId" : "create",
         "requestBody" : {
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/LocalizationMessageRequest"
+                "$ref" : "#/components/schemas/LocalizationRequest"
               }
             }
           },
@@ -312,7 +327,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/LocalizationMessageResponse"
+                  "$ref" : "#/components/schemas/LocalizationResponse"
                 }
               }
             }
@@ -545,7 +560,7 @@
     },
     "/hello" : {
       "get" : {
-        "tags" : [ "Hello" ],
+        "tags" : [ "Technical" ],
         "summary" : "Return Hello World",
         "description" : "Public endpoint for quick smoke testing.",
         "operationId" : "hello",
@@ -563,11 +578,11 @@
         }
       }
     },
-    "/api/users/me" : {
+    "/api/account" : {
       "get" : {
-        "tags" : [ "Users" ],
-        "summary" : "Get the current user profile",
-        "description" : "Requires an authenticated session and returns the persisted application user profile.",
+        "tags" : [ "Account" ],
+        "summary" : "Get the current account",
+        "description" : "Requires an authenticated session and returns the persisted application account.",
         "operationId" : "currentUser",
         "responses" : {
           "200" : {
@@ -575,7 +590,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/UserProfileResponse"
+                  "$ref" : "#/components/schemas/UserAccountResponse"
                 }
               }
             }
@@ -586,67 +601,19 @@
         } ]
       }
     },
-    "/api/localization-messages/language/{language}" : {
+    "/" : {
       "get" : {
-        "tags" : [ "Localization Messages" ],
-        "summary" : "List localization messages for one language",
-        "description" : "Public endpoint ordered by message key.",
-        "operationId" : "findAllByLanguage",
-        "parameters" : [ {
-          "name" : "language",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "pattern" : "^[a-zA-Z]{2}$",
-            "type" : "string"
-          }
-        } ],
+        "tags" : [ "Technical" ],
+        "summary" : "Return technical application overview",
+        "description" : "Public endpoint that combines build, git, dependency, runtime, and important configuration details.",
+        "operationId" : "overview",
         "responses" : {
           "200" : {
             "description" : "OK",
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "type" : "array",
-                  "items" : {
-                    "$ref" : "#/components/schemas/LocalizationMessageResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/localization-messages/key/{messageKey}/lang/{language}" : {
-      "get" : {
-        "tags" : [ "Localization Messages" ],
-        "summary" : "Lookup a localization message by key and language",
-        "description" : "Public exact-match lookup.",
-        "operationId" : "findByMessageKeyAndLanguage",
-        "parameters" : [ {
-          "name" : "messageKey",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "name" : "language",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "pattern" : "^[a-zA-Z]{2}$",
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "*/*" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/LocalizationMessageResponse"
+                  "$ref" : "#/components/schemas/TechnicalOverviewResponse"
                 }
               }
             }
@@ -657,77 +624,7 @@
   },
   "components" : {
     "schemas" : {
-      "UserLanguagePreferenceRequest" : {
-        "type" : "object",
-        "properties" : {
-          "preferredLanguage" : {
-            "type" : "string",
-            "description" : "Two-letter ISO 639-1 language code. Use null or blank to clear the preference.",
-            "example" : "pl"
-          }
-        },
-        "description" : "Payload for updating the current user's preferred language."
-      },
-      "UserProfileResponse" : {
-        "type" : "object",
-        "properties" : {
-          "id" : {
-            "type" : "integer",
-            "description" : "Database identifier.",
-            "format" : "int64",
-            "example" : 1
-          },
-          "provider" : {
-            "type" : "string",
-            "description" : "OAuth provider name.",
-            "example" : "github"
-          },
-          "login" : {
-            "type" : "string",
-            "description" : "GitHub login.",
-            "example" : "kamkie"
-          },
-          "displayName" : {
-            "type" : "string",
-            "description" : "Display name from the OAuth provider.",
-            "example" : "Kamil Kiewisz"
-          },
-          "email" : {
-            "type" : "string",
-            "description" : "Email address when available from the provider."
-          },
-          "preferredLanguage" : {
-            "type" : "string",
-            "description" : "Preferred two-letter language code used as the last localization fallback."
-          },
-          "roles" : {
-            "type" : "array",
-            "description" : "Roles assigned to the persisted user.",
-            "items" : {
-              "type" : "string",
-              "description" : "Granted role name.",
-              "example" : "USER"
-            }
-          },
-          "lastLoginAt" : {
-            "type" : "string",
-            "description" : "Timestamp of the latest authenticated request.",
-            "format" : "date-time"
-          },
-          "createdAt" : {
-            "type" : "string",
-            "description" : "Creation timestamp.",
-            "format" : "date-time"
-          },
-          "updatedAt" : {
-            "type" : "string",
-            "description" : "Last update timestamp.",
-            "format" : "date-time"
-          }
-        },
-        "description" : "Persisted application profile for the current authenticated user."
-      },
-      "LocalizationMessageRequest" : {
+      "LocalizationRequest" : {
         "required" : [ "language", "messageKey", "messageText" ],
         "type" : "object",
         "properties" : {
@@ -763,7 +660,7 @@
         },
         "description" : "Payload for creating or updating a localization message."
       },
-      "LocalizationMessageResponse" : {
+      "LocalizationResponse" : {
         "type" : "object",
         "properties" : {
           "id" : {
@@ -908,6 +805,76 @@
         },
         "description" : "Book category."
       },
+      "UserAccountLanguageRequest" : {
+        "type" : "object",
+        "properties" : {
+          "preferredLanguage" : {
+            "type" : "string",
+            "description" : "Two-letter ISO 639-1 language code. Use null or blank to clear the preference.",
+            "example" : "pl"
+          }
+        },
+        "description" : "Payload for updating the current user's preferred language."
+      },
+      "UserAccountResponse" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "description" : "Database identifier.",
+            "format" : "int64",
+            "example" : 1
+          },
+          "provider" : {
+            "type" : "string",
+            "description" : "OAuth provider name.",
+            "example" : "github"
+          },
+          "login" : {
+            "type" : "string",
+            "description" : "GitHub login.",
+            "example" : "kamkie"
+          },
+          "displayName" : {
+            "type" : "string",
+            "description" : "Display name from the OAuth provider.",
+            "example" : "Kamil Kiewisz"
+          },
+          "email" : {
+            "type" : "string",
+            "description" : "Email address when available from the provider."
+          },
+          "preferredLanguage" : {
+            "type" : "string",
+            "description" : "Preferred two-letter language code used as the last localization fallback."
+          },
+          "roles" : {
+            "type" : "array",
+            "description" : "Roles assigned to the persisted user.",
+            "items" : {
+              "type" : "string",
+              "description" : "Granted role name.",
+              "example" : "USER"
+            }
+          },
+          "lastLoginAt" : {
+            "type" : "string",
+            "description" : "Timestamp of the latest authenticated request.",
+            "format" : "date-time"
+          },
+          "createdAt" : {
+            "type" : "string",
+            "description" : "Creation timestamp.",
+            "format" : "date-time"
+          },
+          "updatedAt" : {
+            "type" : "string",
+            "description" : "Last update timestamp.",
+            "format" : "date-time"
+          }
+        },
+        "description" : "Persisted application profile for the current authenticated user."
+      },
       "CategoryCreateRequest" : {
         "required" : [ "name" ],
         "type" : "object",
@@ -961,7 +928,7 @@
         },
         "description" : "Payload for creating a new book."
       },
-      "PageLocalizationMessageResponse" : {
+      "PageLocalizationResponse" : {
         "type" : "object",
         "properties" : {
           "totalElements" : {
@@ -979,7 +946,7 @@
           "content" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/LocalizationMessageResponse"
+              "$ref" : "#/components/schemas/LocalizationResponse"
             }
           },
           "number" : {
@@ -996,11 +963,11 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "sort" : {
-            "$ref" : "#/components/schemas/SortObject"
-          },
           "pageable" : {
             "$ref" : "#/components/schemas/PageableObject"
+          },
+          "sort" : {
+            "$ref" : "#/components/schemas/SortObject"
           },
           "empty" : {
             "type" : "boolean"
@@ -1014,19 +981,19 @@
             "type" : "integer",
             "format" : "int64"
           },
-          "paged" : {
-            "type" : "boolean"
-          },
-          "sort" : {
-            "$ref" : "#/components/schemas/SortObject"
+          "pageSize" : {
+            "type" : "integer",
+            "format" : "int32"
           },
           "pageNumber" : {
             "type" : "integer",
             "format" : "int32"
           },
-          "pageSize" : {
-            "type" : "integer",
-            "format" : "int32"
+          "sort" : {
+            "$ref" : "#/components/schemas/SortObject"
+          },
+          "paged" : {
+            "type" : "boolean"
           },
           "unpaged" : {
             "type" : "boolean"
@@ -1082,14 +1049,212 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "sort" : {
-            "$ref" : "#/components/schemas/SortObject"
-          },
           "pageable" : {
             "$ref" : "#/components/schemas/PageableObject"
           },
+          "sort" : {
+            "$ref" : "#/components/schemas/SortObject"
+          },
           "empty" : {
             "type" : "boolean"
+          }
+        }
+      },
+      "BuildDetails" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "group" : {
+            "type" : "string"
+          },
+          "artifact" : {
+            "type" : "string"
+          },
+          "version" : {
+            "type" : "string"
+          },
+          "time" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        }
+      },
+      "ConfigurationDetails" : {
+        "type" : "object",
+        "properties" : {
+          "pagination" : {
+            "$ref" : "#/components/schemas/PaginationDetails"
+          },
+          "session" : {
+            "$ref" : "#/components/schemas/SessionDetails"
+          },
+          "observability" : {
+            "$ref" : "#/components/schemas/ObservabilityDetails"
+          },
+          "documentation" : {
+            "$ref" : "#/components/schemas/DocumentationDetails"
+          },
+          "security" : {
+            "$ref" : "#/components/schemas/SecurityDetails"
+          },
+          "shutdown" : {
+            "$ref" : "#/components/schemas/ShutdownDetails"
+          }
+        }
+      },
+      "DocumentationDetails" : {
+        "type" : "object",
+        "properties" : {
+          "html" : {
+            "type" : "string"
+          },
+          "openApiJson" : {
+            "type" : "string"
+          },
+          "openApiYaml" : {
+            "type" : "string"
+          },
+          "openApiVersion" : {
+            "type" : "string"
+          }
+        }
+      },
+      "GitDetails" : {
+        "type" : "object",
+        "properties" : {
+          "branch" : {
+            "type" : "string"
+          },
+          "commitId" : {
+            "type" : "string"
+          },
+          "shortCommitId" : {
+            "type" : "string"
+          },
+          "commitTime" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        }
+      },
+      "ObservabilityDetails" : {
+        "type" : "object",
+        "properties" : {
+          "exposedEndpoints" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "healthProbesEnabled" : {
+            "type" : "boolean"
+          },
+          "tracingSamplingProbability" : {
+            "type" : "number",
+            "format" : "double"
+          }
+        }
+      },
+      "PaginationDetails" : {
+        "type" : "object",
+        "properties" : {
+          "defaultPageSize" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "maxPageSize" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }
+      },
+      "RuntimeDetails" : {
+        "type" : "object",
+        "properties" : {
+          "applicationName" : {
+            "type" : "string"
+          },
+          "javaVersion" : {
+            "type" : "string"
+          },
+          "javaVendor" : {
+            "type" : "string"
+          },
+          "activeProfiles" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "SecurityDetails" : {
+        "type" : "object",
+        "properties" : {
+          "csrfEnabled" : {
+            "type" : "boolean"
+          },
+          "oauthProfileActive" : {
+            "type" : "boolean"
+          },
+          "oauthLoginPath" : {
+            "type" : "string"
+          }
+        }
+      },
+      "SessionDetails" : {
+        "type" : "object",
+        "properties" : {
+          "storeType" : {
+            "type" : "string"
+          },
+          "timeout" : {
+            "type" : "string"
+          },
+          "cookieName" : {
+            "type" : "string"
+          },
+          "cookieHttpOnly" : {
+            "type" : "boolean"
+          },
+          "cookieSameSite" : {
+            "type" : "string"
+          }
+        }
+      },
+      "ShutdownDetails" : {
+        "type" : "object",
+        "properties" : {
+          "serverShutdown" : {
+            "type" : "string"
+          },
+          "timeoutPerShutdownPhase" : {
+            "type" : "string"
+          }
+        }
+      },
+      "TechnicalOverviewResponse" : {
+        "type" : "object",
+        "properties" : {
+          "build" : {
+            "$ref" : "#/components/schemas/BuildDetails"
+          },
+          "git" : {
+            "$ref" : "#/components/schemas/GitDetails"
+          },
+          "runtime" : {
+            "$ref" : "#/components/schemas/RuntimeDetails"
+          },
+          "dependencies" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "string"
+            }
+          },
+          "configuration" : {
+            "$ref" : "#/components/schemas/ConfigurationDetails"
           }
         }
       }

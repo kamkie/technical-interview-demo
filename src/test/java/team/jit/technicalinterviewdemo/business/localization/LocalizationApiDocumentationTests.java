@@ -24,29 +24,29 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import team.jit.technicalinterviewdemo.testing.AbstractDocumentationIntegrationTest;
-import team.jit.technicalinterviewdemo.testing.LocalizationMessageTestData;
+import team.jit.technicalinterviewdemo.testing.LocalizationTestData;
 import team.jit.technicalinterviewdemo.testing.RestDocsIntegrationSpringBootTest;
 
 @RestDocsIntegrationSpringBootTest
 class LocalizationApiDocumentationTests extends AbstractDocumentationIntegrationTest {
 
     @Autowired
-    private LocalizationMessageRepository localizationMessageRepository;
+    private LocalizationRepository localizationRepository;
 
-    private LocalizationMessage bookNotFoundEn;
-    private LocalizationMessage bookNotFoundEs;
+    private Localization bookNotFoundEn;
+    private Localization bookNotFoundEs;
 
     @BeforeEach
     void setUp() {
-        LocalizationMessageTestData.DefaultLocalizationMessages messages =
-                LocalizationMessageTestData.reloadDefaultMessages(localizationMessageRepository);
+        LocalizationTestData.DefaultLocalizations messages =
+                LocalizationTestData.reloadDefaultMessages(localizationRepository);
         bookNotFoundEn = messages.bookNotFoundEn();
         bookNotFoundEs = messages.bookNotFoundEs();
     }
 
     @Test
-    void documentListLocalizationMessagesEndpoint() throws Exception {
-        mockMvc.perform(get("/api/localization-messages")
+    void documentListLocalizationsEndpoint() throws Exception {
+        mockMvc.perform(get("/api/localizations")
                         .queryParam("page", "0")
                         .queryParam("size", "2")
                         .queryParam("sort", "messageKey,asc")
@@ -55,8 +55,12 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
                 .andDo(documentEndpoint(
-                        "localization/list-localization-messages",
+                        "localization/list-localizations",
                         queryParameters(
+                                parameterWithName("messageKey").optional().description("Exact localization key filter."),
+                                parameterWithName("language").optional().description(
+                                        "Supported two-letter ISO 639-1 language code filter. Current values: `en`, `es`, `de`, `fr`, `pl`, `uk`, `no`."
+                                ),
                                 parameterWithName("page").optional().description("Zero-based page index."),
                                 parameterWithName("size").optional().description("Page size capped by the server."),
                                 parameterWithName("sort").optional().description(
@@ -65,8 +69,8 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                         ),
                         responseHeaders(commonResponseHeaders()),
                         relaxedResponseFields(
-                                fieldWithPath("content[].id").description("Localization message identifier."),
-                                fieldWithPath("content[].messageKey").description("Stable localization message key."),
+                                fieldWithPath("content[].id").description("Localization identifier."),
+                                fieldWithPath("content[].messageKey").description("Stable localization key."),
                                 fieldWithPath("content[].language").description("Two-letter ISO 639-1 language code."),
                                 fieldWithPath("content[].messageText").description("Localized message text."),
                                 fieldWithPath("content[].description").description("Optional description for maintainers."),
@@ -75,7 +79,7 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                                 subsectionWithPath("pageable").description("Pagination request metadata."),
                                 subsectionWithPath("sort").description("Applied sort metadata."),
                                 fieldWithPath("totalPages").description("Total number of pages."),
-                                fieldWithPath("totalElements").description("Total number of localization messages."),
+                                fieldWithPath("totalElements").description("Total number of localizations."),
                                 fieldWithPath("last").description("Whether this page is the last page."),
                                 fieldWithPath("size").description("Requested page size."),
                                 fieldWithPath("number").description("Current zero-based page index."),
@@ -87,15 +91,15 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
     }
 
     @Test
-    void documentGetLocalizationMessageByIdEndpoint() throws Exception {
-        mockMvc.perform(get("/api/localization-messages/{id}", bookNotFoundEs.getId()))
+    void documentGetLocalizationByIdEndpoint() throws Exception {
+        mockMvc.perform(get("/api/localizations/{id}", bookNotFoundEs.getId()))
                 .andExpect(status().isOk())
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
                 .andDo(documentEndpoint(
-                        "localization/get-localization-message",
+                        "localization/get-localization",
                         pathParameters(
-                                parameterWithName("id").description("Localization message identifier.")
+                                parameterWithName("id").description("Localization identifier.")
                         ),
                         responseHeaders(commonResponseHeaders()),
                         responseFields(responseFieldDescriptors())
@@ -103,25 +107,52 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
     }
 
     @Test
-    void documentGetLocalizationMessageByKeyAndLanguageEndpoint() throws Exception {
-        mockMvc.perform(get("/api/localization-messages/key/{messageKey}/lang/{language}", "error.request.invalid", "en"))
+    void documentListLocalizationsWithFiltersEndpoint() throws Exception {
+        mockMvc.perform(get("/api/localizations")
+                        .queryParam("messageKey", "error.request.invalid")
+                        .queryParam("language", "en"))
                 .andExpect(status().isOk())
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
                 .andDo(documentEndpoint(
-                        "localization/get-localization-message-by-key-and-language",
-                        pathParameters(
-                                parameterWithName("messageKey").description("Stable localization message key."),
-                                parameterWithName("language").description("Supported two-letter ISO 639-1 language code. Current values: `en`, `es`, `de`, `fr`, `pl`, `uk`, `no`.")
+                        "localization/list-localizations-filtered",
+                        queryParameters(
+                                parameterWithName("messageKey").description("Exact localization key filter."),
+                                parameterWithName("language").description(
+                                        "Supported two-letter ISO 639-1 language code filter. Current values: `en`, `es`, `de`, `fr`, `pl`, `uk`, `no`."
+                                ),
+                                parameterWithName("page").optional().description("Zero-based page index."),
+                                parameterWithName("size").optional().description("Page size capped by the server."),
+                                parameterWithName("sort").optional().description(
+                                        "Sort expression in the form `property,direction`. Repeat the parameter for multiple sort fields. Supported properties: `id`, `messageKey`, `language`, `createdAt`, `updatedAt`."
+                                )
                         ),
                         responseHeaders(commonResponseHeaders()),
-                        responseFields(responseFieldDescriptors())
+                        relaxedResponseFields(
+                                fieldWithPath("content[].id").description("Localization identifier."),
+                                fieldWithPath("content[].messageKey").description("Stable localization key."),
+                                fieldWithPath("content[].language").description("Two-letter ISO 639-1 language code."),
+                                fieldWithPath("content[].messageText").description("Localized message text."),
+                                fieldWithPath("content[].description").description("Optional description for maintainers."),
+                                fieldWithPath("content[].createdAt").description("Creation timestamp in UTC."),
+                                fieldWithPath("content[].updatedAt").description("Last update timestamp in UTC."),
+                                subsectionWithPath("pageable").description("Pagination request metadata."),
+                                subsectionWithPath("sort").description("Applied sort metadata."),
+                                fieldWithPath("totalPages").description("Total number of pages."),
+                                fieldWithPath("totalElements").description("Total number of matching localizations."),
+                                fieldWithPath("last").description("Whether this page is the last page."),
+                                fieldWithPath("size").description("Requested page size."),
+                                fieldWithPath("number").description("Current zero-based page index."),
+                                fieldWithPath("numberOfElements").description("Number of localizations returned in the current page."),
+                                fieldWithPath("first").description("Whether this page is the first page."),
+                                fieldWithPath("empty").description("Whether the page content is empty.")
+                        )
                 ));
     }
 
     @Test
-    void documentCreateLocalizationMessageEndpoint() throws Exception {
-        mockMvc.perform(post("/api/localization-messages")
+    void documentCreateLocalizationEndpoint() throws Exception {
+        mockMvc.perform(post("/api/localizations")
                         .with(adminOauthUser())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -136,10 +167,10 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
                 .andDo(documentEndpoint(
-                        "localization/create-localization-message",
+                        "localization/create-localization",
                         requestBody(),
                         requestFields(
-                                fieldWithPath("messageKey").description("Stable localization message key."),
+                                fieldWithPath("messageKey").description("Stable localization key."),
                                 fieldWithPath("language").description("Supported two-letter ISO 639-1 language code. Current values: `en`, `es`, `de`, `fr`, `pl`, `uk`, `no`."),
                                 fieldWithPath("messageText").description("Localized message text."),
                                 fieldWithPath("description").description("Optional maintainer-facing description.")
@@ -150,8 +181,8 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
     }
 
     @Test
-    void documentUpdateLocalizationMessageEndpoint() throws Exception {
-        mockMvc.perform(put("/api/localization-messages/{id}", bookNotFoundEn.getId())
+    void documentUpdateLocalizationEndpoint() throws Exception {
+        mockMvc.perform(put("/api/localizations/{id}", bookNotFoundEn.getId())
                         .with(adminOauthUser())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -166,13 +197,13 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
                 .andDo(documentEndpoint(
-                        "localization/update-localization-message",
+                        "localization/update-localization",
                         pathParameters(
-                                parameterWithName("id").description("Localization message identifier.")
+                                parameterWithName("id").description("Localization identifier.")
                         ),
                         requestBody(),
                         requestFields(
-                                fieldWithPath("messageKey").description("Stable localization message key."),
+                                fieldWithPath("messageKey").description("Stable localization key."),
                                 fieldWithPath("language").description("Supported two-letter ISO 639-1 language code. Current values: `en`, `es`, `de`, `fr`, `pl`, `uk`, `no`."),
                                 fieldWithPath("messageText").description("Updated localized message text."),
                                 fieldWithPath("description").description("Optional updated maintainer-facing description.")
@@ -183,48 +214,68 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
     }
 
     @Test
-    void documentDeleteLocalizationMessageEndpoint() throws Exception {
-        mockMvc.perform(delete("/api/localization-messages/{id}", bookNotFoundEn.getId())
+    void documentDeleteLocalizationEndpoint() throws Exception {
+        mockMvc.perform(delete("/api/localizations/{id}", bookNotFoundEn.getId())
                         .with(adminOauthUser()))
                 .andExpect(status().isNoContent())
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
                 .andDo(documentEndpoint(
-                        "localization/delete-localization-message",
+                        "localization/delete-localization",
                         pathParameters(
-                                parameterWithName("id").description("Localization message identifier.")
+                                parameterWithName("id").description("Localization identifier.")
                         ),
                         responseHeaders(commonResponseHeaders())
                 ));
     }
 
     @Test
-    void documentListLocalizationMessagesByLanguageEndpoint() throws Exception {
-        mockMvc.perform(get("/api/localization-messages/language/{language}", "es"))
+    void documentListLocalizationsByLanguageEndpoint() throws Exception {
+        mockMvc.perform(get("/api/localizations")
+                        .queryParam("language", "es")
+                        .queryParam("sort", "messageKey,asc"))
                 .andExpect(status().isOk())
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
                 .andDo(documentEndpoint(
-                        "localization/list-localization-messages-by-language",
-                        pathParameters(
-                                parameterWithName("language").description("Supported two-letter ISO 639-1 language code. Current values: `en`, `es`, `de`, `fr`, `pl`, `uk`, `no`.")
+                        "localization/list-localizations-by-language",
+                        queryParameters(
+                                parameterWithName("messageKey").optional().description("Exact localization key filter."),
+                                parameterWithName("language").description(
+                                        "Supported two-letter ISO 639-1 language code filter. Current values: `en`, `es`, `de`, `fr`, `pl`, `uk`, `no`."
+                                ),
+                                parameterWithName("page").optional().description("Zero-based page index."),
+                                parameterWithName("size").optional().description("Page size capped by the server."),
+                                parameterWithName("sort").optional().description(
+                                        "Sort expression in the form `property,direction`. Repeat the parameter for multiple sort fields. Supported properties: `id`, `messageKey`, `language`, `createdAt`, `updatedAt`."
+                                )
                         ),
                         responseHeaders(commonResponseHeaders()),
                         relaxedResponseFields(
-                                fieldWithPath("[].id").description("Localization message identifier."),
-                                fieldWithPath("[].messageKey").description("Stable localization message key."),
-                                fieldWithPath("[].language").description("Two-letter ISO 639-1 language code."),
-                                fieldWithPath("[].messageText").description("Localized message text."),
-                                fieldWithPath("[].description").description("Optional description for maintainers."),
-                                fieldWithPath("[].createdAt").description("Creation timestamp in UTC."),
-                                fieldWithPath("[].updatedAt").description("Last update timestamp in UTC.")
+                                fieldWithPath("content[].id").description("Localization identifier."),
+                                fieldWithPath("content[].messageKey").description("Stable localization key."),
+                                fieldWithPath("content[].language").description("Two-letter ISO 639-1 language code."),
+                                fieldWithPath("content[].messageText").description("Localized message text."),
+                                fieldWithPath("content[].description").description("Optional description for maintainers."),
+                                fieldWithPath("content[].createdAt").description("Creation timestamp in UTC."),
+                                fieldWithPath("content[].updatedAt").description("Last update timestamp in UTC."),
+                                subsectionWithPath("pageable").description("Pagination request metadata."),
+                                subsectionWithPath("sort").description("Applied sort metadata."),
+                                fieldWithPath("totalPages").description("Total number of pages."),
+                                fieldWithPath("totalElements").description("Total number of matching localizations."),
+                                fieldWithPath("last").description("Whether this page is the last page."),
+                                fieldWithPath("size").description("Requested page size."),
+                                fieldWithPath("number").description("Current zero-based page index."),
+                                fieldWithPath("numberOfElements").description("Number of localizations returned in the current page."),
+                                fieldWithPath("first").description("Whether this page is the first page."),
+                                fieldWithPath("empty").description("Whether the page content is empty.")
                         )
                 ));
     }
 
     @Test
-    void documentCreateLocalizationMessageValidationError() throws Exception {
-        mockMvc.perform(post("/api/localization-messages")
+    void documentCreateLocalizationValidationError() throws Exception {
+        mockMvc.perform(post("/api/localizations")
                         .with(adminOauthUser())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -239,7 +290,7 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
                 .andDo(documentEndpoint(
-                        "errors/create-localization-message-validation-failed",
+                        "errors/create-localization-validation-failed",
                         requestBody(),
                         responseHeaders(commonResponseHeaders()),
                         relaxedResponseFields(problemResponseFieldsWithFieldErrors())
@@ -247,8 +298,8 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
     }
 
     @Test
-    void documentCreateLocalizationMessageUnsupportedLanguageError() throws Exception {
-        mockMvc.perform(post("/api/localization-messages")
+    void documentCreateLocalizationUnsupportedLanguageError() throws Exception {
+        mockMvc.perform(post("/api/localizations")
                         .with(adminOauthUser())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -263,7 +314,7 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
                 .andDo(documentEndpoint(
-                        "errors/create-localization-message-unsupported-language",
+                        "errors/create-localization-unsupported-language",
                         requestBody(),
                         responseHeaders(commonResponseHeaders()),
                         relaxedResponseFields(problemResponseFields())
@@ -271,8 +322,8 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
     }
 
     @Test
-    void documentCreateLocalizationMessageDuplicateError() throws Exception {
-        mockMvc.perform(post("/api/localization-messages")
+    void documentCreateLocalizationDuplicateError() throws Exception {
+        mockMvc.perform(post("/api/localizations")
                         .with(adminOauthUser())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -287,7 +338,7 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
                 .andDo(documentEndpoint(
-                        "errors/create-localization-message-duplicate",
+                        "errors/create-localization-duplicate",
                         requestBody(),
                         responseHeaders(commonResponseHeaders()),
                         relaxedResponseFields(problemResponseFields())
@@ -295,15 +346,15 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
     }
 
     @Test
-    void documentGetLocalizationMessageNotFoundError() throws Exception {
-        mockMvc.perform(get("/api/localization-messages/{id}", 9999))
+    void documentGetLocalizationNotFoundError() throws Exception {
+        mockMvc.perform(get("/api/localizations/{id}", 9999))
                 .andExpect(status().isNotFound())
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
                 .andDo(documentEndpoint(
-                        "errors/get-localization-message-not-found",
+                        "errors/get-localization-not-found",
                         pathParameters(
-                                parameterWithName("id").description("Localization message identifier that does not exist.")
+                                parameterWithName("id").description("Localization identifier that does not exist.")
                         ),
                         responseHeaders(commonResponseHeaders()),
                         relaxedResponseFields(problemResponseFields())
@@ -311,8 +362,8 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
     }
     private org.springframework.restdocs.payload.FieldDescriptor[] responseFieldDescriptors() {
         return new org.springframework.restdocs.payload.FieldDescriptor[]{
-                fieldWithPath("id").description("Localization message identifier."),
-                fieldWithPath("messageKey").description("Stable localization message key."),
+                fieldWithPath("id").description("Localization identifier."),
+                fieldWithPath("messageKey").description("Stable localization key."),
                 fieldWithPath("language").description("Supported two-letter ISO 639-1 language code. Current values: `en`, `es`, `de`, `fr`, `pl`, `uk`, `no`."),
                 fieldWithPath("messageText").description("Localized message text."),
                 fieldWithPath("description").description("Optional description for maintainers."),
@@ -320,6 +371,4 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                 fieldWithPath("updatedAt").description("Last update timestamp in UTC.")
         };
     }
-
 }
-

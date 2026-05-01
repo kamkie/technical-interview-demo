@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
 import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
-import team.jit.technicalinterviewdemo.business.localization.LocalizationMessageRepository;
+import team.jit.technicalinterviewdemo.business.localization.LocalizationRepository;
 import team.jit.technicalinterviewdemo.business.user.UserAccountRepository;
 import team.jit.technicalinterviewdemo.business.user.UserRole;
 
@@ -31,7 +31,7 @@ public class ApplicationMetrics {
             MeterRegistry meterRegistry,
             BookRepository bookRepository,
             CategoryRepository categoryRepository,
-            LocalizationMessageRepository localizationMessageRepository,
+            LocalizationRepository localizationRepository,
             UserAccountRepository userAccountRepository
     ) {
         this.meterRegistry = meterRegistry;
@@ -41,7 +41,7 @@ public class ApplicationMetrics {
         Gauge.builder(CATEGORY_TOTAL, categoryRepository, CategoryRepository::count)
                 .description("Current number of categories.")
                 .register(meterRegistry);
-        Gauge.builder(LOCALIZATION_TOTAL, localizationMessageRepository, LocalizationMessageRepository::count)
+        Gauge.builder(LOCALIZATION_TOTAL, localizationRepository, LocalizationRepository::count)
                 .description("Current number of localization messages.")
                 .register(meterRegistry);
         Gauge.builder(USER_TOTAL, userAccountRepository, UserAccountRepository::count)

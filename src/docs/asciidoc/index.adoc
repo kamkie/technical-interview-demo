@@ -54,7 +54,7 @@ The values below are loaded from `{build-info-path}` during the Asciidoctor buil
 - xref:technical-overview-controller.adoc[TechnicalOverviewController API]
 - xref:book-controller.adoc[BookController API]
 - xref:category-controller.adoc[CategoryController API]
-- xref:localization-message-controller.adoc[LocalizationMessageController API]
+- xref:localization-controller.adoc[LocalizationController API]
 - xref:technical-endpoints.adoc[Technical Endpoints]
 
 == Build And Runtime Notes

@@ -234,8 +234,8 @@ Role behavior:
 - every authenticated GitHub login is persisted as an application user with the `USER` role
 - logins listed in `ADMIN_LOGINS` also receive the `ADMIN` role
 - category creation and localization-message management require `ADMIN`
-- the current persisted user profile is available at `GET /api/users/me`
-- preferred-language updates are available at `PUT /api/users/me/preferred-language`
+- the current persisted user profile is available at `GET /api/account`
+- preferred-language updates are available at `PUT /api/account/language`
 
 ## Troubleshooting
 

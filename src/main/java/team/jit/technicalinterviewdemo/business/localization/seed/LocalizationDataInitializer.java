@@ -6,22 +6,22 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import team.jit.technicalinterviewdemo.business.localization.LocalizationMessage;
-import team.jit.technicalinterviewdemo.business.localization.LocalizationMessageRepository;
+import team.jit.technicalinterviewdemo.business.localization.Localization;
+import team.jit.technicalinterviewdemo.business.localization.LocalizationRepository;
 
 @Slf4j
 @Configuration
-public class LocalizationMessageDataInitializer {
+public class LocalizationDataInitializer {
 
     @Bean
-    CommandLineRunner seedLocalizationMessages(LocalizationMessageRepository localizationMessageRepository) {
+    CommandLineRunner seedLocalizations(LocalizationRepository localizationMessageRepository) {
         return args -> {
-            for (LocalizationMessage seedMessage : LocalizationMessageSeedData.defaultMessages()) {
+            for (Localization seedMessage : LocalizationSeedData.defaultMessages()) {
                 if (localizationMessageRepository.existsByMessageKeyAndLanguage(seedMessage.getMessageKey(), seedMessage.getLanguage())) {
                     continue;
                 }
 
-                LocalizationMessage savedMessage = localizationMessageRepository.save(seedMessage);
+                Localization savedMessage = localizationMessageRepository.save(seedMessage);
                 log.info(
                         "Seeded localization message id={} key={} language={}",
                         savedMessage.getId(),

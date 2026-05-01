@@ -2,11 +2,11 @@ package team.jit.technicalinterviewdemo.business.localization;
 
 import java.util.List;
 import java.util.Set;
-import team.jit.technicalinterviewdemo.business.localization.seed.LocalizationMessageSeedData;
+import team.jit.technicalinterviewdemo.business.localization.seed.LocalizationSeedData;
 
 public final class SupportedLanguages {
 
-    private static final List<String> VALUES = LocalizationMessageSeedData.supportedLanguages();
+    private static final List<String> VALUES = LocalizationSeedData.supportedLanguages();
     private static final Set<String> VALUE_SET = Set.copyOf(VALUES);
 
     private SupportedLanguages() {

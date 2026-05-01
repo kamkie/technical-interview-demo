@@ -20,6 +20,7 @@ Use `TODO.md` for active planning and `COMPLETED_TASKS.md` for implementation hi
 - Append-only audit logging for state-changing operations
 - Developer setup and contribution guides
 - OpenAPI contract publication and compatibility gating
+- Pre-`1.0` endpoint, package, and class naming simplification for account, localization, and technical overview APIs
 - Release versioning and changelog workflow
 
 ## Archived Completed Work
@@ -77,12 +78,12 @@ Tag: `v0.1.0`
 
 ### Phase 3: Internationalization (i18n) & Localization Messages
 
-#### 3.1 Create LocalizationMessage Entity
+#### 3.1 Create Localization Entity
 
 Status: Completed
 
 Summary:
-- Added `LocalizationMessage` entity, repository, service, and not-found exception.
+- Added `Localization` entity, repository, service, and not-found exception.
 - Added Flyway migration for the `localization_messages` table.
 - Added integration coverage for lookup and fallback behavior.
 
@@ -120,7 +121,7 @@ Tag: `v0.9.0`
 Status: Completed
 
 Summary:
-- Updated `ApiExceptionHandler` to resolve localized messages through `LocalizationMessageService`.
+- Updated `ApiExceptionHandler` to resolve localized messages through `LocalizationService`.
 - Added `RequestLanguageResolver` with `lang` override and `Accept-Language` support.
 - Added `messageKey`, localized `message`, and resolved `language` to `ProblemDetail` responses.
 - Added and documented tests for header-based negotiation, explicit override, and English fallback.
@@ -165,7 +166,7 @@ Status: Completed
 
 Summary:
 - Added persisted application users, role storage, and authenticated-user synchronization on login.
-- Added `GET /api/users/me` and `PUT /api/users/me/preferred-language`.
+- Added `GET /api/account` and `PUT /api/account/language`.
 - Added admin-role enforcement for category and localization management plus user-specific Micrometer metrics.
 - Updated localization fallback so persisted user preference is used when a request does not explicitly choose a language.
 
@@ -178,7 +179,7 @@ Status: Completed
 
 Summary:
 - Added the append-only `AuditLog` entity, repository, service, and Flyway migration.
-- Recorded audit entries for `Book` and `LocalizationMessage` create, update, and delete operations.
+- Recorded audit entries for `Book` and `Localization` create, update, and delete operations.
 - Stored the acting persisted user, actor login snapshot, summary, and timestamp for each audited change.
 - Added integration tests covering audit-log creation for regular-user and admin write flows.
 
@@ -247,7 +248,7 @@ Tag: `v0.14.0`
 Status: Completed
 
 Summary:
-- Documented the persisted user model, roles, and `/api/users/me` profile endpoints across the human-facing docs, AI instructions, and generated docs overview.
+- Documented the persisted user model, roles, and `/api/account` profile endpoints across the human-facing docs, AI instructions, and generated docs overview.
 - Added reviewer-facing OAuth/session guidance together with the OpenAPI contract and baseline refresh workflow.
 - Kept the roadmap notes aligned with the now-complete OpenAPI documentation work.
 
@@ -339,6 +340,19 @@ Summary:
 
 Commit: `8bf223a`
 Tag: `v0.21.0`
+
+### Pre-1.0 API & Naming Simplification
+
+Status: Completed
+
+Summary:
+- Renamed the technical overview surface around `TechnicalOverviewController`, kept `/hello`, and added `/` as the public technical overview endpoint.
+- Standardized user-area naming around `UserAccount*` and simplified the singleton authenticated-user API to `GET /api/account` and `PUT /api/account/language`.
+- Renamed the localization slice from `LocalizationMessage*` to `Localization*` and flattened localization reads onto `/api/localizations` with `messageKey` and `language` query filters instead of special-case lookup paths.
+- Updated generated docs, HTTP examples, OpenAPI baseline, performance scenarios, and supporting tests to match the simplified pre-`1.0` contract.
+
+Commit: release commit tagged `v0.22.0`
+Tag: `v0.22.0`
 
 ## Roadmap Maintenance Notes
 

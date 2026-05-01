@@ -17,14 +17,14 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import team.jit.technicalinterviewdemo.business.book.Book;
-import team.jit.technicalinterviewdemo.business.localization.LocalizationMessage;
-import team.jit.technicalinterviewdemo.business.localization.LocalizationMessageService;
+import team.jit.technicalinterviewdemo.business.localization.Localization;
+import team.jit.technicalinterviewdemo.business.localization.LocalizationService;
 
 @ExtendWith(MockitoExtension.class)
 class ApiExceptionHandlerTests {
 
     @Mock
-    private LocalizationMessageService localizationMessageService;
+    private LocalizationService localizationMessageService;
 
     private ApiExceptionHandler apiExceptionHandler;
 
@@ -113,7 +113,7 @@ class ApiExceptionHandlerTests {
         return request;
     }
 
-    private LocalizationMessage localizedMessage(String messageKey, String messageText) {
-        return new LocalizationMessage(messageKey, "pl", messageText, null);
+    private Localization localizedMessage(String messageKey, String messageText) {
+        return new Localization(messageKey, "pl", messageText, null);
     }
 }

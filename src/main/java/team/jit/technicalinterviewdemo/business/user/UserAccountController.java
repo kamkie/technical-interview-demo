@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import team.jit.technicalinterviewdemo.technical.docs.OpenApiConfiguration;
 
 @RestController
-@RequestMapping("/api/users/me")
-@Tag(name = "Users", description = "Authenticated-user profile endpoints.")
+@RequestMapping("/api/account")
+@Tag(name = "Account", description = "Authenticated account endpoints.")
 public class UserAccountController {
 
     private final UserAccountService userAccountService;
@@ -24,8 +24,8 @@ public class UserAccountController {
 
     @GetMapping
     @Operation(
-            summary = "Get the current user profile",
-            description = "Requires an authenticated session and returns the persisted application user profile.",
+            summary = "Get the current account",
+            description = "Requires an authenticated session and returns the persisted application account.",
             security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
     )
     public ResponseEntity<UserAccountResponse> currentUser() {
@@ -33,14 +33,14 @@ public class UserAccountController {
         return ResponseEntity.ok(payload);
     }
 
-    @PutMapping("/preferred-language")
+    @PutMapping("/language")
     @Operation(
-            summary = "Update the current user's preferred language",
+            summary = "Update the account language",
             description = "Requires an authenticated session. Blank or null clears the preference.",
             security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
     )
     public ResponseEntity<UserAccountResponse> updatePreferredLanguage(
-            @RequestBody UserAccountLanguagePreferenceRequest request
+            @RequestBody UserAccountLanguageRequest request
     ) {
         UserAccountResponse payload = userAccountService.updatePreferredLanguage(request.preferredLanguage());
         return ResponseEntity.ok(payload);

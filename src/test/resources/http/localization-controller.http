@@ -1,0 +1,65 @@
+# IntelliJ HTTP Client examples for technical-interview-demo
+# Localization writes require ADMIN and an authenticated session.
+
+@baseUrl = http://localhost:8080
+@sessionCookie = paste-technical-interview-demo-session-here
+@localizationId = 1
+@writeLocalizationId = 0
+@demoMessageKey = info.book.created.demo-change-me-if-rerunning
+
+### LocalizationController - list localizations with pagination and sorting
+GET {{baseUrl}}/api/localizations?page=0&size=5&sort=messageKey,asc&sort=language,asc
+Accept: application/json
+
+### LocalizationController - filter localizations by key and language and capture the first id
+GET {{baseUrl}}/api/localizations?messageKey=error.book.not_found&language=en
+Accept: application/json
+
+> {%
+if (response.status === 200 && response.body.content.length > 0) {
+  client.global.set("localizationId", String(response.body.content[0].id));
+}
+%}
+
+### LocalizationController - get localization message by id
+GET {{baseUrl}}/api/localizations/{{localizationId}}
+Accept: application/json
+
+### LocalizationController - list messages for one language
+GET {{baseUrl}}/api/localizations?language=es&sort=messageKey,asc
+Accept: application/json
+
+### LocalizationController - create localization (ADMIN + authenticated session)
+POST {{baseUrl}}/api/localizations
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "messageKey": "{{demoMessageKey}}",
+  "language": "fr",
+  "messageText": "Le livre a ete cree.",
+  "description": "French success message for demo requests."
+}
+> {%
+if (response.status === 201) {
+  client.global.set("writeLocalizationId", String(response.body.id));
+}
+%}
+
+### LocalizationController - update the localization message created above (run create first)
+PUT {{baseUrl}}/api/localizations/{{writeLocalizationId}}
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "messageKey": "{{demoMessageKey}}",
+  "language": "fr",
+  "messageText": "Le livre a ete cree avec succes.",
+  "description": "Updated French success message for demo requests."
+}
+
+### LocalizationController - delete the localization created above (run create first)
+DELETE {{baseUrl}}/api/localizations/{{writeLocalizationId}}
+Cookie: technical-interview-demo-session={{sessionCookie}}

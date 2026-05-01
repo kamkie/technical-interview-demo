@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 @Schema(description = "Payload for creating or updating a localization message.")
-public record LocalizationMessageRequest(
+public record LocalizationRequest(
         @Schema(description = "Stable message key managed by the application.", example = "error.request.resource_not_found")
         @NotBlank(message = "messageKey is required")
         @Pattern(regexp = "^[a-z0-9._-]+$", message = "messageKey must match ^[a-z0-9._-]+$")
