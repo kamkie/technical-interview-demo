@@ -243,6 +243,12 @@
     - result: passed with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`
   - `.\gradlew.bat externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo`
     - result: passed with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`; the smoke environment reached readiness, Flyway schema history was verified, and the 5 external smoke tests passed
+- Release preparation on 2026-05-02:
+  - updated `CHANGELOG.md` with the `v1.0.1` release section and reset `## [Unreleased]`
+  - updated `ROADMAP.md` so the completed post-`1.0` operational-readiness work is no longer tracked as active roadmap work
+  - archived this executed plan under `ai/archive/` as part of the release change
+  - reran `.\gradlew.bat build` from `main` for the release candidate before creating the release commit and annotated tag
+    - result: passed with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`
 - Scope checks:
   - no OpenAPI baseline refresh was needed
   - no `gatlingBenchmark` rerun was needed because execution stayed documentation-only

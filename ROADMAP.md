@@ -12,25 +12,11 @@ Keep this file focused on work that is still planned or in progress.
 
 ## Current Priorities
 
-1. Tighten post-`1.0` release governance and operational documentation around the now-stable demo contract.
-2. Document healthy runtime expectations, deployment troubleshooting, and upgrade/rollback guidance for maintained releases.
-3. Keep optional future enhancements explicitly deferred until those operational gaps are closed.
+1. No active implementation roadmap item is open right now; add the next item only after it has a concrete spec.
 
 ## Ordered Plan
 
-### Now: Post-1.0 Operational Readiness
-
-Status: Planned
-
-Goal: keep the released `1.x` demo contract easy to operate, review, and evolve without reopening the completed `1.0` scope decisions.
-
-#### Finalize Release Governance
-- [ ] Add a release checklist for Flyway migration review, OpenAPI compatibility, benchmark review, changelog update, and tagging
-
-#### Document Operational Readiness
-- [ ] Document what healthy runtime behavior looks like for health, readiness, metrics, and audit logging
-- [ ] Add deployment-oriented troubleshooting for OAuth setup, PostgreSQL connectivity, and session persistence failures
-- [ ] Document an upgrade and rollback flow for schema migrations and versioned container releases
+No active planned work is tracked here after the `v1.0.1` operational-readiness release. Add the next concrete item when it is ready to implement.
 
 ---
 
