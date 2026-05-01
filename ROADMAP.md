@@ -43,6 +43,9 @@ Goal: make the `1.0` boundary mean a stable, documented, and intentionally scope
 - [ ] Document the intended production posture for session cookies, OAuth login, admin bootstrap, and trusted deployment topology
 
 #### Add Release-Grade Runtime Verification
+- [ ] Make the `release.yml` GitHub Actions workflow create a GitHub Release with release notes pulled from `CHANGELOG.md` and a link to the published Docker image
+- [ ] Add smoke tests that run from Gradle via a separate source set, target an externally running application, and stay out of the standard test lifecycle
+- [ ] Run benchmark tests from a dedicated Gradle task instead of the PowerShell wrapper script
 - [ ] Review the new container smoke validation and keep it aligned with release expectations for the packaged image
 - [ ] Review the new deployment manifests, Helm chart, and monitoring assets against the final `1.0` security and operational defaults
 - [ ] Add a release checklist for Flyway migration review, OpenAPI compatibility, benchmark review, changelog update, and tagging
