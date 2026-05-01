@@ -44,6 +44,22 @@ Inspect repository state before editing release metadata:
 
 If the implementation is incomplete, specs are not aligned, the build is failing, or the release candidate is not on `main`, do not make a release.
 
+## Maintainer Release Checklist
+
+Before creating an annotated release tag, confirm all of these on `main`:
+
+1. review any new Flyway migration files under `src/main/resources/db/migration/` and confirm they are intentional for the target version
+2. confirm `.\gradlew.bat build` passed for the exact release candidate
+3. confirm OpenAPI compatibility still passes as part of the standard build and no unreviewed baseline refresh slipped in
+4. decide whether `.\gradlew.bat gatlingBenchmark` is required because the change touched book search/list behavior, localization lookup behavior, or OAuth/session startup behavior
+5. move the intended `CHANGELOG.md` entries into the versioned release section
+6. update `ROADMAP.md` to remove the completed released work from the active roadmap
+7. archive the executed `ai/PLAN_*.md` file and update moved-path references in the same change
+8. create the annotated tag only after the release commit exists locally on `main`
+9. after push, verify the remote accepted both `main` and the tag, the `Release` workflow passed, the GitHub Release was created, and GHCR published both:
+   - the semantic tag image `ghcr.io/<owner>/<repo>:vMAJOR.MINOR.PATCH`
+   - the immutable short-SHA image `ghcr.io/<owner>/<repo>:sha-<12-char-commit>`
+
 ## Choosing The Version
 
 Use semantic version tags in the form `vMAJOR.MINOR.PATCH`.
@@ -115,7 +131,7 @@ When push is requested:
 2. push the annotated tag
 3. verify the remote accepted both updates
 4. monitor the tag-driven `Release` workflow until `./gradlew externalSmokeTest` passes for the tagged image and both container-image tags plus the GitHub Release are published
-5. confirm the GitHub Release body matches the exact `## [vMAJOR.MINOR.PATCH]` section from `CHANGELOG.md` and includes the tag image reference, SHA image reference, and package-page link
+5. confirm the GitHub Release body matches the exact `## [vMAJOR.MINOR.PATCH]` section from `CHANGELOG.md` and includes the tag image reference, short-SHA image reference, and package-page link
 6. remove temporary worktrees and branches that were used only to execute the released plan, after confirming their changes are already integrated onto `main`
 
 Do not assume a remote push is always desired just because a local release tag exists.

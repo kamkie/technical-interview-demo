@@ -7,6 +7,9 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Changed
+- Added a concrete post-`1.0` maintainer release checklist across the AI release workflow, contributor guidance, and the human-facing release model, including Flyway review, benchmark-decision guidance, and verification of the immutable short-SHA image tag.
+
 ## [v1.0.0] - 2026-05-02
 
 ### Changed

@@ -142,6 +142,9 @@ Additional change-sensitive checks:
 - keep release numbers increasing in `git log --first-parent` order
 - record human-facing release history in `CHANGELOG.md`
 - tag-driven releases publish the matching `CHANGELOG.md` version section as GitHub Release notes
+- maintainers prepare releases only from validated `main`
+- before tagging, maintainers review new Flyway migrations, confirm whether `gatlingBenchmark` is required, and complete changelog/roadmap/plan cleanup
+- after pushing a release tag, maintainers verify the remote workflow published both the semantic image tag and the immutable short-SHA image tag
 
 ## CI/CD And Deployment
 
@@ -150,7 +153,7 @@ Supported delivery path:
 - GitHub Actions is the repository CI/CD platform
 - pull requests to `main` and pushes to `main` run the `CI` workflow, which executes `./gradlew build` and `./gradlew externalSmokeTest`
 - Dependabot opens grouped weekly update PRs for Gradle, GitHub Actions, and Docker, and those PRs are expected to pass the same `CI` workflow before merge
-- semantic version tags trigger the `Release` workflow, which builds the tagged image with Gradle, validates it with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry as `ghcr.io/<owner>/<repo>:<tag>` and `ghcr.io/<owner>/<repo>:sha-<commit>`, then creates the matching GitHub Release from `CHANGELOG.md`
+- semantic version tags trigger the `Release` workflow, which builds the tagged image with Gradle, validates it with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry as `ghcr.io/<owner>/<repo>:<tag>` and `ghcr.io/<owner>/<repo>:sha-<12-char-commit>`, then creates the matching GitHub Release from `CHANGELOG.md`
 - deployment artifacts are provided as:
   - Docker image
   - vendor-neutral Kubernetes manifests under `k8s/base` with a local overlay under `k8s/overlays/local`

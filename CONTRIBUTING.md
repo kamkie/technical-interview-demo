@@ -98,6 +98,18 @@ Branch protection expectations for the default branch:
 - prefer squash merges or another linear-history policy
 - keep version-tag creation with maintainers who also own release validation
 
+## Release Expectations
+
+Maintainers preparing a release should follow `ai/RELEASES.md` from `main`.
+
+Release preparation should include:
+
+- reviewing any new Flyway migrations under `src/main/resources/db/migration/`
+- confirming the exact release candidate passed `.\gradlew.bat build`
+- deciding whether `.\gradlew.bat gatlingBenchmark` is required for the scoped changes
+- updating `CHANGELOG.md`, `ROADMAP.md`, and the executed `ai/PLAN_*.md` file before tagging
+- verifying the remote `Release` workflow published the semantic image tag, the immutable short-SHA image tag, and the GitHub Release notes
+
 ## Testing Requirements
 
 Run the required quality gate before asking for review:
