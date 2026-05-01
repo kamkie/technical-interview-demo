@@ -1,13 +1,13 @@
 # Learnings
 
-`LEARNINGS.md` is for durable engineering wisdom that should survive refactors and still apply as this repository grows. Use the scope ladder when deciding where a new insight should live:
+`ai/LEARNINGS.md` is for durable engineering wisdom that should survive refactors and still apply as this repository grows. Use the scope ladder when deciding where a new insight should live:
 
-- **Repo-wide and durable** (still true after package moves, endpoint additions, and internal rewrites): put it in `LEARNINGS.md`.
+- **Repo-wide and durable** (still true after package moves, endpoint additions, and internal rewrites): put it in `ai/LEARNINGS.md`.
 - **App-specific architecture or policy** (current package boundaries, feature ownership, runtime flows): put it in `ai/ARCHITECTURE.md`.
 - **Public contract specifics** (endpoint behavior, payload shape, examples, docs): put it in executable specs, `README.md`, `src/docs/asciidoc/`, `src/test/resources/http/`, and the approved OpenAPI baseline.
 - **Symbol-local contract** (one class, method, or type behavior): put it in code near the symbol.
 - **Naming or API smell** (callers keep getting it wrong): prefer renaming or reshaping the API instead of adding more prose.
-- Quick test: if the statement remains true after adding new endpoints and refactoring packages, it likely belongs in `LEARNINGS.md`; if it depends on the current API surface or module layout, it belongs in specs or architecture notes.
+- Quick test: if the statement remains true after adding new endpoints and refactoring packages, it likely belongs in `ai/LEARNINGS.md`; if it depends on the current API surface or module layout, it belongs in specs or architecture notes.
 
 ## Engineering discipline
 

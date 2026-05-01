@@ -1,6 +1,6 @@
 # Architecture Guide
 
-`ARCHITECTURE.md` is the AI-facing architecture map for `technical-interview-demo`.
+`ai/ARCHITECTURE.md` is the AI-facing architecture map for `technical-interview-demo`.
 
 Use this file to understand how the codebase is organized before making structural changes.
 This file is descriptive, not authoritative. Behavioral truth still lives in the spec artifacts described in `AGENTS.md`.
@@ -264,7 +264,7 @@ When changing architecture-sensitive behavior, read the technical tests first.
 - Keep controllers thin.
 - Keep packages feature-local unless the concern is clearly cross-cutting.
 - Do not move setup/runbook detail into AI docs.
-- Do not treat `ARCHITECTURE.md` as spec authority; use tests and contract docs for that.
+- Do not treat `ai/ARCHITECTURE.md` as spec authority; use tests and contract docs for that.
 
 ## Common Safe Changes
 

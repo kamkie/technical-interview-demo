@@ -1,6 +1,6 @@
 # AI Project Instructions
 
-`README.md` is the human-facing counterpart of this file. `SETUP.md` is the environment and onboarding guide. Keep all three aligned, but do not duplicate setup/runbook detail from `SETUP.md` here.
+`README.md` is the human-facing counterpart of this file. `SETUP.md` is the environment and onboarding guide. The `ai/` directory contains AI-facing support documents. Keep these sources aligned when their scopes overlap, but do not duplicate setup/runbook detail from `SETUP.md` here.
 
 ## Role Of This File
 
@@ -15,6 +15,26 @@ Use this file for:
 - quality gates and release rules
 
 Do not use this file for detailed local setup, IDE walkthroughs, Docker onboarding, or troubleshooting steps that already belong in `SETUP.md`.
+
+## AI Document Set
+
+The `ai/` directory is the AI-facing working set for non-contract repository knowledge.
+
+Use these files deliberately:
+
+- `ai/ARCHITECTURE.md`: descriptive codebase map, package responsibilities, and structural guidance
+- `ai/DESIGN.md`: intended design direction, product tradeoffs, and open design decisions
+- `ai/LEARNINGS.md`: durable repo-wide engineering lessons that should survive refactors
+- `ai/PLAN.md`: instructions for producing execution plans
+- `ai/PLAN_*.md`: task-specific execution plans and milestone breakdowns
+
+Rules for maintaining the `ai/` documents:
+
+- keep the role of each file distinct; do not collapse architecture, design, planning, and learnings into one document
+- update the relevant `ai/` file in the same change when architecture, design intent, durable engineering guidance, or an execution plan materially changes
+- treat `ai/ARCHITECTURE.md`, `ai/DESIGN.md`, and `ai/LEARNINGS.md` as descriptive guidance, not executable spec authority
+- if an interrupted tool or IDE run leaves an `ai/` document incomplete, finish it or clearly mark the gaps instead of leaving misleading partial content
+- when moving or renaming AI documents, update references in `AGENTS.md` and other `ai/` files in the same change
 
 ## Core Approach: Spec-Driven Development
 
@@ -53,7 +73,15 @@ Use these artifacts deliberately:
 - `CHANGELOG.md`: release history only
 - `SETUP.md`: local environment and troubleshooting only
 
+The `ai/` documents are guidance and planning aids. They are not higher-priority truth than executable specs or published contract docs.
+
 ## Required Updates By Change Type
+
+### Architecture, design, or AI guidance change
+
+- update the relevant file under `ai/`
+- keep `AGENTS.md` aligned when the role or maintenance rules for `ai/` documents change
+- do not update `README.md` unless the human-facing contract or project description changed
 
 ### Public API change
 

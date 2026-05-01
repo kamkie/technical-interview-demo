@@ -1,6 +1,6 @@
 # Design Guide
 
-`DESIGN.md` captures the intended design direction for `technical-interview-demo`.
+`ai/DESIGN.md` captures the intended design direction for `technical-interview-demo`.
 
 Use this file when making product-shaping decisions:
 
@@ -223,8 +223,10 @@ Documentation should match the role of each file:
   - how AI agents should plan work
 - `ai/ARCHITECTURE.md`
   - structural map of the codebase
-- `DESIGN.md`
+- `ai/DESIGN.md`
   - this design-intent document
+- `ai/LEARNINGS.md`
+  - durable repo-wide engineering guidance that should survive refactors
 - `ROADMAP.md`
   - active roadmap only
 
