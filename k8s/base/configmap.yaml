@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: technical-interview-demo-config
+  namespace: technical-interview-demo
+  labels:
+    app.kubernetes.io/name: technical-interview-demo
+    app.kubernetes.io/component: app
+data:
+  SPRING_PROFILES_ACTIVE: prod
+  DATABASE_HOST: postgresql
+  DATABASE_PORT: "5432"
+  DATABASE_NAME: technical_interview_demo
+  DATABASE_USER: technical_interview_demo
+  SESSION_COOKIE_SECURE: "true"

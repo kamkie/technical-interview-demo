@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: technical-interview-demo
+  namespace: technical-interview-demo
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: technical-interview-demo
+          image: technical-interview-demo:local
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi

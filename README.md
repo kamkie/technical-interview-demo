@@ -123,7 +123,7 @@ Supported delivery path:
 - semantic version tags trigger the `Release` workflow, which publishes the Docker image to GitHub Container Registry as `ghcr.io/<owner>/<repo>:<tag>` and `ghcr.io/<owner>/<repo>:sha-<commit>`
 - deployment artifacts are provided as:
   - Docker image
-  - vendor-neutral Kubernetes manifests under `k8s/`
+  - vendor-neutral Kubernetes manifests under `k8s/base` with a local overlay under `k8s/overlays/local`
   - Helm chart under `helm/`
   - monitoring and alerting assets for Prometheus, Grafana, and Alertmanager
 

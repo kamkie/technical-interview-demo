@@ -340,6 +340,14 @@
   - verification:
     - `.\gradlew.bat dockerBuild --no-daemon` passed locally with Java 25
     - `.\scripts\ci\smoke-container.ps1 -ImageName technical-interview-demo` passed locally
+- Milestone 4:
+  - added `k8s/base/` with a namespace, config map, deployment, service, example secret, and Kustomize entrypoint
+  - added `k8s/overlays/local/` to reduce replica/resources for local-cluster validation and to target a local `technical-interview-demo:local` image
+  - updated `README.md` and `SETUP.md` with the raw-manifest deployment path, required secrets, render/apply commands, and post-deploy readiness checks
+  - verification:
+    - `kubectl kustomize k8s/base` passed locally
+    - `kubectl kustomize k8s/overlays/local` passed locally
+    - `kubectl apply --dry-run=client -k k8s/overlays/local` passed locally
 
 ## User Validation
 - Review the plan against `ROADMAP.md` and confirm the chosen defaults:

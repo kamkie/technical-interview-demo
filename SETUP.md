@@ -255,6 +255,46 @@ What the smoke validation proves:
 - `GET /actuator/health/readiness` returns `HTTP 200` with `status=UP`
 - Flyway migrations complete against PostgreSQL
 
+## Kubernetes Deployment
+
+The raw Kubernetes baseline lives under `k8s/base`. The local demo overlay lives under `k8s/overlays/local`.
+
+Secret handling:
+
+- `k8s/base/secret-example.yaml` is an example only and is not included in the base Kustomize package
+- create a real `technical-interview-demo-secrets` secret before applying the manifests
+- the required secret key is `DATABASE_PASSWORD`
+- optional secret keys are `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, and `ADMIN_LOGINS`
+
+Render the manifests:
+
+```powershell
+kubectl kustomize k8s/base
+kubectl kustomize k8s/overlays/local
+```
+
+Prepare the local overlay:
+
+1. Build the image with `.\gradlew.bat dockerBuild -PdockerImageName=technical-interview-demo:local`.
+2. Load that image into your local cluster runtime if needed, for example `kind load docker-image technical-interview-demo:local`.
+3. Make sure a PostgreSQL service named `postgres` exists in the `technical-interview-demo` namespace, or patch `DATABASE_HOST` in `k8s/overlays/local/patch-configmap.yaml`.
+4. Create the deployment secret from `k8s/base/secret-example.yaml` or with `kubectl create secret generic`.
+
+Apply the local overlay:
+
+```powershell
+kubectl apply -k k8s/overlays/local
+```
+
+Verify readiness after deployment:
+
+```powershell
+kubectl -n technical-interview-demo rollout status deployment/technical-interview-demo
+kubectl -n technical-interview-demo get pods
+kubectl -n technical-interview-demo port-forward service/technical-interview-demo 8080:80
+Invoke-WebRequest http://127.0.0.1:8080/actuator/health/readiness
+```
+
 ## OAuth Setup
 
 The application supports GitHub OAuth login behind the optional `oauth` profile.
