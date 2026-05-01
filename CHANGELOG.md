@@ -7,6 +7,8 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+## [v1.0.0] - 2026-05-02
+
 ### Changed
 - Clarified the locked `1.0` deployment posture across setup guidance, technical-endpoint docs, reviewer HTTP examples, and monitoring/chart metadata, including the deployment-scoped status of `GET /actuator/prometheus`.
 - Updated the technical overview and REST Docs-backed technical coverage so the repository explicitly documents the locked `1.0` posture for CSRF, optional OAuth login, Prometheus scraping, and the stable `/` and `/hello` endpoints.

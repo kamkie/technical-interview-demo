@@ -204,7 +204,7 @@
   - shared integration files:
     - `README.md`
     - `CHANGELOG.md`
-    - `ai/PLAN_1_0_contract_and_production_posture.md`
+    - `ai/archive/PLAN_1_0_contract_and_production_posture.md`
     - release-only cleanup files such as `ROADMAP.md` and `ai/archive/PLAN_1_0_contract_and_production_posture.md`
   - responsibilities:
     - keep the execution plan aligned with user decisions and worker task ownership
@@ -264,7 +264,7 @@
     - manual verification that setup/deployment guidance and reviewer HTTP examples match the intended posture
 
 Coordinator integration notes:
-- Workers must not edit `README.md`, `CHANGELOG.md`, or `ai/PLAN_1_0_contract_and_production_posture.md`.
+- Workers must not edit `README.md`, `CHANGELOG.md`, or `ai/archive/PLAN_1_0_contract_and_production_posture.md`.
 - Workers are not alone in the codebase. They must stay within their owned files, avoid reverting changes made by others, and adjust to coordinator-merged changes when asked.
 - Final repository validation and the release happen only after all worker commits are integrated onto the coordinator branch and then onto `main`.
 
@@ -340,8 +340,17 @@ Coordinator integration notes:
 - Final validation on `main`:
   - `.\gradlew.bat build`
   - result: passed on 2026-05-02 with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`
-- Follow-up status:
-  - release/tag intentionally deferred per user request
+- Release preparation on `main`:
+  - chose `v1.0.0` as the first stable `1.x` contract release after `v0.24.2`
+  - updated `CHANGELOG.md` with `## [v1.0.0] - 2026-05-02`
+  - updated `ROADMAP.md` to remove the completed pre-`1.0` contract and posture work from the active roadmap
+  - archived this executed plan under `ai/archive/PLAN_1_0_contract_and_production_posture.md`
+  - reran `.\gradlew.bat build`
+  - result: passed on 2026-05-02 with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`
+- Release completion:
+  - created release commit `Prepare v1.0.0 release`
+  - created annotated tag `v1.0.0`
+  - push/publication intentionally deferred until explicitly requested
 
 ## User Validation
 - Confirm that the delivered repository clearly answers these questions without ambiguity:

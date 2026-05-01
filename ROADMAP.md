@@ -12,41 +12,22 @@ Keep this file focused on work that is still planned or in progress.
 
 ## Current Priorities
 
-1. Finish the pre-`1.0` release-readiness work so the project has a clear, defensible definition of what `1.0` means.
-2. Freeze the production posture for security, deployment defaults, and technical endpoint exposure before declaring the demo stable.
-3. Keep optional future enhancements explicitly deferred until the core roadmap is complete.
+1. Tighten post-`1.0` release governance and operational documentation around the now-stable demo contract.
+2. Document healthy runtime expectations, deployment troubleshooting, and upgrade/rollback guidance for maintained releases.
+3. Keep optional future enhancements explicitly deferred until those operational gaps are closed.
 
 ## Ordered Plan
 
-### Now: Pre-1.0 Release Readiness
+### Now: Post-1.0 Operational Readiness
 
 Status: Planned
 
-Goal: make the `1.0` boundary mean a stable, documented, and intentionally scoped demo application rather than only a feature-complete snapshot.
-
-#### Decide The 1.0 Promise
-- [ ] Decide whether `1.0` means "stable interview-demo reference app" or "production-ready starter"
-- [ ] Define the compatibility promise for future `1.x` releases
-
-#### Freeze The Supported Surface
-- [ ] Document which endpoints and behaviors are part of the supported public contract
-- [ ] Document which endpoints are technical/demo-only convenience endpoints
-- [ ] Review endpoint naming, resource semantics, and response shapes before freezing the `1.0` contract
-- [ ] Refresh the approved OpenAPI baseline only after the `1.0` surface is reviewed and accepted
-
-#### Freeze The Production Posture
-- [ ] Re-evaluate session-based write security before `1.0`: either re-enable CSRF for browser-session writes or document the deliberate alternative
-- [ ] Review whether `/actuator/prometheus` and other technical endpoints should stay public in production or become deployment-specific
-- [ ] Document the intended production posture for session cookies, OAuth login, admin bootstrap, and trusted deployment topology
-
-#### Finalize Deployment Guidance
-- [ ] Review the deployment manifests, Helm chart, and monitoring assets against the final `1.0` security and operational defaults
-- [ ] Align `README.md`, `SETUP.md`, and deployment examples with the final `1.0` production posture decisions
+Goal: keep the released `1.x` demo contract easy to operate, review, and evolve without reopening the completed `1.0` scope decisions.
 
 #### Finalize Release Governance
 - [ ] Add a release checklist for Flyway migration review, OpenAPI compatibility, benchmark review, changelog update, and tagging
 
-#### Tighten Operational Readiness
+#### Document Operational Readiness
 - [ ] Document what healthy runtime behavior looks like for health, readiness, metrics, and audit logging
 - [ ] Add deployment-oriented troubleshooting for OAuth setup, PostgreSQL connectivity, and session persistence failures
 - [ ] Document an upgrade and rollback flow for schema migrations and versioned container releases
