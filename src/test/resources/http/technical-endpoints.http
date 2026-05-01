@@ -18,6 +18,8 @@ Accept: application/json
 GET {{baseUrl}}/actuator/health/readiness
 Accept: application/json
 
-### Technical endpoints - Prometheus metrics
+### Technical endpoints - Prometheus metrics for trusted deployment scraping
+# Deployment-scoped endpoint. Use this through a trusted cluster scrape or a deliberate port-forward,
+# not as an internet-public endpoint.
 GET {{baseUrl}}/actuator/prometheus
 Accept: text/plain

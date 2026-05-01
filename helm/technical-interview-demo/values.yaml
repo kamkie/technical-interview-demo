@@ -20,6 +20,7 @@ config:
   sessionCookieSecure: "true"
 
 oauth:
+  # OAuth stays opt-in even for prod deployments.
   enabled: false
 
 secret:
@@ -61,6 +62,7 @@ metrics:
     labels: {}
     interval: 30s
     scrapeTimeout: 10s
+    # Deployment-scoped scrape target, not an internet-public endpoint.
     path: /actuator/prometheus
 
 secretExample:

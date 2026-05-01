@@ -2,6 +2,7 @@
 # This app does not issue JWTs and does not accept Authorization: Bearer tokens.
 # Protected app requests use the GitHub OAuth login flow plus the
 # technical-interview-demo-session cookie created by Spring Session.
+# For 1.0, this reviewer-oriented browser session flow deliberately keeps CSRF disabled.
 #
 # The GitHub token exchange examples below are for diagnostics only.
 # GitHub returns an access token for GitHub APIs, not a JWT for this app,
@@ -14,7 +15,8 @@
 #@githubAuthCode = paste-github-auth-code-here
 #@githubAccessToken = paste-github-access-token-here
 
-### App authentication - start GitHub OAuth login flow in a browser-capable client
+### App authentication - start the optional GitHub OAuth login flow in a browser-capable client
+# This endpoint is only active when the oauth profile is enabled.
 GET {{baseUrl}}/oauth2/authorization/github
 
 ### App authentication - verify the authenticated app session cookie

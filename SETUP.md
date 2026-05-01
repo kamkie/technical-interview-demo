@@ -43,6 +43,7 @@ export PATH="$JAVA_HOME/bin:$PATH"
 
 The default `local` profile expects PostgreSQL on `localhost:5432`. The included `docker-compose.yml` starts that database for you. After startup, open:
 
+- `http://localhost:8080/`
 - `http://localhost:8080/hello`
 - `http://localhost:8080/api/books`
 - `http://localhost:8080/docs`
@@ -69,7 +70,17 @@ Variables you are most likely to need:
 
 ## Deployment Contract
 
-Milestone 10 standardizes the deployment story around these artifacts:
+The `1.0` line is a stable interview-demo reference app. The checked-in deployment assets intentionally freeze this posture:
+
+- `GET /` and `GET /hello` remain supported contract endpoints alongside the documented `/api/**` and documentation surfaces
+- `prod` is the default deployment profile in the raw manifests and Helm chart
+- browser sessions use secure cookies by default through `SESSION_COOKIE_SECURE=true`
+- GitHub OAuth stays opt-in through the `oauth` profile; bare `prod` does not require GitHub credentials
+- admin bootstrap remains environment-driven through `ADMIN_LOGINS`
+- CSRF remains disabled as a deliberate demo tradeoff for reviewer-oriented session workflows
+- `GET /actuator/prometheus` stays supported for trusted deployment scraping, but it is not part of the internet-public endpoint contract
+
+The deployment story is standardized around these artifacts:
 
 - GitHub Actions workflows for CI validation and tag-based release publishing
 - a Docker image built from the packaged Spring Boot boot jar
@@ -99,12 +110,6 @@ CI and release workflow expectations:
 - `CI` uses JDK 25, Gradle dependency caching, explicit Docker availability checks, `./gradlew build`, and `./gradlew externalSmokeTest`
 - `Release` runs on `vMAJOR.MINOR.PATCH` tags, rebuilds the tagged image through Gradle, validates it with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry, and then creates a GitHub Release from the exact matching `CHANGELOG.md` section
 - recommended branch protection requires `CI`, at least one reviewer, and a squash-merge or equivalent linear-history policy
-
-Deployment defaults that are intentionally not frozen yet because they belong to the pre-`1.0` release-readiness work:
-
-- whether `/actuator/prometheus` stays publicly reachable in deployed environments
-- whether OAuth login is enabled in deployed environments by default
-- whether browser-session write flows require CSRF changes before `1.0`
 
 ## IDE Setup
 
@@ -182,6 +187,7 @@ docker-compose up -d
 
 Useful endpoints once the app is running:
 
+- `GET /`
 - `GET /hello`
 - `GET /api/books`
 - `GET /docs`
@@ -191,7 +197,7 @@ Useful endpoints once the app is running:
 - `GET /actuator/health`
 - `GET /actuator/health/liveness`
 - `GET /actuator/health/readiness`
-- `GET /actuator/prometheus`
+- `GET /actuator/prometheus` for trusted local inspection or deployment scraping, not as an internet-public endpoint
 
 ## Running Tests And Quality Checks
 
@@ -357,6 +363,7 @@ The chart mirrors the raw manifest contract:
 - image repository and tag are values-driven
 - the deployment still expects an existing `technical-interview-demo-secrets` secret
 - `values-local.yaml` matches the local overlay assumptions: single replica, local image tag, `postgres` service host, and non-secure session cookie for HTTP testing
+- OAuth remains opt-in through the `oauth` profile and `GITHUB_CLIENT_*` secret keys
 - ServiceMonitor rendering is optional and stays disabled until the monitoring stack is installed
 
 ## Monitoring And Alerting
@@ -380,7 +387,7 @@ kubectl apply -k monitoring/grafana
 
 What the monitoring assets provide:
 
-- `k8s/monitoring/servicemonitor.yaml` scrapes `GET /actuator/prometheus`
+- `k8s/monitoring/servicemonitor.yaml` scrapes `GET /actuator/prometheus` from inside the cluster as a trusted deployment concern, not an internet-public endpoint
 - `k8s/monitoring/prometheus-rule.yaml` adds alerts for target-down, readiness failures, repeated restarts, and elevated 5xx rates
 - `monitoring/grafana/dashboards/technical-interview-demo.json` adds starter panels for JVM memory, CPU, request throughput/latency, cache events, and domain totals
 - `monitoring/alertmanager/config-example.yaml` is a starting Alertmanager route/receiver config that you should adapt before using real notifications
@@ -422,6 +429,8 @@ Start the login flow at:
 - `http://localhost:8080/oauth2/authorization/github`
 
 Protected requests use the authenticated session cookie, so you can replay state-changing requests from an HTTP client once you have signed in and captured `technical-interview-demo-session`.
+
+For `1.0`, this reviewer-oriented session flow keeps CSRF disabled as a deliberate demo tradeoff.
 
 Authenticated sessions are persisted in PostgreSQL through Spring Session JDBC, using tables `SPRING_SESSION` and `SPRING_SESSION_ATTRIBUTES`.
 

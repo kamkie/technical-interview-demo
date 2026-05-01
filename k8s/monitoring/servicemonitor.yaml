@@ -16,6 +16,7 @@ spec:
       app.kubernetes.io/component: app
   endpoints:
     - port: http
+      # Scrape the deployment-scoped metrics endpoint from inside the cluster.
       path: /actuator/prometheus
       interval: 30s
       scrapeTimeout: 10s

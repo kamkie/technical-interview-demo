@@ -2,11 +2,10 @@
 
 @baseUrl = http://localhost:8080
 
-### TechnicalOverviewController - technical overview
+### TechnicalOverviewController - supported root technical overview
 GET {{baseUrl}}/
 Accept: application/json
 
-### TechnicalOverviewController - hello world
+### TechnicalOverviewController - supported hello endpoint
 GET {{baseUrl}}/hello
 Accept: text/plain
-
