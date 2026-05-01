@@ -255,7 +255,32 @@ Coordinator integration notes:
 - `scripts/run-phase-9-benchmarks.ps1` and historical plan validation notes still reference a personal JDK path. They are adjacent cleanup candidates, but they should stay out of this task unless the user expands the portability scope beyond setup-facing artifacts.
 
 ## Validation Results
-- To be filled in during execution.
+- Worker task integration:
+  - integrated `9e5850b` (`Make env example setup paths portable`) from worker commit `9f72d2db506565a99d2dc9ec71c926c52ea1442b`
+  - integrated `ef150ad` (`Automate GitHub release publication`) from worker commit `d3f76e5211aa9d02f916471f9d56ceac71e9ae8d`
+  - integrated `304cc1c` (`ci: add grouped dependabot updates`) from worker commit `cc642f7ab3a683c509263389e2d7418ba460b38b`
+  - integrated `063ad9e` (`Harden prod datasource configuration`) from worker commit `bf71844819c4f2979878473958a675f8fd5d15c0`
+- Coordinator-owned doc alignment on `main`:
+  - updated `README.md` and `SETUP.md` to document:
+    - required `prod` database variables
+    - optional `SESSION_COOKIE_SECURE` with default `true`
+    - grouped weekly Dependabot coverage for Gradle, GitHub Actions, and Docker
+    - tag-driven GitHub Release publication from `CHANGELOG.md`
+    - portable setup placeholders instead of workstation-specific paths
+- Final validation run on `main` on 2026-05-01:
+  - `docker version`: passed
+  - `helm lint helm/technical-interview-demo`: passed
+  - `helm template technical-interview-demo helm/technical-interview-demo -f helm/technical-interview-demo/values-local.yaml`: passed
+  - `.\gradlew.bat build`: passed with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`
+  - `.\scripts\ci\smoke-container.ps1 -ImageName technical-interview-demo`: passed
+  - `.\scripts\release\render-release-notes.ps1 -Tag v0.24.0 -TagImageReference ghcr.io/kamkie/technical-interview-demo:v0.24.0 -ShaImageReference ghcr.io/kamkie/technical-interview-demo:sha-6b1bc65 -PackagePageUrl https://github.com/kamkie/technical-interview-demo/pkgs/container/technical-interview-demo -OutputPath build\tmp\release-notes-preview.md`: passed
+- Manual validation:
+  - confirmed the rendered release-note preview used the exact `CHANGELOG.md` `v0.24.0` section plus appended container metadata
+  - confirmed `SETUP.md` and `.env.example` no longer contain personal workstation paths
+- Contract and benchmark checks:
+  - no OpenAPI baseline refresh performed
+  - no HTTP example updates required
+  - no Phase 9 benchmark rerun performed because OAuth startup behavior was not changed
 
 ## User Validation
 - Review the plan and confirm these defaults before implementation starts:
