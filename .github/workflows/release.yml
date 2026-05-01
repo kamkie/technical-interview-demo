@@ -69,6 +69,13 @@ jobs:
           -PdockerImageName=${{ steps.image.outputs.repository }}:${{ steps.image.outputs.tag }}
           --no-daemon
 
+      - name: Validate tagged image with external smoke test
+        run: >-
+          ./gradlew externalSmokeTest
+          -PexternalSmokeImageName=${{ steps.image.outputs.repository }}:${{ steps.image.outputs.tag }}
+          -PdockerImageName=${{ steps.image.outputs.repository }}:${{ steps.image.outputs.tag }}
+          --no-daemon
+
       - name: Tag immutable commit image
         run: >-
           docker tag

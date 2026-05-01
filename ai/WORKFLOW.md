@@ -77,7 +77,7 @@ Shared files should stay under coordinator ownership unless there is a strong re
 8. After each integrated task, the coordinator updates the plan state as needed and keeps progress moving.
 9. After the whole plan is complete, the coordinator updates the plan's `Validation Results`.
 10. The coordinator runs `.\gradlew.bat build` on `main`.
-11. The coordinator creates the release from `main` by following `ai/RELEASES.md`.
+11. The coordinator creates the release from `main` by following `ai/RELEASES.md`, including `ROADMAP.md` cleanup, plan archival, and post-release cleanup of temporary execution worktrees and branches.
 
 ## Worktree Rules
 
@@ -129,7 +129,7 @@ Coordinator final validation must run on `main`:
 If the plan changes:
 
 - public API behavior, update tests, REST Docs, OpenAPI artifacts, HTTP examples, and contract docs together
-- book list/search behavior, localization lookup behavior, or OAuth/session startup behavior, rerun `.\scripts\run-phase-9-benchmarks.ps1`
+- book list/search behavior, localization lookup behavior, or OAuth/session startup behavior, rerun `.\gradlew.bat gatlingBenchmark`
 
 Treat failing compatibility or benchmark checks as spec failures.
 
@@ -139,9 +139,12 @@ After the whole plan is complete:
 
 - make sure all intended changes are already on `main`
 - keep `CHANGELOG.md` aligned with the completed work
+- update `ROADMAP.md` so released work is no longer tracked as active roadmap work
 - create the release only from `main`
 - use semantic version tags in the form `vMAJOR.MINOR.PATCH`
 - create an annotated tag
+- archive the executed `ai/PLAN_*.md` file under `ai/archive/` as part of the release change
+- after the release is pushed and verified, remove temporary execution worktrees and branches that are no longer needed
 
 Follow `ai/RELEASES.md` for the release commit, tag, and final verification steps.
 

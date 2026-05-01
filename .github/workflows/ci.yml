@@ -52,6 +52,9 @@ jobs:
           helm/technical-interview-demo
           -f helm/technical-interview-demo/values-local.yaml
 
-      - name: Run container smoke validation
-        shell: pwsh
-        run: ./scripts/ci/smoke-container.ps1 -ImageName technical-interview-demo
+      - name: Run external smoke validation
+        run: >-
+          ./gradlew externalSmokeTest
+          -PexternalSmokeImageName=technical-interview-demo
+          -PdockerImageName=technical-interview-demo
+          --no-daemon

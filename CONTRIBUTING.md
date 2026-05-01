@@ -115,7 +115,7 @@ Additional expectations:
 - Pull requests should stay green on the `CI` workflow before review is requested.
 - Review the JaCoCo HTML output at `build/reports/jacoco/test/html/index.html` or run `./gradlew jacocoCoverageSummary` when coverage-sensitive changes land.
 - `check` and `build` enforce minimum JaCoCo bundle coverage of 90% line coverage and 70% branch coverage.
-- Rerun `./scripts/run-phase-9-benchmarks.ps1` when changing book list/search behavior, localization lookup behavior, or the OAuth/session startup flow.
+- Rerun `./gradlew gatlingBenchmark` when changing book list/search behavior, localization lookup behavior, or the OAuth/session startup flow.
 - Use `SETUP.md` for environment prerequisites and local tool configuration.
 
 Deployment-oriented checks when those assets are part of the change:

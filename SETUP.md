@@ -96,8 +96,8 @@ CI and release workflow expectations:
 
 - `CI` runs on pull requests to `main` and pushes to `main`
 - Dependabot opens grouped weekly pull requests for Gradle, GitHub Actions, and Docker, and those PRs use the same `CI` workflow as human-authored PRs
-- `CI` uses JDK 25, Gradle dependency caching, explicit Docker availability checks, and `./gradlew build`
-- `Release` runs on `vMAJOR.MINOR.PATCH` tags, rebuilds the image through Gradle, publishes it to GitHub Container Registry, and then creates a GitHub Release from the exact matching `CHANGELOG.md` section
+- `CI` uses JDK 25, Gradle dependency caching, explicit Docker availability checks, `./gradlew build`, and `./gradlew externalSmokeTest`
+- `Release` runs on `vMAJOR.MINOR.PATCH` tags, rebuilds the tagged image through Gradle, validates it with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry, and then creates a GitHub Release from the exact matching `CHANGELOG.md` section
 - recommended branch protection requires `CI`, at least one reviewer, and a squash-merge or equivalent linear-history policy
 
 Deployment defaults that are intentionally not frozen yet because they belong to the pre-`1.0` release-readiness work:
@@ -215,6 +215,10 @@ OpenAPI contract workflow:
 .\gradlew.bat refreshOpenApiBaseline
 ```
 
+Benchmark workflow:
+
+- run `.\gradlew.bat gatlingBenchmark` when changing book list/search behavior, localization lookup behavior, or OAuth/session startup behavior
+
 ## Reproducing CI Locally
 
 The `CI` workflow currently validates the repository with these commands and prerequisites:
@@ -224,7 +228,7 @@ docker version
 .\gradlew.bat build
 helm lint helm/technical-interview-demo
 helm template technical-interview-demo helm/technical-interview-demo -f helm/technical-interview-demo/values-local.yaml
-.\scripts\ci\smoke-container.ps1 -ImageName technical-interview-demo
+.\gradlew.bat externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo
 ```
 
 Deployment-manifest validation to pair with the CI flow:
@@ -274,13 +278,13 @@ The container uses the `prod` profile by default.
 
 ## Container Smoke Validation
 
-The repository CI now performs a production-like container smoke test after `./gradlew build`.
+The repository CI now performs a production-like container smoke test through the Gradle `externalSmokeTest` task after `./gradlew build`.
 
 Local reproduction command sequence:
 
 ```powershell
-.\gradlew.bat dockerBuild
-.\scripts\ci\smoke-container.ps1 -ImageName technical-interview-demo
+.\gradlew.bat build
+.\gradlew.bat externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo
 ```
 
 What the smoke validation proves:
@@ -515,7 +519,7 @@ Fix:
 
 Symptom:
 
-- `.\scripts\ci\smoke-container.ps1` fails before readiness succeeds
+- `.\gradlew.bat externalSmokeTest` fails before readiness succeeds
 - the logs mention PostgreSQL startup or authentication
 
 Fix:
@@ -523,7 +527,7 @@ Fix:
 1. Confirm Docker Desktop is running and `docker version` succeeds.
 2. Confirm the `technical-interview-demo` image exists with `docker image ls technical-interview-demo`.
 3. Rebuild the image with `.\gradlew.bat dockerBuild`.
-4. Re-run `.\scripts\ci\smoke-container.ps1 -ImageName technical-interview-demo`.
+4. Re-run `.\gradlew.bat externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo`.
 
 ### Kubernetes deployment never becomes ready
 

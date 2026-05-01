@@ -114,12 +114,13 @@ When push is requested:
 1. push the release commit to the intended branch
 2. push the annotated tag
 3. verify the remote accepted both updates
-4. monitor the tag-driven `Release` workflow until it finishes publishing both container-image tags and the GitHub Release
+4. monitor the tag-driven `Release` workflow until `./gradlew externalSmokeTest` passes for the tagged image and both container-image tags plus the GitHub Release are published
 5. confirm the GitHub Release body matches the exact `## [vMAJOR.MINOR.PATCH]` section from `CHANGELOG.md` and includes the tag image reference, SHA image reference, and package-page link
 6. remove temporary worktrees and branches that were used only to execute the released plan, after confirming their changes are already integrated onto `main`
 
 Do not assume a remote push is always desired just because a local release tag exists.
 
+The tag-driven `Release` workflow is also expected to validate the packaged tagged image via `./gradlew externalSmokeTest` before image publication.
 The automated GitHub Release body is sourced from the exact matching `CHANGELOG.md` version section. If the tagged section is missing or duplicated, the release workflow is expected to fail closed instead of publishing partial notes.
 
 ## What Not To Do
