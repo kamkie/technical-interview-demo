@@ -91,7 +91,6 @@ try {
         --env "DATABASE_NAME=$DatabaseName" `
         --env "DATABASE_USER=$DatabaseUser" `
         --env "DATABASE_PASSWORD=$DatabasePassword" `
-        --env "SESSION_COOKIE_SECURE=false" `
         $ImageName 2>&1
     if ($LASTEXITCODE -ne 0) {
         throw "Application container failed to start: $($appRunOutput -join [Environment]::NewLine)"
