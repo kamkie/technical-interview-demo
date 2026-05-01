@@ -36,7 +36,6 @@ Rules for maintaining the `ai/` documents:
 - keep the role of each file distinct; do not collapse architecture, design, planning, release workflow, workflow guidance, and learnings into one document
 - keep AI instruction markdown files under `ai/` by default; `AGENTS.md` is the only standing exception
 - update the relevant `ai/` file in the same change when architecture, design intent, durable engineering guidance, release workflow, workflow guidance, or an execution plan materially changes
-- archive executed `ai/PLAN_*.md` files under `ai/archive/` as part of the release cleanup once that work has been released
 - treat `ai/ARCHITECTURE.md`, `ai/DESIGN.md`, and `ai/LEARNINGS.md` as descriptive guidance, not executable spec authority
 - if an interrupted tool or IDE run leaves an `ai/` document incomplete, finish it or clearly mark the gaps instead of leaving misleading partial content
 - when moving or renaming AI documents, update references in `AGENTS.md` and other `ai/` files in the same change
@@ -201,7 +200,6 @@ Additional verification expectations:
 - create releases only from `main` after all intended changes are integrated there
 - create annotated tags for intentional releases
 - keep `CHANGELOG.md` aligned with releases
-- update `ROADMAP.md` after each release so completed items are removed and only active work remains
 - do not introduce another human-facing completion archive file
 
 ## Definition Of Done
