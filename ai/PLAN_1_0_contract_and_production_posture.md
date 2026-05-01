@@ -56,6 +56,7 @@
   - `GET /actuator/prometheus` is supported for trusted deployment scraping, but not as an internet-public endpoint
   - CSRF remains disabled for browser-session writes in `1.0` and must be documented as a deliberate demo tradeoff
   - `GET /` and `GET /hello` are part of the stable supported `1.x` contract
+  - release and tagging are deferred unless explicitly requested later
 - Planning assumptions that the executor should not revisit:
   - `1.0` means “stable interview-demo reference app”, not “production-ready starter”; if the user wants starter-grade security/platform guarantees, stop and revise the roadmap scope before implementation
   - the `1.x` compatibility promise applies to the documented supported contract, not to every convenience endpoint that happens to exist in the running demo
@@ -303,7 +304,41 @@ Coordinator integration notes:
 - If the contract review uncovers a real public API redesign need, that should become a separate follow-up plan rather than an unbounded expansion of this freeze task.
 
 ## Validation Results
-- To be filled in during execution
+- Coordinator setup:
+  - created coordinator branch `codex/1_0_contract_and_production_posture`
+  - created worker branches/worktrees:
+    - `codex/1_0_contract_docs` at `..\technical-interview-demo-1-0-contract-docs`
+    - `codex/1_0_runtime_posture` at `..\technical-interview-demo-1-0-runtime-posture`
+    - `codex/1_0_deployment_alignment` at `..\technical-interview-demo-1-0-deployment-alignment`
+- Worker task integration on the coordinator branch:
+  - integrated `e2c3808` (`Clarify 1.0 deployment posture docs and examples`) from worker commit `75215c30d260acb68f3d98b395065f837763e063`
+  - integrated `f729a27` (`Freeze runtime posture coverage`) from worker commit `f8109efd3249e6b6fe26bc68d3911f6fd67bbc4c`
+  - integrated `acc58a2` (`Freeze 1.0 contract wording`) from worker commit `c85de0c97dea1123758868024e8ea33b21cdab89`
+  - added coordinator-owned integration commits:
+    - `63892ca` (`chore: record 1.0 deployment posture docs task`)
+    - `0652fa8` (`chore: record 1.0 runtime posture task`)
+    - `977ec0b` (`chore: record 1.0 contract wording task`)
+    - `b918af6` (`docs: freeze 1.0 contract summary in README`)
+- Worker validations:
+  - Worker 1:
+    - `.\gradlew.bat refreshOpenApiBaseline`
+    - `.\gradlew.bat test --tests team.jit.technicalinterviewdemo.technical.docs.OpenApiIntegrationTests --tests team.jit.technicalinterviewdemo.technical.docs.OpenApiCompatibilityIntegrationTests`
+    - `.\gradlew.bat build`
+    - result: passed with Java 25
+  - Worker 2:
+    - `.\gradlew.bat test --tests team.jit.technicalinterviewdemo.technical.info.TechnicalOverviewControllerIntegrationTests --tests team.jit.technicalinterviewdemo.technical.logging.HttpTracingIntegrationTests --tests team.jit.technicalinterviewdemo.technical.docs.ApiDocumentationTests --tests team.jit.technicalinterviewdemo.business.book.BookApiIntegrationTests`
+    - result: passed with Java 25 (`50` tests executed)
+  - Worker 3:
+    - `helm lint helm/technical-interview-demo`
+    - `helm template technical-interview-demo helm/technical-interview-demo -f helm/technical-interview-demo/values-local.yaml`
+    - result: passed
+- Coordinator verification before main integration:
+  - searched the affected contract and setup artifacts for remaining pre-`1.0` unresolved wording after worker integration
+  - result: no remaining contradictions found in the scoped files
+- Pending:
+  - integrate the completed plan onto `main`
+  - run final `.\gradlew.bat build` on `main`
+  - release/tag intentionally deferred per user request
 
 ## User Validation
 - Confirm that the delivered repository clearly answers these questions without ambiguity:
