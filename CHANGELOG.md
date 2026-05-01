@@ -7,6 +7,9 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Changed
+- Clarified the locked `1.0` deployment posture across setup guidance, technical-endpoint docs, reviewer HTTP examples, and monitoring/chart metadata, including the deployment-scoped status of `GET /actuator/prometheus`.
+
 ## [v0.24.2] - 2026-05-01
 
 ### Added
