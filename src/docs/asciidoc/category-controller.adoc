@@ -42,3 +42,24 @@ include::{snippets}/errors/create-category-duplicate/request-body.adoc[]
 include::{snippets}/errors/create-category-duplicate/http-response.adoc[]
 include::{snippets}/errors/create-category-duplicate/response-headers.adoc[]
 include::{snippets}/errors/create-category-duplicate/response-fields.adoc[]
+
+=== `POST /api/categories` unauthorized
+
+Example response when the request does not include an authenticated session.
+
+include::{snippets}/errors/create-category-unauthorized/curl-request.adoc[]
+include::{snippets}/errors/create-category-unauthorized/http-request.adoc[]
+include::{snippets}/errors/create-category-unauthorized/request-body.adoc[]
+include::{snippets}/errors/create-category-unauthorized/http-response.adoc[]
+include::{snippets}/errors/create-category-unauthorized/response-fields.adoc[]
+
+=== `POST /api/categories` forbidden
+
+Example response when the session is authenticated but the user does not have the `ADMIN` role.
+
+include::{snippets}/errors/create-category-forbidden/curl-request.adoc[]
+include::{snippets}/errors/create-category-forbidden/http-request.adoc[]
+include::{snippets}/errors/create-category-forbidden/request-body.adoc[]
+include::{snippets}/errors/create-category-forbidden/http-response.adoc[]
+include::{snippets}/errors/create-category-forbidden/response-headers.adoc[]
+include::{snippets}/errors/create-category-forbidden/response-fields.adoc[]

@@ -34,18 +34,18 @@ public class BookController {
             summary = "List books",
             description = "Public endpoint with pagination, sorting, text filters, category filters, and publication-year filters."
     )
-    public ResponseEntity<Page<Book>> findAll(
+    public ResponseEntity<Page<BookResponse>> findAll(
             @ParameterObject BookSearchRequest request,
             @ParameterObject @PageableDefault(size = 20, sort = "id") Pageable pageable
     ) {
-        Page<Book> payload = bookService.findAll(request, pageable);
+        Page<BookResponse> payload = bookService.findAll(request, pageable).map(BookResponse::from);
         return ResponseEntity.ok(payload);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get a book by id", description = "Public endpoint that returns a single book with its assigned categories.")
-    public ResponseEntity<Book> findById(@PathVariable Long id) {
-        Book payload = bookService.findById(id);
+    public ResponseEntity<BookResponse> findById(@PathVariable Long id) {
+        BookResponse payload = BookResponse.from(bookService.findById(id));
         return ResponseEntity.ok(payload);
     }
 
@@ -55,8 +55,8 @@ public class BookController {
             description = "Requires an authenticated session established through the GitHub OAuth login flow.",
             security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
     )
-    public ResponseEntity<Book> create(@Valid @RequestBody BookCreateRequest request) {
-        Book payload = bookService.create(request);
+    public ResponseEntity<BookResponse> create(@Valid @RequestBody BookCreateRequest request) {
+        BookResponse payload = BookResponse.from(bookService.create(request));
         return ResponseEntity.status(201).body(payload);
     }
 
@@ -66,8 +66,8 @@ public class BookController {
             description = "Requires an authenticated session and the current optimistic-lock version.",
             security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
     )
-    public ResponseEntity<Book> update(@PathVariable Long id, @Valid @RequestBody BookUpdateRequest request) {
-        Book payload = bookService.update(id, request);
+    public ResponseEntity<BookResponse> update(@PathVariable Long id, @Valid @RequestBody BookUpdateRequest request) {
+        BookResponse payload = BookResponse.from(bookService.update(id, request));
         return ResponseEntity.ok(payload);
     }
 

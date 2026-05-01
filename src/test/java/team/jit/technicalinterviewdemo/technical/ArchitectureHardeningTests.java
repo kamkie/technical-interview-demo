@@ -18,13 +18,18 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.core.ResolvableType;
 import team.jit.technicalinterviewdemo.TechnicalInterviewDemoApplication;
 import team.jit.technicalinterviewdemo.business.book.Book;
+import team.jit.technicalinterviewdemo.business.book.BookController;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
+import team.jit.technicalinterviewdemo.business.book.BookResponse;
 import team.jit.technicalinterviewdemo.business.book.BookSearchRequest;
 import team.jit.technicalinterviewdemo.technical.cache.CacheNames;
 import team.jit.technicalinterviewdemo.business.category.Category;
+import team.jit.technicalinterviewdemo.business.category.CategoryController;
 import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
+import team.jit.technicalinterviewdemo.business.category.CategoryResponse;
 import team.jit.technicalinterviewdemo.technical.cache.CachingConfiguration;
 import team.jit.technicalinterviewdemo.testdata.BookCatalogTestData;
 import team.jit.technicalinterviewdemo.testing.IntegrationSpringBootTest;
@@ -66,6 +71,31 @@ class ArchitectureHardeningTests {
     void applicationEntryPointDoesNotContainEnableCachingAnnotation() {
         assertThat(TechnicalInterviewDemoApplication.class.isAnnotationPresent(EnableCaching.class)).isFalse();
         assertThat(CachingConfiguration.class.isAnnotationPresent(EnableCaching.class)).isTrue();
+    }
+
+    @Test
+    void publicControllersDoNotExposeJpaEntitiesInResponseTypes() throws NoSuchMethodException {
+        ResolvableType listBooksReturnType = ResolvableType.forMethodReturnType(
+                BookController.class.getMethod("findAll", BookSearchRequest.class, org.springframework.data.domain.Pageable.class)
+        );
+        ResolvableType getBookReturnType = ResolvableType.forMethodReturnType(BookController.class.getMethod("findById", Long.class));
+        ResolvableType createBookReturnType = ResolvableType.forMethodReturnType(
+                BookController.class.getMethod("create", team.jit.technicalinterviewdemo.business.book.BookCreateRequest.class)
+        );
+        ResolvableType updateBookReturnType = ResolvableType.forMethodReturnType(
+                BookController.class.getMethod("update", Long.class, team.jit.technicalinterviewdemo.business.book.BookUpdateRequest.class)
+        );
+        ResolvableType listCategoriesReturnType = ResolvableType.forMethodReturnType(CategoryController.class.getMethod("findAll"));
+        ResolvableType createCategoryReturnType = ResolvableType.forMethodReturnType(
+                CategoryController.class.getMethod("create", team.jit.technicalinterviewdemo.business.category.CategoryCreateRequest.class)
+        );
+
+        assertThat(listBooksReturnType.getGeneric(0, 0).resolve()).isEqualTo(BookResponse.class);
+        assertThat(getBookReturnType.getGeneric(0).resolve()).isEqualTo(BookResponse.class);
+        assertThat(createBookReturnType.getGeneric(0).resolve()).isEqualTo(BookResponse.class);
+        assertThat(updateBookReturnType.getGeneric(0).resolve()).isEqualTo(BookResponse.class);
+        assertThat(listCategoriesReturnType.getGeneric(0, 0).resolve()).isEqualTo(CategoryResponse.class);
+        assertThat(createCategoryReturnType.getGeneric(0).resolve()).isEqualTo(CategoryResponse.class);
     }
 
     @Test

@@ -69,8 +69,10 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                                 """))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.title").value("Forbidden"))
+                .andExpect(jsonPath("$.status").value(403))
                 .andExpect(jsonPath("$.detail").value("Category management requires the ADMIN role."))
                 .andExpect(jsonPath("$.messageKey").value("error.request.forbidden"))
+                .andExpect(jsonPath("$.message").value("You do not have permission to perform this operation."))
                 .andExpect(jsonPath("$.language").value("en"));
     }
 
@@ -83,7 +85,29 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                                   "name": "Architecture"
                                 }
                                 """))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.title").value("Unauthorized"))
+                .andExpect(jsonPath("$.status").value(401))
+                .andExpect(jsonPath("$.detail").value("Authentication is required to access this resource."))
+                .andExpect(jsonPath("$.messageKey").value("error.request.unauthorized"))
+                .andExpect(jsonPath("$.message").value("You must authenticate before performing this operation."))
+                .andExpect(jsonPath("$.language").value("en"));
+    }
+
+    @Test
+    void createCategoryWithoutAuthenticationUsesRequestLanguageForUnauthorizedProblem() throws Exception {
+        mockMvc.perform(post("/api/categories")
+                        .queryParam("lang", "pl")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "name": "Architecture"
+                                }
+                                """))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.messageKey").value("error.request.unauthorized"))
+                .andExpect(jsonPath("$.message").value("Musisz sie uwierzytelnic przed wykonaniem tej operacji."))
+                .andExpect(jsonPath("$.language").value("pl"));
     }
 
     @Test

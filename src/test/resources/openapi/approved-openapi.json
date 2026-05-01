@@ -376,12 +376,32 @@
           "required" : true
         },
         "responses" : {
-          "200" : {
-            "description" : "OK",
+          "201" : {
+            "description" : "Created",
             "content" : {
-              "*/*" : {
+              "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/Category"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Missing or invalid authenticated session.",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiProblemResponse"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Authenticated user does not have the ADMIN role.",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiProblemResponse"
                 }
               }
             }
@@ -778,7 +798,6 @@
             "example" : 2018
           },
           "categories" : {
-            "uniqueItems" : true,
             "type" : "array",
             "description" : "Assigned categories ordered by name.",
             "items" : {
@@ -888,6 +907,43 @@
         },
         "description" : "Payload for creating a category."
       },
+      "ApiProblemResponse" : {
+        "type" : "object",
+        "properties" : {
+          "title" : {
+            "type" : "string",
+            "description" : "Problem title.",
+            "example" : "Unauthorized"
+          },
+          "status" : {
+            "type" : "integer",
+            "description" : "HTTP status code.",
+            "format" : "int32",
+            "example" : 401
+          },
+          "detail" : {
+            "type" : "string",
+            "description" : "Technical problem detail kept stable for debugging and logs.",
+            "example" : "Authentication is required to access this resource."
+          },
+          "messageKey" : {
+            "type" : "string",
+            "description" : "Stable localization key for the error type.",
+            "example" : "error.request.unauthorized"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "Localized end-user message resolved from the request language.",
+            "example" : "You must authenticate before performing this operation."
+          },
+          "language" : {
+            "type" : "string",
+            "description" : "Two-letter ISO 639-1 language code actually used for the localized message.",
+            "example" : "en"
+          }
+        },
+        "description" : "Localized ProblemDetail payload returned for API errors."
+      },
       "BookCreateRequest" : {
         "required" : [ "author", "isbn", "publicationYear", "title" ],
         "type" : "object",
@@ -953,21 +1009,21 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "first" : {
+          "last" : {
             "type" : "boolean"
           },
-          "last" : {
+          "first" : {
             "type" : "boolean"
           },
           "numberOfElements" : {
             "type" : "integer",
             "format" : "int32"
           },
-          "pageable" : {
-            "$ref" : "#/components/schemas/PageableObject"
-          },
           "sort" : {
             "$ref" : "#/components/schemas/SortObject"
+          },
+          "pageable" : {
+            "$ref" : "#/components/schemas/PageableObject"
           },
           "empty" : {
             "type" : "boolean"
@@ -977,9 +1033,11 @@
       "PageableObject" : {
         "type" : "object",
         "properties" : {
-          "offset" : {
-            "type" : "integer",
-            "format" : "int64"
+          "paged" : {
+            "type" : "boolean"
+          },
+          "sort" : {
+            "$ref" : "#/components/schemas/SortObject"
           },
           "pageSize" : {
             "type" : "integer",
@@ -989,14 +1047,12 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "sort" : {
-            "$ref" : "#/components/schemas/SortObject"
-          },
-          "paged" : {
-            "type" : "boolean"
-          },
           "unpaged" : {
             "type" : "boolean"
+          },
+          "offset" : {
+            "type" : "integer",
+            "format" : "int64"
           }
         }
       },
@@ -1039,21 +1095,21 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "first" : {
+          "last" : {
             "type" : "boolean"
           },
-          "last" : {
+          "first" : {
             "type" : "boolean"
           },
           "numberOfElements" : {
             "type" : "integer",
             "format" : "int32"
           },
-          "pageable" : {
-            "$ref" : "#/components/schemas/PageableObject"
-          },
           "sort" : {
             "$ref" : "#/components/schemas/SortObject"
+          },
+          "pageable" : {
+            "$ref" : "#/components/schemas/PageableObject"
           },
           "empty" : {
             "type" : "boolean"

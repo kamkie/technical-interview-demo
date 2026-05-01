@@ -7,6 +7,19 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+## [v0.24.0] - 2026-05-01
+
+### Added
+- Added explicit `BookResponse` and `CategoryResponse` API models so public controllers no longer expose JPA entities directly.
+- Added a shared `ApiProblemResponse` OpenAPI schema and documented `401`/`403` category-write error responses in REST Docs, HTTP examples, and the approved OpenAPI baseline.
+- Added localized seed messages for `error.request.unauthorized`.
+- Added focused unit coverage for the API security entry point and access-denied handler.
+
+### Changed
+- Standardized API `401` and security-layer `403` responses to use the same localized `ProblemDetail` shape as the rest of the API.
+- Moved book and category response schema metadata from persistence entities onto dedicated response DTOs while preserving the existing JSON field names and category ordering.
+- Updated localization list tests and contract artifacts to account for the new seeded auth-error localization key.
+
 ## [v0.23.0] - 2026-05-01
 
 ### Added

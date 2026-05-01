@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import team.jit.technicalinterviewdemo.business.localization.seed.LocalizationSeedData;
 import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
 import team.jit.technicalinterviewdemo.testdata.LocalizationTestData;
 import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
@@ -48,8 +49,8 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .andExpect(jsonPath("$.content[0].messageKey").value("error.book.isbn_duplicate"))
                 .andExpect(jsonPath("$.content[0].language").value("de"))
                 .andExpect(jsonPath("$.content[1].language").value("en"))
-                .andExpect(jsonPath("$.totalElements").value(126))
-                .andExpect(jsonPath("$.totalPages").value(63));
+                .andExpect(jsonPath("$.totalElements").value(totalSeededLocalizations()))
+                .andExpect(jsonPath("$.totalPages").value(totalPagesForPageSize(2)));
     }
 
     @Test
@@ -266,11 +267,23 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                         .queryParam("language", "es")
                         .queryParam("sort", "messageKey,asc"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content.length()").value(18))
+                .andExpect(jsonPath("$.content.length()").value(documentedKeyCount()))
                 .andExpect(jsonPath("$.content[0].language").value("es"))
                 .andExpect(jsonPath("$.content[0].messageKey").value("error.book.isbn_duplicate"))
-                .andExpect(jsonPath("$.content[17].messageKey").value("error.server.internal"))
-                .andExpect(jsonPath("$.totalElements").value(18))
+                .andExpect(jsonPath("$.content[%d].messageKey".formatted(documentedKeyCount() - 1)).value("error.server.internal"))
+                .andExpect(jsonPath("$.totalElements").value(documentedKeyCount()))
                 .andExpect(jsonPath("$.totalPages").value(1));
+    }
+
+    private int documentedKeyCount() {
+        return LocalizationSeedData.documentedKeys().size();
+    }
+
+    private int totalSeededLocalizations() {
+        return LocalizationSeedData.documentedKeys().size() * LocalizationSeedData.supportedLanguages().size();
+    }
+
+    private int totalPagesForPageSize(int pageSize) {
+        return (totalSeededLocalizations() + pageSize - 1) / pageSize;
     }
 }

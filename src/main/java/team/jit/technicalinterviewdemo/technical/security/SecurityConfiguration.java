@@ -5,14 +5,12 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
 @Configuration
 public class SecurityConfiguration {
@@ -28,7 +26,9 @@ public class SecurityConfiguration {
     SecurityFilterChain securityFilterChain(
             HttpSecurity http,
             ObjectProvider<ClientRegistrationRepository> clientRegistrationRepository,
-            AuthenticatedUserSynchronizationFilter authenticatedUserSynchronizationFilter
+            AuthenticatedUserSynchronizationFilter authenticatedUserSynchronizationFilter,
+            ApiAuthenticationEntryPoint apiAuthenticationEntryPoint,
+            ApiAccessDeniedHandler apiAccessDeniedHandler
     ) throws Exception {
         http
                 .formLogin(AbstractHttpConfigurer::disable)
@@ -48,10 +48,16 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.DELETE, "/api/books/*", "/api/localizations/*").authenticated()
                         .anyRequest().permitAll()
                 )
-                .exceptionHandling(exceptions -> exceptions.defaultAuthenticationEntryPointFor(
-                        new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
-                        request -> request.getRequestURI().startsWith("/api/")
-                ))
+                .exceptionHandling(exceptions -> exceptions
+                        .defaultAuthenticationEntryPointFor(
+                                apiAuthenticationEntryPoint,
+                                request -> request.getRequestURI().startsWith("/api/")
+                        )
+                        .defaultAccessDeniedHandlerFor(
+                                apiAccessDeniedHandler,
+                                request -> request.getRequestURI().startsWith("/api/")
+                        )
+                )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                         .sessionFixation(sessionFixation -> sessionFixation.migrateSession())

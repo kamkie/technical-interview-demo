@@ -81,7 +81,18 @@ class OpenApiIntegrationTests extends AbstractRandomPortIntegrationTest {
         assertEquals("Books", openApi.at("/paths/~1api~1books/get/tags/0").asText());
         assertEquals("Account", openApi.at("/paths/~1api~1account/get/tags/0").asText());
         assertEquals("Localizations", openApi.at("/paths/~1api~1localizations/get/tags/0").asText());
+        assertFalse(openApi.at("/paths/~1api~1categories/post/responses/401").isMissingNode());
+        assertFalse(openApi.at("/paths/~1api~1categories/post/responses/403").isMissingNode());
+        assertEquals(
+                "#/components/schemas/ApiProblemResponse",
+                openApi.at("/paths/~1api~1categories/post/responses/401/content/application~1problem+json/schema/$ref").asText()
+        );
+        assertEquals(
+                "#/components/schemas/ApiProblemResponse",
+                openApi.at("/paths/~1api~1categories/post/responses/403/content/application~1problem+json/schema/$ref").asText()
+        );
         assertFalse(openApi.at("/components/schemas/Book").isMissingNode());
+        assertFalse(openApi.at("/components/schemas/ApiProblemResponse").isMissingNode());
         assertFalse(openApi.at("/components/schemas/BookCreateRequest").isMissingNode());
         assertFalse(openApi.at("/components/schemas/LocalizationResponse").isMissingNode());
         assertFalse(openApi.at("/components/schemas/UserAccountResponse").isMissingNode());

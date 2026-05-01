@@ -192,7 +192,14 @@
 - If execution shows that more controllers still expose persistence entities after book/category are fixed, stop and split that wider cleanup into a follow-up plan instead of expanding this task silently.
 
 ## Validation Results
-- To be filled in during execution.
+- Executed with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3` because the machine defaulted to Java 11 and Gradle 9.5 requires a newer runtime in this repository.
+- Targeted validation completed successfully:
+  - `.\gradlew.bat test --tests "team.jit.technicalinterviewdemo.technical.api.ApiExceptionHandlerTests"`
+  - `.\gradlew.bat test --tests "team.jit.technicalinterviewdemo.business.category.CategoryApiIntegrationTests"`
+  - `.\gradlew.bat test --tests "team.jit.technicalinterviewdemo.technical.ArchitectureHardeningTests" --tests "team.jit.technicalinterviewdemo.business.book.BookApiIntegrationTests" --tests "team.jit.technicalinterviewdemo.business.user.UserManagementIntegrationTests" --tests "team.jit.technicalinterviewdemo.business.category.CategoryApiDocumentationTests" --tests "team.jit.technicalinterviewdemo.technical.docs.OpenApiIntegrationTests" --tests "team.jit.technicalinterviewdemo.technical.docs.OpenApiCompatibilityIntegrationTests"`
+  - `.\gradlew.bat test --tests "team.jit.technicalinterviewdemo.business.localization.LocalizationServiceTests" --tests "team.jit.technicalinterviewdemo.technical.localization.RequestLocalizationIntegrationTests"`
+- Refreshed the approved OpenAPI baseline with `.\gradlew.bat refreshOpenApiBaseline` after reviewing the intentional diff for `POST /api/categories` auth-error responses and the new `ApiProblemResponse` schema.
+- Final verification completed successfully with `.\gradlew.bat clean build`.
 
 ## User Validation
 - Verify one success-path response and two auth-error responses:

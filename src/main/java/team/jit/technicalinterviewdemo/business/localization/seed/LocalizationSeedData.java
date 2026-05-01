@@ -22,6 +22,7 @@ public final class LocalizationSeedData {
             "error.request.missing_header",
             "error.request.missing_parameter",
             "error.request.resource_not_found",
+            "error.request.unauthorized",
             "error.request.unsupported_media_type",
             "error.request.validation_failed",
             "error.server.internal"
@@ -206,6 +207,17 @@ public final class LocalizationSeedData {
                 "Nie znaleziono zadanego zasobu.",
                 "Zapytanyi resurs ne znaideno.",
                 "Den forespurte ressursen ble ikke funnet."
+        );
+        addTranslations(
+                messages,
+                "error.request.unauthorized",
+                "You must authenticate before performing this operation.",
+                "Debe autenticarse antes de realizar esta operacion.",
+                "Sie muessen sich authentifizieren, bevor Sie diesen Vorgang ausfuehren.",
+                "Vous devez vous authentifier avant d'effectuer cette operation.",
+                "Musisz sie uwierzytelnic przed wykonaniem tej operacji.",
+                "Vy maiete avtoryzuvatysia pered vykonanniam tsiiei operatsii.",
+                "Du ma autentisere deg for du utforer denne operasjonen."
         );
         addTranslations(
                 messages,

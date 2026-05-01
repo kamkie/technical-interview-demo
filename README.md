@@ -88,6 +88,7 @@ Contract notes:
 - `GET /api/books` is paginated and supports text, category, and year filters
 - `GET /api/localizations` is paginated and supports optional exact `messageKey` and `language` filters
 - localized error responses include `messageKey`, localized `message`, and resolved `language`
+- protected API `401` and `403` responses use that same localized `ProblemDetail` structure
 - authenticated-user preferred language is the last localization fallback before English
 
 ## Quality Model

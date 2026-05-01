@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminOauthUser;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.oauthUser;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -99,6 +100,46 @@ class CategoryApiDocumentationTests extends AbstractDocumentationIntegrationTest
                 .andExpect(jsonPath("$.title").value("Invalid Request"))
                 .andDo(documentEndpoint(
                         "errors/create-category-duplicate",
+                        requestBody(),
+                        responseHeaders(commonResponseHeaders()),
+                        relaxedResponseFields(problemResponseFields())
+                ));
+    }
+
+    @Test
+    void documentCreateCategoryUnauthorizedError() throws Exception {
+        mockMvc.perform(post("/api/categories")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "name": "Architecture"
+                                }
+                                """))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.title").value("Unauthorized"))
+                .andDo(documentEndpoint(
+                        "errors/create-category-unauthorized",
+                        requestBody(),
+                        relaxedResponseFields(problemResponseFields())
+                ));
+    }
+
+    @Test
+    void documentCreateCategoryForbiddenError() throws Exception {
+        mockMvc.perform(post("/api/categories")
+                        .with(oauthUser())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "name": "Architecture"
+                                }
+                                """))
+                .andExpect(status().isForbidden())
+                .andExpect(header().exists("X-Request-Id"))
+                .andExpect(header().exists("traceparent"))
+                .andExpect(jsonPath("$.title").value("Forbidden"))
+                .andDo(documentEndpoint(
+                        "errors/create-category-forbidden",
                         requestBody(),
                         responseHeaders(commonResponseHeaders()),
                         relaxedResponseFields(problemResponseFields())

@@ -2,18 +2,24 @@ package team.jit.technicalinterviewdemo.business.category;
 
 import jakarta.validation.Valid;
 
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import team.jit.technicalinterviewdemo.technical.api.ApiProblemResponse;
 import team.jit.technicalinterviewdemo.technical.docs.OpenApiConfiguration;
 
 @RequiredArgsConstructor
@@ -26,8 +32,10 @@ public class CategoryController {
 
     @GetMapping
     @Operation(summary = "List categories", description = "Public endpoint that returns categories ordered by name.")
-    public ResponseEntity<List<Category>> findAll() {
-        List<Category> payload = categoryService.findAll();
+    public ResponseEntity<List<CategoryResponse>> findAll() {
+        List<CategoryResponse> payload = categoryService.findAll().stream()
+                .map(CategoryResponse::from)
+                .toList();
         return ResponseEntity.ok(payload);
     }
 
@@ -37,8 +45,34 @@ public class CategoryController {
             description = "Requires an authenticated session with the ADMIN role.",
             security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
     )
-    public ResponseEntity<Category> create(@Valid @RequestBody CategoryCreateRequest request) {
-        Category payload = categoryService.create(request);
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Created",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = CategoryResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Missing or invalid authenticated session.",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
+                            schema = @Schema(implementation = ApiProblemResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Authenticated user does not have the ADMIN role.",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
+                            schema = @Schema(implementation = ApiProblemResponse.class)
+                    )
+            )
+    })
+    public ResponseEntity<CategoryResponse> create(@Valid @RequestBody CategoryCreateRequest request) {
+        CategoryResponse payload = CategoryResponse.from(categoryService.create(request));
         return ResponseEntity.status(201).body(payload);
     }
 }

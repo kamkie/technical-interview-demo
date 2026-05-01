@@ -138,6 +138,9 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
                                 }
                                 """))
                 .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.title").value("Forbidden"))
+                .andExpect(jsonPath("$.status").value(403))
+                .andExpect(jsonPath("$.detail").value("Category management requires the ADMIN role."))
                 .andExpect(jsonPath("$.messageKey").value("error.request.forbidden"))
                 .andExpect(jsonPath("$.message").value("Nie masz uprawnien do wykonania tej operacji."))
                 .andExpect(jsonPath("$.language").value("pl"));
@@ -211,4 +214,3 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
         return gauge.value();
     }
 }
-

@@ -1,5 +1,6 @@
 # IntelliJ HTTP Client examples for technical-interview-demo
 # User profile requests require an authenticated session.
+# Missing-session responses use the same localized ProblemDetail shape as other API errors.
 
 @baseUrl = http://localhost:8080
 @sessionCookie = paste-technical-interview-demo-session-here
@@ -7,6 +8,10 @@
 GET {{baseUrl}}/api/account
 Cookie: technical-interview-demo-session={{sessionCookie}}
 Accept: application/json
+
+### UserAccountController - current authenticated user without session (401 localized ProblemDetail)
+GET {{baseUrl}}/api/account
+Accept: application/problem+json
 
 ### UserAccountController - update preferred language (authenticated session)
 PUT {{baseUrl}}/api/account/language

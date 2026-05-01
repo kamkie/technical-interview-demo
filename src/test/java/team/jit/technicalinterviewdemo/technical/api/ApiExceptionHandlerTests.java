@@ -30,7 +30,7 @@ class ApiExceptionHandlerTests {
 
     @BeforeEach
     void setUp() {
-        apiExceptionHandler = new ApiExceptionHandler(localizationMessageService);
+        apiExceptionHandler = new ApiExceptionHandler(new ApiProblemFactory(localizationMessageService));
     }
 
     @Test
