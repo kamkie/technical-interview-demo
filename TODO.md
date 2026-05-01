@@ -15,7 +15,7 @@ Keep this file focused on work that is still planned or in progress.
 1. Complete the CI/CD and deployment assets after the `1.0` release bar is explicit.
 2. Finish the pre-`1.0` release-readiness work so the project has a clear, defensible definition of what `1.0` means.
 3. Keep the public API stable after the last pre-`1.0` simplification pass unless a release-blocking clarity issue is still found.
-4. Keep Milestone 11 explicitly deferred until the core roadmap is complete.
+4. Keep Milestone X explicitly deferred until the core roadmap is complete.
 
 ## Ordered Plan
 
@@ -84,7 +84,7 @@ Goal: make the `1.0` boundary mean a stable, documented, and intentionally scope
 
 ## Deferred
 
-### Milestone 11: Optional Future Enhancements
+### Milestone X: Optional Future Enhancements
 
 Status: Deferred until the core roadmap is complete
 
