@@ -250,8 +250,9 @@ If the user later asks you to execute a plan:
 1. Re-read `ai/PLAN.md`, `AGENTS.md`, and the target `ai/PLAN_<topic>.md` file.
 2. Implement the smallest change that satisfies the plan.
 3. Update the `Validation Results` section in the plan document with what you actually ran and what passed or failed.
-4. If execution discovers a missing decision, stop and ask unless the plan already recorded an explicit fallback assumption.
-5. If execution discovers a better-engineering prerequisite that invalidates the plan, stop and explain why the plan must be revised.
+4. If the user also asks for a release after execution, follow `ai/RELEASES.md` after the implementation and validation work is complete.
+5. If execution discovers a missing decision, stop and ask unless the plan already recorded an explicit fallback assumption.
+6. If execution discovers a better-engineering prerequisite that invalidates the plan, stop and explain why the plan must be revised.
 
 ## Final Planning Check
 
