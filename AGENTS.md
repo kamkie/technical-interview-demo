@@ -51,6 +51,12 @@ Principle:
 
 If the intended behavior is not clear enough to express as a spec, stop and clarify it before implementing.
 
+## Branch And Worktree Expectations
+
+- treat `main` as the integration branch for completed work
+- if you implement changes in a git worktree or another branch, integrate those changes back onto `main` before considering the task complete
+- do not cut a release from a worktree-only branch tip or from changes that have not yet landed on `main`
+
 ## Spec Priority
 
 When resolving truth, use this order:
@@ -200,4 +206,5 @@ A change is complete when:
 - the intended behavior exists in an appropriate spec artifact
 - implementation and specs agree
 - public contract artifacts are updated when behavior changed
+- if the work was done in a git worktree or non-`main` branch, the final changes are integrated onto `main`
 - `./gradlew build` passes

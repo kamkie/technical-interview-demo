@@ -31,6 +31,7 @@ Read these artifacts before making release changes:
 Inspect repository state before editing release metadata:
 
 - confirm the target plan was fully executed
+- confirm any work done in a git worktree or side branch has already been integrated back onto `main`
 - confirm all intended release changes have been merged or otherwise integrated onto `main`
 - confirm `git branch --show-current` is `main`
 - confirm the target plan's `Validation Results` section reflects what actually ran
