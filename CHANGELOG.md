@@ -11,6 +11,7 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 - Replaced workstation-specific `.env.example` path examples with portable placeholders for JDK and IntelliJ configuration.
 - Extended the tag-driven release workflow to publish a GitHub Release from the matching `CHANGELOG.md` section after container-image publication succeeds.
 - Added grouped weekly Dependabot updates for Gradle, GitHub Actions, and Docker while keeping the existing `CI` workflow as the single PR validation path.
+- Hardened the `prod` profile so database connection settings must be provided explicitly, while `SESSION_COOKIE_SECURE` remains optional with a secure-by-default value.
 
 ## [v0.24.0] - 2026-05-01
 
