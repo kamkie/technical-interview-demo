@@ -171,6 +171,47 @@
   - keep examples copyable by pairing placeholders with one short explanation of what belongs there
   - verify that `SETUP.md` still points readers to the right commands for local boot, CI reproduction, container smoke validation, Kubernetes/Helm validation, and OAuth setup
 
+## Execution Task Split
+- Coordinator ownership on `main`:
+  - shared integration files: `CHANGELOG.md`, `ai/PLAN_selected_release_readiness_tasks.md`
+  - shared setup/release docs that span multiple milestones: `README.md`, `SETUP.md`
+  - integration branch management, worker result review, final validation, and release creation
+- Worker 1 task: Harden `prod` startup requirements
+  - branch/worktree: `codex/release-ready-prod-hardening`, `..\technical-interview-demo-prod-hardening`
+  - owned files:
+    - `src/main/resources/application-prod.properties`
+    - `scripts/ci/smoke-container.ps1`
+    - `src/test/java/team/jit/technicalinterviewdemo/technical/ProductionConfigurationTests.java`
+  - validation scope:
+    - focused configuration test coverage for required `prod` variables
+    - `.\scripts\ci\smoke-container.ps1 -ImageName technical-interview-demo` when the local image is available
+- Worker 2 task: Enable Dependabot without forking the maintenance flow
+  - branch/worktree: `codex/release-ready-dependabot`, `..\technical-interview-demo-dependabot`
+  - owned files:
+    - `.github/dependabot.yml`
+    - `.github/workflows/ci.yml`
+  - validation scope:
+    - YAML validation by repository build and workflow review
+- Worker 3 task: Publish GitHub Releases from `CHANGELOG.md`
+  - branch/worktree: `codex/release-ready-release-automation`, `..\technical-interview-demo-release-automation`
+  - owned files:
+    - `.github/workflows/release.yml`
+    - `scripts/release/render-release-notes.ps1`
+    - `ai/RELEASES.md`
+  - validation scope:
+    - local dry run of the release-note rendering helper against an existing changelog section
+- Worker 4 task: Remove workstation-specific setup details from setup-facing templates
+  - branch/worktree: `codex/release-ready-setup-portability`, `..\technical-interview-demo-setup-portability`
+  - owned files:
+    - `.env.example`
+  - validation scope:
+    - verify setup-facing templates no longer contain machine-specific paths
+
+Coordinator integration notes:
+- Workers must not edit `CHANGELOG.md`, `ai/PLAN_selected_release_readiness_tasks.md`, `README.md`, or `SETUP.md`.
+- After each worker task lands on `main`, the coordinator updates `CHANGELOG.md` under `## [Unreleased]` and folds the completed behavior into the shared docs.
+- Final repository validation and release creation happen only after all four worker tasks are integrated on `main`.
+
 ## Edge Cases And Failure Modes
 - Removing `prod` fallbacks can break the container smoke test if any required env var is omitted there; the plan must update validation scripts in the same change.
 - Making OAuth secrets required for plain `prod` would be a behavior regression because current docs describe them as optional deployment variables.
