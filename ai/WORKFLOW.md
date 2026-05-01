@@ -1,6 +1,6 @@
 # Codex Multi-Agent Workflow
 
-`WORKFLOW.md` explains how Codex should run a multi-agent workflow in this repository.
+`ai/WORKFLOW.md` explains how Codex should run a multi-agent workflow in this repository.
 
 Use this file when the user wants delegation, parallel agent work, or a multi-worktree execution model for a planned change.
 Use `AGENTS.md` for repository rules, `SETUP.md` for environment setup, `ai/PLAN.md` and `ai/PLAN_*.md` for planning, and `ai/RELEASES.md` for the final release workflow.

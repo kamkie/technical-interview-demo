@@ -164,7 +164,7 @@ Monitoring support uses the upstream `kube-prometheus-stack` Helm chart plus rep
 ## Project Map
 
 - `SETUP.md`: developer onboarding, local environment setup, OAuth setup, Docker workflow, and troubleshooting
-- `WORKFLOW.md`: Codex multi-agent workflow, task integration, and release handoff rules for this repository
+- `ai/WORKFLOW.md`: Codex multi-agent workflow, task integration, and release handoff rules for this repository
 - `AGENTS.md`: AI-facing project rules and spec-driven working contract
 - `ROADMAP.md`: active roadmap only
 - `CHANGELOG.md`: released history only

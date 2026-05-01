@@ -28,11 +28,13 @@ Use these files deliberately:
 - `ai/PLAN.md`: instructions for producing execution plans
 - `ai/PLAN_*.md`: task-specific execution plans and milestone breakdowns
 - `ai/RELEASES.md`: AI-facing release workflow for intentional post-implementation releases
+- `ai/WORKFLOW.md`: AI-facing multi-agent workflow for delegation, worktree usage, integration, and release handoff
 
 Rules for maintaining the `ai/` documents:
 
-- keep the role of each file distinct; do not collapse architecture, design, planning, release workflow, and learnings into one document
-- update the relevant `ai/` file in the same change when architecture, design intent, durable engineering guidance, release workflow, or an execution plan materially changes
+- keep the role of each file distinct; do not collapse architecture, design, planning, release workflow, workflow guidance, and learnings into one document
+- keep AI instruction markdown files under `ai/` by default; `AGENTS.md` is the only standing exception
+- update the relevant `ai/` file in the same change when architecture, design intent, durable engineering guidance, release workflow, workflow guidance, or an execution plan materially changes
 - treat `ai/ARCHITECTURE.md`, `ai/DESIGN.md`, and `ai/LEARNINGS.md` as descriptive guidance, not executable spec authority
 - if an interrupted tool or IDE run leaves an `ai/` document incomplete, finish it or clearly mark the gaps instead of leaving misleading partial content
 - when moving or renaming AI documents, update references in `AGENTS.md` and other `ai/` files in the same change
