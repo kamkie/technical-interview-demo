@@ -156,6 +156,8 @@ Branch protection recommendation for the default branch:
 - prefer squash merges so release tags map cleanly onto reviewed changes
 - restrict `vMAJOR.MINOR.PATCH` tag creation to maintainers who also own release validation
 
+Use the raw manifests under `k8s/` when you want explicit repo-owned YAML. Use the Helm chart under `helm/technical-interview-demo` when you want the same deployment contract packaged behind values files.
+
 ## Project Map
 
 - `SETUP.md`: developer onboarding, local environment setup, OAuth setup, Docker workflow, and troubleshooting

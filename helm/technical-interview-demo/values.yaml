@@ -1,0 +1,67 @@
+replicaCount: 2
+
+image:
+  repository: ghcr.io/example/technical-interview-demo
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+config:
+  profiles:
+    - prod
+  databaseHost: postgresql
+  databasePort: "5432"
+  databaseName: technical_interview_demo
+  databaseUser: technical_interview_demo
+  sessionCookieSecure: "true"
+
+oauth:
+  enabled: false
+
+secret:
+  existingSecret: technical-interview-demo-secrets
+  keys:
+    databasePassword: DATABASE_PASSWORD
+    githubClientId: GITHUB_CLIENT_ID
+    githubClientSecret: GITHUB_CLIENT_SECRET
+    adminLogins: ADMIN_LOGINS
+
+probes:
+  readiness:
+    path: /actuator/health/readiness
+    initialDelaySeconds: 20
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+  liveness:
+    path: /actuator/health/liveness
+    initialDelaySeconds: 60
+    periodSeconds: 20
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: "1"
+    memory: 1Gi
+
+pod:
+  terminationGracePeriodSeconds: 30
+
+metrics:
+  serviceMonitor:
+    enabled: false
+    labels: {}
+    interval: 30s
+    scrapeTimeout: 10s
+    path: /actuator/prometheus
+
+secretExample:
+  enabled: false

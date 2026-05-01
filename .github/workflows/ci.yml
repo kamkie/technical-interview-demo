@@ -32,11 +32,23 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+
       - name: Verify Docker availability
         run: docker version
 
       - name: Run full build
         run: ./gradlew build --no-daemon
+
+      - name: Lint Helm chart
+        run: helm lint helm/technical-interview-demo
+
+      - name: Render Helm chart
+        run: >-
+          helm template technical-interview-demo
+          helm/technical-interview-demo
+          -f helm/technical-interview-demo/values-local.yaml
 
       - name: Run container smoke validation
         shell: pwsh

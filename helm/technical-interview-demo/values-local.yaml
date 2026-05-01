@@ -1,0 +1,18 @@
+replicaCount: 1
+
+image:
+  repository: technical-interview-demo
+  tag: local
+
+config:
+  databaseHost: postgres
+  databaseUser: postgres
+  sessionCookieSecure: "false"
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi

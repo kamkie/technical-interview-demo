@@ -295,6 +295,30 @@ kubectl -n technical-interview-demo port-forward service/technical-interview-dem
 Invoke-WebRequest http://127.0.0.1:8080/actuator/health/readiness
 ```
 
+## Helm Deployment
+
+Use the raw manifests when you want to review or patch explicit YAML checked into the repo. Use the Helm chart when you want release-style installs driven by values files.
+
+Validate the chart locally:
+
+```powershell
+helm lint helm/technical-interview-demo
+helm template technical-interview-demo helm/technical-interview-demo -f helm/technical-interview-demo/values-local.yaml
+```
+
+Install or upgrade the local chart:
+
+```powershell
+helm upgrade --install technical-interview-demo helm/technical-interview-demo --namespace technical-interview-demo --create-namespace -f helm/technical-interview-demo/values-local.yaml
+```
+
+The chart mirrors the raw manifest contract:
+
+- image repository and tag are values-driven
+- the deployment still expects an existing `technical-interview-demo-secrets` secret
+- `values-local.yaml` matches the local overlay assumptions: single replica, local image tag, `postgres` service host, and non-secure session cookie for HTTP testing
+- ServiceMonitor rendering is optional and stays disabled until the monitoring stack is installed
+
 ## OAuth Setup
 
 The application supports GitHub OAuth login behind the optional `oauth` profile.

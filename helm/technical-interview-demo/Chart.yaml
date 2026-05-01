@@ -1,0 +1,6 @@
+apiVersion: v2
+name: technical-interview-demo
+description: Helm chart for the technical-interview-demo application
+type: application
+version: 0.1.0
+appVersion: "latest"

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "technical-interview-demo.fullname" . }}-config
+  labels:
+    {{- include "technical-interview-demo.labels" . | nindent 4 }}
+data:
+  SPRING_PROFILES_ACTIVE: {{ include "technical-interview-demo.profiles" . | quote }}
+  DATABASE_HOST: {{ .Values.config.databaseHost | quote }}
+  DATABASE_PORT: {{ .Values.config.databasePort | quote }}
+  DATABASE_NAME: {{ .Values.config.databaseName | quote }}
+  DATABASE_USER: {{ .Values.config.databaseUser | quote }}
+  SESSION_COOKIE_SECURE: {{ .Values.config.sessionCookieSecure | quote }}

@@ -348,6 +348,14 @@
     - `kubectl kustomize k8s/base` passed locally
     - `kubectl kustomize k8s/overlays/local` passed locally
     - `kubectl apply --dry-run=client -k k8s/overlays/local` passed locally
+- Milestone 5:
+  - added `helm/technical-interview-demo/` with values, templates, and helper functions mirroring the raw Kubernetes deployment contract
+  - included optional ServiceMonitor rendering and an opt-in example secret template so Helm packaging does not silently create placeholder credentials
+  - updated `.github/workflows/ci.yml` to run `helm lint` and `helm template`
+  - updated `README.md` and `SETUP.md` to explain when to use raw manifests versus the Helm chart and how to validate/install the chart
+  - verification:
+    - `helm lint helm/technical-interview-demo` passed locally
+    - `helm template technical-interview-demo helm/technical-interview-demo -f helm/technical-interview-demo/values-local.yaml` passed locally
 
 ## User Validation
 - Review the plan against `ROADMAP.md` and confirm the chosen defaults:
