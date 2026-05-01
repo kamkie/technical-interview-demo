@@ -167,6 +167,9 @@ Monitoring support uses the upstream `kube-prometheus-stack` Helm chart plus rep
 - `ROADMAP.md`: active roadmap only
 - `CHANGELOG.md`: released history only
 - `CONTRIBUTING.md`: contributor workflow and review expectations
+- `k8s/`: raw Kubernetes deployment and monitoring manifests
+- `helm/technical-interview-demo/`: Helm chart for the application deployment contract
+- `monitoring/`: upstream-stack values, Grafana dashboards, and Alertmanager examples
 - `src/docs/asciidoc/`: generated-doc source pages
 - `src/test/resources/openapi/approved-openapi.json`: approved OpenAPI baseline
 - `src/test/resources/http/`: runnable HTTP examples grouped by area

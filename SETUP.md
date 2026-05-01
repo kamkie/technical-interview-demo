@@ -213,6 +213,30 @@ OpenAPI contract workflow:
 .\gradlew.bat refreshOpenApiBaseline
 ```
 
+## Reproducing CI Locally
+
+The `CI` workflow currently validates the repository with these commands and prerequisites:
+
+```powershell
+docker version
+.\gradlew.bat build
+helm lint helm/technical-interview-demo
+helm template technical-interview-demo helm/technical-interview-demo -f helm/technical-interview-demo/values-local.yaml
+.\scripts\ci\smoke-container.ps1 -ImageName technical-interview-demo
+```
+
+Deployment-manifest validation to pair with the CI flow:
+
+```powershell
+kubectl kustomize k8s/base
+kubectl kustomize k8s/overlays/local
+kubectl apply --dry-run=client -k k8s/overlays/local
+kubectl kustomize k8s/monitoring
+kubectl kustomize monitoring/grafana
+kubectl apply --dry-run=client -k k8s/monitoring
+kubectl apply --dry-run=client -k monitoring/grafana
+```
+
 ## Building Docker Images
 
 Build with Gradle:
@@ -474,6 +498,49 @@ Fix:
 2. Confirm `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` are exported in the same shell or run configuration.
 3. Confirm the GitHub OAuth App callback URL is `http://localhost:8080/login/oauth2/code/github`.
 4. Re-run the app with `.\gradlew.bat bootRun`.
+
+### Container smoke validation fails on database startup
+
+Symptom:
+
+- `.\scripts\ci\smoke-container.ps1` fails before readiness succeeds
+- the logs mention PostgreSQL startup or authentication
+
+Fix:
+
+1. Confirm Docker Desktop is running and `docker version` succeeds.
+2. Confirm the `technical-interview-demo` image exists with `docker image ls technical-interview-demo`.
+3. Rebuild the image with `.\gradlew.bat dockerBuild`.
+4. Re-run `.\scripts\ci\smoke-container.ps1 -ImageName technical-interview-demo`.
+
+### Kubernetes deployment never becomes ready
+
+Symptom:
+
+- `kubectl rollout status deployment/technical-interview-demo` times out
+- pod logs show PostgreSQL connection failures or missing secret keys
+
+Fix:
+
+1. Confirm the `technical-interview-demo-secrets` secret exists in the target namespace.
+2. Confirm `DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_NAME`, `DATABASE_USER`, and `DATABASE_PASSWORD` match the reachable PostgreSQL service.
+3. Confirm the image tag in the manifest or Helm values exists in the cluster runtime or remote registry.
+4. Describe the pod with `kubectl -n technical-interview-demo describe pod <pod-name>` and check the readiness probe events.
+
+### Prometheus does not scrape app metrics
+
+Symptom:
+
+- the target is missing or down in Prometheus
+- the Grafana dashboard loads but panels stay empty
+
+Fix:
+
+1. Confirm the monitoring stack was installed with `monitoring/kube-prometheus-stack-values.yaml`.
+2. Confirm `kubectl apply -k k8s/monitoring` and `kubectl apply -k monitoring/grafana` both succeeded.
+3. Confirm the `ServiceMonitor` is in the `monitoring` namespace and the app `Service` is in `technical-interview-demo`.
+4. Port-forward the app service and verify `GET /actuator/prometheus` manually.
+5. Confirm the monitoring stack is allowed to watch `technical-interview-demo` and `monitoring` namespaces.
 
 ### Spotless skips Java formatting
 

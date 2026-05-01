@@ -91,6 +91,13 @@ Each PR should include:
 
 If the change affects public API behavior, include example requests/responses or reference the updated generated docs and OpenAPI change.
 
+Branch protection expectations for the default branch:
+
+- require the `CI` workflow to pass
+- require at least one reviewer
+- prefer squash merges or another linear-history policy
+- keep version-tag creation with maintainers who also own release validation
+
 ## Testing Requirements
 
 Run the required quality gate before asking for review:
@@ -104,11 +111,21 @@ Additional expectations:
 - Add or update tests when API behavior changes.
 - Keep the aggregate `build` clean.
 - Do not skip documentation generation or the Docker image step when using the standard verification flow.
-- Pull requests also run the OpenAPI compatibility workflow against the approved baseline.
+- The `CI` workflow includes the OpenAPI compatibility gate as part of the full build.
+- Pull requests should stay green on the `CI` workflow before review is requested.
 - Review the JaCoCo HTML output at `build/reports/jacoco/test/html/index.html` or run `./gradlew jacocoCoverageSummary` when coverage-sensitive changes land.
 - `check` and `build` enforce minimum JaCoCo bundle coverage of 90% line coverage and 70% branch coverage.
 - Rerun `./scripts/run-phase-9-benchmarks.ps1` when changing book list/search behavior, localization lookup behavior, or the OAuth/session startup flow.
 - Use `SETUP.md` for environment prerequisites and local tool configuration.
+
+Deployment-oriented checks when those assets are part of the change:
+
+- `helm lint helm/technical-interview-demo`
+- `helm template technical-interview-demo helm/technical-interview-demo -f helm/technical-interview-demo/values-local.yaml`
+- `kubectl kustomize k8s/overlays/local`
+- `kubectl apply --dry-run=client -k k8s/overlays/local`
+- `kubectl kustomize k8s/monitoring`
+- `kubectl kustomize monitoring/grafana`
 
 ## Documentation Expectations
 

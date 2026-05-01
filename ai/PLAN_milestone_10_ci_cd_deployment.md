@@ -366,6 +366,10 @@
     - `kubectl kustomize monitoring/grafana` passed locally
     - `kubectl apply --dry-run=client -k k8s/monitoring` passed locally
     - `kubectl apply --dry-run=client -k monitoring/grafana` passed locally
+- Milestone 7:
+  - updated `README.md`, `SETUP.md`, and `CONTRIBUTING.md` to summarize the CI/CD and deployment support, local CI reproduction steps, troubleshooting, and branch-protection expectations
+  - verification:
+    - `.\gradlew.bat build --no-daemon` passed locally with Java 25
 
 ## User Validation
 - Review the plan against `ROADMAP.md` and confirm the chosen defaults:
