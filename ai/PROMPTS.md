@@ -224,6 +224,24 @@ Create the annotated tag.
 Do not push unless I ask.
 ```
 
+### Prepare And Execute Release For Plan File
+
+```text
+Prepare and execute the release for `<plan_file>`.
+
+Before releasing, confirm the plan is fully implemented, all intended changes are integrated onto `main`, the plan's `Validation Results` are up to date, and the required validation has passed on `main`.
+Follow `ai/RELEASES.md`.
+
+Choose the next semantic version deliberately.
+Update `CHANGELOG.md`.
+Create the release commit using the repository commit message pattern.
+Create the annotated tag.
+Push the release commit on `main` to GitHub.
+Push the annotated tag to GitHub.
+Verify that the remote accepted both the branch update and the tag.
+Summarize exactly what was published.
+```
+
 ### Push An Already Prepared Release
 
 ```text
