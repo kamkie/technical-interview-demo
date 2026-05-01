@@ -33,7 +33,7 @@ version = getProjectVersion()
 group = "team.jit"
 description = "technical-interview-demo"
 
-val errorProneVersion = "2.44.0"
+val errorProneVersion = "2.49.0"
 val pmdVersion = "7.17.0"
 val gradleWrapperVersion = "9.5.0"
 val springdocVersion = "3.0.3"
