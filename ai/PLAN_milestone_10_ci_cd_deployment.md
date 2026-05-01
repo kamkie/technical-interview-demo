@@ -332,6 +332,14 @@
   - removed the now-redundant standalone OpenAPI workflow because the `CI` build already enforces the compatibility gate
   - updated `README.md` and `SETUP.md` with release registry and branch-protection expectations
   - verification pending in later milestones with the full repository build and workflow review
+- Milestone 3:
+  - fixed the Docker image entrypoint so the packaged container starts with `java -jar`
+  - added `scripts/ci/smoke-container.ps1` to start PostgreSQL, run the production-profile image, assert port `8080`, readiness, and Flyway migration success, and clean up containers afterward
+  - updated `.github/workflows/ci.yml` to run the smoke script after the standard Gradle build
+  - updated `SETUP.md` with the local smoke-validation reproduction steps
+  - verification:
+    - `.\gradlew.bat dockerBuild --no-daemon` passed locally with Java 25
+    - `.\scripts\ci\smoke-container.ps1 -ImageName technical-interview-demo` passed locally
 
 ## User Validation
 - Review the plan against `ROADMAP.md` and confirm the chosen defaults:

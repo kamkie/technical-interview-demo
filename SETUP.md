@@ -236,6 +236,25 @@ docker run --rm -p 8080:8080 technical-interview-demo
 
 The container uses the `prod` profile by default.
 
+## Container Smoke Validation
+
+The repository CI now performs a production-like container smoke test after `./gradlew build`.
+
+Local reproduction command sequence:
+
+```powershell
+.\gradlew.bat dockerBuild
+.\scripts\ci\smoke-container.ps1 -ImageName technical-interview-demo
+```
+
+What the smoke validation proves:
+
+- PostgreSQL starts for the container under test
+- the app container starts with `SPRING_PROFILES_ACTIVE=prod`
+- the app publishes port `8080`
+- `GET /actuator/health/readiness` returns `HTTP 200` with `status=UP`
+- Flyway migrations complete against PostgreSQL
+
 ## OAuth Setup
 
 The application supports GitHub OAuth login behind the optional `oauth` profile.

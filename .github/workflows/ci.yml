@@ -37,3 +37,7 @@ jobs:
 
       - name: Run full build
         run: ./gradlew build --no-daemon
+
+      - name: Run container smoke validation
+        shell: pwsh
+        run: ./scripts/ci/smoke-container.ps1 -ImageName technical-interview-demo
