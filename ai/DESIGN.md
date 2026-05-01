@@ -17,6 +17,9 @@ This file is not the public contract. It explains the intended design logic behi
 
 This application is a technical interview demo, not a general-purpose starter platform.
 
+`1.0` means a stable interview-demo reference app.
+It does not mean this repository is trying to become a production-ready starter.
+
 The design target is:
 
 - small enough to understand in one sitting
@@ -156,15 +159,15 @@ The design goal is pragmatic security for a demo application:
 - persisted application users and roles
 - session-backed behavior realistic enough to discuss in an interview
 
-The design is intentionally not finished.
-Pre-`1.0` work still needs to settle:
+The `1.x` contract is intentionally narrow and explicit:
 
-- final `401` and `403` response consistency
-- whether browser-session writes need CSRF reintroduction
-- whether `/actuator/prometheus` remains public in production
-- how strictly `prod` fails on missing secrets and credentials
+- stable supported business and documentation endpoints include `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, `/api/books...`, `/api/categories`, `/api/localizations...`, and `/api/account...`
+- stable supported operational endpoints include `/actuator/health`, `/actuator/health/liveness`, `/actuator/health/readiness`, and `/actuator/info`
+- `/actuator/prometheus` is deployment-scoped technical surface for trusted scraping, not part of the internet-public contract
+- `/oauth2/authorization/github` is a technical login bootstrap path available only when the optional `oauth` profile is active; it supports reviewer-oriented browser flows without becoming part of the business API surface
+- CSRF stays disabled for `1.0` browser-session writes as a deliberate demo tradeoff for reviewer-oriented session workflows
 
-Agents should not accidentally freeze those open decisions by quietly coding around them.
+Design work should preserve those decisions unless an explicit follow-up contract review changes them.
 
 ## Data Design
 
@@ -236,7 +239,7 @@ Do not collapse those roles into one giant meta-document.
 
 Current roadmap pressure points are sensible:
 
-- lock the `1.0` contract
+- preserve the frozen `1.0` contract
 - tighten production posture
 - add deployment and CI/CD assets
 - keep optional future scope clearly deferred
@@ -265,8 +268,8 @@ Usually bad:
 - introducing new feature areas with weak justification
 - adding framework-heavy indirection to a small codebase
 - letting docs drift from behavior
-- pushing roadmap work ahead of unresolved `1.0` decisions
-- making production assumptions that the roadmap still marks as open
+- reopening locked `1.0` decisions without an explicit contract review
+- making production assumptions that the documented demo posture does not support
 
 ## Design Review Questions
 

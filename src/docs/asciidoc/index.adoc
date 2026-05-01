@@ -9,7 +9,14 @@ This documentation is generated from integration tests using Spring REST Docs.
 == Application Overview
 
 Technical Interview Demo is a small Spring Boot application intended for interview exercises.
-The current runtime surface includes a simple hello endpoint, a CRUD-style book API with category assignment, a category API, a CRUD-style localization message API, and operational endpoints under `/docs` and `/actuator`.
+`1.0` freezes it as a stable interview-demo reference app rather than a production-ready starter.
+The supported `1.x` contract keeps the simple overview endpoints, the CRUD-style book/category/localization APIs, generated documentation, and a small operational surface easy to review in one sitting.
+
+== Contract Tiers
+
+- Supported `1.x` business and documentation contract: `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, `/api/books...`, `/api/categories`, `/api/localizations...`, `/api/account...`
+- Supported operational contract: `/actuator/health`, `/actuator/health/liveness`, `/actuator/health/readiness`, `/actuator/info`
+- Deployment-scoped technical surface: `/actuator/prometheus` is supported for trusted deployment scraping, but it is not part of the internet-public contract
 
 == Build Metadata
 
@@ -41,9 +48,11 @@ The values below are loaded from `{build-info-path}` during the Asciidoctor buil
 - Protected API `401` and `403` responses use the same localized `ProblemDetail` field set as validation and domain errors.
 - Browser-compatible localization uses `Accept-Language`, the optional `lang` query parameter overrides it with values such as `pl` or `pl-PL`, and cookie `language` is used as fallback.
 - Supported application languages are `en`, `es`, `de`, `fr`, `pl`, `uk`, and `no`.
-- Read endpoints stay public, while state-changing book, category, and localization endpoints require an authenticated OAuth 2.0 session.
-- Interactive login is available at `/oauth2/authorization/github` when the optional `oauth` profile is active.
+- Public supported endpoints include `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, and the read-only book/category/localization lookups.
+- Protected supported endpoints use an authenticated browser session for `/api/account` and for state-changing book, category, and localization operations.
+- Interactive login bootstrap is available at `/oauth2/authorization/github` only when the optional `oauth` profile is active.
 - Authenticated browser sessions are persisted through Spring Session JDBC in PostgreSQL.
+- CSRF remains disabled for browser-session writes as a deliberate demo tradeoff for reviewer-oriented workflows.
 - The machine-readable OpenAPI contract is available at `/v3/api-docs` and `/v3/api-docs.yaml`.
 - Collection endpoints use Spring pagination conventions such as `page`, `size`, and repeated `sort` parameters.
 - Update operations that modify books require a `version` field for optimistic locking.
@@ -66,4 +75,3 @@ The values below are loaded from `{build-info-path}` during the Asciidoctor buil
 - The application serves the generated output from `/docs`, with `/docs` redirecting to `index.html`.
 - The approved OpenAPI baseline is stored at `src/test/resources/openapi/approved-openapi.json`.
 - Refresh the approved OpenAPI baseline intentionally with `./gradlew refreshOpenApiBaseline` or `.\gradlew.bat refreshOpenApiBaseline`.
-

@@ -43,12 +43,24 @@ class OpenApiIntegrationTests extends AbstractRandomPortIntegrationTest {
         JsonNode openApi = fetchOpenApiJson();
 
         assertEquals("technical-interview-demo API", openApi.at("/info/title").asText());
+        assertEquals(
+                "Machine-readable contract for the demo application's stable 1.x supported HTTP surface,"
+                        + " including the public overview and documentation endpoints plus the secured business"
+                        + " API operations. Deployment-scoped technical endpoints such as"
+                        + " /actuator/prometheus are documented separately.",
+                openApi.at("/info/description").asText()
+        );
         assertFalse(openApi.at("/paths/~1/get").isMissingNode());
         assertEquals("apiKey", openApi.at("/components/securitySchemes/sessionCookie/type").asText());
         assertEquals("cookie", openApi.at("/components/securitySchemes/sessionCookie/in").asText());
         assertEquals(
                 "technical-interview-demo-session",
                 openApi.at("/components/securitySchemes/sessionCookie/name").asText()
+        );
+        assertEquals(
+                "Authenticated browser session cookie used by protected operations. It is established through"
+                        + " GET /oauth2/authorization/github when the optional oauth profile is active.",
+                openApi.at("/components/securitySchemes/sessionCookie/description").asText()
         );
 
         JsonNode createBookSecurity = openApi.at("/paths/~1api~1books/post/security");
@@ -104,4 +116,3 @@ class OpenApiIntegrationTests extends AbstractRandomPortIntegrationTest {
         return OBJECT_MAPPER.readTree(response.body());
     }
 }
-

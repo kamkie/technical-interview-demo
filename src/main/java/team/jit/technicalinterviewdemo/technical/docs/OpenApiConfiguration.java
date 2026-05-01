@@ -20,8 +20,9 @@ public class OpenApiConfiguration {
                 .in(SecurityScheme.In.COOKIE)
                 .name("technical-interview-demo-session")
                 .description(
-                        "Authenticated browser session established through GET /oauth2/authorization/github"
-                                + " when the oauth profile is active."
+                        "Authenticated browser session cookie used by protected operations."
+                                + " It is established through GET /oauth2/authorization/github"
+                                + " when the optional oauth profile is active."
                 );
 
         return new OpenAPI()
@@ -29,9 +30,10 @@ public class OpenApiConfiguration {
                         .title("technical-interview-demo API")
                         .version(buildProperties.getVersion())
                         .description(
-                                "Machine-readable contract for the demo application's public and secured API surface."
-                                        + " Read endpoints stay public, while protected operations require the session"
-                                        + " cookie created by the GitHub OAuth login flow."
+                                "Machine-readable contract for the demo application's stable 1.x supported HTTP"
+                                        + " surface, including the public overview and documentation endpoints plus"
+                                        + " the secured business API operations. Deployment-scoped technical"
+                                        + " endpoints such as /actuator/prometheus are documented separately."
                         ))
                 .components(new Components().addSecuritySchemes(SESSION_COOKIE_SCHEME, sessionCookieSecurityScheme));
     }
