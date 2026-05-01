@@ -10,6 +10,9 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 ### Added
 - Added external HTTP smoke tests under a separate `externalTest` source set to cover the public overview, hello, docs redirect, readiness, and book-list endpoints against an externally running application.
 
+### Changed
+- Switched CI, release validation, and repository guidance to use Gradle-owned `externalSmokeTest` and `gatlingBenchmark` tasks as the source of truth for external smoke and benchmark verification.
+
 ## [v0.24.1] - 2026-05-01
 
 ### Changed
