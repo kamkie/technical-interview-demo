@@ -97,6 +97,7 @@ Before reporting completion, verify:
 - `git log --first-parent --decorate --oneline -n 5` shows the release commit and tag in the expected place
 - `CHANGELOG.md` matches the chosen tag and date
 - the target plan's `Validation Results` section still reflects the final verified state
+- the executed plan file has been moved to `ai/archive/` and any moved-path references were updated in the same change
 
 If any of these checks fail, fix the issue before calling the release complete.
 
@@ -111,6 +112,7 @@ When push is requested:
 3. verify the remote accepted both updates
 4. monitor the tag-driven `Release` workflow until it finishes publishing both container-image tags and the GitHub Release
 5. confirm the GitHub Release body matches the exact `## [vMAJOR.MINOR.PATCH]` section from `CHANGELOG.md` and includes the tag image reference, SHA image reference, and package-page link
+6. remove temporary worktrees and branches that were used only to execute the released plan, after confirming their changes are already integrated onto `main`
 
 Do not assume a remote push is always desired just because a local release tag exists.
 
@@ -130,8 +132,10 @@ The automated GitHub Release body is sourced from the exact matching `CHANGELOG.
 1. Execute the target plan.
 2. Integrate all intended changes onto `main` and switch to `main`.
 3. Update the plan's `Validation Results`.
-4. Run `.\gradlew.bat build`.
-5. Update `CHANGELOG.md` for the chosen version.
-6. Commit with `Prepare vMAJOR.MINOR.PATCH release`.
-7. Create an annotated tag `vMAJOR.MINOR.PATCH`.
-8. Verify clean status, branch, tag placement, and changelog alignment.
+4. Move the executed `ai/PLAN_*.md` file to `ai/archive/` and update moved-path references in the same change.
+5. Run `.\gradlew.bat build`.
+6. Update `CHANGELOG.md` for the chosen version.
+7. Commit with `Prepare vMAJOR.MINOR.PATCH release`.
+8. Create an annotated tag `vMAJOR.MINOR.PATCH`.
+9. Push the release commit and annotated tag when requested, verify remote publication, and then clean up temporary execution worktrees and branches.
+10. Verify clean status, branch, tag placement, changelog alignment, and plan archival.

@@ -218,6 +218,7 @@ Read the executed plan, `CHANGELOG.md`, and any changed contract docs first.
 
 Choose the next semantic version deliberately.
 Update `CHANGELOG.md`.
+Archive the executed plan file under `ai/archive/` and update any moved-path references in the same change.
 Create the release commit using the repository commit message pattern.
 Create the annotated tag.
 
@@ -234,11 +235,13 @@ Follow `ai/RELEASES.md`.
 
 Choose the next semantic version deliberately.
 Update `CHANGELOG.md`.
+Archive the executed plan file under `ai/archive/` and update any moved-path references in the same change.
 Create the release commit using the repository commit message pattern.
 Create the annotated tag.
 Push the release commit on `main` to GitHub.
 Push the annotated tag to GitHub.
 Verify that the remote accepted both the branch update and the tag.
+Remove temporary execution worktrees and branches after confirming their changes are already integrated onto `main`.
 Summarize exactly what was published.
 ```
 
@@ -300,20 +303,20 @@ Create a new execution plan for these selected roadmap tasks:
 - Make the `release.yml` GitHub Actions workflow create a GitHub Release with release notes pulled from `CHANGELOG.md` and a link to the published Docker image
 - Remove machine-specific local paths and personal workstation details from `SETUP.md` and replace them with portable examples and placeholders
 
-Create `ai/PLAN_selected_release_readiness_tasks.md`.
+Create `ai/PLAN_example_release_readiness_tasks.md`.
 ```
 
 ### Example: Implement The Selected Release-Readiness Plan
 
 ```text
-Implement `ai/PLAN_selected_release_readiness_tasks.md`.
+Implement `ai/PLAN_example_release_readiness_tasks.md`.
 Do not release yet.
 ```
 
 ### Example: Implement And Release In One Go
 
 ```text
-Implement `ai/PLAN_selected_release_readiness_tasks.md`.
+Implement `ai/PLAN_example_release_readiness_tasks.md`.
 
 Use the multi-agent workflow from `ai/WORKFLOW.md`.
 Act as coordinator.
@@ -321,12 +324,14 @@ Keep shared integration files such as `CHANGELOG.md` and the plan's `Validation 
 Integrate completed work back onto `main`.
 Run final validation on `main`.
 After the whole plan is complete and validated, follow `ai/RELEASES.md` to prepare the release from `main`.
+Archive the executed plan file under `ai/archive/` as part of the release change.
+After the release is pushed and verified, clean up the temporary execution worktrees and branches for that plan.
 Do not push unless I explicitly ask for remote publication.
 ```
 
 ### Example: Prepare The Release After Implementation
 
 ```text
-Prepare a release for `ai/PLAN_selected_release_readiness_tasks.md`.
+Prepare a release for `ai/PLAN_example_release_readiness_tasks.md`.
 Do not push.
 ```
