@@ -1,4 +1,4 @@
-package team.jit.technicalinterviewdemo.testing;
+package team.jit.technicalinterviewdemo.testdata;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -9,6 +9,7 @@ import team.jit.technicalinterviewdemo.business.book.BookRepository;
 import team.jit.technicalinterviewdemo.business.category.Category;
 import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
 import team.jit.technicalinterviewdemo.technical.cache.CacheNames;
+import team.jit.technicalinterviewdemo.testing.CacheTestSupport;
 
 public final class BookCatalogTestData {
 

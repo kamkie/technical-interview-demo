@@ -32,7 +32,7 @@ import team.jit.technicalinterviewdemo.business.book.BookRepository;
 import team.jit.technicalinterviewdemo.business.category.Category;
 import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
 import team.jit.technicalinterviewdemo.testing.AbstractDocumentationIntegrationTest;
-import team.jit.technicalinterviewdemo.testing.BookCatalogTestData;
+import team.jit.technicalinterviewdemo.testdata.BookCatalogTestData;
 import team.jit.technicalinterviewdemo.testing.RestDocsIntegrationSpringBootTest;
 
 @RestDocsIntegrationSpringBootTest

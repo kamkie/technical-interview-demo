@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
-import team.jit.technicalinterviewdemo.testing.LocalizationTestData;
+import team.jit.technicalinterviewdemo.testdata.LocalizationTestData;
 import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
 
 @MockMvcIntegrationSpringBootTest

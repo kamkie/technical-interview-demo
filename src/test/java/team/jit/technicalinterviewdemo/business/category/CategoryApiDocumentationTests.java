@@ -20,7 +20,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
 import team.jit.technicalinterviewdemo.testing.AbstractDocumentationIntegrationTest;
-import team.jit.technicalinterviewdemo.testing.BookCatalogTestData;
+import team.jit.technicalinterviewdemo.testdata.BookCatalogTestData;
 import team.jit.technicalinterviewdemo.testing.RestDocsIntegrationSpringBootTest;
 
 @RestDocsIntegrationSpringBootTest
@@ -105,4 +105,3 @@ class CategoryApiDocumentationTests extends AbstractDocumentationIntegrationTest
                 ));
     }
 }
-

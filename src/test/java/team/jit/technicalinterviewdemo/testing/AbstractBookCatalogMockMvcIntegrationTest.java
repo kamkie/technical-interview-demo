@@ -6,6 +6,7 @@ import org.springframework.cache.CacheManager;
 import team.jit.technicalinterviewdemo.business.book.Book;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
 import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
+import team.jit.technicalinterviewdemo.testdata.BookCatalogTestData;
 
 public abstract class AbstractBookCatalogMockMvcIntegrationTest extends AbstractMockMvcIntegrationTest {
 

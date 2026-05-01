@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import team.jit.technicalinterviewdemo.business.localization.seed.LocalizationSeedData;
 import team.jit.technicalinterviewdemo.technical.localization.LocalizationContext;
 import team.jit.technicalinterviewdemo.testing.IntegrationSpringBootTest;
-import team.jit.technicalinterviewdemo.testing.LocalizationTestData;
+import team.jit.technicalinterviewdemo.testdata.LocalizationTestData;
 
 @IntegrationSpringBootTest
 class LocalizationServiceTests {

@@ -30,7 +30,7 @@ import team.jit.technicalinterviewdemo.business.localization.LocalizationReposit
 import team.jit.technicalinterviewdemo.business.localization.LocalizationRequest;
 import team.jit.technicalinterviewdemo.business.localization.LocalizationService;
 import team.jit.technicalinterviewdemo.business.user.UserAccountRepository;
-import team.jit.technicalinterviewdemo.testing.BookCatalogTestData;
+import team.jit.technicalinterviewdemo.testdata.BookCatalogTestData;
 import team.jit.technicalinterviewdemo.testing.CacheTestSupport;
 import team.jit.technicalinterviewdemo.testing.IntegrationSpringBootTest;
 
