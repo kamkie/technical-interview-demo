@@ -173,7 +173,7 @@
 
 ## Execution Task Split
 - Coordinator ownership on `main`:
-  - shared integration files: `CHANGELOG.md`, `ai/PLAN_selected_release_readiness_tasks.md`
+  - shared integration files: `CHANGELOG.md`, `ai/archive/PLAN_selected_release_readiness_tasks.md`
   - shared setup/release docs that span multiple milestones: `README.md`, `SETUP.md`
   - integration branch management, worker result review, final validation, and release creation
 - Worker 1 task: Harden `prod` startup requirements
@@ -208,7 +208,7 @@
     - verify setup-facing templates no longer contain machine-specific paths
 
 Coordinator integration notes:
-- Workers must not edit `CHANGELOG.md`, `ai/PLAN_selected_release_readiness_tasks.md`, `README.md`, or `SETUP.md`.
+- Workers must not edit `CHANGELOG.md`, `ai/archive/PLAN_selected_release_readiness_tasks.md`, `README.md`, or `SETUP.md`.
 - After each worker task lands on `main`, the coordinator updates `CHANGELOG.md` under `## [Unreleased]` and folds the completed behavior into the shared docs.
 - Final repository validation and release creation happen only after all four worker tasks are integrated on `main`.
 
