@@ -2,7 +2,7 @@
 
 `ai/RELEASES.md` explains how AI agents should create an intentional release in this repository after implementing a plan.
 
-Use this file when the user asks to make a release, prepare a release commit, create a release tag, or finish plan execution with a versioned release.
+Use this file when the user asks to make a release, prepare a release commit, create a release tag, or when plan execution reaches the final release step.
 Do not use this file for implementation planning, setup troubleshooting, or release history. Planning belongs in `ai/PLAN.md` and `ai/PLAN_*.md`. Setup belongs in `SETUP.md`. Release history belongs in `CHANGELOG.md`.
 
 ## Release Goal
@@ -15,7 +15,7 @@ A release in this repository means:
 - `CHANGELOG.md` has a new released version entry
 - the release commit is tagged with an annotated semantic version tag
 
-Releases are intentional. Do not update `CHANGELOG.md` or create a tag unless the user asked for a release.
+Releases are intentional. Do not update `CHANGELOG.md` or create a tag before the implemented plan is complete and validated.
 Cut releases only from `main`. Do not create a release from a feature branch, detached `HEAD`, or a partially integrated branch tip.
 
 ## Before You Release
