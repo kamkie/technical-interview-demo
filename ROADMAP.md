@@ -43,6 +43,7 @@ Goal: make the `1.0` boundary mean a stable, documented, and intentionally scope
 - [ ] Document the intended production posture for session cookies, OAuth login, admin bootstrap, and trusted deployment topology
 
 #### Add Release-Grade Runtime Verification
+- [ ] Enable the Dependabot workflow and keep dependency update automation aligned with the repository CI/release flow
 - [ ] Make the `release.yml` GitHub Actions workflow create a GitHub Release with release notes pulled from `CHANGELOG.md` and a link to the published Docker image
 - [ ] Add smoke tests that run from Gradle via a separate source set, target an externally running application, and stay out of the standard test lifecycle
 - [ ] Run benchmark tests from a dedicated Gradle task instead of the PowerShell wrapper script
