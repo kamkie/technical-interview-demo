@@ -1,12 +1,16 @@
 # Changelog
 
-All notable changes to this project are documented in this file.
+All notable released changes to this project are documented in this file.
 
 The format is based on Keep a Changelog and the project uses semantic version tags in the form `vMAJOR.MINOR.PATCH`.
-Each completed roadmap phase is released with an annotated git tag. Release numbers must increase in `git log --first-parent` order, and the Gradle build version is derived from the nearest reachable git tag.
-Historical `v0.0.x` releases were backfilled as annotated tags from mainline git history to preserve the pre-phase milestones that landed before the roadmap-based release numbering stabilized.
+The Gradle build version is derived from the nearest reachable annotated git tag, and release numbers must increase in `git log --first-parent` order.
 
 ## [Unreleased]
+
+### Changed
+- Reworked project documentation around a Spec-Driven Development workflow.
+- Made `SETUP.md` the sole detailed onboarding and troubleshooting guide.
+- Removed `COMPLETED_TASKS.md` so released human history now lives only in `CHANGELOG.md`.
 
 ## [v0.22.0] - 2026-05-01
 

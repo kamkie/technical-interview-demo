@@ -1,19 +1,40 @@
 # Contributing Guide
 
-This repository is intentionally small. Contributions should preserve that quality: readable code, direct implementations, and low ceremony.
+This repository is intentionally small. Contributions should preserve that quality: readable code, direct implementations, low ceremony, and spec-driven changes.
 
 ## Ground Rules
 
 Follow these project-level constraints first:
 
-- Keep the demo easy to reason about
-- Prefer straightforward Spring MVC, Spring Data JPA, and `@Service` code over extra abstraction
-- Keep package names under `team.jit.technicalinterviewdemo`
-- Do not remove the existing `hello` or `book` endpoints unless the change explicitly requires it
-- Use PostgreSQL for runtime work and keep the local developer path Docker-friendly
-- Keep `README.md` and `AGENTS.md` aligned when project setup, API behavior, formatter usage, logging/tracing behavior, or quality gates change
+- Keep the demo easy to reason about.
+- Prefer straightforward Spring MVC, Spring Data JPA, and `@Service` code over extra abstraction.
+- Keep package names under `team.jit.technicalinterviewdemo`.
+- Do not remove the existing `hello` or `book` endpoints unless the change explicitly requires it.
+- Use PostgreSQL for runtime work and keep the local developer path Docker-friendly.
+- Keep `README.md`, `AGENTS.md`, and `SETUP.md` aligned when product contract, engineering rules, or setup guidance change.
 
-`AGENTS.md` is the authoritative source for technical constraints and architecture expectations. If this file and `AGENTS.md` ever conflict, update this file to match `AGENTS.md`.
+`AGENTS.md` is the authoritative source for project-specific engineering rules. `SETUP.md` is the authoritative source for local environment and troubleshooting guidance.
+
+## Spec-Driven Development
+
+Contribute spec-first, not implementation-first.
+
+Expected flow:
+
+1. Identify the behavior being changed.
+2. Update or add the relevant spec artifact.
+3. Implement the smallest code change that satisfies the updated spec.
+4. Verify build, docs, and compatibility gates stay aligned.
+
+Relevant spec artifacts include:
+
+- integration and documentation tests under `src/test/java/`
+- Asciidoc sources under `src/docs/asciidoc/`
+- approved OpenAPI baseline at `src/test/resources/openapi/approved-openapi.json`
+- runnable HTTP examples under `src/test/resources/http/`
+- `README.md` for public human-facing contract
+- `TODO.md` for active planned work
+- `CHANGELOG.md` for released history
 
 ## Branch Naming
 
@@ -21,7 +42,7 @@ Use short, descriptive branch names:
 
 - `feat/book-search`
 - `fix/book-update-validation`
-- `docs/setup-guide`
+- `docs/spec-driven-docs`
 - `chore/testcontainers-upgrade`
 
 Recommended pattern:
@@ -46,10 +67,10 @@ Use concise, imperative subjects that describe the change clearly.
 Good examples:
 
 - `Add developer setup guide`
-- `Add book filtering by title and author`
-- `Update README for PostgreSQL profile`
+- `Flatten localization lookups onto collection filters`
+- `Document spec-driven contribution workflow`
 
-Keep the subject focused on one logical change. If you are working from `TODO.md`, include the roadmap item in the commit body when that context is useful, but keep the subject line readable on its own.
+Keep the subject focused on one logical change.
 
 ## Pull Request Process
 
@@ -58,7 +79,7 @@ Keep pull requests narrow enough to review quickly.
 Before opening a PR:
 
 1. Rebase or merge your branch so it reflects the current target branch.
-2. Make sure the change is scoped to one feature, fix, or documentation update.
+2. Make sure the change is scoped to one feature, fix, refactor, or documentation update.
 3. Update tests and docs when behavior changed.
 
 Each PR should include:
@@ -68,42 +89,40 @@ Each PR should include:
 - the commands you ran to validate it
 - any follow-up work that remains out of scope
 
-If the change affects API behavior, include example requests/responses or reference the updated generated docs.
+If the change affects public API behavior, include example requests/responses or reference the updated generated docs and OpenAPI change.
 
 ## Testing Requirements
 
-Run the required quality gates before asking for review:
+Run the required quality gate before asking for review:
 
 ```powershell
-$env:JAVA_HOME='C:\Users\kamki\.jdks\azul-25.0.3'
-$env:Path="$env:JAVA_HOME\bin;$env:Path"
-
 .\gradlew.bat build
 ```
 
 Additional expectations:
 
-- Add or update tests when API behavior changes
-- Keep the aggregate `build` clean
-- Do not skip documentation generation or the Docker image step when using the standard verification flow
-- Pull requests also run the dedicated OpenAPI compatibility GitHub Actions workflow against the approved baseline
-- Review the JaCoCo HTML output at `build/reports/jacoco/test/html/index.html` or run `.\gradlew.bat jacocoCoverageSummary` when coverage-sensitive changes land
-- `check` and `build` enforce minimum JaCoCo bundle coverage of 90% line coverage and 70% branch coverage
-- Rerun `.\scripts\run-phase-9-benchmarks.ps1` when changing book list/search queries, localization lookup behavior, or the OAuth/session startup flow
-- Compare the results with `performance/baselines/phase-9-local.json` and call out any sustained increase above 25% in p95 or mean response time, or any success rate below 99%
-- If a change legitimately needs a lower threshold, raise it explicitly in review instead of weakening the gate silently
+- Add or update tests when API behavior changes.
+- Keep the aggregate `build` clean.
+- Do not skip documentation generation or the Docker image step when using the standard verification flow.
+- Pull requests also run the OpenAPI compatibility workflow against the approved baseline.
+- Review the JaCoCo HTML output at `build/reports/jacoco/test/html/index.html` or run `./gradlew jacocoCoverageSummary` when coverage-sensitive changes land.
+- `check` and `build` enforce minimum JaCoCo bundle coverage of 90% line coverage and 70% branch coverage.
+- Rerun `./scripts/run-phase-9-benchmarks.ps1` when changing book list/search behavior, localization lookup behavior, or the OAuth/session startup flow.
+- Use `SETUP.md` for environment prerequisites and local tool configuration.
 
 ## Documentation Expectations
 
-Documentation is part of the change, not cleanup work for later.
+Documentation is part of the change.
 
-Update the relevant files when you change behavior:
+Update the relevant files when behavior changes:
 
-- `README.md` for human-facing setup and runtime behavior
-- `AGENTS.md` for AI-facing constraints and technical rules
-- `SETUP.md` for developer onboarding changes
-- `TODO.md` when a roadmap item is completed or materially re-scoped
-- `src/docs/asciidoc/index.adoc` and generated REST Docs tests when public API behavior changes
+- `README.md` for supported human-facing behavior and contract changes
+- `AGENTS.md` for engineering rules and AI-facing project constraints
+- `SETUP.md` for onboarding, environment, and troubleshooting changes
+- `TODO.md` when active roadmap items are added, removed, or materially re-scoped
+- `CHANGELOG.md` when preparing or documenting a release
+- `src/docs/asciidoc/` and related REST Docs tests when public API behavior changes
+- `src/test/resources/http/` when reviewer-facing request examples change
 
 ## Formatting Expectations
 
@@ -111,34 +130,4 @@ Spotless is the formatter entry point.
 
 Java formatting uses IntelliJ IDEA's formatter when available. If the formatter is not configured, Java formatting is skipped instead of failing the build.
 
-Provide the formatter through one of:
-
-```powershell
-$env:IDEA_FORMATTER_BINARY='C:\Path\To\IntelliJ IDEA\bin\idea64.exe'
-```
-
-```powershell
-$env:IDEA_HOME='C:\Path\To\IntelliJ IDEA'
-```
-
-```powershell
-.\gradlew.bat spotlessApply -PideaFormatterBinary='C:\Path\To\IntelliJ IDEA\bin\idea64.exe'
-```
-
-## Pre-Commit Hooks
-
-Repository-managed hooks are not enforced, but an optional sample hook is available at `.githooks/pre-commit.sample`.
-
-To enable it locally:
-
-```bash
-git config core.hooksPath .githooks
-cp .githooks/pre-commit.sample .githooks/pre-commit
-chmod +x .githooks/pre-commit
-```
-
-The sample runs:
-
-- `./gradlew build`
-
-Keep hooks developer-local unless the team explicitly chooses to standardize them as a required workflow.
+Use `SETUP.md` for formatter setup details and local formatter configuration options.

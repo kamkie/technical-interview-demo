@@ -1,14 +1,14 @@
 # Project TODO & Roadmap
 
 This file tracks active and upcoming work for the technical-interview-demo Spring Boot application.
-Completed work has been moved to `COMPLETED_TASKS.md` so this file stays focused on execution order and next steps.
+Keep this file focused on work that is still planned or in progress.
 
 ## How To Use This File
 
 - Keep only active or planned work here.
 - Keep items short so they are easy to reorder and edit.
-- Move completed work to `COMPLETED_TASKS.md`.
-- Prefer adding tasks under an existing section instead of creating a new roadmap layer.
+- Remove completed items instead of turning this file into a historical archive.
+- Use `CHANGELOG.md` for released history, not `TODO.md`.
 
 ## Current Priorities
 
@@ -108,23 +108,18 @@ Status: Deferred until the core roadmap is complete
 
 ---
 
-## Completed Work Archive
-
-See `COMPLETED_TASKS.md` for archived completed phases, including the completed Phase 4 language negotiation work, the completed Phase 5 security and audit work, the completed Phase 6 book API expansion, the completed Phase 7 caching and metrics work, the completed Phase 8 documentation and OpenAPI work, the completed Phase 9 coverage/performance work, the completed release-versioning workflow, the completed architecture hardening phase, and the completed pre-`1.0` naming/API simplification pass.
-
 ## Quick Reference: Quality Gates
 
 Before completing a task, run:
 
 ```powershell
-$env:JAVA_HOME='C:\Users\kamki\.jdks\azul-25.0.3'
-$env:Path="$env:JAVA_HOME\bin;$env:Path"
-
 .\gradlew.bat build
 ```
+
+Use `SETUP.md` for environment prerequisites and local verification setup.
 
 ## Notes
 
 - Keep the roadmap dependency-ordered so the next implementable task is obvious.
-- Keep `TODO.md` focused on active work; archive finished work instead of letting this file grow indefinitely.
-- Maintain alignment between `README.md` and `AGENTS.md` when project behavior, setup, or quality gates change.
+- Keep `TODO.md` focused on active work only.
+- Maintain alignment between `README.md`, `AGENTS.md`, and `SETUP.md` when project behavior, working rules, or setup guidance change.
