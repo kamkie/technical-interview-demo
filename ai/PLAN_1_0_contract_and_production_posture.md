@@ -335,9 +335,12 @@ Coordinator integration notes:
 - Coordinator verification before main integration:
   - searched the affected contract and setup artifacts for remaining pre-`1.0` unresolved wording after worker integration
   - result: no remaining contradictions found in the scoped files
-- Pending:
-  - integrate the completed plan onto `main`
-  - run final `.\gradlew.bat build` on `main`
+- Final integration:
+  - fast-forwarded `main` to `codex/1_0_contract_and_production_posture`
+- Final validation on `main`:
+  - `.\gradlew.bat build`
+  - result: passed on 2026-05-02 with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`
+- Follow-up status:
   - release/tag intentionally deferred per user request
 
 ## User Validation
