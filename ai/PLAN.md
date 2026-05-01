@@ -249,11 +249,12 @@ If the user later asks you to execute a plan:
 
 1. Re-read `ai/PLAN.md`, `AGENTS.md`, and the target `ai/PLAN_<topic>.md` file.
 2. Implement the smallest change that satisfies the plan.
-3. If execution happens in a git worktree or another branch, integrate the completed changes onto `main` before calling the task done.
-4. Update the `Validation Results` section in the plan document with what you actually ran and what passed or failed.
-5. If the user also asks for a release after execution, follow `ai/RELEASES.md` after the implementation and validation work is complete.
-6. If execution discovers a missing decision, stop and ask unless the plan already recorded an explicit fallback assumption.
-7. If execution discovers a better-engineering prerequisite that invalidates the plan, stop and explain why the plan must be revised.
+3. After each completed task in the plan, create a commit for that finished work. Do not wait and batch the entire plan into one final commit.
+4. If execution happens in a git worktree or another branch, integrate the completed changes onto `main` before calling the task done.
+5. Update the `Validation Results` section in the plan document with what you actually ran and what passed or failed.
+6. If the user also asks for a release after execution, follow `ai/RELEASES.md` after the implementation and validation work is complete.
+7. If execution discovers a missing decision, stop and ask unless the plan already recorded an explicit fallback assumption.
+8. If execution discovers a better-engineering prerequisite that invalidates the plan, stop and explain why the plan must be revised.
 
 ## Final Planning Check
 
