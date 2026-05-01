@@ -188,6 +188,7 @@ Additional verification expectations:
 
 - use semantic version tags in the form `vMAJOR.MINOR.PATCH`
 - keep version numbers increasing in `git log --first-parent` order
+- create releases only from `main` after all intended changes are integrated there
 - create annotated tags for intentional releases
 - keep `CHANGELOG.md` aligned with releases
 - do not introduce another human-facing completion archive file

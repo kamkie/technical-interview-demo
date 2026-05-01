@@ -10,11 +10,13 @@ Do not use this file for implementation planning, setup troubleshooting, or rele
 A release in this repository means:
 
 - the requested implementation work is complete
+- all intended release changes are integrated on `main`
 - the governing specs and published contract artifacts are aligned
 - `CHANGELOG.md` has a new released version entry
 - the release commit is tagged with an annotated semantic version tag
 
 Releases are intentional. Do not update `CHANGELOG.md` or create a tag unless the user asked for a release.
+Cut releases only from `main`. Do not create a release from a feature branch, detached `HEAD`, or a partially integrated branch tip.
 
 ## Before You Release
 
@@ -29,12 +31,14 @@ Read these artifacts before making release changes:
 Inspect repository state before editing release metadata:
 
 - confirm the target plan was fully executed
+- confirm all intended release changes have been merged or otherwise integrated onto `main`
+- confirm `git branch --show-current` is `main`
 - confirm the target plan's `Validation Results` section reflects what actually ran
 - confirm `.\gradlew.bat build` passed for the release candidate
 - confirm OpenAPI, REST Docs, HTTP examples, and `README.md` were updated when the change required them
 - confirm the worktree is in the expected state before creating the release commit
 
-If the implementation is incomplete, specs are not aligned, or the build is failing, do not make a release.
+If the implementation is incomplete, specs are not aligned, the build is failing, or the release candidate is not on `main`, do not make a release.
 
 ## Choosing The Version
 
@@ -55,6 +59,8 @@ Before choosing the version:
 Do not reuse or skip to a lower version than an already published first-parent release.
 
 ## Preparing The Release Commit
+
+Start by syncing your local `main` checkout to the intended integrated state. If required work is still sitting on another branch, integrate it first and only then prepare the release from `main`.
 
 1. Move the relevant `CHANGELOG.md` content from `## [Unreleased]` into a new version section using the chosen tag and the release date in `YYYY-MM-DD` format.
 2. Keep the changelog human-readable and limited to released user-visible changes. Do not add plan-completion notes, agent notes, or internal transcript detail.
@@ -84,6 +90,7 @@ Releases in this repository are based on annotated tags. Lightweight tags are no
 
 Before reporting completion, verify:
 
+- `git branch --show-current` is `main`
 - `git status --short` is clean
 - `git log --first-parent --decorate --oneline -n 5` shows the release commit and tag in the expected place
 - `CHANGELOG.md` matches the chosen tag and date
@@ -107,6 +114,7 @@ Do not assume a remote push is always desired just because a local release tag e
 
 - do not create another human-facing completion archive file
 - do not record unreleased work as released
+- do not cut a release from any branch other than `main`
 - do not tag a commit that has not passed the required validation
 - do not refresh the OpenAPI baseline unless the contract change was intentional and reviewed
 - do not rewrite release history unless the user explicitly asks for recovery work
@@ -114,9 +122,10 @@ Do not assume a remote push is always desired just because a local release tag e
 ## Minimal Release Checklist
 
 1. Execute the target plan.
-2. Update the plan's `Validation Results`.
-3. Run `.\gradlew.bat build`.
-4. Update `CHANGELOG.md` for the chosen version.
-5. Commit with `Prepare vMAJOR.MINOR.PATCH release`.
-6. Create an annotated tag `vMAJOR.MINOR.PATCH`.
-7. Verify clean status, tag placement, and changelog alignment.
+2. Integrate all intended changes onto `main` and switch to `main`.
+3. Update the plan's `Validation Results`.
+4. Run `.\gradlew.bat build`.
+5. Update `CHANGELOG.md` for the chosen version.
+6. Commit with `Prepare vMAJOR.MINOR.PATCH release`.
+7. Create an annotated tag `vMAJOR.MINOR.PATCH`.
+8. Verify clean status, branch, tag placement, and changelog alignment.
