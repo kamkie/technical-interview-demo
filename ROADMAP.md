@@ -12,11 +12,54 @@ Keep this file focused on work that is still planned or in progress.
 
 ## Current Priorities
 
-1. No active implementation roadmap item is open right now; add the next item only after it has a concrete spec.
+1. Add Gradle-owned vulnerability scanning for application dependencies and the built Docker image.
+2. Strengthen release confidence by expanding production-like smoke validation beyond the current five unauthenticated checks.
+3. Close the most obvious demo-API maintenance gaps without reopening the frozen `1.x` contract carelessly.
 
 ## Ordered Plan
 
-No active planned work is tracked here after the `v1.0.1` operational-readiness release. Add the next concrete item when it is ready to implement.
+### Now: Supply-Chain And Vulnerability Scanning
+
+Status: Planned
+
+Goal: make dependency and container-image vulnerability findings visible in local Gradle runs, fail CI on serious issues, and stop publishing images without scanning the exact artifact produced by the build.
+
+#### Scan The Application
+- [ ] Add Gradle-owned vulnerability scanning for application and transitive dependencies instead of relying only on Dependabot update PRs
+- [ ] Produce stable scan artifacts that are usable in local review and CI troubleshooting
+- [ ] Define a narrow suppression and review workflow so intentional exceptions are explicit rather than hidden
+
+#### Scan The Docker Image
+- [ ] Add a Gradle task that scans the Docker image built by `dockerBuild` for OS and package vulnerabilities
+- [ ] Run the image scan in CI and in the tag-driven release flow before GHCR publication
+- [ ] Keep the scan tied to the exact built image coordinates so the release workflow does not scan one image and publish another
+
+### Next: Release Confidence Hardening
+
+Status: Planned
+
+Goal: catch production-like regressions that the current release path can still miss, especially around docs exposure and authenticated session behavior.
+
+#### Expand Production-Like Smoke Coverage
+- [ ] Extend `externalSmokeTest` beyond `/`, `/hello`, `/docs`, readiness, and the public books list
+- [ ] Add smoke coverage for the generated OpenAPI/docs assets so release candidates prove the documentation surface still works when packaged
+- [ ] Add at least one authenticated session path in the production-like validation flow instead of relying only on in-process security integration tests
+
+#### Verify Session-Backed Runtime Behavior
+- [ ] Add a focused production-like check that proves JDBC-backed Spring Session persistence still works in the packaged container path
+- [ ] Keep the new checks narrow so the demo stays easy to run locally and in CI
+
+### Later: Demo API Usability Improvements
+
+Status: Planned
+
+Goal: improve the demo’s day-2 usability for reviewers and maintainers without turning it into a much larger platform.
+
+#### Audit Reviewability
+- [ ] Add a read-only admin-facing audit log API or export path so recorded book and localization changes can be reviewed without direct database access
+
+#### Category Maintenance
+- [ ] Add explicit category update and delete semantics with clear reassignment or validation rules instead of leaving category management create-only
 
 ---
 
