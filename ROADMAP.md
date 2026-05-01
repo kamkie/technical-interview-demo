@@ -13,7 +13,7 @@ Keep this file focused on work that is still planned or in progress.
 ## Current Priorities
 
 1. Finish the pre-`1.0` release-readiness work so the project has a clear, defensible definition of what `1.0` means.
-2. Keep the public API stable after the last pre-`1.0` simplification pass unless a release-blocking clarity issue is still found.
+2. Freeze the production posture for security, deployment defaults, and technical endpoint exposure before declaring the demo stable.
 3. Keep optional future enhancements explicitly deferred until the core roadmap is complete.
 
 ## Ordered Plan
@@ -24,34 +24,31 @@ Status: Planned
 
 Goal: make the `1.0` boundary mean a stable, documented, and intentionally scoped demo application rather than only a feature-complete snapshot.
 
-#### Define The 1.0 Contract
+#### Decide The 1.0 Promise
 - [ ] Decide whether `1.0` means "stable interview-demo reference app" or "production-ready starter"
-- [ ] Document which endpoints and behaviors are part of the supported public contract
-- [ ] Document which endpoints are technical/demo-only convenience endpoints
 - [ ] Define the compatibility promise for future `1.x` releases
 
-#### Stabilize The Public API Surface
+#### Freeze The Supported Surface
+- [ ] Document which endpoints and behaviors are part of the supported public contract
+- [ ] Document which endpoints are technical/demo-only convenience endpoints
 - [ ] Review endpoint naming, resource semantics, and response shapes before freezing the `1.0` contract
-- [ ] Stop returning JPA entities directly from public controllers where persistence shape leaks into the API
-- [ ] Standardize `401` and `403` responses so they follow the same documented `ProblemDetail` style as other API errors
 - [ ] Refresh the approved OpenAPI baseline only after the `1.0` surface is reviewed and accepted
 
-#### Revisit The Production Security Posture
-- [ ] Remove insecure production-style defaults and fail fast when required secrets or database credentials are missing in `prod`
+#### Freeze The Production Posture
 - [ ] Re-evaluate session-based write security before `1.0`: either re-enable CSRF for browser-session writes or document the deliberate alternative
 - [ ] Review whether `/actuator/prometheus` and other technical endpoints should stay public in production or become deployment-specific
 - [ ] Document the intended production posture for session cookies, OAuth login, admin bootstrap, and trusted deployment topology
 
-#### Add Release-Grade Runtime Verification
-- [ ] Enable the Dependabot workflow and keep dependency update automation aligned with the repository CI/release flow
-- [ ] Make the `release.yml` GitHub Actions workflow create a GitHub Release with release notes pulled from `CHANGELOG.md` and a link to the published Docker image
-- [ ] Review the new deployment manifests, Helm chart, and monitoring assets against the final `1.0` security and operational defaults
+#### Finalize Deployment Guidance
+- [ ] Review the deployment manifests, Helm chart, and monitoring assets against the final `1.0` security and operational defaults
+- [ ] Align `README.md`, `SETUP.md`, and deployment examples with the final `1.0` production posture decisions
+
+#### Finalize Release Governance
 - [ ] Add a release checklist for Flyway migration review, OpenAPI compatibility, benchmark review, changelog update, and tagging
 
 #### Tighten Operational Readiness
 - [ ] Document what healthy runtime behavior looks like for health, readiness, metrics, and audit logging
 - [ ] Add deployment-oriented troubleshooting for OAuth setup, PostgreSQL connectivity, and session persistence failures
-- [ ] Remove machine-specific local paths and personal workstation details from `SETUP.md` and replace them with portable examples and placeholders
 - [ ] Document an upgrade and rollback flow for schema migrations and versioned container releases
 
 ---
