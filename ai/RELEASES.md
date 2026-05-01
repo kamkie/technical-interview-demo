@@ -14,6 +14,7 @@ A release in this repository means:
 - the governing specs and published contract artifacts are aligned
 - `CHANGELOG.md` has a new released version entry
 - the release commit is tagged with an annotated semantic version tag
+- pushing that annotated tag may publish the container image and create the GitHub Release artifact
 
 Releases are intentional. Do not update `CHANGELOG.md` or create a tag before the implemented plan is complete and validated.
 Cut releases only from `main`. Do not create a release from a feature branch, detached `HEAD`, or a partially integrated branch tip.
@@ -108,8 +109,12 @@ When push is requested:
 1. push the release commit to the intended branch
 2. push the annotated tag
 3. verify the remote accepted both updates
+4. monitor the tag-driven `Release` workflow until it finishes publishing both container-image tags and the GitHub Release
+5. confirm the GitHub Release body matches the exact `## [vMAJOR.MINOR.PATCH]` section from `CHANGELOG.md` and includes the tag image reference, SHA image reference, and package-page link
 
 Do not assume a remote push is always desired just because a local release tag exists.
+
+The automated GitHub Release body is sourced from the exact matching `CHANGELOG.md` version section. If the tagged section is missing or duplicated, the release workflow is expected to fail closed instead of publishing partial notes.
 
 ## What Not To Do
 
