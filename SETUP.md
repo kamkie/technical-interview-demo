@@ -38,6 +38,7 @@ docker-compose up -d
 export JAVA_HOME='<path-to-jdk-25>'
 export PATH="$JAVA_HOME/bin:$PATH"
 
+docker-compose up -d
 ./gradlew bootRun
 ```
 
@@ -561,7 +562,7 @@ Fix:
 
 ```powershell
 .\gradlew.bat refreshOpenApiBaseline
-.\gradlew.bat test --tests team.jit.technicalinterviewdemo.OpenApiCompatibilityIntegrationTests
+.\gradlew.bat test --tests team.jit.technicalinterviewdemo.technical.docs.OpenApiCompatibilityIntegrationTests
 ```
 
 ### PostgreSQL local profile will not start

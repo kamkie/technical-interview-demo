@@ -243,13 +243,20 @@ Verify that:
 - the remote accepted both the branch update and the tag
 ```
 
-### Publish The GitHub Release After Local Release Prep
+### Verify The GitHub Release After Push
 
 ```text
-Publish the already prepared release on GitHub.
+Verify the tag-driven GitHub Release publication for the already pushed release.
 
-Assume the release commit and annotated tag already exist locally.
+Assume the release commit and annotated tag were already pushed.
 Do not change version numbers or rewrite the release metadata unless a validation issue forces it.
+
+Verify that:
+- the `Release` workflow ran for the pushed tag
+- `./gradlew externalSmokeTest` passed in the release workflow
+- the GitHub Release was created from the matching `CHANGELOG.md` section
+- both the semantic image tag and immutable short-SHA image tag were published
+
 Summarize exactly what was published.
 ```
 

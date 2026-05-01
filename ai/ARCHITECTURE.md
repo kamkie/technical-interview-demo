@@ -167,8 +167,8 @@ Persistence uses:
 
 Current persistence style:
 
-- entities are used directly in several public controllers because the app is still demo-sized
-- some roadmap items explicitly call out future cleanup where persistence shape leaks into the API
+- public controllers use feature-local response DTOs instead of exposing JPA entities directly
+- request and response types stay feature-local so public contract shaping remains explicit and reviewable
 - repositories stay feature-local instead of being abstracted behind extra data-access layers
 
 Implication for AI agents:

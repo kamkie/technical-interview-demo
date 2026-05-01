@@ -73,7 +73,7 @@ Shared files should stay under coordinator ownership unless there is a strong re
 4. Each worker gets its own git worktree or branch for one task.
 5. Each worker completes its task, validates it, and creates a task-level commit.
 6. The coordinator reviews each worker result, updates the plan state as needed, and keeps progress moving without integrating each task onto `main` immediately.
-7. The coordinator updates `CHANGELOG.md` under `## [Unreleased]` on the integration branch when the whole plan is complete and ready to land together.
+7. The coordinator updates `CHANGELOG.md` under `## [Unreleased]` on the integration branch as each completed task or milestone commit lands there.
 8. After the whole plan is complete, the coordinator updates the plan's `Validation Results`.
 9. The coordinator integrates the completed plan onto `main`.
 10. The coordinator runs `.\gradlew.bat build` on `main`.
@@ -118,7 +118,7 @@ In this repository:
 
 - each completed task gets its own commit
 - do not wait and batch the entire plan into one final implementation commit
-- update `CHANGELOG.md` under `## [Unreleased]` as each task lands
+- update `CHANGELOG.md` under `## [Unreleased]` as each completed task or milestone commit lands on the integration branch
 - keep commits narrow enough that they map cleanly to completed plan tasks
 
 The release commit is separate from the task commits and is created only after the whole plan is implemented and validated.

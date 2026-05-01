@@ -27,6 +27,7 @@ Use these files deliberately:
 - `ai/LEARNINGS.md`: durable repo-wide engineering lessons that should survive refactors
 - `ai/PLAN.md`: instructions for producing execution plans
 - `ai/PLAN_*.md`: task-specific execution plans and milestone breakdowns
+- `ai/PROMPTS.md`: reusable prompt library for repository-specific planning, implementation, validation, release, and multi-agent requests
 - `ai/archive/`: archived AI execution plans that have already been released or otherwise completed
 - `ai/RELEASES.md`: AI-facing release workflow for intentional post-implementation releases
 - `ai/WORKFLOW.md`: AI-facing multi-agent workflow for delegation, worktree usage, integration, and release handoff

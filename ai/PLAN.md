@@ -97,7 +97,7 @@ If the plan changes request handling, response shape, documented errors, securit
 - HTTP examples under `src/test/resources/http/`
 - `README.md` if the supported contract changed
 
-The plan must also state whether benchmark reruns are required. In this repository, rerun `./scripts/run-phase-9-benchmarks.ps1` when changing:
+The plan must also state whether benchmark reruns are required. In this repository, rerun `.\gradlew.bat gatlingBenchmark` when changing:
 
 - book list or search behavior
 - localization lookup behavior
@@ -251,7 +251,7 @@ If the user later asks you to execute a plan:
 2. Implement the smallest change that satisfies the plan.
 3. Keep plan-execution commits on the execution branch or worktree until the whole plan is finished.
 4. After each completed task in the plan, create a commit for that finished work. Do not wait and batch the entire plan into one final commit.
-5. After the whole plan is complete, update the `## [Unreleased]` section in `CHANGELOG.md` with the completed work that should be reflected in the upcoming release.
+5. After each completed task or milestone commit, update `CHANGELOG.md` under `## [Unreleased]` with the completed work that should be reflected in the upcoming release.
 6. If execution happens in a git worktree or another branch, integrate the completed plan onto `main` before calling the task done.
 7. Update the `Validation Results` section in the plan document with what you actually ran and what passed or failed.
 8. After the whole plan is implemented and validated, make a release by following `ai/RELEASES.md`.
