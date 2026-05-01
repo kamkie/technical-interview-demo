@@ -110,16 +110,24 @@ class ApiDocumentationTests extends AbstractDocumentationIntegrationTest {
                                 fieldWithPath("configuration.session.cookieName").description("Session cookie name."),
                                 fieldWithPath("configuration.session.cookieHttpOnly").description("Whether the session cookie is HTTP-only."),
                                 fieldWithPath("configuration.session.cookieSameSite").description("Session cookie SameSite mode."),
-                                fieldWithPath("configuration.observability.exposedEndpoints").description("Actuator web endpoints exposed by configuration."),
+                                fieldWithPath("configuration.observability.exposedEndpoints").description(
+                                        "Actuator web endpoints exposed by configuration, including deployment-scoped endpoints such as Prometheus scraping."
+                                ),
                                 fieldWithPath("configuration.observability.healthProbesEnabled").description("Whether readiness/liveness probe groups are enabled."),
                                 fieldWithPath("configuration.observability.tracingSamplingProbability").description("Tracing sampling probability."),
                                 fieldWithPath("configuration.documentation.html").description("Bundled HTML documentation entry point."),
                                 fieldWithPath("configuration.documentation.openApiJson").description("OpenAPI JSON endpoint path."),
                                 fieldWithPath("configuration.documentation.openApiYaml").description("OpenAPI YAML endpoint path."),
                                 fieldWithPath("configuration.documentation.openApiVersion").description("Configured OpenAPI document dialect."),
-                                fieldWithPath("configuration.security.csrfEnabled").description("Whether CSRF protection is enabled for the application."),
-                                fieldWithPath("configuration.security.oauthProfileActive").description("Whether the optional oauth profile is currently active."),
-                                fieldWithPath("configuration.security.oauthLoginPath").description("Interactive GitHub OAuth login path when the oauth profile is active."),
+                                fieldWithPath("configuration.security.csrfEnabled").description(
+                                        "Whether CSRF protection is enabled. For 1.0 this remains disabled as a deliberate demo tradeoff for reviewer-oriented session flows."
+                                ),
+                                fieldWithPath("configuration.security.oauthProfileActive").description(
+                                        "Whether the optional oauth profile is currently active. The base runtime remains deployable without it."
+                                ),
+                                fieldWithPath("configuration.security.oauthLoginPath").description(
+                                        "Interactive GitHub OAuth login path used only when the optional oauth profile is active."
+                                ),
                                 fieldWithPath("configuration.shutdown.serverShutdown").description("Server shutdown mode."),
                                 fieldWithPath("configuration.shutdown.timeoutPerShutdownPhase").description("Per-phase graceful shutdown timeout.")
                         )
@@ -558,7 +566,7 @@ class ApiDocumentationTests extends AbstractDocumentationIntegrationTest {
     }
 
     @Test
-    void documentActuatorPrometheusEndpoint() throws Exception {
+    void documentDeploymentScopedActuatorPrometheusEndpoint() throws Exception {
         mockMvc.perform(get("/actuator/prometheus"))
                 .andExpect(status().isOk())
                 .andExpect(header().exists("X-Request-Id"))

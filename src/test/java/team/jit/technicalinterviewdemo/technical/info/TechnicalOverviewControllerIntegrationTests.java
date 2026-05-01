@@ -1,7 +1,7 @@
 package team.jit.technicalinterviewdemo.technical.info;
 
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasItems;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -17,7 +17,7 @@ import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
 class TechnicalOverviewControllerIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
-    void rootEndpointReturnsTechnicalOverview() throws Exception {
+    void rootEndpointReturnsTechnicalOverviewWithFrozenRuntimePosture() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.build.name").value("technical-interview-demo"))
@@ -42,7 +42,7 @@ class TechnicalOverviewControllerIntegrationTests extends AbstractMockMvcIntegra
                 .andExpect(jsonPath("$.configuration.session.cookieName").value("technical-interview-demo-session"))
                 .andExpect(jsonPath("$.configuration.session.cookieHttpOnly").value(true))
                 .andExpect(jsonPath("$.configuration.session.cookieSameSite").value("lax"))
-                .andExpect(jsonPath("$.configuration.observability.exposedEndpoints", hasItems("health", "info", "prometheus")))
+                .andExpect(jsonPath("$.configuration.observability.exposedEndpoints", contains("health", "info", "prometheus")))
                 .andExpect(jsonPath("$.configuration.observability.healthProbesEnabled").value(true))
                 .andExpect(jsonPath("$.configuration.observability.tracingSamplingProbability").value(1.0d))
                 .andExpect(jsonPath("$.configuration.documentation.html").value("/docs"))
@@ -57,11 +57,10 @@ class TechnicalOverviewControllerIntegrationTests extends AbstractMockMvcIntegra
     }
 
     @Test
-    void helloEndpointReturnsHelloWorld() throws Exception {
+    void helloEndpointRemainsPublicSmokeTestContract() throws Exception {
         mockMvc.perform(get("/hello"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Hello World!"));
     }
 }
-
 

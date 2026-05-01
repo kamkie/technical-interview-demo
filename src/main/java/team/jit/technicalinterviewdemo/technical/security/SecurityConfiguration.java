@@ -33,6 +33,7 @@ public class SecurityConfiguration {
         http
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
+                // 1.0 keeps CSRF disabled to preserve reviewer-friendly session flows in the demo.
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/error", "/", "/docs", "/docs/**", "/hello").permitAll()
@@ -41,6 +42,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/account", "/api/account/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/actuator/health", "/actuator/health/**").permitAll()
+                        // Prometheus stays reachable for trusted deployment scraping; deployment boundaries keep it off the internet.
                         .requestMatchers(HttpMethod.GET, "/actuator/info", "/actuator/prometheus").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/books", "/api/categories", "/api/localizations")
                         .authenticated()
@@ -71,4 +73,3 @@ public class SecurityConfiguration {
         return http.build();
     }
 }
-

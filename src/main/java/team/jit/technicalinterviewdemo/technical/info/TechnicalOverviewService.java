@@ -33,6 +33,7 @@ public class TechnicalOverviewService {
     private final Environment environment;
 
     public TechnicalOverviewResponse getOverview() {
+        List<String> activeProfiles = List.copyOf(Arrays.asList(environment.getActiveProfiles()));
         TechnicalOverviewResponse response = new TechnicalOverviewResponse(
                 new TechnicalOverviewResponse.BuildDetails(
                         buildProperties.getName(),
@@ -51,7 +52,7 @@ public class TechnicalOverviewService {
                         environment.getProperty("spring.application.name", "technical-interview-demo"),
                         System.getProperty("java.version", "unknown"),
                         System.getProperty("java.vendor", "unknown"),
-                        List.copyOf(Arrays.asList(environment.getActiveProfiles()))
+                        activeProfiles
                 ),
                 dependencyVersions(),
                 new TechnicalOverviewResponse.ConfigurationDetails(
@@ -79,7 +80,7 @@ public class TechnicalOverviewService {
                         ),
                         new TechnicalOverviewResponse.SecurityDetails(
                                 false,
-                                List.of(environment.getActiveProfiles()).contains("oauth"),
+                                activeProfiles.contains("oauth"),
                                 OAUTH_LOGIN_PATH
                         ),
                         new TechnicalOverviewResponse.ShutdownDetails(
@@ -146,4 +147,3 @@ public class TechnicalOverviewService {
         }
     }
 }
-

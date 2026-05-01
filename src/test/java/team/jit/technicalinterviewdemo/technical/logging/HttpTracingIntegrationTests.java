@@ -112,7 +112,7 @@ class HttpTracingIntegrationTests extends AbstractRandomPortIntegrationTest {
     }
 
     @Test
-    void actuatorPrometheusEndpointIsExposed() throws IOException, InterruptedException {
+    void actuatorPrometheusEndpointIsExposedForTrustedScraping() throws IOException, InterruptedException {
         HttpResponse<String> response = get("/actuator/prometheus");
 
         assertEquals(200, response.statusCode());
