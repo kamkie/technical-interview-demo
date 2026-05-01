@@ -224,7 +224,29 @@
 - When this work is later released, remove the completed roadmap items from `ROADMAP.md` rather than leaving stale operational-readiness tasks active.
 
 ## Validation Results
-- To be filled in during execution.
+- Milestone 1 completed:
+  - updated `ai/RELEASES.md` with a concrete maintainer release checklist
+  - aligned release wording in `README.md` and `CONTRIBUTING.md`
+  - updated `CHANGELOG.md` under `## [Unreleased]`
+  - committed as `43e946c` (`docs: add post-1.0 release checklist guidance`)
+- Milestone 2 completed:
+  - documented healthy runtime expectations in `SETUP.md`
+  - updated `CHANGELOG.md` under `## [Unreleased]`
+  - committed as `ac56be7` (`docs: define healthy runtime expectations`)
+- Milestone 3 completed:
+  - added upgrade/rollback guidance plus OAuth, PostgreSQL, and Spring Session troubleshooting in `SETUP.md`
+  - updated `CHANGELOG.md` under `## [Unreleased]`
+- Validation commands run on 2026-05-02:
+  - `.\scripts\release\render-release-notes.ps1 -Tag v1.0.0 -TagImageReference ghcr.io/example-owner/technical-interview-demo:v1.0.0 -ShaImageReference ghcr.io/example-owner/technical-interview-demo:sha-example123456 -PackagePageUrl https://github.com/example-owner/technical-interview-demo/pkgs/container/technical-interview-demo`
+    - result: passed and rendered the `v1.0.0` changelog section plus release metadata with tag image, immutable image, and package-page link
+  - `.\gradlew.bat build`
+    - result: passed with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`
+  - `.\gradlew.bat externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo`
+    - result: passed with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`; the smoke environment reached readiness, Flyway schema history was verified, and the 5 external smoke tests passed
+- Scope checks:
+  - no OpenAPI baseline refresh was needed
+  - no `gatlingBenchmark` rerun was needed because execution stayed documentation-only
+  - existing contract behavior was preserved
 
 ## User Validation
 - Confirm that the repository clearly answers these questions without opening the code:

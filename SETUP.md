@@ -345,6 +345,36 @@ select count(*) from spring_session;
 select count(*) from spring_session_attributes;
 ```
 
+## Upgrade And Rollback
+
+This repository treats releases as versioned container-image upgrades backed by forward-only Flyway migrations.
+
+Pre-release checks for a versioned upgrade:
+
+1. Review any new files under `src/main/resources/db/migration/` and confirm the schema change is intentional for the target version.
+2. Run `.\gradlew.bat build`.
+3. Run `.\gradlew.bat externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo`.
+4. If the change touched book search/list behavior, localization lookup behavior, or OAuth/session startup behavior, also run `.\gradlew.bat gatlingBenchmark`.
+5. Confirm the target release notes and deployment values reference the intended semantic version tag.
+
+Upgrade flow:
+
+1. Build or pull the target image tag, for example `ghcr.io/<owner>/technical-interview-demo:v1.0.0`.
+2. Update the Kubernetes manifest image tag or Helm values to the target release.
+3. Apply the rollout and watch `GET /actuator/health/readiness` or `kubectl rollout status` until the app reaches `UP`.
+4. Confirm `GET /actuator/info` reflects the new build metadata.
+5. Confirm trusted Prometheus scraping still works and that authenticated browser-session flows can create rows in `SPRING_SESSION`.
+
+Rollback expectations:
+
+- If the failed rollout did **not** introduce a new Flyway migration, image rollback to the previous known-good version is the normal first response.
+- If the failed rollout **did** introduce a new Flyway migration, do not assume image-only rollback is safe. The repo does not provide Flyway undo migrations.
+- For migration-bearing releases, rollback may require:
+  - restoring the database from backup
+  - manual database repair
+  - or shipping a forward-fix release that restores application compatibility with the migrated schema
+- After rollback or forward-fix recovery, re-check readiness, operational metadata, metrics scraping, and any affected authenticated session or write flows.
+
 ## Kubernetes Deployment
 
 The raw Kubernetes baseline lives under `k8s/base`. The local demo overlay lives under `k8s/overlays/local`.
@@ -488,6 +518,12 @@ Role behavior:
 
 ## Troubleshooting
 
+Use these three PostgreSQL troubleshooting paths deliberately:
+
+- local profile startup: `docker-compose` plus `.\gradlew.bat bootRun`
+- production-like container smoke: `.\gradlew.bat externalSmokeTest`
+- cluster deployment: Kubernetes manifests or Helm plus the target PostgreSQL service/secret wiring
+
 ### Gradle fails because Java 11 is active
 
 Symptom:
@@ -566,7 +602,23 @@ Fix:
 1. Confirm `SPRING_PROFILES_ACTIVE` includes `oauth`.
 2. Confirm `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` are exported in the same shell or run configuration.
 3. Confirm the GitHub OAuth App callback URL is `http://localhost:8080/login/oauth2/code/github`.
-4. Re-run the app with `.\gradlew.bat bootRun`.
+4. Complete the browser login and then verify the app session with `GET /api/account` plus the `technical-interview-demo-session` cookie.
+5. Re-run the app with `.\gradlew.bat bootRun`.
+
+### Authenticated session does not persist after login
+
+Symptom:
+
+- GitHub login appears to complete, but `GET /api/account` still returns unauthorized
+- the app does not retain the `technical-interview-demo-session` state across requests
+
+Fix:
+
+1. Confirm the login flow completed with the optional `oauth` profile enabled.
+2. Query `SPRING_SESSION` and `SPRING_SESSION_ATTRIBUTES` and confirm rows are being created.
+3. If the tables are missing, confirm Flyway ran successfully and that `V4__create_spring_session_tables.sql` is present in the target build.
+4. If the tables exist but stay empty, confirm the app can still reach PostgreSQL with the configured datasource settings.
+5. Repeat the login flow and verify `GET /api/account` with the captured `technical-interview-demo-session` cookie from `src/test/resources/http/authentication.http`.
 
 ### Container smoke validation fails on database startup
 
