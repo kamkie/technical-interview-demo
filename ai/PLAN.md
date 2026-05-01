@@ -249,13 +249,14 @@ If the user later asks you to execute a plan:
 
 1. Re-read `ai/PLAN.md`, `AGENTS.md`, and the target `ai/PLAN_<topic>.md` file.
 2. Implement the smallest change that satisfies the plan.
-3. After each completed task in the plan, update the `## [Unreleased]` section in `CHANGELOG.md` with the newly completed work that should be reflected in the upcoming release.
+3. Keep plan-execution commits on the execution branch or worktree until the whole plan is finished.
 4. After each completed task in the plan, create a commit for that finished work. Do not wait and batch the entire plan into one final commit.
-5. If execution happens in a git worktree or another branch, integrate the completed changes onto `main` before calling the task done.
-6. Update the `Validation Results` section in the plan document with what you actually ran and what passed or failed.
-7. After the whole plan is implemented and validated, make a release by following `ai/RELEASES.md`.
-8. If execution discovers a missing decision, stop and ask unless the plan already recorded an explicit fallback assumption.
-9. If execution discovers a better-engineering prerequisite that invalidates the plan, stop and explain why the plan must be revised.
+5. After the whole plan is complete, update the `## [Unreleased]` section in `CHANGELOG.md` with the completed work that should be reflected in the upcoming release.
+6. If execution happens in a git worktree or another branch, integrate the completed plan onto `main` before calling the task done.
+7. Update the `Validation Results` section in the plan document with what you actually ran and what passed or failed.
+8. After the whole plan is implemented and validated, make a release by following `ai/RELEASES.md`.
+9. If execution discovers a missing decision, stop and ask unless the plan already recorded an explicit fallback assumption.
+10. If execution discovers a better-engineering prerequisite that invalidates the plan, stop and explain why the plan must be revised.
 
 ## Final Planning Check
 

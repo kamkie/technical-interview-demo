@@ -26,7 +26,7 @@ The coordinator agent owns:
 - deciding whether the work is worth splitting
 - splitting the plan into bounded, non-overlapping tasks
 - keeping `main` as the integration branch
-- integrating completed worker changes back onto `main`
+- holding completed worker changes on execution branches until the whole plan is finished, then integrating the full plan onto `main`
 - maintaining shared integration files such as `CHANGELOG.md` and the target plan's `Validation Results`
 - running final repository validation on `main`
 - creating the release from `main` after the whole plan is complete
@@ -72,10 +72,10 @@ Shared files should stay under coordinator ownership unless there is a strong re
 3. The coordinator splits the plan into bounded tasks with explicit file ownership.
 4. Each worker gets its own git worktree or branch for one task.
 5. Each worker completes its task, validates it, and creates a task-level commit.
-6. The coordinator reviews the result and integrates that completed task onto `main`.
-7. After each integrated task, the coordinator updates `CHANGELOG.md` under `## [Unreleased]` for the newly completed work.
-8. After each integrated task, the coordinator updates the plan state as needed and keeps progress moving.
-9. After the whole plan is complete, the coordinator updates the plan's `Validation Results`.
+6. The coordinator reviews each worker result, updates the plan state as needed, and keeps progress moving without integrating each task onto `main` immediately.
+7. The coordinator updates `CHANGELOG.md` under `## [Unreleased]` on the integration branch when the whole plan is complete and ready to land together.
+8. After the whole plan is complete, the coordinator updates the plan's `Validation Results`.
+9. The coordinator integrates the completed plan onto `main`.
 10. The coordinator runs `.\gradlew.bat build` on `main`.
 11. The coordinator creates the release from `main` by following `ai/RELEASES.md`, including `ROADMAP.md` cleanup, plan archival, and post-release cleanup of temporary execution worktrees and branches.
 
@@ -85,7 +85,7 @@ When using git worktrees:
 
 - keep `main` as the integration branch
 - treat worktree branches as temporary execution branches, not release branches
-- do not consider a task complete until its changes are integrated back onto `main`
+- do not consider a plan complete until its finished changes are integrated back onto `main`
 - do not cut a release from a worktree branch or detached `HEAD`
 
 A typical pattern is:
@@ -99,8 +99,15 @@ git worktree add ..\technical-interview-demo-<task> -b codex/<task> main
 After a worker finishes:
 
 ```powershell
-git checkout main
+git checkout codex/<plan>
 git cherry-pick <worker-commit-sha>
+```
+
+After the whole plan is complete:
+
+```powershell
+git checkout main
+git merge --ff-only codex/<plan>
 ```
 
 Use non-interactive git commands. Do not use destructive history rewrites unless the user explicitly asks for recovery work.
@@ -155,7 +162,7 @@ Each worker handoff should give the coordinator:
 - the task it completed
 - the files it changed
 - the validation it ran
-- the commit SHA to integrate
-- any open issue that blocks clean integration
+- the commit SHA to retain for final plan integration
+- any open issue that blocks clean final integration
 
-The coordinator should report progress in terms of integrated tasks on `main`, not just work completed in side branches.
+The coordinator should report progress in terms of completed plan tasks and readiness for final integration onto `main`, not just work completed in side branches.

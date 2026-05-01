@@ -58,7 +58,7 @@ If the intended behavior is not clear enough to express as a spec, stop and clar
 ## Branch And Worktree Expectations
 
 - treat `main` as the integration branch for completed work
-- if you implement changes in a git worktree or another branch, integrate those changes back onto `main` before considering the task complete
+- if you implement a multi-step plan in a git worktree or another branch, keep the work there until the whole plan is finished, then integrate the completed changes back onto `main` before considering the task complete
 - do not cut a release from a worktree-only branch tip or from changes that have not yet landed on `main`
 
 ## Spec Priority
