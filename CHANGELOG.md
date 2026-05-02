@@ -6,6 +6,9 @@ The format is based on Keep a Changelog and the project uses semantic version ta
 The Gradle build version is derived from the nearest reachable annotated git tag, and release numbers must increase in `git log --first-parent` order.
 
 ## [Unreleased]
+ 
+## [v1.2.1] - 2026-05-02
+
 ### Changed
 - Expanded Docker-backed external smoke coverage to validate the packaged docs HTML, OpenAPI JSON/YAML endpoints, and a JDBC-backed authenticated `GET /api/account` session flow against the release image.
 - Added Codecov publication to the `CI` workflow, inlined release-note rendering into the tag-driven `Release` workflow, removed thin PowerShell wrappers that only delegated to Gradle or workflow logic, and updated the maintainer docs to match.

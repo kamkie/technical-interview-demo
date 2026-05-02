@@ -197,6 +197,8 @@
 - 2026-05-02: Executed the inlined release-note extraction logic locally against `CHANGELOG.md` section `v1.1.0` and wrote then removed `release-notes-smoke.md`. Passed, confirming the workflow logic still fails closed on tag matching and renders the expected section format.
 - 2026-05-02: Codecov upload was not runnable from the local shell because it depends on the GitHub Actions environment plus repository Codecov onboarding. The CI workflow was updated to publish `build/reports/jacoco/test/jacocoTestReport.xml` through `codecov/codecov-action@v5` with OIDC authentication.
 - 2026-05-02: Ran `.\gradlew.bat build --no-daemon`. Passed, including tests, JaCoCo coverage verification, Asciidoctor generation, PMD, Spotless, dependency and image vulnerability scans, and Docker image build.
+- 2026-05-02: Re-ran `.\gradlew.bat externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo --no-daemon` on the integrated `main` release candidate with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`. Passed with the packaged docs/OpenAPI/account smoke assertions intact after bringing the `a1` commits onto `main`.
+- 2026-05-02: Re-ran `.\gradlew.bat build --no-daemon` on the integrated `main` release candidate with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`. Passed, confirming the combined `v1.2.0` plus release-confidence hardening changes before release preparation.
 
 ## User Validation
 - Confirm the new plan execution leaves the public API unchanged by reviewing that REST Docs pages, HTTP examples, and the approved OpenAPI baseline did not move.

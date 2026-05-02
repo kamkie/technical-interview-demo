@@ -12,34 +12,9 @@ Keep this file focused on work that is still planned or in progress.
 
 ## Current Priorities
 
-1. Strengthen release confidence by expanding production-like smoke validation beyond the current five unauthenticated checks.
-2. Define the explicit post-`1.x` work needed to evolve this repo from an interview demo into a production-ready sample application.
+1. Define the explicit post-`1.x` work needed to evolve this repo from an interview demo into a production-ready sample application.
 
 ## Ordered Plan
-
-### Now: Release Confidence Hardening
-
-Status: Planned
-
-Goal: catch production-like regressions that the current release path can still miss, especially around docs exposure and authenticated session behavior.
-
-#### Publish Quality Signals
-- [ ] Publish JaCoCo coverage reports from CI to codecov.io
-- [ ] Add CI and Codecov badges to `README.md` once the external coverage reporting is live
-
-#### Simplify Release Tooling
-- [ ] Delete scripts from `scripts/` where they are no longer justified by reuse or cross-environment needs
-- [ ] Inline `scripts/render-release-notes.ps1` into `.github/workflows/release.yml` if that keeps the release flow simpler and easier to review
-- [ ] Reconsider the implementation language for any remaining release helper scripts instead of defaulting to PowerShell
-
-#### Expand Production-Like Smoke Coverage
-- [ ] Extend `externalSmokeTest` beyond `/`, `/hello`, `/docs`, readiness, and the public books list
-- [ ] Add smoke coverage for the generated OpenAPI/docs assets so release candidates prove the documentation surface still works when packaged
-- [ ] Add at least one authenticated session path in the production-like validation flow instead of relying only on in-process security integration tests
-
-#### Verify Session-Backed Runtime Behavior
-- [ ] Add a focused production-like check that proves JDBC-backed Spring Session persistence still works in the packaged container path
-- [ ] Keep the new checks narrow so the demo stays easy to run locally and in CI
 
 ### Future: Production-Ready Sample App Track
 
