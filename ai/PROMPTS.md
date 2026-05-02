@@ -52,6 +52,21 @@ Ask targeted clarification questions before locking the plan if scope, compatibi
 Record requirement gaps, unresolved user-input holes, and fallback assumptions explicitly.
 ```
 
+### Create A Plan From Checked Roadmap Tasks
+
+```text
+Create a new execution plan from every checklist item marked `[x]` in `ROADMAP.md`.
+
+Read `AGENTS.md`, `README.md`, `ROADMAP.md`, `ai/PLAN.md`, and the governing specs first.
+Follow `ai/PLAN.md`.
+Use only the checked `[x]` roadmap items as the requested work scope unless the roadmap text around them makes a dependency explicit.
+Choose an appropriate short lowercase underscore-separated topic name based on the combined checked tasks, then create the new file as `ai/PLAN_<topic>.md`.
+In the plan summary and scope, restate exactly which checked roadmap items were included.
+If no roadmap items are checked, or the checked items do not describe one coherent executable plan, stop and explain the gap instead of guessing.
+Ask targeted clarification questions before locking the plan if scope, compatibility, rollout, acceptance criteria, or validation are still ambiguous.
+Record requirement gaps, unresolved user-input holes, and fallback assumptions explicitly.
+```
+
 ### Revise An Existing Plan
 
 ```text
