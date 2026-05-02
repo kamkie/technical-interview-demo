@@ -24,10 +24,11 @@ Use these files deliberately:
 
 - `ai/ARCHITECTURE.md`: descriptive codebase map, package responsibilities, and structural guidance
 - `ai/DESIGN.md`: intended design direction, product tradeoffs, and open design decisions
+- `ai/EXECUTION.md`: AI-facing implementation workflow for executing plan files, updating validation results, and handling unreleased work
 - `ai/LEARNINGS.md`: durable repo-wide engineering lessons that should survive refactors
 - `ai/PLAN.md`: instructions for producing execution plans
 - `ai/PLAN_*.md`: task-specific execution plans and milestone breakdowns
-- `ai/PROMPTS.md`: reusable prompt library for repository-specific planning, implementation, validation, release, and multi-agent requests
+- `ai/PROMPTS.md`: lean reusable prompt starters that point to the standing guidance in the other AI documents
 - `ai/archive/`: archived AI execution plans that have already been released or otherwise completed
 - `ai/RELEASES.md`: AI-facing release workflow for intentional post-implementation releases
 - `ai/WORKFLOW.md`: AI-facing multi-agent workflow for delegation, worktree usage, integration, and release handoff
@@ -37,6 +38,8 @@ Rules for maintaining the `ai/` documents:
 - keep the role of each file distinct; do not collapse architecture, design, planning, release workflow, workflow guidance, and learnings into one document
 - keep AI instruction markdown files under `ai/` by default; `AGENTS.md` is the only standing exception
 - update the relevant `ai/` file in the same change when architecture, design intent, durable engineering guidance, release workflow, workflow guidance, or an execution plan materially changes
+- keep `ai/PROMPTS.md` lean; put standing workflow rules in the best owning AI document instead of restating them inside prompts
+- when AI instruction files accumulate overlap, compact them by moving duplicated guidance into the single best owning file and updating cross-references in the same change
 - archive executed `ai/PLAN_*.md` files under `ai/archive/` as part of the release cleanup once that work has been released
 - treat `ai/ARCHITECTURE.md`, `ai/DESIGN.md`, and `ai/LEARNINGS.md` as descriptive guidance, not executable spec authority
 - if an interrupted tool or IDE run leaves an `ai/` document incomplete, finish it or clearly mark the gaps instead of leaving misleading partial content

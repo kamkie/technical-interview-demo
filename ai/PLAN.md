@@ -4,6 +4,7 @@
 
 Use this file when the user asks for a plan, milestone, execution document, milestone breakdown, or a detailed change strategy.
 Do not use `ROADMAP.md` as a substitute for a real plan. `ROADMAP.md` is the roadmap. A plan is a self-contained handoff document for a concrete piece of work.
+Use `ai/EXECUTION.md` when the user asks to implement an existing plan.
 
 ## Planning Goals
 
@@ -243,20 +244,15 @@ A good plan would:
 - call out compatibility risk because clients may already depend on current response shapes
 - define user-visible verification steps against the affected endpoints
 
-## Execution Expectations For Agents
+## Execution Hand-Off
 
-If the user later asks you to execute a plan:
+Once a plan is approved, execution belongs in:
 
-1. Re-read `ai/PLAN.md`, `AGENTS.md`, and the target `ai/PLAN_<topic>.md` file.
-2. Implement the smallest change that satisfies the plan.
-3. Keep plan-execution commits on the execution branch or worktree until the whole plan is finished.
-4. After each completed task in the plan, create a commit for that finished work. Do not wait and batch the entire plan into one final commit.
-5. After each completed task or milestone commit, update `CHANGELOG.md` under `## [Unreleased]` with the completed work that should be reflected in the upcoming release.
-6. If execution happens in a git worktree or another branch, integrate the completed plan onto `main` before calling the task done.
-7. Update the `Validation Results` section in the plan document with what you actually ran and what passed or failed.
-8. After the whole plan is implemented and validated, make a release by following `ai/RELEASES.md`.
-9. If execution discovers a missing decision, stop and ask unless the plan already recorded an explicit fallback assumption.
-10. If execution discovers a better-engineering prerequisite that invalidates the plan, stop and explain why the plan must be revised.
+- `ai/EXECUTION.md` for single-agent implementation
+- `ai/WORKFLOW.md` for delegated or multi-agent execution
+- `ai/RELEASES.md` for the release step after implementation is complete
+
+Keep `ai/PLAN.md` focused on plan quality and handoff completeness rather than repeating execution mechanics.
 
 ## Final Planning Check
 

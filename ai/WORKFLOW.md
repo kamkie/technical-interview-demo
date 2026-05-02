@@ -3,7 +3,7 @@
 `ai/WORKFLOW.md` explains how Codex should run a multi-agent workflow in this repository.
 
 Use this file when the user wants delegation, parallel agent work, or a multi-worktree execution model for a planned change.
-Use `AGENTS.md` for repository rules, `SETUP.md` for environment setup, `ai/PLAN.md` and `ai/PLAN_*.md` for planning, and `ai/RELEASES.md` for the final release workflow.
+Use `AGENTS.md` for repository rules, `SETUP.md` for environment setup, `ai/PLAN.md` and `ai/PLAN_*.md` for planning, `ai/EXECUTION.md` for single-agent execution rules that still apply within a worker's local scope, and `ai/RELEASES.md` for the final release workflow.
 
 ## When To Use Multi-Agent Execution
 
@@ -39,6 +39,7 @@ Each worker agent owns one bounded task with a clear write scope.
 Each worker should:
 
 - stay within its assigned files and responsibility
+- follow `ai/EXECUTION.md` for task-local execution discipline unless this workflow overrides it
 - implement the smallest spec-driven change for its task
 - update task-local tests, docs, OpenAPI artifacts, and HTTP examples when its task requires them
 - run the most relevant validation for its assigned task

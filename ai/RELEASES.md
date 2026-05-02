@@ -3,7 +3,7 @@
 `ai/RELEASES.md` explains how AI agents should create an intentional release in this repository after implementing a plan.
 
 Use this file when the user asks to make a release, prepare a release commit, create a release tag, or when plan execution reaches the final release step.
-Do not use this file for implementation planning, setup troubleshooting, or release history. Planning belongs in `ai/PLAN.md` and `ai/PLAN_*.md`. Setup belongs in `SETUP.md`. Release history belongs in `CHANGELOG.md`.
+Do not use this file for implementation planning, non-release execution, setup troubleshooting, or release history. Planning belongs in `ai/PLAN.md` and `ai/PLAN_*.md`. Non-release execution belongs in `ai/EXECUTION.md`. Setup belongs in `SETUP.md`. Release history belongs in `CHANGELOG.md`.
 
 ## Release Goal
 
