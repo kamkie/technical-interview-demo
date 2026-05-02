@@ -223,7 +223,7 @@ Monitoring support uses the upstream `kube-prometheus-stack` Helm chart plus rep
 - `ai/PLAN.md`: AI-facing planning rules for execution plans and milestone-ready plan files
 - `ai/EXECUTION.md`: AI-facing single-agent execution workflow for local implementation, validation, and PR-ready handoff
 - `ai/RELEASES.md`: AI-facing maintainer release workflow after approved work is merged onto `main`
-- `ai/PROMPTS.md`: reusable prompt library for repository-specific planning, implementation, release, and multi-agent requests
+- `ai/PROMPTS.md`: reusable prompt library for repository-specific planning, implementation, release, and multi-agent requests; its prompt entry titles can be used as shorthand when the request includes the needed concrete context
 - `ai/WORKFLOW.md`: Codex multi-agent workflow, task integration, and release handoff rules for this repository
 - `ai/CODE_STYLE.md`: AI-facing code-style and change-shaping guidance for repo edits
 - `ai/TESTING.md`: AI-facing testing and validation guidance

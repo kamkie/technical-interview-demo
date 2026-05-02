@@ -13,6 +13,23 @@ Keep prompts lean:
 
 Prefer filling in placeholders such as `<topic>`, `<plan_file>`, `<milestone_name>`, `<task>`, and `<constraint>` so the request is concrete.
 
+## Title Shorthand
+
+You may invoke a prompt in this file by using its `###` title as shorthand for the full starter under that heading.
+
+Rules:
+
+- use the exact prompt title or an unmistakably close reference to one prompt title in this file
+- supply the required placeholders or equivalent concrete context in the same request
+- treat section headings such as `## Planning` and `## Validation` as categories, not invocable prompts
+- if the title match is ambiguous or required context is missing, stop and ask a targeted clarification question instead of guessing
+
+Example shorthand:
+
+```text
+Use `Implement A Plan Without Releasing` for `ai/PLAN_auth_cleanup.md`.
+```
+
 ## Planning
 
 ### Create A New Execution Plan
