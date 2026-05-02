@@ -295,6 +295,9 @@ What the smoke validation proves:
 - the app publishes port `8080`
 - `GET /actuator/health/readiness` returns `HTTP 200` with `status=UP`
 - Flyway migrations complete against PostgreSQL
+- the packaged docs entry page is served at `GET /docs/index.html`
+- the packaged OpenAPI endpoints respond at `GET /v3/api-docs` and `GET /v3/api-docs.yaml`
+- the smoke harness can seed a JDBC-backed Spring Session record in PostgreSQL and the packaged app accepts that authenticated session for `GET /api/account`
 
 ## Healthy Runtime Expectations
 

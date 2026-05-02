@@ -9,6 +9,7 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 ### Changed
 - Expanded Docker-backed external smoke coverage to validate the packaged docs HTML, OpenAPI JSON/YAML endpoints, and a JDBC-backed authenticated `GET /api/account` session flow against the release image.
 - Added Codecov publication to the `CI` workflow, inlined release-note rendering into the tag-driven `Release` workflow, removed thin PowerShell wrappers that only delegated to Gradle or workflow logic, and updated the maintainer docs to match.
+- Updated the human-facing repo guidance so `README.md` and `SETUP.md` describe the expanded packaged smoke guarantees and the CI coverage publication path accurately.
 
 ## [v1.2.0] - 2026-05-02
 
