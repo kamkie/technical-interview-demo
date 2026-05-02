@@ -12,11 +12,12 @@ Current scope:
 - `GET /` returns technical application details including build/git metadata, dependency versions, and important runtime configuration
 - `GET /hello` returns `Hello World!`
 - `Book` API under `/api/books` with pagination, filtering, optimistic locking, and category assignment
-- `Category` API under `/api/categories`
+- `Category` API under `/api/categories` with list, create, rename, and guarded delete semantics
 - `Localization` API under `/api/localizations` with CRUD plus collection filtering by `messageKey` and `language`
 - authenticated account API under `/api/account`
+- ADMIN audit review API at `/api/audit-logs`
 - OAuth 2.0 protected write endpoints with JDBC-backed HTTP sessions
-- append-only audit logging for state-changing `Book` and `Localization` operations
+- append-only audit logging for state-changing `Book` and `Localization` operations plus admin review access
 - generated REST Docs and an approved OpenAPI baseline
 - PostgreSQL runtime profiles and PostgreSQL-backed integration tests via Testcontainers
 - request tracing, structured logging, in-memory caches, application-specific Prometheus metrics, and tracked Gatling baselines
@@ -75,6 +76,8 @@ Stable `1.x` contract:
   - `DELETE /api/books/{id}`
   - `GET /api/categories`
   - `POST /api/categories`
+  - `PUT /api/categories/{id}`
+  - `DELETE /api/categories/{id}`
   - `GET /api/localizations`
   - `GET /api/localizations/{id}`
   - `POST /api/localizations`
@@ -82,6 +85,7 @@ Stable `1.x` contract:
   - `DELETE /api/localizations/{id}`
   - `GET /api/account`
   - `PUT /api/account/language`
+  - `GET /api/audit-logs`
 - supported operational endpoints:
   - `GET /actuator/info`
   - `GET /actuator/health`
@@ -106,12 +110,14 @@ Supported technical bootstrap:
 Security summary:
 
 - public supported reads: `/`, `/hello`, `/docs`, OpenAPI docs, `GET /api/books/**`, `GET /api/categories`, `GET /api/localizations/**`, actuator health endpoints, and actuator info
-- authenticated session required: account endpoints and all write endpoints
-- `ADMIN` role required: category creation and localization create/update/delete
+- authenticated session required: account endpoints, `GET /api/audit-logs`, and all write endpoints
+- `ADMIN` role required: audit log review, category create/update/delete, and localization create/update/delete
 - interactive login starts at `GET /oauth2/authorization/github` when the `oauth` profile is active
 
 Contract notes:
 
+- `GET /api/audit-logs` is paginated and supports optional exact `targetType`, `action`, and `actorLogin` filters
+- `DELETE /api/categories/{id}` fails with a localized conflict if the category is still assigned to one or more books
 - `GET /api/books` is paginated and supports text, category, and year filters
 - `GET /api/localizations` is paginated and supports optional exact `messageKey` and `language` filters
 - localized error responses include `messageKey`, localized `message`, and resolved `language`

@@ -20,4 +20,6 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
     Page<Book> findAll(Specification<Book> spec, Pageable pageable);
 
     boolean existsByIsbn(String isbn);
+
+    boolean existsByCategories_Id(Long categoryId);
 }

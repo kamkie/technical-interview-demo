@@ -15,6 +15,7 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import team.jit.technicalinterviewdemo.business.book.BookRepository;
 import team.jit.technicalinterviewdemo.business.user.CurrentUserAccountService;
 import team.jit.technicalinterviewdemo.business.user.UserRole;
 import team.jit.technicalinterviewdemo.technical.api.InvalidRequestException;
@@ -32,6 +33,7 @@ public class CategoryService {
     private static final String CATEGORY_DIRECTORY_CACHE_KEY = "byNormalizedName";
 
     private final CategoryRepository categoryRepository;
+    private final BookRepository bookRepository;
     private final CacheManager cacheManager;
     private final ApplicationMetrics applicationMetrics;
     private final CurrentUserAccountService currentUserAccountService;
@@ -57,15 +59,42 @@ public class CategoryService {
     public Category create(CategoryCreateRequest request) {
         currentUserAccountService.requireRole(UserRole.ADMIN, "Category management requires the ADMIN role.");
         String normalizedName = normalizeName(request.name());
-        if (categoryRepository.existsByNameIgnoreCase(normalizedName)) {
-            throw new InvalidRequestException("Category '%s' already exists.".formatted(normalizedName));
-        }
+        validateUniqueName(normalizedName, null);
 
         Category savedCategory = categoryRepository.saveAndFlush(new Category(normalizedName));
         evictCategoryCaches();
         applicationMetrics.recordCategoryOperation("create");
         log.info("Created category id={} name={}", savedCategory.getId(), savedCategory.getName());
         return savedCategory;
+    }
+
+    @Transactional
+    public Category update(Long id, CategoryUpdateRequest request) {
+        currentUserAccountService.requireRole(UserRole.ADMIN, "Category management requires the ADMIN role.");
+        Category category = requireCategory(id);
+        String normalizedName = normalizeName(request.name());
+        validateUniqueName(normalizedName, id);
+
+        category.setName(normalizedName);
+        Category updatedCategory = categoryRepository.saveAndFlush(category);
+        evictCategoryCaches();
+        applicationMetrics.recordCategoryOperation("update");
+        log.info("Updated category id={} name={}", updatedCategory.getId(), updatedCategory.getName());
+        return updatedCategory;
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        currentUserAccountService.requireRole(UserRole.ADMIN, "Category management requires the ADMIN role.");
+        Category category = requireCategory(id);
+        if (bookRepository.existsByCategories_Id(id)) {
+            throw new CategoryInUseException(id, category.getName());
+        }
+
+        categoryRepository.delete(category);
+        evictCategoryCaches();
+        applicationMetrics.recordCategoryOperation("delete");
+        log.info("Deleted category id={} name={}", id, category.getName());
     }
 
     public Set<Category> resolveForAssignment(Collection<String> names) {
@@ -89,6 +118,11 @@ public class CategoryService {
         List<Category> categories = categoryRepository.findAllById(categoryIds);
         categories.sort(Comparator.comparing(Category::getName));
         return new LinkedHashSet<>(categories);
+    }
+
+    private Category requireCategory(Long id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new CategoryNotFoundException(id));
     }
 
     @SuppressWarnings("unchecked")
@@ -136,6 +170,15 @@ public class CategoryService {
         return normalizedName;
     }
 
+    private void validateUniqueName(String normalizedName, Long id) {
+        boolean exists = id == null
+                ? categoryRepository.existsByNameIgnoreCase(normalizedName)
+                : categoryRepository.existsByNameIgnoreCaseAndIdNot(normalizedName, id);
+        if (exists) {
+            throw new InvalidRequestException("Category '%s' already exists.".formatted(normalizedName));
+        }
+    }
+
     private void evictCategoryCaches() {
         requireCache(CacheNames.CATEGORIES).clear();
         applicationMetrics.recordCacheEvent(CacheNames.CATEGORIES, "evict");
@@ -151,4 +194,3 @@ public class CategoryService {
         return cache;
     }
 }
-

@@ -27,6 +27,8 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import team.jit.technicalinterviewdemo.business.book.BookNotFoundException;
 import team.jit.technicalinterviewdemo.business.book.DuplicateIsbnException;
 import team.jit.technicalinterviewdemo.business.book.StaleBookVersionException;
+import team.jit.technicalinterviewdemo.business.category.CategoryInUseException;
+import team.jit.technicalinterviewdemo.business.category.CategoryNotFoundException;
 import team.jit.technicalinterviewdemo.business.localization.DuplicateLocalizationException;
 import team.jit.technicalinterviewdemo.business.localization.LocalizationNotFoundException;
 
@@ -55,6 +57,30 @@ public class ApiExceptionHandler {
                 "Localization Not Found",
                 exception.getMessage(),
                 "error.localization.not_found",
+                request,
+                Map.of("exception", exception.getClass().getSimpleName())
+        );
+    }
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+    ProblemDetail handleCategoryNotFound(CategoryNotFoundException exception, HttpServletRequest request) {
+        return apiProblemFactory.clientProblem(
+                HttpStatus.NOT_FOUND,
+                "Category Not Found",
+                exception.getMessage(),
+                "error.category.not_found",
+                request,
+                Map.of("exception", exception.getClass().getSimpleName())
+        );
+    }
+
+    @ExceptionHandler(CategoryInUseException.class)
+    ProblemDetail handleCategoryInUse(CategoryInUseException exception, HttpServletRequest request) {
+        return apiProblemFactory.clientProblem(
+                HttpStatus.CONFLICT,
+                "Category In Use",
+                exception.getMessage(),
+                "error.category.in_use",
                 request,
                 Map.of("exception", exception.getClass().getSimpleName())
         );

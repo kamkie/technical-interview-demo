@@ -265,6 +265,7 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
     void listLocalizationsCanFilterByLanguage() throws Exception {
         mockMvc.perform(get("/api/localizations")
                         .queryParam("language", "es")
+                        .queryParam("size", "50")
                         .queryParam("sort", "messageKey,asc"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content.length()").value(documentedKeyCount()))

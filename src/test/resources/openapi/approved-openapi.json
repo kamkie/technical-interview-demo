@@ -15,6 +15,9 @@
     "name" : "Account",
     "description" : "Authenticated account endpoints."
   }, {
+    "name" : "Audit Logs",
+    "description" : "ADMIN-only audit log review endpoint."
+  }, {
     "name" : "Localizations",
     "description" : "Public localization reads with ADMIN-only management operations."
   }, {
@@ -114,6 +117,141 @@
         } ]
       }
     },
+    "/api/categories/{id}" : {
+      "put" : {
+        "tags" : [ "Categories" ],
+        "summary" : "Update a category",
+        "description" : "Requires an authenticated session with the ADMIN role.",
+        "operationId" : "update_1",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CategoryUpdateRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Category"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Missing or invalid authenticated session.",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiProblemResponse"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Authenticated user does not have the ADMIN role.",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiProblemResponse"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Requested category was not found.",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiProblemResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "sessionCookie" : [ ]
+        } ]
+      },
+      "delete" : {
+        "tags" : [ "Categories" ],
+        "summary" : "Delete a category",
+        "description" : "Requires an authenticated session with the ADMIN role. Categories assigned to books cannot be deleted.",
+        "operationId" : "delete_1",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "No Content"
+          },
+          "401" : {
+            "description" : "Missing or invalid authenticated session.",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiProblemResponse"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Authenticated user does not have the ADMIN role.",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiProblemResponse"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Requested category was not found.",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiProblemResponse"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "Category is still assigned to one or more books.",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiProblemResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "sessionCookie" : [ ]
+        } ]
+      }
+    },
     "/api/books/{id}" : {
       "get" : {
         "tags" : [ "Books" ],
@@ -146,7 +284,7 @@
         "tags" : [ "Books" ],
         "summary" : "Update a book",
         "description" : "Requires an authenticated session and the current optimistic-lock version.",
-        "operationId" : "update_1",
+        "operationId" : "update_2",
         "parameters" : [ {
           "name" : "id",
           "in" : "path",
@@ -186,7 +324,7 @@
         "tags" : [ "Books" ],
         "summary" : "Delete a book",
         "description" : "Requires an authenticated session.",
-        "operationId" : "delete_1",
+        "operationId" : "delete_2",
         "parameters" : [ {
           "name" : "id",
           "in" : "path",
@@ -598,6 +736,105 @@
         }
       }
     },
+    "/api/audit-logs" : {
+      "get" : {
+        "tags" : [ "Audit Logs" ],
+        "summary" : "List audit logs",
+        "description" : "Requires an authenticated session with the ADMIN role and returns pageable audit entries.",
+        "operationId" : "findAll_3",
+        "parameters" : [ {
+          "name" : "targetType",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "BOOK", "LOCALIZATION_MESSAGE" ]
+          }
+        }, {
+          "name" : "action",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "CREATE", "UPDATE", "DELETE" ]
+          }
+        }, {
+          "name" : "actorLogin",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "Zero-based page index (0..N)",
+          "required" : false,
+          "schema" : {
+            "minimum" : 0,
+            "type" : "integer",
+            "default" : 0
+          }
+        }, {
+          "name" : "size",
+          "in" : "query",
+          "description" : "The size of the page to be returned",
+          "required" : false,
+          "schema" : {
+            "minimum" : 1,
+            "type" : "integer",
+            "default" : 20
+          }
+        }, {
+          "name" : "sort",
+          "in" : "query",
+          "description" : "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            },
+            "default" : [ "id,DESC" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AuditLogPageResponse"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Missing or invalid authenticated session.",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiProblemResponse"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Authenticated user does not have the ADMIN role.",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiProblemResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "sessionCookie" : [ ]
+        } ]
+      }
+    },
     "/api/account" : {
       "get" : {
         "tags" : [ "Account" ],
@@ -721,6 +958,73 @@
         },
         "description" : "Localization message returned by the API."
       },
+      "CategoryUpdateRequest" : {
+        "required" : [ "name" ],
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "minLength" : 1,
+            "type" : "string",
+            "description" : "Unique category name.",
+            "example" : "Software Architecture"
+          }
+        },
+        "description" : "Payload for updating a category."
+      },
+      "Category" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "description" : "Database identifier.",
+            "format" : "int64",
+            "example" : 1
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "Unique category name.",
+            "example" : "Java"
+          }
+        },
+        "description" : "Book category."
+      },
+      "ApiProblemResponse" : {
+        "type" : "object",
+        "properties" : {
+          "title" : {
+            "type" : "string",
+            "description" : "Problem title.",
+            "example" : "Unauthorized"
+          },
+          "status" : {
+            "type" : "integer",
+            "description" : "HTTP status code.",
+            "format" : "int32",
+            "example" : 401
+          },
+          "detail" : {
+            "type" : "string",
+            "description" : "Technical problem detail kept stable for debugging and logs.",
+            "example" : "Authentication is required to access this resource."
+          },
+          "messageKey" : {
+            "type" : "string",
+            "description" : "Stable localization key for the error type.",
+            "example" : "error.request.unauthorized"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "Localized end-user message resolved from the request language.",
+            "example" : "You must authenticate before performing this operation."
+          },
+          "language" : {
+            "type" : "string",
+            "description" : "Two-letter ISO 639-1 language code actually used for the localized message.",
+            "example" : "en"
+          }
+        },
+        "description" : "Localized ProblemDetail payload returned for API errors."
+      },
       "BookUpdateRequest" : {
         "required" : [ "author", "publicationYear", "title", "version" ],
         "type" : "object",
@@ -807,23 +1111,6 @@
         },
         "description" : "Book resource returned by the API."
       },
-      "Category" : {
-        "type" : "object",
-        "properties" : {
-          "id" : {
-            "type" : "integer",
-            "description" : "Database identifier.",
-            "format" : "int64",
-            "example" : 1
-          },
-          "name" : {
-            "type" : "string",
-            "description" : "Unique category name.",
-            "example" : "Java"
-          }
-        },
-        "description" : "Book category."
-      },
       "UserAccountLanguageRequest" : {
         "type" : "object",
         "properties" : {
@@ -907,43 +1194,6 @@
         },
         "description" : "Payload for creating a category."
       },
-      "ApiProblemResponse" : {
-        "type" : "object",
-        "properties" : {
-          "title" : {
-            "type" : "string",
-            "description" : "Problem title.",
-            "example" : "Unauthorized"
-          },
-          "status" : {
-            "type" : "integer",
-            "description" : "HTTP status code.",
-            "format" : "int32",
-            "example" : 401
-          },
-          "detail" : {
-            "type" : "string",
-            "description" : "Technical problem detail kept stable for debugging and logs.",
-            "example" : "Authentication is required to access this resource."
-          },
-          "messageKey" : {
-            "type" : "string",
-            "description" : "Stable localization key for the error type.",
-            "example" : "error.request.unauthorized"
-          },
-          "message" : {
-            "type" : "string",
-            "description" : "Localized end-user message resolved from the request language.",
-            "example" : "You must authenticate before performing this operation."
-          },
-          "language" : {
-            "type" : "string",
-            "description" : "Two-letter ISO 639-1 language code actually used for the localized message.",
-            "example" : "en"
-          }
-        },
-        "description" : "Localized ProblemDetail payload returned for API errors."
-      },
       "BookCreateRequest" : {
         "required" : [ "author", "isbn", "publicationYear", "title" ],
         "type" : "object",
@@ -995,6 +1245,12 @@
             "type" : "integer",
             "format" : "int32"
           },
+          "sort" : {
+            "$ref" : "#/components/schemas/SortObject"
+          },
+          "pageable" : {
+            "$ref" : "#/components/schemas/PageableObject"
+          },
           "size" : {
             "type" : "integer",
             "format" : "int32"
@@ -1019,12 +1275,6 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "sort" : {
-            "$ref" : "#/components/schemas/SortObject"
-          },
-          "pageable" : {
-            "$ref" : "#/components/schemas/PageableObject"
-          },
           "empty" : {
             "type" : "boolean"
           }
@@ -1033,22 +1283,22 @@
       "PageableObject" : {
         "type" : "object",
         "properties" : {
-          "paged" : {
-            "type" : "boolean"
-          },
           "sort" : {
             "$ref" : "#/components/schemas/SortObject"
           },
-          "pageSize" : {
-            "type" : "integer",
-            "format" : "int32"
+          "paged" : {
+            "type" : "boolean"
+          },
+          "unpaged" : {
+            "type" : "boolean"
           },
           "pageNumber" : {
             "type" : "integer",
             "format" : "int32"
           },
-          "unpaged" : {
-            "type" : "boolean"
+          "pageSize" : {
+            "type" : "integer",
+            "format" : "int32"
           },
           "offset" : {
             "type" : "integer",
@@ -1059,13 +1309,13 @@
       "SortObject" : {
         "type" : "object",
         "properties" : {
-          "empty" : {
-            "type" : "boolean"
-          },
           "sorted" : {
             "type" : "boolean"
           },
           "unsorted" : {
+            "type" : "boolean"
+          },
+          "empty" : {
             "type" : "boolean"
           }
         }
@@ -1080,6 +1330,12 @@
           "totalPages" : {
             "type" : "integer",
             "format" : "int32"
+          },
+          "sort" : {
+            "$ref" : "#/components/schemas/SortObject"
+          },
+          "pageable" : {
+            "$ref" : "#/components/schemas/PageableObject"
           },
           "size" : {
             "type" : "integer",
@@ -1105,16 +1361,120 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "sort" : {
-            "$ref" : "#/components/schemas/SortObject"
-          },
-          "pageable" : {
-            "$ref" : "#/components/schemas/PageableObject"
-          },
           "empty" : {
             "type" : "boolean"
           }
         }
+      },
+      "AuditLogPageResponse" : {
+        "type" : "object",
+        "properties" : {
+          "content" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/AuditLogResponse"
+            }
+          },
+          "pageable" : {
+            "type" : "object",
+            "description" : "Pagination request metadata."
+          },
+          "sort" : {
+            "type" : "object",
+            "description" : "Applied sort metadata."
+          },
+          "totalPages" : {
+            "type" : "integer",
+            "description" : "Total number of pages.",
+            "format" : "int32",
+            "example" : 1
+          },
+          "totalElements" : {
+            "type" : "integer",
+            "description" : "Total number of matching audit log entries.",
+            "format" : "int64",
+            "example" : 3
+          },
+          "last" : {
+            "type" : "boolean",
+            "description" : "Whether this page is the last page.",
+            "example" : true
+          },
+          "size" : {
+            "type" : "integer",
+            "description" : "Requested page size.",
+            "format" : "int32",
+            "example" : 20
+          },
+          "number" : {
+            "type" : "integer",
+            "description" : "Current zero-based page index.",
+            "format" : "int32",
+            "example" : 0
+          },
+          "numberOfElements" : {
+            "type" : "integer",
+            "description" : "Number of audit entries returned in the current page.",
+            "format" : "int32",
+            "example" : 3
+          },
+          "first" : {
+            "type" : "boolean",
+            "description" : "Whether this page is the first page.",
+            "example" : true
+          },
+          "empty" : {
+            "type" : "boolean",
+            "description" : "Whether the page content is empty.",
+            "example" : false
+          }
+        },
+        "description" : "Paginated audit log response."
+      },
+      "AuditLogResponse" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "description" : "Database identifier.",
+            "format" : "int64",
+            "example" : 42
+          },
+          "targetType" : {
+            "type" : "string",
+            "description" : "Type of audited target.",
+            "example" : "BOOK",
+            "enum" : [ "BOOK", "LOCALIZATION_MESSAGE" ]
+          },
+          "targetId" : {
+            "type" : "integer",
+            "description" : "Identifier of the audited target.",
+            "format" : "int64",
+            "example" : 7
+          },
+          "action" : {
+            "type" : "string",
+            "description" : "Recorded action.",
+            "example" : "UPDATE",
+            "enum" : [ "CREATE", "UPDATE", "DELETE" ]
+          },
+          "actorLogin" : {
+            "type" : "string",
+            "description" : "Login of the acting user, or `system` for non-user writes.",
+            "example" : "admin-user"
+          },
+          "summary" : {
+            "type" : "string",
+            "description" : "Human-readable audit summary.",
+            "example" : "Updated book 'Clean Code' with ISBN 9780132350884."
+          },
+          "createdAt" : {
+            "type" : "string",
+            "description" : "Creation timestamp in UTC.",
+            "format" : "date-time"
+          }
+        },
+        "description" : "Recorded audit log entry."
       },
       "BuildDetails" : {
         "type" : "object",

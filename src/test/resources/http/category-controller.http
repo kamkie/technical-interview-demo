@@ -4,6 +4,7 @@
 
 @baseUrl = http://localhost:8080
 @sessionCookie = paste-technical-interview-demo-session-here
+@writeCategoryId = 0
 ### CategoryController - list categories
 GET {{baseUrl}}/api/categories
 Accept: application/json
@@ -17,6 +18,11 @@ Accept: application/json
 {
   "name": "Architecture"
 }
+> {%
+if (response.status === 201) {
+  client.global.set("writeCategoryId", String(response.body.id));
+}
+%}
 
 ### CategoryController - create category without authentication (401 localized ProblemDetail)
 POST {{baseUrl}}/api/categories
@@ -37,3 +43,24 @@ Accept: application/problem+json
 {
   "name": "Architecture"
 }
+
+### CategoryController - update category (ADMIN + authenticated session)
+# Run the create request first or replace the id with an existing category.
+PUT {{baseUrl}}/api/categories/{{writeCategoryId}}
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Software Architecture"
+}
+
+### CategoryController - delete unused category (ADMIN + authenticated session)
+# Run the create request first.
+DELETE {{baseUrl}}/api/categories/{{writeCategoryId}}
+Cookie: technical-interview-demo-session={{sessionCookie}}
+
+### CategoryController - delete category assigned to books (409 localized ProblemDetail)
+DELETE {{baseUrl}}/api/categories/1
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/problem+json

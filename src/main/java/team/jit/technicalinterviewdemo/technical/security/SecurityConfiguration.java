@@ -40,14 +40,15 @@ public class SecurityConfiguration {
                         .requestMatchers("/v3/api-docs", "/v3/api-docs/**", "/v3/api-docs.yaml").permitAll()
                         .requestMatchers("/oauth2/**", "/login/**").permitAll()
                         .requestMatchers("/api/account", "/api/account/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/audit-logs").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/actuator/health", "/actuator/health/**").permitAll()
                         // Prometheus stays reachable for trusted deployment scraping; deployment boundaries keep it off the internet.
                         .requestMatchers(HttpMethod.GET, "/actuator/info", "/actuator/prometheus").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/books", "/api/categories", "/api/localizations")
                         .authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/api/books/*", "/api/localizations/*").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/api/books/*", "/api/localizations/*").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/books/*", "/api/categories/*", "/api/localizations/*").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/books/*", "/api/categories/*", "/api/localizations/*").authenticated()
                         .anyRequest().permitAll()
                 )
                 .exceptionHandling(exceptions -> exceptions

@@ -14,7 +14,7 @@ The supported `1.x` contract keeps the simple overview endpoints, the CRUD-style
 
 == Contract Tiers
 
-- Supported `1.x` business and documentation contract: `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, `/api/books...`, `/api/categories`, `/api/localizations...`, `/api/account...`
+- Supported `1.x` business and documentation contract: `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, `/api/books...`, `/api/categories...`, `/api/localizations...`, `/api/account...`, `/api/audit-logs`
 - Supported operational contract: `/actuator/health`, `/actuator/health/liveness`, `/actuator/health/readiness`, `/actuator/info`
 - Deployment-scoped technical surface: `/actuator/prometheus` is supported for trusted deployment scraping, but it is not part of the internet-public contract
 
@@ -49,7 +49,7 @@ The values below are loaded from `{build-info-path}` during the Asciidoctor buil
 - Browser-compatible localization uses `Accept-Language`, the optional `lang` query parameter overrides it with values such as `pl` or `pl-PL`, and cookie `language` is used as fallback.
 - Supported application languages are `en`, `es`, `de`, `fr`, `pl`, `uk`, and `no`.
 - Public supported endpoints include `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, and the read-only book/category/localization lookups.
-- Protected supported endpoints use an authenticated browser session for `/api/account` and for state-changing book, category, and localization operations.
+- Protected supported endpoints use an authenticated browser session for `/api/account`, `/api/audit-logs`, and for state-changing book, category, and localization operations.
 - Interactive login bootstrap is available at `/oauth2/authorization/github` only when the optional `oauth` profile is active.
 - Authenticated browser sessions are persisted through Spring Session JDBC in PostgreSQL.
 - CSRF remains disabled for browser-session writes as a deliberate demo tradeoff for reviewer-oriented workflows.
@@ -65,6 +65,7 @@ The values below are loaded from `{build-info-path}` during the Asciidoctor buil
 - xref:book-controller.adoc[BookController API]
 - xref:category-controller.adoc[CategoryController API]
 - xref:localization-controller.adoc[LocalizationController API]
+- xref:audit-log-controller.adoc[AuditLogController API]
 - xref:technical-endpoints.adoc[Technical Endpoints]
 
 == Build And Runtime Notes
