@@ -9,6 +9,7 @@ Keep prompts lean:
 - put implementation rules in `ai/EXECUTION.md`
 - put multi-agent rules in `ai/WORKFLOW.md`
 - put release rules in `ai/RELEASES.md`
+- use the focused guides `ai/CODE_STYLE.md`, `ai/TESTING.md`, `ai/REVIEWS.md`, and `ai/DOCUMENTATION.md` only when the task needs those lenses
 
 Prefer filling in placeholders such as `<topic>`, `<plan_file>`, `<milestone_name>`, `<task>`, and `<constraint>` so the request is concrete.
 
@@ -21,6 +22,8 @@ Create `ai/PLAN_<topic>.md` for <topic>.
 
 Read `AGENTS.md`, `README.md`, `ai/PLAN.md`, and the governing specs first.
 Follow `ai/PLAN.md`.
+Ask targeted clarification questions before locking the plan if scope, compatibility, rollout, acceptance criteria, or validation are still ambiguous.
+Record requirement gaps, unresolved user-input holes, and fallback assumptions explicitly.
 ```
 
 ### Create A New Execution Plan From A Roadmap Item
@@ -30,6 +33,8 @@ Create plan file for <topic> from ROADMAP.md.
 
 Read `AGENTS.md`, `README.md`, `ai/PLAN.md`, and the governing specs first.
 Follow `ai/PLAN.md`.
+Ask targeted clarification questions before locking the plan if scope, compatibility, rollout, acceptance criteria, or validation are still ambiguous.
+Record requirement gaps, unresolved user-input holes, and fallback assumptions explicitly.
 ```
 
 ### Create A Plan From Selected Roadmap Tasks
@@ -43,6 +48,8 @@ Create `ai/PLAN_<topic>.md` for these selected roadmap tasks:
 Use `ROADMAP.md` only as roadmap input.
 Read `AGENTS.md`, `README.md`, `ROADMAP.md`, `ai/PLAN.md`, and the governing specs first.
 Follow `ai/PLAN.md`.
+Ask targeted clarification questions before locking the plan if scope, compatibility, rollout, acceptance criteria, or validation are still ambiguous.
+Record requirement gaps, unresolved user-input holes, and fallback assumptions explicitly.
 ```
 
 ### Revise An Existing Plan
@@ -53,6 +60,7 @@ Revise `<plan_file>` for this new requirement or constraint:
 
 Keep the plan self-contained.
 Follow `ai/PLAN.md`.
+Record any new requirement gaps, unresolved user-input holes, and fallback assumptions explicitly.
 ```
 
 ### Review Whether A Plan Is Ready
@@ -73,7 +81,7 @@ Implement `<plan_file>`.
 
 Read `AGENTS.md`, `ai/EXECUTION.md`, and `<plan_file>` first.
 Follow `ai/EXECUTION.md`.
-Do not release.
+Do not push, open a PR, or release unless I ask.
 ```
 
 ### Implement A Plan And Complete The Release Flow
@@ -82,7 +90,7 @@ Do not release.
 Implement `<plan_file>`.
 
 Read `AGENTS.md`, `ai/EXECUTION.md`, `<plan_file>`, and `ai/RELEASES.md` first.
-Follow `ai/EXECUTION.md` for implementation and `ai/RELEASES.md` for the release step.
+Follow `ai/EXECUTION.md` for implementation and `ai/RELEASES.md` for the release step after the approved implementation PR has been merged onto `main`.
 ```
 
 ### Implement Only One Milestone
@@ -92,7 +100,7 @@ Implement only `<milestone_name>` from `<plan_file>`.
 
 Read `AGENTS.md`, `ai/EXECUTION.md`, and `<plan_file>` first.
 Follow `ai/EXECUTION.md`.
-Do not start later milestones or release.
+Do not start later milestones, push, open a PR, or release unless I ask.
 ```
 
 ## Validation
@@ -103,7 +111,7 @@ Do not start later milestones or release.
 Run only the required validation for `<plan_file>` or `<change>`.
 Do not edit files.
 
-Use `AGENTS.md` and the relevant AI workflow documents to decide what checks are required.
+Use `AGENTS.md`, `ai/TESTING.md`, and the relevant AI workflow documents to decide what checks are required.
 Summarize what ran, what passed, what failed, and what artifacts would likely need updates.
 ```
 
@@ -155,6 +163,7 @@ Prepare a release for `<plan_file>`.
 
 Read `AGENTS.md`, `ai/RELEASES.md`, the executed plan, and the changed contract docs first.
 Follow `ai/RELEASES.md`.
+Only proceed if the approved implementation PR is already merged onto `main`.
 Do not push unless I ask.
 ```
 
@@ -165,6 +174,7 @@ Prepare and execute the release for `<plan_file>`.
 
 Read `AGENTS.md`, `ai/RELEASES.md`, the executed plan, and the changed contract docs first.
 Follow `ai/RELEASES.md`.
+Only proceed if the approved implementation PR is already merged onto `main`.
 ```
 
 ### Push An Already Prepared Release
@@ -193,6 +203,7 @@ Execute `<plan_file>` with delegation.
 
 Use `ai/WORKFLOW.md`.
 Act as coordinator.
+Keep phase ownership explicit for requirements, planning, investigation, coding, testing, review, security review, and documentation.
 ```
 
 ### Decide Whether Multi-Agent Execution Is Worth It
@@ -201,7 +212,7 @@ Act as coordinator.
 Review `<plan_file>` and decide whether it should be executed by one agent or with delegation.
 
 Use `ai/WORKFLOW.md`.
-If delegation is worth it, propose the task split and file ownership boundaries.
+If delegation is worth it, propose the phase split, task split, and file ownership boundaries.
 ```
 
 ## Maintenance

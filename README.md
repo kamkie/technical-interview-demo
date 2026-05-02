@@ -159,7 +159,9 @@ Additional change-sensitive checks:
 - keep release numbers increasing in `git log --first-parent` order
 - record human-facing release history in `CHANGELOG.md`
 - tag-driven releases publish the matching `CHANGELOG.md` version section as GitHub Release notes
-- maintainers prepare releases only from validated `main`
+- complete local implementation, validation, and review work before pushing a branch or opening an implementation PR
+- treat PR creation as the final implementation handoff, not as a substitute for local execution
+- maintainers prepare releases only after the approved implementation PR has been merged onto validated `main`
 - before tagging, maintainers review new Flyway migrations, confirm whether `gatlingBenchmark` is required, and complete changelog/roadmap/plan cleanup
 - after pushing a release tag, maintainers verify the remote workflow published both the semantic image tag and the immutable short-SHA image tag
 
@@ -216,8 +218,15 @@ Monitoring support uses the upstream `kube-prometheus-stack` Helm chart plus rep
 ## Project Map
 
 - `SETUP.md`: developer onboarding, local environment setup, OAuth setup, Docker workflow, and troubleshooting
+- `ai/PLAN.md`: AI-facing planning rules for execution plans and milestone-ready plan files
+- `ai/EXECUTION.md`: AI-facing single-agent execution workflow for local implementation, validation, and PR-ready handoff
+- `ai/RELEASES.md`: AI-facing maintainer release workflow after approved work is merged onto `main`
 - `ai/PROMPTS.md`: reusable prompt library for repository-specific planning, implementation, release, and multi-agent requests
 - `ai/WORKFLOW.md`: Codex multi-agent workflow, task integration, and release handoff rules for this repository
+- `ai/CODE_STYLE.md`: AI-facing code-style and change-shaping guidance for repo edits
+- `ai/TESTING.md`: AI-facing testing and validation guidance
+- `ai/REVIEWS.md`: AI-facing code-review and security-review guidance
+- `ai/DOCUMENTATION.md`: AI-facing documentation ownership and update guidance
 - `AGENTS.md`: AI-facing project rules and spec-driven working contract
 - `ROADMAP.md`: active roadmap only
 - `CHANGELOG.md`: released history only

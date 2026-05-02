@@ -7,6 +7,12 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Changed
+- Clarified the maintainer and AI workflow so local implementation, validation, and review finish before any branch push or PR creation, and release preparation begins only after the approved implementation PR is merged onto `main`.
+- Tightened AI planning guidance so plans must ask targeted clarification questions for material gaps and record unresolved requirement holes plus fallback assumptions explicitly instead of silently guessing.
+- Split standing AI guidance into focused code-style, testing, review, and documentation guides so policy ownership is explicit and prompts or workflow docs no longer need to absorb those concerns.
+- Defined phase-based multi-agent workflow guidance so delegated execution can split requirements, planning, investigation, coding, testing, review, security review, and documentation work only when the coordination cost is justified.
+
 ## [v1.2.1] - 2026-05-02
 
 ### Changed

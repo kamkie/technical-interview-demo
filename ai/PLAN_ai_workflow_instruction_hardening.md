@@ -194,7 +194,28 @@
 - If execution discovers that contributor-facing human guidance needs a larger rewrite than `README.md` and `CONTRIBUTING.md` can absorb cleanly, stop and split that broader documentation work into a follow-up plan instead of folding it into this AI hardening task.
 
 ## Validation Results
-- To be filled in during execution
+- 2026-05-02 Milestone 1 completed:
+  - updated `ai/EXECUTION.md`, `ai/WORKFLOW.md`, `ai/RELEASES.md`, `ai/PROMPTS.md`, `README.md`, and `CONTRIBUTING.md` to make the local execution -> PR handoff -> merged `main` -> release sequence explicit
+  - preserved `.github/workflows/ci.yml` and `.github/workflows/release.yml` unchanged
+  - validation run: manual document-consistency review for the milestone changes; final `.\gradlew.bat build` still pending until the full plan is complete
+- 2026-05-02 Milestone 2 completed:
+  - updated `ai/PLAN.md` to require clarification-first planning for material scope, compatibility, rollout, acceptance-criteria, and validation gaps
+  - updated `ai/PROMPTS.md` so planning prompts require explicit requirement-gap recording and fallback assumptions
+  - validation run: manual review of plan-template and prompt consistency; final `.\gradlew.bat build` still pending until the full plan is complete
+- 2026-05-02 Milestone 3 completed:
+  - added focused ownership guides: `ai/CODE_STYLE.md`, `ai/TESTING.md`, `ai/REVIEWS.md`, and `ai/DOCUMENTATION.md`
+  - updated `AGENTS.md`, `README.md`, `CONTRIBUTING.md`, `ai/EXECUTION.md`, and `ai/PROMPTS.md` so those new guides are discoverable and own the recurring style, testing, review, and documentation guidance
+  - validation run: manual review of document ownership, cross-references, and focused-guide discoverability; final `.\gradlew.bat build` still pending until the full plan is complete
+- 2026-05-02 Milestone 4 completed:
+  - rewrote `ai/WORKFLOW.md` around explicit phase ownership for requirements, planning, investigation, coding, testing, code review, security review, and documentation
+  - updated `ai/PROMPTS.md` so delegated-execution prompts ask for explicit phase splits instead of ad hoc task parallelism
+  - validation run: manual review of phase ownership, delegation decision rules, and release handoff sequencing; final `.\gradlew.bat build` still pending until the full plan is complete
+- 2026-05-02 Final validation:
+  - initial `.\gradlew.bat build` failed immediately because the shell defaulted to `JAVA_HOME=C:\Program Files\Microsoft\jdk-11.0.31.11-hotspot\`, while Gradle 9.5 in this repo requires JVM 17 or later
+  - reran `.\gradlew.bat build` with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`; that retry reached `spotlessMiscCheck` and failed on whitespace-only blank lines in `CHANGELOG.md`
+  - removed the whitespace-only blank lines around `## [Unreleased]` in `CHANGELOG.md`
+  - reran `.\gradlew.bat build` with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`: passed
+  - `.\gradlew.bat gatlingBenchmark` not run because this plan changed repository guidance only, not the benchmark-sensitive application behavior listed in `AGENTS.md`
 
 ## User Validation
 - Read the updated AI guidance and confirm you can trace one end-to-end story for: planning, local execution, PR creation, merge-to-main, release preparation, and optional phase-based delegation.

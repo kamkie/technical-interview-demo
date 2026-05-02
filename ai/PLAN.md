@@ -39,6 +39,7 @@ At minimum, inspect:
 - implementation code in `src/main/java/`
 
 If the user referenced another document, ticket, PR, issue, API example, or web page, read it before planning.
+If the request leaves material gaps in scope, compatibility, rollout, acceptance criteria, or validation, resolve what repo truth can answer first and then ask targeted clarification questions before finalizing the plan. Do not hide material requirement holes inside silent assumptions.
 
 ## How To Plan
 
@@ -52,21 +53,24 @@ If the user referenced another document, ticket, PR, issue, API example, or web 
    Search the repo and inspect likely source files before asking the user questions. Do not ask questions whose answers are already in the codebase, docs, configs, or tests.
 
 4. Ask only high-value questions.
-   Ask the user when ambiguity affects product intent, scope, compatibility, rollout, or tradeoffs. If you ask, present concrete options and recommend one.
+   Ask the user when ambiguity affects product intent, scope, compatibility, rollout, acceptance criteria, validation, or other material tradeoffs. If you ask, present concrete options and recommend one.
 
-5. Lock assumptions.
-   If the user does not answer a non-blocking preference question, proceed with a reasonable default and record it explicitly in the plan as an assumption.
+5. Record requirement gaps explicitly.
+   If a material question is still open after repo research, record what is missing, why it matters, and whether planning is blocked pending user input.
 
-6. Keep the plan decision-complete.
+6. Lock assumptions carefully.
+   If the user does not answer a non-blocking preference question, proceed with a reasonable default and record it explicitly in the plan as a fallback assumption. Do not convert missing product decisions about scope, compatibility, rollout, acceptance criteria, or validation into silent assumptions.
+
+7. Keep the plan decision-complete.
    The implementer should not need to decide what files to touch, what behavior to preserve, what tests to add, or what validation proves completion.
 
-7. Prefer the smallest coherent change.
+8. Prefer the smallest coherent change.
    Favor direct Spring MVC, Spring Data, and `@Service`-level changes over new abstraction layers unless the user explicitly wants broader architecture work.
 
-8. Call out better-engineering blockers.
+9. Call out better-engineering blockers.
    If the requested change is poorly framed because a more fundamental problem must be solved first, say so in the plan. Small prerequisite cleanup can be included as an early milestone. Large prerequisite work should be called out as a separate plan.
 
-9. Make validation concrete.
+10. Make validation concrete.
    Every plan must explain exactly how the executor will prove correctness. Include repository-specific commands, tests, compatibility checks, and any manual verification steps.
 
 ## Required Planning Questions
@@ -80,6 +84,7 @@ A plan is not ready until it answers all of these:
 - Which source files will likely change?
 - What compatibility promises must be preserved?
 - What edge cases or failure modes matter?
+- What requirement gaps still need user input, and which of them block planning?
 - What validation proves the work is complete?
 - Does the task require docs, OpenAPI, HTTP example, or benchmark updates?
 - Is there a smaller or cleaner way to achieve the same goal?
@@ -140,9 +145,15 @@ Use this structure:
 - Current constraints
 - Relevant existing specs and code
 
+## Requirement Gaps And Open Questions
+- Material questions still requiring user input
+- Why each gap matters
+- Whether planning is blocked or what fallback applies if the user does not answer
+
 ## Locked Decisions And Assumptions
 - User decisions
-- Planning assumptions that the executor should not revisit
+- Requirement gaps resolved from repo truth
+- Fallback assumptions that the executor should not revisit
 
 ## Affected Artifacts
 - Tests
@@ -193,6 +204,7 @@ Good plans in this repository usually:
 - start from tests and contract docs instead of starting from controllers
 - name exact files or packages instead of vague areas
 - distinguish public contract work from internal cleanup
+- make material requirement gaps explicit instead of silently guessing
 - say whether OpenAPI baseline refresh is expected or forbidden
 - say whether HTTP example files must change
 - state whether `README.md` changes are required
@@ -202,6 +214,7 @@ Good plans in this repository usually:
 Poor plans in this repository usually:
 
 - describe implementation without identifying the spec first
+- bury unresolved scope, compatibility, rollout, acceptance-criteria, or validation questions inside vague assumptions
 - change public behavior without listing docs and OpenAPI consequences
 - propose new abstractions that fight the demo scope
 - use vague language like "update tests as needed" instead of naming which tests must change
@@ -262,6 +275,7 @@ Before presenting a plan to the user, verify that:
 - the plan names the governing specs
 - the plan separates scope from non-goals
 - the plan names the likely files to change
+- the plan records any remaining requirement gaps and fallback assumptions explicitly
 - the plan includes repo-specific validation
 - the plan respects the demo scope of the application
 - the plan does not hide compatibility or benchmark consequences
