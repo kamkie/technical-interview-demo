@@ -270,8 +270,11 @@ Use the multi-agent workflow from `ai/WORKFLOW.md` for `<plan_file>`.
 Act as coordinator.
 Split the plan into bounded tasks with explicit file ownership.
 Keep shared integration files such as `CHANGELOG.md` and the plan's `Validation Results` under coordinator ownership.
+Report the task split before delegating.
+Report worker completions and blockers as they happen.
 Keep completed work on execution branches until the whole plan is finished, then integrate the plan onto `main`.
 Run final validation on `main`.
+Send an explicit final completion message that states what landed on `main`, what validation ran, and whether any release step remains.
 Only create the release after all intended work is integrated and validated.
 ```
 
@@ -314,8 +317,11 @@ Implement `ai/PLAN_example_release_readiness_tasks.md`.
 Use the multi-agent workflow from `ai/WORKFLOW.md`.
 Act as coordinator.
 Keep shared integration files such as `CHANGELOG.md` and the plan's `Validation Results` under coordinator ownership.
+Report the task split before delegating.
+Report worker completions and blockers as they happen.
 Keep completed work on execution branches until the whole plan is finished, then integrate the plan onto `main`.
 Run final validation on `main`.
+Send an explicit final completion message that states what landed on `main`, what validation ran, and whether any release step remains.
 After the whole plan is complete and validated, follow `ai/RELEASES.md` to execute the release from `main`.
 Do not push unless I explicitly ask for remote publication.
 ```

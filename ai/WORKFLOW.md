@@ -25,6 +25,7 @@ The coordinator agent owns:
 - reading `AGENTS.md`, `README.md`, the target `ai/PLAN_*.md`, and any governing specs
 - deciding whether the work is worth splitting
 - splitting the plan into bounded, non-overlapping tasks
+- giving the user visible status updates when delegation starts, when a worker finishes, when work is blocked, and when the overall plan reaches a terminal state
 - keeping `main` as the integration branch
 - holding completed worker changes on execution branches until the whole plan is finished, then integrating the full plan onto `main`
 - maintaining shared integration files such as `CHANGELOG.md` and the target plan's `Validation Results`
@@ -70,14 +71,17 @@ Shared files should stay under coordinator ownership unless there is a strong re
 1. The coordinator reads the governing docs and specs.
 2. The coordinator creates or confirms the execution plan in `ai/PLAN_*.md`.
 3. The coordinator splits the plan into bounded tasks with explicit file ownership.
-4. Each worker gets its own git worktree or branch for one task.
-5. Each worker completes its task, validates it, and creates a task-level commit.
-6. The coordinator reviews each worker result, updates the plan state as needed, and keeps progress moving without integrating each task onto `main` immediately.
-7. The coordinator updates `CHANGELOG.md` under `## [Unreleased]` on the integration branch as each completed task or milestone commit lands there.
-8. After the whole plan is complete, the coordinator updates the plan's `Validation Results`.
-9. The coordinator integrates the completed plan onto `main`.
-10. The coordinator runs `.\gradlew.bat build` on `main`.
-11. The coordinator creates the release from `main` by following `ai/RELEASES.md`, including `ROADMAP.md` cleanup, plan archival, and post-release cleanup of temporary execution worktrees and branches.
+4. The coordinator tells the user which tasks were delegated, which files stay under coordinator ownership, and what completion signal to expect.
+5. Each worker gets its own git worktree or branch for one task.
+6. Each worker completes its task, validates it, and creates a task-level commit.
+7. The coordinator reports worker completion back to the user as tasks finish, including validation status and any blocker that affects final integration.
+8. The coordinator reviews each worker result, updates the plan state as needed, and keeps progress moving without integrating each task onto `main` immediately.
+9. The coordinator updates `CHANGELOG.md` under `## [Unreleased]` on the integration branch as each completed task or milestone commit lands there.
+10. After the whole plan is complete, the coordinator updates the plan's `Validation Results`.
+11. The coordinator integrates the completed plan onto `main`.
+12. The coordinator runs `.\gradlew.bat build` on `main`.
+13. The coordinator sends an explicit final status message saying whether the plan is complete, what landed on `main`, what validation passed or failed, and whether any release or user decision remains.
+14. The coordinator creates the release from `main` by following `ai/RELEASES.md`, including `ROADMAP.md` cleanup, plan archival, and post-release cleanup of temporary execution worktrees and branches.
 
 ## Worktree Rules
 
@@ -166,3 +170,17 @@ Each worker handoff should give the coordinator:
 - any open issue that blocks clean final integration
 
 The coordinator should report progress in terms of completed plan tasks and readiness for final integration onto `main`, not just work completed in side branches.
+
+Coordinator feedback must be user-visible and explicit:
+
+- before delegation starts, report the task split, file ownership boundaries, and the conditions for plan completion
+- when a worker finishes, report the completed task, changed files, validation status, and whether the result is ready for integration
+- if work stalls, report the blocker instead of waiting silently
+- when the plan reaches a terminal state, send a final completion message even if no release was requested
+
+The final completion message should state:
+
+- whether implementation is complete
+- whether the finished work is integrated onto `main`
+- whether final validation on `main` passed
+- whether the plan is blocked, awaiting release work, or fully done
