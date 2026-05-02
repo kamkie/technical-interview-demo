@@ -210,6 +210,12 @@
   - rewrote `ai/WORKFLOW.md` around explicit phase ownership for requirements, planning, investigation, coding, testing, code review, security review, and documentation
   - updated `ai/PROMPTS.md` so delegated-execution prompts ask for explicit phase splits instead of ad hoc task parallelism
   - validation run: manual review of phase ownership, delegation decision rules, and release handoff sequencing; final `.\gradlew.bat build` still pending until the full plan is complete
+- 2026-05-02 Final validation:
+  - initial `.\gradlew.bat build` failed immediately because the shell defaulted to `JAVA_HOME=C:\Program Files\Microsoft\jdk-11.0.31.11-hotspot\`, while Gradle 9.5 in this repo requires JVM 17 or later
+  - reran `.\gradlew.bat build` with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`; that retry reached `spotlessMiscCheck` and failed on whitespace-only blank lines in `CHANGELOG.md`
+  - removed the whitespace-only blank lines around `## [Unreleased]` in `CHANGELOG.md`
+  - reran `.\gradlew.bat build` with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`: passed
+  - `.\gradlew.bat gatlingBenchmark` not run because this plan changed repository guidance only, not the benchmark-sensitive application behavior listed in `AGENTS.md`
 
 ## User Validation
 - Read the updated AI guidance and confirm you can trace one end-to-end story for: planning, local execution, PR creation, merge-to-main, release preparation, and optional phase-based delegation.
