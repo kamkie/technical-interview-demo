@@ -203,6 +203,7 @@ Execute `<plan_file>` with delegation.
 
 Use `ai/WORKFLOW.md`.
 Act as coordinator.
+Keep phase ownership explicit for requirements, planning, investigation, coding, testing, review, security review, and documentation.
 ```
 
 ### Decide Whether Multi-Agent Execution Is Worth It
@@ -211,7 +212,7 @@ Act as coordinator.
 Review `<plan_file>` and decide whether it should be executed by one agent or with delegation.
 
 Use `ai/WORKFLOW.md`.
-If delegation is worth it, propose the task split and file ownership boundaries.
+If delegation is worth it, propose the phase split, task split, and file ownership boundaries.
 ```
 
 ## Maintenance

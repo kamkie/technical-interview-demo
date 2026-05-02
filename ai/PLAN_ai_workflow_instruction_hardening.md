@@ -206,6 +206,10 @@
   - added focused ownership guides: `ai/CODE_STYLE.md`, `ai/TESTING.md`, `ai/REVIEWS.md`, and `ai/DOCUMENTATION.md`
   - updated `AGENTS.md`, `README.md`, `CONTRIBUTING.md`, `ai/EXECUTION.md`, and `ai/PROMPTS.md` so those new guides are discoverable and own the recurring style, testing, review, and documentation guidance
   - validation run: manual review of document ownership, cross-references, and focused-guide discoverability; final `.\gradlew.bat build` still pending until the full plan is complete
+- 2026-05-02 Milestone 4 completed:
+  - rewrote `ai/WORKFLOW.md` around explicit phase ownership for requirements, planning, investigation, coding, testing, code review, security review, and documentation
+  - updated `ai/PROMPTS.md` so delegated-execution prompts ask for explicit phase splits instead of ad hoc task parallelism
+  - validation run: manual review of phase ownership, delegation decision rules, and release handoff sequencing; final `.\gradlew.bat build` still pending until the full plan is complete
 
 ## User Validation
 - Read the updated AI guidance and confirm you can trace one end-to-end story for: planning, local execution, PR creation, merge-to-main, release preparation, and optional phase-based delegation.
