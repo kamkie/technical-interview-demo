@@ -194,7 +194,10 @@
 - If execution discovers that contributor-facing human guidance needs a larger rewrite than `README.md` and `CONTRIBUTING.md` can absorb cleanly, stop and split that broader documentation work into a follow-up plan instead of folding it into this AI hardening task.
 
 ## Validation Results
-- To be filled in during execution
+- 2026-05-02 Milestone 1 completed:
+  - updated `ai/EXECUTION.md`, `ai/WORKFLOW.md`, `ai/RELEASES.md`, `ai/PROMPTS.md`, `README.md`, and `CONTRIBUTING.md` to make the local execution -> PR handoff -> merged `main` -> release sequence explicit
+  - preserved `.github/workflows/ci.yml` and `.github/workflows/release.yml` unchanged
+  - validation run: manual document-consistency review for the milestone changes; final `.\gradlew.bat build` still pending until the full plan is complete
 
 ## User Validation
 - Read the updated AI guidance and confirm you can trace one end-to-end story for: planning, local execution, PR creation, merge-to-main, release preparation, and optional phase-based delegation.

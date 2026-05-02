@@ -159,7 +159,9 @@ Additional change-sensitive checks:
 - keep release numbers increasing in `git log --first-parent` order
 - record human-facing release history in `CHANGELOG.md`
 - tag-driven releases publish the matching `CHANGELOG.md` version section as GitHub Release notes
-- maintainers prepare releases only from validated `main`
+- complete local implementation, validation, and review work before pushing a branch or opening an implementation PR
+- treat PR creation as the final implementation handoff, not as a substitute for local execution
+- maintainers prepare releases only after the approved implementation PR has been merged onto validated `main`
 - before tagging, maintainers review new Flyway migrations, confirm whether `gatlingBenchmark` is required, and complete changelog/roadmap/plan cleanup
 - after pushing a release tag, maintainers verify the remote workflow published both the semantic image tag and the immutable short-SHA image tag
 

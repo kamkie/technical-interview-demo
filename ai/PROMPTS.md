@@ -73,7 +73,7 @@ Implement `<plan_file>`.
 
 Read `AGENTS.md`, `ai/EXECUTION.md`, and `<plan_file>` first.
 Follow `ai/EXECUTION.md`.
-Do not release.
+Do not push, open a PR, or release unless I ask.
 ```
 
 ### Implement A Plan And Complete The Release Flow
@@ -82,7 +82,7 @@ Do not release.
 Implement `<plan_file>`.
 
 Read `AGENTS.md`, `ai/EXECUTION.md`, `<plan_file>`, and `ai/RELEASES.md` first.
-Follow `ai/EXECUTION.md` for implementation and `ai/RELEASES.md` for the release step.
+Follow `ai/EXECUTION.md` for implementation and `ai/RELEASES.md` for the release step after the approved implementation PR has been merged onto `main`.
 ```
 
 ### Implement Only One Milestone
@@ -92,7 +92,7 @@ Implement only `<milestone_name>` from `<plan_file>`.
 
 Read `AGENTS.md`, `ai/EXECUTION.md`, and `<plan_file>` first.
 Follow `ai/EXECUTION.md`.
-Do not start later milestones or release.
+Do not start later milestones, push, open a PR, or release unless I ask.
 ```
 
 ## Validation
@@ -155,6 +155,7 @@ Prepare a release for `<plan_file>`.
 
 Read `AGENTS.md`, `ai/RELEASES.md`, the executed plan, and the changed contract docs first.
 Follow `ai/RELEASES.md`.
+Only proceed if the approved implementation PR is already merged onto `main`.
 Do not push unless I ask.
 ```
 
@@ -165,6 +166,7 @@ Prepare and execute the release for `<plan_file>`.
 
 Read `AGENTS.md`, `ai/RELEASES.md`, the executed plan, and the changed contract docs first.
 Follow `ai/RELEASES.md`.
+Only proceed if the approved implementation PR is already merged onto `main`.
 ```
 
 ### Push An Already Prepared Release

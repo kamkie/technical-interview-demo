@@ -5,6 +5,9 @@
 Use this file when the user asks to make a release, prepare a release commit, create a release tag, or when plan execution reaches the final release step.
 Do not use this file for implementation planning, non-release execution, setup troubleshooting, or release history. Planning belongs in `ai/PLAN.md` and `ai/PLAN_*.md`. Non-release execution belongs in `ai/EXECUTION.md`. Setup belongs in `SETUP.md`. Release history belongs in `CHANGELOG.md`.
 
+Release work starts only after the implementation flow is finished and the approved implementation PR has already been merged onto `main`.
+If the work is still only local, still on a side branch, or still in an open PR, stay in execution mode and use `ai/EXECUTION.md` or `ai/WORKFLOW.md` instead.
+
 ## Release Goal
 
 A release in this repository means:
@@ -33,20 +36,22 @@ Read these artifacts before making release changes:
 Inspect repository state before editing release metadata:
 
 - confirm the target plan was fully executed
+- confirm the approved implementation PR has already been merged onto `main`; if no PR existed by explicit user choice, confirm the reviewed final change set is already on `main`
 - confirm any work done in a git worktree or side branch has already been integrated back onto `main`
 - confirm all intended release changes have been merged or otherwise integrated onto `main`
 - confirm `git branch --show-current` is `main`
+- confirm local `main` is synced to the approved merged state before editing release metadata
 - confirm the target plan's `Validation Results` section reflects what actually ran
 - confirm `.\gradlew.bat build` passed for the release candidate
 - confirm OpenAPI, REST Docs, HTTP examples, and `README.md` were updated when the change required them
 - confirm `ROADMAP.md` was updated to remove work completed by the release from the active roadmap
 - confirm the worktree is in the expected state before creating the release commit
 
-If the implementation is incomplete, specs are not aligned, the build is failing, or the release candidate is not on `main`, do not make a release.
+If the implementation is incomplete, specs are not aligned, the build is failing, the PR is not yet merged, or the release candidate is not on `main`, do not make a release.
 
 ## Maintainer Release Checklist
 
-Before creating an annotated release tag, confirm all of these on `main`:
+Before creating an annotated release tag, confirm all of these on merged `main`:
 
 1. review any new Flyway migration files under `src/main/resources/db/migration/` and confirm they are intentional for the target version
 2. confirm `.\gradlew.bat build` passed for the exact release candidate
@@ -80,7 +85,7 @@ Do not reuse or skip to a lower version than an already published first-parent r
 
 ## Preparing The Release Commit
 
-Start by syncing your local `main` checkout to the intended integrated state. If required work is still sitting on another branch, integrate it first and only then prepare the release from `main`.
+Start from local `main` synced to the approved merged state. If required work is still sitting on another branch, only in an open PR, or not yet integrated on `main`, stop and finish execution first.
 
 1. Move the relevant `CHANGELOG.md` content from `## [Unreleased]` into a new version section using the chosen tag and the release date in `YYYY-MM-DD` format.
 2. Update `ROADMAP.md` so completed items released in this version are removed from active roadmap sections.
@@ -146,13 +151,14 @@ Keep the release-note extraction logic inline in `.github/workflows/release.yml`
 - do not record unreleased work as released
 - do not cut a release from any branch other than `main`
 - do not tag a commit that has not passed the required validation
+- do not start release work from an unmerged PR or side branch
 - do not refresh the OpenAPI baseline unless the contract change was intentional and reviewed
 - do not rewrite release history unless the user explicitly asks for recovery work
 
 ## Minimal Release Checklist
 
-1. Execute the target plan.
-2. Integrate all intended changes onto `main` and switch to `main`.
+1. Execute the target plan and finish any requested PR handoff.
+2. Wait for the approved implementation PR to be merged onto `main`, then switch to synced `main`.
 3. Update the plan's `Validation Results`.
 4. Update `ROADMAP.md` to remove work completed by the release from the active roadmap.
 5. Move the executed `ai/PLAN_*.md` file to `ai/archive/` and update moved-path references in the same change.

@@ -78,9 +78,12 @@ Keep pull requests narrow enough to review quickly.
 
 Before opening a PR:
 
-1. Rebase or merge your branch so it reflects the current target branch.
-2. Make sure the change is scoped to one feature, fix, refactor, or documentation update.
-3. Update tests and docs when behavior changed.
+1. Finish the intended local implementation scope first and run the required local validation.
+2. Rebase or merge your branch so it reflects the current target branch.
+3. Make sure the change is scoped to one feature, fix, refactor, or documentation update.
+4. Update tests and docs when behavior changed.
+
+Opening the PR is the handoff after local execution is complete. It is not a substitute for local validation, review, or documentation updates.
 
 Each PR should include:
 
@@ -100,7 +103,7 @@ Branch protection expectations for the default branch:
 
 ## Release Expectations
 
-Maintainers preparing a release should follow `ai/RELEASES.md` from `main`.
+Maintainers preparing a release should follow `ai/RELEASES.md` only after the approved implementation PR has been merged onto `main`.
 
 Release preparation should include:
 

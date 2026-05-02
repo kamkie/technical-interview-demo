@@ -7,6 +7,9 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
  
+### Changed
+- Clarified the maintainer and AI workflow so local implementation, validation, and review finish before any branch push or PR creation, and release preparation begins only after the approved implementation PR is merged onto `main`.
+ 
 ## [v1.2.1] - 2026-05-02
 
 ### Changed
