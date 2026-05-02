@@ -18,6 +18,8 @@ Add new rough tasks below.
 - Consider changing the auth setup to something that better fits a plain REST app, such as a fully stateless token-based model
 - Consider adding a user-facing Java UI for the app as an alternative to the auth-direction change above
 - Consider adding a user-facing UI for the app in a separate repository
+- Upload test results to Codecov
+- static analysis reports should be visible in the GitHub Actions UI
 - add config for forwarding logs to a centralized logging service, preferably with jsonl or other format that is semantic human readable and will preserve multi-line messages like stack traces
 
 ## How To Use This File
