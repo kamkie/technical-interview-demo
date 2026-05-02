@@ -28,15 +28,15 @@ Goal: close current AI guidance gaps around planning quality, phase ownership, P
 - [ ] Update the release workflow so it starts from merging the approved PR onto `main` before any release-only metadata, tagging, or push steps begin
 - [ ] Align prompts and release-readiness guidance with the PR-first, merge-before-release sequence so agents stop implying direct branch-tip releases
 
-#### Audit AI Instruction Coverage
-- [ ] Review all AI instruction files under `ai/` and map the current coverage, overlap, and missing guidance areas
-- [ ] Decide whether to add focused AI guides for code style, testing, code review, security review, and documentation instead of continuing to overload the existing instruction files
-- [ ] If the new focused guides are justified, define their intended roles and update `AGENTS.md` plus cross-file references in the same change
-
 #### Tighten Planning Intake
 - [ ] Strengthen planning guidance so agents ask more targeted clarification questions when user input leaves scope, compatibility, acceptance criteria, rollout, or validation ambiguous
 - [ ] Add explicit planning rules for recording requirement gaps, locked assumptions, and unresolved user-input holes instead of silently guessing
 - [ ] Update reusable planning prompts so they explicitly drive clarification-first requirement capture before plan writing
+
+#### Audit AI Instruction Coverage
+- [ ] Review all AI instruction files under `ai/` and map the current coverage, overlap, and missing guidance areas
+- [ ] Decide whether to add focused AI guides for code style, testing, code review, security review, and documentation instead of continuing to overload the existing instruction files
+- [ ] If the new focused guides are justified, define their intended roles and update `AGENTS.md` plus cross-file references in the same change
 
 #### Expand Multi-Agent Phase Guidance
 - [ ] Update the agentic workflow to describe dedicated agents or explicit phase owners for requirements gathering, planning, investigation, coding, testing, code review, security review, and documentation
