@@ -218,6 +218,8 @@ Monitoring support uses the upstream `kube-prometheus-stack` Helm chart plus rep
 ## Project Map
 
 - `SETUP.md`: developer onboarding, local environment setup, OAuth setup, Docker workflow, and troubleshooting
+- `ai/ARCHITECTURE.md`: AI-facing architecture map, API shape summary, and structural guidance
+- `ai/BUSINESS_MODULES.md`: AI-facing business-feature package map and ownership guide
 - `ai/PLAN.md`: AI-facing planning rules for execution plans and milestone-ready plan files
 - `ai/EXECUTION.md`: AI-facing single-agent execution workflow for local implementation, validation, and PR-ready handoff
 - `ai/RELEASES.md`: AI-facing maintainer release workflow after approved work is merged onto `main`

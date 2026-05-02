@@ -1,71 +1,66 @@
 # Documentation Guide For AI Agents
 
-`ai/DOCUMENTATION.md` owns standing AI guidance for documentation scope, ownership, and cross-file alignment in this repository.
+`ai/DOCUMENTATION.md` owns standing AI guidance for documentation scope, owning-file selection, and cross-file alignment in this repository.
 
-Use this file when the task changes any repository documentation, generated contract artifact, reviewer example, roadmap entry, release note, or AI instruction file.
+Use this file when the task changes repository docs, AI instruction files, reviewer examples, generated contract artifacts, roadmap entries, or release notes.
 
-## Documentation Ownership
+## Choose The Owning Artifact
 
-Use the owning document for the matching concern:
+Update the artifact that owns the kind of truth being changed:
 
-- `README.md`: human-facing product contract, release model, project map, and quality model
-- `AGENTS.md`: repository rules for AI agents, authoritative spec locations, and AI-document inventory or maintenance rules
-- `SETUP.md`: onboarding, environment setup, local tooling, and troubleshooting
-- `CONTRIBUTING.md`: contributor PR flow, review expectations, and testing expectations
-- `ROADMAP.md`: active planned work only
-- `CHANGELOG.md`: released history only
-- `src/docs/asciidoc/`: published REST Docs structure
-- `src/test/resources/http/`: reviewer-facing runnable examples
-- `src/test/resources/openapi/approved-openapi.json`: reviewed machine-readable public API contract
-- `ai/PLAN.md`: planning rules
-- `ai/EXECUTION.md`: single-agent execution rules
-- `ai/WORKFLOW.md`: delegated or multi-agent workflow
-- `ai/RELEASES.md`: release workflow
-- `ai/PROMPTS.md`: lean prompt starters, not standing policy
-- `ai/CODE_STYLE.md`: standing code-style and change-shaping guidance for AI edits
-- `ai/TESTING.md`: standing testing and validation guidance for AI edits
-- `ai/REVIEWS.md`: standing code-review and security-review guidance for AI edits
-- `ai/DOCUMENTATION.md`: standing documentation ownership and cross-reference guidance for AI edits
+- behavior and API contract: executable tests, `src/docs/asciidoc/`, `src/test/resources/http/`, `src/test/resources/openapi/approved-openapi.json`, and `README.md`
+- AI repository rules and AI-document inventory: `AGENTS.md`
+- local setup, tools, troubleshooting, and onboarding: `SETUP.md`
+- contributor workflow and maintainer expectations: `CONTRIBUTING.md`
+- active planned work only: `ROADMAP.md`
+- released history only: `CHANGELOG.md`
+- planning guidance: `ai/PLAN.md`
+- single-agent implementation guidance: `ai/EXECUTION.md`
+- delegated or worktree-based execution guidance: `ai/WORKFLOW.md`
+- release sequencing and tagging: `ai/RELEASES.md`
+- prompt starters only: `ai/PROMPTS.md`
+- descriptive codebase map, API shape summary, and structural guidance: `ai/ARCHITECTURE.md`
+- descriptive business-feature package map and ownership notes: `ai/BUSINESS_MODULES.md`
+- code-shaping rules: `ai/CODE_STYLE.md`
+- validation scope and commands: `ai/TESTING.md`
+- review and security-review expectations: `ai/REVIEWS.md`
+
+If the change does not clearly fit one owner, stop and decide that ownership before editing multiple docs.
 
 ## Alignment Rules
 
-- update human-facing and AI-facing docs together when their scopes overlap
-- keep prompts lean by linking to the owning long-form guide instead of restating policy
-- compact overlapping guidance into the single best owning file when docs begin to drift together
-- when adding, moving, or renaming AI documents, update discoverability references in `AGENTS.md`, `README.md`, and any other affected docs in the same change
-- do not move setup detail into AI workflow docs or release history into roadmap files
+- update overlapping human-facing and AI-facing docs in the same change
+- keep prompts short and point to the owning long-form guide instead of restating policy
+- move repeated standing guidance into the best owner instead of maintaining parallel copies
+- when adding, moving, or renaming AI docs, update discoverability references in `AGENTS.md` and any affected cross-references in the same change
+- keep setup detail out of workflow docs and keep release history out of roadmap files
 
-## Ownership Rebalance In This Repo
+## Update Patterns
 
-This repo now keeps recurring guidance in focused AI guides so workflow docs can stay narrow:
-
-- code-style and change-shaping guidance moved into `ai/CODE_STYLE.md`
-- testing and validation guidance moved into `ai/TESTING.md`
-- code-review and security-review guidance moved into `ai/REVIEWS.md`
-- documentation ownership and cross-reference guidance moved into `ai/DOCUMENTATION.md`
-
-Keep future edits in those owning files instead of re-scattering the same rules across `ai/PROMPTS.md`, workflow docs, README, or contributing guidance.
-
-## Documentation Update Patterns
-
-When behavior changes:
+When public behavior changes:
 
 - update the governing spec artifacts first
-- update all affected contract docs together
-- keep README, generated docs, HTTP examples, and approved OpenAPI aligned where applicable
+- keep tests, REST Docs, HTTP examples, approved OpenAPI, and `README.md` aligned where applicable
+- use `ai/TESTING.md` to confirm the required validation scope
 
 When workflow or maintainer guidance changes:
 
-- update the owning AI docs
-- update README and CONTRIBUTING where their human-facing workflow overlaps
-- update AGENTS when the AI-document inventory or maintenance rules changed
+- update the owning AI guide first
+- update `README.md` and `CONTRIBUTING.md` when their human-facing workflow overlaps
+- update `AGENTS.md` only when the AI-document set or maintenance rules changed
 
 When setup changes:
 
 - update `SETUP.md`
-- avoid duplicating setup detail into `README.md`, `AGENTS.md`, or AI workflow files
+- do not duplicate the same setup instructions into `README.md`, `AGENTS.md`, or `ai/` workflow docs
+
+When roadmap or release history changes:
+
+- keep unreleased planning in `ROADMAP.md`
+- keep released history in `CHANGELOG.md`
+- do not invent another archive for human-facing completion notes
 
 ## Cross-References
 
-- use `ai/TESTING.md` to decide whether documentation-only work still needs contract-artifact or build verification
-- use `ai/REVIEWS.md` for final contradiction and drift checks before finalizing doc changes
+- use `ai/TESTING.md` to decide whether doc-only work still needs contract-artifact or build verification
+- use `ai/REVIEWS.md` for contradiction and drift checks before finalizing documentation changes

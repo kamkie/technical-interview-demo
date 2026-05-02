@@ -3,7 +3,7 @@
 `ai/LEARNINGS.md` is for durable engineering wisdom that should survive refactors and still apply as this repository grows. Use the scope ladder when deciding where a new insight should live:
 
 - **Repo-wide and durable** (still true after package moves, endpoint additions, and internal rewrites): put it in `ai/LEARNINGS.md`.
-- **App-specific architecture or policy** (current package boundaries, feature ownership, runtime flows): put it in `ai/ARCHITECTURE.md`.
+- **App-specific architecture or policy** (current package boundaries, runtime flows, API shape): put it in `ai/ARCHITECTURE.md`. Put detailed business-feature ownership in `ai/BUSINESS_MODULES.md`.
 - **Public contract specifics** (endpoint behavior, payload shape, examples, docs): put it in executable specs, `README.md`, `src/docs/asciidoc/`, `src/test/resources/http/`, and the approved OpenAPI baseline.
 - **Symbol-local contract** (one class, method, or type behavior): put it in code near the symbol.
 - **Naming or API smell** (callers keep getting it wrong): prefer renaming or reshaping the API instead of adding more prose.

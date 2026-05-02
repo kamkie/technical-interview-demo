@@ -4,6 +4,8 @@
 
 Use this file to understand how the codebase is organized before making structural changes.
 This file is descriptive, not authoritative. Behavioral truth still lives in the spec artifacts described in `AGENTS.md`.
+Use `ai/CODE_STYLE.md` for edit-shaping rules, `ai/TESTING.md` for validation scope, and `ai/DOCUMENTATION.md` for contract-artifact alignment.
+Use `ai/BUSINESS_MODULES.md` for the detailed business-feature package map.
 
 ## System Purpose
 
@@ -21,6 +23,28 @@ Primary architecture goal:
 - keep the codebase small, readable, and easy to reason about
 
 That goal matters more than layering purity or abstraction density.
+
+## API Shape
+
+Current implemented endpoint surface:
+
+- `GET /docs`
+- `GET /`
+- `GET /hello`
+- `GET|POST|PUT|DELETE /api/books...`
+- `GET|POST /api/categories`
+- `GET|POST|PUT|DELETE /api/localizations...`
+- `GET|PUT /api/account...`
+- actuator health, info, and Prometheus endpoints
+- OpenAPI docs at `/v3/api-docs` and `/v3/api-docs.yaml`
+
+Key API-shape expectations:
+
+- `GET /api/books` is paginated and filterable
+- `GET /api/localizations` is paginated and supports optional exact `messageKey` and `language` filters
+- account endpoints require an authenticated session
+- category creation and localization writes require `ADMIN`
+- localized errors include `messageKey`, localized `message`, and resolved `language`
 
 ## Top-Level Shape
 
@@ -50,45 +74,7 @@ The practical split is:
 
 ### Business Modules
 
-- `business.book`
-  - `BookController`
-  - `BookService`
-  - `BookRepository`
-  - `Book`
-  - request objects, search support, and domain exceptions
-  - owns pagination, filtering, optimistic locking, category assignment, and audit logging for books
-
-- `business.category`
-  - `CategoryController`
-  - `CategoryService`
-  - `CategoryRepository`
-  - `Category`
-  - request object and startup seed initializer
-  - owns category creation, list ordering, cache eviction, and admin-only write control
-
-- `business.localization`
-  - `LocalizationController`
-  - `LocalizationService`
-  - `LocalizationRepository`
-  - `Localization`
-  - request/response types, supported language policy, seed support, and domain exceptions
-  - owns localized message lookup, fallback behavior, filtering, write authorization, and cache eviction
-
-- `business.user`
-  - `UserAccountController`
-  - `UserAccountService`
-  - `CurrentUserAccountService`
-  - `UserAccountRepository`
-  - `UserAccount`
-  - request/response types and role enum
-  - owns persisted user profile data, preferred-language updates, and synchronization of authenticated users into application state
-
-- `business.audit`
-  - `AuditLogService`
-  - `AuditLogRepository`
-  - `AuditLog`
-  - enums for action and target type
-  - owns append-only write auditing for feature services
+See `ai/BUSINESS_MODULES.md` for the detailed feature-package map and ownership notes.
 
 ### Technical Modules
 
@@ -113,7 +99,7 @@ The practical split is:
   - application-specific counters and gauges
 
 - `technical.logging`
-  - request tracing/logging filter
+  - request tracing and request-logging filter
   - service logging aspect
   - sensitive parameter sanitization
 
@@ -151,7 +137,7 @@ Preferred dependency direction:
 - `business.*` may depend on other business services when the dependency is concrete and small
 - controllers depend on services, not repositories
 - repositories should not depend on services
-- avoid introducing extra “shared util” layers unless reuse is real and local
+- avoid introducing extra shared layers unless reuse is real and local
 
 This codebase intentionally tolerates direct feature-to-feature service calls when they keep the design simpler.
 Example: `BookService` delegates category resolution to `CategoryService` rather than introducing an artificial coordination layer.
@@ -170,11 +156,6 @@ Current persistence style:
 - public controllers use feature-local response DTOs instead of exposing JPA entities directly
 - request and response types stay feature-local so public contract shaping remains explicit and reviewable
 - repositories stay feature-local instead of being abstracted behind extra data-access layers
-
-Implication for AI agents:
-
-- do not add repository abstraction interfaces or service facades without a concrete need
-- if public response shape must change, treat that as a real contract change and update specs/docs accordingly
 
 ## Security Model
 
@@ -207,15 +188,9 @@ This means localization changes often touch both business and technical packages
 Observability is built into the main app rather than bolted on later:
 
 - Micrometer application counters and gauges
-- tracing/logging filter for request correlation
+- tracing and request-logging filter for request correlation
 - actuator endpoints for health, readiness, liveness, info, and Prometheus scraping
 - write-operation logging and audit logging
-
-Agents should preserve that model:
-
-- new important write flows should be logged
-- new domain operations should update metrics if they materially affect app behavior
-- technical logging should remain safe by sanitizing sensitive values
 
 ## Caching Model
 
@@ -225,22 +200,16 @@ Caching is explicit and small:
 - cache behavior is part of tested technical behavior
 - cache eviction happens in services on writes
 
-Agents should not:
-
-- add implicit caching through hidden framework annotations without understanding the eviction story
-- spread cache decisions across controllers
-
 ## Documentation And Spec Model
 
-Published and executable specs are part of the architecture:
+Published and executable specs are part of the delivery architecture:
 
 - integration tests define runtime behavior
 - REST Docs tests define public documentation snippets
 - OpenAPI compatibility tests gate backward compatibility
 - HTTP example files support reviewability
 
-This is not optional documentation around the code.
-It is part of the delivery architecture.
+This is not optional documentation around the code. It is part of the delivered system.
 
 ## Test Architecture
 
@@ -256,15 +225,14 @@ Tests are intentionally strong relative to app size:
 
 When changing architecture-sensitive behavior, read the technical tests first.
 
-## Architectural Constraints For AI Agents
+## Architecture Implications For Changes
 
-- Preserve the demo nature of the app.
-- Prefer direct code over reusable frameworks built inside the repo.
-- Keep non-trivial business behavior in services.
-- Keep controllers thin.
-- Keep packages feature-local unless the concern is clearly cross-cutting.
-- Do not move setup/runbook detail into AI docs.
-- Do not treat `ai/ARCHITECTURE.md` as spec authority; use tests and contract docs for that.
+When editing structure:
+
+- preserve the demo nature of the app and prefer direct feature-local code over repo-internal frameworks
+- keep business behavior near the owning feature package unless the concern is genuinely cross-cutting
+- treat public response-shape changes as contract changes that must flow through specs and docs
+- do not move setup or workflow process detail into architecture notes
 
 ## Common Safe Changes
 
@@ -278,8 +246,8 @@ Usually safe:
 
 Usually risky:
 
-- introducing generic base controllers/services/repositories
-- creating a shared abstractions package to “clean up” a small codebase
+- introducing generic base controllers, services, or repositories
+- creating a shared abstractions package to clean up a small codebase
 - changing security defaults without updating tests and public docs
 - changing error shape without treating it as a contract update
 - moving public behavior into hidden framework configuration
@@ -291,5 +259,5 @@ Before making structural changes, ask:
 - does this reduce or increase the number of concepts in the repo?
 - does it keep behavior near the owning feature package?
 - is the change reflected in tests and docs if it affects public behavior?
-- does it preserve readability for an interview/demo audience?
+- does it preserve readability for an interview and demo audience?
 - is a new abstraction solving a real repeated problem, or only satisfying style preference?

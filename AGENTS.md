@@ -23,6 +23,7 @@ The `ai/` directory is the AI-facing working set for non-contract repository kno
 Use these files deliberately:
 
 - `ai/ARCHITECTURE.md`: descriptive codebase map, package responsibilities, and structural guidance
+- `ai/BUSINESS_MODULES.md`: descriptive business-feature package map and ownership guide
 - `ai/CODE_STYLE.md`: AI-facing code-style and change-shaping guidance for repo edits
 - `ai/DESIGN.md`: intended design direction, product tradeoffs, and open design decisions
 - `ai/DOCUMENTATION.md`: AI-facing documentation ownership and update guidance
@@ -46,7 +47,7 @@ Rules for maintaining the `ai/` documents:
 - keep standing code-style, testing, review, and documentation guidance in their focused owning files instead of redistributing it across prompts or workflow docs
 - when AI instruction files accumulate overlap, compact them by moving duplicated guidance into the single best owning file and updating cross-references in the same change
 - archive executed `ai/PLAN_*.md` files under `ai/archive/` as part of the release cleanup once that work has been released
-- treat `ai/ARCHITECTURE.md`, `ai/DESIGN.md`, and `ai/LEARNINGS.md` as descriptive guidance, not executable spec authority
+- treat `ai/ARCHITECTURE.md`, `ai/BUSINESS_MODULES.md`, `ai/DESIGN.md`, and `ai/LEARNINGS.md` as descriptive guidance, not executable spec authority
 - if an interrupted tool or IDE run leaves an `ai/` document incomplete, finish it or clearly mark the gaps instead of leaving misleading partial content
 - when moving or renaming AI documents, update references in `AGENTS.md` and other `ai/` files in the same change
 
@@ -136,13 +137,8 @@ Update all affected artifacts in the same change:
 
 Current implemented scope:
 
-- `GET /docs`
-- `GET /`
-- `GET /hello`
-- `Book` API under `/api/books`
-- `Category` API under `/api/categories`
-- `Localization` API under `/api/localizations`
-- authenticated account API under `/api/account`
+- public overview, docs, and smoke-test endpoints
+- book, category, localization, and authenticated account APIs
 - OAuth 2.0 protected writes with JDBC-backed HTTP sessions
 - generated REST Docs plus approved OpenAPI compatibility gate
 - PostgreSQL runtime profiles and Testcontainers-backed integration tests
@@ -152,40 +148,13 @@ Primary goal: keep the codebase small, readable, and easy to reason about.
 
 ## Architecture Constraints
 
-- Preserve the demo nature of the project. Prefer direct code over abstraction.
-- Keep package names under `team.jit.technicalinterviewdemo`.
-- Use Lombok when it clearly reduces routine boilerplate.
-- Keep code compatible with Error Prone and the curated PMD ruleset.
-- Keep non-trivial business logic in `@Service` beans.
-- Prefer Spring MVC controllers and Spring Data repositories for new demo endpoints.
-- Use PostgreSQL for runtime behavior unless explicitly told otherwise.
-- Avoid extra infrastructure, distributed-systems concerns, or heavy libraries unless requested.
-- Keep REST responses JSON-friendly.
-- Do not remove the existing `hello` or `book` endpoints unless explicitly requested.
-- When returning `ResponseEntity`, assign the payload to a local variable first.
-- Log successful operations that change database state.
+`ai/ARCHITECTURE.md` owns the descriptive codebase map, business-module map, current API shape, and structural guidance for this repository.
 
-## API Contract Summary
+When making architecture-sensitive changes:
 
-Supported endpoint surface:
-
-- `GET /docs`
-- `GET /`
-- `GET /hello`
-- `GET|POST|PUT|DELETE /api/books...`
-- `GET|POST /api/categories`
-- `GET|POST|PUT|DELETE /api/localizations...`
-- `GET|PUT /api/account...`
-- actuator health/info/prometheus endpoints
-- OpenAPI docs at `/v3/api-docs` and `/v3/api-docs.yaml`
-
-Contract specifics:
-
-- `GET /api/books` is paginated and filterable
-- `GET /api/localizations` is paginated and supports optional exact `messageKey` and `language` filters
-- account endpoints require an authenticated session
-- category creation and localization writes require `ADMIN`
-- localized errors include `messageKey`, localized `message`, and resolved `language`
+- follow `ai/ARCHITECTURE.md` and `ai/BUSINESS_MODULES.md`
+- preserve the demo nature of the project and prefer direct code over abstraction
+- keep `AGENTS.md` aligned only when repo-level architectural rules or AI-document ownership changed
 
 ## Verification Rules
 

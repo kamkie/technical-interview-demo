@@ -11,7 +11,8 @@ Use this file when making product-shaping decisions:
 - operational defaults
 - roadmap tradeoffs
 
-This file is not the public contract. It explains the intended design logic behind that contract.
+This file explains the intent behind the contract. It is not the contract itself.
+Use `ai/DOCUMENTATION.md` for owning-file selection and cross-document alignment.
 
 ## Product Intent
 
@@ -45,7 +46,7 @@ This repository is not trying to be:
 - a microservices example
 - a cloud-provider reference architecture
 - a frontend-heavy product
-- a “best possible abstraction” showcase
+- a best-possible-abstraction showcase
 
 If a change pushes the app toward any of those, it needs strong justification.
 
@@ -60,8 +61,7 @@ The application currently supports:
 - authenticated user profile behavior
 - observability, generated docs, and compatibility gates
 
-That mix is deliberate.
-It demonstrates several dimensions of backend work in one compact codebase:
+That mix is deliberate. It demonstrates several dimensions of backend work in one compact codebase:
 
 - request validation
 - filtering and pagination
@@ -104,7 +104,7 @@ A direct implementation is usually preferred to:
 
 - a generic base class
 - an internal platform layer
-- a factory/strategy hierarchy for a single use case
+- a factory or strategy hierarchy for a single use case
 
 Design consistency matters, but readability matters more.
 
@@ -147,7 +147,7 @@ Current desired properties:
 - localization metadata
 - consistent client behavior across validation, not-found, conflict, and forbidden cases
 
-If you change error handling, treat it as a design and contract change.
+If you change error handling, treat it as both a design and contract change.
 
 ## Security Design
 
@@ -159,15 +159,15 @@ The design goal is pragmatic security for a demo application:
 - persisted application users and roles
 - session-backed behavior realistic enough to discuss in an interview
 
-The `1.x` contract is intentionally narrow and explicit:
+The `1.x` contract is intentionally narrow:
 
-- stable supported business and documentation endpoints include `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, `/api/books...`, `/api/categories`, `/api/localizations...`, and `/api/account...`
-- stable supported operational endpoints include `/actuator/health`, `/actuator/health/liveness`, `/actuator/health/readiness`, and `/actuator/info`
+- supported business and documentation endpoints include `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, `/api/books...`, `/api/categories`, `/api/localizations...`, and `/api/account...`
+- supported operational endpoints include `/actuator/health`, `/actuator/health/liveness`, `/actuator/health/readiness`, and `/actuator/info`
 - `/actuator/prometheus` is deployment-scoped technical surface for trusted scraping, not part of the internet-public contract
-- `/oauth2/authorization/github` is a technical login bootstrap path available only when the optional `oauth` profile is active; it supports reviewer-oriented browser flows without becoming part of the business API surface
+- `/oauth2/authorization/github` is a technical login bootstrap path available only when the optional `oauth` profile is active
 - CSRF stays disabled for `1.0` browser-session writes as a deliberate demo tradeoff for reviewer-oriented session workflows
 
-Design work should preserve those decisions unless an explicit follow-up contract review changes them.
+Preserve those decisions unless an explicit follow-up contract review changes them.
 
 ## Data Design
 
@@ -178,24 +178,19 @@ Data should stay straightforward:
 - JPA for persistence mapping
 - feature-local repositories
 
-The design tolerates some demo-friendly shortcuts today, but the roadmap already identifies one important cleanup direction:
+One important cleanup direction remains deliberate and explicit:
 
 - avoid letting JPA entity shape become the permanent public API contract
 
-That should be addressed deliberately, not by scattered ad hoc DTO churn.
-
 ## Localization Design
 
-Localization is not limited to a dedicated CRUD feature.
-It also shapes platform behavior:
+Localization is not limited to a dedicated CRUD feature. It also shapes:
 
 - request language detection
 - user preferred-language fallback
 - localized API errors
 
-Design consequence:
-
-- localization changes should be reviewed as product changes, not just data-model edits
+Review localization changes as product changes, not only data-model edits.
 
 ## Observability Design
 
@@ -207,33 +202,17 @@ The app should be easy to inspect in development and credible in deployment:
 - explicit domain counters and gauges
 - append-only audit logging for write operations
 
-Design preference:
-
-- add a small number of meaningful metrics and logs
-- avoid speculative observability complexity
+Prefer a small number of meaningful metrics and logs over speculative observability complexity.
 
 ## Documentation Design
 
-Documentation should match the role of each file:
+Documentation should stay role-distinct:
 
-- `README.md`
-  - supported contract and high-level project description
-- `SETUP.md`
-  - onboarding, environment, and troubleshooting
-- `AGENTS.md`
-  - repo rules for AI agents
-- `ai/PLAN.md`
-  - how AI agents should plan work
-- `ai/ARCHITECTURE.md`
-  - structural map of the codebase
-- `ai/DESIGN.md`
-  - this design-intent document
-- `ai/LEARNINGS.md`
-  - durable repo-wide engineering guidance that should survive refactors
-- `ROADMAP.md`
-  - active roadmap only
+- contract and reviewer-facing behavior lives in executable specs and published contract docs
+- human maintainer workflow lives in `README.md`, `CONTRIBUTING.md`, and `SETUP.md`
+- AI workflow and focused standing guidance live in `AGENTS.md` and the owning `ai/` guides
 
-Do not collapse those roles into one giant meta-document.
+Do not collapse those roles into one meta-document.
 
 ## Roadmap Design Direction
 
@@ -256,7 +235,7 @@ over adding major new features.
 
 Usually good:
 
-- clarifying a request/response contract
+- clarifying a request or response contract
 - making error behavior more consistent
 - reducing persistence leakage in the public API
 - adding targeted metrics or audit entries
