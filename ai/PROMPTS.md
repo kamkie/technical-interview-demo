@@ -23,6 +23,15 @@ Read `AGENTS.md`, `README.md`, `ai/PLAN.md`, and the governing specs first.
 Follow `ai/PLAN.md`.
 ```
 
+### Create A New Execution Plan From A Roadmap Item
+
+```text
+Create plan file for <topic> from ROADMAP.md.
+
+Read `AGENTS.md`, `README.md`, `ai/PLAN.md`, and the governing specs first.
+Follow `ai/PLAN.md`.
+```
+
 ### Create A Plan From Selected Roadmap Tasks
 
 ```text
