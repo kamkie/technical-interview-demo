@@ -28,6 +28,11 @@ Goal: catch production-like regressions that the current release path can still 
 - [ ] Publish JaCoCo coverage reports from CI to codecov.io
 - [ ] Add CI and Codecov badges to `README.md` once the external coverage reporting is live
 
+#### Simplify Release Tooling
+- [ ] Delete scripts from `scripts/` where they are no longer justified by reuse or cross-environment needs
+- [ ] Inline `scripts/render-release-notes.ps1` into `.github/workflows/release.yml` if that keeps the release flow simpler and easier to review
+- [ ] Reconsider the implementation language for any remaining release helper scripts instead of defaulting to PowerShell
+
 #### Expand Production-Like Smoke Coverage
 - [ ] Extend `externalSmokeTest` beyond `/`, `/hello`, `/docs`, readiness, and the public books list
 - [ ] Add smoke coverage for the generated OpenAPI/docs assets so release candidates prove the documentation surface still works when packaged
@@ -84,6 +89,11 @@ Goal: evolve the repository into a production-ready sample app deliberately, wit
 - [ ] Add log shipping and trace-export guidance that works beyond local inspection and single-node troubleshooting
 - [ ] Define resource requests, limits, autoscaling expectations, and disruption budgets for Kubernetes deployments
 - [ ] Add synthetic or scheduled external checks so the app is observed continuously after deployment, not only during release-time smoke validation
+
+#### Harden Production Logging
+- [ ] Set the root log level to `INFO` in the production profile
+- [ ] Disable ASCII color output automatically when no terminal is detected
+- [ ] Use a JSON Lines logger configuration in the production profile
 
 #### Tighten Data And Admin Operations
 - [ ] Add database backup, retention, and restore expectations for a production-ready sample deployment
