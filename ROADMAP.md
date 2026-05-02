@@ -12,30 +12,13 @@ Keep this file focused on work that is still planned or in progress.
 
 ## Current Priorities
 
-1. Add Gradle-owned vulnerability scanning for application dependencies and the built Docker image.
-2. Strengthen release confidence by expanding production-like smoke validation beyond the current five unauthenticated checks.
-3. Close the most obvious demo-API maintenance gaps without reopening the frozen `1.x` contract carelessly.
-4. Define the explicit post-`1.x` work needed to evolve this repo from an interview demo into a production-ready sample application.
+1. Strengthen release confidence by expanding production-like smoke validation beyond the current five unauthenticated checks.
+2. Close the most obvious demo-API maintenance gaps without reopening the frozen `1.x` contract carelessly.
+3. Define the explicit post-`1.x` work needed to evolve this repo from an interview demo into a production-ready sample application.
 
 ## Ordered Plan
 
-### Now: Supply-Chain And Vulnerability Scanning
-
-Status: Planned
-
-Goal: make dependency and container-image vulnerability findings visible in local Gradle runs, fail CI on serious issues, and stop publishing images without scanning the exact artifact produced by the build.
-
-#### Scan The Application
-- [ ] Add Gradle-owned vulnerability scanning for application and transitive dependencies instead of relying only on Dependabot update PRs
-- [ ] Produce stable scan artifacts that are usable in local review and CI troubleshooting
-- [ ] Define a narrow suppression and review workflow so intentional exceptions are explicit rather than hidden
-
-#### Scan The Docker Image
-- [ ] Add a Gradle task that scans the Docker image built by `dockerBuild` for OS and package vulnerabilities
-- [ ] Run the image scan in CI and in the tag-driven release flow before GHCR publication
-- [ ] Keep the scan tied to the exact built image coordinates so the release workflow does not scan one image and publish another
-
-### Next: Release Confidence Hardening
+### Now: Release Confidence Hardening
 
 Status: Planned
 
