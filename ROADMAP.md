@@ -13,8 +13,7 @@ Keep this file focused on work that is still planned or in progress.
 ## Current Priorities
 
 1. Strengthen release confidence by expanding production-like smoke validation beyond the current five unauthenticated checks.
-2. Close the most obvious demo-API maintenance gaps without reopening the frozen `1.x` contract carelessly.
-3. Define the explicit post-`1.x` work needed to evolve this repo from an interview demo into a production-ready sample application.
+2. Define the explicit post-`1.x` work needed to evolve this repo from an interview demo into a production-ready sample application.
 
 ## Ordered Plan
 
@@ -41,18 +40,6 @@ Goal: catch production-like regressions that the current release path can still 
 #### Verify Session-Backed Runtime Behavior
 - [ ] Add a focused production-like check that proves JDBC-backed Spring Session persistence still works in the packaged container path
 - [ ] Keep the new checks narrow so the demo stays easy to run locally and in CI
-
-### Later: Demo API Usability Improvements
-
-Status: Planned
-
-Goal: improve the demo’s day-2 usability for reviewers and maintainers without turning it into a much larger platform.
-
-#### Audit Reviewability
-- [ ] Add a read-only admin-facing audit log API or export path so recorded book and localization changes can be reviewed without direct database access
-
-#### Category Maintenance
-- [ ] Add explicit category update and delete semantics with clear reassignment or validation rules instead of leaving category management create-only
 
 ### Future: Production-Ready Sample App Track
 

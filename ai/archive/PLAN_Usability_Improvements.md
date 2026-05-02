@@ -204,11 +204,12 @@
   - `.\gradlew.bat refreshOpenApiBaseline`: passed after the additive audit-log and category-management contract changes were reviewed, using `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`
   - `.\gradlew.bat test --tests "*OpenApiCompatibilityIntegrationTests"`: passed with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`
   - `.\gradlew.bat build`: passed with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`, including the full test suite, Asciidoctor generation, PMD/Spotless checks, vulnerability scans, Docker image build, and overall Gradle `build` verification
+  - `git merge --no-ff a2`: applied cleanly on `main` before release preparation
+  - `.\gradlew.bat build`: passed again on the integrated `main` branch with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3` before the release commit was prepared
 
 ## User Validation
 - Start the application and authenticate as an admin-capable user.
 - Run the category HTTP examples to create, rename, and delete a category, then verify existing category list and book-read payloads remain unchanged apart from the renamed category value.
 - Run the audit HTTP example and confirm recent book or localization writes appear with `targetType`, `action`, `actorLogin`, `summary`, and `createdAt`.
 - Open `/docs` and confirm the category page now includes update/delete operations and the new audit-log page is linked from the index.
-
 
