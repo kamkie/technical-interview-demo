@@ -69,6 +69,15 @@ jobs:
           -PdockerImageName=${{ steps.image.outputs.repository }}:${{ steps.image.outputs.tag }}
           --no-daemon
 
+      - name: Upload vulnerability scan artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-reports-release-${{ github.ref_name }}
+          path: build/reports/security/
+          if-no-files-found: warn
+          retention-days: 14
+
       - name: Validate tagged image with external smoke test
         run: >-
           ./gradlew externalSmokeTest

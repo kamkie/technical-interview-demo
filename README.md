@@ -133,7 +133,8 @@ The standard build includes Spotless, PMD, tests, JaCoCo thresholds, REST Docs g
 Supply-chain verification is part of the standard build:
 
 - `.\gradlew.bat build` also runs Gradle-owned dependency and Docker-image vulnerability scans
-- scan reports are written under `build/reports/security/`
+- `.\gradlew.bat vulnerabilityScan` runs the two scan tasks directly when you want the security checks without the full lifecycle
+- scan reports are written under `build/reports/security/` as JSON, SARIF, and summary text files
 - unsuppressed `HIGH` and `CRITICAL` findings fail the relevant scan task and therefore fail the build
 - suppressions must be explicit and reviewable through `config/security/trivy.ignore`
 

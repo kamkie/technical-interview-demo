@@ -12,6 +12,7 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 - Fixed setup and architecture documentation drift by restoring the missing Bash PostgreSQL startup step, correcting the OpenAPI compatibility test command, and updating the architecture guide to reflect the current DTO-backed public controller responses.
 - Defined the internal supply-chain scanning contract in `README.md`, including stable report locations under `build/reports/security/`, the unsuppressed `HIGH`/`CRITICAL` failure threshold, CI artifact expectations, and the checked-in Trivy suppression policy file.
 - Added Gradle-owned `dependencyVulnerabilityScan`, `imageVulnerabilityScan`, and `vulnerabilityScan` tasks backed by Trivy container runs, stable JSON/SARIF/summary reports under `build/reports/security/`, and automatic build verification wiring through `check`.
+- Updated CI and release automation to upload `build/reports/security/` artifacts with `always()` handling, kept release scanning on the exact tagged `dockerImageName` before smoke validation and any image push, and documented the direct `vulnerabilityScan` entry point in `README.md`.
 
 ## [v1.0.1] - 2026-05-02
 
