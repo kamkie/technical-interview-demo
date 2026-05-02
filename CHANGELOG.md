@@ -6,7 +6,7 @@ The format is based on Keep a Changelog and the project uses semantic version ta
 The Gradle build version is derived from the nearest reachable annotated git tag, and release numbers must increase in `git log --first-parent` order.
 
 ## [Unreleased]
- 
+
 ## [v1.2.1] - 2026-05-02
 
 ### Changed
