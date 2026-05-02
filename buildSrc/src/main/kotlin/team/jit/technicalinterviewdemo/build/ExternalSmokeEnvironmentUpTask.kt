@@ -43,6 +43,9 @@ abstract class ExternalSmokeEnvironmentUpTask @Inject constructor(
     abstract val hostPort: Property<Int>
 
     @get:Input
+    abstract val postgresHostPort: Property<Int>
+
+    @get:Input
     abstract val timeoutSeconds: Property<Int>
 
     init {
@@ -69,6 +72,8 @@ abstract class ExternalSmokeEnvironmentUpTask @Inject constructor(
                 postgresContainerName.get(),
                 "--network",
                 networkName.get(),
+                "--publish",
+                "${postgresHostPort.get()}:5432",
                 "--env",
                 "POSTGRES_DB=${databaseName.get()}",
                 "--env",

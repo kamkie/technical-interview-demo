@@ -55,4 +55,52 @@ class ExternalSmokeTests extends ExternalHttpTestSupport {
         assertTrue(response.body().contains("\"content\""));
         assertTrue(response.body().contains("\"totalElements\""));
     }
+
+    @Test
+    void docsIndexEndpointServesGeneratedHtml() throws IOException, InterruptedException {
+        HttpResponse<String> response = get("/docs/index.html", "text/html");
+
+        assertEquals(200, response.statusCode());
+        assertTrue(requiredHeader(response, "content-type").contains("text/html"));
+        assertTrue(response.body().contains("Technical Interview Demo API"));
+    }
+
+    @Test
+    void openApiJsonEndpointIsExposed() throws IOException, InterruptedException {
+        HttpResponse<String> response = get("/v3/api-docs", "application/json");
+
+        assertEquals(200, response.statusCode());
+        assertTrue(requiredHeader(response, "content-type").contains("application/json"));
+        assertTrue(response.body().contains("\"openapi\":\"3."));
+        assertTrue(response.body().contains("\"/api/books\""));
+    }
+
+    @Test
+    void openApiYamlEndpointIsExposed() throws IOException, InterruptedException {
+        HttpResponse<String> response = get("/v3/api-docs.yaml", "application/vnd.oai.openapi");
+
+        assertEquals(200, response.statusCode());
+        assertTrue(requiredHeader(response, "content-type").contains("openapi"));
+        assertTrue(response.body().contains("openapi: 3."));
+        assertTrue(response.body().contains("/api/books:"));
+    }
+
+    @Test
+    void accountEndpointAcceptsJdbcBackedAuthenticatedSession() throws IOException, InterruptedException {
+        try (ExternalSessionSupport sessionSupport = ExternalSessionSupport.create()) {
+            String sessionId = sessionSupport.createAuthenticatedSession("smoke-user");
+
+            assertEquals(1, sessionSupport.sessionRowCount(sessionId));
+            assertTrue(sessionSupport.sessionAttributeCount(sessionId) > 0);
+            assertTrue(sessionSupport.hasStoredSecurityContext(sessionId));
+
+            HttpResponse<String> response = getWithSession("/api/account", "application/json", sessionId);
+
+            assertEquals(200, response.statusCode());
+            assertTrue(requiredHeader(response, "content-type").contains("application/json"));
+            assertTrue(response.body().contains("\"provider\":\"github\""));
+            assertTrue(response.body().contains("\"login\":\"smoke-user\""));
+            assertTrue(response.body().contains("\"displayName\":\"smoke-user display\""));
+        }
+    }
 }

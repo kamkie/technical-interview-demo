@@ -6,6 +6,8 @@ The format is based on Keep a Changelog and the project uses semantic version ta
 The Gradle build version is derived from the nearest reachable annotated git tag, and release numbers must increase in `git log --first-parent` order.
 
 ## [Unreleased]
+### Changed
+- Expanded Docker-backed external smoke coverage to validate the packaged docs HTML, OpenAPI JSON/YAML endpoints, and a JDBC-backed authenticated `GET /api/account` session flow against the release image.
 
 ## [v1.2.0] - 2026-05-02
 

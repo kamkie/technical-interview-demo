@@ -187,7 +187,11 @@
 - If Codecov configuration needs repo-specific secrets or onboarding outside code, document that explicitly in the changed guidance so future maintainers can reproduce the setup.
 
 ## Validation Results
-- To be filled in during execution
+- 2026-05-02: Ran `.\gradlew.bat externalSmokeVerification --tests team.jit.technicalinterviewdemo.external.ExternalSmokeTests.accountEndpointAcceptsJdbcBackedAuthenticatedSession -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo --no-daemon`. Failed first with `401` because the smoke helper sent the raw JDBC session id instead of the base64-encoded `technical-interview-demo-session` cookie value Spring Session expects.
+- 2026-05-02: Ran `.\gradlew.bat externalSmokeEnvironmentUp -x test -x asciidoctor -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo --no-daemon` to inspect the packaged smoke environment. Confirmed the seeded session rows existed in `SPRING_SESSION` / `SPRING_SESSION_ATTRIBUTES` and isolated the cookie-encoding mismatch against the running container.
+- 2026-05-02: Ran `.\gradlew.bat externalSmokeEnvironmentDown -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo --no-daemon` after the manual smoke-environment inspection. Passed.
+- 2026-05-02: Re-ran `.\gradlew.bat externalSmokeVerification --tests team.jit.technicalinterviewdemo.external.ExternalSmokeTests.accountEndpointAcceptsJdbcBackedAuthenticatedSession -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo --no-daemon` after encoding the session cookie. Passed.
+- 2026-05-02: Ran `.\gradlew.bat externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo --no-daemon`. Passed with 9 external smoke assertions, including `/docs/index.html`, `/v3/api-docs`, `/v3/api-docs.yaml`, and the JDBC-backed authenticated `/api/account` check.
 
 ## User Validation
 - Confirm the new plan execution leaves the public API unchanged by reviewing that REST Docs pages, HTTP examples, and the approved OpenAPI baseline did not move.

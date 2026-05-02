@@ -5,20 +5,48 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.Base64;
+import java.util.Map;
 import java.util.Optional;
 
 abstract class ExternalHttpTestSupport {
 
-    private static final Duration HTTP_TIMEOUT = Duration.ofSeconds(15);
+    protected static final Duration HTTP_TIMEOUT = Duration.ofSeconds(15);
     private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
             .connectTimeout(HTTP_TIMEOUT)
             .build();
 
     protected HttpResponse<String> get(String path, String accept) throws IOException, InterruptedException {
-        HttpRequest request = HttpRequest.newBuilder(uri(path))
+        return get(path, accept, Map.of());
+    }
+
+    protected HttpResponse<String> get(String path, String accept, Map<String, String> headers)
+            throws IOException, InterruptedException {
+        HttpRequest.Builder builder = HttpRequest.newBuilder(uriFor(path))
+                .timeout(HTTP_TIMEOUT)
+                .header("Accept", accept);
+        headers.forEach(builder::header);
+        HttpRequest request = builder.GET().build();
+        return HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+    }
+
+    protected URI uriFor(String path) {
+        if (!path.startsWith("/")) {
+            throw new IllegalArgumentException("Path must start with '/': " + path);
+        }
+        return URI.create(baseUrl() + path);
+    }
+
+    protected HttpResponse<String> getWithSession(String path, String accept, String sessionId)
+            throws IOException, InterruptedException {
+        URI requestUri = uriFor(path);
+        String encodedSessionId = Base64.getEncoder().encodeToString(sessionId.getBytes(StandardCharsets.UTF_8));
+        HttpRequest request = HttpRequest.newBuilder(requestUri)
                 .timeout(HTTP_TIMEOUT)
                 .header("Accept", accept)
+                .header("Cookie", "technical-interview-demo-session=" + encodedSessionId)
                 .GET()
                 .build();
         return HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
@@ -31,13 +59,6 @@ abstract class ExternalHttpTestSupport {
 
     protected boolean bodyContainsRegex(HttpResponse<String> response, String regex) {
         return response.body().replace("\n", "").matches(".*" + regex + ".*");
-    }
-
-    private URI uri(String path) {
-        if (!path.startsWith("/")) {
-            throw new IllegalArgumentException("Path must start with '/': " + path);
-        }
-        return URI.create(baseUrl() + path);
     }
 
     private String baseUrl() {

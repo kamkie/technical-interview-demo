@@ -48,8 +48,15 @@ class ExternalTestingConventionsPlugin : Plugin<Project> {
             .orElse(providers.gradleProperty("dockerImageName"))
             .orElse("technical-interview-demo")
         val smokeHostPort = intProperty("externalSmoke.hostPort", 18080)
+        val smokeDatabaseHostPort = intProperty("externalSmoke.postgresHostPort", 15432)
+        val smokeDatabaseName = providers.gradleProperty("externalSmoke.databaseName").orElse("technical_interview_demo")
+        val smokeDatabaseUser = providers.gradleProperty("externalSmoke.databaseUser").orElse("postgres")
+        val smokeDatabasePassword = providers.gradleProperty("externalSmoke.databasePassword").orElse("changeme")
         val smokeBaseUrl = providers.gradleProperty("externalSmoke.baseUrl")
             .orElse(smokeHostPort.map { "http://127.0.0.1:$it" })
+        val smokeJdbcUrl = providers.provider {
+            "jdbc:postgresql://127.0.0.1:${smokeDatabaseHostPort.get()}/${smokeDatabaseName.get()}"
+        }
         val smokeUpTask = registerExternalSmokeEnvironmentUpTask(dockerImageName, smokeHostPort)
         val smokeDownTask = registerExternalSmokeEnvironmentDownTask()
 
@@ -67,6 +74,9 @@ class ExternalTestingConventionsPlugin : Plugin<Project> {
                 logger.lifecycle("[externalSmokeTest] Running external smoke assertions against {}.", baseUrl)
                 systemProperty("app.baseUrl", baseUrl)
                 systemProperty("external.baseUrl", baseUrl)
+                systemProperty("external.jdbc.url", smokeJdbcUrl.get())
+                systemProperty("external.jdbc.user", smokeDatabaseUser.get())
+                systemProperty("external.jdbc.password", smokeDatabasePassword.get())
                 environment("EXTERNAL_BASE_URL", baseUrl)
             }
         }
@@ -110,6 +120,7 @@ class ExternalTestingConventionsPlugin : Plugin<Project> {
             providers.gradleProperty("externalSmoke.appContainerName").orElse("technical-interview-demo-smoke-app")
         )
         hostPort.convention(smokeHostPort)
+        postgresHostPort.convention(intProperty("externalSmoke.postgresHostPort", 15432))
         timeoutSeconds.convention(intProperty("externalSmoke.timeoutSeconds", 120))
     }
 
