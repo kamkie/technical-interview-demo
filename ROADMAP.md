@@ -15,12 +15,7 @@ Keep rough candidate tasks here for manual editing before they are promoted into
 
 Add new rough tasks below.
 
-- Consider changing the auth setup to something that better fits a plain REST app, such as a fully stateless token-based model
-- Consider adding a user-facing Java UI for the app as an alternative to the auth-direction change above
-- Consider adding a user-facing UI for the app in a separate repository
-- Upload test results to Codecov
-- static analysis reports should be visible in the GitHub Actions UI
-- add config for forwarding logs to a centralized logging service, preferably with jsonl or other format that is semantic human readable and will preserve multi-line messages like stack traces
+No rough tasks are waiting for refinement right now.
 
 ## How To Use This File
 
@@ -31,7 +26,8 @@ Add new rough tasks below.
 
 ## Current Priorities
 
-1. Define the explicit post-`1.x` work needed to evolve this repo from an interview demo into a production-ready sample application.
+1. Lock the post-`1.x` client and authentication direction so the production-ready track stops carrying competing API-only versus first-party UI futures.
+2. Close the remaining production logging and CI report-visibility gaps that already have clear implementation paths.
 
 ## Ordered Plan
 
@@ -40,6 +36,11 @@ Add new rough tasks below.
 Status: Planned
 
 Goal: evolve the repository into a production-ready sample app deliberately, with explicit contract and posture review instead of treating that shift as a silent extension of the frozen interview-demo `1.x` promise.
+
+#### Lock The Post-`1.x` Client And Auth Direction
+- [ ] Decide whether the production-ready track stays API-first and replaces the current session-oriented write flow with a stateless token contract, or instead keeps browser-oriented auth by adding a first-party UI that justifies session-backed flows
+- [ ] If a first-party UI remains in scope, decide whether it belongs inside this repository or in a separate repository before adding any frontend build, deployment, or release surface
+- [ ] Rewrite the downstream security and identity roadmap items around the chosen direction and remove the rejected alternative once that decision is made
 
 #### Revisit The Security Posture
 - [ ] Replace the current reviewer-oriented CSRF-disabled browser write posture with a production-grade approach and update the supported client-flow model accordingly
@@ -56,6 +57,7 @@ Goal: evolve the repository into a production-ready sample app deliberately, wit
 #### Strengthen Supply Chain And Artifact Trust
 - [ ] Generate and publish an SBOM for the application artifact and container image as part of the build or release flow
 - [ ] Sign published container images and attach provenance or attestations so the sample release story covers artifact authenticity, not only version tags
+- [ ] Publish stable static-analysis artifacts from GitHub Actions runs so PMD and similar quality failures are reviewable from the Actions UI without reproducing them locally
 - [x] Add static application security testing and keep it aligned with the existing Gradle and CI workflows
 - [x] Keep dependency, image, and vulnerability exceptions reviewable with explicit policy files and documented expiration or revalidation expectations
 
@@ -74,7 +76,8 @@ Goal: evolve the repository into a production-ready sample app deliberately, wit
 #### Harden Production Logging
 - [x] Set the root log level to `INFO` in the production profile
 - [x] Disable ASCII color output automatically when no terminal is detected
-- [ ] Use a JSON Lines logger configuration in the production profile
+- [ ] Use a JSON Lines logger configuration in the production profile so centralized collectors receive structured entries without terminal-oriented formatting noise
+- [ ] Add deployment-facing log-forwarding configuration that preserves multiline exception output when shipping production logs to a centralized logging service
 
 #### Tighten Data And Admin Operations
 - [ ] Add database backup, retention, and restore expectations for a production-ready sample deployment
