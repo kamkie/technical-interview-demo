@@ -42,3 +42,73 @@ spec:
           annotations:
             summary: technical-interview-demo is returning elevated 5xx errors
             description: More than 5% of technical-interview-demo HTTP requests have been returning 5xx responses for 10 minutes.
+        - alert: TechnicalInterviewDemoAuthenticationFailuresElevated
+          expr: >-
+            (
+              (
+                sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo",uri=~"/api/account|/api/account/language|/api/audit-logs",status=~"401|403"}[10m]))
+                +
+                sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo",method=~"POST|PUT|DELETE",uri=~"/api/categories|/api/categories/.+|/api/localizations|/api/localizations/.+",status=~"401|403"}[10m]))
+              )
+              /
+              clamp_min(
+                sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo",uri=~"/api/account|/api/account/language|/api/audit-logs"}[10m]))
+                +
+                sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo",method=~"POST|PUT|DELETE",uri=~"/api/categories|/api/categories/.+|/api/localizations|/api/localizations/.+"}[10m])),
+                0.001
+              )
+            ) > 0.20
+            and
+            (
+              sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo",uri=~"/api/account|/api/account/language|/api/audit-logs"}[10m]))
+              +
+              sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo",method=~"POST|PUT|DELETE",uri=~"/api/categories|/api/categories/.+|/api/localizations|/api/localizations/.+"}[10m]))
+            ) > 0.02
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: technical-interview-demo is seeing elevated auth failures
+            description: More than 20% of protected technical-interview-demo requests have been returning 401 or 403 responses for at least 10 minutes.
+        - alert: TechnicalInterviewDemoSessionBackedAccountErrors
+          expr: >-
+            (
+              sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo",uri=~"/api/account|/api/account/language",status=~"5.."}[10m]))
+              /
+              clamp_min(sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo",uri=~"/api/account|/api/account/language"}[10m])), 0.001)
+            ) > 0.05
+            and
+            sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo",uri=~"/api/account|/api/account/language"}[10m])) > 0.01
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: technical-interview-demo account requests are failing
+            description: More than 5% of authenticated account requests have been returning 5xx responses for 10 minutes, which usually points to JDBC-backed session persistence or downstream database trouble.
+        - alert: TechnicalInterviewDemoDatabasePoolSaturation
+          expr: >-
+            sum(hikaricp_connections_active{namespace="technical-interview-demo"})
+            /
+            clamp_min(sum(hikaricp_connections_max{namespace="technical-interview-demo"}), 1) > 0.80
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: technical-interview-demo database pool is near saturation
+            description: HikariCP has been using more than 80% of its configured PostgreSQL connections for at least 10 minutes.
+        - alert: TechnicalInterviewDemoDatabaseConnectionTimeouts
+          expr: sum(increase(hikaricp_connections_timeout_total{namespace="technical-interview-demo"}[10m])) > 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: technical-interview-demo is timing out waiting for database connections
+            description: HikariCP recorded one or more database connection timeouts in the last 10 minutes.
+        - alert: TechnicalInterviewDemoFlywayStartupCrashLooping
+          expr: max_over_time(kube_pod_container_status_waiting_reason{namespace="technical-interview-demo",pod=~"technical-interview-demo.*",reason="CrashLoopBackOff"}[10m]) > 0
+          for: 10m
+          labels:
+            severity: critical
+          annotations:
+            summary: technical-interview-demo pods are crash-looping during startup
+            description: technical-interview-demo pods have been stuck in CrashLoopBackOff for at least 10 minutes, which commonly indicates startup failures such as Flyway migration errors or unavailable PostgreSQL dependencies.

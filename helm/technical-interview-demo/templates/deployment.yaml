@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "technical-interview-demo.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ ternary .Values.autoscaling.minReplicas .Values.replicaCount .Values.autoscaling.enabled }}
   selector:
     matchLabels:
       {{- include "technical-interview-demo.selectorLabels" . | nindent 6 }}
