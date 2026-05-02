@@ -30,6 +30,29 @@ include::{snippets}/categories/create-category/http-response.adoc[]
 include::{snippets}/categories/create-category/response-headers.adoc[]
 include::{snippets}/categories/create-category/response-fields.adoc[]
 
+== `PUT /api/categories/{id}`
+
+Renames an existing category.
+
+include::{snippets}/categories/update-category/curl-request.adoc[]
+include::{snippets}/categories/update-category/http-request.adoc[]
+include::{snippets}/categories/update-category/path-parameters.adoc[]
+include::{snippets}/categories/update-category/request-body.adoc[]
+include::{snippets}/categories/update-category/request-fields.adoc[]
+include::{snippets}/categories/update-category/http-response.adoc[]
+include::{snippets}/categories/update-category/response-headers.adoc[]
+include::{snippets}/categories/update-category/response-fields.adoc[]
+
+== `DELETE /api/categories/{id}`
+
+Deletes a category that is not assigned to any book.
+
+include::{snippets}/categories/delete-category/curl-request.adoc[]
+include::{snippets}/categories/delete-category/http-request.adoc[]
+include::{snippets}/categories/delete-category/path-parameters.adoc[]
+include::{snippets}/categories/delete-category/http-response.adoc[]
+include::{snippets}/categories/delete-category/response-headers.adoc[]
+
 == Error Response Example
 
 === `POST /api/categories` duplicate name
@@ -63,3 +86,25 @@ include::{snippets}/errors/create-category-forbidden/request-body.adoc[]
 include::{snippets}/errors/create-category-forbidden/http-response.adoc[]
 include::{snippets}/errors/create-category-forbidden/response-headers.adoc[]
 include::{snippets}/errors/create-category-forbidden/response-fields.adoc[]
+
+=== `DELETE /api/categories/{id}` category not found
+
+Example response when the requested category identifier does not exist.
+
+include::{snippets}/errors/delete-category-not-found/curl-request.adoc[]
+include::{snippets}/errors/delete-category-not-found/http-request.adoc[]
+include::{snippets}/errors/delete-category-not-found/path-parameters.adoc[]
+include::{snippets}/errors/delete-category-not-found/http-response.adoc[]
+include::{snippets}/errors/delete-category-not-found/response-headers.adoc[]
+include::{snippets}/errors/delete-category-not-found/response-fields.adoc[]
+
+=== `DELETE /api/categories/{id}` category in use
+
+Example conflict response when the category is still assigned to one or more books.
+
+include::{snippets}/errors/delete-category-in-use/curl-request.adoc[]
+include::{snippets}/errors/delete-category-in-use/http-request.adoc[]
+include::{snippets}/errors/delete-category-in-use/path-parameters.adoc[]
+include::{snippets}/errors/delete-category-in-use/http-response.adoc[]
+include::{snippets}/errors/delete-category-in-use/response-headers.adoc[]
+include::{snippets}/errors/delete-category-in-use/response-fields.adoc[]

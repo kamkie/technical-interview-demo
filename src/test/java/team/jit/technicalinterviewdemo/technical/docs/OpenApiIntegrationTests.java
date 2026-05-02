@@ -75,6 +75,14 @@ class OpenApiIntegrationTests extends AbstractRandomPortIntegrationTest {
         assertFalse(auditLogSecurity.isMissingNode());
         assertEquals("sessionCookie", auditLogSecurity.get(0).fieldNames().next());
 
+        JsonNode updateCategorySecurity = openApi.at("/paths/~1api~1categories~1{id}/put/security");
+        assertFalse(updateCategorySecurity.isMissingNode());
+        assertEquals("sessionCookie", updateCategorySecurity.get(0).fieldNames().next());
+
+        JsonNode deleteCategorySecurity = openApi.at("/paths/~1api~1categories~1{id}/delete/security");
+        assertFalse(deleteCategorySecurity.isMissingNode());
+        assertEquals("sessionCookie", deleteCategorySecurity.get(0).fieldNames().next());
+
         List<String> listBookParameters = openApi.at("/paths/~1api~1books/get/parameters")
                 .findValuesAsText("name");
         assertTrue(listBookParameters.containsAll(List.of(
@@ -102,6 +110,8 @@ class OpenApiIntegrationTests extends AbstractRandomPortIntegrationTest {
         assertEquals("Account", openApi.at("/paths/~1api~1account/get/tags/0").asText());
         assertEquals("Audit Logs", openApi.at("/paths/~1api~1audit-logs/get/tags/0").asText());
         assertEquals("Localizations", openApi.at("/paths/~1api~1localizations/get/tags/0").asText());
+        assertEquals("Categories", openApi.at("/paths/~1api~1categories~1{id}/put/tags/0").asText());
+        assertEquals("Categories", openApi.at("/paths/~1api~1categories~1{id}/delete/tags/0").asText());
         assertFalse(openApi.at("/paths/~1api~1audit-logs/get/responses/401").isMissingNode());
         assertFalse(openApi.at("/paths/~1api~1audit-logs/get/responses/403").isMissingNode());
         assertEquals(
@@ -122,10 +132,26 @@ class OpenApiIntegrationTests extends AbstractRandomPortIntegrationTest {
                 "#/components/schemas/ApiProblemResponse",
                 openApi.at("/paths/~1api~1categories/post/responses/403/content/application~1problem+json/schema/$ref").asText()
         );
+        assertFalse(openApi.at("/paths/~1api~1categories~1{id}/put/responses/404").isMissingNode());
+        assertFalse(openApi.at("/paths/~1api~1categories~1{id}/delete/responses/404").isMissingNode());
+        assertFalse(openApi.at("/paths/~1api~1categories~1{id}/delete/responses/409").isMissingNode());
+        assertEquals(
+                "#/components/schemas/ApiProblemResponse",
+                openApi.at("/paths/~1api~1categories~1{id}/put/responses/404/content/application~1problem+json/schema/$ref").asText()
+        );
+        assertEquals(
+                "#/components/schemas/ApiProblemResponse",
+                openApi.at("/paths/~1api~1categories~1{id}/delete/responses/404/content/application~1problem+json/schema/$ref").asText()
+        );
+        assertEquals(
+                "#/components/schemas/ApiProblemResponse",
+                openApi.at("/paths/~1api~1categories~1{id}/delete/responses/409/content/application~1problem+json/schema/$ref").asText()
+        );
         assertFalse(openApi.at("/components/schemas/Book").isMissingNode());
         assertFalse(openApi.at("/components/schemas/ApiProblemResponse").isMissingNode());
         assertFalse(openApi.at("/components/schemas/AuditLogResponse").isMissingNode());
         assertFalse(openApi.at("/components/schemas/BookCreateRequest").isMissingNode());
+        assertFalse(openApi.at("/components/schemas/CategoryUpdateRequest").isMissingNode());
         assertFalse(openApi.at("/components/schemas/LocalizationResponse").isMissingNode());
         assertFalse(openApi.at("/components/schemas/UserAccountResponse").isMissingNode());
     }

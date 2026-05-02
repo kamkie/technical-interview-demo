@@ -3,11 +3,15 @@ package team.jit.technicalinterviewdemo.business.category;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.relaxedResponseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestBody;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,7 +42,7 @@ class CategoryApiDocumentationTests extends AbstractDocumentationIntegrationTest
 
     @BeforeEach
     void setUp() {
-        BookCatalogTestData.seedDefaultCategories(categoryRepository, bookRepository, cacheManager);
+        BookCatalogTestData.seedDefaultCatalog(bookRepository, categoryRepository, cacheManager);
     }
 
     @Test
@@ -141,6 +145,100 @@ class CategoryApiDocumentationTests extends AbstractDocumentationIntegrationTest
                 .andDo(documentEndpoint(
                         "errors/create-category-forbidden",
                         requestBody(),
+                        responseHeaders(commonResponseHeaders()),
+                        relaxedResponseFields(problemResponseFields())
+                ));
+    }
+
+    @Test
+    void documentUpdateCategoryEndpoint() throws Exception {
+        Category javaCategory = categoryRepository.findAllByOrderByNameAsc().stream()
+                .filter(category -> "Java".equals(category.getName()))
+                .findFirst()
+                .orElseThrow();
+
+        mockMvc.perform(put("/api/categories/{id}", javaCategory.getId())
+                        .with(adminOauthUser())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "name": "JVM"
+                                }
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(header().exists("X-Request-Id"))
+                .andExpect(header().exists("traceparent"))
+                .andDo(documentEndpoint(
+                        "categories/update-category",
+                        pathParameters(
+                                parameterWithName("id").description("Category identifier.")
+                        ),
+                        requestBody(),
+                        requestFields(
+                                fieldWithPath("name").description("Updated unique category name.")
+                        ),
+                        responseHeaders(commonResponseHeaders()),
+                        responseFields(
+                                fieldWithPath("id").description("Updated category identifier."),
+                                fieldWithPath("name").description("Updated category name.")
+                        )
+                ));
+    }
+
+    @Test
+    void documentDeleteCategoryEndpoint() throws Exception {
+        Category architecture = categoryRepository.saveAndFlush(new Category("Architecture"));
+
+        mockMvc.perform(delete("/api/categories/{id}", architecture.getId())
+                        .with(adminOauthUser()))
+                .andExpect(status().isNoContent())
+                .andExpect(header().exists("X-Request-Id"))
+                .andExpect(header().exists("traceparent"))
+                .andDo(documentEndpoint(
+                        "categories/delete-category",
+                        pathParameters(
+                                parameterWithName("id").description("Category identifier.")
+                        ),
+                        responseHeaders(commonResponseHeaders())
+                ));
+    }
+
+    @Test
+    void documentDeleteCategoryNotFoundError() throws Exception {
+        mockMvc.perform(delete("/api/categories/{id}", 9999)
+                        .with(adminOauthUser()))
+                .andExpect(status().isNotFound())
+                .andExpect(header().exists("X-Request-Id"))
+                .andExpect(header().exists("traceparent"))
+                .andExpect(jsonPath("$.title").value("Category Not Found"))
+                .andDo(documentEndpoint(
+                        "errors/delete-category-not-found",
+                        pathParameters(
+                                parameterWithName("id").description("Category identifier that does not exist.")
+                        ),
+                        responseHeaders(commonResponseHeaders()),
+                        relaxedResponseFields(problemResponseFields())
+                ));
+    }
+
+    @Test
+    void documentDeleteCategoryInUseError() throws Exception {
+        Category javaCategory = categoryRepository.findAllByOrderByNameAsc().stream()
+                .filter(category -> "Java".equals(category.getName()))
+                .findFirst()
+                .orElseThrow();
+
+        mockMvc.perform(delete("/api/categories/{id}", javaCategory.getId())
+                        .with(adminOauthUser()))
+                .andExpect(status().isConflict())
+                .andExpect(header().exists("X-Request-Id"))
+                .andExpect(header().exists("traceparent"))
+                .andExpect(jsonPath("$.title").value("Category In Use"))
+                .andDo(documentEndpoint(
+                        "errors/delete-category-in-use",
+                        pathParameters(
+                                parameterWithName("id").description("Category identifier that is still assigned to one or more books.")
+                        ),
                         responseHeaders(commonResponseHeaders()),
                         relaxedResponseFields(problemResponseFields())
                 ));

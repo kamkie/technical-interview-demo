@@ -196,6 +196,10 @@
   - `.\gradlew.bat test --tests "*AuditLogIntegrationTests" --tests "*AuditLogApiIntegrationTests" --tests "*AuditLogApiDocumentationTests" --tests "*OpenApiIntegrationTests" --tests "*ArchitectureHardeningTests"`: passed after running Gradle with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`
   - Initial attempt to run the same Gradle test command with the workstation-default JVM failed before executing tests because Gradle started on Java 11 and this repository now requires Java 17+ to run Gradle itself.
   - `.\gradlew.bat refreshOpenApiBaseline --args "D:\Projects\Jit\technical-interview-demo-a2\build\tmp\openapi-audit.json"`: passed as a temporary inspection step to confirm the generated audit-log OpenAPI shape without refreshing the approved baseline yet
+- Milestone 2:
+  - `.\gradlew.bat test --tests "*CategoryApiIntegrationTests" --tests "*CategoryApiDocumentationTests" --tests "*LocalizationApiIntegrationTests" --tests "*ApiExceptionHandlerTests" --tests "*OpenApiIntegrationTests" --tests "*ArchitectureHardeningTests"`: passed after running Gradle with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`
+  - The first run of the same Milestone 2 command surfaced three implementation gaps and one collateral test drift: category update/delete routes were not yet authenticated in `SecurityConfiguration`, the category tests/docs were seeding categories without books so the in-use delete path never triggered, and the expanded localization seed set exceeded the default page size in one language-filter test.
+  - After tightening security, switching the category fixtures to `BookCatalogTestData.seedDefaultCatalog(...)`, and requesting a larger page size in the localization language-filter test, the same validation command passed cleanly.
 
 ## User Validation
 - Start the application and authenticate as an admin-capable user.

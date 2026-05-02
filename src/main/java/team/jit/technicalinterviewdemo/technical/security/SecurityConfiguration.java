@@ -47,8 +47,8 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/actuator/info", "/actuator/prometheus").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/books", "/api/categories", "/api/localizations")
                         .authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/api/books/*", "/api/localizations/*").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/api/books/*", "/api/localizations/*").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/books/*", "/api/categories/*", "/api/localizations/*").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/books/*", "/api/categories/*", "/api/localizations/*").authenticated()
                         .anyRequest().permitAll()
                 )
                 .exceptionHandling(exceptions -> exceptions

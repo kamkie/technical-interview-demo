@@ -12,7 +12,7 @@ Current scope:
 - `GET /` returns technical application details including build/git metadata, dependency versions, and important runtime configuration
 - `GET /hello` returns `Hello World!`
 - `Book` API under `/api/books` with pagination, filtering, optimistic locking, and category assignment
-- `Category` API under `/api/categories`
+- `Category` API under `/api/categories` with list, create, rename, and guarded delete semantics
 - `Localization` API under `/api/localizations` with CRUD plus collection filtering by `messageKey` and `language`
 - authenticated account API under `/api/account`
 - ADMIN audit review API at `/api/audit-logs`
@@ -76,6 +76,8 @@ Stable `1.x` contract:
   - `DELETE /api/books/{id}`
   - `GET /api/categories`
   - `POST /api/categories`
+  - `PUT /api/categories/{id}`
+  - `DELETE /api/categories/{id}`
   - `GET /api/localizations`
   - `GET /api/localizations/{id}`
   - `POST /api/localizations`
@@ -109,12 +111,13 @@ Security summary:
 
 - public supported reads: `/`, `/hello`, `/docs`, OpenAPI docs, `GET /api/books/**`, `GET /api/categories`, `GET /api/localizations/**`, actuator health endpoints, and actuator info
 - authenticated session required: account endpoints, `GET /api/audit-logs`, and all write endpoints
-- `ADMIN` role required: audit log review, category creation, and localization create/update/delete
+- `ADMIN` role required: audit log review, category create/update/delete, and localization create/update/delete
 - interactive login starts at `GET /oauth2/authorization/github` when the `oauth` profile is active
 
 Contract notes:
 
 - `GET /api/audit-logs` is paginated and supports optional exact `targetType`, `action`, and `actorLogin` filters
+- `DELETE /api/categories/{id}` fails with a localized conflict if the category is still assigned to one or more books
 - `GET /api/books` is paginated and supports text, category, and year filters
 - `GET /api/localizations` is paginated and supports optional exact `messageKey` and `language` filters
 - localized error responses include `messageKey`, localized `message`, and resolved `language`

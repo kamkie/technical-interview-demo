@@ -14,7 +14,7 @@ The supported `1.x` contract keeps the simple overview endpoints, the CRUD-style
 
 == Contract Tiers
 
-- Supported `1.x` business and documentation contract: `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, `/api/books...`, `/api/categories`, `/api/localizations...`, `/api/account...`, `/api/audit-logs`
+- Supported `1.x` business and documentation contract: `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, `/api/books...`, `/api/categories...`, `/api/localizations...`, `/api/account...`, `/api/audit-logs`
 - Supported operational contract: `/actuator/health`, `/actuator/health/liveness`, `/actuator/health/readiness`, `/actuator/info`
 - Deployment-scoped technical surface: `/actuator/prometheus` is supported for trusted deployment scraping, but it is not part of the internet-public contract
 

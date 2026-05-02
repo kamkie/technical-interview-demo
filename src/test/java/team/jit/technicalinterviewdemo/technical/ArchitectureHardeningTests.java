@@ -100,6 +100,13 @@ class ArchitectureHardeningTests {
         ResolvableType createCategoryReturnType = ResolvableType.forMethodReturnType(
                 CategoryController.class.getMethod("create", team.jit.technicalinterviewdemo.business.category.CategoryCreateRequest.class)
         );
+        ResolvableType updateCategoryReturnType = ResolvableType.forMethodReturnType(
+                CategoryController.class.getMethod(
+                        "update",
+                        Long.class,
+                        team.jit.technicalinterviewdemo.business.category.CategoryUpdateRequest.class
+                )
+        );
 
         assertThat(listBooksReturnType.getGeneric(0, 0).resolve()).isEqualTo(BookResponse.class);
         assertThat(getBookReturnType.getGeneric(0).resolve()).isEqualTo(BookResponse.class);
@@ -108,6 +115,7 @@ class ArchitectureHardeningTests {
         assertThat(listAuditLogsReturnType.getGeneric(0, 0).resolve()).isEqualTo(AuditLogResponse.class);
         assertThat(listCategoriesReturnType.getGeneric(0, 0).resolve()).isEqualTo(CategoryResponse.class);
         assertThat(createCategoryReturnType.getGeneric(0).resolve()).isEqualTo(CategoryResponse.class);
+        assertThat(updateCategoryReturnType.getGeneric(0).resolve()).isEqualTo(CategoryResponse.class);
     }
 
     @Test

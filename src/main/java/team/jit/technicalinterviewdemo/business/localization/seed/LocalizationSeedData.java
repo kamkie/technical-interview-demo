@@ -7,6 +7,8 @@ import team.jit.technicalinterviewdemo.business.localization.Localization;
 public final class LocalizationSeedData {
 
     private static final List<String> DOCUMENTED_KEYS = List.of(
+            "error.category.in_use",
+            "error.category.not_found",
             "error.book.isbn_duplicate",
             "error.book.not_found",
             "error.book.stale_version",
@@ -43,6 +45,28 @@ public final class LocalizationSeedData {
 
     public static List<Localization> defaultMessages() {
         List<Localization> messages = new ArrayList<>();
+        addTranslations(
+                messages,
+                "error.category.in_use",
+                "The category cannot be deleted because it is still assigned to one or more books.",
+                "La categoria no se puede eliminar porque todavia esta asignada a uno o mas libros.",
+                "Die Kategorie kann nicht geloescht werden, weil sie noch einem oder mehreren Buechern zugewiesen ist.",
+                "La categorie ne peut pas etre supprimee car elle est encore attribuee a un ou plusieurs livres.",
+                "Nie mozna usunac kategorii, poniewaz jest nadal przypisana do co najmniej jednej ksiazki.",
+                "Katehoriiu nemozhlyvo vydalyty, oskilky vona vse shche pryznachena odnii chy kilkom knyham.",
+                "Kategorien kan ikke slettes fordi den fortsatt er tilordnet en eller flere boker."
+        );
+        addTranslations(
+                messages,
+                "error.category.not_found",
+                "The requested category was not found.",
+                "No se encontro la categoria solicitada.",
+                "Die angeforderte Kategorie wurde nicht gefunden.",
+                "La categorie demandee est introuvable.",
+                "Nie znaleziono zadanej kategorii.",
+                "Zapytanu katehoriiu ne znaideno.",
+                "Den forespurte kategorien ble ikke funnet."
+        );
         addTranslations(
                 messages,
                 "error.book.isbn_duplicate",
@@ -279,4 +303,3 @@ public final class LocalizationSeedData {
         return "Seed translation for %s in %s.".formatted(messageKey, language);
     }
 }
-
