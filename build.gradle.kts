@@ -2,6 +2,9 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import net.ltgt.gradle.errorprone.errorprone
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.gradle.kotlin.dsl.register
+import team.jit.technicalinterviewdemo.build.TrivyFilesystemScanTask
+import team.jit.technicalinterviewdemo.build.TrivyImageScanTask
 import java.util.Properties
 
 plugins {
@@ -43,6 +46,9 @@ val snippetsDir = layout.buildDirectory.dir("generated-snippets")
 val buildInfoPropertiesFile = layout.buildDirectory.file("resources/main/META-INF/build-info.properties")
 val approvedOpenApiFile = layout.projectDirectory.file("src/test/resources/openapi/approved-openapi.json")
 val asciidoctorTask = tasks.named<org.asciidoctor.gradle.jvm.AsciidoctorTask>("asciidoctor")
+val trivyIgnoreFile = layout.projectDirectory.file("config/security/trivy.ignore")
+val trivyContainerImage = providers.gradleProperty("trivyImage").orElse("aquasec/trivy:0.63.0")
+val trivyFailOnSeverities = listOf("HIGH", "CRITICAL")
 
 java {
     toolchain {
@@ -133,6 +139,49 @@ tasks.register<Exec>("dockerBuild") {
     }
 }
 
+val prepareDependencyVulnerabilityScanInput = tasks.register<Sync>("prepareDependencyVulnerabilityScanInput") {
+    group = "verification"
+    description = "Extracts the packaged boot jar for dependency vulnerability scanning."
+    dependsOn(tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar"))
+    val bootJar = tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar")
+    from({
+        zipTree(bootJar.get().archiveFile.get().asFile)
+    })
+    into(layout.buildDirectory.dir("security/dependency-scan/input"))
+}
+
+val dependencyVulnerabilityScan = tasks.register<TrivyFilesystemScanTask>("dependencyVulnerabilityScan") {
+    group = "verification"
+    description = "Scans packaged runtime dependencies for known vulnerabilities."
+    dependsOn(prepareDependencyVulnerabilityScanInput)
+    trivyImage.convention(trivyContainerImage)
+    ignoreFile.convention(trivyIgnoreFile)
+    failOnSeverities.convention(trivyFailOnSeverities)
+    scanLabel.convention("dependencyVulnerabilityScan")
+    inputDirectory.convention(layout.buildDirectory.dir("security/dependency-scan/input"))
+    reportDirectory.convention(layout.buildDirectory.dir("reports/security/dependencies"))
+    cacheDirectory.convention(layout.buildDirectory.dir("security/trivy-cache/dependencies"))
+}
+
+val imageVulnerabilityScan = tasks.register<TrivyImageScanTask>("imageVulnerabilityScan") {
+    group = "verification"
+    description = "Scans the Docker image built by dockerBuild for OS and package vulnerabilities."
+    dependsOn(tasks.named("dockerBuild"))
+    trivyImage.convention(trivyContainerImage)
+    ignoreFile.convention(trivyIgnoreFile)
+    failOnSeverities.convention(trivyFailOnSeverities)
+    scanLabel.convention("imageVulnerabilityScan")
+    imageName.convention(dockerImageName)
+    reportDirectory.convention(layout.buildDirectory.dir("reports/security/image"))
+    cacheDirectory.convention(layout.buildDirectory.dir("security/trivy-cache/image"))
+}
+
+tasks.register("vulnerabilityScan") {
+    group = "verification"
+    description = "Runs dependency and Docker image vulnerability scans."
+    dependsOn(dependencyVulnerabilityScan, imageVulnerabilityScan)
+}
+
 tasks.register<JavaExec>("refreshOpenApiBaseline") {
     group = "documentation"
     description = "Refreshes the approved OpenAPI baseline from the current application contract."
@@ -145,6 +194,10 @@ tasks.register<JavaExec>("refreshOpenApiBaseline") {
 
 tasks.build {
     dependsOn(tasks.named("dockerBuild"))
+}
+
+tasks.check {
+    dependsOn(dependencyVulnerabilityScan, imageVulnerabilityScan)
 }
 
 tasks.withType<Test> {
