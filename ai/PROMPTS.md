@@ -51,6 +51,25 @@ Ask targeted clarification questions before locking the plan if scope, compatibi
 Record requirement gaps, unresolved user-input holes, and fallback assumptions explicitly.
 ```
 
+### Create Multiple Plans From Disjoint Checked Roadmap Tasks
+
+```text
+Create one or more new execution plans from every checklist item marked `[x]` in `ROADMAP.md`.
+
+Read `AGENTS.md`, `README.md`, `ROADMAP.md`, `ai/PLAN.md`, and `ai/WORKFLOW.md` first.
+Follow `ai/PLAN.md`.
+Use only the checked `[x]` roadmap items as the requested work scope unless the roadmap text around them makes a dependency explicit.
+Split the checked tasks into multiple plan files only when they describe genuinely disjoint work that can be planned and later executed in parallel without hidden coupling.
+Treat shared contract artifacts, overlapping source-file ownership, rollout dependencies, or shared validation gates as reasons not to split.
+For each disjoint workstream, choose an appropriate short lowercase underscore-separated topic name and create a separate file as `ai/PLAN_<topic>.md`.
+In each plan summary and scope, restate exactly which checked roadmap items were included in that file.
+If the checked items form only one coherent plan, stop and say that the single-plan checked-roadmap prompt should be used instead of forcing multiple files.
+If some checked items are disjoint but others are not, create plan files only for the cleanly separated groups and explain why the remaining items were not split out.
+If no roadmap items are checked, or the checked items do not describe one or more executable plans, stop and explain the gap instead of guessing.
+Ask targeted clarification questions before locking any plan if scope, compatibility, rollout, acceptance criteria, validation, or cross-plan boundaries are still ambiguous.
+Record requirement gaps, unresolved user-input holes, fallback assumptions, and any cross-plan dependency notes explicitly in each created plan.
+```
+
 ### Refine Unrefined Roadmap Tasks Into Real Entries
 
 ```text

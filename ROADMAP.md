@@ -18,6 +18,7 @@ Add new rough tasks below.
 - Consider changing the auth setup to something that better fits a plain REST app, such as a fully stateless token-based model
 - Consider adding a user-facing Java UI for the app as an alternative to the auth-direction change above
 - Consider adding a user-facing UI for the app in a separate repository
+- add config for forwarding logs to a centralized logging service, preferably with jsonl or other format that is semantic human readable and will preserve multi-line messages like stack traces
 
 ## How To Use This File
 
@@ -46,15 +47,15 @@ Goal: evolve the repository into a production-ready sample app deliberately, wit
 
 #### Harden Identity, Sessions, And Secrets
 - [ ] Move beyond the single optional GitHub OAuth provider toward a production-ready identity story suitable for a sample app, including explicit issuer/provider configuration
-- [ ] Tighten session-management settings for real deployments, including cookie scope, timeout, rotation, and concurrent-session expectations
-- [ ] Add stronger secret and credential handling guidance or integration points so deployments do not rely only on raw environment-variable wiring
-- [ ] Add startup validation for required auth, session, and outbound-integration settings when the production-ready posture is enabled
+- [x] Tighten session-management settings for real deployments, including cookie scope, timeout, rotation, and concurrent-session expectations
+- [x] Add stronger secret and credential handling guidance or integration points so deployments do not rely only on raw environment-variable wiring
+- [x] Add startup validation for required auth, session, and outbound-integration settings when the production-ready posture is enabled
 
 #### Strengthen Supply Chain And Artifact Trust
 - [ ] Generate and publish an SBOM for the application artifact and container image as part of the build or release flow
 - [ ] Sign published container images and attach provenance or attestations so the sample release story covers artifact authenticity, not only version tags
-- [ ] Add static application security testing and keep it aligned with the existing Gradle and CI workflows
-- [ ] Keep dependency, image, and vulnerability exceptions reviewable with explicit policy files and documented expiration or revalidation expectations
+- [x] Add static application security testing and keep it aligned with the existing Gradle and CI workflows
+- [x] Keep dependency, image, and vulnerability exceptions reviewable with explicit policy files and documented expiration or revalidation expectations
 
 #### Make Releases And Migrations Safer
 - [ ] Define a safer production rollout model for Flyway-backed releases, including compatibility expectations for rolling upgrades and schema-first versus app-first ordering
@@ -63,14 +64,14 @@ Goal: evolve the repository into a production-ready sample app deliberately, wit
 - [ ] Document and validate a realistic disaster-recovery path instead of only a local rollback narrative
 
 #### Expand Operational Readiness Into Real SRE Basics
-- [ ] Add alerting and dashboards for authentication failures, session persistence health, Flyway startup failures, database saturation, and application error-rate regressions
-- [ ] Add log shipping and trace-export guidance that works beyond local inspection and single-node troubleshooting
-- [ ] Define resource requests, limits, autoscaling expectations, and disruption budgets for Kubernetes deployments
-- [ ] Add synthetic or scheduled external checks so the app is observed continuously after deployment, not only during release-time smoke validation
+- [x] Add alerting and dashboards for authentication failures, session persistence health, Flyway startup failures, database saturation, and application error-rate regressions
+- [x] Add log shipping and trace-export guidance that works beyond local inspection and single-node troubleshooting
+- [x] Define resource requests, limits, autoscaling expectations, and disruption budgets for Kubernetes deployments
+- [x] Add synthetic or scheduled external checks so the app is observed continuously after deployment, not only during release-time smoke validation
 
 #### Harden Production Logging
-- [ ] Set the root log level to `INFO` in the production profile
-- [ ] Disable ASCII color output automatically when no terminal is detected
+- [x] Set the root log level to `INFO` in the production profile
+- [x] Disable ASCII color output automatically when no terminal is detected
 - [ ] Use a JSON Lines logger configuration in the production profile
 
 #### Tighten Data And Admin Operations
