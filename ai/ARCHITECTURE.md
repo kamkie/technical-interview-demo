@@ -5,6 +5,7 @@
 Use this file to understand how the codebase is organized before making structural changes.
 This file is descriptive, not authoritative. Behavioral truth still lives in the spec artifacts described in `AGENTS.md`.
 Use `ai/CODE_STYLE.md` for edit-shaping rules, `ai/TESTING.md` for validation scope, and `ai/DOCUMENTATION.md` for contract-artifact alignment.
+Use `ai/BUSINESS_MODULES.md` for the detailed business-feature package map.
 
 ## System Purpose
 
@@ -22,6 +23,28 @@ Primary architecture goal:
 - keep the codebase small, readable, and easy to reason about
 
 That goal matters more than layering purity or abstraction density.
+
+## API Shape
+
+Current implemented endpoint surface:
+
+- `GET /docs`
+- `GET /`
+- `GET /hello`
+- `GET|POST|PUT|DELETE /api/books...`
+- `GET|POST /api/categories`
+- `GET|POST|PUT|DELETE /api/localizations...`
+- `GET|PUT /api/account...`
+- actuator health, info, and Prometheus endpoints
+- OpenAPI docs at `/v3/api-docs` and `/v3/api-docs.yaml`
+
+Key API-shape expectations:
+
+- `GET /api/books` is paginated and filterable
+- `GET /api/localizations` is paginated and supports optional exact `messageKey` and `language` filters
+- account endpoints require an authenticated session
+- category creation and localization writes require `ADMIN`
+- localized errors include `messageKey`, localized `message`, and resolved `language`
 
 ## Top-Level Shape
 
@@ -51,45 +74,7 @@ The practical split is:
 
 ### Business Modules
 
-- `business.book`
-  - `BookController`
-  - `BookService`
-  - `BookRepository`
-  - `Book`
-  - request objects, search support, and domain exceptions
-  - owns pagination, filtering, optimistic locking, category assignment, and audit logging for books
-
-- `business.category`
-  - `CategoryController`
-  - `CategoryService`
-  - `CategoryRepository`
-  - `Category`
-  - request object and startup seed initializer
-  - owns category creation, list ordering, cache eviction, and admin-only write control
-
-- `business.localization`
-  - `LocalizationController`
-  - `LocalizationService`
-  - `LocalizationRepository`
-  - `Localization`
-  - request/response types, supported language policy, seed support, and domain exceptions
-  - owns localized message lookup, fallback behavior, filtering, write authorization, and cache eviction
-
-- `business.user`
-  - `UserAccountController`
-  - `UserAccountService`
-  - `CurrentUserAccountService`
-  - `UserAccountRepository`
-  - `UserAccount`
-  - request/response types and role enum
-  - owns persisted user profile data, preferred-language updates, and synchronization of authenticated users into application state
-
-- `business.audit`
-  - `AuditLogService`
-  - `AuditLogRepository`
-  - `AuditLog`
-  - enums for action and target type
-  - owns append-only write auditing for feature services
+See `ai/BUSINESS_MODULES.md` for the detailed feature-package map and ownership notes.
 
 ### Technical Modules
 

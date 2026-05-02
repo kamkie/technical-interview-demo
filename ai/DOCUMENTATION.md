@@ -19,6 +19,8 @@ Update the artifact that owns the kind of truth being changed:
 - delegated or worktree-based execution guidance: `ai/WORKFLOW.md`
 - release sequencing and tagging: `ai/RELEASES.md`
 - prompt starters only: `ai/PROMPTS.md`
+- descriptive codebase map, API shape summary, and structural guidance: `ai/ARCHITECTURE.md`
+- descriptive business-feature package map and ownership notes: `ai/BUSINESS_MODULES.md`
 - code-shaping rules: `ai/CODE_STYLE.md`
 - validation scope and commands: `ai/TESTING.md`
 - review and security-review expectations: `ai/REVIEWS.md`
