@@ -245,6 +245,48 @@ Act as coordinator.
 Keep phase ownership explicit for requirements, planning, investigation, coding, testing, review, security review, and documentation.
 ```
 
+### Implement Multiple Plans In Parallel With Worktrees
+
+```text
+Implement these plan files in parallel using git worktrees:
+- <plan_file_1>
+- <plan_file_2>
+- <plan_file_3>
+
+Read `AGENTS.md`, `ai/EXECUTION.md`, `ai/WORKFLOW.md`, and each listed plan file first.
+Use `ai/WORKFLOW.md`.
+Act as coordinator.
+Create separate temporary worktrees only for plans that are genuinely disjoint in source ownership, contract artifacts, rollout order, and validation needs.
+Keep `main` as the integration target and do not treat worktree branches as release branches.
+Assign explicit ownership boundaries per plan, including shared-file rules for docs, changelog, release artifacts, and validation reporting.
+Do not let workers edit the same controller, service, integration test, REST Docs artifact, OpenAPI artifact, or plan file in parallel.
+If any listed plans are too coupled to execute safely in parallel, stop and explain which plans should be merged back into one execution stream instead of forcing worktrees.
+Integrate worker output back onto the coordinator branch only after each worktree task is locally validated.
+Run the final repository validation after integration and summarize per-plan progress, integration status, validation results, and any remaining blockers.
+Do not push, open a PR, or release unless I ask.
+```
+
+### Implement All Unfinished Plans In Parallel With Worktrees
+
+```text
+Implement all unfinished plan files under `ai/` in parallel using git worktrees.
+
+Read `AGENTS.md`, `ai/EXECUTION.md`, `ai/WORKFLOW.md`, and every non-archived `ai/PLAN_*.md` file under `ai/` first.
+Use `ai/WORKFLOW.md`.
+Act as coordinator.
+Treat unfinished plans as the `ai/PLAN_*.md` files still present directly under `ai/`, excluding `ai/archive/`.
+If there are no unfinished plan files, stop and say so explicitly.
+Group the unfinished plans into parallel-safe workstreams only when their source ownership, contract artifacts, rollout order, and validation needs are genuinely disjoint.
+Create separate temporary worktrees only for those disjoint workstreams.
+If some unfinished plans are too coupled to execute safely in parallel, keep them in the same execution stream and explain the boundary instead of forcing one worktree per file.
+Keep `main` as the integration target and do not treat worktree branches as release branches.
+Assign explicit ownership boundaries per workstream, including shared-file rules for docs, changelog, release artifacts, and validation reporting.
+Do not let workers edit the same controller, service, integration test, REST Docs artifact, OpenAPI artifact, or plan file in parallel.
+Integrate worker output back onto the coordinator branch only after each worktree task is locally validated.
+Run the final repository validation after integration and summarize which unfinished plans were completed, which were grouped together, which were left blocked or deferred, and what validation passed or failed.
+Do not push, open a PR, or release unless I ask.
+```
+
 ### Decide Whether Multi-Agent Execution Is Worth It
 
 ```text
