@@ -12,10 +12,36 @@ Keep this file focused on work that is still planned or in progress.
 
 ## Current Priorities
 
-1. Define the explicit post-`1.x` work needed to evolve this repo from an interview demo into a production-ready sample application.
+1. Tighten the AI workflow and instruction set so planning, execution, PR handling, and release flow are coordinated more deliberately.
+2. Define the explicit post-`1.x` work needed to evolve this repo from an interview demo into a production-ready sample application.
 
 ## Ordered Plan
 
+### Now: AI Workflow And Instruction Hardening
+
+Status: Planned
+
+Goal: close current AI guidance gaps around planning quality, phase ownership, PR/release sequencing, and review discipline before expanding other delivery workflows further.
+
+#### Clarify PR And Release Sequencing
+- [ ] Update the execution and workflow guidance so pushing changes to GitHub and creating a PR are treated as the last execution step after local implementation, validation, and integration readiness work are complete
+- [ ] Update the release workflow so it starts from merging the approved PR onto `main` before any release-only metadata, tagging, or push steps begin
+- [ ] Align prompts and release-readiness guidance with the PR-first, merge-before-release sequence so agents stop implying direct branch-tip releases
+
+#### Audit AI Instruction Coverage
+- [ ] Review all AI instruction files under `ai/` and map the current coverage, overlap, and missing guidance areas
+- [ ] Decide whether to add focused AI guides for code style, testing, code review, security review, and documentation instead of continuing to overload the existing instruction files
+- [ ] If the new focused guides are justified, define their intended roles and update `AGENTS.md` plus cross-file references in the same change
+
+#### Tighten Planning Intake
+- [ ] Strengthen planning guidance so agents ask more targeted clarification questions when user input leaves scope, compatibility, acceptance criteria, rollout, or validation ambiguous
+- [ ] Add explicit planning rules for recording requirement gaps, locked assumptions, and unresolved user-input holes instead of silently guessing
+- [ ] Update reusable planning prompts so they explicitly drive clarification-first requirement capture before plan writing
+
+#### Expand Multi-Agent Phase Guidance
+- [ ] Update the agentic workflow to describe dedicated agents or explicit phase owners for requirements gathering, planning, investigation, coding, testing, code review, security review, and documentation
+- [ ] Define when phase-specific agents are worth the coordination overhead and when a single-agent flow remains the better fit
+- [ ] Add prompt and workflow handoff checkpoints so phase-based execution stays reviewable instead of becoming ad hoc parallelism
 ### Future: Production-Ready Sample App Track
 
 Status: Planned after the current `1.x` demo-hardening work
