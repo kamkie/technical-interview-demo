@@ -287,6 +287,42 @@ Run the final repository validation after integration and summarize which unfini
 Do not push, open a PR, or release unless I ask.
 ```
 
+### Check Status on Single Worker In Multi-Agent Execution
+
+In `Multi-Agent Execution`, check the status of worker `<worker name or agent id>`.
+
+Report:
+- branch and worktree
+- current task progress
+- changed files
+- validations run with results
+- commit SHA(s)
+- blockers
+- ready-for-cherry-pick status
+
+If the worker has stalled or completed, state that clearly.
+
+### Check Status On Workers In Multi-Agent Execution
+
+```text
+Check the status of the active workers in the current multi-agent execution.
+
+Use `ai/WORKFLOW.md`.
+Act as coordinator.
+For each active worker, report:
+- worker name or agent id
+- assigned branch and worktree
+- current task or milestone
+- changed files so far
+- validation run with pass/fail status
+- commit SHA(s) already created
+- blockers, risks, or coordinator decisions needed
+- whether the work is ready for integration onto `main`
+
+If a worker is stalled, still in analysis, has no edits yet, or is already complete, say that explicitly.
+Keep the report concise and factual.
+```
+
 ### Decide Whether Multi-Agent Execution Is Worth It
 
 ```text
