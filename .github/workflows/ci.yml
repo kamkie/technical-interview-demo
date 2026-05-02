@@ -10,6 +10,7 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -42,6 +43,14 @@ jobs:
 
       - name: Run full build
         run: ./gradlew build --no-daemon
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          use_oidc: true
+          files: ./build/reports/jacoco/test/jacocoTestReport.xml
+          disable_search: true
+          fail_ci_if_error: true
 
       - name: Upload vulnerability scan artifacts
         if: always()

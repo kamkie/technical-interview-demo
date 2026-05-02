@@ -109,12 +109,50 @@ jobs:
       - name: Render release notes from CHANGELOG.md
         shell: pwsh
         run: |
-          ./scripts/release/render-release-notes.ps1 `
-            -Tag "${{ github.ref_name }}" `
-            -TagImageReference "${{ needs.publish-image.outputs.image_repository }}:${{ needs.publish-image.outputs.image_tag }}" `
-            -ShaImageReference "${{ needs.publish-image.outputs.image_repository }}:${{ needs.publish-image.outputs.image_sha_tag }}" `
-            -PackagePageUrl "${{ needs.publish-image.outputs.package_page }}" `
-            -OutputPath release-notes.md
+          $tag = "${{ github.ref_name }}"
+          $tagImageReference = "${{ needs.publish-image.outputs.image_repository }}:${{ needs.publish-image.outputs.image_tag }}"
+          $shaImageReference = "${{ needs.publish-image.outputs.image_repository }}:${{ needs.publish-image.outputs.image_sha_tag }}"
+          $packagePageUrl = "${{ needs.publish-image.outputs.package_page }}"
+
+          $changelog = Get-Content -LiteralPath CHANGELOG.md -Raw
+          $headingPattern = "(?m)^## \[$([Regex]::Escape($tag))\] - .+$"
+          $headingMatches = [Regex]::Matches($changelog, $headingPattern)
+
+          if ($headingMatches.Count -eq 0) {
+            throw "No CHANGELOG.md section matched tag '$tag'."
+          }
+
+          if ($headingMatches.Count -gt 1) {
+            throw "Multiple CHANGELOG.md sections matched tag '$tag'."
+          }
+
+          $sectionStart = $headingMatches[0].Index
+          $remainingChangelog = $changelog.Substring($sectionStart)
+          $sectionHeadingMatches = [Regex]::Matches(
+            $remainingChangelog,
+            "(?m)^## \[",
+            [Text.RegularExpressions.RegexOptions]::Multiline,
+            [TimeSpan]::FromSeconds(5)
+          )
+
+          if ($sectionHeadingMatches.Count -gt 1) {
+            $releaseSection = $remainingChangelog.Substring(0, $sectionHeadingMatches[1].Index)
+          } else {
+            $releaseSection = $remainingChangelog
+          }
+
+          $releaseSection = $releaseSection.TrimEnd("`r", "`n")
+          $releaseNotes = @(
+            $releaseSection
+            ""
+            "## Release Metadata"
+            ""
+            "- Container image: ``$tagImageReference``"
+            "- Immutable image: ``$shaImageReference``"
+            "- Package page: [GitHub Container Registry package]($packagePageUrl)"
+          ) -join [Environment]::NewLine
+
+          Set-Content -LiteralPath release-notes.md -Value $releaseNotes
 
       - name: Create GitHub Release
         env:

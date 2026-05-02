@@ -192,6 +192,10 @@
 - 2026-05-02: Ran `.\gradlew.bat externalSmokeEnvironmentDown -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo --no-daemon` after the manual smoke-environment inspection. Passed.
 - 2026-05-02: Re-ran `.\gradlew.bat externalSmokeVerification --tests team.jit.technicalinterviewdemo.external.ExternalSmokeTests.accountEndpointAcceptsJdbcBackedAuthenticatedSession -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo --no-daemon` after encoding the session cookie. Passed.
 - 2026-05-02: Ran `.\gradlew.bat externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo --no-daemon`. Passed with 9 external smoke assertions, including `/docs/index.html`, `/v3/api-docs`, `/v3/api-docs.yaml`, and the JDBC-backed authenticated `/api/account` check.
+- 2026-05-02: Ran `git diff --check` after the CI/release-workflow and doc updates for coverage publication plus script cleanup. Passed.
+- 2026-05-02: Ran `rg -n "render-release-notes|smoke-container|run-phase-9-benchmarks" README.md SETUP.md ai/RELEASES.md .github/workflows scripts`. Returned no matches, confirming the deleted wrapper-script references were removed.
+- 2026-05-02: Executed the inlined release-note extraction logic locally against `CHANGELOG.md` section `v1.1.0` and wrote then removed `release-notes-smoke.md`. Passed, confirming the workflow logic still fails closed on tag matching and renders the expected section format.
+- 2026-05-02: Codecov upload was not runnable from the local shell because it depends on the GitHub Actions environment plus repository Codecov onboarding. The CI workflow was updated to publish `build/reports/jacoco/test/jacocoTestReport.xml` through `codecov/codecov-action@v5` with OIDC authentication.
 
 ## User Validation
 - Confirm the new plan execution leaves the public API unchanged by reviewing that REST Docs pages, HTTP examples, and the approved OpenAPI baseline did not move.

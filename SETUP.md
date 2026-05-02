@@ -108,8 +108,8 @@ CI and release workflow expectations:
 
 - `CI` runs on pull requests to `main` and pushes to `main`
 - Dependabot opens grouped weekly pull requests for Gradle, GitHub Actions, and Docker, and those PRs use the same `CI` workflow as human-authored PRs
-- `CI` uses JDK 25, Gradle dependency caching, explicit Docker availability checks, `./gradlew build`, and `./gradlew externalSmokeTest`
-- `Release` runs on `vMAJOR.MINOR.PATCH` tags, rebuilds the tagged image through Gradle, validates it with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry, and then creates a GitHub Release from the exact matching `CHANGELOG.md` section
+- `CI` uses JDK 25, Gradle dependency caching, explicit Docker availability checks, `./gradlew build`, uploads `build/reports/jacoco/test/jacocoTestReport.xml` to Codecov, and then runs `./gradlew externalSmokeTest`
+- `Release` runs on `vMAJOR.MINOR.PATCH` tags, rebuilds the tagged image through Gradle, validates it with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry, and then creates a GitHub Release from the exact matching `CHANGELOG.md` section rendered inline in `.github/workflows/release.yml`
 - recommended branch protection requires `CI`, at least one reviewer, and a squash-merge or equivalent linear-history policy
 
 ## IDE Setup
@@ -238,6 +238,8 @@ helm template technical-interview-demo helm/technical-interview-demo -f helm/tec
 .\gradlew.bat externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo
 ```
 
+The hosted `CI` workflow also uploads `build/reports/jacoco/test/jacocoTestReport.xml` to Codecov. Local reproduction normally stops at generating that file; it does not publish coverage unless you intentionally run the same GitHub Action path in CI.
+
 Deployment-manifest validation to pair with the CI flow:
 
 ```powershell
@@ -250,15 +252,7 @@ kubectl apply --dry-run=client -k k8s/monitoring
 kubectl apply --dry-run=client -k monitoring/grafana
 ```
 
-Dry-run the release-notes helper against an existing changelog section:
-
-```powershell
-.\scripts\release\render-release-notes.ps1 `
-  -Tag v0.24.0 `
-  -TagImageReference ghcr.io/example-owner/technical-interview-demo:v0.24.0 `
-  -ShaImageReference ghcr.io/example-owner/technical-interview-demo:sha-example123456 `
-  -PackagePageUrl https://github.com/example-owner/technical-interview-demo/pkgs/container/technical-interview-demo
-```
+Release-note rendering now lives inline in `.github/workflows/release.yml`; keep that workflow file as the source of truth rather than a local wrapper script.
 
 ## Building Docker Images
 

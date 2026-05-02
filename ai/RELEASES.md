@@ -138,6 +138,7 @@ Do not assume a remote push is always desired just because a local release tag e
 
 The tag-driven `Release` workflow is also expected to validate the packaged tagged image via `./gradlew externalSmokeTest` before image publication.
 The automated GitHub Release body is sourced from the exact matching `CHANGELOG.md` version section. If the tagged section is missing or duplicated, the release workflow is expected to fail closed instead of publishing partial notes.
+Keep the release-note extraction logic inline in `.github/workflows/release.yml` as the source of truth unless future workflow complexity justifies restoring a dedicated helper.
 
 ## What Not To Do
 

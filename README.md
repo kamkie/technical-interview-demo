@@ -1,5 +1,8 @@
 # Technical Interview Demo
 
+[![CI](https://github.com/kamkie/technical-interview-demo/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/kamkie/technical-interview-demo/actions/workflows/ci.yml)
+[![Codecov](https://codecov.io/gh/kamkie/technical-interview-demo/graph/badge.svg)](https://codecov.io/gh/kamkie/technical-interview-demo)
+
 `AGENTS.md` is the AI-facing counterpart of this file. Keep both files aligned when project behavior, public API contracts, formatter usage, logging/tracing behavior, or quality gates change.
 
 ## Overview
@@ -166,6 +169,7 @@ Supported delivery path:
 
 - GitHub Actions is the repository CI/CD platform
 - pull requests to `main` and pushes to `main` run the `CI` workflow, which executes `./gradlew build` and `./gradlew externalSmokeTest`
+- the `CI` workflow uploads `build/reports/jacoco/test/jacocoTestReport.xml` to Codecov after the Gradle build, so the repository must be onboarded for Codecov uploads before that signal is expected to pass consistently
 - Dependabot opens grouped weekly update PRs for Gradle, GitHub Actions, and Docker, and those PRs are expected to pass the same `CI` workflow before merge
 - the `CI` workflow uploads the generated vulnerability scan artifacts from `build/reports/security/` so blocked runs remain reviewable
 - semantic version tags trigger the `Release` workflow, which builds and scans the tagged image with Gradle, validates it with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry as `ghcr.io/<owner>/<repo>:<tag>` and `ghcr.io/<owner>/<repo>:sha-<12-char-commit>`, then creates the matching GitHub Release from `CHANGELOG.md`
