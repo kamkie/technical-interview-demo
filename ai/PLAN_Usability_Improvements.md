@@ -200,6 +200,10 @@
   - `.\gradlew.bat test --tests "*CategoryApiIntegrationTests" --tests "*CategoryApiDocumentationTests" --tests "*LocalizationApiIntegrationTests" --tests "*ApiExceptionHandlerTests" --tests "*OpenApiIntegrationTests" --tests "*ArchitectureHardeningTests"`: passed after running Gradle with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`
   - The first run of the same Milestone 2 command surfaced three implementation gaps and one collateral test drift: category update/delete routes were not yet authenticated in `SecurityConfiguration`, the category tests/docs were seeding categories without books so the in-use delete path never triggered, and the expanded localization seed set exceeded the default page size in one language-filter test.
   - After tightening security, switching the category fixtures to `BookCatalogTestData.seedDefaultCatalog(...)`, and requesting a larger page size in the localization language-filter test, the same validation command passed cleanly.
+- Milestone 3:
+  - `.\gradlew.bat refreshOpenApiBaseline`: passed after the additive audit-log and category-management contract changes were reviewed, using `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`
+  - `.\gradlew.bat test --tests "*OpenApiCompatibilityIntegrationTests"`: passed with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`
+  - `.\gradlew.bat build`: passed with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`, including the full test suite, Asciidoctor generation, PMD/Spotless checks, vulnerability scans, Docker image build, and overall Gradle `build` verification
 
 ## User Validation
 - Start the application and authenticate as an admin-capable user.

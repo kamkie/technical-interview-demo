@@ -11,6 +11,9 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 - Added an ADMIN-only `GET /api/audit-logs` API with pagination, exact-match filtering for `targetType`, `action`, and `actorLogin`, generated REST Docs coverage, reviewer HTTP examples, and aligned README/OpenAPI contract updates.
 - Added explicit ADMIN-only category rename and guarded delete operations at `PUT /api/categories/{id}` and `DELETE /api/categories/{id}`, including localized `404` and `409` API errors, REST Docs coverage, reviewer HTTP examples, and aligned README/OpenAPI contract updates.
 
+### Changed
+- Refreshed the approved OpenAPI baseline and completed final compatibility/build verification for the new audit-log and category-management APIs.
+
 ## [v1.1.0] - 2026-05-02
 
 ### Changed
