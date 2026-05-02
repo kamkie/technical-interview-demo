@@ -9,6 +9,7 @@ The Gradle build version is derived from the nearest reachable annotated git tag
  
 ### Changed
 - Clarified the maintainer and AI workflow so local implementation, validation, and review finish before any branch push or PR creation, and release preparation begins only after the approved implementation PR is merged onto `main`.
+- Tightened AI planning guidance so plans must ask targeted clarification questions for material gaps and record unresolved requirement holes plus fallback assumptions explicitly instead of silently guessing.
  
 ## [v1.2.1] - 2026-05-02
 

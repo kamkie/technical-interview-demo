@@ -21,6 +21,8 @@ Create `ai/PLAN_<topic>.md` for <topic>.
 
 Read `AGENTS.md`, `README.md`, `ai/PLAN.md`, and the governing specs first.
 Follow `ai/PLAN.md`.
+Ask targeted clarification questions before locking the plan if scope, compatibility, rollout, acceptance criteria, or validation are still ambiguous.
+Record requirement gaps, unresolved user-input holes, and fallback assumptions explicitly.
 ```
 
 ### Create A New Execution Plan From A Roadmap Item
@@ -30,6 +32,8 @@ Create plan file for <topic> from ROADMAP.md.
 
 Read `AGENTS.md`, `README.md`, `ai/PLAN.md`, and the governing specs first.
 Follow `ai/PLAN.md`.
+Ask targeted clarification questions before locking the plan if scope, compatibility, rollout, acceptance criteria, or validation are still ambiguous.
+Record requirement gaps, unresolved user-input holes, and fallback assumptions explicitly.
 ```
 
 ### Create A Plan From Selected Roadmap Tasks
@@ -43,6 +47,8 @@ Create `ai/PLAN_<topic>.md` for these selected roadmap tasks:
 Use `ROADMAP.md` only as roadmap input.
 Read `AGENTS.md`, `README.md`, `ROADMAP.md`, `ai/PLAN.md`, and the governing specs first.
 Follow `ai/PLAN.md`.
+Ask targeted clarification questions before locking the plan if scope, compatibility, rollout, acceptance criteria, or validation are still ambiguous.
+Record requirement gaps, unresolved user-input holes, and fallback assumptions explicitly.
 ```
 
 ### Revise An Existing Plan
@@ -53,6 +59,7 @@ Revise `<plan_file>` for this new requirement or constraint:
 
 Keep the plan self-contained.
 Follow `ai/PLAN.md`.
+Record any new requirement gaps, unresolved user-input holes, and fallback assumptions explicitly.
 ```
 
 ### Review Whether A Plan Is Ready

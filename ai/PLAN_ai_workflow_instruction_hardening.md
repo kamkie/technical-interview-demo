@@ -198,6 +198,10 @@
   - updated `ai/EXECUTION.md`, `ai/WORKFLOW.md`, `ai/RELEASES.md`, `ai/PROMPTS.md`, `README.md`, and `CONTRIBUTING.md` to make the local execution -> PR handoff -> merged `main` -> release sequence explicit
   - preserved `.github/workflows/ci.yml` and `.github/workflows/release.yml` unchanged
   - validation run: manual document-consistency review for the milestone changes; final `.\gradlew.bat build` still pending until the full plan is complete
+- 2026-05-02 Milestone 2 completed:
+  - updated `ai/PLAN.md` to require clarification-first planning for material scope, compatibility, rollout, acceptance-criteria, and validation gaps
+  - updated `ai/PROMPTS.md` so planning prompts require explicit requirement-gap recording and fallback assumptions
+  - validation run: manual review of plan-template and prompt consistency; final `.\gradlew.bat build` still pending until the full plan is complete
 
 ## User Validation
 - Read the updated AI guidance and confirm you can trace one end-to-end story for: planning, local execution, PR creation, merge-to-main, release preparation, and optional phase-based delegation.
