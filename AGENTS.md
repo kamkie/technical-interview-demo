@@ -23,22 +23,27 @@ The `ai/` directory is the AI-facing working set for non-contract repository kno
 Use these files deliberately:
 
 - `ai/ARCHITECTURE.md`: descriptive codebase map, package responsibilities, and structural guidance
+- `ai/CODE_STYLE.md`: AI-facing code-style and change-shaping guidance for repo edits
 - `ai/DESIGN.md`: intended design direction, product tradeoffs, and open design decisions
+- `ai/DOCUMENTATION.md`: AI-facing documentation ownership and update guidance
 - `ai/EXECUTION.md`: AI-facing implementation workflow for executing plan files, updating validation results, and handling unreleased work
 - `ai/LEARNINGS.md`: durable repo-wide engineering lessons that should survive refactors
 - `ai/PLAN.md`: instructions for producing execution plans
 - `ai/PLAN_*.md`: task-specific execution plans and milestone breakdowns
 - `ai/PROMPTS.md`: lean reusable prompt starters that point to the standing guidance in the other AI documents
+- `ai/REVIEWS.md`: AI-facing code-review and security-review guidance
 - `ai/archive/`: archived AI execution plans that have already been released or otherwise completed
 - `ai/RELEASES.md`: AI-facing release workflow for intentional post-implementation releases
+- `ai/TESTING.md`: AI-facing testing and validation guidance
 - `ai/WORKFLOW.md`: AI-facing multi-agent workflow for delegation, worktree usage, integration, and release handoff
 
 Rules for maintaining the `ai/` documents:
 
-- keep the role of each file distinct; do not collapse architecture, design, planning, release workflow, workflow guidance, and learnings into one document
+- keep the role of each file distinct; do not collapse architecture, code style, design, documentation ownership, execution, planning, release workflow, review guidance, testing guidance, workflow guidance, and learnings into one document
 - keep AI instruction markdown files under `ai/` by default; `AGENTS.md` is the only standing exception
-- update the relevant `ai/` file in the same change when architecture, design intent, durable engineering guidance, release workflow, workflow guidance, or an execution plan materially changes
+- update the relevant `ai/` file in the same change when architecture, code-style expectations, design intent, documentation ownership, durable engineering guidance, release workflow, review/security review guidance, testing/validation guidance, workflow guidance, or an execution plan materially changes
 - keep `ai/PROMPTS.md` lean; put standing workflow rules in the best owning AI document instead of restating them inside prompts
+- keep standing code-style, testing, review, and documentation guidance in their focused owning files instead of redistributing it across prompts or workflow docs
 - when AI instruction files accumulate overlap, compact them by moving duplicated guidance into the single best owning file and updating cross-references in the same change
 - archive executed `ai/PLAN_*.md` files under `ai/archive/` as part of the release cleanup once that work has been released
 - treat `ai/ARCHITECTURE.md`, `ai/DESIGN.md`, and `ai/LEARNINGS.md` as descriptive guidance, not executable spec authority

@@ -14,6 +14,7 @@ Follow these project-level constraints first:
 - Keep `README.md`, `AGENTS.md`, and `SETUP.md` aligned when product contract, engineering rules, or setup guidance change.
 
 `AGENTS.md` is the authoritative source for project-specific engineering rules. `SETUP.md` is the authoritative source for local environment and troubleshooting guidance.
+Focused AI workflow guidance now lives under `ai/`, with standing ownership split across `ai/CODE_STYLE.md`, `ai/TESTING.md`, `ai/REVIEWS.md`, and `ai/DOCUMENTATION.md`. Keep this guide aligned with those files where contributor workflow overlaps.
 
 ## Spec-Driven Development
 
@@ -91,6 +92,9 @@ Each PR should include:
 - the reason for the change
 - the commands you ran to validate it
 - any follow-up work that remains out of scope
+- any security-sensitive changes such as auth, secrets, workflow permissions, logging of sensitive data, or container publication behavior
+
+Self-review and reviewer focus should stay on bugs, regressions, spec drift, missing validation, and security-sensitive changes before style-only cleanup.
 
 If the change affects public API behavior, include example requests/responses or reference the updated generated docs and OpenAPI change.
 

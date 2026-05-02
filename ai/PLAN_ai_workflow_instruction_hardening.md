@@ -202,6 +202,10 @@
   - updated `ai/PLAN.md` to require clarification-first planning for material scope, compatibility, rollout, acceptance-criteria, and validation gaps
   - updated `ai/PROMPTS.md` so planning prompts require explicit requirement-gap recording and fallback assumptions
   - validation run: manual review of plan-template and prompt consistency; final `.\gradlew.bat build` still pending until the full plan is complete
+- 2026-05-02 Milestone 3 completed:
+  - added focused ownership guides: `ai/CODE_STYLE.md`, `ai/TESTING.md`, `ai/REVIEWS.md`, and `ai/DOCUMENTATION.md`
+  - updated `AGENTS.md`, `README.md`, `CONTRIBUTING.md`, `ai/EXECUTION.md`, and `ai/PROMPTS.md` so those new guides are discoverable and own the recurring style, testing, review, and documentation guidance
+  - validation run: manual review of document ownership, cross-references, and focused-guide discoverability; final `.\gradlew.bat build` still pending until the full plan is complete
 
 ## User Validation
 - Read the updated AI guidance and confirm you can trace one end-to-end story for: planning, local execution, PR creation, merge-to-main, release preparation, and optional phase-based delegation.

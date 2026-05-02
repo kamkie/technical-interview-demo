@@ -218,8 +218,15 @@ Monitoring support uses the upstream `kube-prometheus-stack` Helm chart plus rep
 ## Project Map
 
 - `SETUP.md`: developer onboarding, local environment setup, OAuth setup, Docker workflow, and troubleshooting
+- `ai/PLAN.md`: AI-facing planning rules for execution plans and milestone-ready plan files
+- `ai/EXECUTION.md`: AI-facing single-agent execution workflow for local implementation, validation, and PR-ready handoff
+- `ai/RELEASES.md`: AI-facing maintainer release workflow after approved work is merged onto `main`
 - `ai/PROMPTS.md`: reusable prompt library for repository-specific planning, implementation, release, and multi-agent requests
 - `ai/WORKFLOW.md`: Codex multi-agent workflow, task integration, and release handoff rules for this repository
+- `ai/CODE_STYLE.md`: AI-facing code-style and change-shaping guidance for repo edits
+- `ai/TESTING.md`: AI-facing testing and validation guidance
+- `ai/REVIEWS.md`: AI-facing code-review and security-review guidance
+- `ai/DOCUMENTATION.md`: AI-facing documentation ownership and update guidance
 - `AGENTS.md`: AI-facing project rules and spec-driven working contract
 - `ROADMAP.md`: active roadmap only
 - `CHANGELOG.md`: released history only

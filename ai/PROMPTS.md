@@ -9,6 +9,7 @@ Keep prompts lean:
 - put implementation rules in `ai/EXECUTION.md`
 - put multi-agent rules in `ai/WORKFLOW.md`
 - put release rules in `ai/RELEASES.md`
+- use the focused guides `ai/CODE_STYLE.md`, `ai/TESTING.md`, `ai/REVIEWS.md`, and `ai/DOCUMENTATION.md` only when the task needs those lenses
 
 Prefer filling in placeholders such as `<topic>`, `<plan_file>`, `<milestone_name>`, `<task>`, and `<constraint>` so the request is concrete.
 
@@ -110,7 +111,7 @@ Do not start later milestones, push, open a PR, or release unless I ask.
 Run only the required validation for `<plan_file>` or `<change>`.
 Do not edit files.
 
-Use `AGENTS.md` and the relevant AI workflow documents to decide what checks are required.
+Use `AGENTS.md`, `ai/TESTING.md`, and the relevant AI workflow documents to decide what checks are required.
 Summarize what ran, what passed, what failed, and what artifacts would likely need updates.
 ```
 

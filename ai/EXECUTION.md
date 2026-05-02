@@ -22,6 +22,7 @@ Read these artifacts before editing:
 - `AGENTS.md`
 - `ai/PLAN.md`
 - the target `ai/PLAN_*.md` file
+- the focused AI guides relevant to the change: `ai/CODE_STYLE.md`, `ai/TESTING.md`, `ai/REVIEWS.md`, and `ai/DOCUMENTATION.md`
 - the governing tests, docs, HTTP examples, and source files named by the plan
 - `README.md`, `src/docs/asciidoc/`, `src/test/resources/openapi/approved-openapi.json`, and `src/test/resources/http/` when the plan touches public behavior
 
@@ -37,16 +38,17 @@ Before writing code or docs:
 1. Re-read the target scope, locked decisions, and non-goals. Do not silently expand scope.
 2. Update the governing spec artifact first when behavior is intentionally changing.
 3. Implement the smallest code or documentation change that satisfies the updated spec.
-4. Preserve current contract behavior unless the plan explicitly changes it.
-5. Update all affected contract artifacts together when public behavior changes, and update the owning maintainer docs together when workflow guidance changes.
-6. Keep execution state current as work lands:
+4. Follow `ai/CODE_STYLE.md` when code or build files are part of the change.
+5. Preserve current contract behavior unless the plan explicitly changes it.
+6. Update all affected contract artifacts together when public behavior changes, and update the owning maintainer docs together when workflow guidance changes.
+7. Keep execution state current as work lands:
    - update `CHANGELOG.md` under `## [Unreleased]` after each completed plan task or milestone
    - create a normal non-interactive commit after each completed plan task or milestone
    - update the plan's `Validation Results` section with what actually ran and what happened
-7. Run the required validation before finishing.
-8. Perform a final local review for correctness, contract alignment, and documentation drift before remote handoff.
-9. If the user asked for remote collaboration, push the finished branch and create the PR only after steps 1 through 8 are complete. PR creation is the last execution step, not a substitute for local execution.
-10. Stop after reporting execution status. Release work begins only after the approved PR has been merged onto `main`; if release is later requested, follow `ai/RELEASES.md` from merged `main`.
+8. Run the required validation before finishing, using `ai/TESTING.md` when the task needs test-layer or validation-scope guidance.
+9. Perform a final local review using `ai/REVIEWS.md`, including any documentation-alignment checks required by `ai/DOCUMENTATION.md`.
+10. If the user asked for remote collaboration, push the finished branch and create the PR only after steps 1 through 9 are complete. PR creation is the last execution step, not a substitute for local execution.
+11. Stop after reporting execution status. Release work begins only after the approved PR has been merged onto `main`; if release is later requested, follow `ai/RELEASES.md` from merged `main`.
 
 ## Milestone-Only Execution
 
