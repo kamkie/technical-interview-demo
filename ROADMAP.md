@@ -3,6 +3,15 @@
 This file tracks active and upcoming work for the technical-interview-demo Spring Boot application.
 Keep this file focused on work that is still planned or in progress.
 
+## Not Yet Refined
+
+Keep rough candidate tasks here for manual editing before they are promoted into real roadmap entries.
+
+- Use this section as an intake list for ideas that are not yet specific enough for `Current Priorities` or `Ordered Plan`.
+- Rewrite an item into a concrete roadmap entry before moving it below.
+- Remove an item from this section once it is promoted, merged into another entry, or intentionally dropped.
+- Add new rough tasks below this line:
+
 ## How To Use This File
 
 - Keep only active or planned work here.

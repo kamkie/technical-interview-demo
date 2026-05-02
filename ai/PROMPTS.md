@@ -67,6 +67,20 @@ Ask targeted clarification questions before locking the plan if scope, compatibi
 Record requirement gaps, unresolved user-input holes, and fallback assumptions explicitly.
 ```
 
+### Refine Unrefined Roadmap Tasks Into Real Entries
+
+```text
+Refine the items listed under `## Not Yet Refined` in `ROADMAP.md` into concrete roadmap entries.
+
+Read `AGENTS.md`, `README.md`, `ROADMAP.md`, and `ai/PLAN.md` first.
+Treat the `## Not Yet Refined` section as rough intake only, not as already-approved roadmap structure.
+For each rough task, identify the intended behavior, missing decisions, likely governing specs, and the smallest roadmap wording that would make it implementation-ready.
+Group related tasks when that produces a cleaner roadmap shape, but do not invent scope that is not supported by the rough input or current repo truth.
+Update `ROADMAP.md` by moving refined tasks out of `## Not Yet Refined` and into the appropriate roadmap section only when the resulting entries are concrete enough to sequence.
+If any task is still too ambiguous to refine safely, leave it in `## Not Yet Refined` and explain exactly what is missing.
+Keep the roadmap focused on active planned work, not release history or speculative architecture.
+```
+
 ### Revise An Existing Plan
 
 ```text
