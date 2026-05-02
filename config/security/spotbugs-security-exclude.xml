@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Keep this file narrow and reviewable.
+
+Every suppression must be tied to a specific finding and include:
+- why: short rationale for accepting the finding
+- owner: team or reviewer accountable for revalidation
+- reviewed: YYYY-MM-DD
+- revalidate-by: YYYY-MM-DD or release tag for the next required check
+- reference: issue, PR, or review discussion that approved the exception
+
+Prefer matching on bug code and class or method instead of broad package-level exclusions.
+Delete suppressions when the underlying code or the detector output changes.
+-->
+<FindBugsFilter>
+</FindBugsFilter>
