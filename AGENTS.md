@@ -130,6 +130,7 @@ Update all affected artifacts in the same change:
 ### Roadmap change
 
 - update `ROADMAP.md`
+- treat `[x]` items in `ROADMAP.md` as selected for active planning or development, not as completed history
 - remove completed items instead of archiving them elsewhere
 - do not recreate a second human history file; released history belongs in `CHANGELOG.md`
 

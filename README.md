@@ -53,7 +53,7 @@ Authoritative spec artifacts:
 - approved OpenAPI baseline at `src/test/resources/openapi/approved-openapi.json`
 - HTTP example collections under `src/test/resources/http/`
 - this `README.md` for the supported human-facing API/runtime contract
-- `ROADMAP.md` for planned work that is not yet part of the contract
+- `ROADMAP.md` for planned work and explicitly selected active development that is not yet part of the contract; checked `[x]` items are selected work, not completed history
 - `CHANGELOG.md` for released history
 
 What that means in practice:
@@ -230,7 +230,7 @@ Monitoring support uses the upstream `kube-prometheus-stack` Helm chart plus rep
 - `ai/REVIEWS.md`: AI-facing code-review and security-review guidance
 - `ai/DOCUMENTATION.md`: AI-facing documentation ownership and update guidance
 - `AGENTS.md`: AI-facing project rules and spec-driven working contract
-- `ROADMAP.md`: active roadmap only
+- `ROADMAP.md`: active roadmap only; `[x]` marks selected work, not completed history
 - `CHANGELOG.md`: released history only
 - `CONTRIBUTING.md`: contributor workflow and review expectations
 - `k8s/`: raw Kubernetes deployment and monitoring manifests

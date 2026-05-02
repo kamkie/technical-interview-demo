@@ -20,6 +20,9 @@ No rough tasks are waiting for refinement right now.
 ## How To Use This File
 
 - Keep only active or planned work here.
+- Use `[ ]` for planned work that is not yet selected.
+- Use `[x]` for work explicitly selected for current planning or development.
+- Do not use `[x]` to mean completed; remove an item once it is no longer active roadmap work.
 - Keep items short so they are easy to reorder and edit.
 - Remove completed items instead of turning this file into a historical archive.
 - Use `CHANGELOG.md` for released history, not `ROADMAP.md`.
