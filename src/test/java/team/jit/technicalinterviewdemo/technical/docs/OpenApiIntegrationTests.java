@@ -71,6 +71,10 @@ class OpenApiIntegrationTests extends AbstractRandomPortIntegrationTest {
         assertFalse(accountSecurity.isMissingNode());
         assertEquals("sessionCookie", accountSecurity.get(0).fieldNames().next());
 
+        JsonNode auditLogSecurity = openApi.at("/paths/~1api~1audit-logs/get/security");
+        assertFalse(auditLogSecurity.isMissingNode());
+        assertEquals("sessionCookie", auditLogSecurity.get(0).fieldNames().next());
+
         List<String> listBookParameters = openApi.at("/paths/~1api~1books/get/parameters")
                 .findValuesAsText("name");
         assertTrue(listBookParameters.containsAll(List.of(
@@ -90,9 +94,24 @@ class OpenApiIntegrationTests extends AbstractRandomPortIntegrationTest {
                 .findValuesAsText("name");
         assertTrue(localizationParameters.containsAll(List.of("messageKey", "language", "page", "size", "sort")));
 
+        List<String> auditLogParameters = openApi.at("/paths/~1api~1audit-logs/get/parameters")
+                .findValuesAsText("name");
+        assertTrue(auditLogParameters.containsAll(List.of("targetType", "action", "actorLogin", "page", "size", "sort")));
+
         assertEquals("Books", openApi.at("/paths/~1api~1books/get/tags/0").asText());
         assertEquals("Account", openApi.at("/paths/~1api~1account/get/tags/0").asText());
+        assertEquals("Audit Logs", openApi.at("/paths/~1api~1audit-logs/get/tags/0").asText());
         assertEquals("Localizations", openApi.at("/paths/~1api~1localizations/get/tags/0").asText());
+        assertFalse(openApi.at("/paths/~1api~1audit-logs/get/responses/401").isMissingNode());
+        assertFalse(openApi.at("/paths/~1api~1audit-logs/get/responses/403").isMissingNode());
+        assertEquals(
+                "#/components/schemas/ApiProblemResponse",
+                openApi.at("/paths/~1api~1audit-logs/get/responses/401/content/application~1problem+json/schema/$ref").asText()
+        );
+        assertEquals(
+                "#/components/schemas/ApiProblemResponse",
+                openApi.at("/paths/~1api~1audit-logs/get/responses/403/content/application~1problem+json/schema/$ref").asText()
+        );
         assertFalse(openApi.at("/paths/~1api~1categories/post/responses/401").isMissingNode());
         assertFalse(openApi.at("/paths/~1api~1categories/post/responses/403").isMissingNode());
         assertEquals(
@@ -105,6 +124,7 @@ class OpenApiIntegrationTests extends AbstractRandomPortIntegrationTest {
         );
         assertFalse(openApi.at("/components/schemas/Book").isMissingNode());
         assertFalse(openApi.at("/components/schemas/ApiProblemResponse").isMissingNode());
+        assertFalse(openApi.at("/components/schemas/AuditLogResponse").isMissingNode());
         assertFalse(openApi.at("/components/schemas/BookCreateRequest").isMissingNode());
         assertFalse(openApi.at("/components/schemas/LocalizationResponse").isMissingNode());
         assertFalse(openApi.at("/components/schemas/UserAccountResponse").isMissingNode());

@@ -40,6 +40,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/v3/api-docs", "/v3/api-docs/**", "/v3/api-docs.yaml").permitAll()
                         .requestMatchers("/oauth2/**", "/login/**").permitAll()
                         .requestMatchers("/api/account", "/api/account/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/audit-logs").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/actuator/health", "/actuator/health/**").permitAll()
                         // Prometheus stays reachable for trusted deployment scraping; deployment boundaries keep it off the internet.

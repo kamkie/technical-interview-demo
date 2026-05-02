@@ -20,6 +20,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.core.ResolvableType;
 import team.jit.technicalinterviewdemo.TechnicalInterviewDemoApplication;
+import team.jit.technicalinterviewdemo.business.audit.AuditLogController;
+import team.jit.technicalinterviewdemo.business.audit.AuditLogResponse;
 import team.jit.technicalinterviewdemo.business.book.Book;
 import team.jit.technicalinterviewdemo.business.book.BookController;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
@@ -85,6 +87,15 @@ class ArchitectureHardeningTests {
         ResolvableType updateBookReturnType = ResolvableType.forMethodReturnType(
                 BookController.class.getMethod("update", Long.class, team.jit.technicalinterviewdemo.business.book.BookUpdateRequest.class)
         );
+        ResolvableType listAuditLogsReturnType = ResolvableType.forMethodReturnType(
+                AuditLogController.class.getMethod(
+                        "findAll",
+                        team.jit.technicalinterviewdemo.business.audit.AuditTargetType.class,
+                        team.jit.technicalinterviewdemo.business.audit.AuditAction.class,
+                        String.class,
+                        org.springframework.data.domain.Pageable.class
+                )
+        );
         ResolvableType listCategoriesReturnType = ResolvableType.forMethodReturnType(CategoryController.class.getMethod("findAll"));
         ResolvableType createCategoryReturnType = ResolvableType.forMethodReturnType(
                 CategoryController.class.getMethod("create", team.jit.technicalinterviewdemo.business.category.CategoryCreateRequest.class)
@@ -94,6 +105,7 @@ class ArchitectureHardeningTests {
         assertThat(getBookReturnType.getGeneric(0).resolve()).isEqualTo(BookResponse.class);
         assertThat(createBookReturnType.getGeneric(0).resolve()).isEqualTo(BookResponse.class);
         assertThat(updateBookReturnType.getGeneric(0).resolve()).isEqualTo(BookResponse.class);
+        assertThat(listAuditLogsReturnType.getGeneric(0, 0).resolve()).isEqualTo(AuditLogResponse.class);
         assertThat(listCategoriesReturnType.getGeneric(0, 0).resolve()).isEqualTo(CategoryResponse.class);
         assertThat(createCategoryReturnType.getGeneric(0).resolve()).isEqualTo(CategoryResponse.class);
     }
@@ -136,4 +148,3 @@ class ArchitectureHardeningTests {
                 .containsExactly("Best Practices", "Java");
     }
 }
-

@@ -1,0 +1,26 @@
+# IntelliJ HTTP Client examples for technical-interview-demo
+# Audit log review requires ADMIN and an authenticated session.
+# Auth errors use the localized ProblemDetail shape with title/status/detail/messageKey/message/language.
+
+@baseUrl = http://localhost:8080
+@sessionCookie = paste-technical-interview-demo-session-here
+
+### AuditLogController - list audit logs (ADMIN + authenticated session)
+GET {{baseUrl}}/api/audit-logs?page=0&size=20&sort=id,desc
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/json
+
+### AuditLogController - filter audit logs by target type, action, and actor login
+GET {{baseUrl}}/api/audit-logs?targetType=BOOK&action=UPDATE&actorLogin=admin-user
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/json
+
+### AuditLogController - list audit logs without authentication (401 localized ProblemDetail)
+GET {{baseUrl}}/api/audit-logs
+Accept: application/problem+json
+
+### AuditLogController - list audit logs as non-admin user (403 localized ProblemDetail)
+# Replace the session cookie with a regular authenticated USER session.
+GET {{baseUrl}}/api/audit-logs
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/problem+json

@@ -192,7 +192,10 @@
 - If execution discovers that audit review needs more than exact filters and pagination to be useful, stop and split that into a follow-up plan rather than quietly expanding this one into a reporting subsystem.
 
 ## Validation Results
-- To be filled in during execution.
+- Milestone 1:
+  - `.\gradlew.bat test --tests "*AuditLogIntegrationTests" --tests "*AuditLogApiIntegrationTests" --tests "*AuditLogApiDocumentationTests" --tests "*OpenApiIntegrationTests" --tests "*ArchitectureHardeningTests"`: passed after running Gradle with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`
+  - Initial attempt to run the same Gradle test command with the workstation-default JVM failed before executing tests because Gradle started on Java 11 and this repository now requires Java 17+ to run Gradle itself.
+  - `.\gradlew.bat refreshOpenApiBaseline --args "D:\Projects\Jit\technical-interview-demo-a2\build\tmp\openapi-audit.json"`: passed as a temporary inspection step to confirm the generated audit-log OpenAPI shape without refreshing the approved baseline yet
 
 ## User Validation
 - Start the application and authenticate as an admin-capable user.
