@@ -41,6 +41,10 @@ Status: Planned
 
 Goal: catch production-like regressions that the current release path can still miss, especially around docs exposure and authenticated session behavior.
 
+#### Publish Quality Signals
+- [ ] Publish JaCoCo coverage reports from CI to codecov.io
+- [ ] Add CI and Codecov badges to `README.md` once the external coverage reporting is live
+
 #### Expand Production-Like Smoke Coverage
 - [ ] Extend `externalSmokeTest` beyond `/`, `/hello`, `/docs`, readiness, and the public books list
 - [ ] Add smoke coverage for the generated OpenAPI/docs assets so release candidates prove the documentation surface still works when packaged
