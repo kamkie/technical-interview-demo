@@ -10,7 +10,11 @@ Keep rough candidate tasks here for manual editing before they are promoted into
 - Use this section as an intake list for ideas that are not yet specific enough for `Current Priorities` or `Ordered Plan`.
 - Rewrite an item into a concrete roadmap entry before moving it below.
 - Remove an item from this section once it is promoted, merged into another entry, or intentionally dropped.
-- Add new rough tasks below this line:
+
+### Rough Tasks
+
+Add new rough tasks below.
+
 - Consider changing the auth setup to something that better fits a plain REST app, such as a fully stateless token-based model
 - Consider adding a user-facing Java UI for the app as an alternative to the auth-direction change above
 - Consider adding a user-facing UI for the app in a separate repository
