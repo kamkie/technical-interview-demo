@@ -4,13 +4,19 @@ import team.jit.technicalinterviewdemo.business.user.CurrentUserAccountService;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
+import org.springframework.session.FindByIndexNameSessionRepository;
+import org.springframework.session.Session;
+import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 
 @Configuration
 public class SecurityConfiguration {
@@ -28,7 +34,10 @@ public class SecurityConfiguration {
             ObjectProvider<ClientRegistrationRepository> clientRegistrationRepository,
             AuthenticatedUserSynchronizationFilter authenticatedUserSynchronizationFilter,
             ApiAuthenticationEntryPoint apiAuthenticationEntryPoint,
-            ApiAccessDeniedHandler apiAccessDeniedHandler
+            ApiAccessDeniedHandler apiAccessDeniedHandler,
+            SessionRegistry sessionRegistry,
+            SecuritySettingsProperties securitySettingsProperties,
+            Environment environment
     ) throws Exception {
         http
                 .formLogin(AbstractHttpConfigurer::disable)
@@ -67,10 +76,26 @@ public class SecurityConfiguration {
                 )
                 .addFilterAfter(authenticatedUserSynchronizationFilter, AuthorizationFilter.class);
 
+        if (environment.acceptsProfiles(Profiles.of("prod"))) {
+            http.sessionManagement(session -> session
+                    .sessionConcurrency(concurrency -> concurrency
+                            .maximumSessions(securitySettingsProperties.getSession().getMaxConcurrentSessions())
+                            .maxSessionsPreventsLogin(securitySettingsProperties.getSession().isMaxSessionsPreventsLogin())
+                            .sessionRegistry(sessionRegistry)
+                    )
+            );
+        }
+
         if (clientRegistrationRepository.getIfAvailable() != null) {
             http.oauth2Login(oauth2 -> oauth2.loginPage("/oauth2/authorization/github"));
         }
 
         return http.build();
+    }
+
+    @Bean
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    SessionRegistry sessionRegistry(FindByIndexNameSessionRepository<? extends Session> sessionRepository) {
+        return new SpringSessionBackedSessionRegistry((FindByIndexNameSessionRepository) sessionRepository);
     }
 }

@@ -1,8 +1,10 @@
 package team.jit.technicalinterviewdemo.technical;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -10,6 +12,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -17,6 +20,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import team.jit.technicalinterviewdemo.TechnicalInterviewDemoApplication;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
+import team.jit.technicalinterviewdemo.technical.security.SecuritySettingsProperties;
 
 class ProductionConfigurationTests {
 
@@ -56,31 +60,108 @@ class ProductionConfigurationTests {
                 ));
     }
 
+    @Test
+    void prodProfileExposesHardenedSessionSettings() {
+        try (ConfigurableApplicationContext context = runProdApplication()) {
+            SecuritySettingsProperties securitySettingsProperties = context.getBean(SecuritySettingsProperties.class);
+
+            assertThat(context.getEnvironment().getProperty("server.servlet.session.timeout")).isEqualTo("15m");
+            assertThat(securitySettingsProperties.getSession().isCookieSecure()).isTrue();
+            assertThat(securitySettingsProperties.getSession().getMaxConcurrentSessions()).isEqualTo(1);
+            assertThat(securitySettingsProperties.getSession().isMaxSessionsPreventsLogin()).isTrue();
+        }
+    }
+
+    @Test
+    void prodProfileFailsFastWhenSecureSessionCookieIsDisabled() {
+        assertThatThrownBy(() -> runProdApplication("--SESSION_COOKIE_SECURE=false"))
+                .hasStackTraceContaining("SESSION_COOKIE_SECURE=true");
+    }
+
+    @Test
+    void prodProfileFailsFastWhenAdminLoginsContainInvalidGithubUsernames() {
+        assertThatThrownBy(() -> runProdApplication("--ADMIN_LOGINS=invalid login"))
+                .hasStackTraceContaining("ADMIN_LOGINS must contain comma-separated GitHub logins");
+    }
+
+    @Test
+    void prodProfileWithOauthFailsFastWhenGithubClientIdIsMissing() {
+        assertThatThrownBy(() -> runProdApplication(
+                "--spring.profiles.active=prod,oauth",
+                "--GITHUB_CLIENT_ID=",
+                "--GITHUB_CLIENT_SECRET=demo-secret"
+        ))
+                .hasStackTraceContaining("GITHUB_CLIENT_ID");
+    }
+
+    @Test
+    void prodProfileWithOauthFailsFastWhenGithubClientSecretIsMissing() {
+        assertThatThrownBy(() -> runProdApplication(
+                "--spring.profiles.active=prod,oauth",
+                "--GITHUB_CLIENT_ID=demo-client",
+                "--GITHUB_CLIENT_SECRET="
+        )).hasStackTraceContaining("GITHUB_CLIENT_SECRET");
+    }
+
     private static void runProdApplicationWithout(String missingVariableName) {
-        try (ConfigurableApplicationContext ignored = new SpringApplicationBuilder(TechnicalInterviewDemoApplication.class)
-                .web(WebApplicationType.NONE)
-                .run(argumentsWithout(missingVariableName))) {
+        try (ConfigurableApplicationContext ignored = runApplication(argumentsWithout(missingVariableName))) {
             // The prod profile should fail before the context starts when a required variable is missing.
         }
     }
 
+    private static ConfigurableApplicationContext runProdApplication(String... overrides) {
+        return runApplication(argumentsWithDefaults(overrides));
+    }
+
     private static String[] argumentsWithout(String missingVariableName) {
-        Map<String, String> requiredDatabaseProperties = Map.of(
-                "DATABASE_HOST", POSTGRESQL_CONTAINER.getHost(),
-                "DATABASE_PORT", String.valueOf(POSTGRESQL_CONTAINER.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT)),
-                "DATABASE_NAME", POSTGRESQL_CONTAINER.getDatabaseName(),
-                "DATABASE_USER", POSTGRESQL_CONTAINER.getUsername(),
-                "DATABASE_PASSWORD", POSTGRESQL_CONTAINER.getPassword()
-        );
-        List<String> arguments = new ArrayList<>();
-        arguments.add("--spring.profiles.active=prod");
-        arguments.add("--spring.main.banner-mode=off");
-        arguments.add("--logging.level.root=OFF");
+        Map<String, String> requiredDatabaseProperties = requiredDatabaseProperties();
+        List<String> arguments = new ArrayList<>(List.of(
+                "--spring.profiles.active=prod",
+                "--spring.main.banner-mode=off",
+                "--logging.level.root=OFF"
+        ));
         for (Map.Entry<String, String> entry : requiredDatabaseProperties.entrySet()) {
             if (!entry.getKey().equals(missingVariableName)) {
                 arguments.add("--" + entry.getKey() + "=" + entry.getValue());
             }
         }
         return arguments.toArray(String[]::new);
+    }
+
+    private static String[] argumentsWithDefaults(String... overrides) {
+        Map<String, String> argumentsByKey = new LinkedHashMap<>();
+        argumentsByKey.put("spring.profiles.active", "prod");
+        argumentsByKey.put("spring.main.banner-mode", "off");
+        argumentsByKey.put("logging.level.root", "OFF");
+        argumentsByKey.put("server.port", "0");
+        argumentsByKey.put("SESSION_COOKIE_SECURE", "true");
+        requiredDatabaseProperties().forEach(argumentsByKey::put);
+        for (String override : overrides) {
+            String withoutPrefix = override.substring(2);
+            int separatorIndex = withoutPrefix.indexOf('=');
+            argumentsByKey.put(
+                    withoutPrefix.substring(0, separatorIndex),
+                    withoutPrefix.substring(separatorIndex + 1)
+            );
+        }
+        return argumentsByKey.entrySet().stream()
+                .map(entry -> "--" + entry.getKey() + "=" + entry.getValue())
+                .toArray(String[]::new);
+    }
+
+    private static Map<String, String> requiredDatabaseProperties() {
+        return Map.of(
+                "DATABASE_HOST", POSTGRESQL_CONTAINER.getHost(),
+                "DATABASE_PORT", String.valueOf(POSTGRESQL_CONTAINER.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT)),
+                "DATABASE_NAME", POSTGRESQL_CONTAINER.getDatabaseName(),
+                "DATABASE_USER", POSTGRESQL_CONTAINER.getUsername(),
+                "DATABASE_PASSWORD", POSTGRESQL_CONTAINER.getPassword()
+        );
+    }
+
+    private static ConfigurableApplicationContext runApplication(String[] arguments) {
+        return new SpringApplicationBuilder(TechnicalInterviewDemoApplication.class)
+                .web(WebApplicationType.SERVLET)
+                .run(arguments);
     }
 }
