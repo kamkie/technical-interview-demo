@@ -52,7 +52,7 @@ public class BookController {
     @PostMapping
     @Operation(
             summary = "Create a book",
-            description = "Requires an authenticated session established through the GitHub OAuth login flow.",
+            description = "Requires an authenticated session established through the configured OAuth provider login flow.",
             security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
     )
     public ResponseEntity<BookResponse> create(@Valid @RequestBody BookCreateRequest request) {

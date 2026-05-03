@@ -1,23 +1,24 @@
 # IntelliJ HTTP Client examples for technical-interview-demo
 # This app does not issue JWTs and does not accept Authorization: Bearer tokens.
-# Protected app requests use the GitHub OAuth login flow plus the
+# Protected app requests use the configured OAuth provider login flow plus the
 # technical-interview-demo-session cookie created by Spring Session.
 # For 1.0, this reviewer-oriented browser session flow deliberately keeps CSRF disabled.
 #
-# The GitHub token exchange examples below are for diagnostics only.
-# GitHub returns an access token for GitHub APIs, not a JWT for this app,
-# and the app will not accept that token on /api/**.
+# Provider token exchange examples are for diagnostics only.
+# External provider access tokens are for provider APIs, not for this app,
+# and the app will not accept those tokens on /api/**.
 
 @baseUrl = http://localhost:8080
+#@oauthProvider = github
 #@sessionCookie = paste-technical-interview-demo-session-here
-#@githubClientId = paste-github-client-id-here
-#@githubClientSecret = paste-github-client-secret-here
-#@githubAuthCode = paste-github-auth-code-here
-#@githubAccessToken = paste-github-access-token-here
+#@providerClientId = paste-provider-client-id-here
+#@providerClientSecret = paste-provider-client-secret-here
+#@providerAuthCode = paste-provider-auth-code-here
+#@providerAccessToken = paste-provider-access-token-here
 
-### App authentication - start the optional GitHub OAuth login flow in a browser-capable client
-# This endpoint is only active when the oauth profile is enabled.
-GET {{baseUrl}}/oauth2/authorization/github
+### App authentication - start the optional OAuth login flow in a browser-capable client
+# This endpoint is active only when the oauth profile is enabled and the provider registration exists.
+GET {{baseUrl}}/oauth2/authorization/{{oauthProvider}}
 
 ### App authentication - verify the authenticated app session cookie
 GET {{baseUrl}}/api/account

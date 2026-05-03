@@ -50,7 +50,10 @@ The values below are loaded from `{build-info-path}` during the Asciidoctor buil
 - Supported application languages are `en`, `es`, `de`, `fr`, `pl`, `uk`, and `no`.
 - Public supported endpoints include `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, and the read-only book/category/localization lookups.
 - Protected supported endpoints use an authenticated browser session for `/api/account`, `/api/audit-logs`, and for state-changing book, category, and localization operations.
-- Interactive login bootstrap is available at `/oauth2/authorization/github` only when the optional `oauth` profile is active.
+- Interactive login bootstrap is provider-aware when the optional `oauth` profile is active:
+  - `/oauth2/authorization/{registrationId}` for direct provider entry points
+  - configured default-provider shortcut via `/oauth2/authorization/{defaultRegistrationId}` when `OAUTH_DEFAULT_PROVIDER` is set
+  - `/login` as the chooser page when multiple providers are configured without a default shortcut outside `prod`
 - Authenticated browser sessions are persisted through Spring Session JDBC in PostgreSQL.
 - CSRF remains disabled for browser-session writes as a deliberate demo tradeoff for reviewer-oriented workflows.
 - The machine-readable OpenAPI contract is available at `/v3/api-docs` and `/v3/api-docs.yaml`.

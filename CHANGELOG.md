@@ -10,6 +10,7 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 ### Changed
 - Introduced typed OAuth provider configuration under `app.security.oauth` with explicit provider type/default-provider handling and prod fail-fast validation for provider credentials, issuer requirements, and multi-provider default selection.
 - Replaced hard-coded GitHub login wiring with provider-aware client-registration bootstrapping and default-login resolution derived from configured provider registrations.
+- Updated OAuth-facing contract documentation, setup guidance, HTTP examples, and OpenAPI metadata to describe provider-aware `/oauth2/authorization/{registrationId}` login bootstrap semantics.
 
 ## [v1.3.0] - 2026-05-03
 
