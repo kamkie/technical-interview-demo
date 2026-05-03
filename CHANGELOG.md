@@ -7,6 +7,9 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Added
+- Added an explicit ADMIN-only operator inspection API at `GET /api/operator/surface` that combines recent audit history, runtime diagnostics, and operational status links, together with integration/REST Docs coverage, HTTP examples, and refreshed OpenAPI contract artifacts.
+
 ### Changed
 - Introduced typed OAuth provider configuration under `app.security.oauth` with explicit provider type/default-provider handling and prod fail-fast validation for provider credentials, issuer requirements, and multi-provider default selection.
 - Replaced hard-coded GitHub login wiring with provider-aware client-registration bootstrapping and default-login resolution derived from configured provider registrations.
@@ -18,6 +21,8 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 - Added a repo-owned PowerShell helper at `scripts/release/render-release-notes.ps1` so cumulative release-note rendering can be validated locally and reused by workflow automation.
 - Added Gradle-owned `applicationSbom`, `imageSbom`, and aggregate `sbom` tasks that generate CycloneDX SBOM outputs for the packaged boot jar and built container image under `build/reports/sbom/`, and wired CI/release workflows to publish those SBOM bundles as run artifacts.
 - Added stable `static-analysis-reports` artifact bundles in CI and release workflows so PMD plus SpotBugs/FindSecBugs reports remain downloadable from GitHub Actions even when verification fails.
+- Added typed `app.bootstrap.seed.demo-data` configuration to separate demo seed initialization from production-safe startup defaults, wired all startup seed initializers through that toggle, and documented the profile defaults (`local`/`test` enabled, `prod` disabled).
+- Documented vendor-neutral backup retention expectations and a reproducible restore drill aligned with migration-bearing release and rollback behavior.
 
 ## [v1.3.0] - 2026-05-03
 

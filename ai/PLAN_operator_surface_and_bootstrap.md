@@ -140,7 +140,15 @@
 - Backup guidance is only valuable if it matches the repo's actual Flyway and deployment posture; avoid generic checklist text that ignores migration-bearing releases.
 
 ## Validation Results
-- To be filled in during execution.
+- `.\gradlew.bat test --tests team.jit.technicalinterviewdemo.business.book.BookDataInitializerTests --tests team.jit.technicalinterviewdemo.business.category.CategoryDataInitializerTests --tests team.jit.technicalinterviewdemo.business.localization.seed.LocalizationDataInitializerTests`
+  - Initial attempt failed because Gradle was running on Java 11.
+  - Re-ran with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`; passed.
+- `.\gradlew.bat test --tests team.jit.technicalinterviewdemo.technical.operator.OperatorSurfaceApiIntegrationTests --tests team.jit.technicalinterviewdemo.technical.operator.OperatorSurfaceApiDocumentationTests --tests team.jit.technicalinterviewdemo.business.audit.AuditLogApiIntegrationTests --tests team.jit.technicalinterviewdemo.technical.info.TechnicalOverviewControllerIntegrationTests --tests team.jit.technicalinterviewdemo.technical.docs.OpenApiIntegrationTests`
+  - Re-ran with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`; passed.
+- `.\gradlew.bat refreshOpenApiBaseline`
+  - Re-ran with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`; passed and updated `src/test/resources/openapi/approved-openapi.json`.
+- `.\gradlew.bat build`
+  - Re-ran with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`; passed (tests, REST Docs, OpenAPI compatibility, static security scan, vulnerability scans, and docker build all succeeded).
 
 ## User Validation
 - Run one demo-style boot and one production-style boot and compare the seeded data behavior.

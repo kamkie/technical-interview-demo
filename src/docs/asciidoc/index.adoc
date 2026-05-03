@@ -14,7 +14,7 @@ The supported `1.x` contract keeps the simple overview endpoints, the CRUD-style
 
 == Contract Tiers
 
-- Supported `1.x` business and documentation contract: `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, `/api/books...`, `/api/categories...`, `/api/localizations...`, `/api/account...`, `/api/audit-logs`
+- Supported `1.x` business and documentation contract: `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, `/api/books...`, `/api/categories...`, `/api/localizations...`, `/api/account...`, `/api/audit-logs`, `/api/operator/surface`
 - Supported operational contract: `/actuator/health`, `/actuator/health/liveness`, `/actuator/health/readiness`, `/actuator/info`
 - Deployment-scoped technical surface: `/actuator/prometheus` is supported for trusted deployment scraping, but it is not part of the internet-public contract
 
@@ -54,6 +54,7 @@ The values below are loaded from `{build-info-path}` during the Asciidoctor buil
   - `/oauth2/authorization/{registrationId}` for direct provider entry points
   - configured default-provider shortcut via `/oauth2/authorization/{defaultRegistrationId}` when `OAUTH_DEFAULT_PROVIDER` is set
   - `/login` as the chooser page when multiple providers are configured without a default shortcut outside `prod`
+- The operator inspection surface at `/api/operator/surface` requires an authenticated session and the `ADMIN` role.
 - Authenticated browser sessions are persisted through Spring Session JDBC in PostgreSQL.
 - CSRF remains disabled for browser-session writes as a deliberate demo tradeoff for reviewer-oriented workflows.
 - The machine-readable OpenAPI contract is available at `/v3/api-docs` and `/v3/api-docs.yaml`.
@@ -69,6 +70,7 @@ The values below are loaded from `{build-info-path}` during the Asciidoctor buil
 - xref:category-controller.adoc[CategoryController API]
 - xref:localization-controller.adoc[LocalizationController API]
 - xref:audit-log-controller.adoc[AuditLogController API]
+- xref:operator-surface-controller.adoc[OperatorSurfaceController API]
 - xref:technical-endpoints.adoc[Technical Endpoints]
 
 == Build And Runtime Notes

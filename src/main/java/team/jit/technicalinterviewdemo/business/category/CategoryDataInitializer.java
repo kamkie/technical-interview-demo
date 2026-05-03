@@ -7,6 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import team.jit.technicalinterviewdemo.technical.bootstrap.BootstrapSettingsProperties;
 
 @Slf4j
 @Configuration
@@ -14,8 +15,15 @@ public class CategoryDataInitializer {
 
     @Bean
     @Order(10)
-    CommandLineRunner seedCategories(CategoryRepository categoryRepository) {
+    CommandLineRunner seedCategories(
+            CategoryRepository categoryRepository,
+            BootstrapSettingsProperties bootstrapSettingsProperties
+    ) {
         return args -> {
+            if (!bootstrapSettingsProperties.getSeed().isDemoData()) {
+                log.info("Skipping demo category bootstrap because app.bootstrap.seed.demo-data is disabled.");
+                return;
+            }
             for (String categoryName : defaultCategoryNames()) {
                 if (categoryRepository.existsByNameIgnoreCase(categoryName)) {
                     continue;

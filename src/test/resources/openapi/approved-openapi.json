@@ -15,6 +15,9 @@
     "name" : "Account",
     "description" : "Authenticated account endpoints."
   }, {
+    "name" : "Operator",
+    "description" : "ADMIN-only operational inspection surface."
+  }, {
     "name" : "Audit Logs",
     "description" : "ADMIN-only audit log review endpoint."
   }, {
@@ -736,6 +739,49 @@
         }
       }
     },
+    "/api/operator/surface" : {
+      "get" : {
+        "tags" : [ "Operator" ],
+        "summary" : "Get operator inspection surface",
+        "description" : "Requires an authenticated session with the ADMIN role and returns audit, runtime, and operational visibility in one payload.",
+        "operationId" : "getSurface",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/OperatorSurfaceResponse"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Missing or invalid authenticated session.",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiProblemResponse"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Authenticated user does not have the ADMIN role.",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiProblemResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "sessionCookie" : [ ]
+        } ]
+      }
+    },
     "/api/audit-logs" : {
       "get" : {
         "tags" : [ "Audit Logs" ],
@@ -1234,203 +1280,6 @@
         },
         "description" : "Payload for creating a new book."
       },
-      "PageLocalizationResponse" : {
-        "type" : "object",
-        "properties" : {
-          "totalElements" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
-          "totalPages" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "sort" : {
-            "$ref" : "#/components/schemas/SortObject"
-          },
-          "pageable" : {
-            "$ref" : "#/components/schemas/PageableObject"
-          },
-          "size" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "content" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/LocalizationResponse"
-            }
-          },
-          "number" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "last" : {
-            "type" : "boolean"
-          },
-          "first" : {
-            "type" : "boolean"
-          },
-          "numberOfElements" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "empty" : {
-            "type" : "boolean"
-          }
-        }
-      },
-      "PageableObject" : {
-        "type" : "object",
-        "properties" : {
-          "sort" : {
-            "$ref" : "#/components/schemas/SortObject"
-          },
-          "paged" : {
-            "type" : "boolean"
-          },
-          "unpaged" : {
-            "type" : "boolean"
-          },
-          "pageNumber" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "pageSize" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "offset" : {
-            "type" : "integer",
-            "format" : "int64"
-          }
-        }
-      },
-      "SortObject" : {
-        "type" : "object",
-        "properties" : {
-          "sorted" : {
-            "type" : "boolean"
-          },
-          "unsorted" : {
-            "type" : "boolean"
-          },
-          "empty" : {
-            "type" : "boolean"
-          }
-        }
-      },
-      "PageBook" : {
-        "type" : "object",
-        "properties" : {
-          "totalElements" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
-          "totalPages" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "sort" : {
-            "$ref" : "#/components/schemas/SortObject"
-          },
-          "pageable" : {
-            "$ref" : "#/components/schemas/PageableObject"
-          },
-          "size" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "content" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/Book"
-            }
-          },
-          "number" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "last" : {
-            "type" : "boolean"
-          },
-          "first" : {
-            "type" : "boolean"
-          },
-          "numberOfElements" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "empty" : {
-            "type" : "boolean"
-          }
-        }
-      },
-      "AuditLogPageResponse" : {
-        "type" : "object",
-        "properties" : {
-          "content" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/AuditLogResponse"
-            }
-          },
-          "pageable" : {
-            "type" : "object",
-            "description" : "Pagination request metadata."
-          },
-          "sort" : {
-            "type" : "object",
-            "description" : "Applied sort metadata."
-          },
-          "totalPages" : {
-            "type" : "integer",
-            "description" : "Total number of pages.",
-            "format" : "int32",
-            "example" : 1
-          },
-          "totalElements" : {
-            "type" : "integer",
-            "description" : "Total number of matching audit log entries.",
-            "format" : "int64",
-            "example" : 3
-          },
-          "last" : {
-            "type" : "boolean",
-            "description" : "Whether this page is the last page.",
-            "example" : true
-          },
-          "size" : {
-            "type" : "integer",
-            "description" : "Requested page size.",
-            "format" : "int32",
-            "example" : 20
-          },
-          "number" : {
-            "type" : "integer",
-            "description" : "Current zero-based page index.",
-            "format" : "int32",
-            "example" : 0
-          },
-          "numberOfElements" : {
-            "type" : "integer",
-            "description" : "Number of audit entries returned in the current page.",
-            "format" : "int32",
-            "example" : 3
-          },
-          "first" : {
-            "type" : "boolean",
-            "description" : "Whether this page is the first page.",
-            "example" : true
-          },
-          "empty" : {
-            "type" : "boolean",
-            "description" : "Whether the page content is empty.",
-            "example" : false
-          }
-        },
-        "description" : "Paginated audit log response."
-      },
       "AuditLogResponse" : {
         "type" : "object",
         "properties" : {
@@ -1573,6 +1422,95 @@
           }
         }
       },
+      "OperatorAuditSection" : {
+        "type" : "object",
+        "properties" : {
+          "auditLogEndpoint" : {
+            "type" : "string",
+            "description" : "Endpoint path for full audit log pagination.",
+            "example" : "/api/audit-logs"
+          },
+          "totalEntries" : {
+            "type" : "integer",
+            "description" : "Total number of audit log entries currently stored.",
+            "format" : "int64",
+            "example" : 42
+          },
+          "recentEntries" : {
+            "type" : "array",
+            "description" : "Most recent audit entries, newest first.",
+            "items" : {
+              "$ref" : "#/components/schemas/AuditLogResponse"
+            }
+          }
+        },
+        "description" : "Audit endpoint summary for operators."
+      },
+      "OperatorOperationalStatus" : {
+        "type" : "object",
+        "properties" : {
+          "actuatorHealthEndpoint" : {
+            "type" : "string",
+            "description" : "Endpoint path for actuator health.",
+            "example" : "/actuator/health"
+          },
+          "actuatorInfoEndpoint" : {
+            "type" : "string",
+            "description" : "Endpoint path for actuator info.",
+            "example" : "/actuator/info"
+          },
+          "actuatorPrometheusEndpoint" : {
+            "type" : "string",
+            "description" : "Endpoint path for deployment-scoped Prometheus scraping.",
+            "example" : "/actuator/prometheus"
+          },
+          "applicationHealthStatus" : {
+            "type" : "string",
+            "description" : "Current aggregated health status code.",
+            "example" : "UP"
+          },
+          "livenessState" : {
+            "type" : "string",
+            "description" : "Current Spring Boot liveness state.",
+            "example" : "CORRECT"
+          },
+          "readinessState" : {
+            "type" : "string",
+            "description" : "Current Spring Boot readiness state.",
+            "example" : "ACCEPTING_TRAFFIC"
+          }
+        },
+        "description" : "Operational status links and current readiness state."
+      },
+      "OperatorRuntimeDiagnostics" : {
+        "type" : "object",
+        "properties" : {
+          "technicalOverviewEndpoint" : {
+            "type" : "string",
+            "description" : "Endpoint path for the full technical overview.",
+            "example" : "/"
+          },
+          "technicalOverview" : {
+            "$ref" : "#/components/schemas/TechnicalOverviewResponse"
+          }
+        },
+        "description" : "Runtime diagnostics available to operators."
+      },
+      "OperatorSurfaceResponse" : {
+        "type" : "object",
+        "properties" : {
+          "audit" : {
+            "$ref" : "#/components/schemas/OperatorAuditSection"
+          },
+          "runtime" : {
+            "$ref" : "#/components/schemas/OperatorRuntimeDiagnostics"
+          },
+          "operations" : {
+            "$ref" : "#/components/schemas/OperatorOperationalStatus"
+          }
+        },
+        "description" : "ADMIN-only operational inspection surface."
+      },
       "PaginationDetails" : {
         "type" : "object",
         "properties" : {
@@ -1672,7 +1610,205 @@
           "configuration" : {
             "$ref" : "#/components/schemas/ConfigurationDetails"
           }
+        },
+        "description" : "Current technical overview payload."
+      },
+      "PageLocalizationResponse" : {
+        "type" : "object",
+        "properties" : {
+          "totalElements" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "totalPages" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "size" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "content" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/LocalizationResponse"
+            }
+          },
+          "number" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "first" : {
+            "type" : "boolean"
+          },
+          "last" : {
+            "type" : "boolean"
+          },
+          "numberOfElements" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "pageable" : {
+            "$ref" : "#/components/schemas/PageableObject"
+          },
+          "sort" : {
+            "$ref" : "#/components/schemas/SortObject"
+          },
+          "empty" : {
+            "type" : "boolean"
+          }
         }
+      },
+      "PageableObject" : {
+        "type" : "object",
+        "properties" : {
+          "offset" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "pageNumber" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "pageSize" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "unpaged" : {
+            "type" : "boolean"
+          },
+          "paged" : {
+            "type" : "boolean"
+          },
+          "sort" : {
+            "$ref" : "#/components/schemas/SortObject"
+          }
+        }
+      },
+      "SortObject" : {
+        "type" : "object",
+        "properties" : {
+          "empty" : {
+            "type" : "boolean"
+          },
+          "unsorted" : {
+            "type" : "boolean"
+          },
+          "sorted" : {
+            "type" : "boolean"
+          }
+        }
+      },
+      "PageBook" : {
+        "type" : "object",
+        "properties" : {
+          "totalElements" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "totalPages" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "size" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "content" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Book"
+            }
+          },
+          "number" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "first" : {
+            "type" : "boolean"
+          },
+          "last" : {
+            "type" : "boolean"
+          },
+          "numberOfElements" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "pageable" : {
+            "$ref" : "#/components/schemas/PageableObject"
+          },
+          "sort" : {
+            "$ref" : "#/components/schemas/SortObject"
+          },
+          "empty" : {
+            "type" : "boolean"
+          }
+        }
+      },
+      "AuditLogPageResponse" : {
+        "type" : "object",
+        "properties" : {
+          "content" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/AuditLogResponse"
+            }
+          },
+          "pageable" : {
+            "type" : "object",
+            "description" : "Pagination request metadata."
+          },
+          "sort" : {
+            "type" : "object",
+            "description" : "Applied sort metadata."
+          },
+          "totalPages" : {
+            "type" : "integer",
+            "description" : "Total number of pages.",
+            "format" : "int32",
+            "example" : 1
+          },
+          "totalElements" : {
+            "type" : "integer",
+            "description" : "Total number of matching audit log entries.",
+            "format" : "int64",
+            "example" : 3
+          },
+          "last" : {
+            "type" : "boolean",
+            "description" : "Whether this page is the last page.",
+            "example" : true
+          },
+          "size" : {
+            "type" : "integer",
+            "description" : "Requested page size.",
+            "format" : "int32",
+            "example" : 20
+          },
+          "number" : {
+            "type" : "integer",
+            "description" : "Current zero-based page index.",
+            "format" : "int32",
+            "example" : 0
+          },
+          "numberOfElements" : {
+            "type" : "integer",
+            "description" : "Number of audit entries returned in the current page.",
+            "format" : "int32",
+            "example" : 3
+          },
+          "first" : {
+            "type" : "boolean",
+            "description" : "Whether this page is the first page.",
+            "example" : true
+          },
+          "empty" : {
+            "type" : "boolean",
+            "description" : "Whether the page content is empty.",
+            "example" : false
+          }
+        },
+        "description" : "Paginated audit log response."
       }
     },
     "securitySchemes" : {

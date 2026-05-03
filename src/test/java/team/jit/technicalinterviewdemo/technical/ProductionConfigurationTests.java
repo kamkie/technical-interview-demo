@@ -19,6 +19,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import team.jit.technicalinterviewdemo.TechnicalInterviewDemoApplication;
+import team.jit.technicalinterviewdemo.technical.bootstrap.BootstrapSettingsProperties;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 import team.jit.technicalinterviewdemo.technical.security.SecuritySettingsProperties;
@@ -65,11 +66,13 @@ class ProductionConfigurationTests {
     void prodProfileExposesHardenedSessionSettings() {
         try (ConfigurableApplicationContext context = runProdApplication()) {
             SecuritySettingsProperties securitySettingsProperties = context.getBean(SecuritySettingsProperties.class);
+            BootstrapSettingsProperties bootstrapSettingsProperties = context.getBean(BootstrapSettingsProperties.class);
 
             assertThat(context.getEnvironment().getProperty("server.servlet.session.timeout")).isEqualTo("15m");
             assertThat(securitySettingsProperties.getSession().isCookieSecure()).isTrue();
             assertThat(securitySettingsProperties.getSession().getMaxConcurrentSessions()).isEqualTo(1);
             assertThat(securitySettingsProperties.getSession().isMaxSessionsPreventsLogin()).isTrue();
+            assertThat(bootstrapSettingsProperties.getSeed().isDemoData()).isFalse();
         }
     }
 

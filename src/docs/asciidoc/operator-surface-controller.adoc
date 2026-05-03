@@ -1,0 +1,40 @@
+= OperatorSurfaceController API
+:toc:
+:toclevels: 2
+:sectanchors:
+:source-highlighter: highlight.js
+
+xref:index.adoc[Back to API overview]
+
+This page documents the explicit ADMIN-only operator inspection surface exposed by `OperatorSurfaceController`.
+
+== `GET /api/operator/surface`
+
+Returns one ADMIN-only payload that combines recent audit history, runtime diagnostics, and operational status links without requiring direct database access.
+
+include::{snippets}/operator/get-operator-surface/curl-request.adoc[]
+include::{snippets}/operator/get-operator-surface/http-request.adoc[]
+include::{snippets}/operator/get-operator-surface/http-response.adoc[]
+include::{snippets}/operator/get-operator-surface/response-headers.adoc[]
+include::{snippets}/operator/get-operator-surface/response-fields.adoc[]
+
+== Error Response Examples
+
+=== `GET /api/operator/surface` unauthorized
+
+Example response when the request does not include an authenticated session.
+
+include::{snippets}/errors/get-operator-surface-unauthorized/curl-request.adoc[]
+include::{snippets}/errors/get-operator-surface-unauthorized/http-request.adoc[]
+include::{snippets}/errors/get-operator-surface-unauthorized/http-response.adoc[]
+include::{snippets}/errors/get-operator-surface-unauthorized/response-fields.adoc[]
+
+=== `GET /api/operator/surface` forbidden
+
+Example response when the session is authenticated but the user does not have the `ADMIN` role.
+
+include::{snippets}/errors/get-operator-surface-forbidden/curl-request.adoc[]
+include::{snippets}/errors/get-operator-surface-forbidden/http-request.adoc[]
+include::{snippets}/errors/get-operator-surface-forbidden/http-response.adoc[]
+include::{snippets}/errors/get-operator-surface-forbidden/response-headers.adoc[]
+include::{snippets}/errors/get-operator-surface-forbidden/response-fields.adoc[]

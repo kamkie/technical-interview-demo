@@ -19,6 +19,7 @@ Current scope:
 - `Localization` API under `/api/localizations` with CRUD plus collection filtering by `messageKey` and `language`
 - authenticated account API under `/api/account`
 - ADMIN audit review API at `/api/audit-logs`
+- configuration-driven demo data bootstrap with production-safe defaults
 - OAuth 2.0 protected write endpoints with JDBC-backed HTTP sessions
 - append-only audit logging for state-changing `Book` and `Localization` operations plus admin review access
 - generated REST Docs and an approved OpenAPI baseline
@@ -89,6 +90,7 @@ Stable `1.x` contract:
   - `GET /api/account`
   - `PUT /api/account/language`
   - `GET /api/audit-logs`
+  - `GET /api/operator/surface`
 - supported operational endpoints:
   - `GET /actuator/info`
   - `GET /actuator/health`
@@ -110,6 +112,9 @@ Supported technical bootstrap:
 - `GET /oauth2/authorization/{registrationId}`
   - interactive login entry point when the optional `oauth` profile is active
   - resolved from configured providers (`github`, `oidc`, or additional configured registration ids)
+- `APP_BOOTSTRAP_SEED_DEMO_DATA`
+  - controls startup seeding for demo categories, books, and localization messages
+  - defaults to `true` in `local` and `test`, defaults to `false` in `prod`
 
 Security summary:
 
@@ -117,10 +122,13 @@ Security summary:
 - authenticated session required: account endpoints, `GET /api/audit-logs`, and all write endpoints
 - `ADMIN` role required: audit log review, category create/update/delete, and localization create/update/delete
 - interactive login starts at `GET /oauth2/authorization/{registrationId}` when the `oauth` profile is active
+- `ADMIN` role required: audit log review, operator surface access, category create/update/delete, and localization create/update/delete
+- interactive login starts at `GET /oauth2/authorization/{registrationId}` when the `oauth` profile is active
 
 Contract notes:
 
 - `GET /api/audit-logs` is paginated and supports optional exact `targetType`, `action`, and `actorLogin` filters
+- `GET /api/operator/surface` returns one ADMIN-only payload that combines recent audit history, runtime diagnostics, and operational status links
 - `DELETE /api/categories/{id}` fails with a localized conflict if the category is still assigned to one or more books
 - `GET /api/books` is paginated and supports text, category, and year filters
 - `GET /api/localizations` is paginated and supports optional exact `messageKey` and `language` filters
@@ -215,6 +223,7 @@ Frozen `1.0` production posture:
 - OAuth login remains opt-in through the `oauth` profile and requires at least one configured provider (`github` or `oidc`) with client credentials, with `OIDC_ISSUER_URI` required for OIDC
 - `OAUTH_DEFAULT_PROVIDER` controls the default login bootstrap path when multiple providers are configured
 - `ADMIN_LOGINS` remains the environment-driven admin bootstrap mechanism and is validated as a comma-separated list of external login identifiers when present
+- demo data bootstrap remains disabled by default in `prod` through `APP_BOOTSTRAP_SEED_DEMO_DATA=false`
 - `SESSION_COOKIE_SECURE` remains optional with a secure-by-default value of `true`
 - `prod` enforces a 15 minute session timeout, one active session per login, and login rejection when that session cap is already reached
 - browser-session write flows keep CSRF disabled as a deliberate demo tradeoff for reviewer-friendly session-based API exercise flows
@@ -225,6 +234,25 @@ Trusted deployment topology assumption:
 
 - health, readiness, and info endpoints are safe to expose as operational endpoints
 - Prometheus scraping is expected to happen from trusted internal infrastructure such as cluster-local monitoring, not from arbitrary public clients
+
+## Operational Data Recovery Expectations
+
+The repository does not implement backup orchestration, but operating a production-style deployment of this app requires an explicit backup and restore posture:
+
+- create backup snapshots before each migration-bearing release rollout and on a regular schedule between releases
+- keep retention long enough to recover from delayed detection failures; minimum expectation is:
+  - last 7 daily backups
+  - last 4 weekly backups
+  - last known-good pre-release backup for each migration-bearing rollout still within your rollback window
+- test restore viability routinely, not only backup creation success
+
+Restore-drill baseline for this repository:
+
+1. restore a recent backup to a separate PostgreSQL instance
+2. start the current tagged app image against that restored instance
+3. confirm `GET /actuator/health/readiness` is `UP` and `GET /actuator/info` returns build metadata
+4. verify core runtime tables are present and queryable (`flyway_schema_history`, `books`, `categories`, `localization_messages`, `audit_logs`, `spring_session`)
+5. run one authenticated request (`GET /api/account`) and one operator request (`GET /api/operator/surface`) to confirm session-backed and operational visibility paths still work after restore
 
 Use the raw manifests under `k8s/` when you want explicit repo-owned YAML. Use the Helm chart under `helm/technical-interview-demo` when you want the same deployment contract packaged behind values files.
 
