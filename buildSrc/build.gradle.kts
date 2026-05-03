@@ -9,7 +9,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.20.1")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.3")
 }
 
 gradlePlugin {

@@ -19,7 +19,7 @@ plugins {
     id("technical-interview-demo.external-testing-conventions")
     id("io.gatling.gradle") version "3.15.0.1"
     id("com.gorylenko.gradle-git-properties") version "2.5.7"
-    id("com.github.spotbugs") version "6.4.8"
+    id("com.github.spotbugs") version "6.5.4"
     id("com.diffplug.spotless") version "8.4.0"
     id("net.ltgt.errorprone") version "5.1.0"
     id("org.springframework.boot") version "4.0.6"
