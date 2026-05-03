@@ -1,5 +1,11 @@
 # Plan: Post-1.0 Operational Readiness
 
+## Lifecycle
+| Field | Value |
+| --- | --- |
+| Phase | Closed |
+| Status | Released |
+
 ## Summary
 - Add the missing post-`1.0` operator and maintainer guidance that `ROADMAP.md` still tracks: a concrete release checklist, a documented definition of healthy runtime behavior, deployment-oriented troubleshooting, and an upgrade/rollback runbook.
 - Keep the work documentation-first and workflow-aligned. The repository already has release automation, external smoke validation, health/readiness endpoints, metrics, audit logging, Flyway migrations, and session persistence; the gap is that those pieces are not yet documented as one coherent post-`1.0` operating model.

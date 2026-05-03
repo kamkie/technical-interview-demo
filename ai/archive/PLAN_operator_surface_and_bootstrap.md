@@ -1,5 +1,11 @@
 # Plan: Operator Surface And Bootstrap
 
+## Lifecycle
+| Field | Value |
+| --- | --- |
+| Phase | Closed |
+| Status | Released |
+
 ## Summary
 - Complete the checked operational-data roadmap work that shares bootstrap behavior, operator-facing runtime visibility, and deployment guidance ownership.
 - Keep backup/restore expectations, the explicit admin or operator surface, and seed-data/bootstrap separation in one plan because they all change the same operational contract and likely touch the same docs, runtime configuration, and admin-facing API surface.

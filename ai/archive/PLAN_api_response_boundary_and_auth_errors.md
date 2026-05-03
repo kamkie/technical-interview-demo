@@ -1,5 +1,11 @@
 # Plan: Stabilize API Response Boundaries And Auth Error Payloads
 
+## Lifecycle
+| Field | Value |
+| --- | --- |
+| Phase | Closed |
+| Status | Released |
+
 ## Summary
 - Replace direct `Book` and `Category` entity responses in public controllers with explicit API response models while preserving the current JSON payload shape.
 - Standardize API `401` and security-originated `403` responses so they use the same localized `ProblemDetail` style already used for other API errors.

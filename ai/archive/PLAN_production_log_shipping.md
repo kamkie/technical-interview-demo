@@ -1,5 +1,11 @@
 # Plan: Production Log Shipping
 
+## Lifecycle
+| Field | Value |
+| --- | --- |
+| Phase | Closed |
+| Status | Released |
+
 ## Summary
 - Complete the checked production-logging roadmap work by switching the production profile to structured JSON Lines output and adding repo-owned log-forwarding guidance or configuration that preserves multiline Java exceptions.
 - Keep this as one plan because both checked items share the same runtime logging contract, deployment examples, and operator documentation.

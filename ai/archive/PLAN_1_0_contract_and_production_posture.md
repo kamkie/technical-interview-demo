@@ -1,5 +1,11 @@
 # Plan: 1.0 Contract And Production Posture
 
+## Lifecycle
+| Field | Value |
+| --- | --- |
+| Phase | Closed |
+| Status | Released |
+
 ## Summary
 - Define `1.0` as a stable interview-demo reference application, not a production-ready starter template.
 - Freeze the `1.x` compatibility surface by explicitly separating supported contract endpoints from deployment-scoped technical endpoints, while keeping room to mark any truly non-contract convenience endpoints explicitly if they still exist after review.

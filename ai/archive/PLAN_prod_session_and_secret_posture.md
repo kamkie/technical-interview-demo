@@ -1,5 +1,11 @@
 # Plan: Production Session And Secret Posture
 
+## Lifecycle
+| Field | Value |
+| --- | --- |
+| Phase | Closed |
+| Status | Released |
+
 ## Summary
 - Tighten the selected production-hardening roadmap work around session policy, secret and credential handling, and startup validation.
 - Keep the existing demo-sized session-backed OAuth posture intact while making the production expectations explicit, validated, and test-covered.

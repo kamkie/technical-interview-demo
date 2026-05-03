@@ -7,6 +7,42 @@ Do not use `ROADMAP.md` as a substitute for a real plan. `ROADMAP.md` is the roa
 Use `ai/EXECUTION.md` when the user asks to implement an existing plan.
 Use `ai/DOCUMENTATION.md` for artifact ownership and `ai/TESTING.md` for validation scope instead of restating those rules in the plan.
 
+## Lifecycle Metadata
+
+Every `ai/PLAN_*.md` file should start with a small `Lifecycle` section immediately below the title.
+Use a compact table so the current state is obvious at a glance:
+
+```md
+## Lifecycle
+| Field | Value |
+| --- | --- |
+| Phase | Planning |
+| Status | Draft |
+```
+
+Prefer this controlled vocabulary unless the user explicitly asks for another scheme.
+
+Recommended `Phase` values:
+
+- `Discovery`: repo research, framing, or pre-planning intake is still underway
+- `Planning`: the plan is being written, reviewed, or finalized
+- `Implementation`: approved work is actively being built
+- `Integration`: implementation is done and the work is being validated, merged, or prepared for release
+- `Closed`: no further active execution is expected for this plan
+
+Recommended `Status` values:
+
+- `Draft`: the plan is still being shaped
+- `Needs Input`: unanswered user questions still block a decision-complete plan
+- `Ready`: the plan is decision-complete and ready for execution
+- `In Progress`: implementation or integration work is actively happening
+- `Blocked`: execution cannot continue until an external blocker is resolved
+- `Done`: implementation and validation are complete, but release or archive cleanup is still pending
+- `Released`: the completed plan has shipped and been cleaned up
+
+Use `Phase` for the coarse lifecycle stage and `Status` for the immediate execution state.
+Keep the lifecycle block current as the plan moves from planning through implementation, integration, and eventual closure.
+
 ## Planning Goals
 
 A good plan for this repository is:
@@ -119,6 +155,12 @@ Use this structure:
 ```md
 # Plan: <title>
 
+## Lifecycle
+| Field | Value |
+| --- | --- |
+| Phase | Planning |
+| Status | Draft |
+
 ## Summary
 - What will change
 - Why it matters
@@ -190,6 +232,7 @@ Use this structure:
 Good plans in this repository usually:
 
 - start from tests and contract docs instead of starting from controllers
+- include a simple lifecycle block that makes the current phase and execution status obvious
 - name exact files or packages instead of vague areas
 - distinguish public contract work from internal cleanup
 - make material requirement gaps explicit instead of silently guessing
@@ -256,6 +299,7 @@ Keep `ai/PLAN.md` focused on plan quality and handoff completeness rather than r
 
 Before presenting a plan to the user, verify that:
 
+- the lifecycle block is present near the top and uses a clear phase/status pair
 - the plan is self-contained
 - the plan names the governing specs
 - the plan separates scope from non-goals

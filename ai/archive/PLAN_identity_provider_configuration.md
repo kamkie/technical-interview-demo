@@ -1,5 +1,11 @@
 # Plan: Identity Provider Configuration
 
+## Lifecycle
+| Field | Value |
+| --- | --- |
+| Phase | Closed |
+| Status | Released |
+
 ## Summary
 - Complete the checked identity-hardening roadmap item by moving the app beyond a single optional GitHub OAuth provider toward an explicit provider and issuer configuration model that still fits the current session-backed sample-app posture.
 - Keep the current browser-session and Spring Session JDBC flow intact while making provider selection, configuration, and startup validation explicit and production-reviewable.

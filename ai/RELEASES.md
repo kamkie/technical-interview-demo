@@ -42,6 +42,7 @@ Confirm all of these before proceeding:
 - the approved implementation PR has already been merged onto `main`, or the user explicitly chose a no-PR flow and the reviewed change set is already on `main`
 - any work done in a branch or worktree has already been integrated onto `main`
 - local `main` is synced to the release candidate state
+- the target plan's `Lifecycle` section still matches the release-candidate state
 - the target plan's `Validation Results` reflects what actually ran
 - the required validation from `ai/TESTING.md` passed for the release candidate
 - required contract and maintainer artifacts are aligned through `ai/DOCUMENTATION.md`
@@ -96,7 +97,8 @@ Start from local `main` synced to the approved merged state.
 6. Keep the changelog human-readable and limited to released user-visible changes.
 7. Leave a fresh `## [Unreleased]` section at the top.
 8. Review the release diff to ensure it contains only intended implementation, spec, roadmap, release metadata, and temporary-changelog cleanup changes.
-9. Rerun `./gradlew.bat build` only if release-metadata edits could have invalidated generated artifacts or the earlier validation result is stale.
+9. Update the target plan's `Lifecycle` section to `Phase=Closed` and `Status=Released`.
+10. Rerun `./gradlew.bat build` only if release-metadata edits could have invalidated generated artifacts or the earlier validation result is stale.
 
 The release commit message should match the existing repository pattern:
 
@@ -126,6 +128,7 @@ Before reporting completion, verify:
 - `CHANGELOG.md` matches the chosen tag and date
 - no consumed `CHANGELOG_<topic>.md` files remain in the worktree after their entries were merged
 - `ROADMAP.md` no longer lists the released work as active
+- the target plan's `Lifecycle` section says `Phase=Closed` and `Status=Released`
 - the target plan's `Validation Results` still reflects the final verified state
 - the executed plan file has been moved to `ai/archive/` and any moved-path references were updated in the same change
 

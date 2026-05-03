@@ -1,5 +1,11 @@
 # Plan: Supply Chain Artifact Trust Hardening
 
+## Lifecycle
+| Field | Value |
+| --- | --- |
+| Phase | Closed |
+| Status | Released |
+
 ## Summary
 - Implement one coherent supply-chain hardening plan from these checked `ROADMAP.md` items:
   - `Add GitHub CodeQL scanning in GitHub Actions with repository-owned configuration, uploaded SARIF results, and explicit guidance for how it complements rather than silently duplicates the existing SpotBugs/FindSecBugs and PMD quality gates`

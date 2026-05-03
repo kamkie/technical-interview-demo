@@ -1,5 +1,11 @@
 # Plan: External Smoke And Benchmark Tasks
 
+## Lifecycle
+| Field | Value |
+| --- | --- |
+| Phase | Closed |
+| Status | Released |
+
 ## Summary
 - Add a dedicated `externalTest` source set whose smoke tests exercise supported endpoints through HTTP against an externally running application, while keeping those tests out of the standard `test`, `check`, and `build` lifecycle.
 - Replace the PowerShell-driven Gatling flow with Gradle tasks implemented in `buildSrc` that start the packaged Docker image plus PostgreSQL, run the selected benchmarks, and keep benchmark execution separate from the default build.

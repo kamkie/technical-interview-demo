@@ -1,5 +1,11 @@
 # Plan: Release Confidence Hardening
 
+## Lifecycle
+| Field | Value |
+| --- | --- |
+| Phase | Closed |
+| Status | Released |
+
 ## Summary
 - Harden the release path so it proves more of the already-supported packaged application surface before publish: generated docs assets, OpenAPI endpoints, and one authenticated session-backed account read in addition to the current unauthenticated smoke checks.
 - Publish the existing JaCoCo report to Codecov from CI and expose that signal in `README.md`, while simplifying release/helper-script usage so Gradle tasks and GitHub workflows remain the source of truth.

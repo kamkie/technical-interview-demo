@@ -1,5 +1,11 @@
 # Plan: AI Workflow And Instruction Hardening
 
+## Lifecycle
+| Field | Value |
+| --- | --- |
+| Phase | Closed |
+| Status | Released |
+
 ## Summary
 - Tighten the repository's AI guidance so execution, PR handling, release preparation, planning intake, and multi-agent coordination follow one explicit, non-conflicting workflow.
 - This work matters because the current AI instruction set is spread across multiple files, leaves some planning and review expectations implicit, and does not yet make the PR-before-release sequence or phase-specific agent roles explicit enough.

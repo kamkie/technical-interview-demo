@@ -1,5 +1,11 @@
 # Plan: Same-Site UI Session Contract
 
+## Lifecycle
+| Field | Value |
+| --- | --- |
+| Phase | Closed |
+| Status | Released |
+
 ## Summary
 - Define the post-`1.x` backend contract for a separate first-party UI that shares one public origin with this backend through reverse-proxy deployment.
 - Keep the current OAuth login bootstrap plus Spring Session JDBC model, but turn the scattered reviewer-oriented auth story into one explicit browser session contract the UI can depend on.

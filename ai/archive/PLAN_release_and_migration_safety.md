@@ -1,5 +1,11 @@
 # Plan: Release And Migration Safety Hardening
 
+## Lifecycle
+| Field | Value |
+| --- | --- |
+| Phase | Closed |
+| Status | Released |
+
 ## Summary
 - Implement one coherent release-safety plan from these checked `ROADMAP.md` items:
   - `Define a rolling-compatible Flyway rollout model, including expand-and-contract rules, mixed-version compatibility expectations, and schema-first versus app-first ordering by migration type`

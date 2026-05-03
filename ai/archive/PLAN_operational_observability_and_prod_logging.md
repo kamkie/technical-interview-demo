@@ -1,5 +1,11 @@
 # Plan: Operational Observability And Production Logging
 
+## Lifecycle
+| Field | Value |
+| --- | --- |
+| Phase | Closed |
+| Status | Released |
+
 ## Summary
 - Complete the selected operational-readiness roadmap work that clusters around monitoring coverage, deployment runtime expectations, synthetic checks, and production logging defaults.
 - Keep these checked items in one plan because they overlap on deployment assets, monitoring guidance, logging configuration, and the repository's operational documentation.

@@ -1,5 +1,11 @@
 # Plan: Post-`1.x` Reverse-Proxy Boundary And Header Hardening
 
+## Lifecycle
+| Field | Value |
+| --- | --- |
+| Phase | Planning |
+| Status | Ready |
+
 ## Summary
 - Make the first post-`1.x` security slice the reverse-proxy and browser-boundary foundation rather than CSRF enablement.
 - Turn the current documented same-site assumption into an explicit runtime and deployment contract where only `/api/**` is externally reachable through `waf -> frontend -> this application`, with proxy-aware request handling, OAuth entry/callback paths that stay under `/api/session/**`, and a fixed production security-header baseline.

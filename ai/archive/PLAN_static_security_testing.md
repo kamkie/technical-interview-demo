@@ -1,5 +1,11 @@
 # Plan: Static Security Testing
 
+## Lifecycle
+| Field | Value |
+| --- | --- |
+| Phase | Closed |
+| Status | Released |
+
 ## Summary
 - Complete the selected supply-chain hardening roadmap work by adding repo-owned static application security testing on top of the already implemented dependency and image vulnerability scanning.
 - Keep the existing Trivy-based scanning contract and explicit exception review model, then add a code-focused security signal that fits the Gradle and CI workflow.

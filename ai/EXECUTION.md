@@ -50,6 +50,7 @@ Before writing code or docs:
 4. Follow `ai/CODE_STYLE.md` for source or build-file edits.
 5. Keep contract and maintainer artifacts aligned through `ai/DOCUMENTATION.md`.
 6. Keep execution state current as work lands:
+   - update the plan's `Lifecycle` section so `Phase` and `Status` still reflect reality
    - update `CHANGELOG.md` under `## [Unreleased]` after each completed plan task or milestone, unless `ai/WORKFLOW.md` replaces direct changelog edits with worker-owned temporary artifacts
    - create a normal non-interactive commit after each completed plan task or milestone
    - update the plan's `Validation Results` section with what actually ran and what happened
@@ -65,6 +66,7 @@ When the user asks for only one milestone:
 - implement only the named milestone
 - preserve the remaining plan structure for later execution
 - do not start later milestones or cleanup implicitly
+- update the plan's `Lifecycle` section only as far as the completed milestone justifies
 - record only the validation actually run for that milestone in `Validation Results`
 - do not prepare or cut a release
 - if the milestone is being executed in a git worktree, push the finished branch and open the PR after local validation; otherwise do not push or open a PR unless the user explicitly asked for that remote handoff
@@ -82,6 +84,7 @@ When the user asks for only one milestone:
 Execution work is complete when:
 
 - the targeted plan scope is implemented
+- the target plan's `Lifecycle` section reflects the final non-release execution state
 - required specs and documentation artifacts are aligned
 - the target plan's `Validation Results` reflects actual execution
 - unreleased history is recorded in the correct changelog artifact for the execution mode in use

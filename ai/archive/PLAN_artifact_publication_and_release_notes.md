@@ -1,5 +1,11 @@
 # Plan: Artifact Publication And Release Notes
 
+## Lifecycle
+| Field | Value |
+| --- | --- |
+| Phase | Closed |
+| Status | Released |
+
 ## Summary
 - Complete the checked supply-chain and release-governance roadmap work that shares build, workflow, and release-artifact ownership.
 - Keep SBOM generation, stable static-analysis artifact publication, and GitHub Release note policy in one plan because they all change the same Gradle and GitHub Actions release surfaces.

@@ -1,5 +1,11 @@
 # Plan: Demo API Usability Improvements
 
+## Lifecycle
+| Field | Value |
+| --- | --- |
+| Phase | Closed |
+| Status | Released |
+
 ## Summary
 - Add additive, ADMIN-only usability capabilities without breaking any existing endpoint or payload: a read-only audit log review API and full category maintenance semantics.
 - This work matters because audit history is currently only reviewable through the database or integration tests, and category management is create-only even though books already depend on category assignments.

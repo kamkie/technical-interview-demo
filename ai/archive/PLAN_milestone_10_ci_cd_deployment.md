@@ -1,5 +1,11 @@
 # Plan: Milestone 10 CI/CD And Deployment
 
+## Lifecycle
+| Field | Value |
+| --- | --- |
+| Phase | Closed |
+| Status | Released |
+
 ## Summary
 - Add a complete but demo-sized delivery path for this application: CI validation, container publishing, Kubernetes deployment assets, a Helm chart, and monitoring/alerting setup.
 - Keep the work vendor-neutral at the deployment layer while choosing one concrete CI/CD platform so the repository is executable rather than aspirational.

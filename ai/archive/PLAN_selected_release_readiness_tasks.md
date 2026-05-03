@@ -1,5 +1,11 @@
 # Plan: Selected Release-Readiness Tasks
 
+## Lifecycle
+| Field | Value |
+| --- | --- |
+| Phase | Closed |
+| Status | Released |
+
 ## Summary
 - Remove permissive `prod` datasource defaults so production-style startup fails fast when required database credentials are missing, while keeping optional OAuth secrets optional unless the `oauth` profile is active.
 - Enable Dependabot in a way that fits the existing GitHub Actions `CI` and tag-driven `Release` workflows instead of creating a parallel dependency-maintenance path.
