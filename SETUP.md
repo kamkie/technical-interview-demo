@@ -69,6 +69,7 @@ Variables you are most likely to need:
 - `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`, and `OIDC_ISSUER_URI` for the built-in issuer-driven OIDC provider when enabling `oauth`
 - `OAUTH_DEFAULT_PROVIDER` when more than one OAuth provider is configured and you want a default login bootstrap path
 - `ADMIN_LOGINS` when you want one or more external logins to receive the persisted `ADMIN` role
+- `APP_BOOTSTRAP_SEED_DEMO_DATA` when you want to override demo-data seeding for categories, books, and localization messages
 - `SESSION_COOKIE_SECURE` when you want to override the `prod` profile session-cookie default of `true` for local HTTP testing or a specific deployment environment
 
 ## Deployment Contract
@@ -80,6 +81,7 @@ The `1.0` line is a stable interview-demo reference app. The checked-in deployme
 - browser sessions use secure cookies by default through `SESSION_COOKIE_SECURE=true`
 - OAuth stays opt-in through the `oauth` profile; bare `prod` does not require identity-provider credentials
 - admin bootstrap remains environment-driven through `ADMIN_LOGINS`
+- demo data bootstrap defaults to disabled in `prod` and enabled in `local` and `test` through `APP_BOOTSTRAP_SEED_DEMO_DATA`
 - CSRF remains disabled as a deliberate demo tradeoff for reviewer-oriented session workflows
 - `GET /actuator/prometheus` stays supported for trusted deployment scraping, but it is not part of the internet-public endpoint contract
 
@@ -106,6 +108,7 @@ Optional runtime environment variables:
 - `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`, and `OIDC_ISSUER_URI` for the built-in issuer-driven OIDC provider when the `oauth` profile is active
 - `OAUTH_DEFAULT_PROVIDER` to choose the default `/oauth2/authorization/{registrationId}` bootstrap path when multiple providers are configured
 - `ADMIN_LOGINS`
+- `APP_BOOTSTRAP_SEED_DEMO_DATA` when you need to opt in or out of demo-data seeding outside the profile defaults
 
 CI and release workflow expectations:
 

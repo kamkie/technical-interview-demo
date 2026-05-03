@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import team.jit.technicalinterviewdemo.business.category.Category;
 import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
+import team.jit.technicalinterviewdemo.technical.bootstrap.BootstrapSettingsProperties;
 
 @Slf4j
 @Configuration
@@ -17,8 +18,16 @@ public class BookDataInitializer {
 
     @Bean
     @Order(20)
-    CommandLineRunner seedBooks(BookRepository bookRepository, CategoryRepository categoryRepository) {
+    CommandLineRunner seedBooks(
+            BookRepository bookRepository,
+            CategoryRepository categoryRepository,
+            BootstrapSettingsProperties bootstrapSettingsProperties
+    ) {
         return args -> {
+            if (!bootstrapSettingsProperties.getSeed().isDemoData()) {
+                log.info("Skipping demo book bootstrap because app.bootstrap.seed.demo-data is disabled.");
+                return;
+            }
             if (bookRepository.count() > 0) {
                 return;
             }

@@ -19,6 +19,7 @@ Current scope:
 - `Localization` API under `/api/localizations` with CRUD plus collection filtering by `messageKey` and `language`
 - authenticated account API under `/api/account`
 - ADMIN audit review API at `/api/audit-logs`
+- configuration-driven demo data bootstrap with production-safe defaults
 - OAuth 2.0 protected write endpoints with JDBC-backed HTTP sessions
 - append-only audit logging for state-changing `Book` and `Localization` operations plus admin review access
 - generated REST Docs and an approved OpenAPI baseline
@@ -110,6 +111,9 @@ Supported technical bootstrap:
 - `GET /oauth2/authorization/{registrationId}`
   - interactive login entry point when the optional `oauth` profile is active
   - resolved from configured providers (`github`, `oidc`, or additional configured registration ids)
+- `APP_BOOTSTRAP_SEED_DEMO_DATA`
+  - controls startup seeding for demo categories, books, and localization messages
+  - defaults to `true` in `local` and `test`, defaults to `false` in `prod`
 
 Security summary:
 
@@ -215,6 +219,7 @@ Frozen `1.0` production posture:
 - OAuth login remains opt-in through the `oauth` profile and requires at least one configured provider (`github` or `oidc`) with client credentials, with `OIDC_ISSUER_URI` required for OIDC
 - `OAUTH_DEFAULT_PROVIDER` controls the default login bootstrap path when multiple providers are configured
 - `ADMIN_LOGINS` remains the environment-driven admin bootstrap mechanism and is validated as a comma-separated list of external login identifiers when present
+- demo data bootstrap remains disabled by default in `prod` through `APP_BOOTSTRAP_SEED_DEMO_DATA=false`
 - `SESSION_COOKIE_SECURE` remains optional with a secure-by-default value of `true`
 - `prod` enforces a 15 minute session timeout, one active session per login, and login rejection when that session cap is already reached
 - browser-session write flows keep CSRF disabled as a deliberate demo tradeoff for reviewer-friendly session-based API exercise flows
