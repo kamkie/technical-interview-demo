@@ -30,14 +30,12 @@ No unrefined tasks currently.
 ## Current Priorities
 
 1. Replace the current reviewer-oriented browser write posture with production-grade same-site protections and explicit reverse-proxy/public-origin assumptions for the separate first-party UI.
-2. Close the remaining rolling-release, restore-verification, and pre-promotion deployment gaps around migration compatibility and deployment checks.
 
 ## Locked Framing Decisions
 
 - Post-`1.x` production-ready work keeps browser-oriented auth by adding a first-party UI instead of switching this repo to a stateless token-only contract.
 - That first-party UI belongs in a separate repository; this repository remains the backend/API, auth, and operational contract.
 - The separate first-party UI is expected to share one public origin with the backend through reverse-proxy deployment, so browser flows should target a same-site contract rather than a cross-origin one.
-- Release hardening assumes rolling-compatible deployments, so migration and rollout work must preserve mixed-version compatibility during upgrades.
 
 ## Ordered Plan
 
@@ -53,12 +51,6 @@ Goal: evolve the repository into a production-ready backend sample that supports
 - [ ] Restrict technical endpoints such as Prometheus and non-public actuator surfaces behind production-ready network or auth expectations instead of relying on deployment convention alone
 - [ ] Add security headers and explicit HTTPS/proxy handling assumptions for real deployments
 - [ ] Add authenticated abuse protection such as request-rate limiting or similar controls for login bootstrap and write-heavy paths
-
-#### Make Releases And Migrations Safer
-- [x] Define a rolling-compatible Flyway rollout model, including expand-and-contract rules, mixed-version compatibility expectations, and schema-first versus app-first ordering by migration type
-- [x] Add automated backup-restore verification or at least a reproducible pre-release restore drill for migration-bearing releases
-- [x] Add deployment checks that validate the exact published image, runtime configuration, and mixed-version readiness before promotion beyond local or CI environments
-- [x] Document and validate a realistic disaster-recovery path instead of only a local rollback narrative
 
 ---
 

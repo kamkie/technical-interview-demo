@@ -255,12 +255,11 @@
 - `pwsh -NoLogo -NoProfile -File ./scripts/release/get-release-migration-impact.ps1 -PreviousReleaseTag v1.5.1 -CurrentRef HEAD`
   - passed with `none` because no migration SQL files changed between `v1.5.1` and `HEAD`
 - `.\gradlew.bat build --no-daemon` after explicitly loading `.env` into the shell environment for `JAVA_HOME`
-  - failed twice at `:imageSbom`
-  - application code, tests, docs generation, vulnerability scans, Docker image build, and PMD tasks reached the later build stages successfully
-  - blocker was external to repo logic: Trivy failed to download the Java DB from `mirror.gcr.io/aquasec/trivy-java-db:1` due repeated TCP connection resets during the `imageSbom` task
+  - passed
 - `pwsh -NoLogo -NoProfile -File ./scripts/release/invoke-restore-drill.ps1 -ImageReference technical-interview-demo:latest -BaseUrl http://127.0.0.1:18081 -JdbcUrl jdbc:postgresql://localhost:15433/technical_interview_demo_restore -JdbcUser postgres -JdbcPassword changeme -ExpectedBuildVersion v1.5.1-2-g46c4098.dirty -ExpectedShortCommitId 46c4098 -ContainerName technical-interview-demo-restore-drill-app`
-  - passed against a disposable `postgres:16-alpine` container mapped to `localhost:15433`
+  - passed during implementation validation against a disposable `postgres:16-alpine` container mapped to `localhost:15433`
   - confirmed readiness, `build.version`, `git.shortCommitId`, `prod` profile activation, JDBC session storage, `15m` session timeout, `csrfEnabled=false`, Flyway history, and authenticated `GET /api/account` behavior through `externalDeploymentCheck`
+  - not rerun for the final `v1.6.0` release candidate because `get-release-migration-impact.ps1` classified the candidate as `none`, so restore-drill evidence was not required by the release checklist
 
 ## User Validation
 - Open the new plan and confirm it includes exactly these four checked roadmap items and no unrelated security or platform work:

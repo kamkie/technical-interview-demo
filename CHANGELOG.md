@@ -7,6 +7,8 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+## [v1.6.0] - 2026-05-03
+
 ### Added
 - Added checked-in Flyway migration sidecar metadata guidance under `src/main/resources/db/migration/metadata/` plus a repo-owned `scripts/release/get-release-migration-impact.ps1` helper that classifies release candidates as `none`, `rolling-compatible`, or `restore-sensitive`.
 - Added a repo-owned `scripts/release/invoke-restore-drill.ps1` helper for running the tagged image against a restored PostgreSQL instance and reusing `externalDeploymentCheck` for restore validation.
