@@ -28,7 +28,7 @@ Add new rough tasks below.
 ## Current Priorities
 
 1. Lock the post-`1.x` client and authentication direction so the production-ready track stops carrying competing API-only versus first-party UI futures.
-2. Close the remaining production logging and CI report-visibility gaps that already have clear implementation paths.
+2. Close the remaining release-safety and artifact-trust gaps around image authenticity, migration rollout, restore verification, and pre-promotion deployment checks.
 
 ## Ordered Plan
 
@@ -49,30 +49,14 @@ Goal: evolve the repository into a production-ready sample app deliberately, wit
 - [ ] Add security headers, forwarded-header handling, and explicit HTTPS/proxy assumptions for real deployments
 - [ ] Add authenticated abuse protection such as request-rate limiting or similar controls for login bootstrap and write-heavy paths
 
-#### Harden Identity, Sessions, And Secrets
-- [x] Move beyond the single optional GitHub OAuth provider toward a production-ready identity story suitable for a sample app, including explicit issuer/provider configuration
-
 #### Strengthen Supply Chain And Artifact Trust
-- [x] Generate and publish an SBOM for the application artifact and container image as part of the build or release flow
 - [ ] Sign published container images and attach provenance or attestations so the sample release story covers artifact authenticity, not only version tags
-- [x] Publish stable static-analysis artifacts from GitHub Actions runs so PMD and similar quality failures are reviewable from the Actions UI without reproducing them locally
 
 #### Make Releases And Migrations Safer
 - [ ] Define a safer production rollout model for Flyway-backed releases, including compatibility expectations for rolling upgrades and schema-first versus app-first ordering
 - [ ] Add automated backup-restore verification or at least a reproducible pre-release restore drill for migration-bearing releases
 - [ ] Add deployment checks that validate the exact published image and runtime configuration before promotion beyond local or CI environments
-- [x] Decide whether GitHub Release notes should keep mirroring only the exact tagged `CHANGELOG.md` section or instead become cumulative notes covering every unreleased user-visible change since the previous published GitHub Release
-- [x] If cumulative GitHub Release notes are required, update release preparation and release-note rendering so delayed or batched releases publish the full change range from the previous published release to the new tag and fail closed when that range cannot be derived
 - [ ] Document and validate a realistic disaster-recovery path instead of only a local rollback narrative
-
-#### Harden Production Logging
-- [x] Use a JSON Lines logger configuration in the production profile so centralized collectors receive structured entries without terminal-oriented formatting noise
-- [x] Add deployment-facing log-forwarding configuration that preserves multiline exception output when shipping production logs to a centralized logging service
-
-#### Tighten Data And Admin Operations
-- [x] Add database backup, retention, and restore expectations for a production-ready sample deployment
-- [x] Add an explicit admin or operator surface for inspecting audit history, runtime diagnostics, and operational status without requiring direct database access
-- [x] Add seed-data and bootstrap guidance that cleanly separates demo defaults from production-safe initialization behavior
 
 ---
 
