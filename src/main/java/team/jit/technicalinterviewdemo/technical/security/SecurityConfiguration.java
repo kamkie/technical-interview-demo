@@ -1,5 +1,8 @@
 package team.jit.technicalinterviewdemo.technical.security;
 
+import java.util.LinkedHashSet;
+import java.util.Optional;
+import java.util.Set;
 import team.jit.technicalinterviewdemo.business.user.CurrentUserAccountService;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
@@ -7,9 +10,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.SecurityFilterChain;
@@ -86,11 +91,48 @@ public class SecurityConfiguration {
             );
         }
 
-        if (clientRegistrationRepository.getIfAvailable() != null) {
-            http.oauth2Login(oauth2 -> oauth2.loginPage("/oauth2/authorization/github"));
+        ClientRegistrationRepository registrationRepository = clientRegistrationRepository.getIfAvailable();
+        if (registrationRepository != null) {
+            Optional<String> loginPage = resolvedLoginPage(securitySettingsProperties, registrationRepository);
+            if (loginPage.isPresent()) {
+                http.oauth2Login(oauth2 -> oauth2.loginPage(loginPage.get()));
+            } else {
+                http.oauth2Login(Customizer.withDefaults());
+            }
         }
 
         return http.build();
+    }
+
+    private Optional<String> resolvedLoginPage(
+            SecuritySettingsProperties securitySettingsProperties,
+            ClientRegistrationRepository registrationRepository
+    ) {
+        Set<String> registrationIds = registrationIds(registrationRepository);
+        Optional<String> configuredLoginProvider = securitySettingsProperties.getOAuth()
+                .resolvedLoginProvider()
+                .filter(registrationIds::contains);
+        if (configuredLoginProvider.isPresent()) {
+            return configuredLoginProvider.map(SecuritySettingsProperties.OAuth::authorizationPath);
+        }
+        if (registrationIds.size() == 1) {
+            return registrationIds.stream()
+                    .findFirst()
+                    .map(SecuritySettingsProperties.OAuth::authorizationPath);
+        }
+        return Optional.empty();
+    }
+
+    private Set<String> registrationIds(ClientRegistrationRepository registrationRepository) {
+        Set<String> registrationIds = new LinkedHashSet<>();
+        if (registrationRepository instanceof Iterable<?> iterableRegistrationRepository) {
+            for (Object registration : iterableRegistrationRepository) {
+                if (registration instanceof ClientRegistration clientRegistration) {
+                    registrationIds.add(clientRegistration.getRegistrationId());
+                }
+            }
+        }
+        return registrationIds;
     }
 
     @Bean

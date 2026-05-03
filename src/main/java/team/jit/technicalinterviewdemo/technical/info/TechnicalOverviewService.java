@@ -18,6 +18,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.core.SpringSecurityCoreVersion;
 import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
 import org.springframework.stereotype.Service;
+import team.jit.technicalinterviewdemo.technical.security.SecuritySettingsProperties;
 
 @Service
 @RequiredArgsConstructor
@@ -26,11 +27,11 @@ public class TechnicalOverviewService {
     static final String DOCS_PATH = "/docs";
     static final String OPEN_API_JSON_PATH = "/v3/api-docs";
     static final String OPEN_API_YAML_PATH = "/v3/api-docs.yaml";
-    static final String OAUTH_LOGIN_PATH = "/oauth2/authorization/github";
 
     private final BuildProperties buildProperties;
     private final GitProperties gitProperties;
     private final Environment environment;
+    private final SecuritySettingsProperties securitySettingsProperties;
 
     public TechnicalOverviewResponse getOverview() {
         List<String> activeProfiles = List.copyOf(Arrays.asList(environment.getActiveProfiles()));
@@ -81,7 +82,7 @@ public class TechnicalOverviewService {
                         new TechnicalOverviewResponse.SecurityDetails(
                                 false,
                                 activeProfiles.contains("oauth"),
-                                OAUTH_LOGIN_PATH
+                                oauthLoginPath(activeProfiles)
                         ),
                         new TechnicalOverviewResponse.ShutdownDetails(
                                 property("server.shutdown", "unknown"),
@@ -90,6 +91,15 @@ public class TechnicalOverviewService {
                 )
         );
         return response;
+    }
+
+    private String oauthLoginPath(List<String> activeProfiles) {
+        if (!activeProfiles.contains("oauth")) {
+            return "";
+        }
+        return securitySettingsProperties.getOAuth()
+                .resolvedLoginPath()
+                .orElse("/login");
     }
 
     private Map<String, String> dependencyVersions() {
