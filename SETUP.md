@@ -494,8 +494,17 @@ What the monitoring assets provide:
 Production logging and tracing posture:
 
 - `application-prod.properties` keeps the root log level at `INFO`
-- `spring.output.ansi.enabled=DETECT` stays enabled so logs remain plain when no TTY is attached
-- logs are still written to stdout and trace export stays runtime-configurable through standard OTLP environment variables instead of a repo-mandated vendor backend
+- production profile logs are emitted as structured JSON Lines on stdout via `logging.structured.format.console=logstash`
+- trace export stays runtime-configurable through standard OTLP environment variables instead of a repo-mandated vendor backend
+- `k8s/log-forwarding/fluent-bit` is an optional forwarder example that recombines multiline Java stack traces before shipping logs to a centralized HTTP endpoint
+
+Optional log-forwarder example apply command:
+
+```powershell
+kubectl apply -k k8s/log-forwarding/fluent-bit
+```
+
+Before applying to a real cluster, update `k8s/log-forwarding/fluent-bit/configmap.yaml` with your destination host, port, URI, and TLS policy.
 
 Verify the monitoring setup:
 

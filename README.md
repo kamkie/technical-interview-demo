@@ -182,6 +182,7 @@ Supported delivery path:
 - deployment artifacts are provided as:
   - Docker image
   - vendor-neutral Kubernetes manifests under `k8s/base` with a local overlay under `k8s/overlays/local`, including a checked-in HPA and pod disruption budget
+  - optional Fluent Bit log-forwarding example under `k8s/log-forwarding/fluent-bit` for multiline Java exception shipping
   - Helm chart under `helm/`, with autoscaling and pod disruption budget defaults enabled for deployment-style installs and disabled in `values-local.yaml` for the single-replica local path
   - monitoring and alerting assets for Prometheus, Grafana, and Alertmanager
 
@@ -208,7 +209,7 @@ Frozen `1.0` production posture:
 - `SESSION_COOKIE_SECURE` remains optional with a secure-by-default value of `true`
 - `prod` enforces a 15 minute session timeout, one active session per login, and login rejection when that session cap is already reached
 - browser-session write flows keep CSRF disabled as a deliberate demo tradeoff for reviewer-friendly session-based API exercise flows
-- production logging uses `INFO` at the root logger while keeping ANSI detection automatic for no-TTY log shipping and leaving trace export runtime-configurable through standard OTLP environment variables
+- production logging uses `INFO` at the root logger and emits structured JSON Lines on stdout (`logging.structured.format.console=logstash`) while keeping trace export runtime-configurable through standard OTLP environment variables
 - `GET /actuator/prometheus` remains available for trusted deployment scraping, but it is not part of the internet-public contract
 
 Trusted deployment topology assumption:
@@ -220,6 +221,7 @@ Use the raw manifests under `k8s/` when you want explicit repo-owned YAML. Use t
 
 Monitoring support uses the upstream `kube-prometheus-stack` Helm chart plus repo-owned ServiceMonitor, alert-rule, Grafana dashboard, and Alertmanager example assets under `k8s/monitoring` and `monitoring/`.
 The checked-in monitoring contract now covers auth failures, session-backed account errors, Flyway-style startup crash loops, database pool saturation and timeouts, and elevated 5xx rates.
+The optional `k8s/log-forwarding/fluent-bit` bundle shows one deployment-facing path for shipping those stdout JSON lines while recombining multiline Java exception stack traces before forwarding.
 
 ## Project Map
 

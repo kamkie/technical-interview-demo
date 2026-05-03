@@ -10,6 +10,7 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 ### Changed
 - Switched the `prod` profile logging contract to structured JSON Lines (`logstash` console format) while preserving the local/test text-pattern defaults and added logging configuration contract coverage for the profile split.
 - Updated request-logging integration coverage to run under `prod` JSON logging and assert structured correlation fields (`rid`, `traceId`, `spanId`) plus sensitive-query-parameter redaction in emitted log events.
+- Added an optional Fluent Bit forwarding bundle under `k8s/log-forwarding/fluent-bit` and aligned README/setup guidance so multiline Java exception stack traces are recombined before logs are shipped from stdout to centralized collectors.
 
 ## [v1.3.0] - 2026-05-03
 
