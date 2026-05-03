@@ -168,7 +168,7 @@ Before finishing, run:
 
 Exception:
 
-- when every changed file is under `ai/`, manual consistency review is sufficient and `.\gradlew.bat build` or other validation commands are not required unless the user explicitly asks for them
+- when every changed file matches `*.md`, manual consistency review is sufficient and `.\gradlew.bat build` or other heavyweight validation commands are not required unless the user explicitly asks for them
 
 Use `SETUP.md` for environment prerequisites such as Java, Docker, and formatter configuration.
 
@@ -196,4 +196,4 @@ A change is complete when:
 - implementation and specs agree
 - public contract artifacts are updated when behavior changed
 - if the work was done in a git worktree or non-`main` branch, the finished branch has been pushed and a pull request is open or already merged onto `main`
-- `./gradlew build` passes, unless every changed file is under `ai/` and manual consistency review is sufficient for that AI-guidance-only change
+- `./gradlew build` passes, unless every changed file matches `*.md` and manual consistency review is sufficient for that markdown-only change

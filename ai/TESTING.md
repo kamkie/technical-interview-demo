@@ -41,8 +41,8 @@ Use the smallest layer that proves the behavior clearly:
 ### Workflow or documentation changes
 
 - prefer manual consistency review of the changed narrative first
-- when the only changed files are under `ai/`, treat the work as AI-guidance-only: do manual consistency review only and do not run `./gradlew.bat build` or other validation commands unless the user explicitly asks for them
-- for non-`ai/` documentation or workflow edits, finish with the validation required by the affected artifacts and repository rules
+- when every changed file matches `*.md`, including AI-guidance-only markdown updates under `ai/`, treat the work as documentation-only: do manual consistency review only and do not run `./gradlew.bat build`, benchmarks, external smoke checks, vulnerability scans, or other heavyweight validation commands unless the user explicitly asks for them
+- if markdown edits accompany any non-markdown change, validate based on the non-markdown artifacts and repository rules
 
 ## Validation Commands
 
@@ -54,7 +54,7 @@ Standard required validation before calling work complete:
 
 Exception:
 
-- when every changed file is under `ai/`, no build or other validation command is required; manual consistency review is sufficient unless the user explicitly asks for more validation
+- when every changed file matches `*.md`, no build or other heavyweight validation command is required; manual consistency review is sufficient unless the user explicitly asks for more validation
 
 Additional validation rules:
 

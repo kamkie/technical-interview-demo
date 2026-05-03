@@ -144,6 +144,10 @@ Standard verification command:
 .\gradlew.bat build
 ```
 
+Exception:
+
+- when every changed file matches `*.md`, manual consistency review is sufficient and `.\gradlew.bat build` or other heavyweight validation commands are not required unless you explicitly want broader validation
+
 Use `SETUP.md` for environment prerequisites and local tooling details.
 
 The standard build includes Spotless, PMD, tests, JaCoCo thresholds, REST Docs generation, OpenAPI compatibility verification, boot jar creation, and Docker image build.
@@ -305,5 +309,5 @@ A change is complete when:
 
 - the behavior is captured in the relevant spec artifacts
 - implementation, tests, docs, and OpenAPI stay aligned
-- the application still starts
-- `./gradlew build` passes
+- the application still starts when the change touches executable artifacts
+- `./gradlew build` passes, unless every changed file matches `*.md` and manual consistency review is sufficient for that markdown-only change
