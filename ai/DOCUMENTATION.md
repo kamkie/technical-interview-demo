@@ -57,6 +57,7 @@ When setup changes:
 When roadmap or release history changes:
 
 - keep unreleased planning in `ROADMAP.md`
+- treat checked `[x]` items in `ROADMAP.md` as selected current work, not as completed-history markers
 - keep released history in `CHANGELOG.md`
 - do not invent another archive for human-facing completion notes
 

@@ -137,7 +137,7 @@
       },
       "fieldConfig": {
         "defaults": {
-          "unit": "ops"
+          "unit": "reqps"
         },
         "overrides": []
       },
@@ -148,6 +148,176 @@
         "y": 16
       },
       "id": 5,
+      "targets": [
+        {
+          "expr": "sum(rate(http_server_requests_seconds_count{namespace=\"technical-interview-demo\",uri=~\"/api/account|/api/account/language|/api/audit-logs\",status=\"401\"}[10m])) + sum(rate(http_server_requests_seconds_count{namespace=\"technical-interview-demo\",method=~\"POST|PUT|DELETE\",uri=~\"/api/categories|/api/categories/.+|/api/localizations|/api/localizations/.+\",status=\"401\"}[10m]))",
+          "legendFormat": "401 responses",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(rate(http_server_requests_seconds_count{namespace=\"technical-interview-demo\",uri=~\"/api/account|/api/account/language|/api/audit-logs\",status=\"403\"}[10m])) + sum(rate(http_server_requests_seconds_count{namespace=\"technical-interview-demo\",method=~\"POST|PUT|DELETE\",uri=~\"/api/categories|/api/categories/.+|/api/localizations|/api/localizations/.+\",status=\"403\"}[10m]))",
+          "legendFormat": "403 responses",
+          "refId": "B"
+        }
+      ],
+      "title": "Protected Endpoint Auth Failures",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      },
+      "id": 6,
+      "targets": [
+        {
+          "expr": "sum(rate(http_server_requests_seconds_count{namespace=\"technical-interview-demo\",uri=~\"/api/account|/api/account/language\",status=~\"2..\"}[10m]))",
+          "legendFormat": "2xx responses",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(rate(http_server_requests_seconds_count{namespace=\"technical-interview-demo\",uri=~\"/api/account|/api/account/language\",status=~\"5..\"}[10m]))",
+          "legendFormat": "5xx responses",
+          "refId": "B"
+        }
+      ],
+      "title": "Session-backed Account Requests",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 24
+      },
+      "id": 7,
+      "targets": [
+        {
+          "expr": "sum(hikaricp_connections_active{namespace=\"technical-interview-demo\"})",
+          "legendFormat": "active",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(hikaricp_connections_idle{namespace=\"technical-interview-demo\"})",
+          "legendFormat": "idle",
+          "refId": "B"
+        },
+        {
+          "expr": "sum(hikaricp_connections_max{namespace=\"technical-interview-demo\"})",
+          "legendFormat": "max",
+          "refId": "C"
+        }
+      ],
+      "title": "Database Connection Pool Usage",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 24
+      },
+      "id": 8,
+      "targets": [
+        {
+          "expr": "sum(hikaricp_connections_pending{namespace=\"technical-interview-demo\"})",
+          "legendFormat": "pending",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(rate(hikaricp_connections_timeout_total{namespace=\"technical-interview-demo\"}[10m]))",
+          "legendFormat": "timeouts/sec",
+          "refId": "B"
+        }
+      ],
+      "title": "Database Connection Pressure",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 32
+      },
+      "id": 9,
+      "targets": [
+        {
+          "expr": "sum(increase(kube_pod_container_status_restarts_total{namespace=\"technical-interview-demo\",pod=~\"technical-interview-demo.*\"}[15m]))",
+          "legendFormat": "restarts (15m)",
+          "refId": "A"
+        },
+        {
+          "expr": "max_over_time(kube_pod_container_status_waiting_reason{namespace=\"technical-interview-demo\",pod=~\"technical-interview-demo.*\",reason=\"CrashLoopBackOff\"}[15m])",
+          "legendFormat": "crash looping",
+          "refId": "B"
+        }
+      ],
+      "title": "Startup Crash Loops (Flyway Or DB)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 32
+      },
+      "id": 10,
       "targets": [
         {
           "expr": "sum(rate(technical_interview_demo_cache_events_total{namespace=\"technical-interview-demo\"}[5m])) by (cache, event)",
@@ -172,10 +342,10 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 12,
-        "y": 16
+        "x": 0,
+        "y": 40
       },
-      "id": 6,
+      "id": 11,
       "targets": [
         {
           "expr": "technical_interview_demo_books_total{namespace=\"technical-interview-demo\"}",
@@ -194,6 +364,39 @@
         }
       ],
       "title": "Domain Totals",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 40
+      },
+      "id": 12,
+      "targets": [
+        {
+          "expr": "sum(hikaricp_connections_active{namespace=\"technical-interview-demo\"}) / clamp_min(sum(hikaricp_connections_max{namespace=\"technical-interview-demo\"}), 1)",
+          "legendFormat": "pool saturation",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(rate(http_server_requests_seconds_count{namespace=\"technical-interview-demo\",status=~\"5..\"}[5m])) / clamp_min(sum(rate(http_server_requests_seconds_count{namespace=\"technical-interview-demo\"}[5m])), 0.001)",
+          "legendFormat": "5xx ratio",
+          "refId": "B"
+        }
+      ],
+      "title": "Operational Ratios",
       "type": "timeseries"
     }
   ],
@@ -233,6 +436,6 @@
   },
   "timezone": "",
   "title": "Technical Interview Demo",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }

@@ -46,6 +46,7 @@ Update together:
 
 - prefer manual consistency review of the changed docs or workflow narrative
 - still finish with the required repository build unless the user explicitly asked for a narrower validation-only pass
+- when the only changed file is `ai/PROMPTS.md`, treat it as a prompt-library-only edit: do manual consistency review only and do not run `.\gradlew.bat build` or other expensive validation unless the user explicitly asks for it
 
 ## Validation Commands
 

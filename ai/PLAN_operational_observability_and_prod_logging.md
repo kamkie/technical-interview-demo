@@ -152,7 +152,20 @@
 - Do not silently absorb the unchecked JSON Lines logger task into this plan; that should remain a separate decision.
 
 ## Validation Results
-- To be filled in during execution
+- 2026-05-03: Ran `.\gradlew.bat build --no-daemon` on `codex/unfinished-plans-integration` with Java 25 (`C:\Users\kamki\.jdks\azul-25.0.3`).
+- Result: passed.
+- 2026-05-03: Ran `.\gradlew.bat externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo --no-daemon`.
+- Result: passed.
+- Notes:
+  - External smoke assertions covered readiness, docs HTML, OpenAPI JSON/YAML, JDBC-backed authenticated-session access to `GET /api/account`, and Flyway-state inspection.
+- 2026-05-03: Ran `.\gradlew.bat gatlingBenchmark --no-daemon` twice because the first run failed on a tolerance-boundary regression for `oauth2-github-redirect` (`15ms` p95 versus a `14ms` threshold).
+- Result: second run passed without baseline changes; final recorded `oauth2-github-redirect` p95 was `14ms`.
+- 2026-05-03: Ran `helm lint helm/technical-interview-demo`.
+- Result: passed.
+- 2026-05-03: Ran `helm template technical-interview-demo helm/technical-interview-demo -f helm/technical-interview-demo/values-local.yaml`.
+- Result: passed.
+- 2026-05-03: Ran `kubectl kustomize k8s/base`, `kubectl kustomize k8s/monitoring`, and `kubectl kustomize monitoring/grafana`.
+- Result: passed.
 
 ## User Validation
 - Review the generated plan artifacts and confirm the three work areas match the intended deployment story:

@@ -262,8 +262,9 @@ Assign explicit ownership boundaries per plan, including shared-file rules for d
 Do not let workers edit the same controller, service, integration test, REST Docs artifact, OpenAPI artifact, or plan file in parallel.
 If any listed plans are too coupled to execute safely in parallel, stop and explain which plans should be merged back into one execution stream instead of forcing worktrees.
 Integrate worker output back onto the coordinator branch only after each worktree task is locally validated.
-Run the final repository validation after integration and summarize per-plan progress, integration status, validation results, and any remaining blockers.
-Do not push, open a PR, or release unless I ask.
+Push the finished worktree branch and open a PR after local validation. Do not merge directly to `main` from a worktree.
+Run the final repository validation after integration and summarize per-plan progress, PR status, validation results, and any remaining blockers.
+Do not release unless I ask.
 ```
 
 ### Implement All Unfinished Plans In Parallel With Worktrees
@@ -283,8 +284,45 @@ Keep `main` as the integration target and do not treat worktree branches as rele
 Assign explicit ownership boundaries per workstream, including shared-file rules for docs, changelog, release artifacts, and validation reporting.
 Do not let workers edit the same controller, service, integration test, REST Docs artifact, OpenAPI artifact, or plan file in parallel.
 Integrate worker output back onto the coordinator branch only after each worktree task is locally validated.
-Run the final repository validation after integration and summarize which unfinished plans were completed, which were grouped together, which were left blocked or deferred, and what validation passed or failed.
-Do not push, open a PR, or release unless I ask.
+Push the finished worktree branch and open a PR after local validation. Do not merge directly to `main` from a worktree.
+Run the final repository validation after integration and summarize which unfinished plans were completed, which were grouped together, which were left blocked or deferred, and what PR and validation status each one has.
+Do not release unless I ask.
+```
+
+### Check Status on Single Worker In Multi-Agent Execution
+
+In `Multi-Agent Execution`, check the status of worker `<worker name or agent id>`.
+
+Report:
+- branch and worktree
+- current task progress
+- changed files
+- validations run with results
+- commit SHA(s)
+- blockers
+- ready-for-cherry-pick status
+
+If the worker has stalled or completed, state that clearly.
+
+### Check Status On Workers In Multi-Agent Execution
+
+```text
+Check the status of the active workers in the current multi-agent execution.
+
+Use `ai/WORKFLOW.md`.
+Act as coordinator.
+For each active worker, report:
+- worker name or agent id
+- assigned branch and worktree
+- current task or milestone
+- changed files so far
+- validation run with pass/fail status
+- commit SHA(s) already created
+- blockers, risks, or coordinator decisions needed
+- whether the work is ready for integration onto `main`
+
+If a worker is stalled, still in analysis, has no edits yet, or is already complete, say that explicitly.
+Keep the report concise and factual.
 ```
 
 ### Decide Whether Multi-Agent Execution Is Worth It

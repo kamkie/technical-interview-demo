@@ -33,11 +33,17 @@ final class ExternalSessionSupport implements AutoCloseable {
         this.sessionRepository = sessionRepository;
     }
 
+    static boolean isJdbcConfigured() {
+        return value("external.jdbc.url", "EXTERNAL_JDBC_URL") != null
+                && value("external.jdbc.user", "EXTERNAL_JDBC_USER") != null
+                && value("external.jdbc.password", "EXTERNAL_JDBC_PASSWORD") != null;
+    }
+
     static ExternalSessionSupport create() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource(
-                requiredSystemProperty("external.jdbc.url"),
-                requiredSystemProperty("external.jdbc.user"),
-                requiredSystemProperty("external.jdbc.password")
+                requiredConfigurationValue("external.jdbc.url", "EXTERNAL_JDBC_URL"),
+                requiredConfigurationValue("external.jdbc.user", "EXTERNAL_JDBC_USER"),
+                requiredConfigurationValue("external.jdbc.password", "EXTERNAL_JDBC_PASSWORD")
         );
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
         context.registerBean(DataSource.class, () -> dataSource);
@@ -106,12 +112,50 @@ final class ExternalSessionSupport implements AutoCloseable {
                 && securityContext.getAuthentication().isAuthenticated();
     }
 
-    private static String requiredSystemProperty(String name) {
-        String value = System.getProperty(name);
+    boolean hasFlywaySchemaHistoryTable() {
+        Integer count = jdbcTemplate.queryForObject(
+                """
+                SELECT COUNT(*)
+                FROM information_schema.tables
+                WHERE table_schema = 'public' AND table_name = 'flyway_schema_history'
+                """,
+                Integer.class
+        );
+        return count != null && count == 1;
+    }
+
+    int successfulFlywayMigrationCount() {
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM flyway_schema_history WHERE success = true",
+                Integer.class
+        );
+        return count == null ? 0 : count;
+    }
+
+    private static String requiredConfigurationValue(String propertyName, String environmentName) {
+        String value = value(propertyName, environmentName);
         if (value == null || value.isBlank()) {
-            throw new IllegalStateException("Missing system property: " + name);
+            throw new IllegalStateException(
+                    "Missing JDBC configuration. Provide system property "
+                            + propertyName
+                            + " or environment variable "
+                            + environmentName
+                            + "."
+            );
         }
         return value.trim();
+    }
+
+    private static String value(String propertyName, String environmentName) {
+        String systemPropertyValue = System.getProperty(propertyName);
+        if (systemPropertyValue != null && !systemPropertyValue.isBlank()) {
+            return systemPropertyValue.trim();
+        }
+        String environmentValue = System.getenv(environmentName);
+        if (environmentValue != null && !environmentValue.isBlank()) {
+            return environmentValue.trim();
+        }
+        return null;
     }
 
     @Override

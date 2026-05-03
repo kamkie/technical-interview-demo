@@ -1,0 +1,13 @@
+{{- if .Values.podDisruptionBudget.enabled }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "technical-interview-demo.fullname" . }}
+  labels:
+    {{- include "technical-interview-demo.labels" . | nindent 4 }}
+spec:
+  minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
+  selector:
+    matchLabels:
+      {{- include "technical-interview-demo.selectorLabels" . | nindent 6 }}
+{{- end }}

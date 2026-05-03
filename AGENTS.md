@@ -68,7 +68,8 @@ If the intended behavior is not clear enough to express as a spec, stop and clar
 ## Branch And Worktree Expectations
 
 - treat `main` as the integration branch for completed work
-- if you implement a multi-step plan in a git worktree or another branch, keep the work there until the whole plan is finished, then integrate the completed changes back onto `main` before considering the task complete
+- if you implement a multi-step plan in a git worktree or another branch, keep the work there until the whole plan is finished, then push that branch and open a pull request instead of trying to integrate the changes directly onto `main` from the worktree
+- consider worktree-based execution complete only when the finished branch has been pushed and the pull request is open or already merged onto `main`
 - do not cut a release from a worktree-only branch tip or from changes that have not yet landed on `main`
 
 ## Spec Priority
@@ -130,6 +131,7 @@ Update all affected artifacts in the same change:
 ### Roadmap change
 
 - update `ROADMAP.md`
+- treat `[x]` items in `ROADMAP.md` as selected for active planning or development, not as completed history
 - remove completed items instead of archiving them elsewhere
 - do not recreate a second human history file; released history belongs in `CHANGELOG.md`
 
@@ -189,5 +191,5 @@ A change is complete when:
 - the intended behavior exists in an appropriate spec artifact
 - implementation and specs agree
 - public contract artifacts are updated when behavior changed
-- if the work was done in a git worktree or non-`main` branch, the final changes are integrated onto `main`
+- if the work was done in a git worktree or non-`main` branch, the finished branch has been pushed and a pull request is open or already merged onto `main`
 - `./gradlew build` passes

@@ -1,0 +1,88 @@
+name: Post-Deploy Smoke
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: post-deploy-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  external-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Check scheduled smoke configuration
+        id: config
+        shell: bash
+        env:
+          EXTERNAL_BASE_URL: ${{ secrets.EXTERNAL_CHECK_BASE_URL }}
+          EXTERNAL_JDBC_URL: ${{ secrets.EXTERNAL_CHECK_JDBC_URL }}
+          EXTERNAL_JDBC_USER: ${{ secrets.EXTERNAL_CHECK_JDBC_USER }}
+          EXTERNAL_JDBC_PASSWORD: ${{ secrets.EXTERNAL_CHECK_JDBC_PASSWORD }}
+        run: |
+          if [ -z "${EXTERNAL_BASE_URL}" ]; then
+            echo "configured=false" >> "${GITHUB_OUTPUT}"
+            echo "Post-deploy smoke skipped because EXTERNAL_CHECK_BASE_URL is not configured." >> "${GITHUB_STEP_SUMMARY}"
+            exit 0
+          fi
+
+          jdbc_values_present=0
+          for value in "${EXTERNAL_JDBC_URL}" "${EXTERNAL_JDBC_USER}" "${EXTERNAL_JDBC_PASSWORD}"; do
+            if [ -n "${value}" ]; then
+              jdbc_values_present=$((jdbc_values_present + 1))
+            fi
+          done
+
+          if [ "${jdbc_values_present}" -ne 0 ] && [ "${jdbc_values_present}" -ne 3 ]; then
+            echo "JDBC-backed smoke configuration is incomplete. Configure EXTERNAL_CHECK_JDBC_URL, EXTERNAL_CHECK_JDBC_USER, and EXTERNAL_CHECK_JDBC_PASSWORD together or leave all three unset." >> "${GITHUB_STEP_SUMMARY}"
+            exit 1
+          fi
+
+          echo "configured=true" >> "${GITHUB_OUTPUT}"
+          if [ "${jdbc_values_present}" -eq 3 ]; then
+            echo "Scheduled smoke will run with HTTP, JDBC-backed session, and Flyway assertions." >> "${GITHUB_STEP_SUMMARY}"
+          else
+            echo "Scheduled smoke will run HTTP-only assertions because JDBC access is not configured." >> "${GITHUB_STEP_SUMMARY}"
+          fi
+
+      - name: Set up Java 25
+        if: steps.config.outputs.configured == 'true'
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "25"
+
+      - name: Set up Gradle
+        if: steps.config.outputs.configured == 'true'
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Run deployed smoke check
+        if: steps.config.outputs.configured == 'true'
+        env:
+          EXTERNAL_CHECK_BASE_URL: ${{ secrets.EXTERNAL_CHECK_BASE_URL }}
+          EXTERNAL_CHECK_JDBC_URL: ${{ secrets.EXTERNAL_CHECK_JDBC_URL }}
+          EXTERNAL_CHECK_JDBC_USER: ${{ secrets.EXTERNAL_CHECK_JDBC_USER }}
+          EXTERNAL_CHECK_JDBC_PASSWORD: ${{ secrets.EXTERNAL_CHECK_JDBC_PASSWORD }}
+        run: ./gradlew scheduledExternalCheck --no-daemon
+
+      - name: Upload deployed smoke test reports
+        if: always() && steps.config.outputs.configured == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: post-deploy-smoke-${{ github.run_id }}
+          path: |
+            build/reports/tests/externalDeploymentCheck/
+            build/test-results/externalDeploymentCheck/
+          if-no-files-found: warn
+          retention-days: 14

@@ -2,6 +2,7 @@ package team.jit.technicalinterviewdemo.external;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.IOException;
 import java.net.http.HttpResponse;
@@ -87,6 +88,10 @@ class ExternalSmokeTests extends ExternalHttpTestSupport {
 
     @Test
     void accountEndpointAcceptsJdbcBackedAuthenticatedSession() throws IOException, InterruptedException {
+        assumeTrue(
+                ExternalSessionSupport.isJdbcConfigured(),
+                "Skipping JDBC-backed session smoke assertions because external JDBC configuration is not available."
+        );
         try (ExternalSessionSupport sessionSupport = ExternalSessionSupport.create()) {
             String sessionId = sessionSupport.createAuthenticatedSession("smoke-user");
 
@@ -101,6 +106,18 @@ class ExternalSmokeTests extends ExternalHttpTestSupport {
             assertTrue(response.body().contains("\"provider\":\"github\""));
             assertTrue(response.body().contains("\"login\":\"smoke-user\""));
             assertTrue(response.body().contains("\"displayName\":\"smoke-user display\""));
+        }
+    }
+
+    @Test
+    void flywayStateIsInspectableWhenJdbcAccessIsConfigured() {
+        assumeTrue(
+                ExternalSessionSupport.isJdbcConfigured(),
+                "Skipping Flyway verification because external JDBC configuration is not available."
+        );
+        try (ExternalSessionSupport sessionSupport = ExternalSessionSupport.create()) {
+            assertTrue(sessionSupport.hasFlywaySchemaHistoryTable());
+            assertTrue(sessionSupport.successfulFlywayMigrationCount() > 0);
         }
     }
 }

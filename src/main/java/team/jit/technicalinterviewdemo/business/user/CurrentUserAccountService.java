@@ -2,7 +2,6 @@ package team.jit.technicalinterviewdemo.business.user;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Optional;
@@ -10,7 +9,6 @@ import java.util.Set;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -19,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team.jit.technicalinterviewdemo.technical.api.ForbiddenOperationException;
 import team.jit.technicalinterviewdemo.technical.metrics.ApplicationMetrics;
+import team.jit.technicalinterviewdemo.technical.security.SecuritySettingsProperties;
 
 @Slf4j
 @Service
@@ -28,9 +27,7 @@ public class CurrentUserAccountService {
 
     private final UserAccountRepository userAccountRepository;
     private final ApplicationMetrics applicationMetrics;
-
-    @Value("${app.security.admin-logins:${ADMIN_LOGINS:}}")
-    private String configuredAdminLogins;
+    private final SecuritySettingsProperties securitySettingsProperties;
 
     @Transactional
     public UserAccount synchronizeCurrentAuthenticatedUser() {
@@ -144,14 +141,7 @@ public class CurrentUserAccountService {
     }
 
     private Set<String> adminLogins() {
-        if (configuredAdminLogins == null || configuredAdminLogins.isBlank()) {
-            return Set.of();
-        }
-        return Arrays.stream(configuredAdminLogins.split(","))
-                .map(String::trim)
-                .filter(value -> !value.isBlank())
-                .map(value -> value.toLowerCase(Locale.ROOT))
-                .collect(java.util.stream.Collectors.toCollection(LinkedHashSet::new));
+        return securitySettingsProperties.normalizedAdminLogins();
     }
 
     private String normalizeRequiredPrincipalValue(String value, String fieldName) {
@@ -169,4 +159,3 @@ public class CurrentUserAccountService {
     ) {
     }
 }
-

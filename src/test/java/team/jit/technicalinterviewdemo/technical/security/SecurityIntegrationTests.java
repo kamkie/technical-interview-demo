@@ -1,6 +1,7 @@
 package team.jit.technicalinterviewdemo.technical.security;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.Map;
 
@@ -9,14 +10,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
+import org.springframework.security.web.authentication.session.SessionAuthenticationException;
 import org.springframework.session.Session;
 import org.springframework.session.SessionRepository;
 import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpSession;
 import team.jit.technicalinterviewdemo.testing.IntegrationSpringBootTest;
 
 @IntegrationSpringBootTest
@@ -27,6 +34,9 @@ class SecurityIntegrationTests {
 
     @Autowired
     private JdbcIndexedSessionRepository sessionRepository;
+
+    @Autowired
+    private SessionRegistry sessionRegistry;
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     private SessionRepository<Session> httpSessionRepository() {
@@ -41,14 +51,7 @@ class SecurityIntegrationTests {
 
     @Test
     void jdbcSessionRepositoryStoresOAuth2SecurityContext() {
-        DefaultOAuth2User oauth2User = new DefaultOAuth2User(
-                AuthorityUtils.createAuthorityList("ROLE_USER"),
-                Map.of("login", "demo-user"),
-                "login"
-        );
-        SecurityContext securityContext = new SecurityContextImpl(
-                new OAuth2AuthenticationToken(oauth2User, oauth2User.getAuthorities(), "github")
-        );
+        SecurityContext securityContext = new SecurityContextImpl(authentication("demo-user"));
         Session session = httpSessionRepository().createSession();
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
         httpSessionRepository().save(session);
@@ -70,5 +73,42 @@ class SecurityIntegrationTests {
         Object storedSecurityContext =
                 storedSession.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
         assertThat(storedSecurityContext).isNotNull();
+    }
+
+    @Test
+    void springSessionRegistrySupportsSingleSessionRejectionForOauthLogins() {
+        OAuth2AuthenticationToken authentication = authentication("demo-user");
+        Session existingSession = httpSessionRepository().createSession();
+        existingSession.setAttribute(
+                HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+                new SecurityContextImpl(authentication)
+        );
+        httpSessionRepository().save(existingSession);
+
+        ConcurrentSessionControlAuthenticationStrategy strategy =
+                new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry);
+        strategy.setMaximumSessions(1);
+        strategy.setExceptionIfMaximumExceeded(true);
+
+        MockHttpServletRequest secondLoginRequest = new MockHttpServletRequest();
+        secondLoginRequest.setSession(new MockHttpSession(null, "second-session"));
+
+        assertThat(sessionRegistry.getAllSessions(authentication.getPrincipal(), false)).hasSize(1);
+        assertThatThrownBy(() -> strategy.onAuthentication(
+                authentication,
+                secondLoginRequest,
+                new MockHttpServletResponse()
+        ))
+                .isInstanceOf(SessionAuthenticationException.class)
+                .hasMessageContaining("Maximum sessions of 1");
+    }
+
+    private OAuth2AuthenticationToken authentication(String login) {
+        DefaultOAuth2User oauth2User = new DefaultOAuth2User(
+                AuthorityUtils.createAuthorityList("ROLE_USER"),
+                Map.of("login", login),
+                "login"
+        );
+        return new OAuth2AuthenticationToken(oauth2User, oauth2User.getAuthorities(), "github");
     }
 }

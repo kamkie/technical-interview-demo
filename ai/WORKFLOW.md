@@ -29,7 +29,7 @@ The coordinator owns:
 - integrating worker output onto the local execution branch or worktree
 - running final validation from `ai/TESTING.md`
 - running final review and documentation-alignment checks using `ai/REVIEWS.md` and `ai/DOCUMENTATION.md`
-- pushing the finished branch and opening the PR only if the user asked for remote handoff
+- pushing the finished worktree branch and opening the PR after local execution is complete, instead of trying to merge directly onto `main` from the worktree
 - starting release work only after the approved PR has been merged onto `main`
 
 ## Phase-Based Ownership
@@ -155,9 +155,9 @@ Shared files should stay under coordinator ownership unless there is a strong re
 6. Workers execute their assigned scope, following `ai/EXECUTION.md` inside that scope.
 7. The coordinator integrates worker results, keeps `CHANGELOG.md` and the target plan current, and resolves any shared-file edits.
 8. The coordinator runs final validation, review, and documentation-alignment checks.
-9. If the user asked for remote collaboration, the coordinator pushes the finished branch and opens the PR as the last execution step.
+9. If execution is happening in a git worktree, the coordinator pushes the finished branch and opens the PR as the last execution step. Outside worktree-based execution, remote handoff still happens only if the user asked for it.
 10. After the approved PR is merged onto `main`, release work may begin only if the user explicitly asked for it.
-11. The coordinator reports whether the plan is locally complete, PR-ready, merged to `main`, blocked, or waiting on a release decision.
+11. The coordinator reports whether the plan is locally complete, PR-open, merged to `main`, blocked, or waiting on a release decision.
 
 ## Worktree Rules
 
@@ -165,7 +165,9 @@ When using git worktrees:
 
 - keep `main` as the only integration and release target
 - treat worktree branches as temporary execution branches, not release branches
-- do not consider a plan complete until the finished changes are ready for PR merge into `main`
+- integrate completed worker branches by merging them onto the coordinator branch after local validation so the worker history stays intact for review
+- push the finished coordinator worktree branch to GitHub and open a pull request instead of trying to merge directly onto `main` from the worktree
+- do not consider a plan complete until the finished branch has been pushed and the PR is open or already merged into `main`
 - do not consider release work started until the approved PR has actually been merged
 - do not cut a release from a worktree branch or detached `HEAD`
 
@@ -181,7 +183,7 @@ After a worker finishes:
 
 ```powershell
 git checkout codex/<plan>
-git cherry-pick <worker-commit-sha>
+git merge <worker-branch>
 ```
 
 Before remote handoff:
@@ -189,6 +191,8 @@ Before remote handoff:
 ```powershell
 git status --short
 git log --oneline --decorate -n 5
+git push -u origin codex/<plan>
+gh pr create --base main --head codex/<plan>
 ```
 
 After the approved PR is merged and release work is requested:
@@ -207,12 +211,12 @@ In this repository:
 - each completed task gets its own commit
 - keep commits narrow enough that they map cleanly to completed plan tasks
 - do not batch the entire plan into one final implementation commit
-- worker handoffs must report changed files, validation run, commit SHA, and any blocker to integration
+- worker handoffs must report the worker branch, changed files, validation run, tip commit SHA, pull-request status, and any blocker to integration
 - coordinator updates should report progress in terms of completed plan tasks and readiness for the next phase
 
 The final completion message should state:
 
 - whether implementation is complete
-- whether the finished work is locally complete, PR-ready, or already merged onto `main`
+- whether the finished work is locally complete, PR-open, or already merged onto `main`
 - whether final validation passed
 - whether any release or user decision remains

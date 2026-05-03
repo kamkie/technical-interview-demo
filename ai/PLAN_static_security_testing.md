@@ -114,7 +114,12 @@
 - If the selected SAST engine cannot produce stable repo-owned artifacts, reconsider the tool choice rather than weakening artifact reviewability.
 
 ## Validation Results
-- To be filled in during execution
+- 2026-05-03: Ran `.\gradlew.bat staticSecurityScan vulnerabilityScan build --no-daemon` on `codex/unfinished-plans-integration` with Java 25 (`C:\Users\kamki\.jdks\azul-25.0.3`).
+- Result: passed.
+- Notes:
+  - `staticSecurityScan` executed `spotbugsMain` with the checked-in SpotBugs include/exclude policy files and produced reports under `build/reports/security/static/main/`.
+  - `vulnerabilityScan` executed both Trivy-backed dependency and image scans and kept the build green.
+  - `build` also passed the full repository gate, including tests, REST Docs/OpenAPI generation, and Docker image build.
 
 ## User Validation
 - Run the new security analysis task directly and then run `.\gradlew.bat build`.
