@@ -29,13 +29,14 @@ No unrefined tasks currently.
 
 ## Current Priorities
 
-1. Define the backend contract and browser-auth posture for a separate post-`1.x` first-party UI so the production-ready track has one clear client direction.
+1. Define the backend contract and same-site browser-auth posture for a separate post-`1.x` first-party UI so the production-ready track has one clear client direction.
 2. Close the remaining rolling-release, restore-verification, and artifact-trust gaps around image authenticity, migration compatibility, and pre-promotion deployment checks.
 
 ## Locked Framing Decisions
 
 - Post-`1.x` production-ready work keeps browser-oriented auth by adding a first-party UI instead of switching this repo to a stateless token-only contract.
 - That first-party UI belongs in a separate repository; this repository remains the backend/API, auth, and operational contract.
+- The separate first-party UI is expected to share one public origin with the backend through reverse-proxy deployment, so browser flows should target a same-site contract rather than a cross-origin one.
 - Release hardening assumes rolling-compatible deployments, so migration and rollout work must preserve mixed-version compatibility during upgrades.
 
 ## Ordered Plan
@@ -44,18 +45,18 @@ No unrefined tasks currently.
 
 Status: Planned
 
-Goal: evolve the repository into a production-ready backend sample that supports a separate first-party UI deliberately, with explicit contract, rollout, and posture review instead of treating that shift as a silent extension of the frozen interview-demo `1.x` promise.
+Goal: evolve the repository into a production-ready backend sample that supports a separate first-party UI behind one public origin deliberately, with explicit contract, rollout, and posture review instead of treating that shift as a silent extension of the frozen interview-demo `1.x` promise.
 
 #### Define The Backend Contract For The Separate First-Party UI
-- [ ] Define the supported browser-client contract this repository owns for the separate first-party UI, including login bootstrap, session/cookie behavior, CSRF expectations, and trusted-origin assumptions
-- [ ] Decide what app-facing auth/session surface the backend should expose for the separate UI without turning this repository into the UI host
-- [ ] Update the remaining security, documentation, smoke-test, and release roadmap items so they assume a separately deployed first-party UI and no longer carry the rejected token-only and in-repo-frontend alternatives
+- [ ] Define the supported same-site browser-client contract this repository owns for the separate first-party UI, including login bootstrap, session/cookie behavior, CSRF expectations, and reverse-proxy boundary assumptions
+- [ ] Decide what app-facing auth/session surface the backend should expose for the separate UI without turning this repository into the UI host or introducing a general cross-origin browser API contract
+- [ ] Update the remaining security, documentation, smoke-test, and release roadmap items so they assume a separately deployed first-party UI behind one public origin and no longer carry the rejected token-only, cross-origin, and in-repo-frontend alternatives
 
 #### Revisit The Security Posture
-- [ ] Replace the current reviewer-oriented CSRF-disabled browser write posture with production-grade browser protections that work for a separate first-party UI
-- [ ] Define and enforce trusted-origin, cookie, and redirect assumptions for the backend-to-UI boundary
+- [ ] Replace the current reviewer-oriented CSRF-disabled browser write posture with production-grade same-site browser protections that work for a reverse-proxied first-party UI
+- [ ] Define and enforce reverse-proxy, public-origin, cookie, redirect, and session assumptions for the backend-to-UI boundary
 - [ ] Restrict technical endpoints such as Prometheus and non-public actuator surfaces behind production-ready network or auth expectations instead of relying on deployment convention alone
-- [ ] Add security headers, forwarded-header handling, and explicit HTTPS/proxy assumptions for real deployments
+- [ ] Add security headers and explicit HTTPS/proxy handling assumptions for real deployments
 - [ ] Add authenticated abuse protection such as request-rate limiting or similar controls for login bootstrap and write-heavy paths
 
 #### Strengthen Supply Chain And Artifact Trust
