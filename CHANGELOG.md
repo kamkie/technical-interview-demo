@@ -7,6 +7,8 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+## [v1.4.0] - 2026-05-03
+
 ### Added
 - Added an explicit ADMIN-only operator inspection API at `GET /api/operator/surface` that combines recent audit history, runtime diagnostics, and operational status links, together with integration/REST Docs coverage, HTTP examples, and refreshed OpenAPI contract artifacts.
 
