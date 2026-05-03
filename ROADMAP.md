@@ -29,8 +29,14 @@ No unrefined tasks currently.
 
 ## Current Priorities
 
-1. Lock the post-`1.x` client and authentication direction so the production-ready track stops carrying competing API-only versus first-party UI futures.
-2. Close the remaining release-safety and artifact-trust gaps around image authenticity, migration rollout, restore verification, and pre-promotion deployment checks.
+1. Define the backend contract and browser-auth posture for a separate post-`1.x` first-party UI so the production-ready track has one clear client direction.
+2. Close the remaining rolling-release, restore-verification, and artifact-trust gaps around image authenticity, migration compatibility, and pre-promotion deployment checks.
+
+## Locked Framing Decisions
+
+- Post-`1.x` production-ready work keeps browser-oriented auth by adding a first-party UI instead of switching this repo to a stateless token-only contract.
+- That first-party UI belongs in a separate repository; this repository remains the backend/API, auth, and operational contract.
+- Release hardening assumes rolling-compatible deployments, so migration and rollout work must preserve mixed-version compatibility during upgrades.
 
 ## Ordered Plan
 
@@ -38,15 +44,16 @@ No unrefined tasks currently.
 
 Status: Planned
 
-Goal: evolve the repository into a production-ready sample app deliberately, with explicit contract and posture review instead of treating that shift as a silent extension of the frozen interview-demo `1.x` promise.
+Goal: evolve the repository into a production-ready backend sample that supports a separate first-party UI deliberately, with explicit contract, rollout, and posture review instead of treating that shift as a silent extension of the frozen interview-demo `1.x` promise.
 
-#### Lock The Post-`1.x` Client And Auth Direction
-- [ ] Decide whether the production-ready track stays API-first and replaces the current session-oriented write flow with a stateless token contract, or instead keeps browser-oriented auth by adding a first-party UI that justifies session-backed flows
-- [ ] If a first-party UI remains in scope, decide whether it belongs inside this repository or in a separate repository before adding any frontend build, deployment, or release surface
-- [ ] Rewrite the downstream security and identity roadmap items around the chosen direction and remove the rejected alternative once that decision is made
+#### Define The Backend Contract For The Separate First-Party UI
+- [ ] Define the supported browser-client contract this repository owns for the separate first-party UI, including login bootstrap, session/cookie behavior, CSRF expectations, and trusted-origin assumptions
+- [ ] Decide what app-facing auth/session surface the backend should expose for the separate UI without turning this repository into the UI host
+- [ ] Update the remaining security, documentation, smoke-test, and release roadmap items so they assume a separately deployed first-party UI and no longer carry the rejected token-only and in-repo-frontend alternatives
 
 #### Revisit The Security Posture
-- [ ] Replace the current reviewer-oriented CSRF-disabled browser write posture with a production-grade approach and update the supported client-flow model accordingly
+- [ ] Replace the current reviewer-oriented CSRF-disabled browser write posture with production-grade browser protections that work for a separate first-party UI
+- [ ] Define and enforce trusted-origin, cookie, and redirect assumptions for the backend-to-UI boundary
 - [ ] Restrict technical endpoints such as Prometheus and non-public actuator surfaces behind production-ready network or auth expectations instead of relying on deployment convention alone
 - [ ] Add security headers, forwarded-header handling, and explicit HTTPS/proxy assumptions for real deployments
 - [ ] Add authenticated abuse protection such as request-rate limiting or similar controls for login bootstrap and write-heavy paths
@@ -56,9 +63,9 @@ Goal: evolve the repository into a production-ready sample app deliberately, wit
 - [ ] Sign published container images and attach provenance or attestations so the sample release story covers artifact authenticity, not only version tags
 
 #### Make Releases And Migrations Safer
-- [ ] Define a safer production rollout model for Flyway-backed releases, including compatibility expectations for rolling upgrades and schema-first versus app-first ordering
+- [ ] Define a rolling-compatible Flyway rollout model, including expand-and-contract rules, mixed-version compatibility expectations, and schema-first versus app-first ordering by migration type
 - [ ] Add automated backup-restore verification or at least a reproducible pre-release restore drill for migration-bearing releases
-- [ ] Add deployment checks that validate the exact published image and runtime configuration before promotion beyond local or CI environments
+- [ ] Add deployment checks that validate the exact published image, runtime configuration, and mixed-version readiness before promotion beyond local or CI environments
 - [ ] Document and validate a realistic disaster-recovery path instead of only a local rollback narrative
 
 ---
