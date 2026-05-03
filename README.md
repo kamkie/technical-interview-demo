@@ -11,9 +11,7 @@ Small Spring Boot demo application for technical interview exercises.
 
 Current scope:
 
-- `GET /docs` redirects to generated API documentation
-- `GET /` returns technical application details including build/git metadata, dependency versions, and important runtime configuration
-- `GET /hello` returns `Hello World!`
+- internal/devops validation surfaces at `GET /`, `GET /hello`, `GET /docs`, `GET /v3/api-docs`, `GET /v3/api-docs.yaml`, and `GET /actuator/**`
 - `Book` API under `/api/books` with pagination, filtering, optimistic locking, and category assignment
 - `Category` API under `/api/categories` with list, create, rename, and guarded delete semantics
 - `Localization` API under `/api/localizations` with CRUD plus collection filtering by `messageKey` and `language`
@@ -29,14 +27,14 @@ Current scope:
 
 Primary goal: keep the codebase small, readable, and easy to reason about.
 
-## 1.0 Promise
+## Compatibility Model
 
-`1.0` means a stable interview-demo reference app.
+This repository remains a small interview-demo reference app.
 
-It does **not** mean a production-ready starter platform with every security and deployment concern solved in-app.
+It does **not** try to solve every security and deployment concern in-app.
 
-The `1.x` compatibility promise applies to the documented supported contract in this file, the generated docs, the HTTP examples, and the approved OpenAPI baseline where applicable.
-It does not extend to deployment-specific exposure choices outside that supported contract.
+The current supported contract in this file, the generated docs, the HTTP examples, and the approved OpenAPI baseline describe the app-owned HTTP surface.
+Internet reachability outside that contract, including keeping non-`/api/**` paths private, is owned by deployment and reverse-proxy configuration.
 
 ## Spec-Driven Development
 
@@ -66,59 +64,59 @@ What that means in practice:
 
 ## Supported Contract
 
-Stable `1.x` contract:
+Supported external application contract:
 
-- user-facing and documentation endpoints:
-  - `GET /`
-  - `GET /hello`
-  - `GET /docs`
-  - `GET /v3/api-docs`
-  - `GET /v3/api-docs.yaml`
+- public or bootstrap paths under `/api/**`:
   - `GET /api/books`
   - `GET /api/books/{id}`
-  - `POST /api/books`
-  - `PUT /api/books/{id}`
-  - `DELETE /api/books/{id}`
   - `GET /api/categories`
-  - `POST /api/categories`
-  - `PUT /api/categories/{id}`
-  - `DELETE /api/categories/{id}`
   - `GET /api/localizations`
   - `GET /api/localizations/{id}`
-  - `POST /api/localizations`
-  - `PUT /api/localizations/{id}`
-  - `DELETE /api/localizations/{id}`
   - `GET /api/session`
   - `POST /api/session/logout`
+  - `GET /api/session/oauth2/authorization/{registrationId}`
+- externally reachable authenticated paths under `/api/**`:
   - `GET /api/account`
   - `PUT /api/account/language`
   - `GET /api/audit-logs`
   - `GET /api/operator/surface`
-- supported operational endpoints:
-  - `GET /actuator/info`
-  - `GET /actuator/health`
-  - `GET /actuator/health/liveness`
-  - `GET /actuator/health/readiness`
+  - `POST /api/books`
+  - `PUT /api/books/{id}`
+  - `DELETE /api/books/{id}`
+  - `POST /api/categories`
+  - `PUT /api/categories/{id}`
+  - `DELETE /api/categories/{id}`
+  - `POST /api/localizations`
+  - `PUT /api/localizations/{id}`
+  - `DELETE /api/localizations/{id}`
+- externally reachable identity-provider callback path:
+  - `GET /api/session/login/oauth2/code/{registrationId}`
 
-Deployment-scoped technical surface:
+Internal or devops-only validation surface:
 
+- `GET /`
+- `GET /hello`
+- `GET /docs`
+- `GET /v3/api-docs`
+- `GET /v3/api-docs.yaml`
+- `GET /actuator/info`
+- `GET /actuator/health`
+- `GET /actuator/health/liveness`
+- `GET /actuator/health/readiness`
 - `GET /actuator/prometheus`
-  - supported for trusted deployment scraping and monitoring integration
-  - not part of the internet-public contract
-
-Remaining demo-only convenience endpoints:
-
-- none intentionally excluded from the stable `1.x` contract at this stage
 
 Supported technical bootstrap:
 
-- `GET /oauth2/authorization/{registrationId}`
-  - interactive login entry point when the optional `oauth` profile is active
-  - resolved from configured providers (`github`, `oidc`, or additional configured registration ids)
 - `GET /api/session`
   - public same-site browser session/bootstrap endpoint for the separate first-party UI
-  - returns `authenticated`, `accountPath`, effective `loginPath`, `logoutPath`, `sessionCookie`, and `csrf.enabled`
-  - `loginPath` is empty when the optional `oauth` profile is inactive and otherwise resolves to `/oauth2/authorization/{registrationId}` or `/login`
+  - returns `authenticated`, `accountPath`, `loginProviders[]`, `logoutPath`, `sessionCookie`, and `csrf.enabled`
+  - `loginProviders` is `[]` when the optional `oauth` profile is inactive
+  - each `loginProviders[]` item exposes `registrationId`, `clientName`, and a relative `authorizationPath`
+- `GET /api/session/oauth2/authorization/{registrationId}`
+  - interactive login entry point when the optional `oauth` profile is active
+  - resolved from configured providers (`github`, `oidc`, or additional configured registration ids)
+- `GET /api/session/login/oauth2/code/{registrationId}`
+  - reverse-proxy callback path expected from the external identity provider
 - `POST /api/session/logout`
   - public idempotent logout endpoint for the same-site browser session contract
   - clears the configured session cookie and invalidates the current server-side session when present
@@ -128,17 +126,19 @@ Supported technical bootstrap:
 
 Security summary:
 
-- public supported endpoints: `/`, `/hello`, `/docs`, OpenAPI docs, `GET /api/books/**`, `GET /api/categories`, `GET /api/localizations/**`, `GET /api/session`, `POST /api/session/logout`, actuator health endpoints, and actuator info
-- authenticated session required: `/api/account`, `PUT /api/account/language`, `GET /api/audit-logs`, `GET /api/operator/surface`, and the state-changing book, category, and localization endpoints
+- public supported external endpoints: read-only `/api/books/**`, `GET /api/categories`, read-only `/api/localizations/**`, `GET /api/session`, `POST /api/session/logout`, and `GET /api/session/oauth2/authorization/{registrationId}`
+- authenticated session required on the external `/api/**` surface: `/api/account`, `PUT /api/account/language`, `GET /api/audit-logs`, `GET /api/operator/surface`, and the state-changing book, category, and localization endpoints
 - `ADMIN` role required: audit log review, operator surface access, category create/update/delete, and localization create/update/delete
-- interactive login starts at `GET /oauth2/authorization/{registrationId}` when the `oauth` profile is active
+- interactive login and provider callbacks stay under `/api/session/**` when the `oauth` profile is active
 - the supported first-party browser contract assumes one public origin via reverse proxy; cross-origin browser support and CORS guarantees are not part of the supported contract
+- conservative browser security headers apply to application responses, with HSTS added on secure `prod` requests
 
 Contract notes:
 
 - `GET /api/audit-logs` is paginated and supports optional exact `targetType`, `action`, and `actorLogin` filters
 - `GET /api/operator/surface` returns one ADMIN-only payload that combines recent audit history, runtime diagnostics, and operational status links
 - `GET /api/session` is the supported same-site UI bootstrap/state endpoint, while `GET /api/account` remains the authenticated persisted-profile endpoint
+- OAuth success redirects to `/` and failures redirect to `/?login=failed` for the separate first-party UI
 - `POST /api/session/logout` always returns `204 No Content`, clears the configured session cookie, and is safe to call even when no session exists
 - `DELETE /api/categories/{id}` fails with a localized conflict if the category is still assigned to one or more books
 - `GET /api/books` is paginated and supports text, category, and year filters
@@ -243,25 +243,26 @@ Optional deployment environment variables:
 - `OIDC_CLIENT_ID`
 - `OIDC_CLIENT_SECRET`
 - `OIDC_ISSUER_URI`
-- `OAUTH_DEFAULT_PROVIDER` (defaults to `github`)
 - `ADMIN_LOGINS`
 
-Frozen `1.0` production posture:
+Current production posture:
 
 - `prod` remains the deployment profile baseline
 - OAuth login remains opt-in through the `oauth` profile and requires at least one configured provider (`github` or `oidc`) with client credentials, with `OIDC_ISSUER_URI` required for OIDC
-- `OAUTH_DEFAULT_PROVIDER` controls the default login bootstrap path when multiple providers are configured
 - `ADMIN_LOGINS` remains the environment-driven admin bootstrap mechanism and is validated as a comma-separated list of external login identifiers when present
 - demo data bootstrap remains disabled by default in `prod` through `APP_BOOTSTRAP_SEED_DEMO_DATA=false`
-- `SESSION_COOKIE_SECURE` remains optional with a secure-by-default value of `true`
+- `SESSION_COOKIE_SECURE` remains optional with a secure-by-default value of `true`, but disabling it in `prod` is rejected at startup
+- `server.forward-headers-strategy=framework` is part of the supported `prod` posture so trusted reverse-proxy headers drive redirect and scheme handling correctly
 - `prod` enforces a 15 minute session timeout, one active session per login, and login rejection when that session cap is already reached
 - browser-session write flows keep CSRF disabled as a deliberate demo tradeoff for reviewer-friendly session-based API exercise flows
 - production logging uses `INFO` at the root logger and emits structured JSON Lines on stdout (`logging.structured.format.console=logstash`) while keeping trace export runtime-configurable through standard OTLP environment variables
+- non-`/api/**` paths remain internal or devops-only; internet reachability for those paths is intentionally owned by deployment and reverse-proxy configuration
 - `GET /actuator/prometheus` remains available for trusted deployment scraping, but it is not part of the internet-public contract
 
 Trusted deployment topology assumption:
 
-- health, readiness, and info endpoints are safe to expose as operational endpoints
+- only `/api/**` is intended to be internet-reachable, via `waf -> frontend -> this application`
+- `/`, `/hello`, `/docs`, OpenAPI publication, and actuator paths are expected to stay private to trusted internal or devops access paths
 - Prometheus scraping is expected to happen from trusted internal infrastructure such as cluster-local monitoring, not from arbitrary public clients
 
 ## Operational Data Recovery Expectations

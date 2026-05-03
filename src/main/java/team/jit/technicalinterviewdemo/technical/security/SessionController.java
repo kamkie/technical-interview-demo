@@ -24,7 +24,7 @@ public class SessionController {
     @GetMapping
     @Operation(
             summary = "Get the current browser session contract",
-            description = "Public same-site session/bootstrap endpoint for the separate first-party UI. Returns the current authenticated state, persisted-account path, effective login bootstrap path, logout path, cookie contract, and current CSRF mode."
+            description = "Public same-site session/bootstrap endpoint for the separate first-party UI. Returns the current authenticated state, persisted-account path, available OAuth login providers, logout path, cookie contract, and current CSRF mode."
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Current same-site browser session state.")

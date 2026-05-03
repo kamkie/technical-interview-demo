@@ -27,11 +27,11 @@ public class TechnicalOverviewService {
     static final String DOCS_PATH = "/docs";
     static final String OPEN_API_JSON_PATH = "/v3/api-docs";
     static final String OPEN_API_YAML_PATH = "/v3/api-docs.yaml";
+    static final String PUBLIC_API_PATH_PATTERN = "/api/**";
 
     private final BuildProperties buildProperties;
     private final GitProperties gitProperties;
     private final Environment environment;
-    private final SecuritySettingsProperties securitySettingsProperties;
 
     public TechnicalOverviewResponse getOverview() {
         List<String> activeProfiles = List.copyOf(Arrays.asList(environment.getActiveProfiles()));
@@ -82,7 +82,10 @@ public class TechnicalOverviewService {
                         new TechnicalOverviewResponse.SecurityDetails(
                                 false,
                                 activeProfiles.contains("oauth"),
-                                oauthLoginPath(activeProfiles)
+                                PUBLIC_API_PATH_PATTERN,
+                                SecuritySettingsProperties.OAuth.AUTHORIZATION_BASE_URI,
+                                SecuritySettingsProperties.OAuth.CALLBACK_BASE_URI + "/{registrationId}",
+                                property("server.forward-headers-strategy", "none")
                         ),
                         new TechnicalOverviewResponse.ShutdownDetails(
                                 property("server.shutdown", "unknown"),
@@ -91,15 +94,6 @@ public class TechnicalOverviewService {
                 )
         );
         return response;
-    }
-
-    private String oauthLoginPath(List<String> activeProfiles) {
-        if (!activeProfiles.contains("oauth")) {
-            return "";
-        }
-        return securitySettingsProperties.getOAuth()
-                .resolvedLoginPath()
-                .orElse("/login");
     }
 
     private Map<String, String> dependencyVersions() {

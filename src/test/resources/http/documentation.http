@@ -1,18 +1,20 @@
 # IntelliJ HTTP Client examples for technical-interview-demo
+# These paths are intended for trusted internal or devops validation, not for the
+# supported external `/api/**` contract.
 
 @baseUrl = http://localhost:8080
 
-### Documentation - redirect to generated API docs
+### Internal documentation - redirect to generated API docs
 GET {{baseUrl}}/docs
 
-### Documentation - generated docs index
+### Internal documentation - generated docs index
 GET {{baseUrl}}/docs/index.html
 Accept: text/html
 
-### Documentation - OpenAPI contract JSON
+### Internal documentation - OpenAPI contract JSON
 GET {{baseUrl}}/v3/api-docs
 Accept: application/json
 
-### Documentation - OpenAPI contract YAML
+### Internal documentation - OpenAPI contract YAML
 GET {{baseUrl}}/v3/api-docs.yaml
 Accept: application/vnd.oai.openapi

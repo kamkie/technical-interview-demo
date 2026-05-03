@@ -54,7 +54,7 @@ If a change pushes the app toward any of those, it needs strong justification.
 
 The application currently supports:
 
-- public technical overview and smoke-test endpoints
+- a deliberately small externally supported `/api/**` contract plus internal or devops validation endpoints
 - CRUD-style book management
 - category management
 - localization management and localized error responses
@@ -159,13 +159,13 @@ The design goal is pragmatic security for a demo application:
 - persisted application users and roles
 - session-backed behavior realistic enough to discuss in an interview
 
-The `1.x` contract is intentionally narrow:
+The current contract is intentionally narrow:
 
-- supported business and documentation endpoints include `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, `/api/books...`, `/api/categories`, `/api/localizations...`, and `/api/account...`
-- supported operational endpoints include `/actuator/health`, `/actuator/health/liveness`, `/actuator/health/readiness`, and `/actuator/info`
+- the externally supported application surface lives under `/api/**`
+- `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, `/actuator/health`, `/actuator/health/liveness`, `/actuator/health/readiness`, and `/actuator/info` remain internal or devops validation paths
 - `/actuator/prometheus` is deployment-scoped technical surface for trusted scraping, not part of the internet-public contract
-- `/oauth2/authorization/github` is a technical login bootstrap path available only when the optional `oauth` profile is active
-- CSRF stays disabled for `1.0` browser-session writes as a deliberate demo tradeoff for reviewer-oriented session workflows
+- same-site browser-session bootstrap lives at `/api/session`, with provider-aware login entry points under `/api/session/oauth2/authorization/{registrationId}` and provider callbacks under `/api/session/login/oauth2/code/{registrationId}` when the optional `oauth` profile is active
+- CSRF stays disabled for current browser-session writes as a deliberate demo tradeoff for reviewer-oriented session workflows
 
 Preserve those decisions unless an explicit follow-up contract review changes them.
 

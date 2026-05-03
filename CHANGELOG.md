@@ -12,6 +12,8 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ### Changed
 - Updated AI execution guidance and setup docs to prefer the shared dotenv loader when PowerShell commands depend on local `.env` values, including Windows paths written with escaped backslashes.
+- Hardened the same-site reverse-proxy session contract by moving OAuth bootstrap and callback handling under `/api/session/**`, replacing `loginPath` with provider-aware `loginProviders[]`, and rejecting removed `OAUTH_DEFAULT_PROVIDER` configuration.
+- Added production forwarded-header fail-fast validation plus a fixed browser security-header baseline, and refreshed the README, setup guide, REST Docs, HTTP examples, AI design guidance, and approved OpenAPI contract so non-`/api/**` overview, docs, OpenAPI, and actuator paths are documented as internal or deployment-scoped validation surfaces.
 
 ## [v1.6.0] - 2026-05-03
 

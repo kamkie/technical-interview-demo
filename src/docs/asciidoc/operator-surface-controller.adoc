@@ -10,7 +10,7 @@ This page documents the explicit ADMIN-only operator inspection surface exposed 
 
 == `GET /api/operator/surface`
 
-Returns one ADMIN-only payload that combines recent audit history, runtime diagnostics, and operational status links without requiring direct database access.
+Returns one ADMIN-only payload that combines recent audit history, runtime diagnostics, and operational status links without requiring direct database access. Links to overview and actuator paths are internal or devops references, not internet-public contract endpoints.
 
 include::{snippets}/operator/get-operator-surface/curl-request.adoc[]
 include::{snippets}/operator/get-operator-surface/http-request.adoc[]

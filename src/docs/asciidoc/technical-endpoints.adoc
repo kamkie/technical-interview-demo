@@ -8,11 +8,11 @@ xref:index.adoc[Back to API overview]
 
 This page documents the technical endpoints exposed outside the business controllers.
 
-The supported internet-facing technical surface for `1.x` includes the documentation and operational endpoints on this page except where noted otherwise. `GET /actuator/prometheus` remains supported for trusted deployment scraping, but it is deployment-scoped rather than part of the internet-public contract.
+These paths are intended for trusted internal or devops access rather than the supported external `/api/**` contract. `GET /actuator/prometheus` remains supported for trusted deployment scraping, but it is deployment-scoped rather than part of the internet-public contract.
 
 == `GET /docs`
 
-Redirects to the generated HTML documentation bundled with the application.
+Redirects to the generated HTML documentation bundled with the application for trusted internal review and runtime validation.
 
 include::{snippets}/docs/get-docs/curl-request.adoc[]
 include::{snippets}/docs/get-docs/http-request.adoc[]
@@ -21,7 +21,7 @@ include::{snippets}/docs/get-docs/response-headers.adoc[]
 
 == `GET /actuator/info`
 
-Returns build and git metadata generated during the build.
+Returns build and git metadata generated during the build for trusted internal or operational inspection.
 
 include::{snippets}/actuator/get-info/curl-request.adoc[]
 include::{snippets}/actuator/get-info/http-request.adoc[]
@@ -31,7 +31,7 @@ include::{snippets}/actuator/get-info/response-fields.adoc[]
 
 == `GET /actuator/health`
 
-Returns the overall application health status.
+Returns the overall application health status for trusted internal or operational inspection.
 
 include::{snippets}/actuator/get-health/curl-request.adoc[]
 include::{snippets}/actuator/get-health/http-request.adoc[]

@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
+import team.jit.technicalinterviewdemo.technical.security.SecuritySettingsProperties;
 
 public final class SecurityTestSupport {
 
@@ -70,7 +71,7 @@ public final class SecurityTestSupport {
                 .clientId("test-client-id")
                 .clientSecret("test-client-secret")
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .redirectUri("{baseUrl}/login/oauth2/code/{registrationId}")
+                .redirectUri(SecuritySettingsProperties.OAuth.REDIRECT_URI_TEMPLATE)
                 .scope("read:user", "user:email")
                 .authorizationUri("https://example.test/oauth/authorize")
                 .tokenUri("https://example.test/oauth/token")
@@ -80,4 +81,3 @@ public final class SecurityTestSupport {
                 .build();
     }
 }
-

@@ -2,7 +2,7 @@
   "openapi" : "3.0.1",
   "info" : {
     "title" : "technical-interview-demo API",
-    "description" : "Machine-readable contract for the demo application's stable 1.x supported HTTP surface, including the public overview and documentation endpoints plus the secured business API operations. Deployment-scoped technical endpoints such as /actuator/prometheus are documented separately.",
+    "description" : "Machine-readable contract for the demo application's supported external /api/** surface. Internal-only overview, documentation, OpenAPI publication, and actuator validation paths are intentionally excluded.",
     "version" : "APPROVED"
   },
   "tags" : [ {
@@ -23,9 +23,6 @@
   }, {
     "name" : "Localizations",
     "description" : "Public localization reads with ADMIN-only management operations."
-  }, {
-    "name" : "Technical",
-    "description" : "Public technical overview and smoke-test endpoints."
   }, {
     "name" : "Session",
     "description" : "Same-site browser session contract endpoints for the separate first-party UI."
@@ -735,31 +732,11 @@
         } ]
       }
     },
-    "/hello" : {
-      "get" : {
-        "tags" : [ "Technical" ],
-        "summary" : "Return Hello World",
-        "description" : "Public endpoint for quick smoke testing.",
-        "operationId" : "hello",
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "*/*" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/session" : {
       "get" : {
         "tags" : [ "Session" ],
         "summary" : "Get the current browser session contract",
-        "description" : "Public same-site session/bootstrap endpoint for the separate first-party UI. Returns the current authenticated state, persisted-account path, effective login bootstrap path, logout path, cookie contract, and current CSRF mode.",
+        "description" : "Public same-site session/bootstrap endpoint for the separate first-party UI. Returns the current authenticated state, persisted-account path, available OAuth login providers, logout path, cookie contract, and current CSRF mode.",
         "operationId" : "currentSession",
         "responses" : {
           "200" : {
@@ -938,26 +915,6 @@
         "security" : [ {
           "sessionCookie" : [ ]
         } ]
-      }
-    },
-    "/" : {
-      "get" : {
-        "tags" : [ "Technical" ],
-        "summary" : "Return technical application overview",
-        "description" : "Public endpoint that combines build, git, dependency, runtime, and important configuration details.",
-        "operationId" : "overview",
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "*/*" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/TechnicalOverviewResponse"
-                }
-              }
-            }
-          }
-        }
       }
     }
   },
@@ -1353,6 +1310,27 @@
         },
         "description" : "Current CSRF contract for browser writes."
       },
+      "SessionLoginProvider" : {
+        "type" : "object",
+        "properties" : {
+          "registrationId" : {
+            "type" : "string",
+            "description" : "Configured OAuth client registration id.",
+            "example" : "github"
+          },
+          "clientName" : {
+            "type" : "string",
+            "description" : "Display name exposed by the configured OAuth client registration.",
+            "example" : "GitHub"
+          },
+          "authorizationPath" : {
+            "type" : "string",
+            "description" : "Relative same-site authorization bootstrap path for the configured provider.",
+            "example" : "/api/session/oauth2/authorization/github"
+          }
+        },
+        "description" : "Available same-site OAuth login bootstrap option."
+      },
       "SessionResponse" : {
         "type" : "object",
         "properties" : {
@@ -1366,10 +1344,12 @@
             "description" : "Endpoint path for the authenticated persisted-account resource.",
             "example" : "/api/account"
           },
-          "loginPath" : {
-            "type" : "string",
-            "description" : "Interactive login bootstrap path for the current runtime. It is empty when oauth is inactive and otherwise resolves to either /oauth2/authorization/{registrationId} or /login.",
-            "example" : "/oauth2/authorization/github"
+          "loginProviders" : {
+            "type" : "array",
+            "description" : "Interactive login bootstrap options for the current runtime. It is an empty array when oauth is inactive.",
+            "items" : {
+              "$ref" : "#/components/schemas/SessionLoginProvider"
+            }
           },
           "logoutPath" : {
             "type" : "string",
@@ -1658,7 +1638,16 @@
           "oauthProfileActive" : {
             "type" : "boolean"
           },
-          "oauthLoginPath" : {
+          "publicApiPathPattern" : {
+            "type" : "string"
+          },
+          "oauthAuthorizationBasePath" : {
+            "type" : "string"
+          },
+          "oauthCallbackPathTemplate" : {
+            "type" : "string"
+          },
+          "forwardHeadersStrategy" : {
             "type" : "string"
           }
         }
@@ -1721,13 +1710,13 @@
       "PageLocalizationResponse" : {
         "type" : "object",
         "properties" : {
-          "totalPages" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
           "totalElements" : {
             "type" : "integer",
             "format" : "int64"
+          },
+          "totalPages" : {
+            "type" : "integer",
+            "format" : "int32"
           },
           "size" : {
             "type" : "integer",
@@ -1743,6 +1732,9 @@
             "type" : "integer",
             "format" : "int32"
           },
+          "pageable" : {
+            "$ref" : "#/components/schemas/PageableObject"
+          },
           "last" : {
             "type" : "boolean"
           },
@@ -1756,9 +1748,6 @@
           "sort" : {
             "$ref" : "#/components/schemas/SortObject"
           },
-          "pageable" : {
-            "$ref" : "#/components/schemas/PageableObject"
-          },
           "empty" : {
             "type" : "boolean"
           }
@@ -1767,26 +1756,26 @@
       "PageableObject" : {
         "type" : "object",
         "properties" : {
-          "offset" : {
+          "pageNumber" : {
             "type" : "integer",
-            "format" : "int64"
-          },
-          "sort" : {
-            "$ref" : "#/components/schemas/SortObject"
-          },
-          "paged" : {
-            "type" : "boolean"
-          },
-          "unpaged" : {
-            "type" : "boolean"
+            "format" : "int32"
           },
           "pageSize" : {
             "type" : "integer",
             "format" : "int32"
           },
-          "pageNumber" : {
+          "paged" : {
+            "type" : "boolean"
+          },
+          "sort" : {
+            "$ref" : "#/components/schemas/SortObject"
+          },
+          "unpaged" : {
+            "type" : "boolean"
+          },
+          "offset" : {
             "type" : "integer",
-            "format" : "int32"
+            "format" : "int64"
           }
         }
       },
@@ -1807,13 +1796,13 @@
       "PageBook" : {
         "type" : "object",
         "properties" : {
-          "totalPages" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
           "totalElements" : {
             "type" : "integer",
             "format" : "int64"
+          },
+          "totalPages" : {
+            "type" : "integer",
+            "format" : "int32"
           },
           "size" : {
             "type" : "integer",
@@ -1829,6 +1818,9 @@
             "type" : "integer",
             "format" : "int32"
           },
+          "pageable" : {
+            "$ref" : "#/components/schemas/PageableObject"
+          },
           "last" : {
             "type" : "boolean"
           },
@@ -1841,9 +1833,6 @@
           },
           "sort" : {
             "$ref" : "#/components/schemas/SortObject"
-          },
-          "pageable" : {
-            "$ref" : "#/components/schemas/PageableObject"
           },
           "empty" : {
             "type" : "boolean"
@@ -1919,7 +1908,7 @@
     "securitySchemes" : {
       "sessionCookie" : {
         "type" : "apiKey",
-        "description" : "Authenticated browser session cookie used by protected operations. It is established through a configured identity provider login path under /oauth2/authorization/{registrationId} when the optional oauth profile is active.",
+        "description" : "Authenticated browser session cookie used by protected operations. It is established through a configured identity provider login path under /api/session/oauth2/authorization/{registrationId} when the optional oauth profile is active.",
         "name" : "technical-interview-demo-session",
         "in" : "cookie"
       }

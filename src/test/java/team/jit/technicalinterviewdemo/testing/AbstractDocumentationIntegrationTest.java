@@ -8,6 +8,8 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.restdocs.headers.HeaderDescriptor;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.payload.FieldDescriptor;
@@ -24,11 +26,22 @@ public abstract class AbstractDocumentationIntegrationTest extends AbstractMockM
         );
     }
 
-    protected HeaderDescriptor[] commonResponseHeaders() {
-        return new HeaderDescriptor[]{
+    protected HeaderDescriptor[] commonResponseHeaders(HeaderDescriptor... additionalHeaders) {
+        List<HeaderDescriptor> headers = new ArrayList<>(List.of(
+                headerWithName("X-Content-Type-Options").description("Response hardening header set to `nosniff`."),
+                headerWithName("X-Frame-Options").description("Response hardening header set to `DENY`."),
+                headerWithName("Referrer-Policy").description("Response hardening header set to `no-referrer`."),
+                headerWithName("Permissions-Policy").description(
+                        "Response hardening header that disables geolocation, microphone, and camera browser features."
+                ),
+                headerWithName("Strict-Transport-Security").optional().description(
+                        "Present on secure responses in `prod` only to enforce HTTPS caching."
+                ),
                 headerWithName("X-Request-Id").description("Request identifier returned on every public endpoint."),
                 headerWithName("traceparent").description("Trace context header returned when tracing is active.")
-        };
+        ));
+        headers.addAll(List.of(additionalHeaders));
+        return headers.toArray(HeaderDescriptor[]::new);
     }
 
     protected FieldDescriptor[] problemResponseFields() {

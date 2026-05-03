@@ -6,7 +6,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -109,16 +108,12 @@ public class SecuritySettingsProperties {
 
     public static class OAuth {
 
-        private String defaultProvider = "";
         private Map<String, Provider> providers = new LinkedHashMap<>();
 
-        public String getDefaultProvider() {
-            return defaultProvider;
-        }
-
-        public void setDefaultProvider(String defaultProvider) {
-            this.defaultProvider = defaultProvider;
-        }
+        public static final String AUTHORIZATION_BASE_URI = "/api/session/oauth2/authorization";
+        public static final String CALLBACK_BASE_URI = "/api/session/login/oauth2/code";
+        public static final String REDIRECTION_ENDPOINT_BASE_URI = CALLBACK_BASE_URI + "/*";
+        public static final String REDIRECT_URI_TEMPLATE = "{baseUrl}" + CALLBACK_BASE_URI + "/{registrationId}";
 
         public Map<String, Provider> getProviders() {
             return providers;
@@ -141,33 +136,8 @@ public class SecuritySettingsProperties {
                     ));
         }
 
-        public Optional<String> normalizedDefaultProvider() {
-            String normalized = normalizeRegistrationId(defaultProvider);
-            if (normalized.isBlank()) {
-                return Optional.empty();
-            }
-            return Optional.of(normalized);
-        }
-
-        public Optional<String> resolvedLoginProvider() {
-            Map<String, Provider> configuredProviders = configuredProviders();
-            Optional<String> defaultProviderCandidate = normalizedDefaultProvider();
-            if (defaultProviderCandidate.isPresent()
-                    && (configuredProviders.isEmpty() || configuredProviders.containsKey(defaultProviderCandidate.get()))) {
-                return defaultProviderCandidate;
-            }
-            if (configuredProviders.size() == 1) {
-                return configuredProviders.keySet().stream().findFirst();
-            }
-            return Optional.empty();
-        }
-
-        public Optional<String> resolvedLoginPath() {
-            return resolvedLoginProvider().map(OAuth::authorizationPath);
-        }
-
         public static String authorizationPath(String providerId) {
-            return "/oauth2/authorization/" + normalizeRegistrationId(providerId);
+            return AUTHORIZATION_BASE_URI + "/" + normalizeRegistrationId(providerId);
         }
 
         private static String normalizeRegistrationId(String providerId) {

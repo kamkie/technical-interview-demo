@@ -120,13 +120,22 @@ class ApiDocumentationTests extends AbstractDocumentationIntegrationTest {
                                 fieldWithPath("configuration.documentation.openApiYaml").description("OpenAPI YAML endpoint path."),
                                 fieldWithPath("configuration.documentation.openApiVersion").description("Configured OpenAPI document dialect."),
                                 fieldWithPath("configuration.security.csrfEnabled").description(
-                                        "Whether CSRF protection is enabled. For 1.0 this remains disabled as a deliberate demo tradeoff for reviewer-oriented session flows."
+                                        "Whether CSRF protection is enabled. It remains disabled in the current same-site demo contract as a deliberate tradeoff for reviewer-oriented session flows."
                                 ),
                                 fieldWithPath("configuration.security.oauthProfileActive").description(
                                         "Whether the optional oauth profile is currently active. The base runtime remains deployable without it."
                                 ),
-                                fieldWithPath("configuration.security.oauthLoginPath").description(
-                                        "Configured interactive OAuth login bootstrap path. It is empty when oauth is inactive and otherwise resolves to either /oauth2/authorization/{registrationId} or /login."
+                                fieldWithPath("configuration.security.publicApiPathPattern").description(
+                                        "Documented public path family intended for external exposure through the reverse proxy."
+                                ),
+                                fieldWithPath("configuration.security.oauthAuthorizationBasePath").description(
+                                        "Base path for same-site OAuth provider authorization bootstrap endpoints."
+                                ),
+                                fieldWithPath("configuration.security.oauthCallbackPathTemplate").description(
+                                        "Callback path template expected from the external identity provider after proxy forwarding."
+                                ),
+                                fieldWithPath("configuration.security.forwardHeadersStrategy").description(
+                                        "Configured Spring forwarded-header handling strategy used to honor trusted reverse-proxy headers."
                                 ),
                                 fieldWithPath("configuration.shutdown.serverShutdown").description("Server shutdown mode."),
                                 fieldWithPath("configuration.shutdown.timeoutPerShutdownPhase").description("Per-phase graceful shutdown timeout.")
@@ -143,11 +152,9 @@ class ApiDocumentationTests extends AbstractDocumentationIntegrationTest {
                 .andExpect(header().string("Location", "/docs/index.html"))
                 .andDo(documentEndpoint(
                         "docs/get-docs",
-                        responseHeaders(
-                                headerWithName("Location").description("Redirect target for the generated API documentation."),
-                                headerWithName("X-Request-Id").description("Request identifier returned on every public endpoint."),
-                                headerWithName("traceparent").description("Trace context header returned when tracing is active.")
-                        )
+                        responseHeaders(commonResponseHeaders(
+                                headerWithName("Location").description("Redirect target for the generated API documentation.")
+                        ))
                 ));
     }
 

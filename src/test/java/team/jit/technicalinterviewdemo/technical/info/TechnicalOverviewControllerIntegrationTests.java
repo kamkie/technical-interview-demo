@@ -51,13 +51,18 @@ class TechnicalOverviewControllerIntegrationTests extends AbstractMockMvcIntegra
                 .andExpect(jsonPath("$.configuration.documentation.openApiVersion").value("OPENAPI_3_0"))
                 .andExpect(jsonPath("$.configuration.security.csrfEnabled").value(false))
                 .andExpect(jsonPath("$.configuration.security.oauthProfileActive").value(false))
-                .andExpect(jsonPath("$.configuration.security.oauthLoginPath").value(""))
+                .andExpect(jsonPath("$.configuration.security.publicApiPathPattern").value("/api/**"))
+                .andExpect(jsonPath("$.configuration.security.oauthAuthorizationBasePath")
+                        .value("/api/session/oauth2/authorization"))
+                .andExpect(jsonPath("$.configuration.security.oauthCallbackPathTemplate")
+                        .value("/api/session/login/oauth2/code/{registrationId}"))
+                .andExpect(jsonPath("$.configuration.security.forwardHeadersStrategy").value("none"))
                 .andExpect(jsonPath("$.configuration.shutdown.serverShutdown").value("graceful"))
                 .andExpect(jsonPath("$.configuration.shutdown.timeoutPerShutdownPhase").value("20s"));
     }
 
     @Test
-    void helloEndpointRemainsPublicSmokeTestContract() throws Exception {
+    void helloEndpointRemainsAvailableForTrustedSmokeChecks() throws Exception {
         mockMvc.perform(get("/hello"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Hello World!"));

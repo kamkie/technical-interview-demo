@@ -6,7 +6,9 @@
 
 xref:index.adoc[Back to API overview]
 
-This page documents the public technical-overview and smoke-test endpoints exposed by `TechnicalOverviewController`.
+This page documents the internal technical-overview and smoke-test endpoints exposed by `TechnicalOverviewController`.
+
+These paths are intended for trusted internal or devops validation. They are no longer part of the supported external `/api/**` contract.
 
 == `GET /`
 
@@ -20,7 +22,7 @@ include::{snippets}/technical/get-root/response-fields.adoc[]
 
 == `GET /hello`
 
-Returns a plain text health-check style response.
+Returns a plain text smoke-check style response for trusted internal validation.
 
 include::{snippets}/hello/get-hello/curl-request.adoc[]
 include::{snippets}/hello/get-hello/http-request.adoc[]

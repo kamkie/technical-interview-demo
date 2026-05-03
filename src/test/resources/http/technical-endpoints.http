@@ -1,4 +1,6 @@
 # IntelliJ HTTP Client examples for technical-interview-demo
+# These paths are intended for trusted internal or devops access and are not part
+# of the supported external `/api/**` contract.
 
 @baseUrl = http://localhost:8080
 
@@ -20,6 +22,6 @@ Accept: application/json
 
 ### Technical endpoints - Prometheus metrics for trusted deployment scraping
 # Deployment-scoped endpoint. Use this through a trusted cluster scrape or a deliberate port-forward,
-# not as an internet-public endpoint.
+# not as part of the supported external `/api/**` contract.
 GET {{baseUrl}}/actuator/prometheus
 Accept: text/plain

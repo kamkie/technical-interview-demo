@@ -1,6 +1,7 @@
 package team.jit.technicalinterviewdemo.technical.security;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
 
 @Schema(name = "SessionResponse", description = "Same-site browser session contract for the separate first-party UI.")
 public record SessionResponse(
@@ -9,10 +10,9 @@ public record SessionResponse(
         @Schema(description = "Endpoint path for the authenticated persisted-account resource.", example = "/api/account")
         String accountPath,
         @Schema(
-                description = "Interactive login bootstrap path for the current runtime. It is empty when oauth is inactive and otherwise resolves to either /oauth2/authorization/{registrationId} or /login.",
-                example = "/oauth2/authorization/github"
+                description = "Interactive login bootstrap options for the current runtime. It is an empty array when oauth is inactive."
         )
-        String loginPath,
+        List<LoginProvider> loginProviders,
         @Schema(description = "Same-site logout endpoint path.", example = "/api/session/logout")
         String logoutPath,
         @Schema(description = "Session cookie contract exposed for same-site browser clients.")
@@ -20,6 +20,20 @@ public record SessionResponse(
         @Schema(description = "Current CSRF contract for browser writes.")
         Csrf csrf
 ) {
+
+    @Schema(name = "SessionLoginProvider", description = "Available same-site OAuth login bootstrap option.")
+    public record LoginProvider(
+            @Schema(description = "Configured OAuth client registration id.", example = "github")
+            String registrationId,
+            @Schema(description = "Display name exposed by the configured OAuth client registration.", example = "GitHub")
+            String clientName,
+            @Schema(
+                    description = "Relative same-site authorization bootstrap path for the configured provider.",
+                    example = "/api/session/oauth2/authorization/github"
+            )
+            String authorizationPath
+    ) {
+    }
 
     @Schema(name = "SessionCookieContract", description = "Session cookie settings relevant to same-site browser clients.")
     public record SessionCookie(

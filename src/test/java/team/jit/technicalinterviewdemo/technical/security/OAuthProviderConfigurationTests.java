@@ -13,40 +13,9 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 class OAuthProviderConfigurationTests {
 
     @Test
-    void oauthSettingsResolveConfiguredDefaultProviderPath() {
-        SecuritySettingsProperties settings = baseSettings();
-        settings.getOAuth().setDefaultProvider("internal");
-        settings.getOAuth().setProviders(new LinkedHashMap<>(Map.of(
-                "github", provider(SecuritySettingsProperties.OAuth.ProviderType.GITHUB, "gh-client", "gh-secret"),
-                "internal", provider(SecuritySettingsProperties.OAuth.ProviderType.GITHUB, "internal-client", "internal-secret")
-        )));
-
-        assertThat(settings.getOAuth().resolvedLoginProvider()).contains("internal");
-        assertThat(settings.getOAuth().resolvedLoginPath()).contains("/oauth2/authorization/internal");
-    }
-
-    @Test
-    void oauthSettingsFallbackToSingleConfiguredProviderWhenDefaultIsNotConfigured() {
-        SecuritySettingsProperties settings = baseSettings();
-        settings.getOAuth().setDefaultProvider("github");
-        settings.getOAuth().setProviders(new LinkedHashMap<>(Map.of(
-                "internal", provider(SecuritySettingsProperties.OAuth.ProviderType.GITHUB, "internal-client", "internal-secret")
-        )));
-
-        assertThat(settings.getOAuth().resolvedLoginProvider()).contains("internal");
-    }
-
-    @Test
-    void oauthSettingsReturnNoShortcutWhenMultipleProvidersLackValidDefault() {
-        SecuritySettingsProperties settings = baseSettings();
-        settings.getOAuth().setDefaultProvider("missing");
-        settings.getOAuth().setProviders(new LinkedHashMap<>(Map.of(
-                "github", provider(SecuritySettingsProperties.OAuth.ProviderType.GITHUB, "gh-client", "gh-secret"),
-                "internal", provider(SecuritySettingsProperties.OAuth.ProviderType.GITHUB, "internal-client", "internal-secret")
-        )));
-
-        assertThat(settings.getOAuth().resolvedLoginProvider()).isEmpty();
-        assertThat(settings.getOAuth().resolvedLoginPath()).isEmpty();
+    void oauthAuthorizationPathUsesApiSessionBaseUri() {
+        assertThat(SecuritySettingsProperties.OAuth.authorizationPath("Internal"))
+                .isEqualTo("/api/session/oauth2/authorization/internal");
     }
 
     @Test
@@ -109,6 +78,7 @@ class OAuthProviderConfigurationTests {
         SecuritySettingsProperties settings = baseSettings();
         MockEnvironment environment = new MockEnvironment().withProperty("spring.profiles.active", "prod");
         environment.setActiveProfiles("prod");
+        environment.setProperty("server.forward-headers-strategy", "framework");
 
         ProductionSecurityConfigurationValidator validator =
                 new ProductionSecurityConfigurationValidator(settings, environment);
@@ -119,13 +89,13 @@ class OAuthProviderConfigurationTests {
     @Test
     void productionValidatorRejectsInvalidProviderId() {
         SecuritySettingsProperties settings = baseSettings();
-        settings.getOAuth().setDefaultProvider("invalid_provider");
         settings.getOAuth().setProviders(new LinkedHashMap<>(Map.of(
                 "invalid_provider", provider(SecuritySettingsProperties.OAuth.ProviderType.GITHUB, "client", "secret")
         )));
 
         MockEnvironment environment = new MockEnvironment().withProperty("spring.profiles.active", "prod,oauth");
         environment.setActiveProfiles("prod", "oauth");
+        environment.setProperty("server.forward-headers-strategy", "framework");
 
         ProductionSecurityConfigurationValidator validator =
                 new ProductionSecurityConfigurationValidator(settings, environment);
@@ -138,7 +108,6 @@ class OAuthProviderConfigurationTests {
     @Test
     void productionValidatorRejectsGithubProviderWithIssuer() {
         SecuritySettingsProperties settings = baseSettings();
-        settings.getOAuth().setDefaultProvider("github");
         SecuritySettingsProperties.OAuth.Provider provider =
                 provider(SecuritySettingsProperties.OAuth.ProviderType.GITHUB, "gh-client", "gh-secret");
         provider.setIssuerUri("https://issuer.example.com");
@@ -146,6 +115,7 @@ class OAuthProviderConfigurationTests {
 
         MockEnvironment environment = new MockEnvironment().withProperty("spring.profiles.active", "prod,oauth");
         environment.setActiveProfiles("prod", "oauth");
+        environment.setProperty("server.forward-headers-strategy", "framework");
 
         ProductionSecurityConfigurationValidator validator =
                 new ProductionSecurityConfigurationValidator(settings, environment);
@@ -158,7 +128,6 @@ class OAuthProviderConfigurationTests {
     @Test
     void productionValidatorRejectsOidcWithoutOpenidScope() {
         SecuritySettingsProperties settings = baseSettings();
-        settings.getOAuth().setDefaultProvider("oidc");
         SecuritySettingsProperties.OAuth.Provider provider =
                 provider(SecuritySettingsProperties.OAuth.ProviderType.OIDC, "oidc-client", "oidc-secret");
         provider.setIssuerUri("https://issuer.example.com");
@@ -167,6 +136,7 @@ class OAuthProviderConfigurationTests {
 
         MockEnvironment environment = new MockEnvironment().withProperty("spring.profiles.active", "prod,oauth");
         environment.setActiveProfiles("prod", "oauth");
+        environment.setProperty("server.forward-headers-strategy", "framework");
 
         ProductionSecurityConfigurationValidator validator =
                 new ProductionSecurityConfigurationValidator(settings, environment);
@@ -177,9 +147,8 @@ class OAuthProviderConfigurationTests {
     }
 
     @Test
-    void productionValidatorRequiresDefaultProviderWhenMultipleProvidersConfigured() {
+    void productionValidatorAllowsMultipleProvidersWithoutDefaultProvider() {
         SecuritySettingsProperties settings = baseSettings();
-        settings.getOAuth().setDefaultProvider("");
         settings.getOAuth().setProviders(new LinkedHashMap<>(Map.of(
                 "github", provider(SecuritySettingsProperties.OAuth.ProviderType.GITHUB, "gh-client", "gh-secret"),
                 "internal", provider(SecuritySettingsProperties.OAuth.ProviderType.GITHUB, "internal-client", "internal-secret")
@@ -187,13 +156,43 @@ class OAuthProviderConfigurationTests {
 
         MockEnvironment environment = new MockEnvironment().withProperty("spring.profiles.active", "prod,oauth");
         environment.setActiveProfiles("prod", "oauth");
+        environment.setProperty("server.forward-headers-strategy", "framework");
+
+        ProductionSecurityConfigurationValidator validator =
+                new ProductionSecurityConfigurationValidator(settings, environment);
+
+        assertThatCode(validator::afterPropertiesSet).doesNotThrowAnyException();
+    }
+
+    @Test
+    void productionValidatorRejectsDeprecatedDefaultProviderSetting() {
+        SecuritySettingsProperties settings = baseSettings();
+        MockEnvironment environment = new MockEnvironment().withProperty("spring.profiles.active", "prod,oauth");
+        environment.setActiveProfiles("prod", "oauth");
+        environment.setProperty("OAUTH_DEFAULT_PROVIDER", "github");
+        environment.setProperty("server.forward-headers-strategy", "framework");
 
         ProductionSecurityConfigurationValidator validator =
                 new ProductionSecurityConfigurationValidator(settings, environment);
 
         assertThatThrownBy(validator::afterPropertiesSet)
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("requires OAUTH_DEFAULT_PROVIDER");
+                .hasMessageContaining("OAUTH_DEFAULT_PROVIDER has been removed");
+    }
+
+    @Test
+    void productionValidatorRejectsNonFrameworkForwardedHeaderStrategy() {
+        SecuritySettingsProperties settings = baseSettings();
+        MockEnvironment environment = new MockEnvironment().withProperty("spring.profiles.active", "prod");
+        environment.setActiveProfiles("prod");
+        environment.setProperty("server.forward-headers-strategy", "native");
+
+        ProductionSecurityConfigurationValidator validator =
+                new ProductionSecurityConfigurationValidator(settings, environment);
+
+        assertThatThrownBy(validator::afterPropertiesSet)
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("server.forward-headers-strategy=framework");
     }
 
     private SecuritySettingsProperties baseSettings() {

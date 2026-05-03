@@ -28,13 +28,14 @@ import org.springframework.session.SessionRepository;
 import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.web.util.UriComponentsBuilder;
 import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
 import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
 
 @MockMvcIntegrationSpringBootTest
 @ActiveProfiles(value = {"test", "oauth"}, inheritProfiles = false)
 @TestPropertySource(properties = {
-        "app.security.oauth.default-provider=github",
         "app.security.oauth.providers.github.client-id=test-client-id",
         "app.security.oauth.providers.github.client-secret=test-client-secret"
 })
@@ -62,7 +63,12 @@ class SessionApiOauthIntegrationTests extends AbstractMockMvcIntegrationTest {
         mockMvc.perform(get("/api/session"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.authenticated").value(false))
-                .andExpect(jsonPath("$.loginPath").value("/oauth2/authorization/github"))
+                .andExpect(jsonPath("$.loginProviders.length()").value(1))
+                .andExpect(jsonPath("$.loginProviders[0].registrationId").value("github"))
+                .andExpect(jsonPath("$.loginProviders[0].clientName").value("GitHub"))
+                .andExpect(jsonPath("$.loginProviders[0].authorizationPath")
+                        .value("/api/session/oauth2/authorization/github"))
+                .andExpect(jsonPath("$.loginPath").doesNotExist())
                 .andExpect(jsonPath("$.logoutPath").value("/api/session/logout"))
                 .andExpect(jsonPath("$.sessionCookie.name").value("technical-interview-demo-session"))
                 .andExpect(jsonPath("$.sessionCookie.sameSite").value("lax"))
@@ -78,8 +84,22 @@ class SessionApiOauthIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.authenticated").value(true))
                 .andExpect(jsonPath("$.accountPath").value("/api/account"))
-                .andExpect(jsonPath("$.loginPath").value("/oauth2/authorization/github"))
+                .andExpect(jsonPath("$.loginProviders.length()").value(1))
+                .andExpect(jsonPath("$.loginProviders[0].authorizationPath")
+                        .value("/api/session/oauth2/authorization/github"))
                 .andExpect(jsonPath("$.logoutPath").value("/api/session/logout"));
+    }
+
+    @Test
+    void oauthAuthorizationEndpointUsesRelativeApiSessionPathInLocalTestProfile() throws Exception {
+        MvcResult result = mockMvc.perform(get("/api/session/oauth2/authorization/github"))
+                .andExpect(status().is3xxRedirection())
+                .andReturn();
+
+        String location = result.getResponse().getHeader("Location");
+        assertThat(location).startsWith("https://github.com/login/oauth/authorize?");
+        assertThat(UriComponentsBuilder.fromUriString(location).build(true).getQueryParams().getFirst("redirect_uri"))
+                .isEqualTo("http://localhost/api/session/login/oauth2/code/github");
     }
 
     @Test

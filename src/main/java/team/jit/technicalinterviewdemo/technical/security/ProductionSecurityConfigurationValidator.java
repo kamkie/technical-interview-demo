@@ -2,17 +2,14 @@ package team.jit.technicalinterviewdemo.technical.security;
 
 import java.time.Duration;
 import java.util.Map;
-import java.util.Optional;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("prod")
 @RequiredArgsConstructor
 public class ProductionSecurityConfigurationValidator implements InitializingBean {
 
@@ -26,8 +23,13 @@ public class ProductionSecurityConfigurationValidator implements InitializingBea
 
     @Override
     public void afterPropertiesSet() {
+        validateRemovedSettings();
+        if (!environment.acceptsProfiles(Profiles.of("prod"))) {
+            return;
+        }
         validateSessionContract();
         validateAdminLogins();
+        validateForwardedHeaderStrategy();
         validateOAuthSettings();
     }
 
@@ -66,6 +68,27 @@ public class ProductionSecurityConfigurationValidator implements InitializingBea
         }
     }
 
+    private void validateRemovedSettings() {
+        String deprecatedDefaultProvider = firstNonBlank(
+                environment.getProperty("OAUTH_DEFAULT_PROVIDER"),
+                environment.getProperty("app.security.oauth.default-provider")
+        );
+        if (deprecatedDefaultProvider != null) {
+            throw new IllegalStateException(
+                    "OAUTH_DEFAULT_PROVIDER has been removed. Expose provider choices through GET /api/session loginProviders[]."
+            );
+        }
+    }
+
+    private void validateForwardedHeaderStrategy() {
+        String forwardHeadersStrategy = environment.getProperty("server.forward-headers-strategy", "");
+        if (!"framework".equalsIgnoreCase(forwardHeadersStrategy)) {
+            throw new IllegalStateException(
+                    "Prod profile requires server.forward-headers-strategy=framework."
+            );
+        }
+    }
+
     private void validateOAuthSettings() {
         if (!environment.acceptsProfiles(Profiles.of("oauth"))) {
             return;
@@ -85,18 +108,6 @@ public class ProductionSecurityConfigurationValidator implements InitializingBea
             validateProviderConfiguration(registrationId, provider);
         }
 
-        Optional<String> defaultProvider = oauthSettings.normalizedDefaultProvider();
-        if (defaultProvider.isPresent() && !configuredProviders.containsKey(defaultProvider.get())) {
-            throw new IllegalStateException(
-                    "OAUTH_DEFAULT_PROVIDER must reference a configured provider with credentials. Configured providers: "
-                            + configuredProviders.keySet()
-            );
-        }
-        if (defaultProvider.isEmpty() && configuredProviders.size() > 1) {
-            throw new IllegalStateException(
-                    "OAuth-enabled prod profile with multiple configured providers requires OAUTH_DEFAULT_PROVIDER."
-            );
-        }
     }
 
     private void validateProviderId(String registrationId) {
@@ -158,5 +169,15 @@ public class ProductionSecurityConfigurationValidator implements InitializingBea
                             .formatted(registrationId)
             );
         }
+    }
+
+    private String firstNonBlank(String first, String second) {
+        if (first != null && !first.isBlank()) {
+            return first;
+        }
+        if (second != null && !second.isBlank()) {
+            return second;
+        }
+        return null;
     }
 }

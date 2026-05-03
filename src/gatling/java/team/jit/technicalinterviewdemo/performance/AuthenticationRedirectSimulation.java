@@ -26,7 +26,7 @@ public class AuthenticationRedirectSimulation extends Simulation {
     private final ScenarioBuilder scenarioBuilder = scenario("oauth-redirect-start")
             .exec(
                     http("oauth2-github-redirect")
-                            .get("/oauth2/authorization/github")
+                            .get("/api/session/oauth2/authorization/github")
                             .check(status().is(302))
                             .check(headerRegex("Location", "https://github.com/.*"))
             );

@@ -9,13 +9,12 @@ This documentation is generated from integration tests using Spring REST Docs.
 == Application Overview
 
 Technical Interview Demo is a small Spring Boot application intended for interview exercises.
-`1.0` freezes it as a stable interview-demo reference app rather than a production-ready starter.
-The supported `1.x` contract keeps the simple overview endpoints, the CRUD-style book/category/localization APIs, generated documentation, and a small operational surface easy to review in one sitting.
+The current contract keeps the externally supported `/api/**` surface small while preserving internal overview, documentation, and operational validation paths for trusted environments.
 
 == Contract Tiers
 
-- Supported `1.x` business and documentation contract: `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, `/api/books...`, `/api/categories...`, `/api/localizations...`, `/api/session`, `/api/session/logout`, `/api/account...`, `/api/audit-logs`, `/api/operator/surface`
-- Supported operational contract: `/actuator/health`, `/actuator/health/liveness`, `/actuator/health/readiness`, `/actuator/info`
+- Supported external application contract: `/api/books...`, `/api/categories...`, `/api/localizations...`, `/api/session`, `/api/session/logout`, `/api/session/oauth2/authorization/{registrationId}`, `/api/session/login/oauth2/code/{registrationId}`, `/api/account...`, `/api/audit-logs`, `/api/operator/surface`
+- Internal or devops-only validation surface: `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, `/actuator/health`, `/actuator/health/liveness`, `/actuator/health/readiness`, `/actuator/info`
 - Deployment-scoped technical surface: `/actuator/prometheus` is supported for trusted deployment scraping, but it is not part of the internet-public contract
 
 == Build Metadata
@@ -48,18 +47,18 @@ The values below are loaded from `{build-info-path}` during the Asciidoctor buil
 - Protected API `401` and `403` responses use the same localized `ProblemDetail` field set as validation and domain errors.
 - Browser-compatible localization uses `Accept-Language`, the optional `lang` query parameter overrides it with values such as `pl` or `pl-PL`, and cookie `language` is used as fallback.
 - Supported application languages are `en`, `es`, `de`, `fr`, `pl`, `uk`, and `no`.
-- Public supported endpoints include `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, the read-only book/category/localization lookups, `GET /api/session`, and `POST /api/session/logout`.
+- Public supported external endpoints include the read-only book/category/localization lookups, `GET /api/session`, `POST /api/session/logout`, and `GET /api/session/oauth2/authorization/{registrationId}`.
 - `GET /api/session` is the supported same-site browser session/bootstrap endpoint for the separate first-party UI, while `/api/account` remains the authenticated persisted-profile resource.
 - Protected supported endpoints use an authenticated browser session for `/api/account`, `/api/audit-logs`, `/api/operator/surface`, and for state-changing book, category, and localization operations.
 - Interactive login bootstrap is provider-aware when the optional `oauth` profile is active:
-  - `/oauth2/authorization/{registrationId}` for direct provider entry points
-  - configured default-provider shortcut via `/oauth2/authorization/{defaultRegistrationId}` when `OAUTH_DEFAULT_PROVIDER` is set
-  - `/login` as the chooser page when multiple providers are configured without a default shortcut outside `prod`
+  - `/api/session/oauth2/authorization/{registrationId}` for direct provider entry points
+  - `/api/session/login/oauth2/code/{registrationId}` as the reverse-proxy callback path
+  - `GET /api/session` exposes `loginProviders[]` so the UI can choose among configured providers without relying on `/login`
 - The supported first-party browser contract assumes one public origin via reverse proxy and does not promise cross-origin browser calls or CORS support.
 - The operator inspection surface at `/api/operator/surface` requires an authenticated session and the `ADMIN` role.
 - Authenticated browser sessions are persisted through Spring Session JDBC in PostgreSQL.
 - CSRF remains disabled for browser-session writes as a deliberate demo tradeoff for reviewer-oriented workflows.
-- The machine-readable OpenAPI contract is available at `/v3/api-docs` and `/v3/api-docs.yaml`.
+- The machine-readable OpenAPI contract is published internally at `/v3/api-docs` and `/v3/api-docs.yaml` for trusted documentation and review workflows.
 - Collection endpoints use Spring pagination conventions such as `page`, `size`, and repeated `sort` parameters.
 - Update operations that modify books require a `version` field for optimistic locking.
 - Books can be filtered by repeated `category` query parameters and can carry multiple assigned categories.
@@ -81,6 +80,6 @@ The values below are loaded from `{build-info-path}` during the Asciidoctor buil
 - Generated snippets are written to `build/generated-snippets`.
 - Build metadata is loaded from `/META-INF/build-info.properties` and rendered into this overview page.
 - Asciidoctor renders the linked HTML pages into `build/docs/asciidoc`.
-- The application serves the generated output from `/docs`, with `/docs` redirecting to `index.html`.
+- The application serves the generated output from `/docs`, with `/docs` redirecting to `index.html`, for trusted internal or devops access.
 - The approved OpenAPI baseline is stored at `src/test/resources/openapi/approved-openapi.json`.
 - Refresh the approved OpenAPI baseline intentionally with `./gradlew refreshOpenApiBaseline` or `.\gradlew.bat refreshOpenApiBaseline`.

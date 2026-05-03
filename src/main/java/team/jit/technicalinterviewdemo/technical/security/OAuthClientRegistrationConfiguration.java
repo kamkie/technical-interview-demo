@@ -17,8 +17,6 @@ import org.springframework.security.oauth2.client.registration.InMemoryClientReg
 @Profile("oauth")
 public class OAuthClientRegistrationConfiguration {
 
-    private static final String REDIRECT_URI_TEMPLATE = "{baseUrl}/login/oauth2/code/{registrationId}";
-
     @Bean
     ClientRegistrationRepository clientRegistrationRepository(SecuritySettingsProperties securitySettingsProperties) {
         Map<String, SecuritySettingsProperties.OAuth.Provider> configuredProviders =
@@ -71,7 +69,7 @@ public class OAuthClientRegistrationConfiguration {
         ClientRegistration.Builder builder = CommonOAuth2Provider.GITHUB.getBuilder(registrationId)
                 .clientId(provider.normalizedClientId())
                 .clientSecret(provider.normalizedClientSecret())
-                .redirectUri(REDIRECT_URI_TEMPLATE);
+                .redirectUri(SecuritySettingsProperties.OAuth.REDIRECT_URI_TEMPLATE);
 
         Set<String> scope = provider.normalizedScope();
         if (!scope.isEmpty()) {
@@ -102,7 +100,7 @@ public class OAuthClientRegistrationConfiguration {
                 .registrationId(registrationId)
                 .clientId(provider.normalizedClientId())
                 .clientSecret(provider.normalizedClientSecret())
-                .redirectUri(REDIRECT_URI_TEMPLATE);
+                .redirectUri(SecuritySettingsProperties.OAuth.REDIRECT_URI_TEMPLATE);
 
         Set<String> scope = provider.normalizedScope();
         if (!scope.isEmpty()) {

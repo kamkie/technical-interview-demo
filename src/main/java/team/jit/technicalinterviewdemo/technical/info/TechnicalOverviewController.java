@@ -1,5 +1,6 @@
 package team.jit.technicalinterviewdemo.technical.info;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "Technical", description = "Public technical overview and smoke-test endpoints.")
+@Hidden
+@Tag(name = "Technical", description = "Internal technical overview and smoke-test endpoints.")
 public class TechnicalOverviewController {
 
     private final TechnicalOverviewService technicalOverviewService;
@@ -17,7 +19,7 @@ public class TechnicalOverviewController {
     @GetMapping("/")
     @Operation(
             summary = "Return technical application overview",
-            description = "Public endpoint that combines build, git, dependency, runtime, and important configuration details."
+            description = "Internal endpoint that combines build, git, dependency, runtime, and important configuration details."
     )
     public ResponseEntity<TechnicalOverviewResponse> overview() {
         TechnicalOverviewResponse payload = technicalOverviewService.getOverview();
@@ -25,7 +27,7 @@ public class TechnicalOverviewController {
     }
 
     @GetMapping("/hello")
-    @Operation(summary = "Return Hello World", description = "Public endpoint for quick smoke testing.")
+    @Operation(summary = "Return Hello World", description = "Internal endpoint for quick smoke testing.")
     public ResponseEntity<String> hello() {
         String payload = "Hello World!";
         return ResponseEntity.ok(payload);

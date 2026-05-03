@@ -80,7 +80,10 @@ public record TechnicalOverviewResponse(
     public record SecurityDetails(
             boolean csrfEnabled,
             boolean oauthProfileActive,
-            String oauthLoginPath
+            String publicApiPathPattern,
+            String oauthAuthorizationBasePath,
+            String oauthCallbackPathTemplate,
+            String forwardHeadersStrategy
     ) {
     }
 

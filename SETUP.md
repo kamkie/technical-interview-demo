@@ -75,22 +75,23 @@ Variables you are most likely to need:
 - `DATABASE_*` variables when overriding the default PostgreSQL connection
 - `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` for the built-in GitHub provider when enabling the optional `oauth` profile
 - `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`, and `OIDC_ISSUER_URI` for the built-in issuer-driven OIDC provider when enabling `oauth`
-- `OAUTH_DEFAULT_PROVIDER` when more than one OAuth provider is configured and you want a default login bootstrap path
 - `ADMIN_LOGINS` when you want one or more external logins to receive the persisted `ADMIN` role
 - `APP_BOOTSTRAP_SEED_DEMO_DATA` when you want to override demo-data seeding for categories, books, and localization messages
 - `SESSION_COOKIE_SECURE` when you want to override the `prod` profile session-cookie default of `true` for local HTTP testing or a specific deployment environment
 
 ## Deployment Contract
 
-The `1.0` line is a stable interview-demo reference app. The checked-in deployment assets intentionally freeze this posture:
+The checked-in deployment assets intentionally freeze this posture:
 
-- `GET /` and `GET /hello` remain supported contract endpoints alongside the documented `/api/**` and documentation surfaces
+- only `/api/**` is intended to be internet-reachable, through `waf -> frontend -> this application`
+- `GET /`, `GET /hello`, `GET /docs`, `GET /v3/api-docs`, `GET /v3/api-docs.yaml`, and `GET /actuator/**` are internal or devops-only validation surfaces
 - `prod` is the default deployment profile in the raw manifests and Helm chart
 - browser sessions use secure cookies by default through `SESSION_COOKIE_SECURE=true`
 - OAuth stays opt-in through the `oauth` profile; bare `prod` does not require identity-provider credentials
 - admin bootstrap remains environment-driven through `ADMIN_LOGINS`
 - demo data bootstrap defaults to disabled in `prod` and enabled in `local` and `test` through `APP_BOOTSTRAP_SEED_DEMO_DATA`
 - CSRF remains disabled as a deliberate demo tradeoff for reviewer-oriented session workflows
+- trusted reverse-proxy headers are part of the `prod` runtime contract through `server.forward-headers-strategy=framework`
 - `GET /actuator/prometheus` stays supported for trusted deployment scraping, but it is not part of the internet-public endpoint contract
 
 The deployment story is standardized around these artifacts:
@@ -114,7 +115,6 @@ Optional runtime environment variables:
 - `SESSION_COOKIE_SECURE` with a secure-by-default value of `true`
 - `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` for the built-in GitHub provider when the `oauth` profile is active
 - `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`, and `OIDC_ISSUER_URI` for the built-in issuer-driven OIDC provider when the `oauth` profile is active
-- `OAUTH_DEFAULT_PROVIDER` to choose the default `/oauth2/authorization/{registrationId}` bootstrap path when multiple providers are configured
 - `ADMIN_LOGINS`
 - `APP_BOOTSTRAP_SEED_DEMO_DATA` when you need to opt in or out of demo-data seeding outside the profile defaults
 
@@ -469,7 +469,7 @@ Secret handling:
 - `k8s/base/secret-example.yaml` is an example only and is not included in the base Kustomize package
 - create a real `technical-interview-demo-secrets` secret before applying the manifests
 - the required secret key is `DATABASE_PASSWORD`
-- optional secret keys are `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`, `OIDC_ISSUER_URI`, `OAUTH_DEFAULT_PROVIDER`, and `ADMIN_LOGINS`
+- optional secret keys are `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`, `OIDC_ISSUER_URI`, and `ADMIN_LOGINS`
 
 Base deployment defaults:
 
@@ -594,22 +594,20 @@ The built-in provider model supports:
 - `oidc` (issuer-driven OpenID Connect metadata + client credentials)
 
 You can also define additional provider registration ids through `app.security.oauth.providers.<registrationId>.*`.
-
-When more than one provider is configured, set `OAUTH_DEFAULT_PROVIDER` to control the default bootstrap path.
+Expose those choices to the first-party UI through `GET /api/session`, which now returns `loginProviders[]` with `registrationId`, `clientName`, and `authorizationPath`.
 
 ### GitHub Example
 
 Create a GitHub OAuth App with:
 
 - Homepage URL: `http://localhost:8080`
-- Authorization callback URL: `http://localhost:8080/login/oauth2/code/github`
+- Authorization callback URL: `http://localhost:8080/api/session/login/oauth2/code/github`
 
 Then export credentials and start the app:
 
 ```powershell
 $env:GITHUB_CLIENT_ID='your-github-client-id'
 $env:GITHUB_CLIENT_SECRET='your-github-client-secret'
-$env:OAUTH_DEFAULT_PROVIDER='github'
 $env:ADMIN_LOGINS='your-login'
 $env:SPRING_PROFILES_ACTIVE='local,oauth'
 
@@ -619,7 +617,7 @@ docker-compose up -d
 
 Start the login flow at:
 
-- `http://localhost:8080/oauth2/authorization/github`
+- `http://localhost:8080/api/session/oauth2/authorization/github`
 
 ### OIDC Example
 
@@ -629,7 +627,6 @@ Provide OIDC issuer metadata plus credentials, then start the app:
 $env:OIDC_CLIENT_ID='your-oidc-client-id'
 $env:OIDC_CLIENT_SECRET='your-oidc-client-secret'
 $env:OIDC_ISSUER_URI='https://your-issuer.example.com/realms/demo'
-$env:OAUTH_DEFAULT_PROVIDER='oidc'
 $env:ADMIN_LOGINS='your-login'
 $env:SPRING_PROFILES_ACTIVE='local,oauth'
 
@@ -639,7 +636,7 @@ docker-compose up -d
 
 Start the login flow at:
 
-- `http://localhost:8080/oauth2/authorization/oidc`
+- `http://localhost:8080/api/session/oauth2/authorization/oidc`
 
 Protected requests use the authenticated session cookie, so you can replay state-changing requests from an HTTP client once you have signed in and captured `technical-interview-demo-session`.
 
@@ -734,14 +731,14 @@ Fix:
 
 Symptom:
 
-- `/oauth2/authorization/{registrationId}` returns an error or redirect loop
+- `/api/session/oauth2/authorization/{registrationId}` returns an error or redirect loop
 
 Fix:
 
 1. Confirm `SPRING_PROFILES_ACTIVE` includes `oauth`.
 2. Confirm the selected provider credentials are exported in the same shell or run configuration (`GITHUB_CLIENT_*` for `github`, `OIDC_*` for `oidc`).
-3. If multiple providers are configured, confirm `OAUTH_DEFAULT_PROVIDER` points at a provider with credentials.
-4. Confirm the provider callback URL matches `http://localhost:8080/login/oauth2/code/{registrationId}` for your registration id.
+3. Confirm the provider callback URL matches `http://localhost:8080/api/session/login/oauth2/code/{registrationId}` for your registration id.
+4. Use `GET /api/session` to confirm the runtime exposes the expected `loginProviders[].authorizationPath`.
 5. Complete the browser login and then verify the app session with `GET /api/account` plus the `technical-interview-demo-session` cookie.
 6. Re-run the app with `.\gradlew.bat bootRun`.
 

@@ -3,8 +3,8 @@
 ## Lifecycle
 | Field | Value |
 | --- | --- |
-| Phase | Implementation |
-| Status | In Progress |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Summary
 - Make the first post-`1.x` security slice the reverse-proxy and browser-boundary foundation rather than CSRF enablement.
@@ -361,7 +361,19 @@
 - Leave edge-owned abuse protection for its own later slice; do not smuggle rate limiting or WAF-like concerns into this work.
 
 ## Validation Results
-- To be filled in during execution
+- Passed focused contract and docs slice:
+  - `. ./scripts/load-dotenv.ps1; ./gradlew.bat test --tests "team.jit.technicalinterviewdemo.technical.security.SessionApiIntegrationTests" --tests "team.jit.technicalinterviewdemo.technical.security.SessionApiOauthIntegrationTests" --tests "team.jit.technicalinterviewdemo.technical.security.SessionApiDocumentationTests" --tests "team.jit.technicalinterviewdemo.technical.security.ReverseProxyBoundaryIntegrationTests" --tests "team.jit.technicalinterviewdemo.technical.security.SecurityHeadersIntegrationTests" --tests "team.jit.technicalinterviewdemo.technical.info.TechnicalOverviewControllerIntegrationTests" --tests "team.jit.technicalinterviewdemo.technical.docs.ApiDocumentationTests" --tests "team.jit.technicalinterviewdemo.technical.docs.OpenApiIntegrationTests" --tests "team.jit.technicalinterviewdemo.technical.ProductionConfigurationTests"`
+- Passed approved contract refresh:
+  - `. ./scripts/load-dotenv.ps1; ./gradlew.bat refreshOpenApiBaseline`
+- Passed repository-required validation:
+  - `. ./scripts/load-dotenv.ps1; ./gradlew.bat build`
+- Passed required benchmark validation for OAuth/session startup behavior:
+  - `. ./scripts/load-dotenv.ps1; ./gradlew.bat gatlingBenchmark`
+  - baseline decisions passed for `list-books`, `search-books`, `lookup-localization-message`, and `oauth2-github-redirect`; benchmark baseline remained unchanged
+- Not run because the corresponding artifacts were unchanged in this slice:
+  - `externalSmokeTest`
+  - `helm lint helm/technical-interview-demo`
+  - `helm template technical-interview-demo helm/technical-interview-demo -f helm/technical-interview-demo/values-local.yaml`
 
 ## User Validation
 - Start the app in a production-like configuration and verify the root overview still reports the documented session posture plus any new proxy/header posture fields added by this slice when accessed from the trusted internal path.

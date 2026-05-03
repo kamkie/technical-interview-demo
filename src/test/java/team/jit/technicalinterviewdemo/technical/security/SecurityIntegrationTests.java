@@ -13,8 +13,12 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationException;
 import org.springframework.session.Session;
@@ -37,6 +41,12 @@ class SecurityIntegrationTests {
 
     @Autowired
     private SessionRegistry sessionRegistry;
+
+    @Autowired
+    private AuthenticationSuccessHandler oauthAuthenticationSuccessHandler;
+
+    @Autowired
+    private AuthenticationFailureHandler oauthAuthenticationFailureHandler;
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     private SessionRepository<Session> httpSessionRepository() {
@@ -101,6 +111,35 @@ class SecurityIntegrationTests {
         ))
                 .isInstanceOf(SessionAuthenticationException.class)
                 .hasMessageContaining("Maximum sessions of 1");
+    }
+
+    @Test
+    void oauthSuccessHandlerAlwaysRedirectsToSharedFrontendRoot() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setSession(new MockHttpSession());
+        request.getSession().setAttribute("SPRING_SECURITY_SAVED_REQUEST", "/api/account");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        oauthAuthenticationSuccessHandler.onAuthenticationSuccess(
+                request,
+                response,
+                authentication("demo-user")
+        );
+
+        assertThat(response.getRedirectedUrl()).isEqualTo("/");
+    }
+
+    @Test
+    void oauthFailureHandlerAlwaysRedirectsToLoginFailedMarker() throws Exception {
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        oauthAuthenticationFailureHandler.onAuthenticationFailure(
+                new MockHttpServletRequest(),
+                response,
+                new OAuth2AuthenticationException(new OAuth2Error("invalid_token"))
+        );
+
+        assertThat(response.getRedirectedUrl()).isEqualTo("/?login=failed");
     }
 
     private OAuth2AuthenticationToken authentication(String login) {

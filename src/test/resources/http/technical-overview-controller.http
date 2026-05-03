@@ -1,11 +1,13 @@
 # IntelliJ HTTP Client examples for technical-interview-demo
+# These paths are intended for trusted internal or devops validation, not for the
+# supported external `/api/**` contract.
 
 @baseUrl = http://localhost:8080
 
-### TechnicalOverviewController - supported root technical overview
+### TechnicalOverviewController - internal root technical overview
 GET {{baseUrl}}/
 Accept: application/json
 
-### TechnicalOverviewController - supported hello endpoint
+### TechnicalOverviewController - internal hello smoke endpoint
 GET {{baseUrl}}/hello
 Accept: text/plain

@@ -18,14 +18,14 @@
 #@providerAccessToken = paste-provider-access-token-here
 
 ### App session contract - inspect the current same-site browser session state
-# Use this endpoint to discover the supported login bootstrap path instead of
-# hard-coding `/oauth2/authorization/{registrationId}` or `/login`.
+# Use this endpoint to discover the current `loginProviders[]` contract instead of
+# hard-coding provider authorization paths into the client.
 GET {{baseUrl}}/api/session
 Accept: application/json
 
 ### App authentication - start the optional OAuth login flow in a browser-capable client
 # This endpoint is active only when the oauth profile is enabled and the provider registration exists.
-GET {{baseUrl}}/oauth2/authorization/{{oauthProvider}}
+GET {{baseUrl}}/api/session/oauth2/authorization/{{oauthProvider}}
 
 ### App session contract - inspect the authenticated same-site browser session state
 GET {{baseUrl}}/api/session

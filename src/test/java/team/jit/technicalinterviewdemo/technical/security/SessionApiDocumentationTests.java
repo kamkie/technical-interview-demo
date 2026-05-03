@@ -35,7 +35,6 @@ import team.jit.technicalinterviewdemo.testing.RestDocsIntegrationSpringBootTest
 @RestDocsIntegrationSpringBootTest
 @ActiveProfiles(value = {"test", "oauth"}, inheritProfiles = false)
 @TestPropertySource(properties = {
-        "app.security.oauth.default-provider=github",
         "app.security.oauth.providers.github.client-id=test-client-id",
         "app.security.oauth.providers.github.client-secret=test-client-secret"
 })
@@ -63,14 +62,16 @@ class SessionApiDocumentationTests extends AbstractDocumentationIntegrationTest 
         mockMvc.perform(get("/api/session"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.authenticated").value(false))
-                .andExpect(jsonPath("$.loginPath").value("/oauth2/authorization/github"))
+                .andExpect(jsonPath("$.loginProviders.length()").value(1))
                 .andDo(documentEndpoint(
                         "session/get-session",
                         responseHeaders(commonResponseHeaders()),
                         responseFields(
                                 fieldWithPath("authenticated").description("Whether the current browser request is backed by an authenticated application session."),
                                 fieldWithPath("accountPath").description("Endpoint path for the authenticated persisted-account resource."),
-                                fieldWithPath("loginPath").description("Interactive login bootstrap path for the current runtime, or an empty string when oauth is inactive."),
+                                fieldWithPath("loginProviders[].registrationId").description("Configured OAuth client registration id."),
+                                fieldWithPath("loginProviders[].clientName").description("Display name exposed by the configured OAuth client registration."),
+                                fieldWithPath("loginProviders[].authorizationPath").description("Relative same-site authorization bootstrap path for the configured provider."),
                                 fieldWithPath("logoutPath").description("Same-site logout endpoint path."),
                                 fieldWithPath("sessionCookie.name").description("Session cookie name expected by protected operations."),
                                 fieldWithPath("sessionCookie.httpOnly").description("Whether the session cookie is HTTP-only."),
@@ -89,13 +90,16 @@ class SessionApiDocumentationTests extends AbstractDocumentationIntegrationTest 
                         .cookie(sessionCookie(sessionId)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.authenticated").value(true))
+                .andExpect(jsonPath("$.loginProviders.length()").value(1))
                 .andDo(documentEndpoint(
                         "session/get-session-authenticated",
                         responseHeaders(commonResponseHeaders()),
                         responseFields(
                                 fieldWithPath("authenticated").description("Whether the current browser request is backed by an authenticated application session."),
                                 fieldWithPath("accountPath").description("Endpoint path for the authenticated persisted-account resource."),
-                                fieldWithPath("loginPath").description("Interactive login bootstrap path for the current runtime, or an empty string when oauth is inactive."),
+                                fieldWithPath("loginProviders[].registrationId").description("Configured OAuth client registration id."),
+                                fieldWithPath("loginProviders[].clientName").description("Display name exposed by the configured OAuth client registration."),
+                                fieldWithPath("loginProviders[].authorizationPath").description("Relative same-site authorization bootstrap path for the configured provider."),
                                 fieldWithPath("logoutPath").description("Same-site logout endpoint path."),
                                 fieldWithPath("sessionCookie.name").description("Session cookie name expected by protected operations."),
                                 fieldWithPath("sessionCookie.httpOnly").description("Whether the session cookie is HTTP-only."),
@@ -116,11 +120,9 @@ class SessionApiDocumentationTests extends AbstractDocumentationIntegrationTest 
                 .andExpect(header().string("Set-Cookie", containsString("Max-Age=0")))
                 .andDo(documentEndpoint(
                         "session/post-session-logout",
-                        responseHeaders(
-                                headerWithName("Set-Cookie").description("Clears the session cookie at the application root path."),
-                                headerWithName("X-Request-Id").description("Request identifier returned on every public endpoint."),
-                                headerWithName("traceparent").description("Trace context header returned when tracing is active.")
-                        )
+                        responseHeaders(commonResponseHeaders(
+                                headerWithName("Set-Cookie").description("Clears the session cookie at the application root path.")
+                        ))
                 ));
     }
 

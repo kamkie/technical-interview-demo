@@ -22,7 +22,8 @@ public class OpenApiConfiguration {
                 .description(
                         "Authenticated browser session cookie used by protected operations."
                                 + " It is established through a configured identity provider login path"
-                                + " under /oauth2/authorization/{registrationId} when the optional oauth profile is active."
+                                + " under /api/session/oauth2/authorization/{registrationId} when the optional oauth profile"
+                                + " is active."
                 );
 
         return new OpenAPI()
@@ -30,10 +31,9 @@ public class OpenApiConfiguration {
                         .title("technical-interview-demo API")
                         .version(buildProperties.getVersion())
                         .description(
-                                "Machine-readable contract for the demo application's stable 1.x supported HTTP"
-                                        + " surface, including the public overview and documentation endpoints plus"
-                                        + " the secured business API operations. Deployment-scoped technical"
-                                        + " endpoints such as /actuator/prometheus are documented separately."
+                                "Machine-readable contract for the demo application's supported external /api/**"
+                                        + " surface. Internal-only overview, documentation, OpenAPI publication,"
+                                        + " and actuator validation paths are intentionally excluded."
                         ))
                 .components(new Components().addSecuritySchemes(SESSION_COOKIE_SCHEME, sessionCookieSecurityScheme));
     }

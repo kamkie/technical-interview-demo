@@ -1,9 +1,5 @@
 package team.jit.technicalinterviewdemo.technical.security;
 
-import java.util.LinkedHashSet;
-import java.util.Optional;
-import java.util.Set;
-import team.jit.technicalinterviewdemo.business.user.CurrentUserAccountService;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,15 +9,21 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
+import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
 import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.session.Session;
 import org.springframework.session.security.SpringSessionBackedSessionRegistry;
+import team.jit.technicalinterviewdemo.business.user.CurrentUserAccountService;
 
 @Configuration
 public class SecurityConfiguration {
@@ -42,17 +44,23 @@ public class SecurityConfiguration {
             ApiAccessDeniedHandler apiAccessDeniedHandler,
             SessionRegistry sessionRegistry,
             SecuritySettingsProperties securitySettingsProperties,
-            Environment environment
+            Environment environment,
+            AuthenticationSuccessHandler oauthAuthenticationSuccessHandler,
+            AuthenticationFailureHandler oauthAuthenticationFailureHandler
     ) throws Exception {
+        boolean prodProfileActive = environment.acceptsProfiles(Profiles.of("prod"));
+
         http
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 // 1.0 keeps CSRF disabled to preserve reviewer-friendly session flows in the demo.
                 .csrf(AbstractHttpConfigurer::disable)
+                .headers(headers -> configureSecurityHeaders(headers, prodProfileActive))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/error", "/", "/docs", "/docs/**", "/hello").permitAll()
                         .requestMatchers("/v3/api-docs", "/v3/api-docs/**", "/v3/api-docs.yaml").permitAll()
-                        .requestMatchers("/oauth2/**", "/login/**").permitAll()
+                        .requestMatchers(SecuritySettingsProperties.OAuth.AUTHORIZATION_BASE_URI + "/**").permitAll()
+                        .requestMatchers(SecuritySettingsProperties.OAuth.CALLBACK_BASE_URI + "/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/session").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/session/logout").permitAll()
                         .requestMatchers("/api/account", "/api/account/**").authenticated()
@@ -84,7 +92,7 @@ public class SecurityConfiguration {
                 )
                 .addFilterAfter(authenticatedUserSynchronizationFilter, AuthorizationFilter.class);
 
-        if (environment.acceptsProfiles(Profiles.of("prod"))) {
+        if (prodProfileActive) {
             http.sessionManagement(session -> session
                     .sessionConcurrency(concurrency -> concurrency
                             .maximumSessions(securitySettingsProperties.getSession().getMaxConcurrentSessions())
@@ -96,51 +104,53 @@ public class SecurityConfiguration {
 
         ClientRegistrationRepository registrationRepository = clientRegistrationRepository.getIfAvailable();
         if (registrationRepository != null) {
-            Optional<String> loginPage = resolvedLoginPage(securitySettingsProperties, registrationRepository);
-            if (loginPage.isPresent()) {
-                http.oauth2Login(oauth2 -> oauth2.loginPage(loginPage.get()));
-            } else {
-                http.oauth2Login(Customizer.withDefaults());
-            }
+            http.oauth2Login(oauth2 -> oauth2
+                    .loginPage("/api/session")
+                    .authorizationEndpoint(authorization -> authorization
+                            .baseUri(SecuritySettingsProperties.OAuth.AUTHORIZATION_BASE_URI)
+                    )
+                    .redirectionEndpoint(redirection -> redirection
+                            .baseUri(SecuritySettingsProperties.OAuth.REDIRECTION_ENDPOINT_BASE_URI)
+                    )
+                    .successHandler(oauthAuthenticationSuccessHandler)
+                    .failureHandler(oauthAuthenticationFailureHandler)
+            );
         }
 
         return http.build();
     }
 
-    private Optional<String> resolvedLoginPage(
-            SecuritySettingsProperties securitySettingsProperties,
-            ClientRegistrationRepository registrationRepository
-    ) {
-        Set<String> registrationIds = registrationIds(registrationRepository);
-        Optional<String> configuredLoginProvider = securitySettingsProperties.getOAuth()
-                .resolvedLoginProvider()
-                .filter(registrationIds::contains);
-        if (configuredLoginProvider.isPresent()) {
-            return configuredLoginProvider.map(SecuritySettingsProperties.OAuth::authorizationPath);
+    private void configureSecurityHeaders(HeadersConfigurer<HttpSecurity> headers, boolean prodProfileActive) {
+        headers.contentTypeOptions(Customizer.withDefaults());
+        headers.frameOptions(frameOptions -> frameOptions.deny());
+        headers.referrerPolicy(referrerPolicy -> referrerPolicy
+                .policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER)
+        );
+        headers.permissionsPolicy(permissionsPolicy -> permissionsPolicy
+                .policy("geolocation=(), microphone=(), camera=()")
+        );
+        if (prodProfileActive) {
+            headers.httpStrictTransportSecurity(Customizer.withDefaults());
+        } else {
+            headers.httpStrictTransportSecurity(HeadersConfigurer.HstsConfig::disable);
         }
-        if (registrationIds.size() == 1) {
-            return registrationIds.stream()
-                    .findFirst()
-                    .map(SecuritySettingsProperties.OAuth::authorizationPath);
-        }
-        return Optional.empty();
-    }
-
-    private Set<String> registrationIds(ClientRegistrationRepository registrationRepository) {
-        Set<String> registrationIds = new LinkedHashSet<>();
-        if (registrationRepository instanceof Iterable<?> iterableRegistrationRepository) {
-            for (Object registration : iterableRegistrationRepository) {
-                if (registration instanceof ClientRegistration clientRegistration) {
-                    registrationIds.add(clientRegistration.getRegistrationId());
-                }
-            }
-        }
-        return registrationIds;
     }
 
     @Bean
     @SuppressWarnings({"rawtypes", "unchecked"})
     SessionRegistry sessionRegistry(FindByIndexNameSessionRepository<? extends Session> sessionRepository) {
         return new SpringSessionBackedSessionRegistry((FindByIndexNameSessionRepository) sessionRepository);
+    }
+
+    @Bean
+    AuthenticationSuccessHandler oauthAuthenticationSuccessHandler() {
+        SimpleUrlAuthenticationSuccessHandler successHandler = new SimpleUrlAuthenticationSuccessHandler("/");
+        successHandler.setAlwaysUseDefaultTargetUrl(true);
+        return successHandler;
+    }
+
+    @Bean
+    AuthenticationFailureHandler oauthAuthenticationFailureHandler() {
+        return new SimpleUrlAuthenticationFailureHandler("/?login=failed");
     }
 }

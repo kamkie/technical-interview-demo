@@ -44,13 +44,13 @@ class OpenApiIntegrationTests extends AbstractRandomPortIntegrationTest {
 
         assertEquals("technical-interview-demo API", openApi.at("/info/title").asText());
         assertEquals(
-                "Machine-readable contract for the demo application's stable 1.x supported HTTP surface,"
-                        + " including the public overview and documentation endpoints plus the secured business"
-                        + " API operations. Deployment-scoped technical endpoints such as"
-                        + " /actuator/prometheus are documented separately.",
+                "Machine-readable contract for the demo application's supported external /api/** surface."
+                        + " Internal-only overview, documentation, OpenAPI publication, and actuator validation"
+                        + " paths are intentionally excluded.",
                 openApi.at("/info/description").asText()
         );
-        assertFalse(openApi.at("/paths/~1/get").isMissingNode());
+        assertTrue(openApi.at("/paths/~1/get").isMissingNode());
+        assertTrue(openApi.at("/paths/~1hello/get").isMissingNode());
         assertEquals("apiKey", openApi.at("/components/securitySchemes/sessionCookie/type").asText());
         assertEquals("cookie", openApi.at("/components/securitySchemes/sessionCookie/in").asText());
         assertEquals(
@@ -59,8 +59,9 @@ class OpenApiIntegrationTests extends AbstractRandomPortIntegrationTest {
         );
         assertEquals(
                 "Authenticated browser session cookie used by protected operations. It is established through a"
-                        + " configured identity provider login path under /oauth2/authorization/{registrationId}"
-                        + " when the optional oauth profile is active.",
+                        + " configured identity provider login path under"
+                        + " /api/session/oauth2/authorization/{registrationId} when the optional oauth profile is"
+                        + " active.",
                 openApi.at("/components/securitySchemes/sessionCookie/description").asText()
         );
 
@@ -181,6 +182,14 @@ class OpenApiIntegrationTests extends AbstractRandomPortIntegrationTest {
         assertFalse(openApi.at("/components/schemas/OperatorSurfaceResponse").isMissingNode());
         assertFalse(openApi.at("/components/schemas/SessionResponse").isMissingNode());
         assertFalse(openApi.at("/components/schemas/UserAccountResponse").isMissingNode());
+        assertFalse(openApi.at("/components/schemas/SessionLoginProvider").isMissingNode());
+        assertTrue(openApi.at("/components/schemas/SessionResponse/properties/loginPath")
+                .isMissingNode());
+        assertEquals(
+                "#/components/schemas/SessionLoginProvider",
+                openApi.at("/components/schemas/SessionResponse/properties/loginProviders/items/$ref")
+                        .asText()
+        );
     }
 
     private JsonNode fetchOpenApiJson() throws IOException, InterruptedException {

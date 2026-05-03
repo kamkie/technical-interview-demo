@@ -5,13 +5,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.http.ResponseCookie;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,6 +35,7 @@ public class SessionService {
 
     private final SecuritySettingsProperties securitySettingsProperties;
     private final Environment environment;
+    private final ObjectProvider<ClientRegistrationRepository> clientRegistrationRepository;
     private final CurrentUserAccountService currentUserAccountService;
     private final SessionRepository<? extends Session> sessionRepository;
 
@@ -38,7 +44,7 @@ public class SessionService {
         return new SessionResponse(
                 isAuthenticated(request),
                 ACCOUNT_PATH,
-                oauthLoginPath(),
+                loginProviders(),
                 LOGOUT_PATH,
                 new SessionResponse.SessionCookie(
                         sessionCookieName(),
@@ -110,13 +116,27 @@ public class SessionService {
         }
     }
 
-    private String oauthLoginPath() {
+    private List<SessionResponse.LoginProvider> loginProviders() {
         if (!environment.acceptsProfiles(Profiles.of("oauth"))) {
-            return "";
+            return List.of();
         }
-        return securitySettingsProperties.getOAuth()
-                .resolvedLoginPath()
-                .orElse("/login");
+
+        ClientRegistrationRepository registrationRepository = clientRegistrationRepository.getIfAvailable();
+        if (!(registrationRepository instanceof Iterable<?> iterableRegistrationRepository)) {
+            return List.of();
+        }
+
+        List<SessionResponse.LoginProvider> loginProviders = new ArrayList<>();
+        for (Object registration : iterableRegistrationRepository) {
+            if (registration instanceof ClientRegistration clientRegistration) {
+                loginProviders.add(new SessionResponse.LoginProvider(
+                        clientRegistration.getRegistrationId(),
+                        clientRegistration.getClientName(),
+                        SecuritySettingsProperties.OAuth.authorizationPath(clientRegistration.getRegistrationId())
+                ));
+            }
+        }
+        return List.copyOf(loginProviders);
     }
 
     private String sessionCookieName() {
