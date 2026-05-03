@@ -7,6 +7,8 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+## [v1.3.0] - 2026-05-03
+
 ### Added
 - Added Gradle-owned `staticSecurityScan` backed by SpotBugs plus FindSecBugs, together with checked-in SpotBugs include/exclude policy files and CI/release artifact handling for the new code-focused security gate.
 - Added a scheduled `Post-Deploy Smoke` GitHub Actions workflow plus deployed-environment smoke support that can run HTTP-only checks or deeper JDBC-backed session and Flyway assertions against an already deployed target.
@@ -15,6 +17,7 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 ### Changed
 - Hardened the `prod` session posture with a 15 minute timeout, secure-cookie validation, single-session enforcement, typed security settings, and fail-fast validation for optional OAuth credentials and admin bootstrap logins.
 - Raised the production root log level to `INFO` while keeping automatic no-TTY ANSI detection and vendor-neutral stdout-plus-OTLP operational guidance.
+- Refined the AI execution and workflow guidance so parallel worktree execution, worker status reporting, and release handoff expectations stay aligned with the repository's plan-driven development model.
 
 ## [v1.2.2] - 2026-05-03
 

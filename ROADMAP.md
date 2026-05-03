@@ -53,16 +53,11 @@ Goal: evolve the repository into a production-ready sample app deliberately, wit
 
 #### Harden Identity, Sessions, And Secrets
 - [ ] Move beyond the single optional GitHub OAuth provider toward a production-ready identity story suitable for a sample app, including explicit issuer/provider configuration
-- [x] Tighten session-management settings for real deployments, including cookie scope, timeout, rotation, and concurrent-session expectations
-- [x] Add stronger secret and credential handling guidance or integration points so deployments do not rely only on raw environment-variable wiring
-- [x] Add startup validation for required auth, session, and outbound-integration settings when the production-ready posture is enabled
 
 #### Strengthen Supply Chain And Artifact Trust
 - [ ] Generate and publish an SBOM for the application artifact and container image as part of the build or release flow
 - [ ] Sign published container images and attach provenance or attestations so the sample release story covers artifact authenticity, not only version tags
 - [ ] Publish stable static-analysis artifacts from GitHub Actions runs so PMD and similar quality failures are reviewable from the Actions UI without reproducing them locally
-- [x] Add static application security testing and keep it aligned with the existing Gradle and CI workflows
-- [x] Keep dependency, image, and vulnerability exceptions reviewable with explicit policy files and documented expiration or revalidation expectations
 
 #### Make Releases And Migrations Safer
 - [ ] Define a safer production rollout model for Flyway-backed releases, including compatibility expectations for rolling upgrades and schema-first versus app-first ordering
@@ -70,15 +65,7 @@ Goal: evolve the repository into a production-ready sample app deliberately, wit
 - [ ] Add deployment checks that validate the exact published image and runtime configuration before promotion beyond local or CI environments
 - [ ] Document and validate a realistic disaster-recovery path instead of only a local rollback narrative
 
-#### Expand Operational Readiness Into Real SRE Basics
-- [x] Add alerting and dashboards for authentication failures, session persistence health, Flyway startup failures, database saturation, and application error-rate regressions
-- [x] Add log shipping and trace-export guidance that works beyond local inspection and single-node troubleshooting
-- [x] Define resource requests, limits, autoscaling expectations, and disruption budgets for Kubernetes deployments
-- [x] Add synthetic or scheduled external checks so the app is observed continuously after deployment, not only during release-time smoke validation
-
 #### Harden Production Logging
-- [x] Set the root log level to `INFO` in the production profile
-- [x] Disable ASCII color output automatically when no terminal is detected
 - [ ] Use a JSON Lines logger configuration in the production profile so centralized collectors receive structured entries without terminal-oriented formatting noise
 - [ ] Add deployment-facing log-forwarding configuration that preserves multiline exception output when shipping production logs to a centralized logging service
 
