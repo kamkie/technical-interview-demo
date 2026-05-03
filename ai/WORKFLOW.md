@@ -202,6 +202,25 @@ When using git worktrees:
 - treat worktree branches as temporary execution branches, not release branches
 - do not cut a release from a worktree branch or detached `HEAD`
 
+### Local Worktree Progress Log
+
+Any worker operating from a git worktree should create and maintain a temporary local progress file, for example:
+
+`ai/tmp/workflow-local/<plan_stem>__<worker_name>.local.md`
+
+This file is for the user's visibility while the work is in progress. It should read like concise agent console output so the user can quickly track progress, understand the current step, and resolve blockers or coordination issues.
+
+The local progress log should be updated throughout execution and should capture:
+
+- the current milestone, task, or slice in progress
+- recently completed steps
+- commands run and the important result
+- files being edited or investigated
+- blockers, risks, or decisions needed from the coordinator or user
+- validation already run and validation still pending
+
+This file may remain local-only and may be gitignored. It does not replace any committed artifact required elsewhere in this guide, including the `Shared Plan` worker progress file under `ai/tmp/workflow/` and any worker-owned `CHANGELOG_<topic>.md` file required for `Parallel Plans`.
+
 For `Parallel Plans`:
 
 - use one worktree branch per plan or per explicitly grouped disjoint plan set
