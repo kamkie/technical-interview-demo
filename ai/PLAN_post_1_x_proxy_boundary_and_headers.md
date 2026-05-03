@@ -2,14 +2,16 @@
 
 ## Summary
 - Make the first post-`1.x` security slice the reverse-proxy and browser-boundary foundation rather than CSRF enablement.
-- Turn the current documented same-site assumption into an explicit runtime and deployment contract for one public origin behind a reverse proxy, with proxy-aware request handling and production security headers.
+- Turn the current documented same-site assumption into an explicit runtime and deployment contract for one public origin behind a reverse proxy, with proxy-aware request handling and a fixed production security-header baseline.
+- Preserve the frozen public operational contract at `/actuator/info` and the health/readiness probes while tightening only deployment-scoped technical surfaces such as Prometheus.
 - Success is measured by: explicit proxy/header behavior in executable specs, aligned README/REST Docs/HTTP examples/setup guidance, preserved same-site session contract behavior, and passing repository validation for the touched artifacts.
 
 ## Scope
 - In scope:
   - defining the first executable post-`1.x` security slice as reverse-proxy, public-origin, cookie, redirect, and session-boundary hardening
   - adding proxy-aware runtime handling for production-style deployments behind one public origin
-  - adding a conservative production security-header baseline that does not break the generated docs or same-site session flows
+  - adding a conservative production security-header baseline that applies to the app's HTTP responses without breaking the generated docs or same-site session flows
+  - preserving the supported public operational endpoints `/actuator/info`, `/actuator/health`, `/actuator/health/liveness`, and `/actuator/health/readiness`
   - keeping Prometheus and other non-public technical surfaces deployment-scoped and privately reachable, while preserving the app-owned operator surface
   - updating runtime posture metadata, docs, and checked-in deployment assets if they must reflect the hardened boundary contract
 - Out of scope:
@@ -22,7 +24,7 @@
 
 ## Current State
 - Current behavior:
-  - `src/main/java/team/jit/technicalinterviewdemo/technical/security/SecurityConfiguration.java` disables CSRF globally, permits the same-site session endpoints, and leaves `/actuator/info` plus `/actuator/prometheus` public because technical-endpoint restriction is currently a deployment convention rather than an enforced boundary.
+  - `src/main/java/team/jit/technicalinterviewdemo/technical/security/SecurityConfiguration.java` disables CSRF globally, permits the same-site session endpoints, keeps `/actuator/info` and the health probes public as part of the supported operational contract, and leaves `/actuator/prometheus` public because its restriction is currently a deployment convention rather than an enforced boundary.
   - `src/main/resources/application.properties` exposes `health`, `info`, and `prometheus`, sets the session cookie to `SameSite=lax`, and does not define any forwarded-header strategy or browser security-header baseline.
   - `src/main/resources/application-prod.properties` makes the session cookie secure by default in `prod`, but still does not define reverse-proxy/header expectations.
   - `src/main/java/team/jit/technicalinterviewdemo/technical/security/SessionService.java` already returns only relative paths (`/api/account`, resolved login path, `/api/session/logout`) for the separate first-party UI, which fits the one-public-origin design and avoids needing absolute external URLs today.
@@ -69,23 +71,38 @@
   - the first concrete security slice should be reverse-proxy/public-origin/session-boundary hardening plus conservative browser security headers
   - CSRF enablement is explicitly deferred to the next slice because it depends on the boundary choices this plan locks down
   - the supported same-site session surface at `/api/session` and `/api/session/logout` should stay relative-path-based and should not gain cross-origin semantics
+  - the supported public operational endpoints `/actuator/info`, `/actuator/health`, `/actuator/health/liveness`, and `/actuator/health/readiness` must remain public and documented as part of the supported contract
+  - only `/actuator/prometheus` and any future non-public actuator exposure belong to the deployment-scoped private surface in this slice
+  - proxy handling in `prod` should be locked to Spring's framework forwarded-header support (`server.forward-headers-strategy=framework`), trusting standard `Forwarded` and `X-Forwarded-*` headers from the repository's assumed reverse-proxy boundary; `local` and `test` should keep working without requiring forwarded headers
+  - this slice should not introduce a canonical public-base-url property unless implementation proves the current relative-path session contract is insufficient
+  - production startup should fail fast if deployment configuration explicitly contradicts the single-origin HTTPS proxy contract, specifically if `prod` disables secure session cookies or overrides forwarded-header handling away from the framework strategy
   - Prometheus scraping remains compatible with the checked-in `ServiceMonitor` assets; any restriction in this slice should be expressed as deployment contract, documentation, and checked-in environment expectations rather than application auth
-  - the header baseline should prefer low-risk defaults such as `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options` or equivalent, and HSTS where appropriate; do not guess a strict CSP in the same slice unless the docs UI and assets are intentionally tested for it
+  - the fixed header baseline for this slice is:
+    - `X-Content-Type-Options: nosniff`
+    - `Referrer-Policy: no-referrer`
+    - `X-Frame-Options: DENY`
+    - `Permissions-Policy: geolocation=(), microphone=(), camera=()`
+    - `Strict-Transport-Security: max-age=31536000; includeSubDomains` on secure requests in `prod` only
+  - that header baseline should apply to app responses consistently, including normal API responses, redirects, ProblemDetail errors, generated docs responses, OpenAPI endpoints, session endpoints, supported operational endpoints, and deployment-scoped Prometheus responses, so the documentation helpers can treat them as common response headers
   - use Spring Boot and Spring Security built-ins where possible instead of adding new libraries or vendor-specific deployment logic
 
 ## Affected Artifacts
 - Tests:
-  - new focused technical integration coverage under `src/test/java/team/jit/technicalinterviewdemo/technical/security/` for proxy/header posture
+  - new `src/test/java/team/jit/technicalinterviewdemo/technical/security/ReverseProxyBoundaryIntegrationTests.java`
+  - new `src/test/java/team/jit/technicalinterviewdemo/technical/security/SecurityHeadersIntegrationTests.java`
   - `src/test/java/team/jit/technicalinterviewdemo/technical/security/SessionApiIntegrationTests.java`
   - `src/test/java/team/jit/technicalinterviewdemo/technical/security/SecurityIntegrationTests.java`
   - `src/test/java/team/jit/technicalinterviewdemo/technical/info/TechnicalOverviewControllerIntegrationTests.java`
   - `src/test/java/team/jit/technicalinterviewdemo/technical/docs/ApiDocumentationTests.java`
+  - `src/test/java/team/jit/technicalinterviewdemo/technical/security/SessionApiDocumentationTests.java`
+  - `src/test/java/team/jit/technicalinterviewdemo/testing/AbstractDocumentationIntegrationTest.java`
   - `src/test/java/team/jit/technicalinterviewdemo/technical/docs/OpenApiIntegrationTests.java` if the overview schema or contract descriptions change
   - `src/externalTest/java/team/jit/technicalinterviewdemo/external/ExternalSmokeTests.java` if deployment posture metadata or response-header expectations become part of packaged-image verification
 - Docs:
   - `README.md`
   - `SETUP.md`
   - `src/docs/asciidoc/index.adoc`
+  - `src/docs/asciidoc/technical-overview-controller.adoc`
   - `src/docs/asciidoc/session-controller.adoc`
   - `src/docs/asciidoc/technical-endpoints.adoc`
   - `src/test/resources/http/authentication.http`
@@ -118,12 +135,16 @@
 - goal
   - define the post-`1.x` reverse-proxy/public-origin/session-boundary expectations in executable specs and docs before runtime changes
 - files to update
-  - focused technical integration tests under `src/test/java/team/jit/technicalinterviewdemo/technical/security/`
+  - new `src/test/java/team/jit/technicalinterviewdemo/technical/security/ReverseProxyBoundaryIntegrationTests.java`
+  - new `src/test/java/team/jit/technicalinterviewdemo/technical/security/SecurityHeadersIntegrationTests.java`
   - `src/test/java/team/jit/technicalinterviewdemo/technical/info/TechnicalOverviewControllerIntegrationTests.java`
   - `src/test/java/team/jit/technicalinterviewdemo/technical/docs/ApiDocumentationTests.java`
+  - `src/test/java/team/jit/technicalinterviewdemo/technical/security/SessionApiDocumentationTests.java`
+  - `src/test/java/team/jit/technicalinterviewdemo/testing/AbstractDocumentationIntegrationTest.java`
   - `README.md`
   - `SETUP.md`
   - `src/docs/asciidoc/index.adoc`
+  - `src/docs/asciidoc/technical-overview-controller.adoc`
   - `src/docs/asciidoc/session-controller.adoc`
   - `src/docs/asciidoc/technical-endpoints.adoc`
   - `src/test/resources/http/authentication.http`
@@ -131,10 +152,12 @@
 - behavior to preserve
   - `GET /api/session` and `POST /api/session/logout` stay public same-site endpoints with relative paths
   - `/api/account` remains authenticated-only
+  - `/actuator/info`, `/actuator/health`, `/actuator/health/liveness`, and `/actuator/health/readiness` remain public supported operational endpoints
   - `/actuator/prometheus` stays scrape-compatible for trusted private deployment access
   - no new cross-origin browser support appears in docs or runtime
 - exact deliverables
-  - spec coverage for the intended proxy-aware and browser-header posture on representative public endpoints
+  - spec coverage that locks the proxy trust model to Spring framework forwarded-header handling in `prod` and confirms non-proxy local/test behavior still works
+  - spec coverage for the fixed security-header baseline on `/`, `/docs`, `/api/session`, `/actuator/info`, `/actuator/health/readiness`, and one ProblemDetail error path, with the same common-header contract used by REST Docs
   - explicit documentation that the app expects one public origin behind a reverse proxy, relative paths for UI bootstrap/logout, and private deployment access for Prometheus
   - updated contract language showing that this slice is prerequisite posture-hardening, not CSRF enablement
 
@@ -156,9 +179,9 @@
   - Prometheus scraping remains compatible with private cluster scraping
   - local development and tests stay usable without forcing HTTPS-only behavior into the `local` and `test` paths
 - exact deliverables
-  - proxy-aware request/header handling for production-style deployments
-  - conservative security headers applied to the supported browser-facing and technical surfaces without breaking `/docs`
-  - any fail-fast validation needed to keep the production boundary posture coherent
+  - proxy-aware request/header handling for production-style deployments using `server.forward-headers-strategy=framework` in `prod`
+  - conservative security headers applied to all app responses in the fixed baseline without breaking `/docs`
+  - explicit fail-fast validation that rejects `prod` configurations which disable secure session cookies or override forwarded-header handling away from the framework strategy
   - runtime posture metadata updated if deployment validation needs to assert the new contract
 
 ### Milestone 3: Align Deployment Assets And Published Contract
@@ -185,23 +208,28 @@
   - no accidental widening into rate limiting, CSRF choreography, or a new management topology
 - exact deliverables
   - checked-in deployment assets aligned with the proxy/header assumptions
+  - deployment docs that distinguish preserved public operational endpoints from deployment-scoped private Prometheus scraping
   - generated and human-facing docs aligned with the new posture
   - smoke and overview checks aligned with any newly published runtime posture metadata
 
 ## Edge Cases And Failure Modes
 - Security headers must not break `/docs` HTML rendering, bundled assets, or the `/docs` redirect.
+- The fixed header baseline must be documented once through `AbstractDocumentationIntegrationTest.commonResponseHeaders()` and applied consistently enough that REST Docs snippets do not drift across endpoint groups.
 - Header policy must not imply cross-origin browser support or introduce CORS behavior that the repo does not support.
 - Any proxy-aware handling must preserve correct behavior in `local` and `test`, where HTTPS termination and forwarded headers may not exist.
 - The session contract must keep relative login/logout/account paths so the app does not become dependent on an externally configured absolute origin before that need is proven.
+- `/actuator/info` and the health endpoints are part of the supported contract and must stay public; only Prometheus and future non-public actuator surfaces belong to the private deployment boundary.
 - Prometheus scraping must remain compatible with `k8s/monitoring/servicemonitor.yaml`; tightening posture must not silently break monitoring.
 - If runtime posture metadata is expanded in `/`, the root endpoint is part of the supported contract, so docs, tests, and OpenAPI must move together.
 - If a strict CSP becomes necessary, it must be validated against the generated documentation assets explicitly rather than guessed.
 
 ## Validation Plan
 - Run focused tests while implementing:
-  - targeted `technical.security` integration tests for proxy/header behavior
+  - `ReverseProxyBoundaryIntegrationTests`
+  - `SecurityHeadersIntegrationTests`
   - `TechnicalOverviewControllerIntegrationTests`
   - `ApiDocumentationTests`
+  - `SessionApiDocumentationTests`
 - Run repository-required validation before completion:
   - `.\gradlew.bat build`
 - Run additional validation when applicable:
