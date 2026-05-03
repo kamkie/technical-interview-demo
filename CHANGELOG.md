@@ -7,6 +7,9 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Changed
+- Switched the `prod` profile logging contract to structured JSON Lines (`logstash` console format) while preserving the local/test text-pattern defaults and added logging configuration contract coverage for the profile split.
+
 ## [v1.3.0] - 2026-05-03
 
 ### Added
