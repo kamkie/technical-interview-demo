@@ -105,54 +105,49 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
-      - name: Render release notes from CHANGELOG.md
+      - name: Resolve previous published GitHub Release
+        id: previous-release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $currentTag = "${{ github.ref_name }}"
+          $publishedReleases = gh release list `
+            --exclude-drafts `
+            --exclude-pre-releases `
+            --limit 100 `
+            --json tagName,publishedAt | ConvertFrom-Json
+
+          if (-not $publishedReleases) {
+            throw "No published GitHub Releases were found. Cumulative release-note range cannot be derived."
+          }
+
+          $previousRelease = @(
+            $publishedReleases |
+            Where-Object { $_.tagName -ne $currentTag } |
+            Sort-Object { [DateTimeOffset]$_.publishedAt } -Descending
+          ) | Select-Object -First 1
+
+          if (-not $previousRelease) {
+            throw "No previous published GitHub Release was found for current tag '$currentTag'."
+          }
+
+          "previous_tag=$($previousRelease.tagName)" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+
+      - name: Render cumulative release notes from CHANGELOG.md
         shell: pwsh
         run: |
-          $tag = "${{ github.ref_name }}"
-          $tagImageReference = "${{ needs.publish-image.outputs.image_repository }}:${{ needs.publish-image.outputs.image_tag }}"
-          $shaImageReference = "${{ needs.publish-image.outputs.image_repository }}:${{ needs.publish-image.outputs.image_sha_tag }}"
-          $packagePageUrl = "${{ needs.publish-image.outputs.package_page }}"
-
-          $changelog = Get-Content -LiteralPath CHANGELOG.md -Raw
-          $headingPattern = "(?m)^## \[$([Regex]::Escape($tag))\] - .+$"
-          $headingMatches = [Regex]::Matches($changelog, $headingPattern)
-
-          if ($headingMatches.Count -eq 0) {
-            throw "No CHANGELOG.md section matched tag '$tag'."
-          }
-
-          if ($headingMatches.Count -gt 1) {
-            throw "Multiple CHANGELOG.md sections matched tag '$tag'."
-          }
-
-          $sectionStart = $headingMatches[0].Index
-          $remainingChangelog = $changelog.Substring($sectionStart)
-          $sectionHeadingMatches = [Regex]::Matches(
-            $remainingChangelog,
-            "(?m)^## \[",
-            [Text.RegularExpressions.RegexOptions]::Multiline,
-            [TimeSpan]::FromSeconds(5)
-          )
-
-          if ($sectionHeadingMatches.Count -gt 1) {
-            $releaseSection = $remainingChangelog.Substring(0, $sectionHeadingMatches[1].Index)
-          } else {
-            $releaseSection = $remainingChangelog
-          }
-
-          $releaseSection = $releaseSection.TrimEnd("`r", "`n")
-          $releaseNotes = @(
-            $releaseSection
-            ""
-            "## Release Metadata"
-            ""
-            "- Container image: ``$tagImageReference``"
-            "- Immutable image: ``$shaImageReference``"
-            "- Package page: [GitHub Container Registry package]($packagePageUrl)"
-          ) -join [Environment]::NewLine
-
-          Set-Content -LiteralPath release-notes.md -Value $releaseNotes
+          ./scripts/release/render-release-notes.ps1 `
+            -ChangelogPath CHANGELOG.md `
+            -CurrentTag "${{ github.ref_name }}" `
+            -PreviousPublishedTag "${{ steps.previous-release.outputs.previous_tag }}" `
+            -TagImageReference "${{ needs.publish-image.outputs.image_repository }}:${{ needs.publish-image.outputs.image_tag }}" `
+            -ShaImageReference "${{ needs.publish-image.outputs.image_repository }}:${{ needs.publish-image.outputs.image_sha_tag }}" `
+            -PackagePageUrl "${{ needs.publish-image.outputs.package_page }}" `
+            -OutputPath release-notes.md
 
       - name: Create GitHub Release
         env:

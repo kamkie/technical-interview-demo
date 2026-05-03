@@ -160,7 +160,8 @@ Additional change-sensitive checks:
 - use semantic version tags in the form `vMAJOR.MINOR.PATCH`
 - keep release numbers increasing in `git log --first-parent` order
 - record human-facing release history in `CHANGELOG.md`
-- tag-driven releases publish the matching `CHANGELOG.md` version section as GitHub Release notes
+- tag-driven releases publish cumulative GitHub Release notes from the new tag section back to the previous published GitHub Release tag section in `CHANGELOG.md`
+- release-note rendering fails closed when the previous published GitHub Release boundary or required `CHANGELOG.md` sections cannot be derived unambiguously
 - complete local implementation, validation, and review work before pushing a branch or opening an implementation PR
 - treat PR creation as the final implementation handoff, not as a substitute for local execution
 - maintainers prepare releases only after the approved implementation PR has been merged onto validated `main`
@@ -178,7 +179,7 @@ Supported delivery path:
 - the `CI` workflow uploads `build/reports/jacoco/test/jacocoTestReport.xml` to Codecov after the Gradle build, so the repository must be onboarded for Codecov uploads before that signal is expected to pass consistently
 - Dependabot opens grouped weekly update PRs for Gradle, GitHub Actions, and Docker, and those PRs are expected to pass the same `CI` workflow before merge
 - the `CI` workflow uploads the generated vulnerability scan artifacts from `build/reports/security/` so blocked runs remain reviewable
-- semantic version tags trigger the `Release` workflow, which builds and scans the tagged image with Gradle, validates it with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry as `ghcr.io/<owner>/<repo>:<tag>` and `ghcr.io/<owner>/<repo>:sha-<12-char-commit>`, then creates the matching GitHub Release from `CHANGELOG.md`
+- semantic version tags trigger the `Release` workflow, which builds and scans the tagged image with Gradle, validates it with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry as `ghcr.io/<owner>/<repo>:<tag>` and `ghcr.io/<owner>/<repo>:sha-<12-char-commit>`, then creates cumulative GitHub Release notes from the previous published GitHub Release tag boundary in `CHANGELOG.md`
 - deployment artifacts are provided as:
   - Docker image
   - vendor-neutral Kubernetes manifests under `k8s/base` with a local overlay under `k8s/overlays/local`, including a checked-in HPA and pod disruption budget
