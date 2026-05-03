@@ -53,6 +53,8 @@ public class SecurityConfiguration {
                         .requestMatchers("/error", "/", "/docs", "/docs/**", "/hello").permitAll()
                         .requestMatchers("/v3/api-docs", "/v3/api-docs/**", "/v3/api-docs.yaml").permitAll()
                         .requestMatchers("/oauth2/**", "/login/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/session").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/session/logout").permitAll()
                         .requestMatchers("/api/account", "/api/account/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/audit-logs").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/operator/surface").authenticated()

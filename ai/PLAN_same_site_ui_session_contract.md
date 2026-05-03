@@ -159,7 +159,16 @@
 - Do not smuggle the later security-hardening roadmap items into this plan. CSRF enforcement, security headers, forwarded-header hardening, and abuse protection should be planned and validated separately once this contract is locked.
 
 ## Validation Results
-- To be filled in during execution
+- 2026-05-03: `.\gradlew.bat test --tests team.jit.technicalinterviewdemo.technical.security.SessionApiIntegrationTests --tests team.jit.technicalinterviewdemo.technical.security.SessionApiOauthIntegrationTests --tests team.jit.technicalinterviewdemo.technical.security.SessionApiDocumentationTests --tests team.jit.technicalinterviewdemo.technical.docs.OpenApiIntegrationTests`
+  - result: passed after implementing `SessionController`/`SessionService` and switching the public session/logout contract to inspect and invalidate the JDBC-backed Spring Session entry behind the configured session cookie
+- 2026-05-03: `.\gradlew.bat refreshOpenApiBaseline`
+  - result: passed and refreshed `src/test/resources/openapi/approved-openapi.json` with the additive `/api/session` and `/api/session/logout` contract
+- 2026-05-03: `.\gradlew.bat gatlingBenchmark`
+  - result: passed; the public-read and OAuth redirect simulations stayed within the tracked baseline tolerances and the benchmark baseline remained unchanged
+- 2026-05-03: `.\gradlew.bat build`
+  - result: passed; the full repository build completed successfully, including 214 tests, REST Docs generation, Asciidoctor rendering, OpenAPI compatibility, static-analysis/security scans, SBOM generation, and Docker image packaging
+- 2026-05-03: `.\gradlew.bat externalSmokeTest`
+  - result: passed; the packaged smoke environment still accepted the JDBC-backed authenticated `GET /api/account` session flow after the new additive session contract was introduced
 
 ## User Validation
 - Open the generated docs and confirm the supported UI-facing auth/session story is now explicit instead of inferred.

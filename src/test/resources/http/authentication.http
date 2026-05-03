@@ -2,7 +2,8 @@
 # This app does not issue JWTs and does not accept Authorization: Bearer tokens.
 # Protected app requests use the configured OAuth provider login flow plus the
 # technical-interview-demo-session cookie created by Spring Session.
-# For 1.0, this reviewer-oriented browser session flow deliberately keeps CSRF disabled.
+# The supported first-party browser contract assumes one public origin via reverse proxy.
+# For the current demo posture, browser-session writes deliberately keep CSRF disabled.
 #
 # Provider token exchange examples are for diagnostics only.
 # External provider access tokens are for provider APIs, not for this app,
@@ -16,11 +17,27 @@
 #@providerAuthCode = paste-provider-auth-code-here
 #@providerAccessToken = paste-provider-access-token-here
 
+### App session contract - inspect the current same-site browser session state
+# Use this endpoint to discover the supported login bootstrap path instead of
+# hard-coding `/oauth2/authorization/{registrationId}` or `/login`.
+GET {{baseUrl}}/api/session
+Accept: application/json
+
 ### App authentication - start the optional OAuth login flow in a browser-capable client
 # This endpoint is active only when the oauth profile is enabled and the provider registration exists.
 GET {{baseUrl}}/oauth2/authorization/{{oauthProvider}}
+
+### App session contract - inspect the authenticated same-site browser session state
+GET {{baseUrl}}/api/session
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/json
 
 ### App authentication - verify the authenticated app session cookie
 GET {{baseUrl}}/api/account
 Cookie: technical-interview-demo-session={{sessionCookie}}
 Accept: application/json
+
+### App authentication - log out the current app session
+# The logout contract is idempotent and still returns 204 when no session exists.
+POST {{baseUrl}}/api/session/logout
+Cookie: technical-interview-demo-session={{sessionCookie}}

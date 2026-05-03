@@ -14,7 +14,7 @@ The supported `1.x` contract keeps the simple overview endpoints, the CRUD-style
 
 == Contract Tiers
 
-- Supported `1.x` business and documentation contract: `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, `/api/books...`, `/api/categories...`, `/api/localizations...`, `/api/account...`, `/api/audit-logs`, `/api/operator/surface`
+- Supported `1.x` business and documentation contract: `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, `/api/books...`, `/api/categories...`, `/api/localizations...`, `/api/session`, `/api/session/logout`, `/api/account...`, `/api/audit-logs`, `/api/operator/surface`
 - Supported operational contract: `/actuator/health`, `/actuator/health/liveness`, `/actuator/health/readiness`, `/actuator/info`
 - Deployment-scoped technical surface: `/actuator/prometheus` is supported for trusted deployment scraping, but it is not part of the internet-public contract
 
@@ -48,12 +48,14 @@ The values below are loaded from `{build-info-path}` during the Asciidoctor buil
 - Protected API `401` and `403` responses use the same localized `ProblemDetail` field set as validation and domain errors.
 - Browser-compatible localization uses `Accept-Language`, the optional `lang` query parameter overrides it with values such as `pl` or `pl-PL`, and cookie `language` is used as fallback.
 - Supported application languages are `en`, `es`, `de`, `fr`, `pl`, `uk`, and `no`.
-- Public supported endpoints include `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, and the read-only book/category/localization lookups.
-- Protected supported endpoints use an authenticated browser session for `/api/account`, `/api/audit-logs`, and for state-changing book, category, and localization operations.
+- Public supported endpoints include `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, the read-only book/category/localization lookups, `GET /api/session`, and `POST /api/session/logout`.
+- `GET /api/session` is the supported same-site browser session/bootstrap endpoint for the separate first-party UI, while `/api/account` remains the authenticated persisted-profile resource.
+- Protected supported endpoints use an authenticated browser session for `/api/account`, `/api/audit-logs`, `/api/operator/surface`, and for state-changing book, category, and localization operations.
 - Interactive login bootstrap is provider-aware when the optional `oauth` profile is active:
   - `/oauth2/authorization/{registrationId}` for direct provider entry points
   - configured default-provider shortcut via `/oauth2/authorization/{defaultRegistrationId}` when `OAUTH_DEFAULT_PROVIDER` is set
   - `/login` as the chooser page when multiple providers are configured without a default shortcut outside `prod`
+- The supported first-party browser contract assumes one public origin via reverse proxy and does not promise cross-origin browser calls or CORS support.
 - The operator inspection surface at `/api/operator/surface` requires an authenticated session and the `ADMIN` role.
 - Authenticated browser sessions are persisted through Spring Session JDBC in PostgreSQL.
 - CSRF remains disabled for browser-session writes as a deliberate demo tradeoff for reviewer-oriented workflows.
@@ -69,6 +71,7 @@ The values below are loaded from `{build-info-path}` during the Asciidoctor buil
 - xref:book-controller.adoc[BookController API]
 - xref:category-controller.adoc[CategoryController API]
 - xref:localization-controller.adoc[LocalizationController API]
+- xref:session-controller.adoc[SessionController API]
 - xref:audit-log-controller.adoc[AuditLogController API]
 - xref:operator-surface-controller.adoc[OperatorSurfaceController API]
 - xref:technical-endpoints.adoc[Technical Endpoints]

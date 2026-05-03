@@ -26,6 +26,9 @@
   }, {
     "name" : "Technical",
     "description" : "Public technical overview and smoke-test endpoints."
+  }, {
+    "name" : "Session",
+    "description" : "Same-site browser session contract endpoints for the separate first-party UI."
   } ],
   "paths" : {
     "/api/localizations/{id}" : {
@@ -380,6 +383,19 @@
         } ]
       }
     },
+    "/api/session/logout" : {
+      "post" : {
+        "tags" : [ "Session" ],
+        "summary" : "Log out the current browser session",
+        "description" : "Same-site logout endpoint for the separate first-party UI. Invalidates the current application session if present, clears the session cookie, and returns 204 even when no session exists.",
+        "operationId" : "logout",
+        "responses" : {
+          "204" : {
+            "description" : "Current session invalidated and cookie cleared."
+          }
+        }
+      }
+    },
     "/api/localizations" : {
       "get" : {
         "tags" : [ "Localizations" ],
@@ -690,7 +706,7 @@
       "post" : {
         "tags" : [ "Books" ],
         "summary" : "Create a book",
-        "description" : "Requires an authenticated session established through the GitHub OAuth login flow.",
+        "description" : "Requires an authenticated session established through the configured OAuth provider login flow.",
         "operationId" : "create_2",
         "requestBody" : {
           "content" : {
@@ -732,6 +748,26 @@
               "*/*" : {
                 "schema" : {
                   "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/session" : {
+      "get" : {
+        "tags" : [ "Session" ],
+        "summary" : "Get the current browser session contract",
+        "description" : "Public same-site session/bootstrap endpoint for the separate first-party UI. Returns the current authenticated state, persisted-account path, effective login bootstrap path, logout path, cookie contract, and current CSRF mode.",
+        "operationId" : "currentSession",
+        "responses" : {
+          "200" : {
+            "description" : "Current same-site browser session state.",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SessionResponse"
                 }
               }
             }
@@ -1184,7 +1220,7 @@
           },
           "login" : {
             "type" : "string",
-            "description" : "GitHub login.",
+            "description" : "External login from the authenticated OAuth provider.",
             "example" : "kamkie"
           },
           "displayName" : {
@@ -1279,6 +1315,75 @@
           }
         },
         "description" : "Payload for creating a new book."
+      },
+      "SessionCookieContract" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string",
+            "description" : "Session cookie name expected by protected operations.",
+            "example" : "technical-interview-demo-session"
+          },
+          "httpOnly" : {
+            "type" : "boolean",
+            "description" : "Whether the session cookie is HTTP-only.",
+            "example" : true
+          },
+          "sameSite" : {
+            "type" : "string",
+            "description" : "Session cookie SameSite mode.",
+            "example" : "lax"
+          },
+          "secure" : {
+            "type" : "boolean",
+            "description" : "Whether the session cookie requires HTTPS.",
+            "example" : false
+          }
+        },
+        "description" : "Session cookie settings relevant to same-site browser clients."
+      },
+      "SessionCsrfContract" : {
+        "type" : "object",
+        "properties" : {
+          "enabled" : {
+            "type" : "boolean",
+            "description" : "Whether CSRF protection is currently enabled for browser writes.",
+            "example" : false
+          }
+        },
+        "description" : "Current CSRF contract for browser writes."
+      },
+      "SessionResponse" : {
+        "type" : "object",
+        "properties" : {
+          "authenticated" : {
+            "type" : "boolean",
+            "description" : "Whether the current browser request is backed by an authenticated application session.",
+            "example" : true
+          },
+          "accountPath" : {
+            "type" : "string",
+            "description" : "Endpoint path for the authenticated persisted-account resource.",
+            "example" : "/api/account"
+          },
+          "loginPath" : {
+            "type" : "string",
+            "description" : "Interactive login bootstrap path for the current runtime. It is empty when oauth is inactive and otherwise resolves to either /oauth2/authorization/{registrationId} or /login.",
+            "example" : "/oauth2/authorization/github"
+          },
+          "logoutPath" : {
+            "type" : "string",
+            "description" : "Same-site logout endpoint path.",
+            "example" : "/api/session/logout"
+          },
+          "sessionCookie" : {
+            "$ref" : "#/components/schemas/SessionCookieContract"
+          },
+          "csrf" : {
+            "$ref" : "#/components/schemas/SessionCsrfContract"
+          }
+        },
+        "description" : "Same-site browser session contract for the separate first-party UI."
       },
       "AuditLogResponse" : {
         "type" : "object",
@@ -1616,13 +1721,13 @@
       "PageLocalizationResponse" : {
         "type" : "object",
         "properties" : {
-          "totalElements" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
           "totalPages" : {
             "type" : "integer",
             "format" : "int32"
+          },
+          "totalElements" : {
+            "type" : "integer",
+            "format" : "int64"
           },
           "size" : {
             "type" : "integer",
@@ -1638,21 +1743,21 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "first" : {
+          "last" : {
             "type" : "boolean"
           },
-          "last" : {
+          "first" : {
             "type" : "boolean"
           },
           "numberOfElements" : {
             "type" : "integer",
             "format" : "int32"
           },
-          "pageable" : {
-            "$ref" : "#/components/schemas/PageableObject"
-          },
           "sort" : {
             "$ref" : "#/components/schemas/SortObject"
+          },
+          "pageable" : {
+            "$ref" : "#/components/schemas/PageableObject"
           },
           "empty" : {
             "type" : "boolean"
@@ -1666,22 +1771,22 @@
             "type" : "integer",
             "format" : "int64"
           },
-          "pageNumber" : {
-            "type" : "integer",
-            "format" : "int32"
+          "sort" : {
+            "$ref" : "#/components/schemas/SortObject"
+          },
+          "paged" : {
+            "type" : "boolean"
+          },
+          "unpaged" : {
+            "type" : "boolean"
           },
           "pageSize" : {
             "type" : "integer",
             "format" : "int32"
           },
-          "unpaged" : {
-            "type" : "boolean"
-          },
-          "paged" : {
-            "type" : "boolean"
-          },
-          "sort" : {
-            "$ref" : "#/components/schemas/SortObject"
+          "pageNumber" : {
+            "type" : "integer",
+            "format" : "int32"
           }
         }
       },
@@ -1691,10 +1796,10 @@
           "empty" : {
             "type" : "boolean"
           },
-          "unsorted" : {
+          "sorted" : {
             "type" : "boolean"
           },
-          "sorted" : {
+          "unsorted" : {
             "type" : "boolean"
           }
         }
@@ -1702,13 +1807,13 @@
       "PageBook" : {
         "type" : "object",
         "properties" : {
-          "totalElements" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
           "totalPages" : {
             "type" : "integer",
             "format" : "int32"
+          },
+          "totalElements" : {
+            "type" : "integer",
+            "format" : "int64"
           },
           "size" : {
             "type" : "integer",
@@ -1724,21 +1829,21 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "first" : {
+          "last" : {
             "type" : "boolean"
           },
-          "last" : {
+          "first" : {
             "type" : "boolean"
           },
           "numberOfElements" : {
             "type" : "integer",
             "format" : "int32"
           },
-          "pageable" : {
-            "$ref" : "#/components/schemas/PageableObject"
-          },
           "sort" : {
             "$ref" : "#/components/schemas/SortObject"
+          },
+          "pageable" : {
+            "$ref" : "#/components/schemas/PageableObject"
           },
           "empty" : {
             "type" : "boolean"
@@ -1814,7 +1919,7 @@
     "securitySchemes" : {
       "sessionCookie" : {
         "type" : "apiKey",
-        "description" : "Authenticated browser session cookie used by protected operations. It is established through GET /oauth2/authorization/github when the optional oauth profile is active.",
+        "description" : "Authenticated browser session cookie used by protected operations. It is established through a configured identity provider login path under /oauth2/authorization/{registrationId} when the optional oauth profile is active.",
         "name" : "technical-interview-demo-session",
         "in" : "cookie"
       }

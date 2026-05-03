@@ -17,6 +17,7 @@ Current scope:
 - `Book` API under `/api/books` with pagination, filtering, optimistic locking, and category assignment
 - `Category` API under `/api/categories` with list, create, rename, and guarded delete semantics
 - `Localization` API under `/api/localizations` with CRUD plus collection filtering by `messageKey` and `language`
+- same-site browser session/bootstrap API under `/api/session` for a separate first-party UI behind one public origin
 - authenticated account API under `/api/account`
 - ADMIN audit review API at `/api/audit-logs`
 - configuration-driven demo data bootstrap with production-safe defaults
@@ -87,6 +88,8 @@ Stable `1.x` contract:
   - `POST /api/localizations`
   - `PUT /api/localizations/{id}`
   - `DELETE /api/localizations/{id}`
+  - `GET /api/session`
+  - `POST /api/session/logout`
   - `GET /api/account`
   - `PUT /api/account/language`
   - `GET /api/audit-logs`
@@ -112,23 +115,31 @@ Supported technical bootstrap:
 - `GET /oauth2/authorization/{registrationId}`
   - interactive login entry point when the optional `oauth` profile is active
   - resolved from configured providers (`github`, `oidc`, or additional configured registration ids)
+- `GET /api/session`
+  - public same-site browser session/bootstrap endpoint for the separate first-party UI
+  - returns `authenticated`, `accountPath`, effective `loginPath`, `logoutPath`, `sessionCookie`, and `csrf.enabled`
+  - `loginPath` is empty when the optional `oauth` profile is inactive and otherwise resolves to `/oauth2/authorization/{registrationId}` or `/login`
+- `POST /api/session/logout`
+  - public idempotent logout endpoint for the same-site browser session contract
+  - clears the configured session cookie and invalidates the current server-side session when present
 - `APP_BOOTSTRAP_SEED_DEMO_DATA`
   - controls startup seeding for demo categories, books, and localization messages
   - defaults to `true` in `local` and `test`, defaults to `false` in `prod`
 
 Security summary:
 
-- public supported reads: `/`, `/hello`, `/docs`, OpenAPI docs, `GET /api/books/**`, `GET /api/categories`, `GET /api/localizations/**`, actuator health endpoints, and actuator info
-- authenticated session required: account endpoints, `GET /api/audit-logs`, and all write endpoints
-- `ADMIN` role required: audit log review, category create/update/delete, and localization create/update/delete
-- interactive login starts at `GET /oauth2/authorization/{registrationId}` when the `oauth` profile is active
+- public supported endpoints: `/`, `/hello`, `/docs`, OpenAPI docs, `GET /api/books/**`, `GET /api/categories`, `GET /api/localizations/**`, `GET /api/session`, `POST /api/session/logout`, actuator health endpoints, and actuator info
+- authenticated session required: `/api/account`, `PUT /api/account/language`, `GET /api/audit-logs`, `GET /api/operator/surface`, and the state-changing book, category, and localization endpoints
 - `ADMIN` role required: audit log review, operator surface access, category create/update/delete, and localization create/update/delete
 - interactive login starts at `GET /oauth2/authorization/{registrationId}` when the `oauth` profile is active
+- the supported first-party browser contract assumes one public origin via reverse proxy; cross-origin browser support and CORS guarantees are not part of the supported contract
 
 Contract notes:
 
 - `GET /api/audit-logs` is paginated and supports optional exact `targetType`, `action`, and `actorLogin` filters
 - `GET /api/operator/surface` returns one ADMIN-only payload that combines recent audit history, runtime diagnostics, and operational status links
+- `GET /api/session` is the supported same-site UI bootstrap/state endpoint, while `GET /api/account` remains the authenticated persisted-profile endpoint
+- `POST /api/session/logout` always returns `204 No Content`, clears the configured session cookie, and is safe to call even when no session exists
 - `DELETE /api/categories/{id}` fails with a localized conflict if the category is still assigned to one or more books
 - `GET /api/books` is paginated and supports text, category, and year filters
 - `GET /api/localizations` is paginated and supports optional exact `messageKey` and `language` filters

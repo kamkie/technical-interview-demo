@@ -1,0 +1,43 @@
+= SessionController API
+:toc:
+:toclevels: 2
+:sectanchors:
+:source-highlighter: highlight.js
+
+xref:index.adoc[Back to API overview]
+
+This page documents the explicit same-site browser session contract exposed by `SessionController`.
+
+The supported contract is for a separate first-party UI that shares one public origin with this backend through reverse-proxy deployment. It does not promise cross-origin browser calls, CORS support, JWT issuance, or bearer-token authentication for `/api/**`.
+
+`GET /api/session` is the supported bootstrap and session-state surface. `GET /api/account` remains the authenticated persisted-profile endpoint.
+
+== `GET /api/session`
+
+Returns the current same-site browser session/bootstrap contract for the separate first-party UI. The payload exposes whether the current request is authenticated, the authenticated account resource path, the effective login bootstrap path, the logout path, cookie metadata relevant to the browser, and the current CSRF mode.
+
+When the optional `oauth` profile is inactive, `loginPath` is an empty string. When `oauth` is active, `loginPath` resolves to the configured provider shortcut such as `/oauth2/authorization/github` or to `/login` when multiple providers are configured without a default shortcut.
+
+include::{snippets}/session/get-session/curl-request.adoc[]
+include::{snippets}/session/get-session/http-request.adoc[]
+include::{snippets}/session/get-session/http-response.adoc[]
+include::{snippets}/session/get-session/response-headers.adoc[]
+include::{snippets}/session/get-session/response-fields.adoc[]
+
+=== Authenticated example
+
+Example response for the same endpoint when the request includes a valid authenticated session cookie.
+
+include::{snippets}/session/get-session-authenticated/curl-request.adoc[]
+include::{snippets}/session/get-session-authenticated/http-request.adoc[]
+include::{snippets}/session/get-session-authenticated/http-response.adoc[]
+include::{snippets}/session/get-session-authenticated/response-headers.adoc[]
+
+== `POST /api/session/logout`
+
+Invalidates the current same-site browser session when present and clears the configured session cookie at the application root path. The endpoint is public and idempotent so the first-party UI can call it safely even when the browser no longer has an active application session.
+
+include::{snippets}/session/post-session-logout/curl-request.adoc[]
+include::{snippets}/session/post-session-logout/http-request.adoc[]
+include::{snippets}/session/post-session-logout/http-response.adoc[]
+include::{snippets}/session/post-session-logout/response-headers.adoc[]

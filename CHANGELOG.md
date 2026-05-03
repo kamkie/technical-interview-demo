@@ -7,6 +7,12 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Added
+- Added an explicit same-site browser session contract with public `GET /api/session` bootstrap/state metadata and public idempotent `POST /api/session/logout`, backed by integration tests, REST Docs coverage, HTTP examples, and refreshed approved OpenAPI artifacts.
+
+### Changed
+- Updated the supported auth/session documentation so the separate first-party UI contract now states the one-public-origin reverse-proxy assumption explicitly while keeping `/api/account` as the authenticated persisted-profile endpoint.
+
 ## [v1.4.0] - 2026-05-03
 
 ### Added
