@@ -55,10 +55,10 @@ Goal: evolve the repository into a production-ready backend sample that supports
 - [ ] Add authenticated abuse protection such as request-rate limiting or similar controls for login bootstrap and write-heavy paths
 
 #### Make Releases And Migrations Safer
-- [ ] Define a rolling-compatible Flyway rollout model, including expand-and-contract rules, mixed-version compatibility expectations, and schema-first versus app-first ordering by migration type
-- [ ] Add automated backup-restore verification or at least a reproducible pre-release restore drill for migration-bearing releases
-- [ ] Add deployment checks that validate the exact published image, runtime configuration, and mixed-version readiness before promotion beyond local or CI environments
-- [ ] Document and validate a realistic disaster-recovery path instead of only a local rollback narrative
+- [x] Define a rolling-compatible Flyway rollout model, including expand-and-contract rules, mixed-version compatibility expectations, and schema-first versus app-first ordering by migration type
+- [x] Add automated backup-restore verification or at least a reproducible pre-release restore drill for migration-bearing releases
+- [x] Add deployment checks that validate the exact published image, runtime configuration, and mixed-version readiness before promotion beyond local or CI environments
+- [x] Document and validate a realistic disaster-recovery path instead of only a local rollback narrative
 
 ---
 
