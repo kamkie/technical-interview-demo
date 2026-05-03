@@ -11,6 +11,7 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 - Switched the tag-driven `Release` workflow to cumulative GitHub Release notes derived from `CHANGELOG.md` between the new tag section and the previous published GitHub Release tag section, with explicit fail-closed checks when boundaries are missing or ambiguous.
 - Added a repo-owned PowerShell helper at `scripts/release/render-release-notes.ps1` so cumulative release-note rendering can be validated locally and reused by workflow automation.
 - Added Gradle-owned `applicationSbom`, `imageSbom`, and aggregate `sbom` tasks that generate CycloneDX SBOM outputs for the packaged boot jar and built container image under `build/reports/sbom/`, and wired CI/release workflows to publish those SBOM bundles as run artifacts.
+- Added stable `static-analysis-reports` artifact bundles in CI and release workflows so PMD plus SpotBugs/FindSecBugs reports remain downloadable from GitHub Actions even when verification fails.
 
 ## [v1.3.0] - 2026-05-03
 
@@ -374,6 +375,3 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 - Added unique ISBN enforcement, request validation, and in-memory test/runtime support.
 - Added baseline API tests, sample request documentation, and CRUD operation logging.
 - Added initial project documentation in `HELP.md` and `AGENTS.md`.
-
-
-

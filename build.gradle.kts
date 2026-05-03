@@ -438,4 +438,3 @@ tasks.wrapper {
     gradleVersion = gradleWrapperVersion
     distributionType = Wrapper.DistributionType.ALL
 }
-

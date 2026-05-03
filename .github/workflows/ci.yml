@@ -61,6 +61,17 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
+      - name: Upload static analysis artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: static-analysis-reports-ci-${{ github.run_id }}
+          path: |
+            build/reports/pmd/
+            build/reports/security/static/
+          if-no-files-found: warn
+          retention-days: 14
+
       - name: Upload SBOM artifacts
         if: always()
         uses: actions/upload-artifact@v4
@@ -85,4 +96,5 @@ jobs:
           -PexternalSmokeImageName=technical-interview-demo
           -PdockerImageName=technical-interview-demo
           --no-daemon
+
 

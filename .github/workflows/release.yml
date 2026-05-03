@@ -78,6 +78,17 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
+      - name: Upload static analysis artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: static-analysis-reports-release-${{ github.ref_name }}
+          path: |
+            build/reports/pmd/
+            build/reports/security/static/
+          if-no-files-found: warn
+          retention-days: 14
+
       - name: Upload SBOM artifacts
         if: always()
         uses: actions/upload-artifact@v4
@@ -165,4 +176,5 @@ jobs:
           gh release create "${{ github.ref_name }}"
           --title "${{ github.ref_name }}"
           --notes-file release-notes.md
+
 
