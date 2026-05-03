@@ -198,6 +198,7 @@ Useful endpoints once the app is running:
 - `GET /`
 - `GET /hello`
 - `GET /api/books`
+- `GET /api/operator/surface` with an authenticated `ADMIN` session
 - `GET /docs`
 - `GET /v3/api-docs`
 - `GET /v3/api-docs.yaml`
@@ -382,6 +383,15 @@ Pre-release checks for a versioned upgrade:
 4. If the change touched book search/list behavior, localization lookup behavior, or OAuth/session startup behavior, also run `.\gradlew.bat gatlingBenchmark`.
 5. Confirm the target release notes and deployment values reference the intended semantic version tag.
 
+Backup and retention expectations for versioned upgrades:
+
+1. Take a database backup snapshot before each migration-bearing rollout.
+2. Keep at least:
+   - the latest 7 daily backups
+   - the latest 4 weekly backups
+   - one known-good pre-release snapshot for each migration-bearing rollout that is still in your rollback window
+3. Verify backup restoration periodically; backup success without restore validation is not sufficient.
+
 Upgrade flow:
 
 1. Build or pull the target image tag, for example `ghcr.io/<owner>/technical-interview-demo:v1.0.0`.
@@ -399,6 +409,22 @@ Rollback expectations:
   - manual database repair
   - or shipping a forward-fix release that restores application compatibility with the migrated schema
 - After rollback or forward-fix recovery, re-check readiness, operational metadata, metrics scraping, and any affected authenticated session or write flows.
+
+Restore drill (recommended each release cycle):
+
+1. Restore a recent backup to a separate PostgreSQL instance.
+2. Start the target tagged image against that restored database.
+3. Verify:
+   - `GET /actuator/health/readiness` returns `UP`
+   - `GET /actuator/info` exposes expected build metadata
+   - `GET /api/operator/surface` works with an authenticated `ADMIN` session
+4. Run SQL spot checks:
+   - `select max(installed_rank), max(version) from flyway_schema_history;`
+   - `select count(*) from books;`
+   - `select count(*) from categories;`
+   - `select count(*) from localization_messages;`
+   - `select count(*) from audit_logs;`
+   - `select count(*) from spring_session;`
 
 ## Kubernetes Deployment
 

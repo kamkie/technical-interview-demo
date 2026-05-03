@@ -35,6 +35,7 @@ Current implemented endpoint surface:
 - `GET|POST /api/categories`
 - `GET|POST|PUT|DELETE /api/localizations...`
 - `GET|PUT /api/account...`
+- `GET /api/operator/surface`
 - actuator health, info, and Prometheus endpoints
 - OpenAPI docs at `/v3/api-docs` and `/v3/api-docs.yaml`
 
@@ -109,6 +110,9 @@ See `ai/BUSINESS_MODULES.md` for the detailed feature-package map and ownership 
 
 - `technical.info`
   - root technical overview endpoint and smoke-test `hello` endpoint
+
+- `technical.operator`
+  - ADMIN-only operator inspection endpoint that combines recent audit history, runtime diagnostics, and operational status links
 
 ## Architectural Flow
 
