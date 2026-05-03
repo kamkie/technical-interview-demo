@@ -3,8 +3,8 @@
 ## Lifecycle
 | Field | Value |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Implementation |
+| Status | In Progress |
 
 ## Summary
 - Make the first post-`1.x` security slice the reverse-proxy and browser-boundary foundation rather than CSRF enablement.
@@ -75,6 +75,9 @@
 - The roadmap asks to restrict technical endpoints, but the user locked that as deployment-scoped private access rather than application auth.
   - Why it matters: moving Prometheus behind app auth would contradict the chosen framing and the existing ServiceMonitor-based scrape model.
   - Fallback assumption used by this plan: keep metrics scraping app-unauthenticated, but tighten the documented and deployment-owned boundary around it instead of changing the application auth model.
+- The current external smoke suite exercises both public API behavior and deployment-status/internal validation endpoints.
+  - Why it matters: tightening the supported public contract must not silently drop deployment-health checks that are still valuable after release.
+  - Fallback assumption used by this plan: keep `ExternalSmokeTests` as deployment-level validation that may continue checking internal-only endpoints, while the published public contract and external-surface docs/OpenAPI remove those endpoints from externally supported behavior.
 
 ## Locked Decisions And Assumptions
 - User decisions already locked in the roadmap:
@@ -94,6 +97,7 @@
   - failed OAuth login redirects to `/?login=failed`
   - `/oauth2/**` and `/login/**` leave the supported public contract in `2.0`
   - `OAUTH_DEFAULT_PROVIDER` leaves the supported config contract in `2.0`, and startup should fail fast if it is still set
+  - `/`, `/hello`, `/docs`, `/v3/api-docs`, and `/v3/api-docs.yaml` leave the approved public OpenAPI and externally supported contract in `2.0`; deployment smoke coverage may still exercise them as internal validation paths
 - Planning assumptions for this plan:
   - the first concrete security slice should be reverse-proxy/public-origin/session-boundary hardening plus conservative browser security headers
   - CSRF enablement is explicitly deferred to the next slice because it depends on the boundary choices this plan locks down
@@ -105,10 +109,12 @@
   - the OAuth success target `/` refers to the shared public frontend root, not the backend application's internal technical-overview endpoint
   - the OAuth flow in this slice should not support deep-link `returnTo` values or saved-request replay; success and failure redirects are fixed
   - this slice should not preserve `/login` or `OAUTH_DEFAULT_PROVIDER` as compatibility aliases
+  - `loginProviders[].clientName` should come from Spring Security's resolved `ClientRegistration.clientName`, so the contract reuses provider metadata already present in the runtime rather than introducing a new display-name property
   - the `2.0.M1` label is a planning and release-sequencing marker for this slice, not a literal git tag format; the eventual repository release must still use the semantic `vMAJOR.MINOR.PATCH` tag required by `AGENTS.md` and `ai/RELEASES.md`
   - proxy handling in `prod` should be locked to Spring's framework forwarded-header support (`server.forward-headers-strategy=framework`), trusting standard `Forwarded` and `X-Forwarded-*` headers from the repository's assumed reverse-proxy boundary; `local` and `test` should keep working without requiring forwarded headers
   - this slice should not introduce a canonical public-base-url property unless implementation proves the current relative-path session contract is insufficient
   - application startup should fail fast if removed config such as `OAUTH_DEFAULT_PROVIDER` is still set, and `prod` startup should additionally fail if deployment configuration contradicts the single-origin HTTPS proxy contract by disabling secure session cookies or overriding forwarded-header handling away from the framework strategy
+  - enforcement that only `/api/**` is internet-reachable is explicitly external to this application and should be represented here as deployment contract, docs, checked-in deployment hints, and tests/assertions about the app-owned public contract rather than as new app-side path blocking
   - Prometheus scraping remains compatible with the checked-in `ServiceMonitor` assets; any restriction in this slice should be expressed as deployment contract, documentation, and checked-in environment expectations rather than application auth
   - the fixed header baseline for this slice is:
     - `X-Content-Type-Options: nosniff`
@@ -151,11 +157,12 @@
   - `src/test/resources/http/operator-surface-controller.http`
   - `src/test/resources/http/technical-endpoints.http`
 - OpenAPI:
-  - `src/test/resources/openapi/approved-openapi.json` after intentional `2.0` contract review, because the public `GET /api/session` schema changes
+  - `src/test/resources/openapi/approved-openapi.json` after intentional `2.0` contract review, because the public `GET /api/session` schema changes and internal-only overview/hello endpoints leave the public machine-readable contract
 - Source files:
   - `src/main/java/team/jit/technicalinterviewdemo/technical/security/SecurityConfiguration.java`
   - `src/main/java/team/jit/technicalinterviewdemo/technical/security/SecuritySettingsProperties.java`
   - `src/main/java/team/jit/technicalinterviewdemo/technical/security/OAuthClientRegistrationConfiguration.java`
+  - `src/main/java/team/jit/technicalinterviewdemo/technical/security/ProductionSecurityConfigurationValidator.java`
   - `src/main/java/team/jit/technicalinterviewdemo/technical/security/SessionController.java`
   - `src/main/java/team/jit/technicalinterviewdemo/technical/security/SessionService.java`
   - `src/main/java/team/jit/technicalinterviewdemo/technical/security/SessionResponse.java`
@@ -219,10 +226,11 @@
 - exact deliverables
   - spec coverage that locks the proxy trust model to Spring framework forwarded-header handling in `prod` and confirms non-proxy local/test behavior still works
   - spec coverage for the fixed security-header baseline on `/`, `/docs`, `/api/session`, `/api/operator/surface`, `/actuator/health/readiness`, and one ProblemDetail error path, with the same common-header contract used by REST Docs
-  - spec coverage that `GET /api/session` exposes `loginProviders[]` with `registrationId`, `clientName`, and `authorizationPath`, and returns `[]` when the `oauth` profile is inactive
+  - spec coverage that `GET /api/session` exposes `loginProviders[]` with `registrationId`, `clientName` taken from `ClientRegistration.clientName`, and `authorizationPath`, and returns `[]` when the `oauth` profile is inactive
   - spec coverage that removes legacy `loginPath`, `/oauth2/**`, `/login/**`, `/login` fallback, and `OAUTH_DEFAULT_PROVIDER` from the supported contract
   - spec coverage that successful OAuth login redirects to `/` and failed OAuth login redirects to `/?login=failed` without saved-request replay or `returnTo` support
   - explicit documentation that the app expects one public origin behind a reverse proxy, exposes only `/api/**` externally, keeps relative account/logout/provider-authorization paths for UI bootstrap, and uses internal/devops paths for overview, docs, OpenAPI, and actuator validation
+  - approved public OpenAPI and REST Docs/OpenAPI descriptions updated so internal-only overview/hello endpoints no longer appear as externally supported public API operations, even if deployment smoke checks still probe them
   - operator-surface contract updates that continue exposing internal/devops endpoint references for authenticated operators without describing those endpoints as externally supported
   - updated contract language showing that this slice is prerequisite posture-hardening, not CSRF enablement
 
@@ -233,6 +241,7 @@
   - `src/main/java/team/jit/technicalinterviewdemo/technical/security/SecurityConfiguration.java`
   - `src/main/java/team/jit/technicalinterviewdemo/technical/security/SecuritySettingsProperties.java`
   - `src/main/java/team/jit/technicalinterviewdemo/technical/security/OAuthClientRegistrationConfiguration.java`
+  - `src/main/java/team/jit/technicalinterviewdemo/technical/security/ProductionSecurityConfigurationValidator.java`
   - `src/main/java/team/jit/technicalinterviewdemo/technical/security/SessionController.java`
   - `src/main/java/team/jit/technicalinterviewdemo/technical/security/SessionService.java`
   - `src/main/java/team/jit/technicalinterviewdemo/technical/security/SessionResponse.java`
@@ -256,7 +265,7 @@
   - OAuth authorization bootstrap and callback handling moved under `/api/session/**`
   - `GET /api/session` returns `loginProviders[]` in configured provider order, not `loginPath`
   - explicit OAuth success redirect to `/` and failure redirect to `/?login=failed`, with `/` interpreted as the shared public frontend root rather than the backend's internal technical-overview endpoint
-  - security rules and documentation posture aligned so only `/api/**` is externally reachable while internal/devops surfaces remain available behind the trusted boundary
+  - security rules and documentation posture aligned so the application-owned public contract is limited to `/api/**` while internal/devops surfaces remain available behind the trusted boundary and internet reachability continues to be enforced externally
   - explicit fail-fast validation that rejects any startup using removed config such as `OAUTH_DEFAULT_PROVIDER`, and in `prod` also rejects configurations which disable secure session cookies or override forwarded-header handling away from the framework strategy
   - runtime posture metadata updated if deployment validation needs to assert the new contract
 
@@ -291,8 +300,8 @@
   - checked-in deployment assets aligned with the proxy/header assumptions
   - deployment docs that distinguish `/api/**` as the only external surface from internal/devops overview/docs/OpenAPI/actuator paths
   - generated and human-facing docs aligned with the new posture, including `/api/session/**` OAuth entry/callback paths, `loginProviders[]`, and frontend-owned `/` and `/?login=failed` redirects
-  - approved OpenAPI baseline refreshed after intentional `2.0` contract review
-  - packaged smoke validation updated so internal-only backend endpoints are no longer treated as externally supported behavior
+  - approved OpenAPI baseline refreshed after intentional `2.0` contract review, with internal-only overview/hello endpoints removed from the public machine-readable contract
+  - packaged smoke validation kept as deployment-level verification, with assertions and naming updated so internal-only backend endpoints can still be checked without being described as externally supported behavior
   - smoke and overview checks aligned with any newly published runtime posture metadata
 
 ## Edge Cases And Failure Modes
@@ -333,6 +342,9 @@
   - `.\gradlew.bat externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo` when `ExternalSmokeTests` are updated for the hardened external surface
   - `helm lint helm/technical-interview-demo`
   - `helm template technical-interview-demo helm/technical-interview-demo -f helm/technical-interview-demo/values-local.yaml` if Helm files change
+- Manual verification during execution:
+  - confirm the public OpenAPI output contains the supported `/api/**` contract and no longer publishes internal-only overview/hello operations
+  - confirm deployment-level smoke tests still cover the intended internal validation paths without reclassifying them as internet-public behavior
 - OpenAPI handling:
   - refresh the approved baseline after intentional `2.0` contract review with `.\gradlew.bat refreshOpenApiBaseline`
 - Benchmark handling:
