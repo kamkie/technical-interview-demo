@@ -4,6 +4,16 @@
     <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
     <module name="technical-interview-demo.main" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="team.jit.technicalinterviewdemo.TechnicalInterviewDemoApplication" />
+    <envs>
+      <env name="DATABASE_HOST" value="localhost" />
+      <env name="DATABASE_PORT" value="5432" />
+      <env name="DATABASE_NAME" value="technical_interview_demo" />
+      <env name="DATABASE_USER" value="postgres" />
+      <env name="DATABASE_PASSWORD" value="changeme" />
+      <env name="GITHUB_CLIENT_ID" value="local-dev-github-client-id" />
+      <env name="GITHUB_CLIENT_SECRET" value="local-dev-github-client-secret" />
+      <env name="OAUTH_DEFAULT_PROVIDER" value="github" />
+    </envs>
     <extension name="net.ashald.envfile">
       <option name="IS_ENABLED" value="true" />
       <option name="IS_SUBST" value="false" />

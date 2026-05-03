@@ -32,6 +32,12 @@ Before writing code or docs:
 - confirm the plan is decision-complete enough to execute without inventing product behavior
 - confirm whether you are executing the whole plan or only one milestone
 - identify any plan gap that now blocks execution, and revise the plan before coding instead of filling the gap ad hoc
+- resolve local machine-dependent environment variables before running env-dependent commands:
+  - check the local `.env` file first when it exists
+  - use `.env.example` only as the template for expected variable names, not as proof of the local values
+  - prefer `.env` for values such as `JAVA_HOME`, `IDEA_HOME`, `IDEA_FORMATTER_BINARY`, `SPRING_PROFILES_ACTIVE`, and other local runtime or toolchain variables needed by the task
+  - if `.env` is missing or incomplete, then inspect the relevant IDE or local machine configuration and report the fallback you used
+  - never commit local machine-specific `.env` values unless the user explicitly asks for that
 
 ## Standard Single-Agent Flow
 
