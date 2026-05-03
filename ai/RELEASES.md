@@ -127,11 +127,12 @@ When push is requested:
 2. push the annotated tag
 3. verify the remote accepted both updates
 4. monitor the tag-driven `Release` workflow until `./gradlew externalSmokeTest` passes for the tagged image and both container-image tags plus the GitHub Release are published
-5. confirm the GitHub Release body matches the exact `## [vMAJOR.MINOR.PATCH]` section from `CHANGELOG.md` and includes the tag image reference, short-SHA image reference, and package-page link
+5. confirm the GitHub Release body includes every `CHANGELOG.md` version section from the new tag back to (but not including) the previous published GitHub Release tag section, plus the tag image reference, short-SHA image reference, and package-page link
 6. remove temporary worktrees and branches used only to execute the released plan after confirming their changes are already integrated onto `main`
 
 The tag-driven `Release` workflow is expected to validate the packaged tagged image via `./gradlew externalSmokeTest` before image publication.
-The automated GitHub Release body is sourced from the exact matching `CHANGELOG.md` version section.
+The automated GitHub Release body is sourced cumulatively from `CHANGELOG.md`, spanning from the new tag section back to the previous published GitHub Release tag section.
+The release workflow must fail closed when it cannot derive that previous published release boundary or the required changelog sections unambiguously.
 
 ## What Not To Do
 

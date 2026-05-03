@@ -142,11 +142,13 @@ The standard build includes Spotless, PMD, tests, JaCoCo thresholds, REST Docs g
 
 Supply-chain verification is part of the standard build:
 
-- `.\gradlew.bat build` also runs Gradle-owned static application security, dependency vulnerability, and Docker-image vulnerability scans
+- `.\gradlew.bat build` also runs Gradle-owned static application security, dependency vulnerability, Docker-image vulnerability, and SBOM generation tasks
 - `.\gradlew.bat staticSecurityScan` runs SpotBugs plus FindSecBugs directly when you want the code-focused security gate without the full lifecycle
 - `.\gradlew.bat vulnerabilityScan` runs the two scan tasks directly when you want the security checks without the full lifecycle
-- static application security reports are written under `build/reports/security/static/` as XML and HTML
+- `.\gradlew.bat sbom` runs the CycloneDX SBOM tasks directly when you want SBOM generation without the full lifecycle
+- PMD reports are written under `build/reports/pmd/` and static application security reports are written under `build/reports/security/static/` as XML and HTML
 - dependency and image vulnerability scan reports are written under `build/reports/security/` as JSON, SARIF, and summary text files
+- application and image SBOM reports are written under `build/reports/sbom/application/application.cyclonedx.json` and `build/reports/sbom/image/image.cyclonedx.json`
 - unsuppressed `HIGH` and `CRITICAL` findings fail the relevant scan task and therefore fail the build
 - suppressions must be explicit and reviewable through `config/security/trivy.ignore`, `config/security/spotbugs-security-include.xml`, and `config/security/spotbugs-security-exclude.xml`
 
@@ -161,7 +163,8 @@ Additional change-sensitive checks:
 - use semantic version tags in the form `vMAJOR.MINOR.PATCH`
 - keep release numbers increasing in `git log --first-parent` order
 - record human-facing release history in `CHANGELOG.md`
-- tag-driven releases publish the matching `CHANGELOG.md` version section as GitHub Release notes
+- tag-driven releases publish cumulative GitHub Release notes from the new tag section back to the previous published GitHub Release tag section in `CHANGELOG.md`
+- release-note rendering fails closed when the previous published GitHub Release boundary or required `CHANGELOG.md` sections cannot be derived unambiguously
 - complete local implementation, validation, and review work before pushing a branch or opening an implementation PR
 - treat PR creation as the final implementation handoff, not as a substitute for local execution
 - maintainers prepare releases only after the approved implementation PR has been merged onto validated `main`
@@ -178,11 +181,12 @@ Supported delivery path:
 - the scheduled `Post-Deploy Smoke` workflow runs `./gradlew scheduledExternalCheck` every six hours and on manual dispatch, using `EXTERNAL_CHECK_BASE_URL` plus optional `EXTERNAL_CHECK_JDBC_URL`, `EXTERNAL_CHECK_JDBC_USER`, and `EXTERNAL_CHECK_JDBC_PASSWORD` secrets for deeper JDBC-backed session and Flyway checks
 - the `CI` workflow uploads `build/reports/jacoco/test/jacocoTestReport.xml` to Codecov after the Gradle build, so the repository must be onboarded for Codecov uploads before that signal is expected to pass consistently
 - Dependabot opens grouped weekly update PRs for Gradle, GitHub Actions, and Docker, and those PRs are expected to pass the same `CI` workflow before merge
-- the `CI` workflow uploads the generated vulnerability scan artifacts from `build/reports/security/` so blocked runs remain reviewable
-- semantic version tags trigger the `Release` workflow, which builds and scans the tagged image with Gradle, validates it with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry as `ghcr.io/<owner>/<repo>:<tag>` and `ghcr.io/<owner>/<repo>:sha-<12-char-commit>`, then creates the matching GitHub Release from `CHANGELOG.md`
+- the `CI` workflow uploads generated vulnerability scan artifacts from `build/reports/security/`, static-analysis artifacts from `build/reports/pmd/` plus `build/reports/security/static/`, and SBOM artifacts from `build/reports/sbom/` so blocked runs remain reviewable
+- semantic version tags trigger the `Release` workflow, which builds, scans, and generates SBOMs for the tagged image with Gradle, uploads security, static-analysis, and SBOM artifact bundles, validates the image with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry as `ghcr.io/<owner>/<repo>:<tag>` and `ghcr.io/<owner>/<repo>:sha-<12-char-commit>`, then creates cumulative GitHub Release notes from the previous published GitHub Release tag boundary in `CHANGELOG.md`
 - deployment artifacts are provided as:
   - Docker image
   - vendor-neutral Kubernetes manifests under `k8s/base` with a local overlay under `k8s/overlays/local`, including a checked-in HPA and pod disruption budget
+  - optional Fluent Bit log-forwarding example under `k8s/log-forwarding/fluent-bit` for multiline Java exception shipping
   - Helm chart under `helm/`, with autoscaling and pod disruption budget defaults enabled for deployment-style installs and disabled in `values-local.yaml` for the single-replica local path
   - monitoring and alerting assets for Prometheus, Grafana, and Alertmanager
 
@@ -214,7 +218,7 @@ Frozen `1.0` production posture:
 - `SESSION_COOKIE_SECURE` remains optional with a secure-by-default value of `true`
 - `prod` enforces a 15 minute session timeout, one active session per login, and login rejection when that session cap is already reached
 - browser-session write flows keep CSRF disabled as a deliberate demo tradeoff for reviewer-friendly session-based API exercise flows
-- production logging uses `INFO` at the root logger while keeping ANSI detection automatic for no-TTY log shipping and leaving trace export runtime-configurable through standard OTLP environment variables
+- production logging uses `INFO` at the root logger and emits structured JSON Lines on stdout (`logging.structured.format.console=logstash`) while keeping trace export runtime-configurable through standard OTLP environment variables
 - `GET /actuator/prometheus` remains available for trusted deployment scraping, but it is not part of the internet-public contract
 
 Trusted deployment topology assumption:
@@ -226,6 +230,7 @@ Use the raw manifests under `k8s/` when you want explicit repo-owned YAML. Use t
 
 Monitoring support uses the upstream `kube-prometheus-stack` Helm chart plus repo-owned ServiceMonitor, alert-rule, Grafana dashboard, and Alertmanager example assets under `k8s/monitoring` and `monitoring/`.
 The checked-in monitoring contract now covers auth failures, session-backed account errors, Flyway-style startup crash loops, database pool saturation and timeouts, and elevated 5xx rates.
+The optional `k8s/log-forwarding/fluent-bit` bundle shows one deployment-facing path for shipping those stdout JSON lines while recombining multiline Java exception stack traces before forwarding.
 
 ## Project Map
 
