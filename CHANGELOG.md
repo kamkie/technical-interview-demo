@@ -7,6 +7,9 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Changed
+- Introduced typed OAuth provider configuration under `app.security.oauth` with explicit provider type/default-provider handling and prod fail-fast validation for provider credentials, issuer requirements, and multi-provider default selection.
+
 ## [v1.3.0] - 2026-05-03
 
 ### Added
