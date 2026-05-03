@@ -3,126 +3,157 @@
 `ai/WORKFLOW.md` explains how Codex should run delegated or parallel execution in this repository.
 
 Use this file when the user explicitly wants delegation, sub-agents, parallel work, or a multi-worktree execution model.
-Use `AGENTS.md` for repository rules, `ai/PLAN.md` and `ai/PLAN_*.md` for planning, `ai/EXECUTION.md` for worker-local execution discipline, `ai/TESTING.md` for validation scope, `ai/DOCUMENTATION.md` for artifact alignment, and `ai/RELEASES.md` only after an approved implementation PR has been merged onto `main`.
+Use `AGENTS.md` for repository rules, `ai/PLAN.md` and `ai/PLAN_*.md` for planning, `ai/EXECUTION.md` for normal single-worker execution discipline, `ai/TESTING.md` for validation scope, `ai/DOCUMENTATION.md` for artifact alignment, and `ai/RELEASES.md` only after an approved implementation PR has been merged onto `main`.
 
-## When To Use Multi-Agent Execution
+## Default Position
 
 Use a multi-agent workflow only when the user explicitly asks for delegation, sub-agents, or parallel work.
 
 Prefer a single agent when:
 
 - the change is small
-- multiple agents would touch the same files
+- multiple workers would touch the same files or same public contract artifacts
 - the next step is tightly blocked on one coupled change
 - coordination cost would exceed the parallelism benefit
 - the review, testing, or documentation slice is too small to justify a handoff
 
-## Coordinator
+## Choose One Of Two Modes
 
-The coordinator owns:
+Multi-agent execution in this repository has only two supported modes:
 
-- reading the governing docs, specs, and target plan
-- deciding whether the work is worth splitting
-- keeping requirements, scope, and task boundaries consistent with the approved plan
-- splitting work into bounded, non-overlapping tasks with explicit file ownership
-- keeping shared integration files such as `CHANGELOG.md` and the target plan's `Validation Results`
-- integrating worker output onto the local execution branch or worktree
+1. `Parallel Plans`
+   Several workers execute different `ai/PLAN_*.md` files in parallel.
+   Each worker should behave exactly like normal single-worker execution on its own branch or worktree.
+2. `Shared Plan`
+   Several workers execute different slices of the same `ai/PLAN_*.md`.
+   Workers must not edit the canonical plan file or `CHANGELOG.md` directly while the plan is being split across workers.
+
+The coordinator must choose the mode before delegating work. Do not mix the two modes inside the same plan without stating the boundary explicitly.
+
+## Coordinator Responsibilities
+
+The coordinator always owns:
+
+- reading the governing docs, specs, and target plans
+- deciding whether the work is worth splitting at all
+- choosing `Parallel Plans` or `Shared Plan`
+- defining explicit non-overlapping worker ownership
+- deciding the integration order
 - running final validation from `ai/TESTING.md`
 - running final review and documentation-alignment checks using `ai/REVIEWS.md` and `ai/DOCUMENTATION.md`
-- pushing the finished worktree branch and opening the PR after local execution is complete, instead of trying to merge directly onto `main` from the worktree
-- starting release work only after the approved PR has been merged onto `main`
+- keeping release work out of scope until the approved PR is merged onto `main`
 
-## Phase-Based Ownership
+Mode-specific coordinator ownership is defined below.
 
-Think in phases even when only some phases are delegated. Do not spawn a dedicated worker for every phase by default. Use phase-specific workers only when the phase has enough independent work to justify the coordination cost.
+## Mode 1: Parallel Plans
 
-### Requirements Gathering
+Use `Parallel Plans` when the work already has multiple plan files and those plans are genuinely disjoint in source ownership, contract artifacts, rollout order, and validation needs.
 
-Default owner: coordinator.
+### Worker Contract
 
-Delegate only when bounded repo research can clarify scope, compatibility, rollout, acceptance criteria, or validation without editing files.
+Each worker owns one plan file, or one explicitly grouped set of disjoint plan files.
 
-Deliverables:
+Inside that owned plan scope, the worker should follow `ai/EXECUTION.md` exactly:
 
-- explicit material open questions for the user, or an explicit statement that the request is decision-complete enough to proceed
-- a short list of requirement gaps resolved from repo truth instead of guessed behavior
+- implement the plan locally
+- update the owned `ai/PLAN_*.md` file as execution progresses
+- update `CHANGELOG.md` under `## [Unreleased]` after each completed milestone
+- create a normal non-interactive commit after each completed milestone
+- run the required validation for that plan
+- when code is done and verified in a worktree-based execution, push the worker branch and open the PR as the final execution step
 
-### Planning
+`Parallel Plans` is intentionally the same operational model as a single worker on `main`, except each worker does it on its own branch or worktree.
 
-Default owner: coordinator.
+### Coordinator Contract
 
-A planning worker may create or revise `ai/PLAN_*.md` when the user explicitly wants multi-agent execution and planning is a distinct phase.
+In `Parallel Plans`, the coordinator owns:
 
-Deliverables:
+- deciding which plans are safe to run in parallel
+- preventing overlapping file ownership across workers
+- tracking worker status, branch names, validation status, and PR status
+- resolving cross-plan conflicts only after workers finish their local execution
+- consolidating final status reporting across the separate plan branches
 
-- a plan that follows `ai/PLAN.md`
-- locked assumptions, requirement gaps, and unresolved user-input holes recorded explicitly
-- clear milestones, validation scope, and file ownership expectations
+The coordinator should not centralize per-plan `CHANGELOG.md` or plan-file edits while workers are still executing. Those edits belong to the worker that owns the plan.
 
-### Investigation
+### Shared-File Reality
 
-Good fit for read-only or explorer-style workers.
+`CHANGELOG.md` conflicts are expected when several plans land in parallel. That is acceptable.
 
-Use investigation workers for bounded questions such as locating governing tests, identifying current contract behavior, or mapping where a cross-cutting concern is implemented.
+Do not avoid `Parallel Plans` just because multiple workers will touch `CHANGELOG.md`. Instead:
 
-Deliverables:
+- let each worker maintain the changelog entries required by `ai/EXECUTION.md`
+- resolve the merge conflict during integration or PR review
+- keep the conflict resolution faithful to the already committed worker entries
 
-- concise answers tied to exact files or packages
-- risks or edge cases that later phases must preserve
+## Mode 2: Shared Plan
 
-### Coding
+Use `Shared Plan` when one `ai/PLAN_*.md` should be executed by multiple workers in parallel.
 
-Good fit for worker agents with disjoint write scopes.
+This mode exists to avoid several workers fighting over the same canonical plan file and the same `CHANGELOG.md`.
 
-Deliverables:
+### Canonical Shared Files
 
-- the smallest spec-driven implementation change for the assigned scope
-- required task-local test or contract-artifact updates for that scope
-- a narrow task-level commit and a report of changed files plus validation run
+In `Shared Plan`, only the coordinator edits these canonical shared files:
 
-### Testing
+- the target `ai/PLAN_*.md`
+- `CHANGELOG.md`
 
-Default owner: coordinator for final gates.
+Workers may edit their assigned source, tests, docs, REST Docs, HTTP examples, OpenAPI artifacts, and README slices when those files are part of their owned scope. They do not edit the canonical plan file or `CHANGELOG.md` unless the coordinator explicitly assigns that exception.
 
-Use a testing worker when validation can proceed in parallel with remaining coding or when a focused test-artifact slice has its own write scope.
+### Worker Progress File
 
-Deliverables:
+Each worker must create and maintain its own temporary committed progress file at:
 
-- added or updated tests when behavior changed
-- explicit record of what validation ran, what failed, and what remains for the coordinator's final gate
+`ai/tmp/workflow/<plan_stem>__<worker_name>.md`
 
-### Code Review
+Create the directory if it does not exist.
 
-Default owner: coordinator.
+This file is the worker-owned execution-state artifact for `Shared Plan` mode. It replaces direct worker edits to the canonical plan file and `CHANGELOG.md`.
 
-Use a dedicated review worker when an independent bug and regression pass adds value before the PR is opened.
+Each progress file must record:
 
-Deliverables:
+- the target plan file
+- the worker branch and worktree
+- the exact owned scope
+- completed milestones, tasks, or slices
+- changed files
+- validation commands run and their pass/fail result
+- the worker's proposed `CHANGELOG.md` bullets
+- commit SHA(s)
+- blockers, risks, and coordinator decisions still needed
+- whether the slice is ready for integration
 
-- findings focused on defects, regressions, spec drift, and missing validation
-- exact file references or an explicit statement that no findings were discovered
+Workers must keep the progress file current and commit it together with the code changes it describes.
 
-### Security Review
+### Worker Contract
 
-Default owner: coordinator.
+In `Shared Plan`, each worker should:
 
-Use a dedicated security-review worker when the change touches authentication, authorization, secrets, logging of sensitive data, workflow permissions, container publication, or externally exposed configuration.
+- implement only the assigned disjoint slice
+- commit normally as milestones or bounded slices complete
+- update the worker progress file in the same commit series
+- run the validation required for the owned slice
+- hand off the completed branch plus progress file to the coordinator
 
-Deliverables:
+Workers do not update the canonical plan file's `Validation Results` or `CHANGELOG.md` directly in this mode.
 
-- findings focused on security regressions, not style preferences
-- explicit notes on auth, secret-handling, logging, dependency, workflow, or deployment-risk changes that need maintainer attention
+### Coordinator Integration Contract
 
-### Documentation
+In `Shared Plan`, the coordinator owns:
 
-Use a documentation worker when README, contributing guidance, setup guidance, AI docs, REST Docs, HTTP examples, or OpenAPI wording need coordinated updates and the write scopes do not heavily overlap active code edits.
+- merging or cherry-picking completed worker branches onto the coordinator branch
+- reading each worker progress file
+- integrating accepted progress into the canonical plan file
+- integrating accepted changelog text into `CHANGELOG.md`
+- making any required shared-file conflict-resolution commit
+- deleting consumed worker progress files before the final push or PR unless the user explicitly wants them retained for audit
 
-Deliverables:
+The coordinator should make the canonical plan and changelog edits only after the worker's code and worker-local validation are complete enough to integrate.
 
-- updates in the owning artifacts named by the plan
-- cross-reference cleanup so human-facing and AI-facing guidance stay aligned where their scopes overlap
+The normal outcome for `Shared Plan` is one coordinator branch and one PR for the full plan. Push worker branches only when the user explicitly wants remote visibility for intermediate worker output.
 
-## Task Slicing For This Repository
+## Task Slicing Rules
 
 Good parallel boundaries in this codebase usually follow package, contract, or artifact ownership boundaries, for example:
 
@@ -131,59 +162,74 @@ Good parallel boundaries in this codebase usually follow package, contract, or a
 - `business.localization`
 - `business.user`
 - `technical.security`
-- `technical.docs`, REST Docs pages, OpenAPI checks, and HTTP examples when the contract impact is isolated
-- documentation-only slices such as `README.md` and `CONTRIBUTING.md` when they do not overlap active source edits
+- contract artifacts owned by one bounded public API change
+- documentation-only slices when they do not overlap active source edits
 
-Avoid parallel splits when tasks would overlap on:
+Do not split work in parallel when workers would overlap on:
 
 - the same controller or service
 - the same integration test class
 - the same REST Docs or OpenAPI artifact
-- `CHANGELOG.md`
-- the target `ai/PLAN_*.md`
-- a single unresolved requirements or rollout decision
+- the same unresolved product or rollout decision
+- the same single plan milestone that cannot be expressed as disjoint file ownership
 
-Shared files should stay under coordinator ownership unless there is a strong reason to do otherwise.
+If the boundary is not defensible in terms of file ownership and validation scope, do not delegate it.
 
-## Standard Flow
+## Standard Coordinator Flow
 
-1. The coordinator reads the governing docs and specs.
-2. The coordinator confirms requirement gaps are closed or explicitly queued for user clarification.
-3. The coordinator creates or revises the execution plan if needed.
-4. The coordinator decides which phases, if any, are worth delegating.
-5. The coordinator splits delegated work into bounded tasks with explicit file ownership and reports that split to the user.
-6. Workers execute their assigned scope, following `ai/EXECUTION.md` inside that scope.
-7. The coordinator integrates worker results, keeps `CHANGELOG.md` and the target plan current, and resolves any shared-file edits.
-8. The coordinator runs final validation, review, and documentation-alignment checks.
-9. If execution is happening in a git worktree, the coordinator pushes the finished branch and opens the PR as the last execution step. Outside worktree-based execution, remote handoff still happens only if the user asked for it.
-10. After the approved PR is merged onto `main`, release work may begin only if the user explicitly asked for it.
-11. The coordinator reports whether the plan is locally complete, PR-open, merged to `main`, blocked, or waiting on a release decision.
+1. Read the governing docs, specs, and target plans.
+2. Close requirement gaps or queue them for user clarification.
+3. Decide whether to stay single-worker or use multi-agent execution.
+4. If using multi-agent execution, choose `Parallel Plans` or `Shared Plan`.
+5. Define explicit worker ownership, including shared-file rules.
+6. Delegate work and track worker progress.
+7. Integrate completed worker output according to the chosen mode.
+8. Run final validation, review, and documentation-alignment checks.
+9. If worktree-based remote handoff is required, push the finished branch and open the PR only after local execution is complete.
+10. Start release work only after the approved PR has been merged onto `main` and only if the user asked for release work.
 
-## Worktree Rules
+## Worktree And Branch Rules
 
 When using git worktrees:
 
 - keep `main` as the only integration and release target
 - treat worktree branches as temporary execution branches, not release branches
-- integrate completed worker branches by merging them onto the coordinator branch after local validation so the worker history stays intact for review
-- push the finished coordinator worktree branch to GitHub and open a pull request instead of trying to merge directly onto `main` from the worktree
-- do not consider a plan complete until the finished branch has been pushed and the PR is open or already merged into `main`
-- do not consider release work started until the approved PR has actually been merged
 - do not cut a release from a worktree branch or detached `HEAD`
 
-A typical pattern is:
+For `Parallel Plans`:
+
+- use one worktree branch per plan or per explicitly grouped disjoint plan set
+- each worker branch is complete only when local validation is done and the branch has been pushed and the PR is open or merged, matching `AGENTS.md`
+
+For `Shared Plan`:
+
+- use one coordinator integration branch for the plan
+- use temporary worker branches or worktrees for the disjoint slices
+- integrate completed worker branches onto the coordinator branch after worker-local validation
+- push the coordinator branch and open one PR after the full plan is integrated and validated, unless the user explicitly asks for a different remote handoff model
+
+A typical `Parallel Plans` start looks like:
 
 ```powershell
 git checkout main
 git pull --ff-only
-git worktree add ..\technical-interview-demo-<task> -b codex/<task> main
+git worktree add ..\technical-interview-demo-<plan> -b codex/<plan> main
 ```
 
-After a worker finishes:
+A typical `Shared Plan` start looks like:
+
+```powershell
+git checkout main
+git pull --ff-only
+git worktree add ..\technical-interview-demo-<plan>-coord -b codex/<plan> main
+git worktree add ..\technical-interview-demo-<plan>-worker-a -b codex/<plan>-worker-a main
+```
+
+After a `Shared Plan` worker finishes:
 
 ```powershell
 git checkout codex/<plan>
-git merge <worker-branch>
+git merge --no-ff codex/<plan>-worker-a
 ```
 
 Before remote handoff:
@@ -195,27 +241,29 @@ git push -u origin codex/<plan>
 gh pr create --base main --head codex/<plan>
 ```
 
-After the approved PR is merged and release work is requested:
-
-```powershell
-git checkout main
-git pull --ff-only
-```
-
 Use non-interactive git commands. Do not use destructive history rewrites unless the user explicitly asks for recovery work.
 
 ## Commit And Reporting Expectations
 
-In this repository:
+In both modes:
 
-- each completed task gets its own commit
-- keep commits narrow enough that they map cleanly to completed plan tasks
-- do not batch the entire plan into one final implementation commit
-- worker handoffs must report the worker branch, changed files, validation run, tip commit SHA, pull-request status, and any blocker to integration
-- coordinator updates should report progress in terms of completed plan tasks and readiness for the next phase
+- keep commits narrow enough that they map cleanly to completed milestones or bounded slices
+- do not batch the entire assignment into one final implementation commit
+- report changed files, validation run, commit SHA(s), blockers, and readiness for integration
+
+Extra expectations for `Parallel Plans`:
+
+- each worker reports the owned plan file
+- each worker reports branch, worktree, validation status, and PR status
+
+Extra expectations for `Shared Plan`:
+
+- each worker reports the path to its progress file
+- the coordinator reports which worker progress files have already been integrated into the canonical plan and changelog
 
 The final completion message should state:
 
+- which mode was used
 - whether implementation is complete
 - whether the finished work is locally complete, PR-open, or already merged onto `main`
 - whether final validation passed

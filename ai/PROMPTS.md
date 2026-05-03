@@ -242,7 +242,12 @@ Execute `<plan_file>` with delegation.
 
 Use `ai/WORKFLOW.md`.
 Act as coordinator.
-Keep phase ownership explicit for requirements, planning, investigation, coding, testing, review, security review, and documentation.
+Use `Shared Plan` mode unless you can justify staying single-worker instead.
+Assign explicit disjoint ownership boundaries inside the plan.
+Reserve the canonical plan file and `CHANGELOG.md` for the coordinator.
+Require each worker to keep a committed progress file at `ai/tmp/workflow/<plan_stem>__<worker_name>.md`.
+Integrate worker progress back into the canonical plan file and `CHANGELOG.md` only after the worker slice is ready.
+Push only the finished coordinator branch unless I explicitly ask for worker branches to be pushed too.
 ```
 
 ### Implement Multiple Plans In Parallel With Worktrees
@@ -256,14 +261,15 @@ Implement these plan files in parallel using git worktrees:
 Read `AGENTS.md`, `ai/EXECUTION.md`, `ai/WORKFLOW.md`, and each listed plan file first.
 Use `ai/WORKFLOW.md`.
 Act as coordinator.
+Use `Parallel Plans` mode.
 Create separate temporary worktrees only for plans that are genuinely disjoint in source ownership, contract artifacts, rollout order, and validation needs.
 Keep `main` as the integration target and do not treat worktree branches as release branches.
-Assign explicit ownership boundaries per plan, including shared-file rules for docs, changelog, release artifacts, and validation reporting.
+Require each worker to follow `ai/EXECUTION.md` inside its owned plan exactly as a single worker would, including plan updates, changelog updates, milestone commits, validation, and final push after verification.
+Assign explicit ownership boundaries per plan, including any expected merge-conflict handling for `CHANGELOG.md` or other shared artifacts.
 Do not let workers edit the same controller, service, integration test, REST Docs artifact, OpenAPI artifact, or plan file in parallel.
 If any listed plans are too coupled to execute safely in parallel, stop and explain which plans should be merged back into one execution stream instead of forcing worktrees.
-Integrate worker output back onto the coordinator branch only after each worktree task is locally validated.
-Push the finished worktree branch and open a PR after local validation. Do not merge directly to `main` from a worktree.
-Run the final repository validation after integration and summarize per-plan progress, PR status, validation results, and any remaining blockers.
+Track per-plan branch, validation, and PR status.
+Run the final repository validation only after the worker branches are complete enough for the requested handoff, then summarize per-plan progress, PR status, validation results, and any remaining blockers.
 Do not release unless I ask.
 ```
 
@@ -278,14 +284,15 @@ Act as coordinator.
 Treat unfinished plans as the `ai/PLAN_*.md` files still present directly under `ai/`, excluding `ai/archive/`.
 If there are no unfinished plan files, stop and say so explicitly.
 Group the unfinished plans into parallel-safe workstreams only when their source ownership, contract artifacts, rollout order, and validation needs are genuinely disjoint.
+Use `Parallel Plans` mode for those disjoint plan files.
 Create separate temporary worktrees only for those disjoint workstreams.
 If some unfinished plans are too coupled to execute safely in parallel, keep them in the same execution stream and explain the boundary instead of forcing one worktree per file.
 Keep `main` as the integration target and do not treat worktree branches as release branches.
-Assign explicit ownership boundaries per workstream, including shared-file rules for docs, changelog, release artifacts, and validation reporting.
+Require each worker to follow `ai/EXECUTION.md` inside its owned plan exactly as a single worker would, including plan updates, changelog updates, milestone commits, validation, and final push after verification.
+Assign explicit ownership boundaries per workstream, including any expected merge-conflict handling for `CHANGELOG.md` or other shared artifacts.
 Do not let workers edit the same controller, service, integration test, REST Docs artifact, OpenAPI artifact, or plan file in parallel.
-Integrate worker output back onto the coordinator branch only after each worktree task is locally validated.
-Push the finished worktree branch and open a PR after local validation. Do not merge directly to `main` from a worktree.
-Run the final repository validation after integration and summarize which unfinished plans were completed, which were grouped together, which were left blocked or deferred, and what PR and validation status each one has.
+Track which worker owns each plan file, plus branch, validation, and PR status.
+Run the final repository validation only after the worker branches are complete enough for the requested handoff, then summarize which unfinished plans were completed, which were grouped together, which were left blocked or deferred, and what PR and validation status each one has.
 Do not release unless I ask.
 ```
 
@@ -294,13 +301,15 @@ Do not release unless I ask.
 In `Multi-Agent Execution`, check the status of worker `<worker name or agent id>`.
 
 Report:
+- mode in use: `Parallel Plans` or `Shared Plan`
 - branch and worktree
 - current task progress
 - changed files
 - validations run with results
 - commit SHA(s)
 - blockers
-- ready-for-cherry-pick status
+- ready-for-integration status
+- worker progress file path when `Shared Plan` mode is in use
 
 If the worker has stalled or completed, state that clearly.
 
@@ -313,6 +322,7 @@ Use `ai/WORKFLOW.md`.
 Act as coordinator.
 For each active worker, report:
 - worker name or agent id
+- mode in use
 - assigned branch and worktree
 - current task or milestone
 - changed files so far
@@ -320,6 +330,7 @@ For each active worker, report:
 - commit SHA(s) already created
 - blockers, risks, or coordinator decisions needed
 - whether the work is ready for integration onto `main`
+- worker progress file path when `Shared Plan` mode is in use
 
 If a worker is stalled, still in analysis, has no edits yet, or is already complete, say that explicitly.
 Keep the report concise and factual.
@@ -331,7 +342,7 @@ Keep the report concise and factual.
 Review `<plan_file>` and decide whether it should be executed by one agent or with delegation.
 
 Use `ai/WORKFLOW.md`.
-If delegation is worth it, propose the phase split, task split, and file ownership boundaries.
+If delegation is worth it, choose `Parallel Plans` or `Shared Plan`, then propose the task split and file ownership boundaries.
 ```
 
 ## Maintenance
