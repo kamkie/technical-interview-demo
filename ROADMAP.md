@@ -15,8 +15,6 @@ Keep rough candidate tasks here for manual editing before they are promoted into
 
 Add new rough tasks below.
 
-- github changelog should include changes from all unreleased versions from last one to current one
-
 ## How To Use This File
 
 - Keep only active or planned work here.
@@ -63,6 +61,8 @@ Goal: evolve the repository into a production-ready sample app deliberately, wit
 - [ ] Define a safer production rollout model for Flyway-backed releases, including compatibility expectations for rolling upgrades and schema-first versus app-first ordering
 - [ ] Add automated backup-restore verification or at least a reproducible pre-release restore drill for migration-bearing releases
 - [ ] Add deployment checks that validate the exact published image and runtime configuration before promotion beyond local or CI environments
+- [ ] Decide whether GitHub Release notes should keep mirroring only the exact tagged `CHANGELOG.md` section or instead become cumulative notes covering every unreleased user-visible change since the previous published GitHub Release
+- [ ] If cumulative GitHub Release notes are required, update release preparation and release-note rendering so delayed or batched releases publish the full change range from the previous published release to the new tag and fail closed when that range cannot be derived
 - [ ] Document and validate a realistic disaster-recovery path instead of only a local rollback narrative
 
 #### Harden Production Logging
