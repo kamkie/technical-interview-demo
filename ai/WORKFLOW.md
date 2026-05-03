@@ -165,6 +165,7 @@ When using git worktrees:
 
 - keep `main` as the only integration and release target
 - treat worktree branches as temporary execution branches, not release branches
+- integrate completed worker branches by merging them onto the coordinator branch after local validation so the worker history stays intact for review
 - do not consider a plan complete until the finished changes are ready for PR merge into `main`
 - do not consider release work started until the approved PR has actually been merged
 - do not cut a release from a worktree branch or detached `HEAD`
@@ -181,7 +182,7 @@ After a worker finishes:
 
 ```powershell
 git checkout codex/<plan>
-git cherry-pick <worker-commit-sha>
+git merge <worker-branch>
 ```
 
 Before remote handoff:
@@ -207,7 +208,7 @@ In this repository:
 - each completed task gets its own commit
 - keep commits narrow enough that they map cleanly to completed plan tasks
 - do not batch the entire plan into one final implementation commit
-- worker handoffs must report changed files, validation run, commit SHA, and any blocker to integration
+- worker handoffs must report the worker branch, changed files, validation run, tip commit SHA, and any blocker to integration
 - coordinator updates should report progress in terms of completed plan tasks and readiness for the next phase
 
 The final completion message should state:
