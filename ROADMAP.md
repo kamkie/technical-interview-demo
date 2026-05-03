@@ -15,7 +15,7 @@ Keep rough candidate tasks here for manual editing before they are promoted into
 
 Add new rough tasks below.
 
-No rough tasks are waiting for refinement right now.
+- github changelog should include changes from all unreleased versions from last one to current one
 
 ## How To Use This File
 
