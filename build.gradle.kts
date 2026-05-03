@@ -1,4 +1,7 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+import com.github.spotbugs.snom.Confidence
+import com.github.spotbugs.snom.Effort
+import com.github.spotbugs.snom.SpotBugsTask
 import net.ltgt.gradle.errorprone.errorprone
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
@@ -16,6 +19,7 @@ plugins {
     id("technical-interview-demo.external-testing-conventions")
     id("io.gatling.gradle") version "3.15.0.1"
     id("com.gorylenko.gradle-git-properties") version "2.5.7"
+    id("com.github.spotbugs") version "6.4.8"
     id("com.diffplug.spotless") version "8.4.0"
     id("net.ltgt.errorprone") version "5.1.0"
     id("org.springframework.boot") version "4.0.6"
@@ -38,7 +42,9 @@ group = "team.jit"
 description = "technical-interview-demo"
 
 val errorProneVersion = "2.49.0"
+val findSecBugsVersion = "1.14.0"
 val pmdVersion = "7.17.0"
+val spotbugsVersion = "4.9.8"
 val gradleWrapperVersion = "9.5.0"
 val springdocVersion = "3.0.3"
 val dockerImageName = providers.gradleProperty("dockerImageName").orElse("technical-interview-demo")
@@ -46,6 +52,8 @@ val snippetsDir = layout.buildDirectory.dir("generated-snippets")
 val buildInfoPropertiesFile = layout.buildDirectory.file("resources/main/META-INF/build-info.properties")
 val approvedOpenApiFile = layout.projectDirectory.file("src/test/resources/openapi/approved-openapi.json")
 val asciidoctorTask = tasks.named<org.asciidoctor.gradle.jvm.AsciidoctorTask>("asciidoctor")
+val spotbugsSecurityIncludeFile = layout.projectDirectory.file("config/security/spotbugs-security-include.xml")
+val spotbugsSecurityExcludeFile = layout.projectDirectory.file("config/security/spotbugs-security-exclude.xml")
 val trivyIgnoreFile = layout.projectDirectory.file("config/security/trivy.ignore")
 val trivyContainerImage = providers.gradleProperty("trivyImage").orElse("aquasec/trivy:0.63.0")
 val trivyFailOnSeverities = listOf("HIGH", "CRITICAL")
@@ -62,6 +70,8 @@ repositories {
 
 dependencies {
     errorprone("com.google.errorprone:error_prone_core:$errorProneVersion")
+    spotbugs("com.github.spotbugs:spotbugs:$spotbugsVersion")
+    spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:$findSecBugsVersion")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
@@ -182,6 +192,12 @@ tasks.register("vulnerabilityScan") {
     dependsOn(dependencyVulnerabilityScan, imageVulnerabilityScan)
 }
 
+val staticSecurityScan = tasks.register("staticSecurityScan") {
+    group = "verification"
+    description = "Runs SpotBugs with FindSecBugs against production code."
+    dependsOn(tasks.named("spotbugsMain"))
+}
+
 tasks.register<JavaExec>("refreshOpenApiBaseline") {
     group = "documentation"
     description = "Refreshes the approved OpenAPI baseline from the current application contract."
@@ -197,7 +213,7 @@ tasks.build {
 }
 
 tasks.check {
-    dependsOn(dependencyVulnerabilityScan, imageVulnerabilityScan)
+    dependsOn(staticSecurityScan, dependencyVulnerabilityScan, imageVulnerabilityScan)
 }
 
 tasks.withType<Test> {
@@ -219,6 +235,29 @@ tasks.withType<JavaCompile>().configureEach {
     options.errorprone.disableWarningsInGeneratedCode.set(true)
     options.errorprone.excludedPaths.set(".*/build/generated/.*")
     options.forkOptions.jvmArgs?.add("--sun-misc-unsafe-memory-access=allow")
+}
+
+tasks.withType<SpotBugsTask>().configureEach {
+    enabled = name == "spotbugsMain"
+    effort.set(Effort.MAX)
+    reportLevel.set(Confidence.HIGH)
+    maxHeapSize.set("1g")
+    showProgress.set(false)
+}
+
+tasks.named<SpotBugsTask>("spotbugsMain") {
+    group = "verification"
+    description = "Runs code-focused static application security analysis on production code."
+    includeFilter.set(spotbugsSecurityIncludeFile)
+    excludeFilter.set(spotbugsSecurityExcludeFile)
+    reports.create("xml") {
+        required.set(true)
+        outputLocation.set(layout.buildDirectory.file("reports/security/static/main/report.xml"))
+    }
+    reports.create("html") {
+        required.set(true)
+        outputLocation.set(layout.buildDirectory.file("reports/security/static/main/report.html"))
+    }
 }
 
 tasks.matching { it.name == "compileGatlingJava" }.configureEach {
