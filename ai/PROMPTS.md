@@ -262,8 +262,9 @@ Assign explicit ownership boundaries per plan, including shared-file rules for d
 Do not let workers edit the same controller, service, integration test, REST Docs artifact, OpenAPI artifact, or plan file in parallel.
 If any listed plans are too coupled to execute safely in parallel, stop and explain which plans should be merged back into one execution stream instead of forcing worktrees.
 Integrate worker output back onto the coordinator branch only after each worktree task is locally validated.
-Run the final repository validation after integration and summarize per-plan progress, integration status, validation results, and any remaining blockers.
-Do not push, open a PR, or release unless I ask.
+Push the finished worktree branch and open a PR after local validation. Do not merge directly to `main` from a worktree.
+Run the final repository validation after integration and summarize per-plan progress, PR status, validation results, and any remaining blockers.
+Do not release unless I ask.
 ```
 
 ### Implement All Unfinished Plans In Parallel With Worktrees
@@ -283,8 +284,9 @@ Keep `main` as the integration target and do not treat worktree branches as rele
 Assign explicit ownership boundaries per workstream, including shared-file rules for docs, changelog, release artifacts, and validation reporting.
 Do not let workers edit the same controller, service, integration test, REST Docs artifact, OpenAPI artifact, or plan file in parallel.
 Integrate worker output back onto the coordinator branch only after each worktree task is locally validated.
-Run the final repository validation after integration and summarize which unfinished plans were completed, which were grouped together, which were left blocked or deferred, and what validation passed or failed.
-Do not push, open a PR, or release unless I ask.
+Push the finished worktree branch and open a PR after local validation. Do not merge directly to `main` from a worktree.
+Run the final repository validation after integration and summarize which unfinished plans were completed, which were grouped together, which were left blocked or deferred, and what PR and validation status each one has.
+Do not release unless I ask.
 ```
 
 ### Check Status on Single Worker In Multi-Agent Execution

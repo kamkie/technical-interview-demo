@@ -13,6 +13,7 @@ Execution in this repository means:
 - keep plan state, code, docs, and validation aligned as work lands
 - preserve the current public contract unless the plan intentionally changes it
 - finish local implementation and validation before any push or PR handoff
+- if execution is happening in a git worktree, push the finished branch and open a PR instead of trying to merge directly onto `main` from that worktree
 - stop before release unless the user explicitly asked for release work
 
 ## Before You Implement
@@ -44,7 +45,7 @@ Before writing code or docs:
    - update the plan's `Validation Results` section with what actually ran and what happened
 7. Run the required validation from `ai/TESTING.md`.
 8. Perform a final local review using `ai/REVIEWS.md`.
-9. If the user asked for remote collaboration, push the finished branch and create the PR only after steps 1 through 8 are complete.
+9. If execution is happening in a git worktree, push the finished branch and create the PR only after steps 1 through 8 are complete. Outside worktree-based execution, do that only if the user asked for remote collaboration.
 10. Stop after reporting execution status. Release work begins only after the approved PR has been merged onto `main`.
 
 ## Milestone-Only Execution
@@ -56,7 +57,7 @@ When the user asks for only one milestone:
 - do not start later milestones or cleanup implicitly
 - record only the validation actually run for that milestone in `Validation Results`
 - do not prepare or cut a release
-- do not push or open a PR unless the user explicitly asked for that remote handoff
+- if the milestone is being executed in a git worktree, push the finished branch and open the PR after local validation; otherwise do not push or open a PR unless the user explicitly asked for that remote handoff
 
 ## Execution Guardrails
 
@@ -76,5 +77,5 @@ Execution work is complete when:
 - the target plan's `Validation Results` reflects actual execution
 - `CHANGELOG.md` under `## [Unreleased]` reflects the unreleased work
 - the required validation from `ai/TESTING.md` passed, or any blocker is explicitly recorded
-- any requested push or PR happened only after local execution was complete
+- any required or requested push or PR happened only after local execution was complete
 - release work remains undone unless the user explicitly asked for it
