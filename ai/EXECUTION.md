@@ -84,7 +84,7 @@ When the user asks for only one milestone:
 Execution work is complete when:
 
 - the targeted plan scope is implemented
-- the target plan's `Lifecycle` section reflects the final non-release execution state
+- the target plan's `Lifecycle` section reflects the final non-release execution state, typically `Phase=Integration` and `Status=Implemented` unless a blocker or milestone-only stop point justifies something else
 - required specs and documentation artifacts are aligned
 - the target plan's `Validation Results` reflects actual execution
 - unreleased history is recorded in the correct changelog artifact for the execution mode in use

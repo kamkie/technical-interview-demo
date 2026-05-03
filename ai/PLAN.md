@@ -37,7 +37,7 @@ Recommended `Status` values:
 - `Ready`: the plan is decision-complete and ready for execution
 - `In Progress`: implementation or integration work is actively happening
 - `Blocked`: execution cannot continue until an external blocker is resolved
-- `Done`: implementation and validation are complete, but release or archive cleanup is still pending
+- `Implemented`: implementation and validation are complete, but release or archive cleanup is still pending
 - `Released`: the completed plan has shipped and been cleaned up
 
 Use `Phase` for the coarse lifecycle stage and `Status` for the immediate execution state.
