@@ -152,9 +152,21 @@
 - Keep the cumulative-note derivation logic explicit and fail-closed rather than trying to infer missing release boundaries heuristically.
 
 ## Validation Results
-- To be filled in during execution.
+- `& .\scripts\release\render-release-notes.ps1 -ChangelogPath CHANGELOG.md -CurrentTag v1.3.0 -PreviousPublishedTag v1.2.1 ... -OutputPath build/tmp/release-notes-smoke.md` (pass): rendered cumulative notes covering `v1.3.0` and `v1.2.2` plus release metadata.
+- `& .\scripts\release\render-release-notes.ps1 -ChangelogPath CHANGELOG.md -CurrentTag v1.3.0 -PreviousPublishedTag v9.9.9 ...` (expected fail): failed closed with `No CHANGELOG.md section matched tag 'v9.9.9'.`
+- `.\gradlew.bat sbom --no-daemon`:
+  - first attempt (fail): local `JAVA_HOME` pointed to Java 11, so Gradle refused to run.
+  - retry with `JAVA_HOME=C:\Users\kamki\AppData\Local\Programs\IntelliJ IDEA Ultimate\jbr` (pass): generated app and image CycloneDX outputs.
+- `.\gradlew.bat build --no-daemon` with Java 25:
+  - first two attempts (fail): `spotlessKotlinGradleCheck` flagged trailing-blank-line formatting in `build.gradle.kts`.
+  - `.\gradlew.bat spotlessApply --no-daemon` (pass) to normalize formatting.
+  - final retry of `.\gradlew.bat build --no-daemon` (pass).
 
 ## User Validation
 - Review one CI-style artifact bundle and confirm it contains the promised SBOM and static-analysis outputs.
 - Confirm the documented GitHub Release notes policy matches the workflow behavior.
 - If cumulative notes are chosen, verify one dry-run example spans the full previous-release-to-new-tag range.
+
+
+
+
