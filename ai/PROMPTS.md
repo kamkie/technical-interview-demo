@@ -224,6 +224,20 @@ Push the current release commit and annotated tag to the remote.
 Follow `ai/RELEASES.md` for the push and post-push verification steps.
 ```
 
+### Verify And Release All Merged PR Work
+
+```text
+Verify and release all merged but unreleased work currently on `main`.
+
+Read `AGENTS.md`, `CHANGELOG.md`, `ROADMAP.md`, `ai/TESTING.md`, and `ai/RELEASES.md` first.
+Identify the merged PRs and executed `ai/PLAN_*.md` files already integrated onto `main` that belong to the unreleased change set.
+Use `ai/RELEASES.md`.
+Verify that the included merged work is actually release-ready, including plan `Validation Results`, required contract artifacts, roadmap cleanup needs, temporary changelog cleanup if present, and plan archival scope.
+If any included merged PR or executed plan is not ready, stop and list blockers first instead of preparing a partial or misleading release.
+If the merged work is ready, prepare the release commit, archive every included executed plan under `ai/archive/`, update moved-path references, create the annotated tag, push the release commit and tag, and verify remote publication.
+Summarize exactly which merged PRs and executed plan files were included in the release.
+```
+
 ### Verify The Published Release
 
 ```text
