@@ -34,6 +34,7 @@ Before writing code or docs:
 - identify any plan gap that now blocks execution, and revise the plan before coding instead of filling the gap ad hoc
 - resolve local machine-dependent environment variables before running env-dependent commands:
   - check the local `.env` file first when it exists
+  - in PowerShell, prefer dot-sourcing `./scripts/load-dotenv.ps1` into the active shell before env-dependent commands instead of reimplementing ad hoc `.env` parsing
   - source or otherwise load the local `.env` values into the active shell or command environment before running env-dependent commands when that file is available locally
   - do not assume Gradle, Spring Boot, or an ad hoc terminal session auto-loads `.env`; make the load step explicit when the task depends on variables from that file
   - use `.env.example` only as the template for expected variable names, not as proof of the local values

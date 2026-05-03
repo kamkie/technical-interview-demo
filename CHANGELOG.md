@@ -7,6 +7,12 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Added
+- Added a reusable PowerShell dotenv loader at `scripts/load-dotenv.ps1` so local shells and repo scripts can source `.env` consistently.
+
+### Changed
+- Updated AI execution guidance and setup docs to prefer the shared dotenv loader when PowerShell commands depend on local `.env` values, including Windows paths written with escaped backslashes.
+
 ## [v1.6.0] - 2026-05-03
 
 ### Added

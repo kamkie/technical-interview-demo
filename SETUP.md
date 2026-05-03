@@ -56,6 +56,14 @@ The default `local` profile expects PostgreSQL on `localhost:5432`. The included
 
 1. Copy `.env.example` to `.env` if you want a private local reference file.
 2. Export the values in your shell, IDE run configuration, or Docker Compose environment.
+3. In PowerShell, you can dot-source the repo helper to load `.env` into the current shell session:
+
+```powershell
+. .\scripts\load-dotenv.ps1
+```
+
+That helper is intended for interactive PowerShell sessions and AI-agent command shells. Dot-sourcing matters: running the script normally starts a child scope and will not persist environment changes back into your current shell.
+For Windows-style paths, the helper accepts both normal forms such as `C:\Users\kamki\.jdks\azul-25.0.3` and escaped forms such as `C:\\Users\\kamki\\.jdks\\azul-25.0.3`.
 
 Placeholder values such as `<path-to-jdk-25>` in `.env.example` should be replaced with paths from your own machine.
 
