@@ -30,7 +30,7 @@ No unrefined tasks currently.
 ## Current Priorities
 
 1. Replace the current reviewer-oriented browser write posture with production-grade same-site protections and explicit reverse-proxy/public-origin assumptions for the separate first-party UI.
-2. Close the remaining rolling-release, restore-verification, and artifact-trust gaps around image authenticity, migration compatibility, and pre-promotion deployment checks.
+2. Close the remaining rolling-release, restore-verification, and pre-promotion deployment gaps around migration compatibility and deployment checks.
 
 ## Locked Framing Decisions
 
@@ -53,10 +53,6 @@ Goal: evolve the repository into a production-ready backend sample that supports
 - [ ] Restrict technical endpoints such as Prometheus and non-public actuator surfaces behind production-ready network or auth expectations instead of relying on deployment convention alone
 - [ ] Add security headers and explicit HTTPS/proxy handling assumptions for real deployments
 - [ ] Add authenticated abuse protection such as request-rate limiting or similar controls for login bootstrap and write-heavy paths
-
-#### Strengthen Supply Chain And Artifact Trust
-- [x] Add GitHub CodeQL scanning in GitHub Actions with repository-owned configuration, uploaded SARIF results, and explicit guidance for how it complements rather than silently duplicates the existing SpotBugs/FindSecBugs and PMD quality gates
-- [x] Sign published container images and attach provenance or attestations so the sample release story covers artifact authenticity, not only version tags
 
 #### Make Releases And Migrations Safer
 - [ ] Define a rolling-compatible Flyway rollout model, including expand-and-contract rules, mixed-version compatibility expectations, and schema-first versus app-first ordering by migration type
