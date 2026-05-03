@@ -8,6 +8,9 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 ## [Unreleased]
 
 ### Changed
+- Switched the `prod` profile logging contract to structured JSON Lines (`logstash` console format) while preserving the local/test text-pattern defaults and added logging configuration contract coverage for the profile split.
+- Updated request-logging integration coverage to run under `prod` JSON logging and assert structured correlation fields (`rid`, `traceId`, `spanId`) plus sensitive-query-parameter redaction in emitted log events.
+- Added an optional Fluent Bit forwarding bundle under `k8s/log-forwarding/fluent-bit` and aligned README/setup guidance so multiline Java exception stack traces are recombined before logs are shipped from stdout to centralized collectors.
 - Switched the tag-driven `Release` workflow to cumulative GitHub Release notes derived from `CHANGELOG.md` between the new tag section and the previous published GitHub Release tag section, with explicit fail-closed checks when boundaries are missing or ambiguous.
 - Added a repo-owned PowerShell helper at `scripts/release/render-release-notes.ps1` so cumulative release-note rendering can be validated locally and reused by workflow automation.
 - Added Gradle-owned `applicationSbom`, `imageSbom`, and aggregate `sbom` tasks that generate CycloneDX SBOM outputs for the packaged boot jar and built container image under `build/reports/sbom/`, and wired CI/release workflows to publish those SBOM bundles as run artifacts.

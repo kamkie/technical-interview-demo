@@ -12,18 +12,20 @@ import org.springframework.core.io.ClassPathResource;
 class LoggingConfigurationContractTests {
 
     @Test
-    void baseConfigurationKeepsAnsiDetectionEnabled() throws IOException {
+    void baseConfigurationKeepsLocalTextLoggingDefaults() throws IOException {
         Properties properties = loadProperties("application.properties");
 
         assertThat(properties.getProperty("spring.output.ansi.enabled")).isEqualTo("DETECT");
+        assertThat(properties.getProperty("logging.pattern.console")).contains("%clr(");
     }
 
     @Test
-    void productionConfigurationKeepsRootLoggingAtInfo() throws IOException {
+    void productionConfigurationUsesStructuredJsonConsoleOutput() throws IOException {
         Properties properties = loadProperties("application-prod.properties");
 
         assertThat(properties.getProperty("logging.level.root")).isEqualTo("INFO");
         assertThat(properties.getProperty("logging.level.org.springframework")).isEqualTo("WARN");
+        assertThat(properties.getProperty("logging.structured.format.console")).isEqualTo("logstash");
     }
 
     private Properties loadProperties(String classpathLocation) throws IOException {

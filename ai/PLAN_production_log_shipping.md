@@ -129,7 +129,16 @@
 - Preserve the existing demo posture by keeping the forwarder example optional and clearly documented rather than making it a hard runtime dependency.
 
 ## Validation Results
-- To be filled in during execution.
+- `.\gradlew.bat test --tests team.jit.technicalinterviewdemo.technical.logging.LoggingConfigurationContractTests`
+  - first run failed before task execution because `JAVA_HOME` pointed to Java 11 (`Gradle requires JVM 17 or later`).
+  - rerun with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3` passed.
+- `.\gradlew.bat test --tests team.jit.technicalinterviewdemo.technical.logging.LoggingConfigurationContractTests --tests team.jit.technicalinterviewdemo.technical.logging.RequestLoggingIntegrationTests --tests team.jit.technicalinterviewdemo.technical.logging.HttpTracingIntegrationTests`
+  - first run failed because `RequestLoggingIntegrationTests` activated `prod` profile and hit the expected `SESSION_COOKIE_SECURE=true` validator.
+  - after setting `server.servlet.session.cookie.secure=true` in that test class, rerun with Java 25 passed (14/14 tests).
+- `kubectl kustomize k8s/log-forwarding/fluent-bit`
+  - passed; rendered ConfigMap + DaemonSet manifests successfully.
+- `.\gradlew.bat build` (with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`)
+  - passed, including test suite, docs generation, container build, and security scan tasks.
 
 ## User Validation
 - Start the app with `prod` and verify the stdout stream is JSON Lines rather than colored text.
