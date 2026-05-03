@@ -8,6 +8,8 @@ Do not use this file for planning, ordinary implementation, setup troubleshootin
 Release work starts only after the implementation flow is finished and the approved implementation PR has already been merged onto `main`.
 If the work is still local, still on a side branch, or still in an open PR, stay in execution mode.
 
+When `ai/WORKFLOW.md` `Parallel Plans` mode was used, worker-owned temporary `CHANGELOG_<topic>.md` files are release inputs. Release preparation on `main` must merge their accepted entries into the canonical `CHANGELOG.md` and then delete the temporary files in the same release-preparation change.
+
 ## Release Goal
 
 A release in this repository means:
@@ -29,6 +31,7 @@ Read these artifacts before editing release metadata:
 - `AGENTS.md`
 - the executed `ai/PLAN_*.md` file
 - `CHANGELOG.md`
+- any root-level `CHANGELOG_*.md` temporary changelog files that belong to the released work
 - `ROADMAP.md`
 - any contract docs touched by the released work
 - `ai/TESTING.md` and `ai/DOCUMENTATION.md` when validation scope or artifact alignment is unclear
@@ -52,11 +55,12 @@ Before creating an annotated release tag on merged `main`:
 1. review any new Flyway migration files under `src/main/resources/db/migration/` and confirm they are intentional for the target version
 2. confirm the required validation from `ai/TESTING.md` passed for the exact release candidate, including `./gradlew gatlingBenchmark` when that guide says it is required
 3. confirm OpenAPI compatibility still passes as part of the standard build and no unreviewed baseline refresh slipped in
-4. move the intended `CHANGELOG.md` entries into the versioned release section
-5. update `ROADMAP.md` to remove the completed released work from active roadmap sections
-6. archive the executed `ai/PLAN_*.md` file and update moved-path references in the same change
-7. create the annotated tag only after the release commit exists locally on `main`
-8. after push, verify the remote accepted both `main` and the tag, the `Release` workflow passed, the GitHub Release was created, and GHCR published both:
+4. merge any accepted `CHANGELOG_<topic>.md` files for the release into `CHANGELOG.md`, then remove the temporary files
+5. move the intended `CHANGELOG.md` entries into the versioned release section
+6. update `ROADMAP.md` to remove the completed released work from active roadmap sections
+7. archive the executed `ai/PLAN_*.md` file and update moved-path references in the same change
+8. create the annotated tag only after the release commit exists locally on `main`
+9. after push, verify the remote accepted both `main` and the tag, the `Release` workflow passed, the GitHub Release was created, and GHCR published both:
    - the semantic tag image `ghcr.io/<owner>/<repo>:vMAJOR.MINOR.PATCH`
    - the immutable short-SHA image `ghcr.io/<owner>/<repo>:sha-<12-char-commit>`
 
@@ -80,12 +84,15 @@ Before choosing the version:
 
 Start from local `main` synced to the approved merged state.
 
-1. Move the relevant `CHANGELOG.md` content from `## [Unreleased]` into a new version section using the chosen tag and the release date in `YYYY-MM-DD` format.
-2. Update `ROADMAP.md` so completed items released in this version are removed from active roadmap sections.
-3. Keep the changelog human-readable and limited to released user-visible changes.
-4. Leave a fresh `## [Unreleased]` section at the top.
-5. Review the release diff to ensure it contains only intended implementation, spec, roadmap, and release metadata changes.
-6. Rerun `./gradlew.bat build` only if release-metadata edits could have invalidated generated artifacts or the earlier validation result is stale.
+1. Collect any accepted root-level `CHANGELOG_<topic>.md` files that belong to the release candidate.
+2. Merge their unreleased entries into the canonical `CHANGELOG.md` under `## [Unreleased]`, preserving the intended released wording and removing duplicates.
+3. Delete the consumed `CHANGELOG_<topic>.md` files in the same change once their content is represented in `CHANGELOG.md`.
+4. Move the relevant `CHANGELOG.md` content from `## [Unreleased]` into a new version section using the chosen tag and the release date in `YYYY-MM-DD` format.
+5. Update `ROADMAP.md` so completed items released in this version are removed from active roadmap sections.
+6. Keep the changelog human-readable and limited to released user-visible changes.
+7. Leave a fresh `## [Unreleased]` section at the top.
+8. Review the release diff to ensure it contains only intended implementation, spec, roadmap, release metadata, and temporary-changelog cleanup changes.
+9. Rerun `./gradlew.bat build` only if release-metadata edits could have invalidated generated artifacts or the earlier validation result is stale.
 
 The release commit message should match the existing repository pattern:
 
@@ -113,6 +120,7 @@ Before reporting completion, verify:
 - `git status --short` is clean
 - `git log --first-parent --decorate --oneline -n 5` shows the release commit and tag in the expected place
 - `CHANGELOG.md` matches the chosen tag and date
+- no consumed `CHANGELOG_<topic>.md` files remain in the worktree after their entries were merged
 - `ROADMAP.md` no longer lists the released work as active
 - the target plan's `Validation Results` still reflects the final verified state
 - the executed plan file has been moved to `ai/archive/` and any moved-path references were updated in the same change
@@ -148,10 +156,11 @@ The release workflow must fail closed when it cannot derive that previous publis
 1. Finish execution and any requested PR handoff.
 2. Wait for the approved implementation PR to be merged onto `main`, then sync local `main`.
 3. Confirm the plan's `Validation Results`, required artifacts, and required validation are current.
-4. Update `ROADMAP.md` to remove work completed by the release from the active roadmap.
-5. Move the executed `ai/PLAN_*.md` file to `ai/archive/` and update moved-path references in the same change.
-6. Update `CHANGELOG.md` for the chosen version.
-7. Commit with `Prepare vMAJOR.MINOR.PATCH release`.
-8. Create an annotated tag `vMAJOR.MINOR.PATCH`.
-9. Push the release commit and annotated tag when requested, then verify remote publication.
-10. Verify clean status, tag placement, changelog alignment, roadmap cleanup, and plan archival.
+4. Merge any release-scoped `CHANGELOG_<topic>.md` files into `CHANGELOG.md`, then delete the temporary files.
+5. Update `ROADMAP.md` to remove work completed by the release from the active roadmap.
+6. Move the executed `ai/PLAN_*.md` file to `ai/archive/` and update moved-path references in the same change.
+7. Update `CHANGELOG.md` for the chosen version.
+8. Commit with `Prepare vMAJOR.MINOR.PATCH release`.
+9. Create an annotated tag `vMAJOR.MINOR.PATCH`.
+10. Push the release commit and annotated tag when requested, then verify remote publication.
+11. Verify clean status, tag placement, changelog alignment, roadmap cleanup, temporary changelog cleanup, and plan archival.

@@ -23,7 +23,7 @@ Multi-agent execution in this repository has only two supported modes:
 
 1. `Parallel Plans`
    Several workers execute different `ai/PLAN_*.md` files in parallel.
-   Each worker should behave exactly like normal single-worker execution on its own branch or worktree.
+   Each worker should behave like normal single-worker execution on its own branch or worktree, except that unreleased changelog text lives in a worker-owned temporary `CHANGELOG_<topic>.md` file instead of the canonical `CHANGELOG.md`.
 2. `Shared Plan`
    Several workers execute different slices of the same `ai/PLAN_*.md`.
    Workers must not edit the canonical plan file or `CHANGELOG.md` directly while the plan is being split across workers.
@@ -57,12 +57,15 @@ Inside that owned plan scope, the worker should follow `ai/EXECUTION.md` exactly
 
 - implement the plan locally
 - update the owned `ai/PLAN_*.md` file as execution progresses
-- update `CHANGELOG.md` under `## [Unreleased]` after each completed milestone
+- create and maintain a root-level worker-owned temporary changelog file named `CHANGELOG_<topic>.md`
+- update `CHANGELOG_<topic>.md` after each completed milestone instead of editing `CHANGELOG.md`
 - create a normal non-interactive commit after each completed milestone
 - run the required validation for that plan
 - when code is done and verified in a worktree-based execution, push the worker branch and open the PR as the final execution step
 
-`Parallel Plans` is intentionally the same operational model as a single worker on `main`, except each worker does it on its own branch or worktree.
+The coordinator must assign a unique `<topic>` token before delegation. Prefer a short stable topic derived from the owned plan or business slice, for example `CHANGELOG_identity_provider_configuration.md`.
+
+`Parallel Plans` is intentionally close to the single-worker model, except changelog work is isolated per worker in `CHANGELOG_<topic>.md` so parallel branches do not fight over `CHANGELOG.md`.
 
 ### Coordinator Contract
 
@@ -70,21 +73,24 @@ In `Parallel Plans`, the coordinator owns:
 
 - deciding which plans are safe to run in parallel
 - preventing overlapping file ownership across workers
+- assigning unique `CHANGELOG_<topic>.md` ownership
 - tracking worker status, branch names, validation status, and PR status
 - resolving cross-plan conflicts only after workers finish their local execution
+- tracking which temporary changelog files must later be merged into `CHANGELOG.md`
 - consolidating final status reporting across the separate plan branches
 
-The coordinator should not centralize per-plan `CHANGELOG.md` or plan-file edits while workers are still executing. Those edits belong to the worker that owns the plan.
+The coordinator should not centralize per-plan changelog or plan-file edits while workers are still executing. Worker changelog edits belong in the worker-owned `CHANGELOG_<topic>.md` file until release preparation on `main`.
 
 ### Shared-File Reality
 
-`CHANGELOG.md` conflicts are expected when several plans land in parallel. That is acceptable.
+`Parallel Plans` should avoid `CHANGELOG.md` conflicts entirely.
 
-Do not avoid `Parallel Plans` just because multiple workers will touch `CHANGELOG.md`. Instead:
+Do not have workers edit the canonical `CHANGELOG.md` while the plans are still executing in parallel. Instead:
 
-- let each worker maintain the changelog entries required by `ai/EXECUTION.md`
-- resolve the merge conflict during integration or PR review
-- keep the conflict resolution faithful to the already committed worker entries
+- let each worker maintain the unreleased changelog entries required by `ai/EXECUTION.md` in its own `CHANGELOG_<topic>.md`
+- keep those temporary files committed with the worker branch so review and integration can inspect them
+- merge the accepted temporary changelog files into `CHANGELOG.md` only during the later release flow from `ai/RELEASES.md`
+- remove the consumed temporary changelog files as part of that release cleanup
 
 ## Mode 2: Shared Plan
 
@@ -254,6 +260,7 @@ In both modes:
 Extra expectations for `Parallel Plans`:
 
 - each worker reports the owned plan file
+- each worker reports the owned `CHANGELOG_<topic>.md` path
 - each worker reports branch, worktree, validation status, and PR status
 
 Extra expectations for `Shared Plan`:
