@@ -5,6 +5,7 @@
 Use this file when the user asks for a plan, milestone, execution document, milestone breakdown, or a detailed change strategy.
 Do not use `ROADMAP.md` as a substitute for a real plan. `ROADMAP.md` is the roadmap. A plan is a self-contained handoff document for a concrete piece of work.
 Use `ai/EXECUTION.md` when the user asks to implement an existing plan.
+Use `ai/DOCUMENTATION.md` for artifact ownership and `ai/TESTING.md` for validation scope instead of restating those rules in the plan.
 
 ## Planning Goals
 
@@ -71,7 +72,7 @@ If the request leaves material gaps in scope, compatibility, rollout, acceptance
    If the requested change is poorly framed because a more fundamental problem must be solved first, say so in the plan. Small prerequisite cleanup can be included as an early milestone. Large prerequisite work should be called out as a separate plan.
 
 10. Make validation concrete.
-   Every plan must explain exactly how the executor will prove correctness. Include repository-specific commands, tests, compatibility checks, and any manual verification steps.
+   Every plan must explain exactly how the executor will prove correctness. Use `ai/TESTING.md` for the required commands and extra gates.
 
 ## Required Planning Questions
 
@@ -86,28 +87,15 @@ A plan is not ready until it answers all of these:
 - What edge cases or failure modes matter?
 - What requirement gaps still need user input, and which of them block planning?
 - What validation proves the work is complete?
-- Does the task require docs, OpenAPI, HTTP example, or benchmark updates?
+- Which documentation or contract artifacts must move according to `ai/DOCUMENTATION.md`?
 - Is there a smaller or cleaner way to achieve the same goal?
 
 ## Repo-Specific Rules For Planning
 
 ### Public API changes
 
-If the plan changes request handling, response shape, documented errors, security requirements, pagination, filtering, or endpoint behavior, the plan must account for all affected artifacts:
-
-- implementation code
-- integration tests
-- REST Docs tests
-- Asciidoc pages when applicable
-- approved OpenAPI baseline after intentional contract review
-- HTTP examples under `src/test/resources/http/`
-- `README.md` if the supported contract changed
-
-The plan must also state whether benchmark reruns are required. In this repository, rerun `.\gradlew.bat gatlingBenchmark` when changing:
-
-- book list or search behavior
-- localization lookup behavior
-- OAuth or session startup behavior
+If the plan changes request handling, response shape, documented errors, security requirements, pagination, filtering, or endpoint behavior, the plan must name all affected contract artifacts required by `AGENTS.md` and routed through `ai/DOCUMENTATION.md`.
+The plan must also state whether extra validation from `ai/TESTING.md` is required, especially benchmark reruns for book list/search, localization lookup, or OAuth/session startup changes.
 
 ### Internal refactors
 
@@ -205,20 +193,17 @@ Good plans in this repository usually:
 - name exact files or packages instead of vague areas
 - distinguish public contract work from internal cleanup
 - make material requirement gaps explicit instead of silently guessing
-- say whether OpenAPI baseline refresh is expected or forbidden
-- say whether HTTP example files must change
-- state whether `README.md` changes are required
-- include the final `./gradlew.bat build` step
-- include benchmark reruns when search, localization lookup, or session startup changes
+- point to `ai/DOCUMENTATION.md` for artifact ownership instead of improvising file routing
+- point to `ai/TESTING.md` for required validation instead of hand-waving about tests
+- include manual user verification for visible behavior
 
 Poor plans in this repository usually:
 
 - describe implementation without identifying the spec first
 - bury unresolved scope, compatibility, rollout, acceptance-criteria, or validation questions inside vague assumptions
-- change public behavior without listing docs and OpenAPI consequences
+- change public behavior without naming the contract and documentation consequences
 - propose new abstractions that fight the demo scope
 - use vague language like "update tests as needed" instead of naming which tests must change
-- forget manual user verification for visible API behavior
 
 ## Example Planning Frames
 
@@ -230,9 +215,9 @@ A good plan would:
 
 - identify the current `Book` API tests and search behavior specs first
 - define request parameter semantics, validation rules, and sort compatibility before coding
-- update integration tests, REST Docs tests, Asciidoc, OpenAPI baseline, HTTP examples, and `README.md` if the filter is part of the supported contract
-- rerun the benchmark script because book list/search behavior changed
-- finish with `./gradlew.bat build`
+- name the contract artifacts that must move together through `ai/DOCUMENTATION.md`
+- call out any benchmark rerun required by `ai/TESTING.md`
+- finish with the standard required validation
 
 ### Example 2: Internal cleanup
 
@@ -243,7 +228,7 @@ A good plan would:
 - treat the current tests as the contract to preserve
 - keep OpenAPI, REST Docs, and HTTP examples unchanged unless behavior really changes
 - list the exact classes to refactor
-- validate with the existing test suite and `./gradlew.bat build`
+- validate with the existing test suite and standard repository checks
 
 ### Example 3: Release-readiness planning
 

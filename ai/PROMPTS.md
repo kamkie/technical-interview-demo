@@ -5,12 +5,27 @@
 Keep prompts lean:
 
 - put standing repository policy in `AGENTS.md`
+- put artifact-routing rules in `ai/DOCUMENTATION.md`
 - put planning rules in `ai/PLAN.md`
 - put execution rules in `ai/EXECUTION.md`
 - put delegated-work rules in `ai/WORKFLOW.md`
 - put release rules in `ai/RELEASES.md`
-- use `ai/CODE_STYLE.md`, `ai/TESTING.md`, `ai/REVIEWS.md`, and `ai/DOCUMENTATION.md` only when the task needs those lenses
+- put validation rules in `ai/TESTING.md`
+- put review rules in `ai/REVIEWS.md`
 
+If a prompt starts accumulating owner-guide policy, move that policy back to the owning guide and keep only the task-specific constraints here.
+
+## Prompt Usage Baseline
+
+Default reading set by prompt type:
+
+- planning prompts: `AGENTS.md`, `ai/PLAN.md`, and the governing specs; include `README.md` or `ROADMAP.md` when the task depends on them
+- implementation prompts: `AGENTS.md`, `ai/EXECUTION.md`, and the target `ai/PLAN_*.md`
+- validation prompts: `AGENTS.md`, `ai/TESTING.md`, and any owner guides needed to judge artifact impact
+- release prompts: `AGENTS.md`, `ai/RELEASES.md`, the executed plan, and the changed contract docs
+- multi-agent prompts: `AGENTS.md`, `ai/WORKFLOW.md`, `ai/EXECUTION.md`, and the relevant plan files
+
+Use the owner guide named by the prompt instead of restating its standing policy in the request.
 Prefer filling in placeholders such as `<topic>`, `<plan_file>`, `<milestone_name>`, `<task>`, and `<constraint>` so the request is concrete.
 
 ## Title Shorthand
@@ -36,8 +51,6 @@ Use `Implement A Plan Without Releasing` for `ai/PLAN_auth_cleanup.md`.
 
 ```text
 Create `ai/PLAN_<topic>.md` for <topic>.
-
-Read `AGENTS.md`, `README.md`, `ai/PLAN.md`, and the governing specs first.
 Follow `ai/PLAN.md`.
 ```
 
@@ -48,57 +61,38 @@ Create `ai/PLAN_<topic>.md` from this roadmap input:
 - <task 1>
 - <task 2>
 
-Use `ROADMAP.md` only as roadmap input.
-Read `AGENTS.md`, `README.md`, `ROADMAP.md`, `ai/PLAN.md`, and the governing specs first.
-Follow `ai/PLAN.md`.
+Treat `ROADMAP.md` only as roadmap input and follow `ai/PLAN.md`.
 ```
 
 ### Create A Plan From Checked Roadmap Tasks
 
 ```text
-Create a new execution plan from every checklist item marked `[x]` in `ROADMAP.md`.
+Create one coherent `ai/PLAN_<topic>.md` from every checklist item marked `[x]` in `ROADMAP.md`.
 
-Read `AGENTS.md`, `README.md`, `ROADMAP.md`, `ai/PLAN.md`, and the governing specs first.
-Follow `ai/PLAN.md`.
-Use only the checked `[x]` roadmap items as the requested work scope unless the roadmap text around them makes a dependency explicit.
-Choose an appropriate short lowercase underscore-separated topic name based on the combined checked tasks, then create the new file as `ai/PLAN_<topic>.md`.
-In the plan summary and scope, restate exactly which checked roadmap items were included.
-If no roadmap items are checked, or the checked items do not describe one coherent executable plan, stop and explain the gap instead of guessing.
-Ask targeted clarification questions before locking the plan if scope, compatibility, rollout, acceptance criteria, or validation are still ambiguous.
-Record requirement gaps, unresolved user-input holes, and fallback assumptions explicitly.
+Use only the checked items unless the roadmap text makes a dependency explicit.
+Restate exactly which checked items were included.
+If the checked items do not form one coherent executable plan, stop and explain the gap instead of guessing.
+Record unresolved requirement gaps and fallback assumptions explicitly.
 ```
 
 ### Create Multiple Plans From Disjoint Checked Roadmap Tasks
 
 ```text
-Create one or more new execution plans from every checklist item marked `[x]` in `ROADMAP.md`.
+Create one or more `ai/PLAN_<topic>.md` files from every checklist item marked `[x]` in `ROADMAP.md`.
 
-Read `AGENTS.md`, `README.md`, `ROADMAP.md`, `ai/PLAN.md`, and `ai/WORKFLOW.md` first.
-Follow `ai/PLAN.md`.
-Use only the checked `[x]` roadmap items as the requested work scope unless the roadmap text around them makes a dependency explicit.
-Split the checked tasks into multiple plan files only when they describe genuinely disjoint work that can be planned and later executed in parallel without hidden coupling.
-Treat shared contract artifacts, overlapping source-file ownership, rollout dependencies, or shared validation gates as reasons not to split.
-For each disjoint workstream, choose an appropriate short lowercase underscore-separated topic name and create a separate file as `ai/PLAN_<topic>.md`.
-In each plan summary and scope, restate exactly which checked roadmap items were included in that file.
-If the checked items form only one coherent plan, stop and say that the single-plan checked-roadmap prompt should be used instead of forcing multiple files.
-If some checked items are disjoint but others are not, create plan files only for the cleanly separated groups and explain why the remaining items were not split out.
-If no roadmap items are checked, or the checked items do not describe one or more executable plans, stop and explain the gap instead of guessing.
-Ask targeted clarification questions before locking any plan if scope, compatibility, rollout, acceptance criteria, validation, or cross-plan boundaries are still ambiguous.
-Record requirement gaps, unresolved user-input holes, fallback assumptions, and any cross-plan dependency notes explicitly in each created plan.
+Split only genuinely disjoint workstreams that can later execute in parallel without overlapping source ownership, contract artifacts, rollout order, or validation.
+If the checked items form only one coherent plan, stop and say that the single-plan prompt should be used instead.
+Record requirement gaps, fallback assumptions, and any cross-plan dependency notes in each created plan.
 ```
 
 ### Refine Unrefined Roadmap Tasks Into Real Entries
 
 ```text
-Refine the items listed under `## Not Yet Refined` in `ROADMAP.md` into concrete roadmap entries.
+Refine the items under `## Not Yet Refined` in `ROADMAP.md` into concrete roadmap entries.
 
-Read `AGENTS.md`, `README.md`, `ROADMAP.md`, and `ai/PLAN.md` first.
-Treat the `## Not Yet Refined` section as rough intake only, not as already-approved roadmap structure.
-For each rough task, identify the intended behavior, missing decisions, likely governing specs, and the smallest roadmap wording that would make it implementation-ready.
-Group related tasks when that produces a cleaner roadmap shape, but do not invent scope that is not supported by the rough input or current repo truth.
-Update `ROADMAP.md` by moving refined tasks out of `## Not Yet Refined` and into the appropriate roadmap section only when the resulting entries are concrete enough to sequence.
-If any task is still too ambiguous to refine safely, leave it in `## Not Yet Refined` and explain exactly what is missing.
-Keep the roadmap focused on active planned work, not release history or speculative architecture.
+Treat that section as rough intake only.
+Move refined tasks only when the resulting roadmap wording is concrete enough to sequence.
+Leave still-ambiguous tasks in place and explain what is missing.
 ```
 
 ### Revise An Existing Plan
@@ -107,8 +101,7 @@ Keep the roadmap focused on active planned work, not release history or speculat
 Revise `<plan_file>` for this new requirement or constraint:
 <constraint>
 
-Keep the plan self-contained.
-Follow `ai/PLAN.md`.
+Keep the plan self-contained and follow `ai/PLAN.md`.
 ```
 
 ### Review Whether A Plan Is Ready
@@ -127,7 +120,6 @@ Say explicitly if the plan is ready.
 ```text
 Implement `<plan_file>`.
 
-Read `AGENTS.md`, `ai/EXECUTION.md`, and `<plan_file>` first.
 Follow `ai/EXECUTION.md`.
 Do not push, open a PR, or release unless I ask.
 ```
@@ -137,7 +129,6 @@ Do not push, open a PR, or release unless I ask.
 ```text
 Implement only `<milestone_name>` from `<plan_file>`.
 
-Read `AGENTS.md`, `ai/EXECUTION.md`, and `<plan_file>` first.
 Follow `ai/EXECUTION.md`.
 Do not start later milestones, push, open a PR, or release unless I ask.
 ```
@@ -147,8 +138,7 @@ Do not start later milestones, push, open a PR, or release unless I ask.
 ```text
 Implement `<plan_file>`.
 
-Read `AGENTS.md`, `ai/EXECUTION.md`, `<plan_file>`, and `ai/RELEASES.md` first.
-Follow `ai/EXECUTION.md` for implementation.
+Use `ai/EXECUTION.md` for implementation.
 Use `ai/RELEASES.md` only after the approved implementation PR has been merged onto `main`.
 ```
 
@@ -160,8 +150,7 @@ Use `ai/RELEASES.md` only after the approved implementation PR has been merged o
 Run only the required validation for `<plan_file>` or `<change>`.
 Do not edit files.
 
-Use `AGENTS.md`, `ai/TESTING.md`, and the relevant workflow docs to decide what checks are required.
-Summarize what ran, what passed, what failed, and what artifacts would likely need updates.
+Use `ai/TESTING.md` and summarize what ran, what passed, what failed, and what artifacts would likely need updates.
 ```
 
 ### Verify Contract Impact
@@ -178,7 +167,7 @@ If the change is internal-only, say that explicitly and explain why.
 ```text
 Review release readiness for `<plan_file>`.
 
-Use `AGENTS.md`, `ai/TESTING.md`, `ai/DOCUMENTATION.md`, and `ai/RELEASES.md`.
+Use `ai/RELEASES.md`.
 List blockers first.
 Say explicitly if the repository is release-ready.
 ```
@@ -210,7 +199,6 @@ Explain what behavior would change, which current specs govern it, what is still
 ```text
 Prepare a release for `<plan_file>`.
 
-Read `AGENTS.md`, `ai/RELEASES.md`, the executed plan, and the changed contract docs first.
 Follow `ai/RELEASES.md`.
 Only proceed if the approved implementation PR is already merged onto `main`.
 Do not push unless I ask.
@@ -221,7 +209,7 @@ Do not push unless I ask.
 ```text
 Push the current release commit and annotated tag to the remote.
 
-Follow `ai/RELEASES.md` for the push and post-push verification steps.
+Follow `ai/RELEASES.md` for push and post-push verification.
 ```
 
 ### Verify And Release All Merged PR Work
@@ -229,13 +217,11 @@ Follow `ai/RELEASES.md` for the push and post-push verification steps.
 ```text
 Verify and release all merged but unreleased work currently on `main`.
 
-Read `AGENTS.md`, `CHANGELOG.md`, `ROADMAP.md`, `ai/TESTING.md`, and `ai/RELEASES.md` first.
-Identify the merged PRs and executed `ai/PLAN_*.md` files already integrated onto `main` that belong to the unreleased change set.
 Use `ai/RELEASES.md`.
-Verify that the included merged work is actually release-ready, including plan `Validation Results`, required contract artifacts, roadmap cleanup needs, temporary changelog cleanup if present, and plan archival scope.
-If any included merged PR or executed plan is not ready, stop and list blockers first instead of preparing a partial or misleading release.
-If the merged work is ready, prepare the release commit, archive every included executed plan under `ai/archive/`, update moved-path references, create the annotated tag, push the release commit and tag, and verify remote publication.
-Summarize exactly which merged PRs and executed plan files were included in the release.
+Include every merged PR and executed `ai/PLAN_*.md` file that belongs to the unreleased change set.
+If any included work is not release-ready, stop and list blockers first instead of preparing a partial release.
+If the merged work is ready, prepare the release commit, archive every included executed plan under `ai/archive/`, create the annotated tag, push the release commit and tag, and verify remote publication.
+Summarize exactly which merged PRs and executed plan files were included.
 ```
 
 ### Verify The Published Release
@@ -254,14 +240,11 @@ Summarize exactly what was published.
 ```text
 Execute `<plan_file>` with delegation.
 
-Use `ai/WORKFLOW.md`.
-Act as coordinator.
-Use `Shared Plan` mode unless you can justify staying single-worker instead.
-Assign explicit disjoint ownership boundaries inside the plan.
-Reserve the canonical plan file and `CHANGELOG.md` for the coordinator.
-Require each worker to keep a committed progress file at `ai/tmp/workflow/<plan_stem>__<worker_name>.md`.
-Integrate worker progress back into the canonical plan file and `CHANGELOG.md` only after the worker slice is ready.
-Push only the finished coordinator branch unless I explicitly ask for worker branches to be pushed too.
+Use `ai/WORKFLOW.md` as coordinator.
+Prefer `Shared Plan` unless `ai/WORKFLOW.md` justifies `Parallel Plans`.
+Assign explicit disjoint ownership boundaries.
+Enforce the worker artifact rules from `ai/WORKFLOW.md`.
+Push only the finished coordinator branch unless I explicitly ask otherwise.
 ```
 
 ### Implement Multiple Plans In Parallel With Worktrees
@@ -272,18 +255,10 @@ Implement these plan files in parallel using git worktrees:
 - <plan_file_2>
 - <plan_file_3>
 
-Read `AGENTS.md`, `ai/EXECUTION.md`, `ai/WORKFLOW.md`, and each listed plan file first.
 Use `ai/WORKFLOW.md`.
-Act as coordinator.
-Use `Parallel Plans` mode.
-Create separate temporary worktrees only for plans that are genuinely disjoint in source ownership, contract artifacts, rollout order, and validation needs.
-Keep `main` as the integration target and do not treat worktree branches as release branches.
-Require each worker to follow `ai/EXECUTION.md` inside its owned plan exactly as a single worker would, including plan updates, changelog updates, milestone commits, validation, and final push after verification.
-Assign explicit ownership boundaries per plan, including any expected merge-conflict handling for `CHANGELOG.md` or other shared artifacts.
-Do not let workers edit the same controller, service, integration test, REST Docs artifact, OpenAPI artifact, or plan file in parallel.
-If any listed plans are too coupled to execute safely in parallel, stop and explain which plans should be merged back into one execution stream instead of forcing worktrees.
+Act as coordinator in `Parallel Plans` mode only when the listed plans are genuinely disjoint in source ownership, contract artifacts, rollout order, and validation needs.
+If they are too coupled, stop and explain which plans should stay in one execution stream instead of forcing parallel worktrees.
 Track per-plan branch, validation, and PR status.
-Run the final repository validation only after the worker branches are complete enough for the requested handoff, then summarize per-plan progress, PR status, validation results, and any remaining blockers.
 Do not release unless I ask.
 ```
 
@@ -292,40 +267,22 @@ Do not release unless I ask.
 ```text
 Implement all unfinished plan files under `ai/` in parallel using git worktrees.
 
-Read `AGENTS.md`, `ai/EXECUTION.md`, `ai/WORKFLOW.md`, and every non-archived `ai/PLAN_*.md` file under `ai/` first.
+Treat unfinished plans as the non-archived `ai/PLAN_*.md` files still present directly under `ai/`.
 Use `ai/WORKFLOW.md`.
-Act as coordinator.
-Treat unfinished plans as the `ai/PLAN_*.md` files still present directly under `ai/`, excluding `ai/archive/`.
-If there are no unfinished plan files, stop and say so explicitly.
-Group the unfinished plans into parallel-safe workstreams only when their source ownership, contract artifacts, rollout order, and validation needs are genuinely disjoint.
-Use `Parallel Plans` mode for those disjoint plan files.
-Create separate temporary worktrees only for those disjoint workstreams.
-If some unfinished plans are too coupled to execute safely in parallel, keep them in the same execution stream and explain the boundary instead of forcing one worktree per file.
-Keep `main` as the integration target and do not treat worktree branches as release branches.
-Require each worker to follow `ai/EXECUTION.md` inside its owned plan exactly as a single worker would, including plan updates, changelog updates, milestone commits, validation, and final push after verification.
-Assign explicit ownership boundaries per workstream, including any expected merge-conflict handling for `CHANGELOG.md` or other shared artifacts.
-Do not let workers edit the same controller, service, integration test, REST Docs artifact, OpenAPI artifact, or plan file in parallel.
-Track which worker owns each plan file, plus branch, validation, and PR status.
-Run the final repository validation only after the worker branches are complete enough for the requested handoff, then summarize which unfinished plans were completed, which were grouped together, which were left blocked or deferred, and what PR and validation status each one has.
+If there are no unfinished plans, stop and say so explicitly.
+Group plans into parallel-safe workstreams only when their source ownership, contract artifacts, rollout order, and validation needs are genuinely disjoint.
+Summarize which plans were completed, grouped together, or left blocked, plus the PR and validation status for each one.
 Do not release unless I ask.
 ```
 
 ### Check Status on Single Worker In Multi-Agent Execution
 
-In `Multi-Agent Execution`, check the status of worker `<worker name or agent id>`.
+```text
+Check the status of worker `<worker name or agent id>` in the current multi-agent execution.
 
-Report:
-- mode in use: `Parallel Plans` or `Shared Plan`
-- branch and worktree
-- current task progress
-- changed files
-- validations run with results
-- commit SHA(s)
-- blockers
-- ready-for-integration status
-- worker progress file path when `Shared Plan` mode is in use
-
+Report mode, branch and worktree, current progress, changed files, validations run with results, commit SHA(s), blockers, ready-for-integration status, and the worker progress-file path when applicable.
 If the worker has stalled or completed, state that clearly.
+```
 
 ### Check Status On Workers In Multi-Agent Execution
 
@@ -333,20 +290,7 @@ If the worker has stalled or completed, state that clearly.
 Check the status of the active workers in the current multi-agent execution.
 
 Use `ai/WORKFLOW.md`.
-Act as coordinator.
-For each active worker, report:
-- worker name or agent id
-- mode in use
-- assigned branch and worktree
-- current task or milestone
-- changed files so far
-- validation run with pass/fail status
-- commit SHA(s) already created
-- blockers, risks, or coordinator decisions needed
-- whether the work is ready for integration onto `main`
-- worker progress file path when `Shared Plan` mode is in use
-
-If a worker is stalled, still in analysis, has no edits yet, or is already complete, say that explicitly.
+For each worker, report mode, branch and worktree, current task, changed files, validations, commit SHA(s), blockers, ready-for-integration status, and the worker progress-file path when applicable.
 Keep the report concise and factual.
 ```
 
@@ -356,7 +300,7 @@ Keep the report concise and factual.
 Review `<plan_file>` and decide whether it should be executed by one agent or with delegation.
 
 Use `ai/WORKFLOW.md`.
-If delegation is worth it, choose `Parallel Plans` or `Shared Plan`, then propose the task split and file ownership boundaries.
+If delegation is worth it, choose `Parallel Plans` or `Shared Plan`, then propose the task split and file-ownership boundaries.
 ```
 
 ## Maintenance
@@ -370,4 +314,5 @@ Read `AGENTS.md` and the current AI instruction files under `ai/` first.
 Keep each file role-distinct.
 Move duplicated standing guidance into the best owning AI document.
 Tighten wording, remove overlap, update cross-references, and summarize the compaction decisions.
+Propose creating new files only if the current owners cannot stay role-distinct without them.
 ```

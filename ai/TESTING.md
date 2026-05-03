@@ -3,6 +3,7 @@
 `ai/TESTING.md` owns standing AI guidance for choosing tests, contract artifacts, and validation commands in this repository.
 
 Use this file when the task changes code, contract behavior, build validation, benchmarks, or any artifact that affects what verification is required.
+Use `ai/DOCUMENTATION.md` when you first need to decide which contract or maintainer artifacts must move.
 
 ## Testing Goals
 
@@ -26,26 +27,21 @@ Use the smallest layer that proves the behavior clearly:
 
 ## Change-Type Expectations
 
-### Public API changes
+### Public behavior changes
 
-Update together:
-
-- implementation
-- integration tests
-- REST Docs tests and Asciidoc pages when applicable
-- approved OpenAPI baseline only after intentional contract review
-- HTTP examples under `src/test/resources/http/`
-- `README.md` when the supported contract changed
+- validate the changed contract artifacts selected through `ai/DOCUMENTATION.md`
+- update or refresh approved OpenAPI only after intentional contract review
+- rerun `./gradlew gatlingBenchmark` when changing book list/search behavior, localization lookup behavior, or OAuth/session startup behavior
 
 ### Internal refactors
 
 - keep the existing specs green without unnecessary contract edits
 - avoid touching OpenAPI, README, or HTTP examples unless behavior actually changed
 
-### Workflow Or Documentation Changes
+### Workflow or documentation changes
 
-- prefer manual consistency review of the changed docs or workflow narrative
-- when the only changed files are under `ai/`, treat the work as AI-guidance-only: do manual consistency review only and do not run `.\gradlew.bat build` or other validation commands unless the user explicitly asks for them
+- prefer manual consistency review of the changed narrative first
+- when the only changed files are under `ai/`, treat the work as AI-guidance-only: do manual consistency review only and do not run `./gradlew.bat build` or other validation commands unless the user explicitly asks for them
 - for non-`ai/` documentation or workflow edits, finish with the validation required by the affected artifacts and repository rules
 
 ## Validation Commands
@@ -62,7 +58,6 @@ Exception:
 
 Additional validation rules:
 
-- rerun `./gradlew gatlingBenchmark` when changing book list/search behavior, localization lookup behavior, or OAuth/session startup behavior
 - refresh the approved OpenAPI baseline only after an intentional contract review with `./gradlew refreshOpenApiBaseline`
 - treat failing compatibility or benchmark checks as spec failures
 
@@ -77,6 +72,6 @@ When reporting validation:
 
 ## Cross-References
 
+- use `ai/DOCUMENTATION.md` when validation implications depend on README, REST Docs, HTTP examples, changelog, roadmap, or AI-doc updates
 - use `ai/CODE_STYLE.md` when deciding how broad the implementation change should be
 - use `ai/REVIEWS.md` for final bug-risk and security review after validation results are in
-- use `ai/DOCUMENTATION.md` when validation implications depend on README, REST Docs, HTTP examples, changelog, roadmap, or AI-doc updates

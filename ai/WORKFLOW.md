@@ -4,6 +4,7 @@
 
 Use this file when the user explicitly wants delegation, sub-agents, parallel work, or a multi-worktree execution model.
 Use `AGENTS.md` for repository rules, `ai/PLAN.md` and `ai/PLAN_*.md` for planning, `ai/EXECUTION.md` for normal single-worker execution discipline, `ai/TESTING.md` for validation scope, `ai/DOCUMENTATION.md` for artifact alignment, and `ai/RELEASES.md` only after an approved implementation PR has been merged onto `main`.
+This file owns only the delegation-specific deviations from normal execution. Anything not overridden here should follow `ai/EXECUTION.md`.
 
 ## Default Position
 
@@ -23,7 +24,7 @@ Multi-agent execution in this repository has only two supported modes:
 
 1. `Parallel Plans`
    Several workers execute different `ai/PLAN_*.md` files in parallel.
-   Each worker should behave like normal single-worker execution on its own branch or worktree, except that unreleased changelog text lives in a worker-owned temporary `CHANGELOG_<topic>.md` file instead of the canonical `CHANGELOG.md`.
+   Each worker behaves like normal single-worker execution on its own branch or worktree, except unreleased changelog text lives in a worker-owned temporary `CHANGELOG_<topic>.md` file instead of the canonical `CHANGELOG.md`.
 2. `Shared Plan`
    Several workers execute different slices of the same `ai/PLAN_*.md`.
    Workers must not edit the canonical plan file or `CHANGELOG.md` directly while the plan is being split across workers.
@@ -52,20 +53,13 @@ Use `Parallel Plans` when the work already has multiple plan files and those pla
 ### Worker Contract
 
 Each worker owns one plan file, or one explicitly grouped set of disjoint plan files.
+Inside that owned scope, the worker should follow `ai/EXECUTION.md` except for these changelog-specific overrides:
 
-Inside that owned plan scope, the worker should follow `ai/EXECUTION.md` exactly:
-
-- implement the plan locally
-- update the owned `ai/PLAN_*.md` file as execution progresses
 - create and maintain a root-level worker-owned temporary changelog file named `CHANGELOG_<topic>.md`
 - update `CHANGELOG_<topic>.md` after each completed milestone instead of editing `CHANGELOG.md`
-- create a normal non-interactive commit after each completed milestone
-- run the required validation for that plan
-- when code is done and verified in a worktree-based execution, push the worker branch and open the PR as the final execution step
+- keep the temporary changelog file committed with the worker branch so review and later release preparation can inspect it
 
 The coordinator must assign a unique `<topic>` token before delegation. Prefer a short stable topic derived from the owned plan or business slice, for example `CHANGELOG_identity_provider_configuration.md`.
-
-`Parallel Plans` is intentionally close to the single-worker model, except changelog work is isolated per worker in `CHANGELOG_<topic>.md` so parallel branches do not fight over `CHANGELOG.md`.
 
 ### Coordinator Contract
 
@@ -81,21 +75,9 @@ In `Parallel Plans`, the coordinator owns:
 
 The coordinator should not centralize per-plan changelog or plan-file edits while workers are still executing. Worker changelog edits belong in the worker-owned `CHANGELOG_<topic>.md` file until release preparation on `main`.
 
-### Shared-File Reality
-
-`Parallel Plans` should avoid `CHANGELOG.md` conflicts entirely.
-
-Do not have workers edit the canonical `CHANGELOG.md` while the plans are still executing in parallel. Instead:
-
-- let each worker maintain the unreleased changelog entries required by `ai/EXECUTION.md` in its own `CHANGELOG_<topic>.md`
-- keep those temporary files committed with the worker branch so review and integration can inspect them
-- merge the accepted temporary changelog files into `CHANGELOG.md` only during the later release flow from `ai/RELEASES.md`
-- remove the consumed temporary changelog files as part of that release cleanup
-
 ## Mode 2: Shared Plan
 
 Use `Shared Plan` when one `ai/PLAN_*.md` should be executed by multiple workers in parallel.
-
 This mode exists to avoid several workers fighting over the same canonical plan file and the same `CHANGELOG.md`.
 
 ### Canonical Shared Files
@@ -134,15 +116,12 @@ Workers must keep the progress file current and commit it together with the code
 
 ### Worker Contract
 
-In `Shared Plan`, each worker should:
+In `Shared Plan`, each worker should follow `ai/EXECUTION.md` except for these shared-file overrides:
 
 - implement only the assigned disjoint slice
-- commit normally as milestones or bounded slices complete
-- update the worker progress file in the same commit series
-- run the validation required for the owned slice
+- update the worker progress file instead of the canonical plan file's `Validation Results`
+- propose changelog bullets inside the progress file instead of editing `CHANGELOG.md`
 - hand off the completed branch plus progress file to the coordinator
-
-Workers do not update the canonical plan file's `Validation Results` or `CHANGELOG.md` directly in this mode.
 
 ### Coordinator Integration Contract
 

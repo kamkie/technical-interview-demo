@@ -4,6 +4,7 @@
 
 Use this file when the user asks to implement `ai/PLAN_*.md`, complete a named milestone, or carry out planned work without releasing it yet.
 Use `ai/WORKFLOW.md` when the user explicitly wants delegation or multi-agent execution. Use `ai/RELEASES.md` only after the approved implementation PR has been merged onto `main`.
+Use `ai/DOCUMENTATION.md` for artifact ownership and `ai/TESTING.md` for validation scope instead of restating those standing rules here.
 
 ## Execution Goal
 
@@ -38,9 +39,9 @@ Before writing code or docs:
 2. Update the governing spec artifact first when behavior is intentionally changing.
 3. Implement the smallest code or documentation change that satisfies the updated spec.
 4. Follow `ai/CODE_STYLE.md` for source or build-file edits.
-5. Keep contract and maintainer artifacts aligned using `ai/DOCUMENTATION.md`.
+5. Keep contract and maintainer artifacts aligned through `ai/DOCUMENTATION.md`.
 6. Keep execution state current as work lands:
-   - update `CHANGELOG.md` under `## [Unreleased]` after each completed plan task or milestone
+   - update `CHANGELOG.md` under `## [Unreleased]` after each completed plan task or milestone, unless `ai/WORKFLOW.md` replaces direct changelog edits with worker-owned temporary artifacts
    - create a normal non-interactive commit after each completed plan task or milestone
    - update the plan's `Validation Results` section with what actually ran and what happened
 7. Run the required validation from `ai/TESTING.md`.
@@ -61,10 +62,9 @@ When the user asks for only one milestone:
 
 ## Execution Guardrails
 
-- public API changes must move the full artifact set defined by `AGENTS.md` and scoped through `ai/DOCUMENTATION.md`
-- internal refactors should preserve current contract artifacts unless behavior actually changed
-- setup changes belong in `SETUP.md`
-- roadmap-only changes belong in `ROADMAP.md`
+- use `ai/DOCUMENTATION.md` to choose which contract or maintainer artifacts must move
+- use `ai/TESTING.md` to choose the required validation and any benchmark or compatibility extras
+- if execution is delegated, follow `ai/WORKFLOW.md` for worker-specific plan, changelog, and progress-file deviations
 - if required validation cannot run, record that explicitly in the plan and in the final status report
 - if the plan stops matching repo reality, revise the plan before continuing instead of improvising new scope
 
@@ -75,7 +75,7 @@ Execution work is complete when:
 - the targeted plan scope is implemented
 - required specs and documentation artifacts are aligned
 - the target plan's `Validation Results` reflects actual execution
-- `CHANGELOG.md` under `## [Unreleased]` reflects the unreleased work
+- unreleased history is recorded in the correct changelog artifact for the execution mode in use
 - the required validation from `ai/TESTING.md` passed, or any blocker is explicitly recorded
 - any required or requested push or PR happened only after local execution was complete
 - release work remains undone unless the user explicitly asked for it
