@@ -29,7 +29,7 @@ No unrefined tasks currently.
 
 ## Current Priorities
 
-1. Define the backend contract and same-site browser-auth posture for a separate post-`1.x` first-party UI so the production-ready track has one clear client direction.
+1. Replace the current reviewer-oriented browser write posture with production-grade same-site protections and explicit reverse-proxy/public-origin assumptions for the separate first-party UI.
 2. Close the remaining rolling-release, restore-verification, and artifact-trust gaps around image authenticity, migration compatibility, and pre-promotion deployment checks.
 
 ## Locked Framing Decisions
@@ -46,11 +46,6 @@ No unrefined tasks currently.
 Status: Planned
 
 Goal: evolve the repository into a production-ready backend sample that supports a separate first-party UI behind one public origin deliberately, with explicit contract, rollout, and posture review instead of treating that shift as a silent extension of the frozen interview-demo `1.x` promise.
-
-#### Define The Backend Contract For The Separate First-Party UI
-- [x] Define the supported same-site browser-client contract this repository owns for the separate first-party UI, including login bootstrap, session/cookie behavior, CSRF expectations, and reverse-proxy boundary assumptions
-- [x] Decide what app-facing auth/session surface the backend should expose for the separate UI without turning this repository into the UI host or introducing a general cross-origin browser API contract
-- [x] Update the remaining security, documentation, smoke-test, and release roadmap items so they assume a separately deployed first-party UI behind one public origin and no longer carry the rejected token-only, cross-origin, and in-repo-frontend alternatives
 
 #### Revisit The Security Posture
 - [ ] Replace the current reviewer-oriented CSRF-disabled browser write posture with production-grade same-site browser protections that work for a reverse-proxied first-party UI

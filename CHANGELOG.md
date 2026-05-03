@@ -7,6 +7,8 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+## [v1.5.0] - 2026-05-03
+
 ### Added
 - Added an explicit same-site browser session contract with public `GET /api/session` bootstrap/state metadata and public idempotent `POST /api/session/logout`, backed by integration tests, REST Docs coverage, HTTP examples, and refreshed approved OpenAPI artifacts.
 
