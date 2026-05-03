@@ -134,7 +134,19 @@
 - Prefer a configuration model that keeps GitHub working while making standards-based OIDC growth possible without another hard-coded branch.
 
 ## Validation Results
-- To be filled in during execution.
+- `.\gradlew.bat test --tests team.jit.technicalinterviewdemo.technical.ProductionConfigurationTests --tests team.jit.technicalinterviewdemo.technical.security.SecurityIntegrationTests --tests team.jit.technicalinterviewdemo.technical.info.TechnicalOverviewControllerIntegrationTests` (PASS)
+  - `17` tests passed.
+- `.\gradlew.bat test --tests team.jit.technicalinterviewdemo.technical.docs.OpenApiCompatibilityIntegrationTests --tests team.jit.technicalinterviewdemo.technical.docs.OpenApiIntegrationTests --tests team.jit.technicalinterviewdemo.technical.docs.ApiDocumentationTests` (PASS)
+  - `23` tests passed.
+- `.\gradlew.bat gatlingBenchmark` (FAIL)
+  - benchmark regression gate failed:
+    - `list-books` p95 `21ms` > baseline `20ms`
+    - `search-books` p95 `21ms` > baseline `19ms`
+    - `oauth2-github-redirect` p95 `15ms` > baseline `14ms`
+- `.\gradlew.bat test --tests team.jit.technicalinterviewdemo.technical.security.OAuthProviderConfigurationTests` (PASS)
+  - `12` tests passed; added to recover JaCoCo thresholds after new provider-configuration branches.
+- `.\gradlew.bat build` (PASS)
+  - full build succeeded after additional coverage tests (`JaCoCo line 90.9%`, branch gate satisfied).
 
 ## User Validation
 - Configure the app once with the existing GitHub-style flow and once with the new explicit provider contract.
