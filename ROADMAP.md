@@ -29,28 +29,31 @@ No unrefined tasks currently.
 
 ## Current Priorities
 
-1. Replace the current reviewer-oriented browser write posture with production-grade same-site protections and explicit reverse-proxy/public-origin assumptions for the separate first-party UI.
+1. Define the post-`1.x` security-hardening track as an explicit breaking follow-up that replaces the current reviewer-oriented browser write posture with production-grade same-site protections and explicit reverse-proxy/public-origin assumptions for the separate first-party UI.
 
 ## Locked Framing Decisions
 
 - Post-`1.x` production-ready work keeps browser-oriented auth by adding a first-party UI instead of switching this repo to a stateless token-only contract.
 - That first-party UI belongs in a separate repository; this repository remains the backend/API, auth, and operational contract.
 - The separate first-party UI is expected to share one public origin with the backend through reverse-proxy deployment, so browser flows should target a same-site contract rather than a cross-origin one.
+- The production-ready security-hardening track is an explicit post-`1.x` contract shift rather than additive `1.x` work; treat it as `2.0`-style breaking follow-up planning.
+- Restricting technical endpoints means keeping Prometheus and other non-public actuator surfaces deployment-scoped and privately reachable, while keeping authenticated operator visibility in the application-owned operator surface instead of turning metrics into an app-auth API.
+- Abuse protection for login bootstrap and write-heavy paths is owned primarily by edge or deployment controls; this roadmap should document and enforce those expectations rather than assuming repo-owned in-app rate limiting is required.
 
 ## Ordered Plan
 
-### Future: Production-Ready Sample App Track
+### Future: Post-`1.x` Production-Ready Sample App Track
 
 Status: Planned
 
-Goal: evolve the repository into a production-ready backend sample that supports a separate first-party UI behind one public origin deliberately, with explicit contract, rollout, and posture review instead of treating that shift as a silent extension of the frozen interview-demo `1.x` promise.
+Goal: evolve the repository into a production-ready backend sample that supports a separate first-party UI behind one public origin deliberately, with explicit contract, rollout, and posture review as a post-`1.x` breaking follow-up instead of treating that shift as a silent extension of the frozen interview-demo `1.x` promise.
 
 #### Revisit The Security Posture
 - [ ] Replace the current reviewer-oriented CSRF-disabled browser write posture with production-grade same-site browser protections that work for a reverse-proxied first-party UI
 - [ ] Define and enforce reverse-proxy, public-origin, cookie, redirect, and session assumptions for the backend-to-UI boundary
-- [ ] Restrict technical endpoints such as Prometheus and non-public actuator surfaces behind production-ready network or auth expectations instead of relying on deployment convention alone
+- [ ] Restrict technical endpoints such as Prometheus and non-public actuator surfaces through deployment-scoped private access expectations, while keeping authenticated operator visibility in the application-owned operator surface
 - [ ] Add security headers and explicit HTTPS/proxy handling assumptions for real deployments
-- [ ] Add authenticated abuse protection such as request-rate limiting or similar controls for login bootstrap and write-heavy paths
+- [ ] Define the required edge or deployment-owned abuse-protection expectations for login bootstrap and write-heavy paths instead of assuming repo-owned application rate limiting
 
 ---
 
