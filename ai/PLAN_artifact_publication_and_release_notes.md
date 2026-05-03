@@ -3,7 +3,7 @@
 ## Summary
 - Complete the checked supply-chain and release-governance roadmap work that shares build, workflow, and release-artifact ownership.
 - Keep SBOM generation, stable static-analysis artifact publication, and GitHub Release note policy in one plan because they all change the same Gradle and GitHub Actions release surfaces.
-- Success is measured by: reproducible SBOM outputs for the packaged app and image, reviewable CI artifacts for quality failures, a decided and documented GitHub Release note policy, and passing build plus workflow-oriented validation.
+- Success is measured by: reproducible SBOM outputs for the packaged app and image, reviewable CI artifacts for quality failures, cumulative GitHub Release notes derived from the full unreleased change range, and passing build plus workflow-oriented validation.
 
 ## Scope
 - In scope:
@@ -25,10 +25,6 @@
 - The checked roadmap items still leave open whether that exact-tag model should remain the supported behavior or be replaced by cumulative notes derived from the gap between the previous published GitHub Release and the new tag.
 
 ## Requirement Gaps And Open Questions
-- The roadmap explicitly asks for a decision on exact-tag versus cumulative GitHub Release notes, but the repository does not contain that product decision yet.
-  - Why it matters: exact-tag and cumulative notes imply different release rendering logic, different failure modes, and different maintainer expectations in `ai/RELEASES.md`.
-  - Blocking status: blocked only for the cumulative-notes branch of the plan.
-  - Fallback if the user does not answer: retain the current exact-tag `CHANGELOG.md` section model as the supported contract and document that the cumulative follow-up item remains intentionally unapplied because its condition was not met.
 - The roadmap asks for an SBOM but does not specify the required standard or publication target.
   - Why it matters: CycloneDX versus SPDX affects plugin choice, artifact naming, and downstream tooling.
   - Fallback if the user does not answer: publish CycloneDX JSON artifacts for both the packaged app and the container image because that keeps the implementation small and repo-owned.
@@ -37,10 +33,12 @@
   - Fallback if the user does not answer: publish stable artifact bundles for PMD plus any existing repo-owned static-analysis reports that already act as blocking gates in `.\gradlew.bat build`.
 
 ## Locked Decisions And Assumptions
+- User decision:
+  - GitHub Releases must publish cumulative notes covering every unreleased user-visible change since the previous published GitHub Release.
 - Keep Gradle as the source of truth for generated build artifacts.
 - Keep GitHub Actions as the publication path for CI and tagged-release artifacts.
 - Preserve the current fail-closed behavior for release-note rendering when the chosen source text cannot be derived reliably.
-- Treat release-note policy as a maintainer workflow contract and update `ai/RELEASES.md` in the same change when that contract changes.
+- Treat cumulative release-note policy as a maintainer workflow contract and update `README.md` plus `ai/RELEASES.md` in the same change.
 - Do not widen the plan into signing or provenance work; those remain separate roadmap items.
 
 ## Affected Artifacts
@@ -68,18 +66,18 @@
 ## Execution Milestones
 ### Milestone 1: Decide And Lock The Release-Notes Policy
 - Goal:
-  - make the repository's GitHub Release notes contract explicit before changing automation.
+  - lock cumulative GitHub Release notes as the repository contract before changing automation.
 - Files to update:
   - `README.md`
   - `ai/RELEASES.md`
-  - `.github/workflows/release.yml` only if the selected policy differs from the current exact-tag model
+  - `.github/workflows/release.yml`
 - Behavior to preserve:
   - GitHub Release creation happens only after tagged image publication succeeds
   - release-note rendering fails closed on ambiguous or missing source content
 - Exact deliverables:
-  - one explicit release-note policy
+  - cumulative GitHub Release notes as the explicit supported policy
   - aligned maintainer docs describing that policy
-  - if the user chooses cumulative notes, one explicit derivation rule based on the previous published GitHub Release
+  - one explicit derivation rule based on the previous published GitHub Release
 
 ### Milestone 2: Generate And Publish SBOM Artifacts
 - Goal:
@@ -112,7 +110,7 @@
 
 ### Milestone 4: Implement Cumulative Release Rendering If Required
 - Goal:
-  - only if the policy decision selects cumulative GitHub Release notes, update release-note rendering to cover the full unreleased range.
+  - update release-note rendering to cover the full unreleased range from the previous published GitHub Release to the new tag.
 - Files to update:
   - `.github/workflows/release.yml`
   - likely a small helper under `scripts/release/`
@@ -126,7 +124,7 @@
 ## Edge Cases And Failure Modes
 - SBOM generation must target the packaged boot jar and the actual tagged image, not source-only or pre-build inputs.
 - Artifact uploads must still happen when PMD or another analysis task fails, or the new visibility requirement is not actually met.
-- If cumulative release notes are chosen, the workflow must distinguish between git tags and published GitHub Releases; missing or unpublished prior releases must fail clearly rather than silently truncating the notes.
+- The workflow must distinguish between git tags and published GitHub Releases; missing or unpublished prior releases must fail clearly rather than silently truncating the cumulative notes.
 - Release-note policy and `ai/RELEASES.md` must stay aligned; otherwise maintainers will prepare releases using the wrong model.
 - Adding new reporting steps must not create a second non-Gradle source of truth for build artifacts.
 
@@ -146,12 +144,12 @@
   - no HTTP example changes expected
 - Manual verification steps:
   - inspect a local or simulated artifact bundle and confirm SBOM plus static-analysis reports are reviewer-usable
-  - if cumulative notes are implemented, run the renderer against a known tag range and confirm the full intended unreleased section is included
+  - run the cumulative release-note renderer against a known previous-release-to-new-tag range and confirm the full intended unreleased section is included
 
 ## Better Engineering Notes
 - SBOM generation and release-note rendering both need to stay tied to the exact shipped artifacts, not a looser approximation.
 - Keep the implementation small: one repo-owned SBOM format, stable report paths, and a readable release workflow.
-- If the user does not choose cumulative release notes, do not implement speculative range logic just because the conditional roadmap item is checked.
+- Keep the cumulative-note derivation logic explicit and fail-closed rather than trying to infer missing release boundaries heuristically.
 
 ## Validation Results
 - To be filled in during execution.
