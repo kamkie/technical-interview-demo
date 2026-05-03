@@ -108,9 +108,9 @@ CI and release workflow expectations:
 
 - `CI` runs on pull requests to `main` and pushes to `main`
 - Dependabot opens grouped weekly pull requests for Gradle, GitHub Actions, and Docker, and those PRs use the same `CI` workflow as human-authored PRs
-- `CI` uses JDK 25, Gradle dependency caching, explicit Docker availability checks, `./gradlew build`, uploads `build/reports/jacoco/test/jacocoTestReport.xml` to Codecov, and then runs `./gradlew externalSmokeTest`
+- `CI` uses JDK 25, Gradle dependency caching, explicit Docker availability checks, `./gradlew build`, uploads `build/reports/jacoco/test/jacocoTestReport.xml` to Codecov, publishes security/static-analysis/SBOM artifact bundles from `build/reports/`, and then runs `./gradlew externalSmokeTest`
 - the scheduled `Post-Deploy Smoke` workflow runs `./gradlew scheduledExternalCheck` every six hours and on manual dispatch, using `EXTERNAL_CHECK_BASE_URL` plus optional `EXTERNAL_CHECK_JDBC_URL`, `EXTERNAL_CHECK_JDBC_USER`, and `EXTERNAL_CHECK_JDBC_PASSWORD` secrets when JDBC-backed session and Flyway assertions should be enabled
-- `Release` runs on `vMAJOR.MINOR.PATCH` tags, rebuilds the tagged image through Gradle, validates it with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry, and then creates a GitHub Release from the exact matching `CHANGELOG.md` section rendered inline in `.github/workflows/release.yml`
+- `Release` runs on `vMAJOR.MINOR.PATCH` tags, rebuilds/scans/SBOM-documents the tagged image through Gradle, publishes security/static-analysis/SBOM artifact bundles from `build/reports/`, validates it with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry, and then creates a cumulative GitHub Release from `CHANGELOG.md` using `scripts/release/render-release-notes.ps1` plus the previous published GitHub Release boundary
 - recommended branch protection requires `CI`, at least one reviewer, and a squash-merge or equivalent linear-history policy
 
 ## IDE Setup
@@ -209,13 +209,14 @@ Set Java 25 in the same shell session first. Docker Desktop must also be running
 .\gradlew.bat build
 ```
 
-`build` now covers Spotless, PMD, SpotBugs plus FindSecBugs via `staticSecurityScan`, tests, Asciidoctor generation, boot jar creation, and the Docker image build.
+`build` now covers Spotless, PMD, SpotBugs plus FindSecBugs via `staticSecurityScan`, dependency/image vulnerability scanning, CycloneDX SBOM generation, tests, Asciidoctor generation, boot jar creation, and the Docker image build.
 Use focused commands such as `test`, `asciidoctor`, or `dockerBuild` only when you intentionally want a narrower loop.
 
 Security scan shortcuts:
 
 - run `.\gradlew.bat staticSecurityScan` when you want the code-focused SpotBugs plus FindSecBugs gate directly
 - run `.\gradlew.bat vulnerabilityScan` when you want only the dependency and container image Trivy gates
+- run `.\gradlew.bat sbom` when you want only the CycloneDX SBOM outputs for the packaged app and image
 - review suppressions in `config/security/trivy.ignore`, `config/security/spotbugs-security-include.xml`, and `config/security/spotbugs-security-exclude.xml`
 
 OpenAPI contract workflow:
@@ -245,7 +246,7 @@ helm template technical-interview-demo helm/technical-interview-demo -f helm/tec
 .\gradlew.bat externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo
 ```
 
-The hosted `CI` workflow also uploads `build/reports/jacoco/test/jacocoTestReport.xml` to Codecov. Local reproduction normally stops at generating that file; it does not publish coverage unless you intentionally run the same GitHub Action path in CI.
+The hosted `CI` workflow also uploads `build/reports/jacoco/test/jacocoTestReport.xml` to Codecov plus artifact bundles from `build/reports/security/`, `build/reports/pmd/`, `build/reports/security/static/`, and `build/reports/sbom/`. Local reproduction normally stops at generating those files; it does not publish them unless you intentionally run the same GitHub Action path in CI.
 
 Deployment-manifest validation to pair with the CI flow:
 
@@ -259,7 +260,7 @@ kubectl apply --dry-run=client -k k8s/monitoring
 kubectl apply --dry-run=client -k monitoring/grafana
 ```
 
-Release-note rendering now lives inline in `.github/workflows/release.yml`; keep that workflow file as the source of truth rather than a local wrapper script.
+Release-note rendering is implemented by `scripts/release/render-release-notes.ps1` and invoked from `.github/workflows/release.yml`; keep script and workflow updates aligned when release-note policy changes.
 
 ## Building Docker Images
 
