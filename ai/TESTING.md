@@ -22,7 +22,7 @@ Use the smallest layer that proves the behavior clearly:
 - OpenAPI compatibility checks when public API behavior or documented schemas change
 - service tests for dense rule validation that does not need full HTTP coverage
 - technical integration tests when the change touches security, caching, metrics, tracing, or other cross-cutting behavior
-- documentation-only work may rely on manual consistency review plus the required repository build when no executable behavior changed
+- documentation-only work may rely on manual consistency review when no executable behavior changed
 
 ## Change-Type Expectations
 
@@ -45,8 +45,8 @@ Update together:
 ### Workflow Or Documentation Changes
 
 - prefer manual consistency review of the changed docs or workflow narrative
-- still finish with the required repository build unless the user explicitly asked for a narrower validation-only pass
-- when the only changed file is `ai/PROMPTS.md`, treat it as a prompt-library-only edit: do manual consistency review only and do not run `.\gradlew.bat build` or other expensive validation unless the user explicitly asks for it
+- when the only changed files are under `ai/`, treat the work as AI-guidance-only: do manual consistency review only and do not run `.\gradlew.bat build` or other validation commands unless the user explicitly asks for them
+- for non-`ai/` documentation or workflow edits, finish with the validation required by the affected artifacts and repository rules
 
 ## Validation Commands
 
@@ -55,6 +55,10 @@ Standard required validation before calling work complete:
 ```powershell
 .\gradlew.bat build
 ```
+
+Exception:
+
+- when every changed file is under `ai/`, no build or other validation command is required; manual consistency review is sufficient unless the user explicitly asks for more validation
 
 Additional validation rules:
 
