@@ -34,6 +34,8 @@ Before writing code or docs:
 - identify any plan gap that now blocks execution, and revise the plan before coding instead of filling the gap ad hoc
 - resolve local machine-dependent environment variables before running env-dependent commands:
   - check the local `.env` file first when it exists
+  - source or otherwise load the local `.env` values into the active shell or command environment before running env-dependent commands when that file is available locally
+  - do not assume Gradle, Spring Boot, or an ad hoc terminal session auto-loads `.env`; make the load step explicit when the task depends on variables from that file
   - use `.env.example` only as the template for expected variable names, not as proof of the local values
   - prefer `.env` for values such as `JAVA_HOME`, `IDEA_HOME`, `IDEA_FORMATTER_BINARY`, `SPRING_PROFILES_ACTIVE`, and other local runtime or toolchain variables needed by the task
   - if `.env` is missing or incomplete, then inspect the relevant IDE or local machine configuration and report the fallback you used
