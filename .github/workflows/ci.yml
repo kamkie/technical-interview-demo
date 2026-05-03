@@ -61,6 +61,15 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
+      - name: Upload SBOM artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-reports-ci-${{ github.run_id }}
+          path: build/reports/sbom/
+          if-no-files-found: warn
+          retention-days: 14
+
       - name: Lint Helm chart
         run: helm lint helm/technical-interview-demo
 
@@ -76,3 +85,4 @@ jobs:
           -PexternalSmokeImageName=technical-interview-demo
           -PdockerImageName=technical-interview-demo
           --no-daemon
+

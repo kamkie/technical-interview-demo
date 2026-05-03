@@ -57,6 +57,8 @@ val spotbugsSecurityExcludeFile = layout.projectDirectory.file("config/security/
 val trivyIgnoreFile = layout.projectDirectory.file("config/security/trivy.ignore")
 val trivyContainerImage = providers.gradleProperty("trivyImage").orElse("aquasec/trivy:0.63.0")
 val trivyFailOnSeverities = listOf("HIGH", "CRITICAL")
+val applicationSbomReportDir = layout.buildDirectory.dir("reports/sbom/application")
+val imageSbomReportDir = layout.buildDirectory.dir("reports/sbom/image")
 
 java {
     toolchain {
@@ -186,12 +188,69 @@ val imageVulnerabilityScan = tasks.register<TrivyImageScanTask>("imageVulnerabil
     cacheDirectory.convention(layout.buildDirectory.dir("security/trivy-cache/image"))
 }
 
+val applicationSbom = tasks.register<Exec>("applicationSbom") {
+    group = "verification"
+    description = "Generates a CycloneDX SBOM for the packaged boot jar artifact."
+    dependsOn(prepareDependencyVulnerabilityScanInput)
+    val inputDirectory = layout.buildDirectory.dir("security/dependency-scan/input")
+    val outputFile = applicationSbomReportDir.map { it.file("application.cyclonedx.json") }
+    inputs.dir(inputDirectory)
+    outputs.file(outputFile)
+    doFirst {
+        applicationSbomReportDir.get().asFile.mkdirs()
+        val inputMount = inputDirectory.get().asFile.absolutePath.replace('\\', '/')
+        val outputMount = applicationSbomReportDir.get().asFile.absolutePath.replace('\\', '/')
+        commandLine(
+            "docker",
+            "run",
+            "--rm",
+            "-v",
+            "$inputMount:/workspace/input:ro",
+            "-v",
+            "$outputMount:/workspace/output",
+            trivyContainerImage.get(),
+            "fs",
+            "/workspace/input",
+            "--format",
+            "cyclonedx",
+            "--output",
+            "/workspace/output/application.cyclonedx.json",
+            "--quiet",
+            "--no-progress"
+        )
+    }
+}
+
+val imageSbom = tasks.register<Exec>("imageSbom") {
+    group = "verification"
+    description = "Generates a CycloneDX SBOM for the Docker image built by dockerBuild."
+    dependsOn(tasks.named("dockerBuild"))
+    val outputFile = imageSbomReportDir.map { it.file("image.cyclonedx.json") }
+    inputs.property("imageName", dockerImageName)
+    outputs.file(outputFile)
+    doFirst {
+        imageSbomReportDir.get().asFile.mkdirs()
+        val outputMount = imageSbomReportDir.get().asFile.absolutePath.replace('\\', '/')
+        commandLine(
+            "docker", "run", "--rm",
+            "-v", "//var/run/docker.sock:/var/run/docker.sock",
+            "-v", "$outputMount:/workspace/output",
+            trivyContainerImage.get(), "image", dockerImageName.get(),
+            "--format", "cyclonedx", "--output", "/workspace/output/image.cyclonedx.json", "--quiet", "--no-progress"
+        )
+    }
+}
 tasks.register("vulnerabilityScan") {
     group = "verification"
     description = "Runs dependency and Docker image vulnerability scans."
     dependsOn(dependencyVulnerabilityScan, imageVulnerabilityScan)
 }
 
+val sbom = tasks.register("sbom") {
+    group = "verification"
+    description = "Generates CycloneDX SBOMs for the packaged application artifact and Docker image."
+    dependsOn(applicationSbom, imageSbom)
+}
 val staticSecurityScan = tasks.register("staticSecurityScan") {
     group = "verification"
     description = "Runs SpotBugs with FindSecBugs against production code."
@@ -213,7 +272,7 @@ tasks.build {
 }
 
 tasks.check {
-    dependsOn(staticSecurityScan, dependencyVulnerabilityScan, imageVulnerabilityScan)
+    dependsOn(staticSecurityScan, dependencyVulnerabilityScan, imageVulnerabilityScan, sbom)
 }
 
 tasks.withType<Test> {
@@ -379,3 +438,4 @@ tasks.wrapper {
     gradleVersion = gradleWrapperVersion
     distributionType = Wrapper.DistributionType.ALL
 }
+

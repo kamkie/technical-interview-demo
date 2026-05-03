@@ -110,7 +110,7 @@ CI and release workflow expectations:
 - Dependabot opens grouped weekly pull requests for Gradle, GitHub Actions, and Docker, and those PRs use the same `CI` workflow as human-authored PRs
 - `CI` uses JDK 25, Gradle dependency caching, explicit Docker availability checks, `./gradlew build`, uploads `build/reports/jacoco/test/jacocoTestReport.xml` to Codecov, and then runs `./gradlew externalSmokeTest`
 - the scheduled `Post-Deploy Smoke` workflow runs `./gradlew scheduledExternalCheck` every six hours and on manual dispatch, using `EXTERNAL_CHECK_BASE_URL` plus optional `EXTERNAL_CHECK_JDBC_URL`, `EXTERNAL_CHECK_JDBC_USER`, and `EXTERNAL_CHECK_JDBC_PASSWORD` secrets when JDBC-backed session and Flyway assertions should be enabled
-- `Release` runs on `vMAJOR.MINOR.PATCH` tags, rebuilds the tagged image through Gradle, validates it with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry, and then creates a GitHub Release from the exact matching `CHANGELOG.md` section rendered inline in `.github/workflows/release.yml`
+- `Release` runs on `vMAJOR.MINOR.PATCH` tags, rebuilds/scans/SBOM-documents the tagged image through Gradle, validates it with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry, and then creates a cumulative GitHub Release from `CHANGELOG.md` using `scripts/release/render-release-notes.ps1` plus the previous published GitHub Release boundary
 - recommended branch protection requires `CI`, at least one reviewer, and a squash-merge or equivalent linear-history policy
 
 ## IDE Setup
@@ -209,13 +209,14 @@ Set Java 25 in the same shell session first. Docker Desktop must also be running
 .\gradlew.bat build
 ```
 
-`build` now covers Spotless, PMD, SpotBugs plus FindSecBugs via `staticSecurityScan`, tests, Asciidoctor generation, boot jar creation, and the Docker image build.
+`build` now covers Spotless, PMD, SpotBugs plus FindSecBugs via `staticSecurityScan`, dependency/image vulnerability scanning, CycloneDX SBOM generation, tests, Asciidoctor generation, boot jar creation, and the Docker image build.
 Use focused commands such as `test`, `asciidoctor`, or `dockerBuild` only when you intentionally want a narrower loop.
 
 Security scan shortcuts:
 
 - run `.\gradlew.bat staticSecurityScan` when you want the code-focused SpotBugs plus FindSecBugs gate directly
 - run `.\gradlew.bat vulnerabilityScan` when you want only the dependency and container image Trivy gates
+- run `.\gradlew.bat sbom` when you want only the CycloneDX SBOM outputs for the packaged app and image
 - review suppressions in `config/security/trivy.ignore`, `config/security/spotbugs-security-include.xml`, and `config/security/spotbugs-security-exclude.xml`
 
 OpenAPI contract workflow:
@@ -259,7 +260,7 @@ kubectl apply --dry-run=client -k k8s/monitoring
 kubectl apply --dry-run=client -k monitoring/grafana
 ```
 
-Release-note rendering now lives inline in `.github/workflows/release.yml`; keep that workflow file as the source of truth rather than a local wrapper script.
+Release-note rendering is implemented by `scripts/release/render-release-notes.ps1` and invoked from `.github/workflows/release.yml`; keep script and workflow updates aligned when release-note policy changes.
 
 ## Building Docker Images
 
@@ -718,3 +719,5 @@ Fix:
 1. Stop the conflicting process or container.
 2. Re-run the command.
 3. If needed, override the port locally in your run configuration.
+
+

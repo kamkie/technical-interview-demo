@@ -141,11 +141,13 @@ The standard build includes Spotless, PMD, tests, JaCoCo thresholds, REST Docs g
 
 Supply-chain verification is part of the standard build:
 
-- `.\gradlew.bat build` also runs Gradle-owned static application security, dependency vulnerability, and Docker-image vulnerability scans
+- `.\gradlew.bat build` also runs Gradle-owned static application security, dependency vulnerability, Docker-image vulnerability, and SBOM generation tasks
 - `.\gradlew.bat staticSecurityScan` runs SpotBugs plus FindSecBugs directly when you want the code-focused security gate without the full lifecycle
 - `.\gradlew.bat vulnerabilityScan` runs the two scan tasks directly when you want the security checks without the full lifecycle
+- `.\gradlew.bat sbom` runs the CycloneDX SBOM tasks directly when you want SBOM generation without the full lifecycle
 - static application security reports are written under `build/reports/security/static/` as XML and HTML
 - dependency and image vulnerability scan reports are written under `build/reports/security/` as JSON, SARIF, and summary text files
+- application and image SBOM reports are written under `build/reports/sbom/application/application.cyclonedx.json` and `build/reports/sbom/image/image.cyclonedx.json`
 - unsuppressed `HIGH` and `CRITICAL` findings fail the relevant scan task and therefore fail the build
 - suppressions must be explicit and reviewable through `config/security/trivy.ignore`, `config/security/spotbugs-security-include.xml`, and `config/security/spotbugs-security-exclude.xml`
 
@@ -178,8 +180,8 @@ Supported delivery path:
 - the scheduled `Post-Deploy Smoke` workflow runs `./gradlew scheduledExternalCheck` every six hours and on manual dispatch, using `EXTERNAL_CHECK_BASE_URL` plus optional `EXTERNAL_CHECK_JDBC_URL`, `EXTERNAL_CHECK_JDBC_USER`, and `EXTERNAL_CHECK_JDBC_PASSWORD` secrets for deeper JDBC-backed session and Flyway checks
 - the `CI` workflow uploads `build/reports/jacoco/test/jacocoTestReport.xml` to Codecov after the Gradle build, so the repository must be onboarded for Codecov uploads before that signal is expected to pass consistently
 - Dependabot opens grouped weekly update PRs for Gradle, GitHub Actions, and Docker, and those PRs are expected to pass the same `CI` workflow before merge
-- the `CI` workflow uploads the generated vulnerability scan artifacts from `build/reports/security/` so blocked runs remain reviewable
-- semantic version tags trigger the `Release` workflow, which builds and scans the tagged image with Gradle, validates it with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry as `ghcr.io/<owner>/<repo>:<tag>` and `ghcr.io/<owner>/<repo>:sha-<12-char-commit>`, then creates cumulative GitHub Release notes from the previous published GitHub Release tag boundary in `CHANGELOG.md`
+- the `CI` workflow uploads the generated vulnerability scan artifacts from `build/reports/security/` and SBOM artifacts from `build/reports/sbom/` so blocked runs remain reviewable
+- semantic version tags trigger the `Release` workflow, which builds, scans, and generates SBOMs for the tagged image with Gradle, uploads the security and SBOM artifact bundles, validates the image with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry as `ghcr.io/<owner>/<repo>:<tag>` and `ghcr.io/<owner>/<repo>:sha-<12-char-commit>`, then creates cumulative GitHub Release notes from the previous published GitHub Release tag boundary in `CHANGELOG.md`
 - deployment artifacts are provided as:
   - Docker image
   - vendor-neutral Kubernetes manifests under `k8s/base` with a local overlay under `k8s/overlays/local`, including a checked-in HPA and pod disruption budget
@@ -269,3 +271,6 @@ A change is complete when:
 - implementation, tests, docs, and OpenAPI stay aligned
 - the application still starts
 - `./gradlew build` passes
+
+
+
