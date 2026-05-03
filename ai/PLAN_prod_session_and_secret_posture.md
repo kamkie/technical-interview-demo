@@ -130,7 +130,17 @@
 - If execution changes session startup or login bootstrap behavior materially, a narrower prerequisite refactor may be needed before final hardening.
 
 ## Validation Results
-- To be filled in during execution
+- 2026-05-03: Ran `.\gradlew.bat build --no-daemon` on `codex/unfinished-plans-integration` with Java 25 (`C:\Users\kamki\.jdks\azul-25.0.3`).
+- Result: passed.
+- Notes:
+  - This covered the updated `ProductionConfigurationTests`, `SecurityIntegrationTests`, `TechnicalOverviewControllerIntegrationTests`, and the rest of the repository test suite.
+  - The build also regenerated docs, verified OpenAPI compatibility, and rebuilt the Docker image with the integrated session-hardening changes.
+- 2026-05-03: Ran `.\gradlew.bat externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo --no-daemon`.
+- Result: passed.
+- Notes:
+  - The packaged smoke flow proved the JDBC-backed authenticated-session path still works against the containerized app and PostgreSQL.
+- 2026-05-03: Ran `.\gradlew.bat gatlingBenchmark --no-daemon` twice because the first run failed on a tolerance-boundary regression for `oauth2-github-redirect` (`15ms` p95 versus a `14ms` threshold).
+- Result: second run passed without baseline changes; final recorded `oauth2-github-redirect` p95 was `14ms`.
 
 ## User Validation
 - Run the app in `prod` once with a correct configuration set and once with one intentionally missing auth/session variable.

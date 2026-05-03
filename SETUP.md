@@ -109,6 +109,7 @@ CI and release workflow expectations:
 - `CI` runs on pull requests to `main` and pushes to `main`
 - Dependabot opens grouped weekly pull requests for Gradle, GitHub Actions, and Docker, and those PRs use the same `CI` workflow as human-authored PRs
 - `CI` uses JDK 25, Gradle dependency caching, explicit Docker availability checks, `./gradlew build`, uploads `build/reports/jacoco/test/jacocoTestReport.xml` to Codecov, and then runs `./gradlew externalSmokeTest`
+- the scheduled `Post-Deploy Smoke` workflow runs `./gradlew scheduledExternalCheck` every six hours and on manual dispatch, using `EXTERNAL_CHECK_BASE_URL` plus optional `EXTERNAL_CHECK_JDBC_URL`, `EXTERNAL_CHECK_JDBC_USER`, and `EXTERNAL_CHECK_JDBC_PASSWORD` secrets when JDBC-backed session and Flyway assertions should be enabled
 - `Release` runs on `vMAJOR.MINOR.PATCH` tags, rebuilds the tagged image through Gradle, validates it with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry, and then creates a GitHub Release from the exact matching `CHANGELOG.md` section rendered inline in `.github/workflows/release.yml`
 - recommended branch protection requires `CI`, at least one reviewer, and a squash-merge or equivalent linear-history policy
 
@@ -208,8 +209,14 @@ Set Java 25 in the same shell session first. Docker Desktop must also be running
 .\gradlew.bat build
 ```
 
-`build` now covers Spotless, PMD, tests, Asciidoctor generation, boot jar creation, and the Docker image build.
+`build` now covers Spotless, PMD, SpotBugs plus FindSecBugs via `staticSecurityScan`, tests, Asciidoctor generation, boot jar creation, and the Docker image build.
 Use focused commands such as `test`, `asciidoctor`, or `dockerBuild` only when you intentionally want a narrower loop.
+
+Security scan shortcuts:
+
+- run `.\gradlew.bat staticSecurityScan` when you want the code-focused SpotBugs plus FindSecBugs gate directly
+- run `.\gradlew.bat vulnerabilityScan` when you want only the dependency and container image Trivy gates
+- review suppressions in `config/security/trivy.ignore`, `config/security/spotbugs-security-include.xml`, and `config/security/spotbugs-security-exclude.xml`
 
 OpenAPI contract workflow:
 
@@ -299,6 +306,18 @@ What the smoke validation proves:
 - the packaged OpenAPI endpoints respond at `GET /v3/api-docs` and `GET /v3/api-docs.yaml`
 - the smoke harness can seed a JDBC-backed Spring Session record in PostgreSQL and the packaged app accepts that authenticated session for `GET /api/account`
 
+## Scheduled Post-Deploy Smoke
+
+Use the scheduled GitHub Actions `Post-Deploy Smoke` workflow when you want continuous checks against an already deployed environment instead of the locally provisioned Docker smoke path.
+
+Workflow contract:
+
+- required repository secret: `EXTERNAL_CHECK_BASE_URL`
+- optional repository secrets for deeper checks: `EXTERNAL_CHECK_JDBC_URL`, `EXTERNAL_CHECK_JDBC_USER`, and `EXTERNAL_CHECK_JDBC_PASSWORD`
+- if only `EXTERNAL_CHECK_BASE_URL` is configured, the scheduled run performs HTTP-only smoke assertions
+- if the JDBC secrets are configured as a complete set, the scheduled run also verifies JDBC-backed authenticated-session behavior and confirms Flyway history is present
+- the workflow uploads test reports from `build/reports/tests/externalDeploymentCheck/` and `build/test-results/externalDeploymentCheck/`
+
 ## Healthy Runtime Expectations
 
 For this repository, a healthy runtime means the existing operational signals line up across health probes, metrics, audit writes, and authenticated session persistence.
@@ -324,6 +343,7 @@ Audit logging expectations:
 Session persistence expectations:
 
 - authenticated browser sessions use Spring Session JDBC with the `technical-interview-demo-session` cookie
+- the `prod` profile tightens the session contract to a 15 minute timeout, secure cookies, and one active session per login with login rejection on concurrent attempts
 - healthy authenticated-session behavior means rows appear in `SPRING_SESSION` and `SPRING_SESSION_ATTRIBUTES` after a successful login flow
 - if `/api/account` starts returning unauthorized responses for an otherwise valid login, inspect those tables before assuming an OAuth redirect problem
 
@@ -384,6 +404,12 @@ Secret handling:
 - the required secret key is `DATABASE_PASSWORD`
 - optional secret keys are `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, and `ADMIN_LOGINS`
 
+Base deployment defaults:
+
+- `k8s/base/horizontalpodautoscaler.yaml` scales the app between 2 and 6 replicas on CPU and memory utilization
+- `k8s/base/poddisruptionbudget.yaml` requires at least one pod to remain available during voluntary disruptions
+- patch or replace those resources if your cluster does not provide the metrics APIs needed for HPA or if your rollout policy needs different budgets
+
 Render the manifests:
 
 ```powershell
@@ -434,7 +460,8 @@ The chart mirrors the raw manifest contract:
 
 - image repository and tag are values-driven
 - the deployment still expects an existing `technical-interview-demo-secrets` secret
-- `values-local.yaml` matches the local overlay assumptions: single replica, local image tag, `postgres` service host, and non-secure session cookie for HTTP testing
+- `values.yaml` enables autoscaling and a pod disruption budget by default for deployment-style installs
+- `values-local.yaml` matches the local overlay assumptions: single replica, local image tag, `postgres` service host, non-secure session cookie for HTTP testing, and autoscaling disabled
 - OAuth remains opt-in through the `oauth` profile and `GITHUB_CLIENT_*` secret keys
 - ServiceMonitor rendering is optional and stays disabled until the monitoring stack is installed
 
@@ -460,9 +487,15 @@ kubectl apply -k monitoring/grafana
 What the monitoring assets provide:
 
 - `k8s/monitoring/servicemonitor.yaml` scrapes `GET /actuator/prometheus` from inside the cluster as a trusted deployment concern, not an internet-public endpoint
-- `k8s/monitoring/prometheus-rule.yaml` adds alerts for target-down, readiness failures, repeated restarts, and elevated 5xx rates
-- `monitoring/grafana/dashboards/technical-interview-demo.json` adds starter panels for JVM memory, CPU, request throughput/latency, cache events, and domain totals
+- `k8s/monitoring/prometheus-rule.yaml` adds alerts for target-down, readiness failures, repeated restarts, elevated auth failures, session-backed account 5xxs, database pool saturation, database connection timeouts, Flyway-style startup crash loops, and elevated 5xx rates
+- `monitoring/grafana/dashboards/technical-interview-demo.json` adds starter panels for JVM memory, CPU, request throughput/latency, cache events, domain totals, authentication failures, session-backed account health, database pool saturation, and Flyway migration visibility
 - `monitoring/alertmanager/config-example.yaml` is a starting Alertmanager route/receiver config that you should adapt before using real notifications
+
+Production logging and tracing posture:
+
+- `application-prod.properties` keeps the root log level at `INFO`
+- `spring.output.ansi.enabled=DETECT` stays enabled so logs remain plain when no TTY is attached
+- logs are still written to stdout and trace export stays runtime-configurable through standard OTLP environment variables instead of a repo-mandated vendor backend
 
 Verify the monitoring setup:
 

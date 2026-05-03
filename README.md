@@ -141,11 +141,13 @@ The standard build includes Spotless, PMD, tests, JaCoCo thresholds, REST Docs g
 
 Supply-chain verification is part of the standard build:
 
-- `.\gradlew.bat build` also runs Gradle-owned dependency and Docker-image vulnerability scans
+- `.\gradlew.bat build` also runs Gradle-owned static application security, dependency vulnerability, and Docker-image vulnerability scans
+- `.\gradlew.bat staticSecurityScan` runs SpotBugs plus FindSecBugs directly when you want the code-focused security gate without the full lifecycle
 - `.\gradlew.bat vulnerabilityScan` runs the two scan tasks directly when you want the security checks without the full lifecycle
-- scan reports are written under `build/reports/security/` as JSON, SARIF, and summary text files
+- static application security reports are written under `build/reports/security/static/` as XML and HTML
+- dependency and image vulnerability scan reports are written under `build/reports/security/` as JSON, SARIF, and summary text files
 - unsuppressed `HIGH` and `CRITICAL` findings fail the relevant scan task and therefore fail the build
-- suppressions must be explicit and reviewable through `config/security/trivy.ignore`
+- suppressions must be explicit and reviewable through `config/security/trivy.ignore`, `config/security/spotbugs-security-include.xml`, and `config/security/spotbugs-security-exclude.xml`
 
 Additional change-sensitive checks:
 
@@ -172,14 +174,15 @@ Supported delivery path:
 - GitHub Actions is the repository CI/CD platform
 - pull requests to `main` and pushes to `main` run the `CI` workflow, which executes `./gradlew build` and `./gradlew externalSmokeTest`
 - `externalSmokeTest` now verifies the packaged docs HTML, OpenAPI JSON/YAML endpoints, and one JDBC-backed authenticated `GET /api/account` session path in addition to the existing public/readiness smoke checks
+- the scheduled `Post-Deploy Smoke` workflow runs `./gradlew scheduledExternalCheck` every six hours and on manual dispatch, using `EXTERNAL_CHECK_BASE_URL` plus optional `EXTERNAL_CHECK_JDBC_URL`, `EXTERNAL_CHECK_JDBC_USER`, and `EXTERNAL_CHECK_JDBC_PASSWORD` secrets for deeper JDBC-backed session and Flyway checks
 - the `CI` workflow uploads `build/reports/jacoco/test/jacocoTestReport.xml` to Codecov after the Gradle build, so the repository must be onboarded for Codecov uploads before that signal is expected to pass consistently
 - Dependabot opens grouped weekly update PRs for Gradle, GitHub Actions, and Docker, and those PRs are expected to pass the same `CI` workflow before merge
 - the `CI` workflow uploads the generated vulnerability scan artifacts from `build/reports/security/` so blocked runs remain reviewable
 - semantic version tags trigger the `Release` workflow, which builds and scans the tagged image with Gradle, validates it with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry as `ghcr.io/<owner>/<repo>:<tag>` and `ghcr.io/<owner>/<repo>:sha-<12-char-commit>`, then creates the matching GitHub Release from `CHANGELOG.md`
 - deployment artifacts are provided as:
   - Docker image
-  - vendor-neutral Kubernetes manifests under `k8s/base` with a local overlay under `k8s/overlays/local`
-  - Helm chart under `helm/`
+  - vendor-neutral Kubernetes manifests under `k8s/base` with a local overlay under `k8s/overlays/local`, including a checked-in HPA and pod disruption budget
+  - Helm chart under `helm/`, with autoscaling and pod disruption budget defaults enabled for deployment-style installs and disabled in `values-local.yaml` for the single-replica local path
   - monitoring and alerting assets for Prometheus, Grafana, and Alertmanager
 
 Required deployment environment variables:
@@ -200,10 +203,12 @@ Optional deployment environment variables:
 Frozen `1.0` production posture:
 
 - `prod` remains the deployment profile baseline
-- OAuth login remains opt-in through the `oauth` profile plus `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`
-- `ADMIN_LOGINS` remains the environment-driven admin bootstrap mechanism
+- OAuth login remains opt-in through the `oauth` profile plus `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`, and those credentials are required only when `oauth` is active
+- `ADMIN_LOGINS` remains the environment-driven admin bootstrap mechanism and is validated as a comma-separated list of GitHub logins when present
 - `SESSION_COOKIE_SECURE` remains optional with a secure-by-default value of `true`
+- `prod` enforces a 15 minute session timeout, one active session per login, and login rejection when that session cap is already reached
 - browser-session write flows keep CSRF disabled as a deliberate demo tradeoff for reviewer-friendly session-based API exercise flows
+- production logging uses `INFO` at the root logger while keeping ANSI detection automatic for no-TTY log shipping and leaving trace export runtime-configurable through standard OTLP environment variables
 - `GET /actuator/prometheus` remains available for trusted deployment scraping, but it is not part of the internet-public contract
 
 Trusted deployment topology assumption:
@@ -214,6 +219,7 @@ Trusted deployment topology assumption:
 Use the raw manifests under `k8s/` when you want explicit repo-owned YAML. Use the Helm chart under `helm/technical-interview-demo` when you want the same deployment contract packaged behind values files.
 
 Monitoring support uses the upstream `kube-prometheus-stack` Helm chart plus repo-owned ServiceMonitor, alert-rule, Grafana dashboard, and Alertmanager example assets under `k8s/monitoring` and `monitoring/`.
+The checked-in monitoring contract now covers auth failures, session-backed account errors, Flyway-style startup crash loops, database pool saturation and timeouts, and elevated 5xx rates.
 
 ## Project Map
 
