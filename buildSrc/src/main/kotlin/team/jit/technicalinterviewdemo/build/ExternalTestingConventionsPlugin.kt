@@ -1,5 +1,6 @@
 package team.jit.technicalinterviewdemo.build
 
+import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.SourceSetContainer
@@ -92,6 +93,69 @@ class ExternalTestingConventionsPlugin : Plugin<Project> {
             group = "verification"
             description = "Runs Docker-backed external smoke tests against the packaged application image."
             dependsOn(smokeVerificationTask)
+        }
+
+        val deploymentBaseUrl = providers.gradleProperty("externalCheck.baseUrl")
+            .orElse(providers.environmentVariable("EXTERNAL_CHECK_BASE_URL"))
+            .orElse(providers.environmentVariable("EXTERNAL_BASE_URL"))
+        val deploymentJdbcUrl = providers.gradleProperty("externalCheck.jdbcUrl")
+            .orElse(providers.environmentVariable("EXTERNAL_CHECK_JDBC_URL"))
+            .orElse(providers.environmentVariable("EXTERNAL_JDBC_URL"))
+        val deploymentJdbcUser = providers.gradleProperty("externalCheck.jdbcUser")
+            .orElse(providers.environmentVariable("EXTERNAL_CHECK_JDBC_USER"))
+            .orElse(providers.environmentVariable("EXTERNAL_JDBC_USER"))
+        val deploymentJdbcPassword = providers.gradleProperty("externalCheck.jdbcPassword")
+            .orElse(providers.environmentVariable("EXTERNAL_CHECK_JDBC_PASSWORD"))
+            .orElse(providers.environmentVariable("EXTERNAL_JDBC_PASSWORD"))
+
+        val deploymentCheckTask = tasks.register<Test>("externalDeploymentCheck") {
+            description = "Executes src/externalTest against a deployed environment without provisioning Docker resources."
+            group = "verification"
+            dependsOn(tasks.named(externalTestSourceSet.classesTaskName))
+            testClassesDirs = externalTestSourceSet.output.classesDirs
+            classpath = externalTestSourceSet.runtimeClasspath
+            shouldRunAfter(tasks.named("test"))
+            useJUnitPlatform()
+            outputs.upToDateWhen { false }
+            doFirst {
+                val baseUrl = deploymentBaseUrl.orNull?.trim()
+                if (baseUrl.isNullOrBlank()) {
+                    throw GradleException(
+                        "externalDeploymentCheck requires externalCheck.baseUrl or EXTERNAL_CHECK_BASE_URL."
+                    )
+                }
+                val jdbcUrl = deploymentJdbcUrl.orNull?.trim()
+                val jdbcUser = deploymentJdbcUser.orNull?.trim()
+                val jdbcPassword = deploymentJdbcPassword.orNull?.trim()
+                val anyJdbcConfigured = listOf(jdbcUrl, jdbcUser, jdbcPassword).any { !it.isNullOrBlank() }
+                val allJdbcConfigured = listOf(jdbcUrl, jdbcUser, jdbcPassword).all { !it.isNullOrBlank() }
+                if (anyJdbcConfigured && !allJdbcConfigured) {
+                    throw GradleException(
+                        "externalDeploymentCheck requires externalCheck.jdbcUrl, externalCheck.jdbcUser, and externalCheck.jdbcPassword together when JDBC-backed checks are enabled."
+                    )
+                }
+                logger.lifecycle("[externalDeploymentCheck] Running deployed smoke assertions against {}.", baseUrl)
+                systemProperty("app.baseUrl", baseUrl)
+                systemProperty("external.baseUrl", baseUrl)
+                environment("EXTERNAL_BASE_URL", baseUrl)
+                if (allJdbcConfigured) {
+                    logger.lifecycle("[externalDeploymentCheck] JDBC-backed session and Flyway checks are enabled.")
+                    systemProperty("external.jdbc.url", jdbcUrl)
+                    systemProperty("external.jdbc.user", jdbcUser)
+                    systemProperty("external.jdbc.password", jdbcPassword)
+                } else {
+                    logger.lifecycle("[externalDeploymentCheck] JDBC-backed checks are disabled; running HTTP-only smoke assertions.")
+                }
+            }
+            extensions.configure(JacocoTaskExtension::class.java) {
+                isEnabled = false
+            }
+        }
+
+        tasks.register("scheduledExternalCheck") {
+            group = "verification"
+            description = "Alias for the deployed external smoke task used by scheduled post-deploy automation."
+            dependsOn(deploymentCheckTask)
         }
     }
 

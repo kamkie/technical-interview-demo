@@ -53,6 +53,17 @@ resources:
     cpu: "1"
     memory: 1Gi
 
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
 pod:
   terminationGracePeriodSeconds: 30
 

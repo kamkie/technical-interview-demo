@@ -1,0 +1,14 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: technical-interview-demo
+  namespace: technical-interview-demo
+  labels:
+    app.kubernetes.io/name: technical-interview-demo
+    app.kubernetes.io/component: app
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: technical-interview-demo
+      app.kubernetes.io/component: app

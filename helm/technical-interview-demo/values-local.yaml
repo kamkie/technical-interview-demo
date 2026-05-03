@@ -1,5 +1,8 @@
 replicaCount: 1
 
+autoscaling:
+  enabled: false
+
 image:
   repository: technical-interview-demo
   tag: local
