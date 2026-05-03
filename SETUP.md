@@ -116,7 +116,9 @@ CI and release workflow expectations:
 - Dependabot opens grouped weekly pull requests for Gradle, GitHub Actions, and Docker, and those PRs use the same `CI` workflow as human-authored PRs
 - `CI` uses JDK 25, Gradle dependency caching, explicit Docker availability checks, `./gradlew build`, uploads `build/reports/jacoco/test/jacocoTestReport.xml` to Codecov, publishes security/static-analysis/SBOM artifact bundles from `build/reports/`, and then runs `./gradlew externalSmokeTest`
 - the scheduled `Post-Deploy Smoke` workflow runs `./gradlew scheduledExternalCheck` every six hours and on manual dispatch, using `EXTERNAL_CHECK_BASE_URL` plus optional `EXTERNAL_CHECK_JDBC_URL`, `EXTERNAL_CHECK_JDBC_USER`, and `EXTERNAL_CHECK_JDBC_PASSWORD` secrets when JDBC-backed session and Flyway assertions should be enabled
+- manual `Post-Deploy Smoke` dispatch also accepts `expected_build_version`, `expected_short_commit_id`, `expected_active_profile`, `expected_session_store_type`, and `expected_session_timeout` so promotion-stage checks can bind to the deployed root overview metadata instead of only checking liveness
 - `Release` runs on `vMAJOR.MINOR.PATCH` tags, rebuilds/scans/SBOM-documents the tagged image through Gradle, publishes security/static-analysis/SBOM artifact bundles from `build/reports/`, validates it with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry, and then creates a cumulative GitHub Release from `CHANGELOG.md` using `scripts/release/render-release-notes.ps1` plus the previous published GitHub Release boundary
+- the `Release` workflow step summary records the semantic tag, immutable short-SHA tag, pushed digest reference, and the exact manual post-deploy check inputs maintainers should reuse before promotion
 - recommended branch protection requires `CI`, at least one reviewer, and a squash-merge or equivalent linear-history policy
 
 ## IDE Setup
@@ -324,6 +326,8 @@ Workflow contract:
 - optional repository secrets for deeper checks: `EXTERNAL_CHECK_JDBC_URL`, `EXTERNAL_CHECK_JDBC_USER`, and `EXTERNAL_CHECK_JDBC_PASSWORD`
 - if only `EXTERNAL_CHECK_BASE_URL` is configured, the scheduled run performs HTTP-only smoke assertions
 - if the JDBC secrets are configured as a complete set, the scheduled run also verifies JDBC-backed authenticated-session behavior and confirms Flyway history is present
+- manual dispatch can override the base URL and assert exact release identity with `expected_build_version` plus `expected_short_commit_id`
+- manual dispatch can assert the documented prod posture with `expected_active_profile=prod`, `expected_session_store_type=jdbc`, and `expected_session_timeout=15m`; when those inputs are present the check also expects `configuration.security.csrfEnabled=false`
 - the workflow uploads test reports from `build/reports/tests/externalDeploymentCheck/` and `build/test-results/externalDeploymentCheck/`
 
 ## Healthy Runtime Expectations
@@ -375,13 +379,25 @@ select count(*) from spring_session_attributes;
 
 This repository treats releases as versioned container-image upgrades backed by forward-only Flyway migrations.
 
+Mixed-version rollout model:
+
+- `expand`: additive schema work, typically `db-first`, intended to keep the previous app version working during rollout
+- `contract`: cleanup or constraint-tightening work, typically `app-first` or `out-of-band`, after the new app version is fully deployed
+- `backfill`: data movement or population work that often needs an `out-of-band` step even when the schema is additive
+- `breaking`: incompatible schema or data changes that are not safe for rolling mixed-version rollout
+- every new or modified migration SQL file must carry a JSON sidecar under `src/main/resources/db/migration/metadata/`
+- `pwsh ./scripts/release/get-release-migration-impact.ps1` classifies the candidate as `none`, `rolling-compatible`, or `restore-sensitive` by diffing the current ref against the previous release tag and reading those sidecars
+
 Pre-release checks for a versioned upgrade:
 
 1. Review any new files under `src/main/resources/db/migration/` and confirm the schema change is intentional for the target version.
-2. Run `.\gradlew.bat build`.
-3. Run `.\gradlew.bat externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo`.
-4. If the change touched book search/list behavior, localization lookup behavior, or OAuth/session startup behavior, also run `.\gradlew.bat gatlingBenchmark`.
-5. Confirm the target release notes and deployment values reference the intended semantic version tag.
+2. For each changed migration SQL file, confirm the matching metadata sidecar under `src/main/resources/db/migration/metadata/` accurately records `summary`, `rolloutCategory`, `deploymentOrder`, `rollingCompatible`, and `rollbackPosture`.
+3. Run `pwsh ./scripts/release/get-release-migration-impact.ps1 -PreviousReleaseTag <previous-tag> -CurrentRef HEAD`.
+4. Run `.\gradlew.bat build`.
+5. Run `.\gradlew.bat externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo`.
+6. If the change touched book search/list behavior, localization lookup behavior, or OAuth/session startup behavior, also run `.\gradlew.bat gatlingBenchmark`.
+7. For `restore-sensitive` releases, capture restore-drill evidence before promotion.
+8. Confirm the target release notes and deployment values reference the intended semantic version tag.
 
 Backup and retention expectations for versioned upgrades:
 
@@ -397,34 +413,44 @@ Upgrade flow:
 1. Build or pull the target image tag, for example `ghcr.io/<owner>/technical-interview-demo:v1.0.0`.
 2. Update the Kubernetes manifest image tag or Helm values to the target release.
 3. Apply the rollout and watch `GET /actuator/health/readiness` or `kubectl rollout status` until the app reaches `UP`.
-4. Confirm `GET /actuator/info` reflects the new build metadata.
-5. Confirm trusted Prometheus scraping still works and that authenticated browser-session flows can create rows in `SPRING_SESSION`.
+4. Run the manual `Post-Deploy Smoke` workflow against the deployed base URL with:
+   - `expected_build_version=<semantic-tag>`
+   - `expected_short_commit_id=<12-char-commit>`
+   - `expected_active_profile=prod`
+   - `expected_session_store_type=jdbc`
+   - `expected_session_timeout=15m`
+5. Confirm the deployed `GET /` overview reports the expected `build.version`, `git.shortCommitId`, `runtime.activeProfiles`, `configuration.session.storeType`, `configuration.session.timeout`, and `configuration.security.csrfEnabled=false`.
+6. Confirm trusted Prometheus scraping still works and that authenticated browser-session flows can create rows in `SPRING_SESSION`.
 
 Rollback expectations:
 
-- If the failed rollout did **not** introduce a new Flyway migration, image rollback to the previous known-good version is the normal first response.
-- If the failed rollout **did** introduce a new Flyway migration, do not assume image-only rollback is safe. The repo does not provide Flyway undo migrations.
-- For migration-bearing releases, rollback may require:
-  - restoring the database from backup
-  - manual database repair
-  - or shipping a forward-fix release that restores application compatibility with the migrated schema
+- If `get-release-migration-impact.ps1` reported `none`, image rollback to the previous known-good version is the normal first response.
+- If the migration impact is `rolling-compatible`, image rollback remains the normal first response, but keep the release metadata and migration sidecars with the incident record.
+- If the migration impact is `restore-sensitive`, do not assume image-only rollback is safe. The repo does not provide Flyway undo migrations.
+- For `restore-sensitive` releases, rollback may require:
+   - restoring the database from backup
+   - manual database repair
+   - or shipping a forward-fix release that restores application compatibility with the migrated schema
 - After rollback or forward-fix recovery, re-check readiness, operational metadata, metrics scraping, and any affected authenticated session or write flows.
 
 Restore drill (recommended each release cycle):
 
 1. Restore a recent backup to a separate PostgreSQL instance.
-2. Start the target tagged image against that restored database.
-3. Verify:
-   - `GET /actuator/health/readiness` returns `UP`
-   - `GET /actuator/info` exposes expected build metadata
-   - `GET /api/operator/surface` works with an authenticated `ADMIN` session
-4. Run SQL spot checks:
-   - `select max(installed_rank), max(version) from flyway_schema_history;`
-   - `select count(*) from books;`
-   - `select count(*) from categories;`
-   - `select count(*) from localization_messages;`
-   - `select count(*) from audit_logs;`
-   - `select count(*) from spring_session;`
+2. Run:
+
+```powershell
+pwsh ./scripts/release/invoke-restore-drill.ps1 `
+  -ImageReference ghcr.io/<owner>/technical-interview-demo:v1.0.0 `
+  -BaseUrl http://127.0.0.1:18080 `
+  -JdbcUrl jdbc:postgresql://localhost:5432/technical_interview_demo_restore `
+  -JdbcUser postgres `
+  -JdbcPassword changeme `
+  -ExpectedBuildVersion v1.0.0 `
+  -ExpectedShortCommitId <12-char-commit>
+```
+
+3. Verify the helper reaches readiness, proves `build.version` plus `git.shortCommitId`, confirms `prod` profile activation, JDBC session storage, the `15m` session timeout, `csrfEnabled=false`, Flyway history, and an authenticated `GET /api/account` request against the restored database.
+4. Keep the console output or captured CI log as restore evidence for every `restore-sensitive` release.
 
 ## Kubernetes Deployment
 

@@ -107,6 +107,16 @@ class ExternalTestingConventionsPlugin : Plugin<Project> {
         val deploymentJdbcPassword = providers.gradleProperty("externalCheck.jdbcPassword")
             .orElse(providers.environmentVariable("EXTERNAL_CHECK_JDBC_PASSWORD"))
             .orElse(providers.environmentVariable("EXTERNAL_JDBC_PASSWORD"))
+        val expectedBuildVersion = providers.gradleProperty("externalCheck.expectedBuildVersion")
+            .orElse(providers.environmentVariable("EXTERNAL_CHECK_EXPECTED_BUILD_VERSION"))
+        val expectedShortCommitId = providers.gradleProperty("externalCheck.expectedShortCommitId")
+            .orElse(providers.environmentVariable("EXTERNAL_CHECK_EXPECTED_SHORT_COMMIT_ID"))
+        val expectedActiveProfile = providers.gradleProperty("externalCheck.expectedActiveProfile")
+            .orElse(providers.environmentVariable("EXTERNAL_CHECK_EXPECTED_ACTIVE_PROFILE"))
+        val expectedSessionStoreType = providers.gradleProperty("externalCheck.expectedSessionStoreType")
+            .orElse(providers.environmentVariable("EXTERNAL_CHECK_EXPECTED_SESSION_STORE_TYPE"))
+        val expectedSessionTimeout = providers.gradleProperty("externalCheck.expectedSessionTimeout")
+            .orElse(providers.environmentVariable("EXTERNAL_CHECK_EXPECTED_SESSION_TIMEOUT"))
 
         val deploymentCheckTask = tasks.register<Test>("externalDeploymentCheck") {
             description = "Executes src/externalTest against a deployed environment without provisioning Docker resources."
@@ -134,6 +144,27 @@ class ExternalTestingConventionsPlugin : Plugin<Project> {
                         "externalDeploymentCheck requires externalCheck.jdbcUrl, externalCheck.jdbcUser, and externalCheck.jdbcPassword together when JDBC-backed checks are enabled."
                     )
                 }
+                val buildVersion = expectedBuildVersion.orNull?.trim()
+                val shortCommitId = expectedShortCommitId.orNull?.trim()
+                val anyIdentityConfigured = listOf(buildVersion, shortCommitId).any { !it.isNullOrBlank() }
+                val allIdentityConfigured = listOf(buildVersion, shortCommitId).all { !it.isNullOrBlank() }
+                if (anyIdentityConfigured && !allIdentityConfigured) {
+                    throw GradleException(
+                        "externalDeploymentCheck requires externalCheck.expectedBuildVersion and externalCheck.expectedShortCommitId together when release identity checks are enabled."
+                    )
+                }
+                val activeProfile = expectedActiveProfile.orNull?.trim()
+                val sessionStoreType = expectedSessionStoreType.orNull?.trim()
+                val sessionTimeout = expectedSessionTimeout.orNull?.trim()
+                val anyRuntimeConfigured = listOf(activeProfile, sessionStoreType, sessionTimeout)
+                    .any { !it.isNullOrBlank() }
+                val allRuntimeConfigured = listOf(activeProfile, sessionStoreType, sessionTimeout)
+                    .all { !it.isNullOrBlank() }
+                if (anyRuntimeConfigured && !allRuntimeConfigured) {
+                    throw GradleException(
+                        "externalDeploymentCheck requires externalCheck.expectedActiveProfile, externalCheck.expectedSessionStoreType, and externalCheck.expectedSessionTimeout together when runtime posture checks are enabled."
+                    )
+                }
                 logger.lifecycle("[externalDeploymentCheck] Running deployed smoke assertions against {}.", baseUrl)
                 systemProperty("app.baseUrl", baseUrl)
                 systemProperty("external.baseUrl", baseUrl)
@@ -145,6 +176,31 @@ class ExternalTestingConventionsPlugin : Plugin<Project> {
                     systemProperty("external.jdbc.password", jdbcPassword)
                 } else {
                     logger.lifecycle("[externalDeploymentCheck] JDBC-backed checks are disabled; running HTTP-only smoke assertions.")
+                }
+                if (allIdentityConfigured) {
+                    val resolvedBuildVersion = requireNotNull(buildVersion)
+                    val resolvedShortCommitId = requireNotNull(shortCommitId)
+                    logger.lifecycle(
+                        "[externalDeploymentCheck] Expecting deployed release identity build.version=$resolvedBuildVersion and git.shortCommitId=$resolvedShortCommitId."
+                    )
+                    systemProperty("external.expected.buildVersion", resolvedBuildVersion)
+                    systemProperty("external.expected.shortCommitId", resolvedShortCommitId)
+                    environment("EXTERNAL_CHECK_EXPECTED_BUILD_VERSION", resolvedBuildVersion)
+                    environment("EXTERNAL_CHECK_EXPECTED_SHORT_COMMIT_ID", resolvedShortCommitId)
+                }
+                if (allRuntimeConfigured) {
+                    val resolvedActiveProfile = requireNotNull(activeProfile)
+                    val resolvedSessionStoreType = requireNotNull(sessionStoreType)
+                    val resolvedSessionTimeout = requireNotNull(sessionTimeout)
+                    logger.lifecycle(
+                        "[externalDeploymentCheck] Expecting prod posture profile=$resolvedActiveProfile, session store=$resolvedSessionStoreType, session timeout=$resolvedSessionTimeout, csrf disabled."
+                    )
+                    systemProperty("external.expected.activeProfile", resolvedActiveProfile)
+                    systemProperty("external.expected.sessionStoreType", resolvedSessionStoreType)
+                    systemProperty("external.expected.sessionTimeout", resolvedSessionTimeout)
+                    environment("EXTERNAL_CHECK_EXPECTED_ACTIVE_PROFILE", resolvedActiveProfile)
+                    environment("EXTERNAL_CHECK_EXPECTED_SESSION_STORE_TYPE", resolvedSessionStoreType)
+                    environment("EXTERNAL_CHECK_EXPECTED_SESSION_TIMEOUT", resolvedSessionTimeout)
                 }
             }
             extensions.configure(JacocoTaskExtension::class.java) {

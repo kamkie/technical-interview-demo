@@ -7,6 +7,14 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Added
+- Added checked-in Flyway migration sidecar metadata guidance under `src/main/resources/db/migration/metadata/` plus a repo-owned `scripts/release/get-release-migration-impact.ps1` helper that classifies release candidates as `none`, `rolling-compatible`, or `restore-sensitive`.
+- Added a repo-owned `scripts/release/invoke-restore-drill.ps1` helper for running the tagged image against a restored PostgreSQL instance and reusing `externalDeploymentCheck` for restore validation.
+
+### Changed
+- Extended deployed smoke validation and the manual `Post-Deploy Smoke` workflow so promotion-stage checks can assert `build.version`, `git.shortCommitId`, the `prod` profile, JDBC session storage, the documented `15m` session timeout, and `csrfEnabled=false` against the deployed root overview endpoint.
+- Updated README, setup, contributor, and AI maintainer release guidance to define the rolling Flyway rollout model, require migration-impact review before tagging, and distinguish image-only rollback from restore-sensitive recovery.
+
 ## [v1.5.1] - 2026-05-03
 
 ### Added

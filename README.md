@@ -192,9 +192,18 @@ Additional change-sensitive checks:
 - complete local implementation, validation, and review work before pushing a branch or opening an implementation PR
 - treat PR creation as the final implementation handoff, not as a substitute for local execution
 - maintainers prepare releases only after the approved implementation PR has been merged onto validated `main`
-- before tagging, maintainers review new Flyway migrations, confirm whether `gatlingBenchmark` is required, and complete changelog/roadmap/plan cleanup
+- before tagging, maintainers classify migration impact with `pwsh ./scripts/release/get-release-migration-impact.ps1 -PreviousReleaseTag <previous-tag> -CurrentRef HEAD`, review any changed SQL migrations plus their JSON sidecars under `src/main/resources/db/migration/metadata/`, confirm whether `gatlingBenchmark` is required, and complete changelog/roadmap/plan cleanup
 - after pushing a release tag, maintainers verify the remote workflow published both the semantic image tag and the immutable short-SHA image tag, plus a keyless signature and provenance attestation for the immutable published digest
 - release-image trust is digest-first: semantic and short-SHA tags are convenience references, but authenticity checks should target the published `ghcr.io/<owner>/<repo>@sha256:...` digest
+
+Checked-in Flyway rollout model:
+
+- `expand`: additive schema changes intended for `db-first` rollout while old and new app instances overlap
+- `contract`: cleanup or constraint-tightening work that should happen only after the new app is fully deployed, usually `app-first` or `out-of-band`
+- `backfill`: data rewrite or population work that may need an `out-of-band` step even when the schema itself is additive
+- `breaking`: incompatible schema or data moves that are not safe for mixed-version rollout
+- release impact is `rolling-compatible` only when every changed migration is marked `rollingCompatible=true` and `rollbackPosture=image-only`
+- any changed migration marked non-rolling-compatible or `rollbackPosture=forward-fix-or-restore` makes the release `restore-sensitive`
 
 ## CI/CD And Deployment
 
@@ -204,11 +213,13 @@ Supported delivery path:
 - pull requests to `main` and pushes to `main` run the `CI` workflow, which executes `./gradlew build` and `./gradlew externalSmokeTest`
 - a dedicated `CodeQL` workflow runs on pull requests, pushes to `main`, and a weekly schedule using repository-owned configuration; its SARIF results appear in GitHub code scanning and are additive to the Gradle-owned SpotBugs plus FindSecBugs and PMD gates
 - `externalSmokeTest` now verifies the packaged docs HTML, OpenAPI JSON/YAML endpoints, and one JDBC-backed authenticated `GET /api/account` session path in addition to the existing public/readiness smoke checks
-- the scheduled `Post-Deploy Smoke` workflow runs `./gradlew scheduledExternalCheck` every six hours and on manual dispatch, using `EXTERNAL_CHECK_BASE_URL` plus optional `EXTERNAL_CHECK_JDBC_URL`, `EXTERNAL_CHECK_JDBC_USER`, and `EXTERNAL_CHECK_JDBC_PASSWORD` secrets for deeper JDBC-backed session and Flyway checks
+- the scheduled `Post-Deploy Smoke` workflow runs `./gradlew scheduledExternalCheck` every six hours and on manual dispatch, using `EXTERNAL_CHECK_BASE_URL` plus optional JDBC secrets for deeper JDBC-backed session and Flyway checks
+- manual `Post-Deploy Smoke` runs can also assert the exact published release identity through `build.version` and `git.shortCommitId`, plus the documented prod runtime posture through `runtime.activeProfiles`, `configuration.session.storeType`, `configuration.session.timeout`, and `configuration.security.csrfEnabled=false`
 - the `CI` workflow uploads `build/reports/jacoco/test/jacocoTestReport.xml` to Codecov after the Gradle build, so the repository must be onboarded for Codecov uploads before that signal is expected to pass consistently
 - Dependabot opens grouped weekly update PRs for Gradle, GitHub Actions, and Docker, and those PRs are expected to pass the same `CI` workflow before merge
 - the `CI` workflow uploads generated vulnerability scan artifacts from `build/reports/security/`, static-analysis artifacts from `build/reports/pmd/` plus `build/reports/security/static/`, and SBOM artifacts from `build/reports/sbom/` so blocked runs remain reviewable
 - semantic version tags trigger the `Release` workflow, which builds, scans, and generates SBOMs for the tagged image with Gradle, uploads security, static-analysis, and SBOM artifact bundles, validates the image with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry as `ghcr.io/<owner>/<repo>:<tag>` and `ghcr.io/<owner>/<repo>:sha-<12-char-commit>`, then signs the pushed immutable digest and publishes provenance attestation for that same digest before creating cumulative GitHub Release notes from the previous published GitHub Release tag boundary in `CHANGELOG.md`
+- the `Release` workflow step summary now records the semantic tag, short-SHA tag, digest reference, and the exact manual `Post-Deploy Smoke` inputs maintainers should use before promotion
 - deployment artifacts are provided as:
   - Docker image
   - vendor-neutral Kubernetes manifests under `k8s/base` with a local overlay under `k8s/overlays/local`, including a checked-in HPA and pod disruption budget
@@ -264,13 +275,18 @@ The repository does not implement backup orchestration, but operating a producti
   - last known-good pre-release backup for each migration-bearing rollout still within your rollback window
 - test restore viability routinely, not only backup creation success
 
+Recovery posture by release class:
+
+- `none`: no migration SQL changed since the previous release tag, so image rollback is normally sufficient when the deployment fails
+- `rolling-compatible`: changed migrations are safe for mixed-version rollout and marked `rollbackPosture=image-only`, so image rollback stays the normal first response
+- `restore-sensitive`: at least one changed migration is not rolling-compatible or requires `forward-fix-or-restore`, so maintainers should expect database restore evidence or a forward-fix plan before promotion
+
 Restore-drill baseline for this repository:
 
 1. restore a recent backup to a separate PostgreSQL instance
-2. start the current tagged app image against that restored instance
-3. confirm `GET /actuator/health/readiness` is `UP` and `GET /actuator/info` returns build metadata
-4. verify core runtime tables are present and queryable (`flyway_schema_history`, `books`, `categories`, `localization_messages`, `audit_logs`, `spring_session`)
-5. run one authenticated request (`GET /api/account`) and one operator request (`GET /api/operator/surface`) to confirm session-backed and operational visibility paths still work after restore
+2. run `pwsh ./scripts/release/invoke-restore-drill.ps1 -ImageReference <image> -BaseUrl http://127.0.0.1:18080 -JdbcUrl <jdbc-url> -JdbcUser <user> -JdbcPassword <password> -ExpectedBuildVersion <tag> -ExpectedShortCommitId <12-char-sha>`
+3. confirm the drill proves readiness, `build.version`, `git.shortCommitId`, `prod` profile activation, JDBC session storage, the `15m` session timeout, `csrfEnabled=false`, Flyway history, and an authenticated `GET /api/account` check against the restored database
+4. keep the restore evidence with the release notes for every `restore-sensitive` rollout
 
 Use the raw manifests under `k8s/` when you want explicit repo-owned YAML. Use the Helm chart under `helm/technical-interview-demo` when you want the same deployment contract packaged behind values files.
 

@@ -1,5 +1,7 @@
 package team.jit.technicalinterviewdemo.external;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -14,6 +16,7 @@ import java.util.Optional;
 abstract class ExternalHttpTestSupport {
 
     protected static final Duration HTTP_TIMEOUT = Duration.ofSeconds(15);
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
             .connectTimeout(HTTP_TIMEOUT)
             .build();
@@ -61,6 +64,14 @@ abstract class ExternalHttpTestSupport {
         return response.body().replace("\n", "").matches(".*" + regex + ".*");
     }
 
+    protected JsonNode jsonBody(HttpResponse<String> response) {
+        try {
+            return OBJECT_MAPPER.readTree(response.body());
+        } catch (IOException exception) {
+            throw new AssertionError("Expected a JSON response body.", exception);
+        }
+    }
+
     private String baseUrl() {
         String configured = firstNonBlank(
                 System.getProperty("external.baseUrl"),
@@ -82,7 +93,7 @@ abstract class ExternalHttpTestSupport {
         return trimmed;
     }
 
-    private static String firstNonBlank(String... values) {
+    protected static String firstNonBlank(String... values) {
         for (String value : values) {
             if (Optional.ofNullable(value).map(String::trim).filter(v -> !v.isEmpty()).isPresent()) {
                 return value;

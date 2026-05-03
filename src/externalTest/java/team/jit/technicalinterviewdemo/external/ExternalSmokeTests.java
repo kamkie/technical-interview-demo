@@ -1,11 +1,15 @@
 package team.jit.technicalinterviewdemo.external;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
 import java.net.http.HttpResponse;
+import java.util.stream.StreamSupport;
 
 import org.junit.jupiter.api.Test;
 
@@ -19,6 +23,68 @@ class ExternalSmokeTests extends ExternalHttpTestSupport {
         assertTrue(requiredHeader(response, "content-type").contains("application/json"));
         assertTrue(response.body().contains("\"build\""));
         assertTrue(response.body().contains("\"configuration\""));
+    }
+
+    @Test
+    void rootEndpointMatchesExpectedReleaseIdentityWhenConfigured() throws IOException, InterruptedException {
+        String expectedBuildVersion = expectedValue(
+                "external.expected.buildVersion",
+                "EXTERNAL_CHECK_EXPECTED_BUILD_VERSION"
+        );
+        String expectedShortCommitId = expectedValue(
+                "external.expected.shortCommitId",
+                "EXTERNAL_CHECK_EXPECTED_SHORT_COMMIT_ID"
+        );
+        assumeTrue(
+                expectedBuildVersion != null && expectedShortCommitId != null,
+                "Skipping release identity assertions because expected build identity is not configured."
+        );
+
+        HttpResponse<String> response = get("/", "application/json");
+        JsonNode overview = jsonBody(response);
+
+        assertEquals(200, response.statusCode());
+        assertEquals(expectedBuildVersion, textAt(overview, "build", "version"));
+        assertEquals(expectedShortCommitId, textAt(overview, "git", "shortCommitId"));
+    }
+
+    @Test
+    void rootEndpointMatchesExpectedRuntimePostureWhenConfigured() throws IOException, InterruptedException {
+        String expectedActiveProfile = expectedValue(
+                "external.expected.activeProfile",
+                "EXTERNAL_CHECK_EXPECTED_ACTIVE_PROFILE"
+        );
+        String expectedSessionStoreType = expectedValue(
+                "external.expected.sessionStoreType",
+                "EXTERNAL_CHECK_EXPECTED_SESSION_STORE_TYPE"
+        );
+        String expectedSessionTimeout = expectedValue(
+                "external.expected.sessionTimeout",
+                "EXTERNAL_CHECK_EXPECTED_SESSION_TIMEOUT"
+        );
+        assumeTrue(
+                expectedActiveProfile != null
+                        && expectedSessionStoreType != null
+                        && expectedSessionTimeout != null,
+                "Skipping runtime posture assertions because expected deployment posture is not configured."
+        );
+
+        HttpResponse<String> response = get("/", "application/json");
+        JsonNode overview = jsonBody(response);
+
+        assertEquals(200, response.statusCode());
+        assertTrue(
+                StreamSupport.stream(overview.path("runtime").path("activeProfiles").spliterator(), false)
+                        .map(JsonNode::asText)
+                        .anyMatch(expectedActiveProfile::equals),
+                "Expected active profile '%s' to be present.".formatted(expectedActiveProfile)
+        );
+        assertEquals(expectedSessionStoreType, textAt(overview, "configuration", "session", "storeType"));
+        assertEquals(expectedSessionTimeout, textAt(overview, "configuration", "session", "timeout"));
+        assertFalse(
+                overview.path("configuration").path("security").path("csrfEnabled").asBoolean(true),
+                "Expected CSRF to remain disabled for the documented prod posture."
+        );
     }
 
     @Test
@@ -119,5 +185,20 @@ class ExternalSmokeTests extends ExternalHttpTestSupport {
             assertTrue(sessionSupport.hasFlywaySchemaHistoryTable());
             assertTrue(sessionSupport.successfulFlywayMigrationCount() > 0);
         }
+    }
+
+    private static String expectedValue(String propertyName, String environmentName) {
+        return firstNonBlank(System.getProperty(propertyName), System.getenv(environmentName));
+    }
+
+    private static String textAt(JsonNode root, String... fieldPath) {
+        JsonNode current = root;
+        for (String fieldName : fieldPath) {
+            current = current.path(fieldName);
+        }
+        assertNotNull(current);
+        assertFalse(current.isMissingNode(), "Expected JSON path to exist: " + String.join(".", fieldPath));
+        assertFalse(current.isNull(), "Expected JSON path to be non-null: " + String.join(".", fieldPath));
+        return current.asText();
     }
 }

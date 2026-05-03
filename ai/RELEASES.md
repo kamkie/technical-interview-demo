@@ -52,18 +52,21 @@ If any of those checks fail, do not start release work.
 
 Before creating an annotated release tag on merged `main`:
 
-1. review any new Flyway migration files under `src/main/resources/db/migration/` and confirm they are intentional for the target version
-2. confirm the required validation from `ai/TESTING.md` passed for the exact release candidate, including `./gradlew gatlingBenchmark` when that guide says it is required
-3. confirm OpenAPI compatibility still passes as part of the standard build, the latest default-branch CodeQL run is healthy or intentionally reviewed, and no unreviewed baseline refresh slipped in
-4. merge any accepted `CHANGELOG_<topic>.md` files for the release into `CHANGELOG.md`, then remove the temporary files
-5. move the intended `CHANGELOG.md` entries into the versioned release section
-6. update `ROADMAP.md` to remove the completed released work from active roadmap sections
-7. archive the executed `ai/PLAN_*.md` file and update moved-path references in the same change
-8. create the annotated tag only after the release commit exists locally on `main`
-9. after push, verify the remote accepted both `main` and the tag, the `Release` workflow passed, the GitHub Release was created, GitHub code scanning still reflects the expected CodeQL posture, and GHCR published both:
+1. review any new or modified Flyway migration files under `src/main/resources/db/migration/` and confirm each has an intentional JSON sidecar under `src/main/resources/db/migration/metadata/`
+2. run `pwsh ./scripts/release/get-release-migration-impact.ps1 -PreviousReleaseTag <previous-tag> -CurrentRef HEAD` and record whether the candidate is `none`, `rolling-compatible`, or `restore-sensitive`
+3. for `restore-sensitive` releases, confirm restore-drill evidence exists for the exact candidate image using `pwsh ./scripts/release/invoke-restore-drill.ps1 ...`
+4. confirm the required validation from `ai/TESTING.md` passed for the exact release candidate, including `./gradlew gatlingBenchmark` when that guide says it is required
+5. confirm OpenAPI compatibility still passes as part of the standard build, the latest default-branch CodeQL run is healthy or intentionally reviewed, and no unreviewed baseline refresh slipped in
+6. merge any accepted `CHANGELOG_<topic>.md` files for the release into `CHANGELOG.md`, then remove the temporary files
+7. move the intended `CHANGELOG.md` entries into the versioned release section
+8. update `ROADMAP.md` to remove the completed released work from active roadmap sections
+9. archive the executed `ai/PLAN_*.md` file and update moved-path references in the same change
+10. create the annotated tag only after the release commit exists locally on `main`
+11. after push, verify the remote accepted both `main` and the tag, the `Release` workflow passed, the GitHub Release was created, GitHub code scanning still reflects the expected CodeQL posture, and GHCR published both:
    - the semantic tag image `ghcr.io/<owner>/<repo>:vMAJOR.MINOR.PATCH`
    - the immutable short-SHA image `ghcr.io/<owner>/<repo>:sha-<12-char-commit>`
    - a keyless signature and provenance attestation for the immutable published digest `ghcr.io/<owner>/<repo>@sha256:...`
+12. run the manual `Post-Deploy Smoke` workflow against the deployed environment before promotion, using the release-summary `expected_build_version`, `expected_short_commit_id`, `expected_active_profile=prod`, `expected_session_store_type=jdbc`, and `expected_session_timeout=15m` inputs so the deployed app proves `build.version` plus `git.shortCommitId`
 
 ## Choosing The Version
 

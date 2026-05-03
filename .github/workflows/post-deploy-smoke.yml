@@ -4,6 +4,34 @@ on:
   schedule:
     - cron: "17 */6 * * *"
   workflow_dispatch:
+    inputs:
+      base_url:
+        description: "Deployment base URL to validate. Falls back to EXTERNAL_CHECK_BASE_URL when omitted."
+        required: false
+        type: string
+      expected_build_version:
+        description: "Expected build.version from GET / for promotion-stage identity checks."
+        required: false
+        type: string
+      expected_short_commit_id:
+        description: "Expected git.shortCommitId from GET / for promotion-stage identity checks."
+        required: false
+        type: string
+      expected_active_profile:
+        description: "Expected runtime.activeProfiles entry when runtime posture checks are enabled."
+        required: false
+        default: "prod"
+        type: string
+      expected_session_store_type:
+        description: "Expected configuration.session.storeType value when runtime posture checks are enabled."
+        required: false
+        default: "jdbc"
+        type: string
+      expected_session_timeout:
+        description: "Expected configuration.session.timeout value when runtime posture checks are enabled."
+        required: false
+        default: "15m"
+        type: string
 
 permissions:
   contents: read
@@ -26,14 +54,22 @@ jobs:
         id: config
         shell: bash
         env:
+          INPUT_BASE_URL: ${{ inputs.base_url }}
+          INPUT_EXPECTED_BUILD_VERSION: ${{ inputs.expected_build_version }}
+          INPUT_EXPECTED_SHORT_COMMIT_ID: ${{ inputs.expected_short_commit_id }}
+          INPUT_EXPECTED_ACTIVE_PROFILE: ${{ inputs.expected_active_profile }}
+          INPUT_EXPECTED_SESSION_STORE_TYPE: ${{ inputs.expected_session_store_type }}
+          INPUT_EXPECTED_SESSION_TIMEOUT: ${{ inputs.expected_session_timeout }}
           EXTERNAL_BASE_URL: ${{ secrets.EXTERNAL_CHECK_BASE_URL }}
           EXTERNAL_JDBC_URL: ${{ secrets.EXTERNAL_CHECK_JDBC_URL }}
           EXTERNAL_JDBC_USER: ${{ secrets.EXTERNAL_CHECK_JDBC_USER }}
           EXTERNAL_JDBC_PASSWORD: ${{ secrets.EXTERNAL_CHECK_JDBC_PASSWORD }}
         run: |
-          if [ -z "${EXTERNAL_BASE_URL}" ]; then
+          effective_base_url="${INPUT_BASE_URL:-$EXTERNAL_BASE_URL}"
+
+          if [ -z "${effective_base_url}" ]; then
             echo "configured=false" >> "${GITHUB_OUTPUT}"
-            echo "Post-deploy smoke skipped because EXTERNAL_CHECK_BASE_URL is not configured." >> "${GITHUB_STEP_SUMMARY}"
+            echo "Post-deploy smoke skipped because neither workflow input base_url nor EXTERNAL_CHECK_BASE_URL is configured." >> "${GITHUB_STEP_SUMMARY}"
             exit 0
           fi
 
@@ -49,11 +85,49 @@ jobs:
             exit 1
           fi
 
-          echo "configured=true" >> "${GITHUB_OUTPUT}"
+          identity_values_present=0
+          for value in "${INPUT_EXPECTED_BUILD_VERSION}" "${INPUT_EXPECTED_SHORT_COMMIT_ID}"; do
+            if [ -n "${value}" ]; then
+              identity_values_present=$((identity_values_present + 1))
+            fi
+          done
+
+          if [ "${identity_values_present}" -ne 0 ] && [ "${identity_values_present}" -ne 2 ]; then
+            echo "Manual release identity checks require expected_build_version and expected_short_commit_id together." >> "${GITHUB_STEP_SUMMARY}"
+            exit 1
+          fi
+
+          posture_values_present=0
+          for value in "${INPUT_EXPECTED_ACTIVE_PROFILE}" "${INPUT_EXPECTED_SESSION_STORE_TYPE}" "${INPUT_EXPECTED_SESSION_TIMEOUT}"; do
+            if [ -n "${value}" ]; then
+              posture_values_present=$((posture_values_present + 1))
+            fi
+          done
+
+          if [ "${posture_values_present}" -ne 0 ] && [ "${posture_values_present}" -ne 3 ]; then
+            echo "Runtime posture checks require expected_active_profile, expected_session_store_type, and expected_session_timeout together." >> "${GITHUB_STEP_SUMMARY}"
+            exit 1
+          fi
+
+          {
+            echo "configured=true"
+            echo "base_url=${effective_base_url}"
+            echo "expected_build_version=${INPUT_EXPECTED_BUILD_VERSION}"
+            echo "expected_short_commit_id=${INPUT_EXPECTED_SHORT_COMMIT_ID}"
+            echo "expected_active_profile=${INPUT_EXPECTED_ACTIVE_PROFILE}"
+            echo "expected_session_store_type=${INPUT_EXPECTED_SESSION_STORE_TYPE}"
+            echo "expected_session_timeout=${INPUT_EXPECTED_SESSION_TIMEOUT}"
+          } >> "${GITHUB_OUTPUT}"
           if [ "${jdbc_values_present}" -eq 3 ]; then
             echo "Scheduled smoke will run with HTTP, JDBC-backed session, and Flyway assertions." >> "${GITHUB_STEP_SUMMARY}"
           else
             echo "Scheduled smoke will run HTTP-only assertions because JDBC access is not configured." >> "${GITHUB_STEP_SUMMARY}"
+          fi
+          if [ "${identity_values_present}" -eq 2 ]; then
+            echo "Manual dispatch will also verify build.version=${INPUT_EXPECTED_BUILD_VERSION} and git.shortCommitId=${INPUT_EXPECTED_SHORT_COMMIT_ID} from GET /." >> "${GITHUB_STEP_SUMMARY}"
+          fi
+          if [ "${posture_values_present}" -eq 3 ]; then
+            echo "Runtime posture validation expects profile=${INPUT_EXPECTED_ACTIVE_PROFILE}, session store=${INPUT_EXPECTED_SESSION_STORE_TYPE}, session timeout=${INPUT_EXPECTED_SESSION_TIMEOUT}, and csrfEnabled=false." >> "${GITHUB_STEP_SUMMARY}"
           fi
 
       - name: Set up Java 25
@@ -70,10 +144,15 @@ jobs:
       - name: Run deployed smoke check
         if: steps.config.outputs.configured == 'true'
         env:
-          EXTERNAL_CHECK_BASE_URL: ${{ secrets.EXTERNAL_CHECK_BASE_URL }}
+          EXTERNAL_CHECK_BASE_URL: ${{ steps.config.outputs.base_url }}
           EXTERNAL_CHECK_JDBC_URL: ${{ secrets.EXTERNAL_CHECK_JDBC_URL }}
           EXTERNAL_CHECK_JDBC_USER: ${{ secrets.EXTERNAL_CHECK_JDBC_USER }}
           EXTERNAL_CHECK_JDBC_PASSWORD: ${{ secrets.EXTERNAL_CHECK_JDBC_PASSWORD }}
+          EXTERNAL_CHECK_EXPECTED_BUILD_VERSION: ${{ steps.config.outputs.expected_build_version }}
+          EXTERNAL_CHECK_EXPECTED_SHORT_COMMIT_ID: ${{ steps.config.outputs.expected_short_commit_id }}
+          EXTERNAL_CHECK_EXPECTED_ACTIVE_PROFILE: ${{ steps.config.outputs.expected_active_profile }}
+          EXTERNAL_CHECK_EXPECTED_SESSION_STORE_TYPE: ${{ steps.config.outputs.expected_session_store_type }}
+          EXTERNAL_CHECK_EXPECTED_SESSION_TIMEOUT: ${{ steps.config.outputs.expected_session_timeout }}
         run: ./gradlew scheduledExternalCheck --no-daemon
 
       - name: Upload deployed smoke test reports

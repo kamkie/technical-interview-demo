@@ -111,9 +111,12 @@ Maintainers preparing a release should follow `ai/RELEASES.md` only after the ap
 
 Release preparation should include:
 
-- reviewing any new Flyway migrations under `src/main/resources/db/migration/`
+- reviewing any new or modified Flyway migrations under `src/main/resources/db/migration/` together with their JSON sidecars under `src/main/resources/db/migration/metadata/`
+- classifying the release with `pwsh ./scripts/release/get-release-migration-impact.ps1 -PreviousReleaseTag <previous-tag> -CurrentRef HEAD`
+- capturing restore-drill evidence with `pwsh ./scripts/release/invoke-restore-drill.ps1 ...` for any `restore-sensitive` release
 - confirming the exact release candidate passed `.\gradlew.bat build`
 - deciding whether `.\gradlew.bat gatlingBenchmark` is required for the scoped changes
+- running the manual `Post-Deploy Smoke` workflow with the expected build version and short commit id before promotion
 - updating `CHANGELOG.md`, `ROADMAP.md`, and the executed `ai/PLAN_*.md` file before tagging
 - verifying the remote `Release` workflow published the semantic image tag, the immutable short-SHA image tag, and the GitHub Release notes
 
