@@ -15,7 +15,7 @@ Keep rough candidate tasks here for manual editing before they are promoted into
 
 Add new rough tasks below.
 
-- add CodeQL scanning in github actions
+No unrefined tasks currently.
 
 ## How To Use This File
 
@@ -52,6 +52,7 @@ Goal: evolve the repository into a production-ready sample app deliberately, wit
 - [ ] Add authenticated abuse protection such as request-rate limiting or similar controls for login bootstrap and write-heavy paths
 
 #### Strengthen Supply Chain And Artifact Trust
+- [ ] Add GitHub CodeQL scanning in GitHub Actions with repository-owned configuration, uploaded SARIF results, and explicit guidance for how it complements rather than silently duplicates the existing SpotBugs/FindSecBugs and PMD quality gates
 - [ ] Sign published container images and attach provenance or attestations so the sample release story covers artifact authenticity, not only version tags
 
 #### Make Releases And Migrations Safer
