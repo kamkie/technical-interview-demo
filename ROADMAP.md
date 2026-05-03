@@ -15,6 +15,8 @@ Keep rough candidate tasks here for manual editing before they are promoted into
 
 Add new rough tasks below.
 
+- add CodeQL scanning in github actions
+
 ## How To Use This File
 
 - Keep only active or planned work here.
