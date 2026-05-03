@@ -149,7 +149,16 @@
 - Do not widen this plan into deployment admission control, cluster policy, or build reproducibility hardening; those can be planned later once the repository first publishes verifiable release artifacts.
 
 ## Validation Results
-- To be filled in during execution
+- `docker run --rm -v "${PWD}:/repo" -w /repo rhysd/actionlint:latest`
+  - passed on 2026-05-03
+  - verified `.github/workflows/codeql.yml` and the updated `.github/workflows/release.yml` are syntactically valid for GitHub Actions
+- `.\gradlew.bat build`
+  - passed on 2026-05-03 after explicitly loading the local `.env` file into the shell environment so `JAVA_HOME` was available to Gradle
+  - build completed successfully in 2m 35s and kept the existing Gradle-owned SpotBugs/FindSecBugs, PMD, Trivy, SBOM, tests, and Docker-image verification flow green
+- Manual contract review
+  - confirmed `README.md` describes CodeQL as additive to the Gradle-owned SpotBugs/FindSecBugs and PMD gates rather than a replacement
+  - confirmed `README.md` and `ai/RELEASES.md` describe digest-first release verification with keyless signing and provenance attestation for the published GHCR digest
+  - confirmed no OpenAPI baseline, REST Docs sources, or reviewer HTTP examples changed because public API and runtime behavior were unchanged
 
 ## User Validation
 - Open the new plan and confirm it includes exactly these checked roadmap items and no unrelated unchecked work:

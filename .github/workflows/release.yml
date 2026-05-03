@@ -7,7 +7,6 @@ on:
 
 permissions:
   contents: write
-  packages: write
 
 concurrency:
   group: release-${{ github.ref }}
@@ -16,10 +15,17 @@ concurrency:
 jobs:
   publish-image:
     runs-on: ubuntu-latest
+    permissions:
+      attestations: write
+      contents: read
+      id-token: write
+      packages: write
     outputs:
       image_repository: ${{ steps.image.outputs.repository }}
       image_tag: ${{ steps.image.outputs.tag }}
       image_sha_tag: ${{ steps.image.outputs.sha_tag }}
+      image_digest: ${{ steps.digest.outputs.digest }}
+      image_reference: ${{ steps.digest.outputs.reference }}
       package_page: ${{ steps.image.outputs.package_page }}
 
     steps:
@@ -116,6 +122,47 @@ jobs:
           docker push "${{ steps.image.outputs.repository }}:${{ steps.image.outputs.tag }}"
           docker push "${{ steps.image.outputs.repository }}:${{ steps.image.outputs.sha_tag }}"
 
+      - name: Resolve pushed image digest
+        id: digest
+        shell: bash
+        run: |
+          image_repository="${{ steps.image.outputs.repository }}"
+          image_tag="${{ steps.image.outputs.tag }}"
+          image_sha_tag="${{ steps.image.outputs.sha_tag }}"
+
+          tag_digest=$(docker buildx imagetools inspect "${image_repository}:${image_tag}" --format '{{.Manifest.Digest}}')
+          sha_digest=$(docker buildx imagetools inspect "${image_repository}:${image_sha_tag}" --format '{{.Manifest.Digest}}')
+
+          if [ -z "${tag_digest}" ] || [ -z "${sha_digest}" ]; then
+            echo "Failed to resolve a pushed GHCR digest for one or both release tags."
+            exit 1
+          fi
+
+          if [ "${tag_digest}" != "${sha_digest}" ]; then
+            echo "Release tags resolved to different digests."
+            echo "${image_repository}:${image_tag} -> ${tag_digest}"
+            echo "${image_repository}:${image_sha_tag} -> ${sha_digest}"
+            exit 1
+          fi
+
+          {
+            echo "digest=${tag_digest}"
+            echo "reference=${image_repository}@${tag_digest}"
+          } >> "${GITHUB_OUTPUT}"
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v4.1.0
+
+      - name: Sign pushed image digest
+        run: cosign sign --yes "${{ steps.digest.outputs.reference }}"
+
+      - name: Publish provenance attestation
+        uses: actions/attest-build-provenance@v3
+        with:
+          push-to-registry: true
+          subject-name: ${{ steps.image.outputs.repository }}
+          subject-digest: ${{ steps.digest.outputs.digest }}
+
   create-release:
     runs-on: ubuntu-latest
     needs: publish-image
@@ -176,5 +223,4 @@ jobs:
           gh release create "${{ github.ref_name }}"
           --title "${{ github.ref_name }}"
           --notes-file release-notes.md
-
 

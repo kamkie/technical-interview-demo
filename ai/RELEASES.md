@@ -54,15 +54,16 @@ Before creating an annotated release tag on merged `main`:
 
 1. review any new Flyway migration files under `src/main/resources/db/migration/` and confirm they are intentional for the target version
 2. confirm the required validation from `ai/TESTING.md` passed for the exact release candidate, including `./gradlew gatlingBenchmark` when that guide says it is required
-3. confirm OpenAPI compatibility still passes as part of the standard build and no unreviewed baseline refresh slipped in
+3. confirm OpenAPI compatibility still passes as part of the standard build, the latest default-branch CodeQL run is healthy or intentionally reviewed, and no unreviewed baseline refresh slipped in
 4. merge any accepted `CHANGELOG_<topic>.md` files for the release into `CHANGELOG.md`, then remove the temporary files
 5. move the intended `CHANGELOG.md` entries into the versioned release section
 6. update `ROADMAP.md` to remove the completed released work from active roadmap sections
 7. archive the executed `ai/PLAN_*.md` file and update moved-path references in the same change
 8. create the annotated tag only after the release commit exists locally on `main`
-9. after push, verify the remote accepted both `main` and the tag, the `Release` workflow passed, the GitHub Release was created, and GHCR published both:
+9. after push, verify the remote accepted both `main` and the tag, the `Release` workflow passed, the GitHub Release was created, GitHub code scanning still reflects the expected CodeQL posture, and GHCR published both:
    - the semantic tag image `ghcr.io/<owner>/<repo>:vMAJOR.MINOR.PATCH`
    - the immutable short-SHA image `ghcr.io/<owner>/<repo>:sha-<12-char-commit>`
+   - a keyless signature and provenance attestation for the immutable published digest `ghcr.io/<owner>/<repo>@sha256:...`
 
 ## Choosing The Version
 
@@ -136,11 +137,13 @@ When push is requested:
 3. verify the remote accepted both updates
 4. monitor the tag-driven `Release` workflow until `./gradlew externalSmokeTest` passes for the tagged image and both container-image tags plus the GitHub Release are published
 5. confirm the GitHub Release body includes every `CHANGELOG.md` version section from the new tag back to (but not including) the previous published GitHub Release tag section, plus the tag image reference, short-SHA image reference, and package-page link
-6. remove temporary worktrees and branches used only to execute the released plan after confirming their changes are already integrated onto `main`
+6. confirm the published container package exposes the expected digest-first authenticity path: the pushed digest is signed and has provenance attestation bound to the same digest
+7. remove temporary worktrees and branches used only to execute the released plan after confirming their changes are already integrated onto `main`
 
 The tag-driven `Release` workflow is expected to validate the packaged tagged image via `./gradlew externalSmokeTest` before image publication.
 The automated GitHub Release body is sourced cumulatively from `CHANGELOG.md`, spanning from the new tag section back to the previous published GitHub Release tag section.
 The release workflow must fail closed when it cannot derive that previous published release boundary or the required changelog sections unambiguously.
+The release workflow is also expected to sign and attest the immutable pushed GHCR digest rather than treating mutable tags as the trust anchor.
 
 ## What Not To Do
 

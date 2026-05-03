@@ -7,6 +7,10 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Added
+- Added a dedicated GitHub Actions `CodeQL` workflow with repository-owned configuration and GitHub code-scanning uploads, while keeping Gradle-owned SpotBugs/FindSecBugs, PMD, Trivy, and SBOM checks as separate gates.
+- Added keyless signing plus provenance attestation publication for the immutable GHCR image digest produced by the tag-driven `Release` workflow, and updated maintainer guidance to verify release authenticity by digest rather than tag alone.
+
 ## [v1.5.0] - 2026-05-03
 
 ### Added
