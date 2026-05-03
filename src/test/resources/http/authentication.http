@@ -9,7 +9,7 @@
 # and the app will not accept those tokens on /api/**.
 
 @baseUrl = http://localhost:8080
-#@oauthProvider = github
+@oauthProvider = github
 #@sessionCookie = paste-technical-interview-demo-session-here
 #@providerClientId = paste-provider-client-id-here
 #@providerClientSecret = paste-provider-client-secret-here
