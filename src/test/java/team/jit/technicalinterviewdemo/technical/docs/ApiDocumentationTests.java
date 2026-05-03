@@ -126,7 +126,7 @@ class ApiDocumentationTests extends AbstractDocumentationIntegrationTest {
                                         "Whether the optional oauth profile is currently active. The base runtime remains deployable without it."
                                 ),
                                 fieldWithPath("configuration.security.oauthLoginPath").description(
-                                        "Interactive GitHub OAuth login path used only when the optional oauth profile is active."
+                                        "Configured interactive OAuth login bootstrap path. It is empty when oauth is inactive and otherwise resolves to either /oauth2/authorization/{registrationId} or /login."
                                 ),
                                 fieldWithPath("configuration.shutdown.serverShutdown").description("Server shutdown mode."),
                                 fieldWithPath("configuration.shutdown.timeoutPerShutdownPhase").description("Per-phase graceful shutdown timeout.")

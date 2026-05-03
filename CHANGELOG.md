@@ -8,6 +8,9 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 ## [Unreleased]
 
 ### Changed
+- Introduced typed OAuth provider configuration under `app.security.oauth` with explicit provider type/default-provider handling and prod fail-fast validation for provider credentials, issuer requirements, and multi-provider default selection.
+- Replaced hard-coded GitHub login wiring with provider-aware client-registration bootstrapping and default-login resolution derived from configured provider registrations.
+- Updated OAuth-facing contract documentation, setup guidance, HTTP examples, and OpenAPI metadata to describe provider-aware `/oauth2/authorization/{registrationId}` login bootstrap semantics.
 - Switched the `prod` profile logging contract to structured JSON Lines (`logstash` console format) while preserving the local/test text-pattern defaults and added logging configuration contract coverage for the profile split.
 - Updated request-logging integration coverage to run under `prod` JSON logging and assert structured correlation fields (`rid`, `traceId`, `spanId`) plus sensitive-query-parameter redaction in emitted log events.
 - Added an optional Fluent Bit forwarding bundle under `k8s/log-forwarding/fluent-bit` and aligned README/setup guidance so multiline Java exception stack traces are recombined before logs are shipped from stdout to centralized collectors.

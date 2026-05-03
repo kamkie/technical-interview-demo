@@ -51,7 +51,7 @@ class TechnicalOverviewControllerIntegrationTests extends AbstractMockMvcIntegra
                 .andExpect(jsonPath("$.configuration.documentation.openApiVersion").value("OPENAPI_3_0"))
                 .andExpect(jsonPath("$.configuration.security.csrfEnabled").value(false))
                 .andExpect(jsonPath("$.configuration.security.oauthProfileActive").value(false))
-                .andExpect(jsonPath("$.configuration.security.oauthLoginPath").value("/oauth2/authorization/github"))
+                .andExpect(jsonPath("$.configuration.security.oauthLoginPath").value(""))
                 .andExpect(jsonPath("$.configuration.shutdown.serverShutdown").value("graceful"))
                 .andExpect(jsonPath("$.configuration.shutdown.timeoutPerShutdownPhase").value("20s"));
     }
@@ -63,4 +63,3 @@ class TechnicalOverviewControllerIntegrationTests extends AbstractMockMvcIntegra
                 .andExpect(content().string("Hello World!"));
     }
 }
-

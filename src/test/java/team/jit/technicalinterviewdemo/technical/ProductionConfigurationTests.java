@@ -17,6 +17,7 @@ import org.junit.jupiter.api.TestFactory;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import team.jit.technicalinterviewdemo.TechnicalInterviewDemoApplication;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -81,26 +82,77 @@ class ProductionConfigurationTests {
     @Test
     void prodProfileFailsFastWhenAdminLoginsContainInvalidGithubUsernames() {
         assertThatThrownBy(() -> runProdApplication("--ADMIN_LOGINS=invalid login"))
-                .hasStackTraceContaining("ADMIN_LOGINS must contain comma-separated GitHub logins");
+                .hasStackTraceContaining("ADMIN_LOGINS must contain comma-separated external login identifiers");
     }
 
     @Test
-    void prodProfileWithOauthFailsFastWhenGithubClientIdIsMissing() {
+    void prodProfileWithOauthFailsFastWhenProviderClientIdIsMissing() {
         assertThatThrownBy(() -> runProdApplication(
                 "--spring.profiles.active=prod,oauth",
+                "--OAUTH_DEFAULT_PROVIDER=github",
                 "--GITHUB_CLIENT_ID=",
                 "--GITHUB_CLIENT_SECRET=demo-secret"
         ))
-                .hasStackTraceContaining("GITHUB_CLIENT_ID");
+                .hasStackTraceContaining("OAuth provider 'github' requires both client-id and client-secret.");
     }
 
     @Test
-    void prodProfileWithOauthFailsFastWhenGithubClientSecretIsMissing() {
+    void prodProfileWithOauthFailsFastWhenProviderClientSecretIsMissing() {
         assertThatThrownBy(() -> runProdApplication(
                 "--spring.profiles.active=prod,oauth",
+                "--OAUTH_DEFAULT_PROVIDER=github",
                 "--GITHUB_CLIENT_ID=demo-client",
                 "--GITHUB_CLIENT_SECRET="
-        )).hasStackTraceContaining("GITHUB_CLIENT_SECRET");
+        )).hasStackTraceContaining("OAuth provider 'github' requires both client-id and client-secret.");
+    }
+
+    @Test
+    void prodProfileWithOauthFailsFastWhenOidcProviderIssuerIsMissing() {
+        assertThatThrownBy(() -> runProdApplication(
+                "--spring.profiles.active=prod,oauth",
+                "--OAUTH_DEFAULT_PROVIDER=oidc",
+                "--GITHUB_CLIENT_ID=",
+                "--GITHUB_CLIENT_SECRET=",
+                "--OIDC_CLIENT_ID=oidc-client",
+                "--OIDC_CLIENT_SECRET=oidc-secret",
+                "--OIDC_ISSUER_URI="
+        )).hasStackTraceContaining("OIDC provider 'oidc' requires issuer-uri.");
+    }
+
+    @Test
+    void prodProfileWithOauthFailsFastWhenMultipleProvidersAreConfiguredWithoutDefaultProvider() {
+        assertThatThrownBy(() -> runProdApplication(
+                "--spring.profiles.active=prod,oauth",
+                "--app.security.oauth.default-provider=",
+                "--GITHUB_CLIENT_ID=github-client",
+                "--GITHUB_CLIENT_SECRET=github-secret",
+                "--app.security.oauth.providers.internal.type=GITHUB",
+                "--app.security.oauth.providers.internal.client-id=internal-client",
+                "--app.security.oauth.providers.internal.client-secret=internal-secret"
+        )).hasStackTraceContaining(
+                "OAuth-enabled prod profile with multiple configured providers requires OAUTH_DEFAULT_PROVIDER."
+        );
+    }
+
+    @Test
+    void prodProfileWithOauthAllowsNonGithubDefaultProviderBootstrap() {
+        try (ConfigurableApplicationContext context = runProdApplication(
+                "--spring.profiles.active=prod,oauth",
+                "--app.security.oauth.default-provider=internal",
+                "--GITHUB_CLIENT_ID=",
+                "--GITHUB_CLIENT_SECRET=",
+                "--app.security.oauth.providers.internal.type=GITHUB",
+                "--app.security.oauth.providers.internal.client-id=internal-client",
+                "--app.security.oauth.providers.internal.client-secret=internal-secret"
+        )) {
+            SecuritySettingsProperties securitySettingsProperties = context.getBean(SecuritySettingsProperties.class);
+            ClientRegistrationRepository clientRegistrationRepository = context.getBean(ClientRegistrationRepository.class);
+
+            assertThat(securitySettingsProperties.getOAuth().resolvedLoginPath())
+                    .contains("/oauth2/authorization/internal");
+            assertThat(clientRegistrationRepository.findByRegistrationId("internal")).isNotNull();
+            assertThat(clientRegistrationRepository.findByRegistrationId("github")).isNull();
+        }
     }
 
     private static void runProdApplicationWithout(String missingVariableName) {

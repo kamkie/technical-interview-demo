@@ -65,8 +65,10 @@ Variables you are most likely to need:
 - `IDEA_HOME` or `IDEA_FORMATTER_BINARY` for Spotless Java formatting
 - `SPRING_PROFILES_ACTIVE` if you want to override the default `local` profile
 - `DATABASE_*` variables when overriding the default PostgreSQL connection
-- `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` when enabling the optional `oauth` profile for authenticated write flows
-- `ADMIN_LOGINS` when you want one or more GitHub logins to receive the persisted `ADMIN` role
+- `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` for the built-in GitHub provider when enabling the optional `oauth` profile
+- `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`, and `OIDC_ISSUER_URI` for the built-in issuer-driven OIDC provider when enabling `oauth`
+- `OAUTH_DEFAULT_PROVIDER` when more than one OAuth provider is configured and you want a default login bootstrap path
+- `ADMIN_LOGINS` when you want one or more external logins to receive the persisted `ADMIN` role
 - `SESSION_COOKIE_SECURE` when you want to override the `prod` profile session-cookie default of `true` for local HTTP testing or a specific deployment environment
 
 ## Deployment Contract
@@ -76,7 +78,7 @@ The `1.0` line is a stable interview-demo reference app. The checked-in deployme
 - `GET /` and `GET /hello` remain supported contract endpoints alongside the documented `/api/**` and documentation surfaces
 - `prod` is the default deployment profile in the raw manifests and Helm chart
 - browser sessions use secure cookies by default through `SESSION_COOKIE_SECURE=true`
-- GitHub OAuth stays opt-in through the `oauth` profile; bare `prod` does not require GitHub credentials
+- OAuth stays opt-in through the `oauth` profile; bare `prod` does not require identity-provider credentials
 - admin bootstrap remains environment-driven through `ADMIN_LOGINS`
 - CSRF remains disabled as a deliberate demo tradeoff for reviewer-oriented session workflows
 - `GET /actuator/prometheus` stays supported for trusted deployment scraping, but it is not part of the internet-public endpoint contract
@@ -100,8 +102,9 @@ Required runtime environment variables for deployed environments:
 Optional runtime environment variables:
 
 - `SESSION_COOKIE_SECURE` with a secure-by-default value of `true`
-- `GITHUB_CLIENT_ID` when the `oauth` profile is active
-- `GITHUB_CLIENT_SECRET` when the `oauth` profile is active
+- `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` for the built-in GitHub provider when the `oauth` profile is active
+- `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`, and `OIDC_ISSUER_URI` for the built-in issuer-driven OIDC provider when the `oauth` profile is active
+- `OAUTH_DEFAULT_PROVIDER` to choose the default `/oauth2/authorization/{registrationId}` bootstrap path when multiple providers are configured
 - `ADMIN_LOGINS`
 
 CI and release workflow expectations:
@@ -403,7 +406,7 @@ Secret handling:
 - `k8s/base/secret-example.yaml` is an example only and is not included in the base Kustomize package
 - create a real `technical-interview-demo-secrets` secret before applying the manifests
 - the required secret key is `DATABASE_PASSWORD`
-- optional secret keys are `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, and `ADMIN_LOGINS`
+- optional secret keys are `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`, `OIDC_ISSUER_URI`, `OAUTH_DEFAULT_PROVIDER`, and `ADMIN_LOGINS`
 
 Base deployment defaults:
 
@@ -463,7 +466,7 @@ The chart mirrors the raw manifest contract:
 - the deployment still expects an existing `technical-interview-demo-secrets` secret
 - `values.yaml` enables autoscaling and a pod disruption budget by default for deployment-style installs
 - `values-local.yaml` matches the local overlay assumptions: single replica, local image tag, `postgres` service host, non-secure session cookie for HTTP testing, and autoscaling disabled
-- OAuth remains opt-in through the `oauth` profile and `GITHUB_CLIENT_*` secret keys
+- OAuth remains opt-in through the `oauth` profile and provider-specific secret keys (`GITHUB_CLIENT_*` and/or `OIDC_*`)
 - ServiceMonitor rendering is optional and stays disabled until the monitoring stack is installed
 
 ## Monitoring And Alerting
@@ -516,23 +519,35 @@ Verify the monitoring setup:
 
 ## OAuth Setup
 
-The application supports GitHub OAuth login behind the optional `oauth` profile.
+The application supports provider-aware OAuth login behind the optional `oauth` profile.
 
 Use it when you want to exercise the protected write endpoints from a browser.
 
-### GitHub OAuth App
+### Provider Configuration
+
+The built-in provider model supports:
+
+- `github` (OAuth app client credentials)
+- `oidc` (issuer-driven OpenID Connect metadata + client credentials)
+
+You can also define additional provider registration ids through `app.security.oauth.providers.<registrationId>.*`.
+
+When more than one provider is configured, set `OAUTH_DEFAULT_PROVIDER` to control the default bootstrap path.
+
+### GitHub Example
 
 Create a GitHub OAuth App with:
 
 - Homepage URL: `http://localhost:8080`
 - Authorization callback URL: `http://localhost:8080/login/oauth2/code/github`
 
-Then export the credentials and start the app with the extra profile:
+Then export credentials and start the app:
 
 ```powershell
 $env:GITHUB_CLIENT_ID='your-github-client-id'
 $env:GITHUB_CLIENT_SECRET='your-github-client-secret'
-$env:ADMIN_LOGINS='your-github-login'
+$env:OAUTH_DEFAULT_PROVIDER='github'
+$env:ADMIN_LOGINS='your-login'
 $env:SPRING_PROFILES_ACTIVE='local,oauth'
 
 docker-compose up -d
@@ -543,6 +558,26 @@ Start the login flow at:
 
 - `http://localhost:8080/oauth2/authorization/github`
 
+### OIDC Example
+
+Provide OIDC issuer metadata plus credentials, then start the app:
+
+```powershell
+$env:OIDC_CLIENT_ID='your-oidc-client-id'
+$env:OIDC_CLIENT_SECRET='your-oidc-client-secret'
+$env:OIDC_ISSUER_URI='https://your-issuer.example.com/realms/demo'
+$env:OAUTH_DEFAULT_PROVIDER='oidc'
+$env:ADMIN_LOGINS='your-login'
+$env:SPRING_PROFILES_ACTIVE='local,oauth'
+
+docker-compose up -d
+.\gradlew.bat bootRun
+```
+
+Start the login flow at:
+
+- `http://localhost:8080/oauth2/authorization/oidc`
+
 Protected requests use the authenticated session cookie, so you can replay state-changing requests from an HTTP client once you have signed in and captured `technical-interview-demo-session`.
 
 For `1.0`, this reviewer-oriented session flow keeps CSRF disabled as a deliberate demo tradeoff.
@@ -551,7 +586,7 @@ Authenticated sessions are persisted in PostgreSQL through Spring Session JDBC, 
 
 Role behavior:
 
-- every authenticated GitHub login is persisted as an application user with the `USER` role
+- every authenticated provider login is persisted as an application user with the `USER` role
 - logins listed in `ADMIN_LOGINS` also receive the `ADMIN` role
 - category creation and localization-message management require `ADMIN`
 - the current persisted user profile is available at `GET /api/account`
@@ -636,21 +671,22 @@ Fix:
 
 Symptom:
 
-- `/oauth2/authorization/github` returns an error or redirect loop
+- `/oauth2/authorization/{registrationId}` returns an error or redirect loop
 
 Fix:
 
 1. Confirm `SPRING_PROFILES_ACTIVE` includes `oauth`.
-2. Confirm `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` are exported in the same shell or run configuration.
-3. Confirm the GitHub OAuth App callback URL is `http://localhost:8080/login/oauth2/code/github`.
-4. Complete the browser login and then verify the app session with `GET /api/account` plus the `technical-interview-demo-session` cookie.
-5. Re-run the app with `.\gradlew.bat bootRun`.
+2. Confirm the selected provider credentials are exported in the same shell or run configuration (`GITHUB_CLIENT_*` for `github`, `OIDC_*` for `oidc`).
+3. If multiple providers are configured, confirm `OAUTH_DEFAULT_PROVIDER` points at a provider with credentials.
+4. Confirm the provider callback URL matches `http://localhost:8080/login/oauth2/code/{registrationId}` for your registration id.
+5. Complete the browser login and then verify the app session with `GET /api/account` plus the `technical-interview-demo-session` cookie.
+6. Re-run the app with `.\gradlew.bat bootRun`.
 
 ### Authenticated session does not persist after login
 
 Symptom:
 
-- GitHub login appears to complete, but `GET /api/account` still returns unauthorized
+- OAuth provider login appears to complete, but `GET /api/account` still returns unauthorized
 - the app does not retain the `technical-interview-demo-session` state across requests
 
 Fix:

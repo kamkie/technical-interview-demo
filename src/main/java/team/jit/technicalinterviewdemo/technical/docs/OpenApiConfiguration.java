@@ -21,8 +21,8 @@ public class OpenApiConfiguration {
                 .name("technical-interview-demo-session")
                 .description(
                         "Authenticated browser session cookie used by protected operations."
-                                + " It is established through GET /oauth2/authorization/github"
-                                + " when the optional oauth profile is active."
+                                + " It is established through a configured identity provider login path"
+                                + " under /oauth2/authorization/{registrationId} when the optional oauth profile is active."
                 );
 
         return new OpenAPI()

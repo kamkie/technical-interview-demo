@@ -12,7 +12,7 @@ public record UserAccountResponse(
         Long id,
         @Schema(description = "OAuth provider name.", example = "github")
         String provider,
-        @Schema(description = "GitHub login.", example = "kamkie")
+        @Schema(description = "External login from the authenticated OAuth provider.", example = "kamkie")
         String login,
         @Schema(description = "Display name from the OAuth provider.", example = "Kamil Kiewisz")
         String displayName,
@@ -52,4 +52,3 @@ public record UserAccountResponse(
         );
     }
 }
-

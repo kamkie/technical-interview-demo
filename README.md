@@ -107,15 +107,16 @@ Remaining demo-only convenience endpoints:
 
 Supported technical bootstrap:
 
-- `GET /oauth2/authorization/github`
+- `GET /oauth2/authorization/{registrationId}`
   - interactive login entry point when the optional `oauth` profile is active
+  - resolved from configured providers (`github`, `oidc`, or additional configured registration ids)
 
 Security summary:
 
 - public supported reads: `/`, `/hello`, `/docs`, OpenAPI docs, `GET /api/books/**`, `GET /api/categories`, `GET /api/localizations/**`, actuator health endpoints, and actuator info
 - authenticated session required: account endpoints, `GET /api/audit-logs`, and all write endpoints
 - `ADMIN` role required: audit log review, category create/update/delete, and localization create/update/delete
-- interactive login starts at `GET /oauth2/authorization/github` when the `oauth` profile is active
+- interactive login starts at `GET /oauth2/authorization/{registrationId}` when the `oauth` profile is active
 
 Contract notes:
 
@@ -202,13 +203,18 @@ Optional deployment environment variables:
 - `SESSION_COOKIE_SECURE` with a secure-by-default value of `true`
 - `GITHUB_CLIENT_ID`
 - `GITHUB_CLIENT_SECRET`
+- `OIDC_CLIENT_ID`
+- `OIDC_CLIENT_SECRET`
+- `OIDC_ISSUER_URI`
+- `OAUTH_DEFAULT_PROVIDER` (defaults to `github`)
 - `ADMIN_LOGINS`
 
 Frozen `1.0` production posture:
 
 - `prod` remains the deployment profile baseline
-- OAuth login remains opt-in through the `oauth` profile plus `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`, and those credentials are required only when `oauth` is active
-- `ADMIN_LOGINS` remains the environment-driven admin bootstrap mechanism and is validated as a comma-separated list of GitHub logins when present
+- OAuth login remains opt-in through the `oauth` profile and requires at least one configured provider (`github` or `oidc`) with client credentials, with `OIDC_ISSUER_URI` required for OIDC
+- `OAUTH_DEFAULT_PROVIDER` controls the default login bootstrap path when multiple providers are configured
+- `ADMIN_LOGINS` remains the environment-driven admin bootstrap mechanism and is validated as a comma-separated list of external login identifiers when present
 - `SESSION_COOKIE_SECURE` remains optional with a secure-by-default value of `true`
 - `prod` enforces a 15 minute session timeout, one active session per login, and login rejection when that session cap is already reached
 - browser-session write flows keep CSRF disabled as a deliberate demo tradeoff for reviewer-friendly session-based API exercise flows

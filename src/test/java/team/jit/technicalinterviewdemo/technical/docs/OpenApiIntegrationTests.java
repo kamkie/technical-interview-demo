@@ -58,8 +58,9 @@ class OpenApiIntegrationTests extends AbstractRandomPortIntegrationTest {
                 openApi.at("/components/securitySchemes/sessionCookie/name").asText()
         );
         assertEquals(
-                "Authenticated browser session cookie used by protected operations. It is established through"
-                        + " GET /oauth2/authorization/github when the optional oauth profile is active.",
+                "Authenticated browser session cookie used by protected operations. It is established through a"
+                        + " configured identity provider login path under /oauth2/authorization/{registrationId}"
+                        + " when the optional oauth profile is active.",
                 openApi.at("/components/securitySchemes/sessionCookie/description").asText()
         );
 
