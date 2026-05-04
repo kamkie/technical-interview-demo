@@ -1,0 +1,4 @@
+interface:
+  display_name: "GitHub Security And Quality"
+  short_description: "Inspect GitHub security alerts and plan the fix"
+  default_prompt: "Use $gh-fix-security-quality to inspect the open GitHub Security and quality issues for this repository, summarize the actionable code-scanning and Dependabot alerts, and decide whether the fix needs a short approval plan or a formal ai/PLAN_*.md update."
