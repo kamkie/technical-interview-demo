@@ -15,7 +15,8 @@ Keep rough candidate tasks here for manual editing before they are promoted into
 
 Add new rough tasks below.
 
-No unrefined tasks currently.
+- design requirements for frontend integration
+- implement gradle Dependency submission for github 
 
 ## How To Use This File
 
