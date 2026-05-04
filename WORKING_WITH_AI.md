@@ -230,11 +230,13 @@ Useful prompt titles:
 
 ### 6. Implementation Integration
 
-Use this after worker implementation is already complete and the next task is to fold ready output back into the canonical plan, changelog, and integration branch.
+Use this after worker implementation is already complete and the next task is to fold ready output from worker branches or open PRs back into the canonical plan or accepted plan branches, `CHANGELOG.md`, and the integration branch.
 
 Useful prompt titles:
 
 - `Integrate Shared Plan Output`
+- `Integrate Parallel Plan Output`
+- `Integrate All Open PRs`
 
 ### 7. Implementation Verification
 

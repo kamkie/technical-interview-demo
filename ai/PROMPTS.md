@@ -50,6 +50,8 @@ If a prompt starts reading like policy, move that policy back to the owner guide
   - [Check Active Workers](#check-active-workers)
 - [Implementation Integration](#implementation-integration)
   - [Integrate Shared Plan Output](#integrate-shared-plan-output)
+  - [Integrate Parallel Plan Output](#integrate-parallel-plan-output)
+  - [Integrate All Open PRs](#integrate-all-open-prs)
 - [Implementation Verification](#implementation-verification)
   - [Run Required Validation](#run-required-validation)
   - [Check Contract Impact](#check-contract-impact)
@@ -365,7 +367,7 @@ Keep the report concise and factual.
 
 ## Implementation Integration
 
-Use these prompts after worker implementation is already done and the next task is to fold ready output back into the canonical plan, changelog, and integration branch.
+Use these prompts after worker implementation is already done and the next task is to fold ready output from worker branches or open PRs back into the canonical plan or accepted plan branches, `CHANGELOG.md`, and the integration branch.
 
 ### Integrate Shared Plan Output
 
@@ -374,6 +376,26 @@ Integrate completed worker output for `<plan_file>`.
 
 Use `ai/WORKFLOW.md` as coordinator in `Shared Plan` mode.
 Merge or cherry-pick ready worker branches, fold accepted worker-log content into the canonical plan and `CHANGELOG.md`, run the required integration validation, delete consumed worker logs before the final push or PR unless I explicitly want them retained, and summarize what landed and what remains.
+```
+
+### Integrate Parallel Plan Output
+
+```markdown
+Integrate completed worker output for all merged `Parallel Plans`.
+
+Use `ai/WORKFLOW.md` as coordinator in `Parallel Plans` mode.
+Review which merged plans are in scope, say explicitly which merged plans were included and which were skipped, integrate any accepted worker output that is not yet on the integration branch, fold accepted `CHANGELOG_<topic>.md` entries into `CHANGELOG.md`, update any canonical plan files or shared artifacts the accepted merged plans require, delete consumed private changelog files and worker logs before the final push or PR unless I explicitly want them retained, run the required integration validation, and summarize what landed, what was skipped, and what remains.
+If there are no in-scope merged `Parallel Plans`, say so explicitly and stop.
+```
+
+### Integrate All Open PRs
+
+```markdown
+Integrate all open implementation PRs that are ready.
+
+Use `ai/WORKFLOW.md` as coordinator.
+Review every currently open PR that belongs to the active unreleased work, say which open PRs are in scope and which were skipped, merge or cherry-pick the accepted output onto the integration branch in dependency order, fold any accepted `CHANGELOG_<topic>.md` entries into `CHANGELOG.md`, update any canonical plan files or shared artifacts the accepted PRs require, delete consumed private changelog files and worker logs before the final push or PR unless I explicitly want them retained, run the required integration validation, and summarize what landed, what was skipped, and what remains open.
+If there are no in-scope open PRs, say so explicitly and stop.
 ```
 
 ## Implementation Verification
