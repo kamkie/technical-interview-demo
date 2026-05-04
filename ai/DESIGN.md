@@ -165,7 +165,7 @@ The current contract is intentionally narrow:
 - `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, `/actuator/health`, `/actuator/health/liveness`, `/actuator/health/readiness`, and `/actuator/info` remain internal or devops validation paths
 - `/actuator/prometheus` is deployment-scoped technical surface for trusted scraping, not part of the internet-public contract
 - same-site browser-session bootstrap lives at `/api/session`, with provider-aware login entry points under `/api/session/oauth2/authorization/{registrationId}` and provider callbacks under `/api/session/login/oauth2/code/{registrationId}` when the optional `oauth` profile is active
-- CSRF stays disabled for current browser-session writes as a deliberate demo tradeoff for reviewer-oriented session workflows
+- unsafe same-site browser writes use the supported CSRF contract: `GET /api/session` bootstraps the readable `XSRF-TOKEN` cookie and clients mirror it into the `X-XSRF-TOKEN` header when a real current application session exists
 
 Preserve those decisions unless an explicit follow-up contract review changes them.
 

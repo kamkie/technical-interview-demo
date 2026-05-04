@@ -33,11 +33,17 @@ No active priorities currently.
 
 ## Ordered Plan
 
-### Future: Post-`1.x` Production-Ready Sample App Track
+### Moving to `2.0`
 
 Status: Planned
 
-Goal: plan the next explicit post-`1.x` contract-shaping evolution without silently stretching the frozen interview-demo `1.x` promise.
+Goal: finish the stable `2.0` line now that the `v2.0.0-M1` and `v2.0.0-M2` contract-shaping slices are already released.
+
+- [ ] Publish a `1.x` to `2.0` upgrade guide for the `/api/**` boundary, `/api/session/**` auth routes, `loginProviders[]`, and CSRF-protected unsafe writes.
+- [ ] Add checked-in reverse-proxy or ingress reference assets for the one-public-origin boundary, private non-`/api/**` surfaces, and edge-owned abuse protection.
+- [ ] Extend `externalSmokeTest` and post-deploy smoke to prove `GET /api/session`, CSRF cookie bootstrap, and one authenticated unsafe `/api/**` write.
+- [ ] Freeze the `2.0` published contract and cut `v2.0.0-RC1` from `main` only after the exact candidate passes `.\gradlew.bat build`, required smoke checks, and `.\gradlew.bat gatlingBenchmark` when session-startup behavior changes.
+- [ ] Release stable `v2.0.0`, update `CHANGELOG.md`, and remove the completed `2.0` track from `ROADMAP.md`.
 
 ## Deferred
 
