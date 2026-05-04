@@ -4,7 +4,7 @@
 | Field | Value |
 | --- | --- |
 | Phase | Planning |
-| Status | Needs Input |
+| Status | Ready |
 
 ## Summary
 - Replace the current reviewer-oriented `csrf.enabled=false` browser-write posture with a production-grade same-site CSRF contract for the separate first-party UI behind one public origin.
@@ -60,29 +60,27 @@
   - deployment/post-release validation: `src/externalTest/java/team/jit/technicalinterviewdemo/external/ExternalSmokeTests.java`, `.github/workflows/post-deploy-smoke.yml`, `scripts/release/invoke-restore-drill.ps1`
 
 ## Requirement Gaps And Open Questions
-- CSRF token transport for the separate UI is a material design choice.
-  - Why it matters: the UI is in a separate repository and cannot depend on server-rendered hidden form fields.
-  - Fallback assumption used by this plan: adopt a same-site SPA-style CSRF contract with a dedicated readable CSRF cookie plus a required request header on unsafe browser writes. `GET /api/session` remains the canonical bootstrap path that publishes the header and cookie names and triggers token issuance or refresh.
-- Naive CSRF enablement would change many current missing-session write failures from localized `401` into `403`.
-  - Why it matters: the current API contract and reviewer docs intentionally distinguish missing authentication from forbidden access.
-  - Blocking question: should `v2.0.0-M2` preserve the current localized `401` semantics for unsafe writes when there is no real current application session, or is it acceptable in this breaking phase to let those requests fail as CSRF-driven `403` responses?
-  - Recommended option: preserve the current `401` semantics. It keeps the auth contract easier to reason about and limits the breaking surface to the new CSRF handshake itself.
-- Edge-owned abuse protection can be documented too vaguely to be actionable.
+- No blocking user-input gap remains after the `v2.0.0-M2` contract decisions were confirmed.
+- Resolved decisions that no longer require implementer judgment:
+  - use a same-site SPA-style CSRF contract with a dedicated readable CSRF cookie plus a required request header on unsafe browser writes
+  - keep `GET /api/session` as the canonical bootstrap path that publishes the CSRF header and cookie names
+  - do not expose the raw CSRF token in the JSON body
+  - preserve the current localized `401` semantics for unsafe writes when there is no real current application session
+  - require CSRF for `POST /api/session/logout` when a current application session exists, while keeping no-session logout idempotent and `204`
+- Edge-owned abuse protection remains a documentation-quality risk rather than a product-intent gap.
   - Why it matters: "deployment-owned" is not enough unless the repo names both the protected path families and the minimum expected capabilities.
-  - Fallback assumption used by this plan: document two required edge-protection groups:
+  - Locked direction for this plan: document two required edge-protection groups:
     - login-bootstrap protection for `/api/session/oauth2/authorization/{registrationId}` with burst limiting plus challenge or block capability for suspicious clients
     - per-client throttling and rejection visibility for unsafe internet-public `/api/**` operations, including logout and the write paths under books, categories, localizations, and account-language update
-- Logout CSRF semantics need an explicit contract choice.
-  - Why it matters: `POST /api/session/logout` is currently public and idempotent, while a production-grade CSRF posture usually protects authenticated logout.
-  - Blocking question: when an authenticated session exists, should logout require a valid CSRF token, or should logout remain fully exempt from CSRF to keep the current simpler client contract?
-  - Recommended option: require CSRF when a current session exists, but keep no-session logout idempotent and `204` so the separate UI can still call it safely after local state drift.
-- The breaking-change rollout label is now explicit.
-  - Why it matters: the plan should not pretend this is preserving the frozen `1.x` browser-write contract.
-  - User decision recorded here: treat this work as `v2.0.0-M2` planning, and assume breaking public-contract changes are allowed in this phase.
 
 ## Locked Decisions And Assumptions
 - Treat the two checked roadmap items as one coherent plan because they both modify the same browser security contract, runtime posture reporting, and deployment guidance.
 - This plan targets the breaking-change prerelease line `v2.0.0-M2`.
+- User-confirmed contract decisions for `v2.0.0-M2`:
+  - breaking public-contract changes are allowed in this phase
+  - preserve current localized `401` semantics for unsafe writes when there is no real current application session
+  - require CSRF for authenticated-session logout
+  - use `readable cookie + required header`, bootstrapped by `GET /api/session`, with no raw CSRF token in JSON
 - Preserve the current architectural direction already locked by earlier roadmap decisions:
   - separate first-party UI repository
   - one public origin behind `waf -> frontend -> this application`
