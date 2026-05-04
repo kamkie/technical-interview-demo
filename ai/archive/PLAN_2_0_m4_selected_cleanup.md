@@ -3,8 +3,8 @@
 ## Lifecycle
 | Field | Value |
 | --- | --- |
-| Phase | Integration |
-| Status | Implemented |
+| Phase | Closed |
+| Status | Released |
 
 ## Summary
 - Execute the currently selected `ROADMAP.md` cleanup tasks as the next prerelease batch, to be delivered in `v2.0.0-M4` before the later `RC1` contract-freeze milestone.
@@ -282,6 +282,8 @@
   - result: passed; validated the packaged image, the hardened runtime/container posture, Flyway-backed startup, and the external smoke path against the built Docker image
 - 2026-05-04: `. .\scripts\load-dotenv.ps1; .\gradlew.bat build`
   - result: passed; full repository validation succeeded after preserving the original `IllegalArgumentException` cause when rethrowing `InvalidRequestException` from admin role replacement so `pmdMain` also stayed clean
+- 2026-05-04: `pwsh ./scripts/release/get-release-migration-impact.ps1 -PreviousReleaseTag v2.0.0-M3 -CurrentRef HEAD`
+  - result: `rolling-compatible`; the `v2.0.0-M4` migration set is additive, uses `db-first` deployment ordering, and retains `image-only` rollback posture, so no restore-drill evidence was required for this local release candidate
 
 ## User Validation
 - Start from an empty database, authenticate as the configured bootstrap admin identity, and confirm that the user becomes an ADMIN without relying on a standing `ADMIN_LOGINS` runtime contract.

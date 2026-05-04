@@ -7,6 +7,8 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+## [v2.0.0-M4] - 2026-05-04
+
 ### Added
 - Added persisted role-grant provenance plus an ADMIN-only `/api/admin/users` management API for listing persisted users and replacing managed role grants, together with aligned REST Docs, reviewer HTTP examples, and approved OpenAPI coverage.
 - Added structured audit `details` payloads and auth-lifecycle audit events for login success, login failure, logout, and session-cap rejection.

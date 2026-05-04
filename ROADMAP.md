@@ -15,7 +15,7 @@ Keep this file focused on work that is still planned or in progress.
 
 ## Current Priorities
 
-- Use the remaining `2.0` prerelease budget for breaking cleanup that lowers production maintenance cost and aligns the app with stronger backend conventions.
+- Use the remaining `2.0` prerelease budget only for unresolved cleanup that still needs to land before the contract freeze.
 - Freeze the `2.0` published contract and cut `v2.0.0-RC1` from `main` only after the exact candidate passes the required validation.
 
 ## Not Yet Refined
@@ -38,19 +38,14 @@ No unrefined tasks currently.
 
 Status: Planned
 
-Goal: finish the stable `2.0` line now that `v2.0.0-M1`, `v2.0.0-M2`, and `v2.0.0-M3` established the browser-session contract, deployment boundary, upgrade guide, edge reference, and smoke-alignment baseline.
+Goal: finish the stable `2.0` line now that `v2.0.0-M1` through `v2.0.0-M4` established the browser-session contract, deployment boundary, upgrade guide, edge reference, smoke-alignment baseline, and the selected maintainability cleanup.
 
 #### Prerelease Maintainability Cleanup
-- [x] Replace `ADMIN_LOGINS` env-driven role assignment with managed role mapping plus persisted role provenance.
 - [ ] Move demo-friendly defaults such as implicit `local` profile activation, Hibernate statistics, and full tracing sampling out of shared runtime config.
-- [x] Split public, admin, and internal management surfaces more cleanly and reduce mixed-use internal endpoints before the `2.0` contract freezes.
-- [x] Expand audit coverage to all privileged mutations and auth events, store structured change data, and define retention or archival behavior.
 - [ ] Migrate persisted timestamps and API serialization to UTC `Instant` plus PostgreSQL `timestamptz`.
-- [x] Add PostgreSQL indexes that match supported search, filter, join, and operational query patterns.
-- [x] Harden container and Kubernetes runtime defaults with slimmer base images and stronger pod or container security settings.
 
 #### Release Confidence
-- [ ] Decide which `2.0` prerelease maintainability-cleanup items land before `v2.0.0-RC1` and explicitly defer the rest.
+- [ ] Decide which remaining `2.0` prerelease maintainability-cleanup items land before `v2.0.0-RC1` and explicitly defer the rest.
 - [ ] Freeze the `2.0` published contract and cut `v2.0.0-RC1` from `main` only after the exact candidate passes `.\gradlew.bat build`, required smoke checks, and `.\gradlew.bat gatlingBenchmark` when session-startup behavior changes.
 - [ ] Release stable `v2.0.0`, update `CHANGELOG.md`, and remove the completed `2.0` track from `ROADMAP.md`.
 
