@@ -29,7 +29,7 @@ No unrefined tasks currently.
 
 ## Current Priorities
 
-1. Continue the post-`1.x` security-hardening track with production-grade same-site CSRF protections and explicit edge-owned abuse-protection expectations for the separate first-party UI.
+No active priorities currently.
 
 ## Locked Framing Decisions
 
@@ -48,12 +48,6 @@ No unrefined tasks currently.
 Status: Planned
 
 Goal: evolve the repository into a production-ready backend sample that supports a separate first-party UI behind one public origin deliberately, with explicit contract, rollout, and posture review as a post-`1.x` breaking follow-up instead of treating that shift as a silent extension of the frozen interview-demo `1.x` promise.
-
-#### Revisit The Security Posture
-- [x] Replace the current reviewer-oriented CSRF-disabled browser write posture with production-grade same-site browser protections that work for a reverse-proxied first-party UI
-- [x] Define the required edge or deployment-owned abuse-protection expectations for login bootstrap and write-heavy paths instead of assuming repo-owned application rate limiting
-
----
 
 ## Deferred
 

@@ -3,8 +3,8 @@
 ## Lifecycle
 | Field | Value |
 | --- | --- |
-| Phase | Integration |
-| Status | Implemented |
+| Phase | Closed |
+| Status | Released |
 
 ## Summary
 - Replace the current reviewer-oriented `csrf.enabled=false` browser-write posture with a production-grade same-site CSRF contract for the separate first-party UI behind one public origin.

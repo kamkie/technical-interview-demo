@@ -7,6 +7,8 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+## [v2.0.0-M2] - 2026-05-04
+
 ### Added
 - Added a same-site browser CSRF contract for authenticated unsafe `/api/**` writes with `GET /api/session` bootstrap metadata, a readable `XSRF-TOKEN` cookie, a required `X-XSRF-TOKEN` header, a dedicated localized CSRF error contract, and shared CSRF-aware test helpers.
 
