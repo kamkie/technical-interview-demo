@@ -42,9 +42,13 @@
 - Proposed private changelog text:
   - Refactored `OperatorSurfaceService` into explicit admin-guard, audit-section, runtime-section, and operations-section assembly steps without changing the `/api/admin/operator-surface` contract.
 - Commit:
-  - Pending milestone commit.
+  - `4f13469` - `Refactor operator surface assembly`
 - Ready for integration:
-  - Yes, pending push and PR handoff.
+  - Yes.
 
 ## Blockers And Risks
 - None.
+
+## Remote Handoff
+- Branch pushed: `origin/codex/run-all-ready/operator-surface-assembly-cleanup`
+- Pull request: `#12` `https://github.com/kamkie/technical-interview-demo/pull/12`
