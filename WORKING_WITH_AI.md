@@ -123,10 +123,10 @@ Good outcomes:
 
 Useful prompt titles from `ai/PROMPTS.md`:
 
-- `Surface Roadmap Framing Decisions Interactively`
-- `Refine Unrefined Roadmap Tasks Into Real Entries`
-- `Select The Next Roadmap Workstream For Planning`
-- `Review A Roadmap Item Before Planning`
+- `Clarify Roadmap Decisions`
+- `Refine Roadmap Intake`
+- `Pick Next Roadmap Workstream`
+- `Review Roadmap Item`
 
 ### 2. Planning
 
@@ -143,11 +143,11 @@ Good outcomes:
 
 Useful prompt titles:
 
-- `Create A New Execution Plan`
-- `Create A Plan From Roadmap Input`
-- `Create A Plan From Checked Roadmap Tasks`
-- `Create Multiple Plans From Disjoint Checked Roadmap Tasks`
-- `Revise An Existing Plan`
+- `Create Plan`
+- `Plan From Roadmap`
+- `Plan Checked Roadmap Items`
+- `Split Checked Roadmap Items Into Plans`
+- `Revise Plan`
 
 ### 3. Plan Verification
 
@@ -162,8 +162,8 @@ The review should answer:
 
 Useful prompt titles:
 
-- `Review Whether A Plan Is Ready`
-- `Decide How One Plan Should Execute`
+- `Review Plan Readiness`
+- `Choose Execution Mode`
 
 Do not skip this step for large or multi-step work.
 It is much cheaper to fix the plan than to unwind a bad implementation stream later.
@@ -180,8 +180,8 @@ That means the milestone should not be treated as done until implementation, val
 
 Useful prompt titles:
 
-- `Implement A Plan Without Releasing`
-- `Implement Only One Milestone`
+- `Implement Plan`
+- `Implement Milestone`
 
 ### 5. Workflow Execution
 
@@ -192,16 +192,16 @@ Use the smallest mode that keeps ownership clear.
 
 When you pass one plan file, there are three useful ways to work:
 
-- let AI infer the right mode from the plan: `Execute One Plan And Infer Workflow Mode`
-- force direct execution on one branch: `Execute One Plan On A Single Branch`
-- force fanout with an orchestrator and workers: `Execute One Plan As Shared Plan`
+- let AI infer the right mode from the plan: `Run Plan With Inferred Mode`
+- force direct execution on one branch: `Run Plan On Single Branch`
+- force fanout with an orchestrator and workers: `Run Plan As Shared Plan`
 
 #### Multiple plan files
 
 When you pass multiple plan files, use `Parallel Plans`.
-Use `Execute Multiple Plans In Parallel` when you already know the exact plan-file set.
-Use `Execute ALL Ready Plans In Parallel` when you want AI to discover every non-archived ready plan first and then run the same parallel execution flow.
-Use `Implement All Unfinished Plans In Parallel` when you want AI to discover every non-archived unfinished plan first and then run the same parallel execution flow.
+Use `Run Plans In Parallel` when you already know the exact plan-file set.
+Use `Run All Ready Plans` when you want AI to discover every non-archived ready plan first and then run the same parallel execution flow.
+Use `Run All Unfinished Plans` when you want AI to discover every non-archived unfinished plan first and then run the same parallel execution flow.
 
 #### Workflow mode guide
 
@@ -215,14 +215,14 @@ Shared-plan and parallel-plan work also use committed worker logs at:
 
 Useful prompt titles:
 
-- `Execute One Plan And Infer Workflow Mode`
-- `Execute One Plan On A Single Branch`
-- `Execute One Plan As Shared Plan`
-- `Execute Multiple Plans In Parallel`
-- `Execute ALL Ready Plans In Parallel`
-- `Implement All Unfinished Plans In Parallel`
-- `Check Status On One Worker`
-- `Check Status On Active Workers`
+- `Run Plan With Inferred Mode`
+- `Run Plan On Single Branch`
+- `Run Plan As Shared Plan`
+- `Run Plans In Parallel`
+- `Run All Ready Plans`
+- `Run All Unfinished Plans`
+- `Check Worker Status`
+- `Check Active Workers`
 
 ### 6. Implementation Integration
 
@@ -230,7 +230,7 @@ Use this after worker implementation is already complete and the next task is to
 
 Useful prompt titles:
 
-- `Integrate Completed Shared-Plan Worker Output`
+- `Integrate Shared Plan Output`
 
 ### 7. Implementation Verification
 
@@ -245,11 +245,11 @@ Typical outcomes:
 
 Useful prompt titles:
 
-- `Run Required Validation Only`
-- `Verify Contract Impact`
-- `Verify An Implemented Milestone`
-- `Review A Diff For Risks`
-- `Triage A Failed Validation Run`
+- `Run Required Validation`
+- `Check Contract Impact`
+- `Verify Milestone`
+- `Review Diff Risks`
+- `Triage Validation Failure`
 
 Repository rule:
 
@@ -261,8 +261,8 @@ Release preparation starts only after the approved implementation PR has been me
 
 Useful prompt titles:
 
-- `Verify Release Readiness`
-- `Prepare A Release Only`
+- `Check Release Readiness`
+- `Prepare Release`
 
 Typical preparation work includes:
 
@@ -277,9 +277,9 @@ Do not ask AI to release unmerged branch work.
 
 Useful prompt titles:
 
-- `Push An Already Prepared Release`
-- `Verify And Release All Merged PR Work`
-- `Verify The Published Release`
+- `Push Prepared Release`
+- `Release All Merged Work`
+- `Check Published Release`
 
 ## How To Choose A Workflow Mode
 
@@ -289,7 +289,7 @@ Use this quick rule set:
 - one plan file with disjoint worker-owned slices and one coordinator: `Shared Plan`
 - multiple plan files: `Parallel Plans`
 
-If you are unsure, ask AI to review the plan first with `Decide How One Plan Should Execute`.
+If you are unsure, ask AI to review the plan first with `Choose Execution Mode`.
 
 ## Suggested Developer Habits
 
@@ -305,21 +305,21 @@ If you are unsure, ask AI to review the plan first with `Decide How One Plan Sho
 
 For a normal feature or cleanup, a good sequence is:
 
-1. use `Select The Next Roadmap Workstream For Planning`
-2. use `Create A New Execution Plan`
-3. use `Review Whether A Plan Is Ready`
-4. use `Implement Only One Milestone` or `Implement A Plan Without Releasing`
-5. use `Run Required Validation Only`
-6. use `Review A Diff For Risks`
-7. if the change is merged to `main`, use `Verify Release Readiness` and then the release prompts when appropriate
+1. use `Pick Next Roadmap Workstream`
+2. use `Create Plan`
+3. use `Review Plan Readiness`
+4. use `Implement Milestone` or `Implement Plan`
+5. use `Run Required Validation`
+6. use `Review Diff Risks`
+7. if the change is merged to `main`, use `Check Release Readiness` and then the release prompts when appropriate
 
 For coordinated multi-branch work:
 
 1. create or refine the relevant plan files
 2. if there is one plan file, use one of the single-plan workflow prompts
-3. if there are multiple plan files and you already know the exact set, use `Execute Multiple Plans In Parallel`
-4. if you want AI to discover every ready plan under `ai/`, use `Execute ALL Ready Plans In Parallel`
-5. if you want AI to pick up every unfinished plan under `ai/`, use `Implement All Unfinished Plans In Parallel`
+3. if there are multiple plan files and you already know the exact set, use `Run Plans In Parallel`
+4. if you want AI to discover every ready plan under `ai/`, use `Run All Ready Plans`
+5. if you want AI to pick up every unfinished plan under `ai/`, use `Run All Unfinished Plans`
 6. use the worker-status prompts while the work is running
 7. integrate, verify, and release only after the normal gates are satisfied
 

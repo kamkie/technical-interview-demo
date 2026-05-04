@@ -41,10 +41,10 @@ Read only what the request needs:
 
 ## Useful Prompt Titles
 
-- `Run Required Validation Only`
-- `Verify Contract Impact`
-- `Verify An Implemented Milestone`
-- `Review A Diff For Risks`
-- `Triage A Failed Validation Run`
+- `Run Required Validation`
+- `Check Contract Impact`
+- `Verify Milestone`
+- `Review Diff Risks`
+- `Triage Validation Failure`
 
 Use prompt titles from `ai/PROMPTS.md` when the user wants a reusable starter.

@@ -40,12 +40,12 @@ Read only what the request needs:
 
 ## Useful Prompt Titles
 
-- `Create A New Execution Plan`
-- `Create A Plan From Roadmap Input`
-- `Create A Plan From Checked Roadmap Tasks`
-- `Create Multiple Plans From Disjoint Checked Roadmap Tasks`
-- `Revise An Existing Plan`
-- `Review Whether A Plan Is Ready`
-- `Decide How One Plan Should Execute`
+- `Create Plan`
+- `Plan From Roadmap`
+- `Plan Checked Roadmap Items`
+- `Split Checked Roadmap Items Into Plans`
+- `Revise Plan`
+- `Review Plan Readiness`
+- `Choose Execution Mode`
 
 Use prompt titles from `ai/PROMPTS.md` when the user wants a reusable starter.

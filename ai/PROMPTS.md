@@ -21,51 +21,51 @@ If a prompt starts reading like policy, move that policy back to the owner guide
 - [Prompt Usage Baseline](#prompt-usage-baseline)
 - [Title Shorthand](#title-shorthand)
 - [Discovery And Roadmap](#discovery-and-roadmap)
-  - [Surface Roadmap Framing Decisions Interactively](#surface-roadmap-framing-decisions-interactively)
-  - [Refine Unrefined Roadmap Tasks Into Real Entries](#refine-unrefined-roadmap-tasks-into-real-entries)
-  - [Select The Next Roadmap Workstream For Planning](#select-the-next-roadmap-workstream-for-planning)
-  - [Review A Roadmap Item Before Planning](#review-a-roadmap-item-before-planning)
+  - [Clarify Roadmap Decisions](#clarify-roadmap-decisions)
+  - [Refine Roadmap Intake](#refine-roadmap-intake)
+  - [Pick Next Roadmap Workstream](#pick-next-roadmap-workstream)
+  - [Review Roadmap Item](#review-roadmap-item)
 - [Planning](#planning)
-  - [Create A New Execution Plan](#create-a-new-execution-plan)
-  - [Create A Plan From Roadmap Input](#create-a-plan-from-roadmap-input)
-  - [Create A Plan From Checked Roadmap Tasks](#create-a-plan-from-checked-roadmap-tasks)
-  - [Create Multiple Plans From Disjoint Checked Roadmap Tasks](#create-multiple-plans-from-disjoint-checked-roadmap-tasks)
-  - [Revise An Existing Plan](#revise-an-existing-plan)
+  - [Create Plan](#create-plan)
+  - [Plan From Roadmap](#plan-from-roadmap)
+  - [Plan Checked Roadmap Items](#plan-checked-roadmap-items)
+  - [Split Checked Roadmap Items Into Plans](#split-checked-roadmap-items-into-plans)
+  - [Revise Plan](#revise-plan)
 - [Plan Verification](#plan-verification)
-  - [Review Whether A Plan Is Ready](#review-whether-a-plan-is-ready)
-  - [Decide How One Plan Should Execute](#decide-how-one-plan-should-execute)
+  - [Review Plan Readiness](#review-plan-readiness)
+  - [Choose Execution Mode](#choose-execution-mode)
 - [Implementation](#implementation)
-  - [Implement A Plan Without Releasing](#implement-a-plan-without-releasing)
-  - [Implement Only One Milestone](#implement-only-one-milestone)
+  - [Implement Plan](#implement-plan)
+  - [Implement Milestone](#implement-milestone)
 - [Workflow Execution](#workflow-execution)
-  - [Execute One Plan And Infer Workflow Mode](#execute-one-plan-and-infer-workflow-mode)
-  - [Execute One Plan On A Single Branch](#execute-one-plan-on-a-single-branch)
-  - [Execute One Plan As Shared Plan](#execute-one-plan-as-shared-plan)
-  - [Execute Multiple Plans In Parallel](#execute-multiple-plans-in-parallel)
-  - [Execute ALL Ready Plans In Parallel](#execute-all-ready-plans-in-parallel)
-  - [Implement All Unfinished Plans In Parallel](#implement-all-unfinished-plans-in-parallel)
-  - [Check Status On One Worker](#check-status-on-one-worker)
-  - [Check Status On Active Workers](#check-status-on-active-workers)
+  - [Run Plan With Inferred Mode](#run-plan-with-inferred-mode)
+  - [Run Plan On Single Branch](#run-plan-on-single-branch)
+  - [Run Plan As Shared Plan](#run-plan-as-shared-plan)
+  - [Run Plans In Parallel](#run-plans-in-parallel)
+  - [Run All Ready Plans](#run-all-ready-plans)
+  - [Run All Unfinished Plans](#run-all-unfinished-plans)
+  - [Check Worker Status](#check-worker-status)
+  - [Check Active Workers](#check-active-workers)
 - [Implementation Integration](#implementation-integration)
-  - [Integrate Completed Shared-Plan Worker Output](#integrate-completed-shared-plan-worker-output)
+  - [Integrate Shared Plan Output](#integrate-shared-plan-output)
 - [Implementation Verification](#implementation-verification)
-  - [Run Required Validation Only](#run-required-validation-only)
-  - [Verify Contract Impact](#verify-contract-impact)
-  - [Verify An Implemented Milestone](#verify-an-implemented-milestone)
-  - [Review A Diff For Risks](#review-a-diff-for-risks)
+  - [Run Required Validation](#run-required-validation)
+  - [Check Contract Impact](#check-contract-impact)
+  - [Verify Milestone](#verify-milestone)
+  - [Review Diff Risks](#review-diff-risks)
 - [Preparing Release](#preparing-release)
-  - [Verify Release Readiness](#verify-release-readiness)
-  - [Prepare A Release Only](#prepare-a-release-only)
+  - [Check Release Readiness](#check-release-readiness)
+  - [Prepare Release](#prepare-release)
 - [Releasing](#releasing)
-  - [Push An Already Prepared Release](#push-an-already-prepared-release)
-  - [Verify And Release All Merged PR Work](#verify-and-release-all-merged-pr-work)
-  - [Verify The Published Release](#verify-the-published-release)
+  - [Push Prepared Release](#push-prepared-release)
+  - [Release All Merged Work](#release-all-merged-work)
+  - [Check Published Release](#check-published-release)
 - [Other Useful Lifecycle Prompts](#other-useful-lifecycle-prompts)
-  - [Implement And Then Release](#implement-and-then-release)
-  - [Summarize The Current Lifecycle State](#summarize-the-current-lifecycle-state)
-  - [Triage A Failed Validation Run](#triage-a-failed-validation-run)
+  - [Implement Then Release](#implement-then-release)
+  - [Summarize Lifecycle State](#summarize-lifecycle-state)
+  - [Triage Validation Failure](#triage-validation-failure)
 - [Maintenance](#maintenance)
-  - [Compact AI Instruction Files](#compact-ai-instruction-files)
+  - [Compact AI Docs](#compact-ai-docs)
 
 ## Prompt Usage Baseline
 
@@ -98,12 +98,12 @@ Rules:
 Example shorthand:
 
 ```text
-Use `Implement A Plan Without Releasing` for `ai/PLAN_auth_cleanup.md`.
+Use `Implement Plan` for `ai/PLAN_auth_cleanup.md`.
 ```
 
 ## Discovery And Roadmap
 
-### Surface Roadmap Framing Decisions Interactively
+### Clarify Roadmap Decisions
 
 ```text
 Review `ROADMAP.md` for project-framing decisions that must be made before roadmap items can be planned or sequenced confidently.
@@ -118,7 +118,7 @@ After the interactive decisions are answered, update `ROADMAP.md` to reflect the
 Do not create an execution plan unless I ask.
 ```
 
-### Refine Unrefined Roadmap Tasks Into Real Entries
+### Refine Roadmap Intake
 
 ```text
 Refine the items under `## Not Yet Refined` in `ROADMAP.md` into concrete roadmap entries.
@@ -128,7 +128,7 @@ Move refined tasks only when the resulting roadmap wording is concrete enough to
 Leave still-ambiguous tasks in place and explain what is missing.
 ```
 
-### Select The Next Roadmap Workstream For Planning
+### Pick Next Roadmap Workstream
 
 ```text
 Review `ROADMAP.md` and select the next coherent workstream to move toward planning.
@@ -139,7 +139,7 @@ If work is ready to move forward, name the exact roadmap items that should feed 
 Do not create the plan yet unless I ask.
 ```
 
-### Review A Roadmap Item Before Planning
+### Review Roadmap Item
 
 ```text
 Review the roadmap item `<task>` before planning implementation.
@@ -152,7 +152,7 @@ Explain what behavior would change, which current specs govern it, what is still
 For planning prompts, use the lifecycle vocabulary from `ai/PLAN.md`.
 Do not force a plan into `Phase=Planning` if the work should still be `Discovery` or `Needs Input`.
 
-### Create A New Execution Plan
+### Create Plan
 
 ```text
 Create `ai/PLAN_<topic>.md` for <topic>.
@@ -161,7 +161,7 @@ Follow `ai/PLAN.md`.
 Set the plan lifecycle using `ai/PLAN.md` instead of guessing.
 ```
 
-### Create A Plan From Roadmap Input
+### Plan From Roadmap
 
 ```text
 Create `ai/PLAN_<topic>.md` from this roadmap input:
@@ -172,7 +172,7 @@ Treat `ROADMAP.md` only as roadmap input and follow `ai/PLAN.md`.
 Set the lifecycle state from `ai/PLAN.md` based on the actual readiness of the work.
 ```
 
-### Create A Plan From Checked Roadmap Tasks
+### Plan Checked Roadmap Items
 
 ```text
 Create one coherent `ai/PLAN_<topic>.md` from every checklist item marked `[x]` in `ROADMAP.md`.
@@ -184,7 +184,7 @@ Record unresolved requirement gaps and fallback assumptions explicitly.
 Set the lifecycle state from `ai/PLAN.md` based on actual planning readiness.
 ```
 
-### Create Multiple Plans From Disjoint Checked Roadmap Tasks
+### Split Checked Roadmap Items Into Plans
 
 ```text
 Create one or more `ai/PLAN_<topic>.md` files from every checklist item marked `[x]` in `ROADMAP.md`.
@@ -195,7 +195,7 @@ Record requirement gaps, fallback assumptions, and any cross-plan dependency not
 Set the lifecycle state for each plan from `ai/PLAN.md`.
 ```
 
-### Revise An Existing Plan
+### Revise Plan
 
 ```text
 Revise `<plan_file>` for this new requirement or constraint:
@@ -207,7 +207,7 @@ Update the lifecycle state only as far as the revision justifies.
 
 ## Plan Verification
 
-### Review Whether A Plan Is Ready
+### Review Plan Readiness
 
 ```text
 Review `<plan_file>` against `ai/PLAN.md`.
@@ -217,7 +217,7 @@ Check whether the lifecycle phase and status are accurate.
 Say explicitly if the plan is ready.
 ```
 
-### Decide How One Plan Should Execute
+### Choose Execution Mode
 
 ```text
 Review `<plan_file>` and decide whether it should execute in `Single Branch` or `Shared Plan`.
@@ -229,7 +229,7 @@ If the work really needs multiple plan files and `Parallel Plans`, say that expl
 
 ## Implementation
 
-### Implement A Plan Without Releasing
+### Implement Plan
 
 ```text
 Implement `<plan_file>`.
@@ -238,7 +238,7 @@ Follow `ai/EXECUTION.md`.
 Do not push, open a PR, or release unless I ask.
 ```
 
-### Implement Only One Milestone
+### Implement Milestone
 
 ```text
 Implement only `<milestone_name>` from `<plan_file>`.
@@ -251,7 +251,7 @@ Do not start later milestones, push, open a PR, or release unless I ask.
 
 Use these prompts when one request should actively execute planned work while also choosing or coordinating the workflow mode from `ai/WORKFLOW.md`.
 
-### Execute One Plan And Infer Workflow Mode
+### Run Plan With Inferred Mode
 
 ```text
 Execute `<plan_file>` using the workflow agent.
@@ -262,7 +262,7 @@ If the plan file is not clear enough to choose safely, stop and explain the ambi
 Do not switch to `Parallel Plans` unless I pass multiple plan files.
 ```
 
-### Execute One Plan On A Single Branch
+### Run Plan On Single Branch
 
 ```text
 Execute `<plan_file>` in `Single Branch` mode.
@@ -272,7 +272,7 @@ Treat the canonical plan file and `CHANGELOG.md` as directly editable on the act
 Do not push, open a PR, or release unless I ask.
 ```
 
-### Execute One Plan As Shared Plan
+### Run Plan As Shared Plan
 
 ```text
 Execute `<plan_file>` in `Shared Plan` mode.
@@ -282,7 +282,7 @@ Act as orchestrator, fan out worker branches or worktrees only for disjoint slic
 Push only the finished coordinator branch unless I explicitly ask otherwise.
 ```
 
-### Execute Multiple Plans In Parallel
+### Run Plans In Parallel
 
 ```text
 Execute these plan files in `Parallel Plans` mode using git worktrees:
@@ -296,10 +296,10 @@ If any listed plans are too coupled for safe parallel execution, stop and explai
 Do not release unless I ask.
 ```
 
-### Execute ALL Ready Plans In Parallel
+### Run All Ready Plans
 
 ```text
-Select every ready plan file under `ai/`, then execute the selected set using the same flow as `Execute Multiple Plans In Parallel`.
+Select every ready plan file under `ai/`, then execute the selected set using the same flow as `Run Plans In Parallel`.
 
 Treat ready plans as the non-archived `ai/PLAN_*.md` files still present directly under `ai/` whose `Lifecycle` status is `Ready`.
 Restate exactly which ready plan files were selected and which non-archived plan files were skipped because they were not `Ready`.
@@ -313,10 +313,10 @@ Track per-plan branch, validation, private `CHANGELOG_<topic>.md`, worker log, a
 Do not release unless I ask.
 ```
 
-### Implement All Unfinished Plans In Parallel
+### Run All Unfinished Plans
 
 ```text
-Select every unfinished plan file under `ai/`, then execute the selected set using the same flow as `Execute Multiple Plans In Parallel`.
+Select every unfinished plan file under `ai/`, then execute the selected set using the same flow as `Run Plans In Parallel`.
 
 Treat unfinished plans as the non-archived `ai/PLAN_*.md` files still present directly under `ai/`.
 If there are no unfinished plans, stop and say so explicitly.
@@ -329,7 +329,7 @@ Track per-plan branch, validation, private `CHANGELOG_<topic>.md`, worker log, a
 Do not release unless I ask.
 ```
 
-### Check Status On One Worker
+### Check Worker Status
 
 ```text
 Check the status of worker `<worker name or agent id>` in the current workflow execution.
@@ -338,7 +338,7 @@ Report mode, branch and worktree, current progress, changed files, validations r
 If the worker has stalled or completed, state that clearly.
 ```
 
-### Check Status On Active Workers
+### Check Active Workers
 
 ```text
 Check the status of the active workers in the current workflow execution.
@@ -352,7 +352,7 @@ Keep the report concise and factual.
 
 Use these prompts after worker implementation is already done and the next task is to fold ready output back into the canonical plan, changelog, and integration branch.
 
-### Integrate Completed Shared-Plan Worker Output
+### Integrate Shared Plan Output
 
 ```text
 Integrate completed worker output for `<plan_file>`.
@@ -363,7 +363,7 @@ Merge or cherry-pick ready worker branches, fold accepted worker-log content int
 
 ## Implementation Verification
 
-### Run Required Validation Only
+### Run Required Validation
 
 ```text
 Run only the required validation for `<plan_file>` or `<change>`.
@@ -372,7 +372,7 @@ Do not edit files.
 Use `ai/TESTING.md` and summarize what ran, what passed, what failed, and what artifacts would likely need updates.
 ```
 
-### Verify Contract Impact
+### Check Contract Impact
 
 ```text
 Review `<change>` for public contract impact.
@@ -381,7 +381,7 @@ State whether it requires updates to tests, REST Docs, Asciidoc, approved OpenAP
 If the change is internal-only, say that explicitly and explain why.
 ```
 
-### Verify An Implemented Milestone
+### Verify Milestone
 
 ```text
 Verify `<milestone_name>` from `<plan_file>` after implementation.
@@ -391,7 +391,7 @@ Check validation coverage, artifact updates, milestone commit completeness, and 
 List blockers first.
 ```
 
-### Review A Diff For Risks
+### Review Diff Risks
 
 ```text
 Review this change with a code review mindset.
@@ -403,7 +403,7 @@ Keep the summary brief.
 
 ## Preparing Release
 
-### Verify Release Readiness
+### Check Release Readiness
 
 ```text
 Review release readiness for `<plan_file>`.
@@ -413,7 +413,7 @@ List blockers first.
 Say explicitly if the repository is release-ready.
 ```
 
-### Prepare A Release Only
+### Prepare Release
 
 ```text
 Prepare a release for `<plan_file>`.
@@ -425,7 +425,7 @@ Do not push unless I ask.
 
 ## Releasing
 
-### Push An Already Prepared Release
+### Push Prepared Release
 
 ```text
 Push the current release commit and annotated tag to the remote.
@@ -433,7 +433,7 @@ Push the current release commit and annotated tag to the remote.
 Follow `ai/RELEASES.md` for push and post-push verification.
 ```
 
-### Verify And Release All Merged PR Work
+### Release All Merged Work
 
 ```text
 Verify and release all merged but unreleased work currently on `main`.
@@ -445,7 +445,7 @@ If the merged work is ready, prepare the release commit, archive every included 
 Summarize exactly which merged PRs and executed plan files were included.
 ```
 
-### Verify The Published Release
+### Check Published Release
 
 ```text
 Verify the already pushed release for `<plan_file>`.
@@ -456,7 +456,7 @@ Summarize exactly what was published.
 
 ## Other Useful Lifecycle Prompts
 
-### Implement And Then Release
+### Implement Then Release
 
 ```text
 Implement `<plan_file>`.
@@ -465,7 +465,7 @@ Use `ai/EXECUTION.md` for implementation.
 Use `ai/RELEASES.md` only after the approved implementation PR has been merged onto `main`.
 ```
 
-### Summarize The Current Lifecycle State
+### Summarize Lifecycle State
 
 ```text
 Summarize the current lifecycle state for `<plan_file>` or the current change.
@@ -474,7 +474,7 @@ Use `ai/PLAN.md`, `ai/EXECUTION.md`, and `ai/WORKFLOW.md` as needed.
 Report phase, status, active milestone, pending validations, integration state, and the next recommended step.
 ```
 
-### Triage A Failed Validation Run
+### Triage Validation Failure
 
 ```text
 Triage the failing validation for `<plan_file>` or `<change>`.
@@ -485,7 +485,7 @@ Identify the first real failure, likely root cause, whether it looks like a spec
 
 ## Maintenance
 
-### Compact AI Instruction Files
+### Compact AI Docs
 
 ```text
 Compact the standing AI instruction files.
