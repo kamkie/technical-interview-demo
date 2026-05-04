@@ -20,7 +20,7 @@ jobs:
   change_detection:
     runs-on: ubuntu-latest
     outputs:
-      markdown_only: ${{ steps.classify.outputs.markdown_only }}
+      skip_heavy_ci: ${{ steps.classify.outputs.skip_heavy_ci }}
 
     steps:
       - name: Check out repository
@@ -39,6 +39,18 @@ jobs:
           PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           set -euo pipefail
+
+          is_lightweight_change() {
+            local path="$1"
+            case "${path}" in
+              *.md|.editorconfig|.gitattributes|.gitignore|*/.gitignore|.aiignore|Default.xml|.run/*.run.xml|.githooks/*.sample|.env.example|*/.env.example)
+                return 0
+                ;;
+              *)
+                return 1
+                ;;
+            esac
+          }
 
           if [[ "${EVENT_NAME}" == "pull_request" ]]; then
             base_sha="${PR_BASE_SHA}"
@@ -61,64 +73,64 @@ jobs:
           fi
 
           if (( ${#changed_files[@]} == 0 )); then
-            echo "markdown_only=false" >> "${GITHUB_OUTPUT}"
+            echo "skip_heavy_ci=false" >> "${GITHUB_OUTPUT}"
             exit 0
           fi
 
-          markdown_only=true
+          skip_heavy_ci=true
           for path in "${changed_files[@]}"; do
-            if [[ "${path}" != *.md ]]; then
-              markdown_only=false
+            if ! is_lightweight_change "${path}"; then
+              skip_heavy_ci=false
               break
             fi
           done
 
-          echo "markdown_only=${markdown_only}" >> "${GITHUB_OUTPUT}"
+          echo "skip_heavy_ci=${skip_heavy_ci}" >> "${GITHUB_OUTPUT}"
 
   build:
     needs: change_detection
     runs-on: ubuntu-latest
 
     steps:
-      - name: Skip heavy CI for markdown-only changes
-        if: needs.change_detection.outputs.markdown_only == 'true'
+      - name: Skip heavy CI for lightweight-only changes
+        if: needs.change_detection.outputs.skip_heavy_ci == 'true'
         run: |
-          echo "Only *.md files changed." >> "${GITHUB_STEP_SUMMARY}"
+          echo "Only markdown or lightweight support files changed." >> "${GITHUB_STEP_SUMMARY}"
           echo "Skipping the Gradle build, Helm validation, and external smoke validation for this CI run." >> "${GITHUB_STEP_SUMMARY}"
 
       - name: Check out repository
-        if: needs.change_detection.outputs.markdown_only != 'true'
+        if: needs.change_detection.outputs.skip_heavy_ci != 'true'
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Set up Java 25
-        if: needs.change_detection.outputs.markdown_only != 'true'
+        if: needs.change_detection.outputs.skip_heavy_ci != 'true'
         uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "25"
 
       - name: Set up Gradle
-        if: needs.change_detection.outputs.markdown_only != 'true'
+        if: needs.change_detection.outputs.skip_heavy_ci != 'true'
         uses: gradle/actions/setup-gradle@v6
         with:
           dependency-graph: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && 'generate-and-upload' || 'disabled' }}
 
       - name: Set up Helm
-        if: needs.change_detection.outputs.markdown_only != 'true'
+        if: needs.change_detection.outputs.skip_heavy_ci != 'true'
         uses: azure/setup-helm@v5
 
       - name: Verify Docker availability
-        if: needs.change_detection.outputs.markdown_only != 'true'
+        if: needs.change_detection.outputs.skip_heavy_ci != 'true'
         run: docker version
 
       - name: Run full build
-        if: needs.change_detection.outputs.markdown_only != 'true'
+        if: needs.change_detection.outputs.skip_heavy_ci != 'true'
         run: ./gradlew build --no-daemon
 
       - name: Upload coverage to Codecov
-        if: needs.change_detection.outputs.markdown_only != 'true'
+        if: needs.change_detection.outputs.skip_heavy_ci != 'true'
         uses: codecov/codecov-action@v6
         with:
           use_oidc: true
@@ -127,7 +139,7 @@ jobs:
           fail_ci_if_error: true
 
       - name: Upload security scan artifacts
-        if: always() && needs.change_detection.outputs.markdown_only != 'true'
+        if: always() && needs.change_detection.outputs.skip_heavy_ci != 'true'
         uses: actions/upload-artifact@v7
         with:
           name: security-reports-ci-${{ github.run_id }}
@@ -136,7 +148,7 @@ jobs:
           retention-days: 14
 
       - name: Upload static analysis artifacts
-        if: always() && needs.change_detection.outputs.markdown_only != 'true'
+        if: always() && needs.change_detection.outputs.skip_heavy_ci != 'true'
         uses: actions/upload-artifact@v7
         with:
           name: static-analysis-reports-ci-${{ github.run_id }}
@@ -147,7 +159,7 @@ jobs:
           retention-days: 14
 
       - name: Upload SBOM artifacts
-        if: always() && needs.change_detection.outputs.markdown_only != 'true'
+        if: always() && needs.change_detection.outputs.skip_heavy_ci != 'true'
         uses: actions/upload-artifact@v7
         with:
           name: sbom-reports-ci-${{ github.run_id }}
@@ -156,18 +168,18 @@ jobs:
           retention-days: 14
 
       - name: Lint Helm chart
-        if: needs.change_detection.outputs.markdown_only != 'true'
+        if: needs.change_detection.outputs.skip_heavy_ci != 'true'
         run: helm lint helm/technical-interview-demo
 
       - name: Render Helm chart
-        if: needs.change_detection.outputs.markdown_only != 'true'
+        if: needs.change_detection.outputs.skip_heavy_ci != 'true'
         run: >-
           helm template technical-interview-demo
           helm/technical-interview-demo
           -f helm/technical-interview-demo/values-local.yaml
 
       - name: Run external smoke validation
-        if: needs.change_detection.outputs.markdown_only != 'true'
+        if: needs.change_detection.outputs.skip_heavy_ci != 'true'
         run: >-
           ./gradlew externalSmokeTest
           -PexternalSmokeImageName=technical-interview-demo
@@ -175,7 +187,7 @@ jobs:
           --no-daemon
 
   submit-dependency-graph:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.change_detection.outputs.markdown_only != 'true'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.change_detection.outputs.skip_heavy_ci != 'true'
     needs:
       - change_detection
       - build

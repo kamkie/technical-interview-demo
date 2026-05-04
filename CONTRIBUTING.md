@@ -174,7 +174,7 @@ Default quality gate before asking for review:
 
 Exception:
 
-- if every changed file matches `*.md`, manual consistency review is sufficient and the `CI` workflow short-circuits the heavy build path for that push or pull request
+- if every changed file is markdown or a lightweight support file such as `.editorconfig`, tracked `.gitignore` files, `.aiignore`, `Default.xml`, `.run/*.run.xml`, `.githooks/*.sample`, or `.env.example` templates, manual consistency review is sufficient and the `CI` workflow short-circuits the heavy build path for that push or pull request
 
 Additional validation rules:
 
