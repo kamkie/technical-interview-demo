@@ -3,8 +3,8 @@
 ## Lifecycle
 | Field | Value |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Summary
 - Synthetic workflow-fixture plan: clean up the internal search-filter normalization path in `business.book` without changing the `GET /api/books` contract.
@@ -141,7 +141,11 @@
 - If execution starts to redesign search semantics, stop and write a real public-API plan instead of hiding that scope inside this dummy cleanup.
 
 ## Validation Results
-- Not started. Planning-only dummy plan.
+- 2026-05-04: Milestone 1 completed. `.\gradlew.bat test --tests team.jit.technicalinterviewdemo.business.book.BookServiceTests --tests team.jit.technicalinterviewdemo.business.book.BookApiIntegrationTests` passed after rerunning with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3` because the default shell environment was pinned to Java 11 and no local `.env` file was present.
+- 2026-05-04: Milestone 2 refactor preserved the focused book behavior checks. `.\gradlew.bat test --tests team.jit.technicalinterviewdemo.business.book.BookServiceTests --tests team.jit.technicalinterviewdemo.business.book.BookApiIntegrationTests` passed with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`.
+- 2026-05-04: `.\gradlew.bat gatlingBenchmark` failed on the benchmark regression gate. The first real failure was shared baseline drift across `list-books` (p95 `28ms > 20ms`), `search-books` (p95 `25ms > 19ms`), `lookup-localization-message` (p95 `21ms > 14ms`), and `oauth2-github-redirect` (p95 `22ms > 14ms`). Because the failure spans unrelated endpoints outside this worker's owned slice, no benchmark baseline change or follow-up fix was made here.
+- 2026-05-04: reran `.\gradlew.bat gatlingBenchmark` with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`; the benchmark gate passed on the second run (`list-books` p95 `18ms`, `search-books` p95 `18ms`, `lookup-localization-message` p95 `14ms`, `oauth2-github-redirect` p95 `11ms`), so the temporary blocked status was cleared without code changes.
+- 2026-05-04: `.\gradlew.bat build` passed with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`.
 
 ## User Validation
 - Call `GET /api/books` with and without filters, including repeated `category` parameters and whitespace around text filters, and confirm the response shape, sort behavior, and validation messages remain unchanged.

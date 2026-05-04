@@ -104,6 +104,36 @@ class BookApiIntegrationTests extends AbstractBookCatalogMockMvcIntegrationTest 
     }
 
     @Test
+    void listBooksIgnoresWhitespaceOnlyFilters() throws Exception {
+        mockMvc.perform(get("/api/books")
+                        .queryParam("title", "   ")
+                        .queryParam("author", "  ")
+                        .queryParam("isbn", " ")
+                        .queryParam("category", " ")
+                        .queryParam("sort", "id,asc"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.length()").value(2))
+                .andExpect(jsonPath("$.content[0].title").value("Clean Code"))
+                .andExpect(jsonPath("$.content[1].title").value("Effective Java"))
+                .andExpect(jsonPath("$.totalElements").value(2));
+    }
+
+    @Test
+    void listBooksTrimsTextFiltersAndAcceptsRepeatedCategories() throws Exception {
+        mockMvc.perform(get("/api/books")
+                        .queryParam("title", " clean ")
+                        .queryParam("author", " MARTIN ")
+                        .queryParam("category", " Software Engineering ")
+                        .queryParam("category", "software engineering")
+                        .queryParam("sort", "id,asc"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.length()").value(1))
+                .andExpect(jsonPath("$.content[0].title").value("Clean Code"))
+                .andExpect(jsonPath("$.content[0].publicationYear").value(2008))
+                .andExpect(jsonPath("$.totalElements").value(1));
+    }
+
+    @Test
     void listBooksWithConflictingYearFiltersReturnsBadRequest() throws Exception {
         mockMvc.perform(get("/api/books")
                         .queryParam("year", "2018")

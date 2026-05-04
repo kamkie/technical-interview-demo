@@ -1,9 +1,11 @@
 package team.jit.technicalinterviewdemo.business.book;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 
@@ -12,9 +14,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import team.jit.technicalinterviewdemo.business.audit.AuditLogService;
 import team.jit.technicalinterviewdemo.business.category.CategoryService;
 import team.jit.technicalinterviewdemo.technical.api.InvalidRequestException;
@@ -97,6 +100,28 @@ class BookServiceTests {
                 .hasMessage("Sort field 'unknown' is not supported. Use one of: id, title, author, isbn, year.");
 
         verify(bookRepository, never()).findAll(
+                org.mockito.ArgumentMatchers.<Specification<Book>>any(),
+                org.mockito.ArgumentMatchers.any(Pageable.class)
+        );
+    }
+
+    @Test
+    void findAllIgnoresBlankFilters() {
+        BookSearchRequest request = new BookSearchRequest();
+        request.setTitle("   ");
+        request.setAuthor("\t");
+        request.setIsbn("  ");
+        request.setCategory(List.of(" ", "   "));
+        when(bookRepository.findAll(
+                org.mockito.ArgumentMatchers.<Specification<Book>>any(),
+                org.mockito.ArgumentMatchers.any(Pageable.class)
+        ))
+                .thenReturn(new PageImpl<>(List.of()));
+
+        assertThatCode(() -> bookService.findAll(request, PageRequest.of(0, 20)))
+                .doesNotThrowAnyException();
+
+        verify(bookRepository).findAll(
                 org.mockito.ArgumentMatchers.<Specification<Book>>any(),
                 org.mockito.ArgumentMatchers.any(Pageable.class)
         );
