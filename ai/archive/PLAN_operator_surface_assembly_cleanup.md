@@ -3,8 +3,8 @@
 ## Lifecycle
 | Field | Value |
 | --- | --- |
-| Phase | Integration |
-| Status | Implemented |
+| Phase | Closed |
+| Status | Released |
 
 ## Summary
 - Synthetic workflow-fixture plan: clean up the internal response-assembly flow in `technical.operator` without changing the `/api/admin/operator-surface` contract.

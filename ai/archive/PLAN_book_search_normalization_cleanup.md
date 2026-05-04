@@ -3,8 +3,8 @@
 ## Lifecycle
 | Field | Value |
 | --- | --- |
-| Phase | Integration |
-| Status | Implemented |
+| Phase | Closed |
+| Status | Released |
 
 ## Summary
 - Synthetic workflow-fixture plan: clean up the internal search-filter normalization path in `business.book` without changing the `GET /api/books` contract.

@@ -3,8 +3,8 @@
 ## Lifecycle
 | Field | Value |
 | --- | --- |
-| Phase | Integration |
-| Status | Implemented |
+| Phase | Closed |
+| Status | Released |
 
 ## Summary
 - Synthetic workflow-fixture plan: clean up the internal category-directory caching and name-normalization flow in `business.category` without changing the `/api/categories` contract or book-category assignment semantics.

@@ -7,16 +7,23 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+## [v2.0.0-M5] - 2026-05-04
+
 ### Added
+- Added `WORKING_WITH_AI.md` as the human-facing guide for AI-assisted discovery, planning, implementation, verification, and release preparation in this repository.
+- Added repo-local `repo-plan-author` and `repo-validation-gate` skills plus `scripts/classify-changed-files.ps1` so AI and CI can classify lightweight support-file changes and skip heavyweight validation when appropriate.
+- Added four repo-owned `Parallel Plans` workflow fixture plans for book search normalization, category directory cache cleanup, localization lookup cache cleanup, and operator-surface assembly cleanup.
 - Added operator-local `OperatorSurfaceService` tests that pin the ADMIN guard, the nested response sections, and the 10-entry recent-audit paging limit before the internal cleanup refactor.
 
 ### Changed
+- Refined `README.md`, `CONTRIBUTING.md`, and the AI guidance set under `ai/` so lifecycle phases, artifact ownership, reusable prompt titles, parallel-plan coordination, and release-preparation flow follow one consistent model.
+- Expanded the `CI` workflow's lightweight-change detection so markdown-only, AI-skill, and other support-file changes can skip heavyweight build validation when the repo-owned classifier marks them as `skipHeavyValidation=true`.
 - Added book-local regression coverage that pins whitespace-only search filters, trimmed text filters, and repeated category filters for `GET /api/books` ahead of the internal normalization cleanup.
 - Added focused category-service coverage for normalized assignment lookups, directory-cache reuse, duplicate-name validation, and the current missing-category error text.
 - Locked localization-local lookup, fallback-miss, and write-driven cache-eviction coverage ahead of the localization cache-flow cleanup.
 - Consolidated book-search request validation and normalization into a feature-local criteria helper so `BookService` and `BookSearchSpecifications` follow one internal search-filter path without changing the `GET /api/books` contract.
 - Simplified `CategoryService` directory-cache assembly and normalized assignment lookup flow while keeping cache names, category ordering, and the published category contract unchanged.
-- Simplified localization lookup and language-scoped cache access so normalized lookup requests and supported-language cache reads follow one internal flow without changing the public localization contract.
+- Simplified localization lookup and language-scoped cache access so normalized lookup requests, fallback handling, and supported-language cache reads follow one internal flow without changing the public localization contract.
 - Refactored `OperatorSurfaceService` into explicit admin-guard, audit-section, runtime-section, and operations-section assembly steps without changing the `/api/admin/operator-surface` contract.
 
 ## [v2.0.0-M4] - 2026-05-04

@@ -38,7 +38,7 @@ No unrefined tasks currently.
 
 Status: Planned
 
-Goal: finish the stable `2.0` line now that `v2.0.0-M1` through `v2.0.0-M4` established the browser-session contract, deployment boundary, upgrade guide, edge reference, smoke-alignment baseline, and the selected maintainability cleanup.
+Goal: finish the stable `2.0` line now that `v2.0.0-M1` through `v2.0.0-M5` established the browser-session contract, deployment boundary, upgrade guide, edge reference, smoke-alignment baseline, the selected maintainability cleanup, and the current prerelease workflow and internal-cleanup baseline.
 
 #### Prerelease Maintainability Cleanup
 - [x] Migrate persisted timestamps and API serialization to UTC `Instant` plus PostgreSQL `timestamptz`.

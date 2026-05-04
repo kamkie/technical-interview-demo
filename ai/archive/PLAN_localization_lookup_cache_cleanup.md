@@ -3,8 +3,8 @@
 ## Lifecycle
 | Field | Value |
 | --- | --- |
-| Phase | Integration |
-| Status | Implemented |
+| Phase | Closed |
+| Status | Released |
 
 ## Summary
 - Synthetic workflow-fixture plan: clean up the cache-backed lookup and fallback flow in `business.localization` without changing the public localization contract.
