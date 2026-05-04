@@ -1,50 +1,101 @@
 # Contributing Guide
 
-This repository is intentionally small. Contributions should preserve that quality: readable code, direct implementations, low ceremony, and spec-driven changes.
+Technical Interview Demo is a small, spec-driven Spring Boot application for interview exercises. Contributions should keep it readable, direct, and easy to reason about.
 
-## Ground Rules
+## Read This First
 
-Follow these project-level constraints first:
+Use the human-facing docs deliberately:
 
-- Keep the demo easy to reason about.
-- Prefer straightforward Spring MVC, Spring Data JPA, and `@Service` code over extra abstraction.
-- Keep package names under `team.jit.technicalinterviewdemo`.
-- Do not remove the existing `hello` or `book` endpoints unless the change explicitly requires it.
-- Use PostgreSQL for runtime work and keep the local developer path Docker-friendly.
-- Keep `README.md`, `AGENTS.md`, and `SETUP.md` aligned when product contract, engineering rules, or setup guidance change.
+- `README.md` for the project overview, implemented scope, and contract map
+- `SETUP.md` for local prerequisites, `.env` loading, run commands, CI reproduction, and troubleshooting
+- `WORKING_WITH_AI.md` for how to use AI across discovery, planning, implementation, verification, and release
+- `ROADMAP.md` for active planned work only
 
-`AGENTS.md` is the authoritative source for project-specific engineering rules. `SETUP.md` is the authoritative source for local environment and troubleshooting guidance.
-Focused AI workflow guidance now lives under `ai/`, with standing ownership split across `ai/CODE_STYLE.md`, `ai/TESTING.md`, `ai/REVIEWS.md`, and `ai/DOCUMENTATION.md`. Keep this guide aligned with those files where contributor workflow overlaps.
+Use the AI-facing docs only when they are the owner for the workflow or rule you are changing:
+
+- `AGENTS.md` for repository-local AI rules, spec priority, required artifact updates, and definition of done
+- `ai/PLAN.md`, `ai/EXECUTION.md`, `ai/WORKFLOW.md`, `ai/TESTING.md`, `ai/REVIEWS.md`, and `ai/RELEASES.md` for the AI-side planning, execution, validation, and release workflow
+
+## Project Ground Rules
+
+Keep these repository constraints intact unless the change explicitly redefines them:
+
+- keep the demo small, readable, and easy to reason about
+- prefer direct Spring MVC, Spring Data JPA, and `@Service` code over extra abstraction
+- keep package names under `team.jit.technicalinterviewdemo`
+- use PostgreSQL for runtime work and keep the local developer path Docker-friendly
+- keep the public application contract centered on `/api/**`
+- treat `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, and `/actuator/**` as internal or deployment-scoped surfaces unless a reviewed contract change says otherwise
+- treat executable specs, REST Docs, the approved OpenAPI baseline, and reviewer HTTP examples as part of the product rather than optional documentation
+
+When documentation changes, keep the right human-facing files aligned:
+
+- `README.md` owns the concise project and contract summary
+- `SETUP.md` owns environment, onboarding, runbooks, and troubleshooting
+- `WORKING_WITH_AI.md` owns the human-facing AI collaboration lifecycle
+- `CONTRIBUTING.md` owns contributor workflow and maintainer expectations
 
 ## Spec-Driven Development
 
 Contribute spec-first, not implementation-first.
 
-Expected flow:
+Normal flow:
 
 1. Identify the behavior being changed.
-2. Update or add the relevant spec artifact.
-3. Implement the smallest code change that satisfies the updated spec.
-4. Verify build, docs, and compatibility gates stay aligned.
+2. Identify the governing spec or contract artifact.
+3. Update or add the spec first when behavior is intentionally changing.
+4. Implement the smallest coherent change that satisfies the updated spec.
+5. Verify the executable and published artifacts still agree.
 
-Relevant spec artifacts include:
+Authoritative artifact map:
 
-- integration and documentation tests under `src/test/java/`
-- Asciidoc sources under `src/docs/asciidoc/`
-- approved OpenAPI baseline at `src/test/resources/openapi/approved-openapi.json`
-- runnable HTTP examples under `src/test/resources/http/`
-- `README.md` for public human-facing contract
-- `ROADMAP.md` for active planned work
-- `CHANGELOG.md` for released history
+- `src/test/java/` for executable behavior specs
+- `src/docs/asciidoc/` for published REST Docs content
+- `src/test/resources/openapi/approved-openapi.json` for the approved machine-readable public contract
+- `src/test/resources/http/` for reviewer-facing runnable request examples
+- `README.md` for the supported human-facing contract summary
+- `ROADMAP.md` for active work only
+- `CHANGELOG.md` for released history only
 
-## Branch Naming
+Change-routing rules:
+
+- public API change: update implementation, tests, REST Docs, HTTP examples, OpenAPI when intentionally changed, and `README.md` if the supported contract changed
+- internal refactor with no contract change: keep existing specs green and avoid unnecessary OpenAPI, HTTP example, or README edits
+- setup or tooling change: update `SETUP.md`
+- AI workflow or AI guidance change: update the owning AI guide and keep `AGENTS.md` aligned when the AI document set or maintenance rules changed
+- roadmap reprioritization: update `ROADMAP.md`
+- released history: update `CHANGELOG.md`
+
+## Working With AI
+
+If you are using AI in this repository, `WORKING_WITH_AI.md` is the human-facing starting point.
+
+Use AI with the same discipline as manual work:
+
+- frame the request in terms of behavior, not only code
+- give the AI the correct owner documents for the current lifecycle phase
+- keep work milestone-sized
+- review the diff, validation, and contract impact yourself
+- keep release work separate from implementation work
+
+Human responsibilities do not move to the AI. The developer still owns:
+
+- scope and product intent
+- approval of assumptions and tradeoffs
+- review of the resulting diff
+- validation choices and acceptance of the evidence
+- release decisions
+
+For multi-step work, planning should happen before implementation. When the work is large enough to justify a real plan, create or revise an `ai/PLAN_*.md` file and follow the workflow described in `WORKING_WITH_AI.md` plus the owning `ai/` guides.
+
+## Branches And Commit Messages
 
 Use short, descriptive branch names:
 
 - `feat/book-search`
-- `fix/book-update-validation`
-- `docs/spec-driven-docs`
-- `chore/testcontainers-upgrade`
+- `fix/session-bootstrap`
+- `docs/contributing-refresh`
+- `refactor/localization-cache`
 
 Recommended pattern:
 
@@ -52,7 +103,7 @@ Recommended pattern:
 <type>/<short-kebab-description>
 ```
 
-Suggested types:
+Suggested branch types:
 
 - `feat`
 - `fix`
@@ -61,68 +112,61 @@ Suggested types:
 - `refactor`
 - `test`
 
-## Commit Messages
-
-Use concise, imperative subjects that describe the change clearly.
+Use concise, imperative commit subjects that describe one logical change.
 
 Good examples:
 
-- `Add developer setup guide`
-- `Flatten localization lookups onto collection filters`
-- `Document spec-driven contribution workflow`
+- `Add admin user management examples`
+- `Document post-deploy smoke expectations`
+- `Refresh contributor workflow guide`
 
-Keep the subject focused on one logical change.
-
-## Pull Request Process
+## Pull Request Expectations
 
 Keep pull requests narrow enough to review quickly.
 
 Before opening a PR:
 
-1. Finish the intended local implementation scope first and run the required local validation.
-2. Rebase or merge your branch so it reflects the current target branch.
-3. Make sure the change is scoped to one feature, fix, refactor, or documentation update.
-4. Update tests and docs when behavior changed.
+1. Finish the intended local implementation scope first.
+2. Run the required local validation for the actual change type.
+3. Rebase or merge so the branch reflects the current target branch.
+4. Update the right specs and docs when behavior or workflow changed.
 
-Opening the PR is the handoff after local execution is complete. It is not a substitute for local validation, review, or documentation updates.
+Opening a PR is the handoff after local execution is complete. It is not a substitute for local validation, review, or documentation updates.
 
 Each PR should include:
 
 - a short summary of what changed
 - the reason for the change
 - the commands you ran to validate it
-- any follow-up work that remains out of scope
+- any follow-up work intentionally left out of scope
 - any security-sensitive changes such as auth, secrets, workflow permissions, logging of sensitive data, or container publication behavior
 
 Self-review and reviewer focus should stay on bugs, regressions, spec drift, missing validation, and security-sensitive changes before style-only cleanup.
 
-If the change affects public API behavior, include example requests/responses or reference the updated generated docs and OpenAPI change.
+If the change affects public API behavior, include example requests or responses, or point reviewers to the updated REST Docs and OpenAPI change.
 
-Branch protection expectations for the default branch:
+Default-branch expectations:
 
 - require the `CI` workflow to pass
 - require at least one reviewer
 - prefer squash merges or another linear-history policy
-- keep version-tag creation with maintainers who also own release validation
+- keep release tagging with maintainers who also own release validation
 
-## Release Expectations
+## Worktrees, Plans, And Integration
 
-Maintainers preparing a release should follow `ai/RELEASES.md` only after the approved implementation PR has been merged onto `main`.
+Treat `main` as the integration branch for completed work.
 
-Release preparation should include:
+If you are executing a multi-step plan in a branch or git worktree:
 
-- reviewing any new or modified Flyway migrations under `src/main/resources/db/migration/` together with their JSON sidecars under `src/main/resources/db/migration/metadata/`
-- classifying the release with `pwsh ./scripts/release/get-release-migration-impact.ps1 -PreviousReleaseTag <previous-tag> -CurrentRef HEAD`
-- capturing restore-drill evidence with `pwsh ./scripts/release/invoke-restore-drill.ps1 ...` for any `restore-sensitive` release
-- confirming the exact release candidate passed `.\gradlew.bat build`
-- deciding whether `.\gradlew.bat gatlingBenchmark` is required for the scoped changes
-- running the manual `Post-Deploy Smoke` workflow with the expected build version and short commit id before promotion
-- updating `CHANGELOG.md`, `ROADMAP.md`, and the executed `ai/PLAN_*.md` file before tagging
-- verifying the remote `Release` workflow published the semantic image tag, the immutable short-SHA image tag, and the GitHub Release notes
+- keep the work there until the full planned scope is complete
+- push that branch and open a PR instead of trying to release directly from a worktree-only branch tip
+- consider worktree-based execution complete only when the finished branch has been pushed and the PR is open or already merged onto `main`
 
-## Testing Requirements
+Do not cut a release from unmerged worktree state.
 
-Run the required quality gate before asking for review:
+## Validation Expectations
+
+Default quality gate before asking for review:
 
 ```powershell
 .\gradlew.bat build
@@ -132,19 +176,25 @@ Exception:
 
 - if every changed file matches `*.md`, manual consistency review is sufficient and the `CI` workflow short-circuits the heavy build path for that push or pull request
 
-Additional expectations:
+Additional validation rules:
 
-- Add or update tests when API behavior changes.
-- Keep the aggregate `build` clean.
-- Do not skip documentation generation or the Docker image step when using the standard verification flow.
-- The `CI` workflow includes the OpenAPI compatibility gate as part of the full build.
-- Pull requests should stay green on the `CI` workflow before review is requested.
-- Review the JaCoCo HTML output at `build/reports/jacoco/test/html/index.html` or run `./gradlew jacocoCoverageSummary` when coverage-sensitive changes land.
-- `check` and `build` enforce minimum JaCoCo bundle coverage of 90% line coverage and 70% branch coverage.
-- Rerun `./gradlew gatlingBenchmark` when changing book list/search behavior, localization lookup behavior, or the OAuth/session startup flow.
-- Use `SETUP.md` for environment prerequisites and local tool configuration.
+- use `SETUP.md` for JDK 25, Docker, `.env`, and command prerequisites
+- if your shell is not already on Java 25, load the repo environment first in PowerShell with:
 
-Deployment-oriented checks when those assets are part of the change:
+```powershell
+. .\scripts\load-dotenv.ps1
+```
+
+- rerun `.\gradlew.bat gatlingBenchmark` when changing book list or search behavior, localization lookup behavior, or OAuth or session startup behavior
+- refresh the approved OpenAPI baseline only after intentional contract review with:
+
+```powershell
+.\gradlew.bat refreshOpenApiBaseline
+```
+
+- keep pull requests green on the `CI` workflow before asking for review
+
+When deployment assets are part of the change, also run the relevant checks from `SETUP.md`, usually including:
 
 - `helm lint helm/technical-interview-demo`
 - `helm template technical-interview-demo helm/technical-interview-demo -f helm/technical-interview-demo/values-local.yaml`
@@ -155,22 +205,40 @@ Deployment-oriented checks when those assets are part of the change:
 
 ## Documentation Expectations
 
-Documentation is part of the change.
+Documentation is part of the change. Update the owning artifact instead of spreading partial updates across unrelated files.
 
-Update the relevant files when behavior changes:
+Common routing:
 
-- `README.md` for supported human-facing behavior and contract changes
-- `AGENTS.md` for engineering rules and AI-facing project constraints
-- `SETUP.md` for onboarding, environment, and troubleshooting changes
-- `ROADMAP.md` when active roadmap items are added, removed, or materially re-scoped
+- `README.md` for supported project scope and public contract summary
+- `SETUP.md` for local setup, CI reproduction, deployment runbooks, and troubleshooting
+- `WORKING_WITH_AI.md` for the human-facing AI collaboration lifecycle
+- `AGENTS.md` and the relevant `ai/` guide when AI rules, ownership, workflow, or execution guidance changed
+- `src/docs/asciidoc/` and the related REST Docs tests when public API behavior changed
+- `src/test/resources/http/` when reviewer-facing request examples changed
+- `ROADMAP.md` when active work changed
 - `CHANGELOG.md` when preparing or documenting a release
-- `src/docs/asciidoc/` and related REST Docs tests when public API behavior changes
-- `src/test/resources/http/` when reviewer-facing request examples change
+
+## Release And Maintainer Expectations
+
+Release preparation starts only after the approved implementation PR has been merged onto `main`.
+
+Use `ai/RELEASES.md` for the detailed release workflow.
+
+At a minimum, release preparation should include:
+
+- reviewing modified Flyway migrations together with their metadata sidecars under `src/main/resources/db/migration/metadata/`
+- classifying the release with `pwsh ./scripts/release/get-release-migration-impact.ps1 -PreviousReleaseTag <previous-tag> -CurrentRef HEAD`
+- capturing restore-drill evidence with `pwsh ./scripts/release/invoke-restore-drill.ps1 ...` for any `restore-sensitive` release
+- confirming the exact release candidate passed `.\gradlew.bat build`
+- deciding whether `.\gradlew.bat gatlingBenchmark` is required for the scoped changes
+- running the manual `Post-Deploy Smoke` workflow with the expected build version and short commit id before promotion
+- updating `CHANGELOG.md`, `ROADMAP.md`, and any executed `ai/PLAN_*.md` files before tagging
+- verifying the remote `Release` workflow published the semantic tag, immutable short-SHA tag, and GitHub Release notes
 
 ## Formatting Expectations
 
-Spotless is the formatter entry point.
+Spotless is the formatting entry point.
 
-Java formatting uses IntelliJ IDEA's formatter when available. If the formatter is not configured, Java formatting is skipped instead of failing the build.
+Java formatting delegates to IntelliJ IDEA when the formatter is available. If the formatter is not configured, Java formatting is skipped instead of failing the build.
 
-Use `SETUP.md` for formatter setup details and local formatter configuration options.
+Use `SETUP.md` for formatter setup details and local IDE configuration.
