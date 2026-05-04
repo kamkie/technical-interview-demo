@@ -1,25 +1,13 @@
 # Design Guide
 
-`ai/DESIGN.md` captures the intended design direction for `technical-interview-demo`.
+`ai/DESIGN.md` captures intended product and contract direction for `technical-interview-demo`.
 
-Use this file when making product-shaping decisions:
-
-- API behavior
-- feature scope
-- security posture decisions
-- user-visible errors
-- operational defaults
-- roadmap tradeoffs
-
-This file explains the intent behind the contract. It is not the contract itself.
-Use `ai/DOCUMENTATION.md` for owning-file selection and cross-document alignment.
+Use this file when the task changes user-visible behavior, supported scope, security posture, operational defaults, or roadmap tradeoffs.
+Use `ai/ARCHITECTURE.md` for structural placement and `ai/DOCUMENTATION.md` for artifact routing. This file explains intent behind the contract; it is not the contract itself.
 
 ## Product Intent
 
-This application is a technical interview demo, not a general-purpose starter platform.
-
-`1.0` means a stable interview-demo reference app.
-It does not mean this repository is trying to become a production-ready starter.
+This repository is a technical interview demo, not a general-purpose starter platform.
 
 The design target is:
 
@@ -27,16 +15,15 @@ The design target is:
 - rich enough to show meaningful backend decisions
 - realistic enough to demonstrate API, persistence, security, observability, and documentation practices
 
-The project should feel intentional, not oversized.
+The stable line is an interview-demo reference app, not a promise to become a full production platform.
 
-## Primary Design Goals
+## Design Priorities
 
 - clarity over cleverness
-- explicit behavior over hidden magic
-- spec-driven evolution over ad hoc changes
-- public API stability once behavior is documented
-- PostgreSQL-backed runtime realism without distributed-systems sprawl
-- production-aware operational features without pretending to be a full platform product
+- explicit, inspectable behavior over hidden magic
+- stable public behavior once it is published
+- operational realism without platform sprawl
+- demo readability over framework ambition
 
 ## Non-Goals
 
@@ -46,216 +33,111 @@ This repository is not trying to be:
 - a microservices example
 - a cloud-provider reference architecture
 - a frontend-heavy product
-- a best-possible-abstraction showcase
+- an abstraction showcase
 
 If a change pushes the app toward any of those, it needs strong justification.
 
 ## Supported Experience
 
-The application currently supports:
+The application intentionally combines:
 
-- a deliberately small externally supported `/api/**` contract plus internal or devops validation endpoints
-- CRUD-style book management
-- category management
-- localization management and localized error responses
-- authenticated user profile behavior
+- a small externally supported `/api/**` surface plus internal or deployment-scoped validation endpoints
+- CRUD-style book, category, and localization behavior
+- authenticated account behavior
+- localized errors
 - observability, generated docs, and compatibility gates
 
-That mix is deliberate. It demonstrates several dimensions of backend work in one compact codebase:
+That mix is deliberate. It demonstrates request validation, filtering, pagination, optimistic locking, role-based authorization, session-backed authentication, localization, caching, metrics, audit logging, REST Docs, and OpenAPI in one compact codebase.
 
-- request validation
-- filtering and pagination
-- optimistic locking
-- role-based authorization
-- session-backed authentication
-- localization
-- caching
-- metrics
-- audit logging
-- REST Docs and OpenAPI
+## Public Contract Direction
 
-## Design Principles
-
-### 1. Small Surface, Real Behavior
-
-Prefer a few endpoints with thoughtful behavior over many thin endpoints.
-The app should show real tradeoffs such as filtering, fallback logic, authorization, and write auditing.
-
-### 2. Spec First
-
-Behavior should be designed through:
-
-- integration tests
-- REST Docs tests
-- OpenAPI compatibility checks
-- human-facing docs
-
-If a design change cannot be expressed clearly in those artifacts, it is probably not ready.
-
-### 3. Thin Adapters, Concrete Services
-
-Controllers should stay HTTP-focused.
-Services should contain the real behavioral decisions.
-Repositories should stay narrow and persistence-focused.
-
-### 4. Demo Readability Beats Architectural Fashion
-
-A direct implementation is usually preferred to:
-
-- a generic base class
-- an internal platform layer
-- a factory or strategy hierarchy for a single use case
-
-Design consistency matters, but readability matters more.
-
-### 5. Operational Features Are Part Of The Design
-
-Caching, metrics, tracing, health endpoints, and audit logging are not afterthoughts.
-They are part of the product being demonstrated.
-
-## API Design Direction
-
-The API should remain:
+The supported API should remain:
 
 - JSON-friendly
 - easy to inspect manually
 - stable once documented
 - strict enough to show validation discipline
 
-Current design preferences:
+Current preferences:
 
 - paginated collection endpoints
 - explicit filter parameters rather than opaque query languages
-- predictable error responses using `ProblemDetail`
+- predictable `ProblemDetail`-based errors
 - localized error metadata with `messageKey`, localized `message`, and `language`
-- authentication and authorization rules that are visible in docs and tests
+- security rules that are visible in docs and tests
 
-Avoid:
+Avoid overloaded endpoints, inconsistent status handling, or letting persistence shape harden into the long-term public contract.
 
-- overloaded endpoints with many special modes
-- persistence leakage becoming the long-term public contract
-- inconsistent status-code behavior across similar operations
+## Security And Deployment Direction
 
-## Error Design
-
-Errors are a designed user surface, not incidental exception output.
-
-Current desired properties:
-
-- correct HTTP status
-- stable, meaningful titles and details
-- localization metadata
-- consistent client behavior across validation, not-found, conflict, and forbidden cases
-
-If you change error handling, treat it as both a design and contract change.
-
-## Security Design
-
-The design goal is pragmatic security for a demo application:
+The security posture is pragmatic for a demo application:
 
 - public reads where appropriate
 - authenticated writes
 - role-based restrictions for privileged operations
 - persisted application users and roles
-- session-backed behavior realistic enough to discuss in an interview
+- session-backed behavior that is realistic enough to discuss in an interview
 
-The current contract is intentionally narrow:
+The supported surface is intentionally narrow:
 
-- the externally supported application surface lives under `/api/**`
-- `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, `/actuator/health`, `/actuator/health/liveness`, `/actuator/health/readiness`, and `/actuator/info` remain internal or devops validation paths
-- `/actuator/prometheus` is deployment-scoped technical surface for trusted scraping, not part of the internet-public contract
+- the externally supported application contract lives under `/api/**`
+- `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, `/actuator/health`, `/actuator/health/liveness`, `/actuator/health/readiness`, and `/actuator/info` remain internal or deployment validation paths
+- `/actuator/prometheus` is a trusted-scrape technical surface, not part of the internet-public contract
 - same-site browser-session bootstrap lives at `/api/session`, with provider-aware login entry points under `/api/session/oauth2/authorization/{registrationId}` and provider callbacks under `/api/session/login/oauth2/code/{registrationId}` when the optional `oauth` profile is active
-- unsafe same-site browser writes use the supported CSRF contract: `GET /api/session` bootstraps the readable `XSRF-TOKEN` cookie and clients mirror it into the `X-XSRF-TOKEN` header when a real current application session exists
+- unsafe same-site browser writes use the supported CSRF contract: `GET /api/session` bootstraps the readable `XSRF-TOKEN` cookie and clients mirror it into `X-XSRF-TOKEN` when a real current session exists
+- abuse protection for login bootstrap and write-heavy internet-public paths is primarily an edge or deployment concern
 
-Preserve those decisions unless an explicit follow-up contract review changes them.
+Preserve those decisions unless an explicit contract review changes them.
 
-## Data Design
+## Data, Localization, And Observability Direction
 
-Data should stay straightforward:
+Keep the data model straightforward:
 
-- relational storage in PostgreSQL
+- PostgreSQL runtime
 - Flyway-managed schema
-- JPA for persistence mapping
+- JPA persistence
 - feature-local repositories
 
-One important cleanup direction remains deliberate and explicit:
-
-- avoid letting JPA entity shape become the permanent public API contract
-
-## Localization Design
-
-Localization is not limited to a dedicated CRUD feature. It also shapes:
+Keep localization as a product concern, not only a CRUD concern:
 
 - request language detection
 - user preferred-language fallback
 - localized API errors
 
-Review localization changes as product changes, not only data-model edits.
+Keep observability built into the product:
 
-## Observability Design
-
-The app should be easy to inspect in development and credible in deployment:
-
-- health, readiness, and liveness endpoints
+- health, readiness, liveness, and info endpoints
 - Prometheus metrics
 - request tracing and request IDs
 - explicit domain counters and gauges
-- append-only audit logging for write operations
+- append-only audit logging for writes
 
 Prefer a small number of meaningful metrics and logs over speculative observability complexity.
 
-## Documentation Design
+## Documentation Role Split
 
-Documentation should stay role-distinct:
+Keep documentation roles distinct:
 
-- contract and reviewer-facing behavior lives in executable specs and published contract docs
-- human maintainer workflow lives in `README.md`, `CONTRIBUTING.md`, and `SETUP.md`
-- AI workflow and focused standing guidance live in `AGENTS.md` and the owning `ai/` guides
+- executable specs and published contract docs own behavior
+- `README.md`, `CONTRIBUTING.md`, and `SETUP.md` own human workflow
+- `AGENTS.md` and the focused `ai/` guides own AI workflow
 
-Do not collapse those roles into one meta-document.
+## Roadmap Direction
 
-## Roadmap Design Direction
-
-Current roadmap pressure points are sensible:
-
-- preserve the frozen `1.0` contract
-- tighten production posture
-- add deployment and CI/CD assets
-- keep optional future scope clearly deferred
-
-That means design work should prefer:
+Current design pressure should stay on:
 
 - finishing and clarifying the existing surface
 - hardening visible behavior
 - improving delivery and operations
 
-over adding major new features.
+Prefer that over adding major new feature areas.
 
-## Long-Term Product Framing
+Longer-term framing remains:
 
-- post-`1.x` evolution should keep browser-oriented auth and session flows instead of pivoting this repo to a bearer-token-only public contract
-- any first-party UI remains a separate repository; this repository continues to own backend/API, auth, and operational behavior
-- supported browser usage assumes one public origin through reverse-proxy deployment, so same-site flows are the design target rather than cross-origin browser support
-- moving toward a more production-ready posture is an explicit post-`1.x` contract review, not a silent extension of the frozen interview-demo `1.x` promise
-
-## Good Design Changes
-
-Usually good:
-
-- clarifying a request or response contract
-- making error behavior more consistent
-- reducing persistence leakage in the public API
-- adding targeted metrics or audit entries
-- documenting real runtime expectations
-- adding deployment assets that stay readable and vendor-neutral
-
-Usually bad:
-
-- introducing new feature areas with weak justification
-- adding framework-heavy indirection to a small codebase
-- letting docs drift from behavior
-- reopening locked `1.0` decisions without an explicit contract review
-- making production assumptions that the documented demo posture does not support
+- post-`1.x` evolution keeps browser-oriented auth and session flows instead of pivoting to bearer-token-only public APIs
+- any first-party UI stays in a separate repository
+- supported browser usage assumes one public origin through reverse-proxy deployment
+- moving toward a more production-ready posture is an explicit post-`1.x` contract review, not a silent extension of the `1.x` promise
 
 ## Design Review Questions
 
@@ -263,6 +145,6 @@ Before finalizing a design change, ask:
 
 - does this make the app easier or harder to explain in an interview?
 - does it improve real behavior or only architecture aesthetics?
-- does it preserve a compact and coherent public surface?
+- does it preserve a compact and coherent supported surface?
 - does it keep specs, docs, and implementation aligned?
 - is this change finishing the demo, or inflating it?

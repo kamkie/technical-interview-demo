@@ -1,55 +1,46 @@
 # Code Style Guide For AI Agents
 
-`ai/CODE_STYLE.md` owns standing AI guidance for shaping code and build-file edits in this repository.
+`ai/CODE_STYLE.md` owns how repository edits should be shaped.
 
 Use this file when the task changes source code, tests, Gradle/build logic, workflow YAML, or other repo-owned implementation files.
-Do not treat this file as a behavior spec. Contract truth still lives in the executable and published spec artifacts named in `AGENTS.md`.
+Use `ai/ARCHITECTURE.md` and `ai/BUSINESS_MODULES.md` for placement and ownership. This file is about edit shape and repo-local coding conventions, not behavior authority.
 
 ## Change-Shaping Goals
 
-Keep code changes:
+Keep changes:
 
 - small enough to review quickly
-- direct enough to preserve the demo nature of the project
+- direct enough to preserve the demo character of the project
 - aligned with the governing spec instead of inventing extra behavior
-- easy to reason about for a future maintainer or interview reviewer
+- easy to trace for a maintainer or interview reviewer
 
-## Preferred Style In This Repo
+## Repo Conventions
 
-- preserve the demo nature of the project; prefer direct code over reusable frameworks built inside the repo
-- keep package names under `team.jit.technicalinterviewdemo`
-- keep non-trivial business rules in `@Service` beans
-- keep Spring MVC controllers thin and focused on HTTP translation
-- prefer Spring Data repositories for persistence access instead of adding extra repository abstraction layers
-- keep REST responses JSON-friendly
+- keep code under `team.jit.technicalinterviewdemo`
+- prefer existing feature-local types and helpers over new shared abstraction layers
+- keep REST responses JSON-friendly and repo-owned
 - when returning `ResponseEntity`, assign the payload to a local variable first
-- use Lombok when it clearly removes routine boilerplate without obscuring behavior
+- use Lombok only when it removes routine boilerplate without hiding behavior
 - keep code compatible with Error Prone and the curated PMD ruleset
 - log successful operations that change database state
 
 ## Editing Discipline
 
-- implement the smallest coherent change that satisfies the updated spec
-- keep related renames, moves, and cleanup narrow enough that the behavioral change stays obvious
-- prefer feature-local changes over cross-repo abstraction unless the repetition is already real
+- implement the smallest coherent change that satisfies the governing spec
+- keep renames, moves, and cleanup narrow enough that the behavioral change stays obvious
+- do not broaden a small fix into cross-repo cleanup unless the repetition is already real
 - do not change public contract behavior accidentally while cleaning up internals
-- avoid opportunistic infrastructure churn when a direct code change is enough
+- when build or workflow files change, prefer existing Gradle tasks and workflows over parallel scripts
 
-## Naming And Structure
+## Naming And Placement
 
 - prefer names that describe business meaning or technical role directly
 - keep new types close to the feature or technical slice that owns them
-- avoid generic helper, util, base, or shared layers unless a repeated problem clearly justifies them
-- prefer explicit flow over hidden indirection or lifecycle magic
-
-## When Build Or Workflow Files Change
-
-- keep the automation path aligned with the repository docs and spec expectations
-- avoid adding parallel scripts when an existing Gradle task or workflow already owns the behavior
-- keep CI or release changes narrow and easy to audit
+- avoid generic `helper`, `util`, `base`, or `shared` layers unless a repeated problem clearly justifies them
+- if placement or boundary questions appear, resolve them through `ai/ARCHITECTURE.md` and `ai/BUSINESS_MODULES.md` instead of encoding architecture rules here
 
 ## Cross-References
 
-- use `ai/TESTING.md` for test-layer and validation guidance
-- use `ai/REVIEWS.md` for bug-risk and security-review lenses before finalizing a change
-- use `ai/DOCUMENTATION.md` when the task also changes README, contributing guidance, setup guidance, AI docs, REST Docs, HTTP examples, or release history
+- use `ai/TESTING.md` for validation scope
+- use `ai/REVIEWS.md` for final bug-risk and security review
+- use `ai/DOCUMENTATION.md` when the change also moves docs, examples, AI guidance, roadmap entries, or release history

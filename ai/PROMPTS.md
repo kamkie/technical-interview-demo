@@ -1,29 +1,30 @@
 # Prompt Library For This Repository
 
 `ai/PROMPTS.md` is a library of short reusable prompt starters for common repository workflows.
+It does not own standing policy.
 
 Keep prompts lean:
 
-- put standing repository policy in `AGENTS.md`
-- put artifact-routing rules in `ai/DOCUMENTATION.md`
-- put planning rules in `ai/PLAN.md`
-- put execution rules in `ai/EXECUTION.md`
-- put delegated-work rules in `ai/WORKFLOW.md`
-- put release rules in `ai/RELEASES.md`
-- put validation rules in `ai/TESTING.md`
-- put review rules in `ai/REVIEWS.md`
+- repository rules live in `AGENTS.md`
+- artifact routing lives in `ai/DOCUMENTATION.md`
+- planning rules live in `ai/PLAN.md`
+- single-agent execution rules live in `ai/EXECUTION.md`
+- delegation rules live in `ai/WORKFLOW.md`
+- release rules live in `ai/RELEASES.md`
+- validation rules live in `ai/TESTING.md`
+- review rules live in `ai/REVIEWS.md`
 
-If a prompt starts accumulating owner-guide policy, move that policy back to the owning guide and keep only the task-specific constraints here.
+If a prompt starts reading like policy, move that policy back to the owner guide and keep only the task-specific constraint here.
 
 ## Prompt Usage Baseline
 
-Default reading set by prompt type:
+Default read set by task:
 
-- planning prompts: `AGENTS.md`, `ai/PLAN.md`, and the governing specs; include `README.md` or `ROADMAP.md` when the task depends on them
-- implementation prompts: `AGENTS.md`, `ai/EXECUTION.md`, and the target `ai/PLAN_*.md`
-- validation prompts: `AGENTS.md`, `ai/TESTING.md`, and any owner guides needed to judge artifact impact
-- release prompts: `AGENTS.md`, `ai/RELEASES.md`, the executed plan, and the changed contract docs
-- multi-agent prompts: `AGENTS.md`, `ai/WORKFLOW.md`, `ai/EXECUTION.md`, and the relevant plan files
+- planning: `AGENTS.md`, `ai/PLAN.md`, and the governing specs; add `README.md` or `ROADMAP.md` only when relevant
+- implementation: `AGENTS.md`, `ai/EXECUTION.md`, and the target `ai/PLAN_*.md`
+- validation: `AGENTS.md`, `ai/TESTING.md`, plus any owner guide needed to judge artifact impact
+- release: `AGENTS.md`, `ai/RELEASES.md`, the executed plan, and the changed contract docs
+- multi-agent: `AGENTS.md`, `ai/WORKFLOW.md`, `ai/EXECUTION.md`, and the relevant plan files
 
 Use the owner guide named by the prompt instead of restating its standing policy in the request.
 Prefer filling in placeholders such as `<topic>`, `<plan_file>`, `<milestone_name>`, `<task>`, and `<constraint>` so the request is concrete.
