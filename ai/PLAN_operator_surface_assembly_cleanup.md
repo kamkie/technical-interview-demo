@@ -3,8 +3,8 @@
 ## Lifecycle
 | Field | Value |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Summary
 - Synthetic workflow-fixture plan: clean up the internal response-assembly flow in `technical.operator` without changing the `/api/admin/operator-surface` contract.
@@ -136,7 +136,12 @@
 - If execution starts to alter the operator response contract, stop and write a real public-API plan instead of expanding this dummy cleanup.
 
 ## Validation Results
-- Not started. Planning-only dummy plan.
+- `.\gradlew.bat test --tests team.jit.technicalinterviewdemo.technical.operator.OperatorSurfaceApiIntegrationTests --tests team.jit.technicalinterviewdemo.technical.operator.OperatorSurfaceApiDocumentationTests --tests team.jit.technicalinterviewdemo.technical.operator.OperatorSurfaceServiceTests`
+  - Re-ran with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`; passed for Milestone 1.
+- `.\gradlew.bat test --tests team.jit.technicalinterviewdemo.technical.operator.OperatorSurfaceApiIntegrationTests --tests team.jit.technicalinterviewdemo.technical.operator.OperatorSurfaceApiDocumentationTests --tests team.jit.technicalinterviewdemo.technical.operator.OperatorSurfaceServiceTests`
+  - Re-ran with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`; passed after the `OperatorSurfaceService` refactor.
+- `.\gradlew.bat build`
+  - Re-ran with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`; passed, including REST Docs, OpenAPI compatibility, vulnerability scans, static analysis, SBOM generation, Docker image build, and the rest of the standard build gates.
 
 ## User Validation
 - Call `GET /api/admin/operator-surface` as an admin and confirm the audit, runtime, and operations sections, links, and values remain unchanged.

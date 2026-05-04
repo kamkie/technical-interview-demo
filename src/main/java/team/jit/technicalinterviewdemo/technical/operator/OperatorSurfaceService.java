@@ -34,33 +34,49 @@ public class OperatorSurfaceService {
     private final ApplicationAvailability applicationAvailability;
 
     public OperatorSurfaceResponse getOperatorSurface() {
+        requireAdminRole();
+        return new OperatorSurfaceResponse(
+                buildAuditSection(),
+                buildRuntimeDiagnostics(),
+                buildOperationalStatus()
+        );
+    }
+
+    private void requireAdminRole() {
         currentUserAccountService.requireRole(UserRole.ADMIN, "Operator surface requires the ADMIN role.");
-        List<AuditLogResponse> recentEntries = auditLogRepository.findAll(
-                        PageRequest.of(0, RECENT_AUDIT_LIMIT, Sort.by(Sort.Direction.DESC, "id"))
-                )
+    }
+
+    private OperatorSurfaceResponse.AuditSection buildAuditSection() {
+        return new OperatorSurfaceResponse.AuditSection(
+                OPERATOR_AUDIT_ENDPOINT,
+                auditLogRepository.count(),
+                loadRecentAuditEntries()
+        );
+    }
+
+    private List<AuditLogResponse> loadRecentAuditEntries() {
+        return auditLogRepository.findAll(PageRequest.of(0, RECENT_AUDIT_LIMIT, Sort.by(Sort.Direction.DESC, "id")))
                 .map(AuditLogResponse::from)
                 .getContent();
-        TechnicalOverviewResponse technicalOverview = technicalOverviewService.getOverview();
-        String healthStatus = healthEndpoint.health().getStatus().getCode();
+    }
 
-        return new OperatorSurfaceResponse(
-                new OperatorSurfaceResponse.AuditSection(
-                        OPERATOR_AUDIT_ENDPOINT,
-                        auditLogRepository.count(),
-                        recentEntries
-                ),
-                new OperatorSurfaceResponse.RuntimeDiagnostics(
-                        OPERATOR_TECHNICAL_OVERVIEW_ENDPOINT,
-                        technicalOverview
-                ),
-                new OperatorSurfaceResponse.OperationalStatus(
-                        OPERATOR_ACTUATOR_HEALTH_ENDPOINT,
-                        OPERATOR_ACTUATOR_INFO_ENDPOINT,
-                        OPERATOR_ACTUATOR_PROMETHEUS_ENDPOINT,
-                        healthStatus,
-                        applicationAvailability.getLivenessState().name(),
-                        applicationAvailability.getReadinessState().name()
-                )
+    private OperatorSurfaceResponse.RuntimeDiagnostics buildRuntimeDiagnostics() {
+        TechnicalOverviewResponse technicalOverview = technicalOverviewService.getOverview();
+        return new OperatorSurfaceResponse.RuntimeDiagnostics(
+                OPERATOR_TECHNICAL_OVERVIEW_ENDPOINT,
+                technicalOverview
+        );
+    }
+
+    private OperatorSurfaceResponse.OperationalStatus buildOperationalStatus() {
+        String healthStatus = healthEndpoint.health().getStatus().getCode();
+        return new OperatorSurfaceResponse.OperationalStatus(
+                OPERATOR_ACTUATOR_HEALTH_ENDPOINT,
+                OPERATOR_ACTUATOR_INFO_ENDPOINT,
+                OPERATOR_ACTUATOR_PROMETHEUS_ENDPOINT,
+                healthStatus,
+                applicationAvailability.getLivenessState().name(),
+                applicationAvailability.getReadinessState().name()
         );
     }
 }
