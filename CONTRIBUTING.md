@@ -128,6 +128,10 @@ Run the required quality gate before asking for review:
 .\gradlew.bat build
 ```
 
+Exception:
+
+- if every changed file matches `*.md`, manual consistency review is sufficient and the `CI` workflow short-circuits the heavy build path for that push or pull request
+
 Additional expectations:
 
 - Add or update tests when API behavior changes.

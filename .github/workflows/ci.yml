@@ -17,8 +17,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  change_detection:
     runs-on: ubuntu-latest
+    outputs:
+      markdown_only: ${{ steps.classify.outputs.markdown_only }}
 
     steps:
       - name: Check out repository
@@ -26,27 +28,97 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Classify changed files
+        id: classify
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BEFORE_SHA: ${{ github.event.before }}
+          CURRENT_SHA: ${{ github.sha }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+
+          if [[ "${EVENT_NAME}" == "pull_request" ]]; then
+            base_sha="${PR_BASE_SHA}"
+            head_sha="${PR_HEAD_SHA}"
+            mapfile -t changed_files < <(git diff --name-only "${base_sha}...${head_sha}" | sed '/^$/d')
+          else
+            base_sha="${BEFORE_SHA}"
+            head_sha="${CURRENT_SHA}"
+
+            if [[ -z "${base_sha}" || "${base_sha}" == "0000000000000000000000000000000000000000" ]]; then
+              if git rev-parse "${CURRENT_SHA}^" >/dev/null 2>&1; then
+                base_sha="$(git rev-parse "${CURRENT_SHA}^")"
+                mapfile -t changed_files < <(git diff --name-only "${base_sha}" "${head_sha}" | sed '/^$/d')
+              else
+                mapfile -t changed_files < <(git show --pretty='' --name-only "${CURRENT_SHA}" | sed '/^$/d')
+              fi
+            else
+              mapfile -t changed_files < <(git diff --name-only "${base_sha}" "${head_sha}" | sed '/^$/d')
+            fi
+          fi
+
+          if (( ${#changed_files[@]} == 0 )); then
+            echo "markdown_only=false" >> "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+
+          markdown_only=true
+          for path in "${changed_files[@]}"; do
+            if [[ "${path}" != *.md ]]; then
+              markdown_only=false
+              break
+            fi
+          done
+
+          echo "markdown_only=${markdown_only}" >> "${GITHUB_OUTPUT}"
+
+  build:
+    needs: change_detection
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Skip heavy CI for markdown-only changes
+        if: needs.change_detection.outputs.markdown_only == 'true'
+        run: |
+          echo "Only *.md files changed." >> "${GITHUB_STEP_SUMMARY}"
+          echo "Skipping the Gradle build, Helm validation, and external smoke validation for this CI run." >> "${GITHUB_STEP_SUMMARY}"
+
+      - name: Check out repository
+        if: needs.change_detection.outputs.markdown_only != 'true'
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
       - name: Set up Java 25
+        if: needs.change_detection.outputs.markdown_only != 'true'
         uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "25"
 
       - name: Set up Gradle
+        if: needs.change_detection.outputs.markdown_only != 'true'
         uses: gradle/actions/setup-gradle@v6
         with:
           dependency-graph: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && 'generate-and-upload' || 'disabled' }}
 
       - name: Set up Helm
+        if: needs.change_detection.outputs.markdown_only != 'true'
         uses: azure/setup-helm@v5
 
       - name: Verify Docker availability
+        if: needs.change_detection.outputs.markdown_only != 'true'
         run: docker version
 
       - name: Run full build
+        if: needs.change_detection.outputs.markdown_only != 'true'
         run: ./gradlew build --no-daemon
 
       - name: Upload coverage to Codecov
+        if: needs.change_detection.outputs.markdown_only != 'true'
         uses: codecov/codecov-action@v6
         with:
           use_oidc: true
@@ -55,7 +127,7 @@ jobs:
           fail_ci_if_error: true
 
       - name: Upload security scan artifacts
-        if: always()
+        if: always() && needs.change_detection.outputs.markdown_only != 'true'
         uses: actions/upload-artifact@v7
         with:
           name: security-reports-ci-${{ github.run_id }}
@@ -64,7 +136,7 @@ jobs:
           retention-days: 14
 
       - name: Upload static analysis artifacts
-        if: always()
+        if: always() && needs.change_detection.outputs.markdown_only != 'true'
         uses: actions/upload-artifact@v7
         with:
           name: static-analysis-reports-ci-${{ github.run_id }}
@@ -75,7 +147,7 @@ jobs:
           retention-days: 14
 
       - name: Upload SBOM artifacts
-        if: always()
+        if: always() && needs.change_detection.outputs.markdown_only != 'true'
         uses: actions/upload-artifact@v7
         with:
           name: sbom-reports-ci-${{ github.run_id }}
@@ -84,15 +156,18 @@ jobs:
           retention-days: 14
 
       - name: Lint Helm chart
+        if: needs.change_detection.outputs.markdown_only != 'true'
         run: helm lint helm/technical-interview-demo
 
       - name: Render Helm chart
+        if: needs.change_detection.outputs.markdown_only != 'true'
         run: >-
           helm template technical-interview-demo
           helm/technical-interview-demo
           -f helm/technical-interview-demo/values-local.yaml
 
       - name: Run external smoke validation
+        if: needs.change_detection.outputs.markdown_only != 'true'
         run: >-
           ./gradlew externalSmokeTest
           -PexternalSmokeImageName=technical-interview-demo
@@ -100,8 +175,10 @@ jobs:
           --no-daemon
 
   submit-dependency-graph:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.change_detection.outputs.markdown_only != 'true'
+    needs:
+      - change_detection
+      - build
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -112,4 +189,3 @@ jobs:
         with:
           dependency-graph: download-and-submit
           dependency-graph-continue-on-failure: false
-
