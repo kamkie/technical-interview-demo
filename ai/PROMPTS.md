@@ -261,6 +261,7 @@ Execute `<plan_file>` using the workflow rules.
 
 Use `ai/WORKFLOW.md` and `ai/EXECUTION.md`.
 Infer `Single Branch` or `Shared Plan` from the plan file, especially `Execution Mode Fit`, milestone boundaries, and shared-file ownership.
+If `Shared Plan` is selected, keep the coordinator active until every worker reaches a terminal state; do not finish the run when only some workers are done.
 If the plan file is not clear enough to choose safely, stop and explain the ambiguity instead of guessing.
 If the work actually needs multiple plan files and `Parallel Plans`, stop and say that explicitly instead of guessing.
 ```
@@ -282,6 +283,7 @@ Execute `<plan_file>` in `Shared Plan` mode.
 
 Use `ai/WORKFLOW.md` and `ai/EXECUTION.md`.
 Act as orchestrator, fan out worker branches or worktrees only for disjoint slices, keep shared files coordinator-owned, and require committed worker logs at `ai/tmp/workflow/<plan_stem_or_topic>__<worker_name>.md`.
+Keep the coordinator active until every worker reaches a terminal state and summarize all workers at the end; progress reports before that are interim only.
 Push only the finished coordinator branch and open one final PR unless I explicitly ask otherwise.
 ```
 
@@ -296,6 +298,7 @@ Execute these plan files in `Parallel Plans` mode using git worktrees:
 Use `ai/WORKFLOW.md` and `ai/EXECUTION.md`.
 Track per-plan branch, validation, private `CHANGELOG_<topic>.md`, worker log, and PR status.
 Treat each worker branch as complete only when local validation is done and the branch has been pushed with a PR open or already merged, matching `ai/WORKFLOW.md` and `AGENTS.md`.
+Keep the coordinator active until every worker reaches a terminal state and summarize all worker outcomes together; do not finish when only one worker is done.
 If any listed plans are too coupled for safe parallel execution, stop and explain why instead of forcing a different mode.
 Do not release unless I ask.
 ```
@@ -315,6 +318,7 @@ Then execute the selected plan files in `Parallel Plans` mode using git worktree
 Use `ai/WORKFLOW.md` and `ai/EXECUTION.md`.
 Track per-plan branch, validation, private `CHANGELOG_<topic>.md`, worker log, and PR status.
 Treat each worker branch as complete only when local validation is done and the branch has been pushed with a PR open or already merged, matching `ai/WORKFLOW.md` and `AGENTS.md`.
+Keep the coordinator active until every worker reaches a terminal state and summarize all worker outcomes together; do not finish when only one worker is done.
 Do not release unless I ask.
 ```
 
@@ -332,6 +336,7 @@ Then execute the selected plan files in `Parallel Plans` mode using git worktree
 Use `ai/WORKFLOW.md` and `ai/EXECUTION.md`.
 Track per-plan branch, validation, private `CHANGELOG_<topic>.md`, worker log, and PR status.
 Treat each worker branch as complete only when local validation is done and the branch has been pushed with a PR open or already merged, matching `ai/WORKFLOW.md` and `AGENTS.md`.
+Keep the coordinator active until every worker reaches a terminal state and summarize all worker outcomes together; do not finish when only one worker is done.
 Do not release unless I ask.
 ```
 

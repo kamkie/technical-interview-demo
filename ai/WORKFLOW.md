@@ -61,6 +61,7 @@ The branch layout changes, but the milestone checkpoint rules do not.
 - keep the plan or worker log current as milestones land
 - keep the correct changelog artifact current as milestones land
 - finish local validation before any push or PR handoff
+- in `Shared Plan` and `Parallel Plans`, keep the coordinator active until every worker reaches a terminal state; do not treat the overall run as complete while any worker is still implementing, validating, pushing, or opening a PR
 - keep release work out of scope until the approved PR has been merged onto `main`
 
 For any forked worker, create and maintain a committed temporary worker log at:
@@ -94,7 +95,28 @@ The coordinator or orchestrator always owns:
 - deciding integration order
 - final validation from `ai/TESTING.md`
 - final review and documentation alignment using `ai/REVIEWS.md` and `ai/DOCUMENTATION.md`
+- waiting for every worker to reach a terminal state before declaring the coordinated run complete
 - keeping release work out of scope until the approved PR has been merged onto `main`
+
+## Coordinator Completion Gate
+
+For `Shared Plan` and `Parallel Plans`, the coordinator run is not complete when the first worker finishes.
+It is complete only when every worker is in a terminal state and that terminal state has been reported.
+
+Treat these as terminal states:
+
+- completed under the mode-specific rules
+- blocked with the blocker recorded clearly
+- failed with the failure recorded clearly
+- cancelled because the user explicitly stopped that worker
+
+Workers are still active while they are implementing, validating, pushing, opening a PR, or waiting on follow-up work that has not been recorded as blocked.
+
+Reporting rules:
+
+- interim progress updates must say they are interim
+- do not give a final success summary while any worker is still active
+- if any worker ends blocked or failed, keep that in the final coordinator summary instead of quietly dropping it
 
 ## Mode 1: Single Branch
 

@@ -209,6 +209,10 @@ Use `Run All Unfinished Plans` when you want AI to discover every non-archived u
 - `Shared Plan`: one current plan file, one coordinator, several worker branches or worktrees, shared files stay coordinator-owned
 - `Parallel Plans`: multiple plan files executing in parallel, each worker keeps a private `CHANGELOG_<topic>.md`
 
+For `Shared Plan` and `Parallel Plans`, the coordinator run is complete only when every worker has reached a terminal state.
+That means the first finished worker is only progress, not the end of the coordinated run.
+If you want an interim snapshot while work is still running, use the worker-status prompts and treat that output as progress reporting rather than completion.
+
 Shared-plan and parallel-plan work also use committed worker logs at:
 
 `ai/tmp/workflow/<plan_stem_or_topic>__<worker_name>.md`
