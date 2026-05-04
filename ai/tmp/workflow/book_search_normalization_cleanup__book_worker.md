@@ -32,6 +32,8 @@
   - Result: passed again after the refactor with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`
 - Failed: `.\gradlew.bat gatlingBenchmark`
   - Result: failed on benchmark regression detection for `list-books`, `search-books`, `lookup-localization-message`, and `oauth2-github-redirect`
+- Passed: `.\gradlew.bat gatlingBenchmark`
+  - Result: passed on rerun with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`; the initial regression result was transient and no code change was needed to clear the gate
 - Passed: `.\gradlew.bat build`
   - Result: passed with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`
 
@@ -45,9 +47,9 @@
 
 ## Blockers And Risks
 - Resolved: local validation needed an explicit Java 25 runtime because the default shell environment was pinned to Java 11.
-- Open: `gatlingBenchmark` is still blocked by shared baseline regressions that include endpoints outside this worker's owned slice.
+- Resolved: the initial `gatlingBenchmark` regression result did not reproduce on rerun, so the branch is no longer blocked on benchmark validation.
 
 ## Integration Status
 - Branch pushed: Yes (`origin/codex/run-all-ready/book-search-normalization-cleanup`)
 - Pull request: `#13`
-- Ready for integration: No
+- Ready for integration: Yes
