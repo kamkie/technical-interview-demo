@@ -10,8 +10,7 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import java.util.Locale;
 
 import lombok.AccessLevel;
@@ -50,11 +49,11 @@ public class Localization {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @Setter(AccessLevel.NONE)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @Column(name = "updated_at", nullable = false)
     @Setter(AccessLevel.NONE)
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 
     public Localization(String messageKey, String language, String messageText, String description) {
         setMessageKey(messageKey);
@@ -81,14 +80,14 @@ public class Localization {
 
     @PrePersist
     void onCreate() {
-        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+        Instant now = Instant.now();
         createdAt = now;
         updatedAt = now;
     }
 
     @PreUpdate
     void onUpdate() {
-        updatedAt = LocalDateTime.now(ZoneOffset.UTC);
+        updatedAt = Instant.now();
     }
 
     private String normalizeRequired(String value, String fieldName) {

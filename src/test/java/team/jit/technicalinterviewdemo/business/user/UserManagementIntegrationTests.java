@@ -12,8 +12,8 @@ import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.authen
 
 import io.micrometer.core.instrument.MeterRegistry;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -228,7 +228,7 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
 
         UserAccount storedUser = userAccountRepository.findByProviderAndExternalLogin("github", "reader-user")
                 .orElseThrow();
-        storedUser.setLastLoginAt(LocalDateTime.now(ZoneOffset.UTC).minusDays(2));
+        storedUser.setLastLoginAt(Instant.now().minus(2, ChronoUnit.DAYS));
         userAccountRepository.saveAndFlush(storedUser);
 
         mockMvc.perform(get("/api/account")
@@ -237,7 +237,7 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
 
         UserAccount refreshedUser = userAccountRepository.findByProviderAndExternalLogin("github", "reader-user")
                 .orElseThrow();
-        assertThat(refreshedUser.getLastLoginAt()).isAfter(LocalDateTime.now(ZoneOffset.UTC).minusHours(1));
+        assertThat(refreshedUser.getLastLoginAt()).isAfter(Instant.now().minus(1, ChronoUnit.HOURS));
     }
 
     @Test

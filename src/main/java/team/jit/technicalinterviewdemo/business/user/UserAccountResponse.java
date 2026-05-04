@@ -2,7 +2,9 @@ package team.jit.technicalinterviewdemo.business.user;
 
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Comparator;
 import java.util.List;
 
@@ -46,9 +48,13 @@ public record UserAccountResponse(
                 userAccount.getEmail(),
                 userAccount.getPreferredLanguage(),
                 roles,
-                userAccount.getLastLoginAt(),
-                userAccount.getCreatedAt(),
-                userAccount.getUpdatedAt()
+                toUtcLocalDateTime(userAccount.getLastLoginAt()),
+                toUtcLocalDateTime(userAccount.getCreatedAt()),
+                toUtcLocalDateTime(userAccount.getUpdatedAt())
         );
+    }
+
+    private static LocalDateTime toUtcLocalDateTime(Instant timestamp) {
+        return timestamp == null ? null : LocalDateTime.ofInstant(timestamp, ZoneOffset.UTC);
     }
 }

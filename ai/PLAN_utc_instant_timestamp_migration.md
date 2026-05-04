@@ -3,8 +3,8 @@
 ## Lifecycle
 | Field | Value |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Implementation |
+| Status | In Progress |
 
 ## Summary
 - Move app-owned persisted timestamps from Java `LocalDateTime` plus PostgreSQL `timestamp` to Java `Instant` plus PostgreSQL `timestamptz`.
@@ -236,8 +236,10 @@
 - If the migration metadata ends up `breaking` or otherwise restore-sensitive, surface that fact clearly in later release-readiness work rather than hiding it as an implementation detail.
 
 ## Validation Results
-- To be filled in during execution.
-- Record exactly which targeted tests, baseline refresh steps, and final build ran, plus any skipped checks and the reason.
+- 2026-05-05: `./gradlew.bat test --tests team.jit.technicalinterviewdemo.business.user.UserManagementIntegrationTests --tests team.jit.technicalinterviewdemo.business.user.UserAccountServiceTests --tests team.jit.technicalinterviewdemo.business.localization.LocalizationApiIntegrationTests --tests team.jit.technicalinterviewdemo.business.audit.AuditLogApiIntegrationTests --tests team.jit.technicalinterviewdemo.technical.operator.OperatorSurfaceServiceTests --tests team.jit.technicalinterviewdemo.technical.docs.OpenApiCompatibilityIntegrationTests`
+  - result: failed before test execution because Gradle started on JVM 11; the repo `.env` had not been loaded yet
+- 2026-05-05: `. .\scripts\load-dotenv.ps1 -Quiet; ./gradlew.bat test --tests team.jit.technicalinterviewdemo.business.user.UserManagementIntegrationTests --tests team.jit.technicalinterviewdemo.business.user.UserAccountServiceTests --tests team.jit.technicalinterviewdemo.business.localization.LocalizationApiIntegrationTests --tests team.jit.technicalinterviewdemo.business.audit.AuditLogApiIntegrationTests --tests team.jit.technicalinterviewdemo.technical.operator.OperatorSurfaceServiceTests --tests team.jit.technicalinterviewdemo.technical.docs.OpenApiCompatibilityIntegrationTests`
+  - result: passed; milestone-1 storage and domain conversion compiled cleanly, the explicit `timestamptz` migration validated against PostgreSQL-backed tests, and the temporary response-bridge layer preserved the current public timestamp shape
 
 ## User Validation
 - Start the app and check one sample response from each affected surface:

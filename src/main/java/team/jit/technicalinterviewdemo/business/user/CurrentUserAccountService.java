@@ -1,7 +1,6 @@
 package team.jit.technicalinterviewdemo.business.user;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -43,14 +42,14 @@ public class CurrentUserAccountService {
                         authenticatedUser.displayName(),
                         authenticatedUser.email(),
                         null,
-                        LocalDateTime.now(ZoneOffset.UTC),
+                        Instant.now(),
                         java.util.Set.of(UserRole.USER)
                 ));
 
         boolean created = userAccount.getId() == null;
         userAccount.setDisplayName(authenticatedUser.displayName());
         userAccount.setEmail(authenticatedUser.email());
-        userAccount.setLastLoginAt(LocalDateTime.now(ZoneOffset.UTC));
+        userAccount.setLastLoginAt(Instant.now());
         userAccount.ensureRoleGrant(UserRole.USER, UserRoleGrantSource.AUTHENTICATED_LOGIN, null, null);
         if (shouldBootstrapAdmin) {
             userAccount.ensureRoleGrant(UserRole.ADMIN, UserRoleGrantSource.BOOTSTRAP, null, null);

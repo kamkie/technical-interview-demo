@@ -12,11 +12,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -64,7 +62,7 @@ public class AuditLog {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @Setter(AccessLevel.NONE)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     public AuditLog(
             AuditTargetType targetType,
@@ -101,7 +99,7 @@ public class AuditLog {
 
     @PrePersist
     void onCreate() {
-        createdAt = LocalDateTime.now(ZoneOffset.UTC);
+        createdAt = Instant.now();
     }
 
     private Map<String, Object> normalizeDetails(Map<String, Object> details) {

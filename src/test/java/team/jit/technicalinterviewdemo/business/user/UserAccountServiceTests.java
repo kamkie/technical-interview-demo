@@ -6,7 +6,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -83,7 +83,7 @@ class UserAccountServiceTests {
                 "Kamil Kiewisz",
                 "kamil@example.com",
                 null,
-                LocalDateTime.of(2026, 4, 30, 20, 0),
+                Instant.parse("2026-04-30T20:00:00Z"),
                 Set.of(UserRole.USER, UserRole.ADMIN)
         );
         when(currentUserAccountService.getCurrentUserOrSynchronize()).thenReturn(currentUser);
@@ -100,7 +100,7 @@ class UserAccountServiceTests {
                 "Kamil Kiewisz",
                 "kamil@example.com",
                 null,
-                LocalDateTime.of(2026, 4, 30, 20, 0),
+                Instant.parse("2026-04-30T20:00:00Z"),
                 Set.of(UserRole.USER)
         );
     }

@@ -10,8 +10,7 @@ import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -39,7 +38,7 @@ public class UserRoleGrant {
     private UserRoleGrantSource grantSource;
 
     @Column(name = "granted_at", nullable = false)
-    private LocalDateTime grantedAt;
+    private Instant grantedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "granted_by_user_id")
@@ -58,7 +57,7 @@ public class UserRoleGrant {
         this.userAccount = Objects.requireNonNull(userAccount, "userAccount is required");
         this.role = Objects.requireNonNull(role, "role is required");
         this.grantSource = Objects.requireNonNull(grantSource, "grantSource is required");
-        this.grantedAt = LocalDateTime.now(ZoneOffset.UTC);
+        this.grantedAt = Instant.now();
         this.grantedByUser = grantedByUser;
         this.reason = normalizeOptional(reason);
 

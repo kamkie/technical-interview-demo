@@ -1,0 +1,7 @@
+{
+  "summary": "Converts app-owned persisted timestamps from timestamp without time zone to timestamptz while preserving existing UTC values.",
+  "rolloutCategory": "breaking",
+  "deploymentOrder": "out-of-band",
+  "rollingCompatible": false,
+  "rollbackPosture": "forward-fix-or-restore"
+}

@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 
 import java.lang.reflect.InvocationTargetException;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -152,7 +151,7 @@ class OperatorSurfaceServiceTests {
                 )
         );
         ReflectionTestUtils.setField(auditLog, "id", id);
-        ReflectionTestUtils.setField(auditLog, "createdAt", LocalDateTime.of(2026, 5, 4, 8, 30));
+        ReflectionTestUtils.setField(auditLog, "createdAt", Instant.parse("2026-05-04T08:30:00Z"));
         return auditLog;
     }
 

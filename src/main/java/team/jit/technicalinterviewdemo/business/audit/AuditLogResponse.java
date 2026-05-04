@@ -1,7 +1,9 @@
 package team.jit.technicalinterviewdemo.business.audit;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Map;
 
 @Schema(name = "AuditLogResponse", description = "Recorded audit log entry.")
@@ -33,7 +35,11 @@ public record AuditLogResponse(
                 auditLog.getActorLogin(),
                 auditLog.getSummary(),
                 auditLog.getDetails(),
-                auditLog.getCreatedAt()
+                toUtcLocalDateTime(auditLog.getCreatedAt())
         );
+    }
+
+    private static LocalDateTime toUtcLocalDateTime(Instant timestamp) {
+        return timestamp == null ? null : LocalDateTime.ofInstant(timestamp, ZoneOffset.UTC);
     }
 }

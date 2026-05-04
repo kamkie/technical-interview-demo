@@ -1,7 +1,9 @@
 package team.jit.technicalinterviewdemo.business.localization;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 @Schema(description = "Localization message returned by the API.")
 public record LocalizationResponse(
@@ -28,8 +30,12 @@ public record LocalizationResponse(
                 message.getLanguage(),
                 message.getMessageText(),
                 message.getDescription(),
-                message.getCreatedAt(),
-                message.getUpdatedAt()
+                toUtcLocalDateTime(message.getCreatedAt()),
+                toUtcLocalDateTime(message.getUpdatedAt())
         );
+    }
+
+    private static LocalDateTime toUtcLocalDateTime(Instant timestamp) {
+        return timestamp == null ? null : LocalDateTime.ofInstant(timestamp, ZoneOffset.UTC);
     }
 }

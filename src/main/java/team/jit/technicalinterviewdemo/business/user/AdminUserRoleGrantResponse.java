@@ -1,7 +1,9 @@
 package team.jit.technicalinterviewdemo.business.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 @Schema(name = "AdminUserRoleGrantResponse", description = "Persisted provenance for one granted application role.")
 public record AdminUserRoleGrantResponse(
@@ -24,10 +26,14 @@ public record AdminUserRoleGrantResponse(
         return new AdminUserRoleGrantResponse(
                 roleGrant.getRole().name(),
                 roleGrant.getGrantSource(),
-                roleGrant.getGrantedAt(),
+                toUtcLocalDateTime(roleGrant.getGrantedAt()),
                 grantedByUser == null ? null : grantedByUser.getId(),
                 grantedByUser == null ? null : grantedByUser.getExternalLogin(),
                 roleGrant.getReason()
         );
+    }
+
+    private static LocalDateTime toUtcLocalDateTime(Instant timestamp) {
+        return timestamp == null ? null : LocalDateTime.ofInstant(timestamp, ZoneOffset.UTC);
     }
 }

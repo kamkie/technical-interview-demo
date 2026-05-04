@@ -13,12 +13,11 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
@@ -62,15 +61,15 @@ public class UserAccount {
     private String preferredLanguage;
 
     @Column(name = "last_login_at", nullable = false)
-    private LocalDateTime lastLoginAt;
+    private Instant lastLoginAt;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @Setter(AccessLevel.NONE)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @Column(name = "updated_at", nullable = false)
     @Setter(AccessLevel.NONE)
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 
     @OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("role ASC")
@@ -82,7 +81,7 @@ public class UserAccount {
             String displayName,
             String email,
             String preferredLanguage,
-            LocalDateTime lastLoginAt,
+            Instant lastLoginAt,
             Set<UserRole> roles
     ) {
         setProvider(provider);
@@ -118,7 +117,7 @@ public class UserAccount {
                 : normalizedPreferredLanguage.toLowerCase(Locale.ROOT);
     }
 
-    public void setLastLoginAt(LocalDateTime lastLoginAt) {
+    public void setLastLoginAt(Instant lastLoginAt) {
         if (lastLoginAt == null) {
             throw new IllegalArgumentException("lastLoginAt is required");
         }
@@ -172,14 +171,14 @@ public class UserAccount {
 
     @PrePersist
     void onCreate() {
-        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+        Instant now = Instant.now();
         createdAt = now;
         updatedAt = now;
     }
 
     @PreUpdate
     void onUpdate() {
-        updatedAt = LocalDateTime.now(ZoneOffset.UTC);
+        updatedAt = Instant.now();
     }
 
     private void initializeRoleGrants(Set<UserRole> roles) {
