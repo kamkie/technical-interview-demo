@@ -35,11 +35,11 @@ Treat validation as part of the product:
 - keep the existing specs green without unnecessary contract edits
 - avoid touching OpenAPI, `README.md`, or HTTP examples unless behavior actually changed
 
-### Documentation-only work
+### Documentation-only or lightweight support-file work
 
-- when every changed file matches `*.md`, including AI-guidance-only changes under `ai/`, do manual consistency review only
+- when `pwsh ./scripts/classify-changed-files.ps1 -Uncommitted` reports `skipHeavyValidation=true`, do manual consistency review only
 - skip `.\gradlew.bat build`, benchmarks, external smoke, vulnerability scans, and other heavyweight validation unless the user explicitly asks for more
-- if markdown edits accompany any non-markdown change, validate based on the non-markdown artifacts and repo rules
+- if lightweight edits accompany any non-lightweight change, validate based on the non-lightweight artifacts and repo rules
 
 ## Standard Command
 
@@ -49,13 +49,14 @@ Treat validation as part of the product:
 
 Exception:
 
-- if every changed file matches `*.md`, manual consistency review is sufficient unless the user explicitly asks for more validation
+- if `pwsh ./scripts/classify-changed-files.ps1 -Uncommitted` reports `skipHeavyValidation=true`, manual consistency review is sufficient unless the user explicitly asks for more validation
 
 ## Additional Rules
 
 - refresh the approved OpenAPI baseline only with `./gradlew refreshOpenApiBaseline` after intentional contract review
 - treat failing compatibility or benchmark checks as spec failures
 - if required validation cannot run, report that explicitly
+- the same classifier script also powers CI push or pull-request short-circuit decisions, but local AI and local manual workflows should run it against uncommitted changes with `-Uncommitted`
 
 ## Recording Validation
 

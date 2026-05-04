@@ -168,7 +168,7 @@ Before finishing, run:
 
 Exception:
 
-- when every changed file matches `*.md`, manual consistency review is sufficient and `.\gradlew.bat build` or other heavyweight validation commands are not required unless the user explicitly asks for them
+- when `pwsh ./scripts/classify-changed-files.ps1 -Uncommitted` reports `skipHeavyValidation=true`, manual consistency review is sufficient and `.\gradlew.bat build` or other heavyweight validation commands are not required unless the user explicitly asks for them
 
 Use `SETUP.md` for environment prerequisites such as Java, Docker, and formatter configuration.
 
@@ -196,4 +196,4 @@ A change is complete when:
 - implementation and specs agree
 - public contract artifacts are updated when behavior changed
 - if the work was done in a git worktree or non-`main` branch, the finished branch has been pushed and a pull request is open or already merged onto `main`
-- `./gradlew build` passes, unless every changed file matches `*.md` and manual consistency review is sufficient for that markdown-only change
+- `./gradlew build` passes, unless `pwsh ./scripts/classify-changed-files.ps1 -Uncommitted` reports `skipHeavyValidation=true` for the current uncommitted changes and manual consistency review is sufficient for that lightweight-only change

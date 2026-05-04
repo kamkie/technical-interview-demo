@@ -30,7 +30,7 @@ jobs:
 
       - name: Classify changed files
         id: classify
-        shell: bash
+        shell: pwsh
         env:
           EVENT_NAME: ${{ github.event_name }}
           BEFORE_SHA: ${{ github.event.before }}
@@ -38,54 +38,19 @@ jobs:
           PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
           PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
-          set -euo pipefail
-
-          is_lightweight_change() {
-            local path="$1"
-            case "${path}" in
-              *.md|.editorconfig|.gitattributes|.gitignore|*/.gitignore|.aiignore|Default.xml|.run/*.run.xml|.githooks/*.sample|.env.example|*/.env.example)
-                return 0
-                ;;
-              *)
-                return 1
-                ;;
-            esac
+          $params = @{}
+          if ($env:EVENT_NAME -eq 'pull_request') {
+            $params.BaseRef = $env:PR_BASE_SHA
+            $params.HeadRef = $env:PR_HEAD_SHA
+            $params.UseMergeBase = $true
+          } else {
+            $params.BaseRef = $env:BEFORE_SHA
+            $params.HeadRef = $env:CURRENT_SHA
           }
 
-          if [[ "${EVENT_NAME}" == "pull_request" ]]; then
-            base_sha="${PR_BASE_SHA}"
-            head_sha="${PR_HEAD_SHA}"
-            mapfile -t changed_files < <(git diff --name-only "${base_sha}...${head_sha}" | sed '/^$/d')
-          else
-            base_sha="${BEFORE_SHA}"
-            head_sha="${CURRENT_SHA}"
-
-            if [[ -z "${base_sha}" || "${base_sha}" == "0000000000000000000000000000000000000000" ]]; then
-              if git rev-parse "${CURRENT_SHA}^" >/dev/null 2>&1; then
-                base_sha="$(git rev-parse "${CURRENT_SHA}^")"
-                mapfile -t changed_files < <(git diff --name-only "${base_sha}" "${head_sha}" | sed '/^$/d')
-              else
-                mapfile -t changed_files < <(git show --pretty='' --name-only "${CURRENT_SHA}" | sed '/^$/d')
-              fi
-            else
-              mapfile -t changed_files < <(git diff --name-only "${base_sha}" "${head_sha}" | sed '/^$/d')
-            fi
-          fi
-
-          if (( ${#changed_files[@]} == 0 )); then
-            echo "skip_heavy_ci=false" >> "${GITHUB_OUTPUT}"
-            exit 0
-          fi
-
-          skip_heavy_ci=true
-          for path in "${changed_files[@]}"; do
-            if ! is_lightweight_change "${path}"; then
-              skip_heavy_ci=false
-              break
-            fi
-          done
-
-          echo "skip_heavy_ci=${skip_heavy_ci}" >> "${GITHUB_OUTPUT}"
+          $result = & ./scripts/classify-changed-files.ps1 @params
+          "skip_heavy_ci=$($result.skipHeavyValidation.ToString().ToLowerInvariant())" |
+            Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
 
   build:
     needs: change_detection

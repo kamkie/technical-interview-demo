@@ -231,7 +231,7 @@ Useful prompt titles:
 
 Repository rule:
 
-- run `.\gradlew.bat build` before finishing, unless every changed file is markdown and manual consistency review is sufficient
+- run `.\gradlew.bat build` before finishing, unless `pwsh ./scripts/classify-changed-files.ps1 -Uncommitted` reports `skipHeavyValidation=true` for the current uncommitted changes and manual consistency review is sufficient
 
 ### 7. Preparing Release
 
