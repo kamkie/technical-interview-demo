@@ -4,7 +4,7 @@
 | Field | Value |
 | --- | --- |
 | Phase | Planning |
-| Status | Draft |
+| Status | Ready |
 
 ## Summary
 - Plan the next pre-RC `2.0` batch: formalize first-party UI integration requirements, publish the `1.x` to `2.0` upgrade guide, add checked-in edge reference assets, and extend local plus deployed smoke validation to prove the documented session and CSRF flow.
@@ -34,18 +34,13 @@
 - The current public machine-readable and executable contract should remain stable for this batch; no OpenAPI or REST Docs schema changes are required unless repo research during execution reveals a documentation omission rather than a behavior gap.
 
 ## Requirement Gaps And Open Questions
-- The user request says “plan next bunch of tasks from roadmap,” which leaves room for how much of the remaining `2.0` track to bundle.
-  - Why it matters: the roadmap also includes RC and stable-release tasks, but those depend on the pre-RC alignment work landing first.
-  - Fallback assumption used by this plan: scope the next batch to the first four unfinished `2.0` items and leave RC/stable release work for a later plan or execution handoff.
-- The roadmap asks for reverse-proxy or ingress reference assets, but it does not prescribe the proxy vendor or whether Helm should template those assets.
-  - Why it matters: controller-specific ingress annotations can create unnecessary coupling and churn in a demo-sized repo.
-  - Fallback assumption used by this plan: add a small checked-in Kubernetes `Ingress`-style reference under `k8s/` plus focused documentation about private non-`/api/**` surfaces and edge-owned abuse protection, and keep Helm unchanged unless execution proves a second artifact is needed to avoid drift.
-- The smoke-extension task requires one authenticated unsafe `/api/**` write, but several existing write endpoints either require `ADMIN` or create noisier side effects.
-  - Why it matters: post-deploy smoke and restore drills run against real environments, so the chosen write must be deterministic and low-noise.
-  - Fallback assumption used by this plan: use `PUT /api/account/language` with a dedicated synthetic smoke user and a stable preferred-language value because it is authenticated, CSRF-protected, user-scoped, and lower blast radius than book/category/localization mutations.
-- The upgrade-guide task needs a published home in the generated documentation set.
-  - Why it matters: putting the guide only in `README.md` would bury it outside the main published docs path, while a standalone setup page would mix contract migration guidance with local onboarding.
-  - Fallback assumption used by this plan: add a new Asciidoctor page under `src/docs/asciidoc/` and link it from `index.adoc`, with concise README and setup references pointing to the owning guide.
+- No blocking user-input gaps remain.
+- Resolved planning decisions:
+  - scope the next batch to the first four unfinished `2.0` items and leave RC/stable release work for a later plan or execution handoff
+  - add a small checked-in Kubernetes `Ingress`-style reference under `k8s/` plus focused documentation about private non-`/api/**` surfaces and edge-owned abuse protection, and keep Helm unchanged unless execution proves a second artifact is needed to avoid drift
+  - use `PUT /api/account/language` with a dedicated synthetic smoke user and a stable preferred-language value as the authenticated unsafe `/api/**` write proof
+  - accept partial deployed-smoke coverage when JDBC-backed session access is unavailable: local packaged smoke and restore drills should prove the full session/bootstrap/write flow, while the scheduled or manual `Post-Deploy Smoke` workflow may remain HTTP-only unless the JDBC secret set is configured
+  - publish the `1.x` to `2.0` upgrade guide as a new Asciidoctor page under `src/docs/asciidoc/` and link it from `index.adoc`, with concise README and setup references pointing to the owning guide
 
 ## Locked Decisions And Assumptions
 - Preserve the current `2.0` public contract. This batch should not introduce new endpoints, new response fields, or new auth models.
@@ -53,6 +48,7 @@
 - Keep the supported first-party browser model same-site and one-public-origin through reverse proxy; do not imply cross-origin browser support anywhere in the new guide or assets.
 - Keep `/api/account` as the authenticated persisted-profile resource, with `PUT /api/account/language` as the preferred low-noise proof of an authenticated unsafe write for smoke validation.
 - Reuse the existing external test harness and `externalDeploymentCheck` path rather than introducing a second deployed-validation framework.
+- Accept partial deployed-smoke coverage when JDBC-backed session access is unavailable. The full write proof is still required for local packaged smoke and for deployed or restore-drill runs where JDBC-backed session access is configured.
 - Treat edge abuse protection as deployment owned. The reference assets and docs should show where those controls belong without trying to implement rate limiting or challenge logic inside the application.
 - Keep the edge reference asset vendor-neutral enough to be illustrative rather than production-prescriptive. The asset should demonstrate `/api/**` public routing and the private treatment of non-`/api/**` paths without claiming to be a one-size-fits-all production ingress package.
 - Leave RC and stable-release sequencing outside this plan. Once this batch lands, the next work should freeze the contract, run the required validation, and cut `v2.0.0-RC1` from `main`.
@@ -67,6 +63,7 @@
 - Docs and published contract guidance:
   - `README.md`
   - `SETUP.md`
+  - `ai/RELEASES.md`
   - `src/docs/asciidoc/index.adoc`
   - `src/docs/asciidoc/session-controller.adoc`
   - `src/docs/asciidoc/technical-overview-controller.adoc`
@@ -129,16 +126,18 @@
   - `src/externalTest/java/team/jit/technicalinterviewdemo/external/ExternalSessionSupport.java`
   - `.github/workflows/post-deploy-smoke.yml`
   - `scripts/release/invoke-restore-drill.ps1`
+  - `ai/RELEASES.md`
   - `README.md`
   - `SETUP.md`
 - behavior to preserve
   - the existing root/readiness/docs/OpenAPI/Flyway/authenticated-account checks remain intact unless they are intentionally superseded by stronger equivalent assertions
   - the deployed smoke path keeps using `externalDeploymentCheck`
+  - the scheduled or manual post-deploy workflow may remain HTTP-only when the JDBC secret set is not configured
   - the smoke write remains deterministic and bounded enough for repeated post-deploy runs
 - exact deliverables
   - packaged smoke coverage for `GET /api/session`, validation that `XSRF-TOKEN` is issued or refreshed, and one authenticated unsafe `/api/**` write using the mirrored `X-XSRF-TOKEN` header
-  - deployed smoke coverage for the same flow when JDBC-backed session access is configured
-  - workflow and restore-drill messaging updated so maintainers know the smoke contract now includes session bootstrap and a CSRF-backed write, not only `GET /api/account`
+  - deployed smoke coverage for `GET /api/session` plus session/bootstrap/write proof when JDBC-backed session access is configured, while preserving HTTP-only post-deploy coverage when that JDBC access is intentionally unavailable
+  - workflow, restore-drill, and release-guide messaging updated so maintainers know the smoke contract now includes session bootstrap and, when JDBC-backed session access is available, a CSRF-backed write rather than only `GET /api/account`
 
 ## Edge Cases And Failure Modes
 - The new upgrade guide must distinguish one-time `1.x` to `2.0` migration guidance from the standing `2.0` supported contract; otherwise it will become a second source of truth that drifts from README and REST Docs.
@@ -146,7 +145,7 @@
 - The edge reference asset must not overpromise controller-specific abuse-protection annotations as portable standards; controller- or vendor-specific knobs need to be clearly labeled as examples.
 - The smoke write must remain low-noise and repeatable in deployed environments. Using a dedicated synthetic smoke user with a stable preferred-language value is acceptable; mutating shared admin or seed-book data is not.
 - `GET /api/session` must be proven before the unsafe write so the smoke harness exercises the documented CSRF bootstrap path rather than bypassing it with an internal test shortcut.
-- Post-deploy smoke and restore-drill messaging must move with the new assertions; otherwise operators may think the deployed checks still prove only readiness and `GET /api/account`.
+- Post-deploy smoke, restore-drill, and release-guide messaging must move with the new assertions and must clearly distinguish HTTP-only scheduled coverage from JDBC-enabled full-flow coverage; otherwise operators may think the deployed checks still prove only readiness and `GET /api/account`, or they may assume the write proof is always present when it is not.
 - Because this batch is not supposed to change the public API, any need to refresh OpenAPI or REST Docs snippets should be treated as a signal to verify whether execution accidentally changed contract behavior.
 
 ## Validation Plan
