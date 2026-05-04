@@ -67,6 +67,36 @@ What that means in practice:
 For human-facing guidance on using AI through discovery, planning, implementation, integration, verification, and release, use [WORKING_WITH_AI.md](WORKING_WITH_AI.md).
 That guide explains how to direct AI in this repository without duplicating the AI-only policy under `AGENTS.md` and `ai/`.
 
+## Shared Reference Sections
+
+Some AI-facing docs also contain short descriptive or workflow sections that are readable to human maintainers.
+Use these links when you want a focused entry point instead of reading a whole AI guide end to end.
+
+Architecture and product direction:
+
+- [System Purpose](ai/ARCHITECTURE.md#system-purpose)
+- [API Shape](ai/ARCHITECTURE.md#api-shape)
+- [Feature Packages](ai/BUSINESS_MODULES.md#feature-packages)
+- [Product Intent](ai/DESIGN.md#product-intent)
+- [Non-Goals](ai/DESIGN.md#non-goals)
+
+Planning and execution:
+
+- [Lifecycle Metadata](ai/PLAN.md#lifecycle-metadata)
+- [Plan Output Format](ai/PLAN.md#plan-output-format)
+- [Common Milestone Loop](ai/EXECUTION.md#common-milestone-loop)
+- [Supported Modes](ai/WORKFLOW.md#supported-modes)
+
+Validation and release:
+
+- [Change-Type Expectations](ai/TESTING.md#change-type-expectations)
+- [Standard Command](ai/TESTING.md#standard-command)
+- [Release Preconditions](ai/RELEASES.md#release-preconditions)
+- [Release Checklist](ai/RELEASES.md#release-checklist)
+
+Treat these as shared guidance and codebase maps.
+Behavioral and public-contract truth still lives in the executable specs and published contract artifacts listed in `Spec-Driven Development`.
+
 ## Supported Contract
 
 Supported external application contract:
