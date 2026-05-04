@@ -4,6 +4,7 @@
 
 Use this file when you want to direct AI effectively as a developer.
 Use `AGENTS.md` and the files under `ai/` as the repository-local instructions that the AI should follow.
+Use `README.md` for the short project overview and the AI-document map.
 Use `SETUP.md` for local environment setup and `CONTRIBUTING.md` for contributor workflow expectations.
 
 ## Core Working Model
@@ -27,8 +28,8 @@ The developer still owns scope, product intent, approval of tradeoffs, review of
 
 Before asking AI to do real work, make sure the session is grounded in these repository files:
 
-- `README.md` for the supported contract, quality model, and project map
-- `AGENTS.md` for repository-specific AI rules
+- `README.md` for the project overview, implemented scope, and AI document map
+- `AGENTS.md` for repository-specific AI rules, spec priority, and required artifact updates
 - `SETUP.md` for local tooling, environment, and verification prerequisites
 - `ai/PROMPTS.md` for reusable prompt starters and shorthand titles
 
