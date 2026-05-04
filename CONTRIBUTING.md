@@ -186,6 +186,7 @@ Additional validation rules:
 ```
 
 - rerun `.\gradlew.bat gatlingBenchmark` when changing book list or search behavior, localization lookup behavior, or OAuth or session startup behavior
+- when both `build` and `gatlingBenchmark` are required, prefer one invocation such as `.\gradlew.bat build gatlingBenchmark --no-daemon` so Gradle reuses the same task graph instead of repeating work in separate runs
 - refresh the approved OpenAPI baseline only after intentional contract review with:
 
 ```powershell

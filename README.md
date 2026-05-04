@@ -25,6 +25,7 @@ Technical Interview Demo is a small, spec-driven Spring Boot application for int
 - [ROADMAP.md](ROADMAP.md): active and planned work only
 - [WORKING_WITH_AI.md](WORKING_WITH_AI.md): how to use AI effectively in this repository
 - `infra/`: checked-in Helm, Kubernetes, and monitoring assets
+- `tooling/`: build-tool rules, static-analysis config, and scan suppressions
 - `src/docs/asciidoc/`: published API documentation sources
 - `src/test/resources/openapi/approved-openapi.json`: approved machine-readable API contract
 

@@ -55,6 +55,7 @@ Exception:
 ## Additional Rules
 
 - refresh the approved OpenAPI baseline only with `./gradlew refreshOpenApiBaseline` after intentional contract review
+- when multiple Gradle targets are required, prefer one invocation such as `./gradlew build gatlingBenchmark --no-daemon` so shared prerequisites run once and validation does not repeat the full build unnecessarily
 - treat failing compatibility or benchmark checks as spec failures
 - if required validation cannot run, report that explicitly
 - the same classifier script also powers CI push or pull-request short-circuit decisions, but local AI and local manual workflows should run it against uncommitted changes with `-Uncommitted`

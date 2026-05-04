@@ -27,7 +27,7 @@ Read only what the request needs:
 4. Use `.env.example` only as the template for expected variable names, not as proof of local values.
 5. Otherwise choose the smallest sufficient proof from `ai/TESTING.md`; default to `.\gradlew.bat build` when no narrower proof is justified.
 6. If public behavior or documented schema changed, inspect the contract artifacts routed by `AGENTS.md` and `ai/DOCUMENTATION.md`.
-7. If the change touches book search, localization lookup, or OAuth/session startup behavior, check whether `./gradlew gatlingBenchmark` is required.
+7. If the change touches book search, localization lookup, or OAuth/session startup behavior, check whether `./gradlew gatlingBenchmark` is required; if `build` is also required, prefer one combined invocation such as `./gradlew build gatlingBenchmark --no-daemon`.
 8. Report the exact commands run, what passed, what failed, what was skipped, and which artifacts likely need updates.
 
 ## Guardrails

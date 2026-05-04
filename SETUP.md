@@ -248,7 +248,7 @@ Security scan shortcuts:
 - run `.\gradlew.bat staticSecurityScan` when you want the code-focused SpotBugs plus FindSecBugs gate directly
 - run `.\gradlew.bat vulnerabilityScan` when you want only the dependency and container image Trivy gates
 - run `.\gradlew.bat sbom` when you want only the CycloneDX SBOM outputs for the packaged app and image
-- review suppressions in `config/security/trivy.ignore`, `config/security/spotbugs-security-include.xml`, and `config/security/spotbugs-security-exclude.xml`
+- review suppressions in `tooling/security/trivy.ignore`, `tooling/security/spotbugs-security-include.xml`, and `tooling/security/spotbugs-security-exclude.xml`
 
 OpenAPI contract workflow:
 
@@ -264,6 +264,7 @@ OpenAPI contract workflow:
 Benchmark workflow:
 
 - run `.\gradlew.bat gatlingBenchmark` when changing book list/search behavior, localization lookup behavior, or OAuth/session startup behavior
+- when both `build` and `gatlingBenchmark` are required, prefer one invocation such as `.\gradlew.bat build gatlingBenchmark --no-daemon` so Gradle reuses the same task graph instead of repeating the full build in separate runs
 - before you skip a local heavyweight validation run for a docs or support-file-only change, inspect the current uncommitted file set with:
 
 ```powershell
@@ -438,6 +439,8 @@ Pre-release checks for a versioned upgrade:
 6. If the change touched book search/list behavior, localization lookup behavior, or OAuth/session startup behavior, also run `.\gradlew.bat gatlingBenchmark`.
 7. For `restore-sensitive` releases, capture restore-drill evidence before promotion.
 8. Confirm the target release notes and deployment values reference the intended semantic version tag.
+
+When both steps 4 and 6 apply, prefer one invocation such as `.\gradlew.bat build gatlingBenchmark --no-daemon` instead of separate Gradle runs.
 
 Backup and retention expectations for versioned upgrades:
 

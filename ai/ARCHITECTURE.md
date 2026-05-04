@@ -79,6 +79,13 @@ Checked-in infrastructure assets live outside the application packages under `in
 - `infra/monitoring/`
   - Grafana, Alertmanager, and upstream monitoring-stack values owned by this repo
 
+Checked-in build-tool policy files live under `tooling/`:
+
+- `tooling/pmd/`
+  - PMD rulesets owned by this repo
+- `tooling/security/`
+  - SpotBugs and Trivy include, exclude, and ignore files for repo-owned verification gates
+
 ## Module Map
 
 ### Root

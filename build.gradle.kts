@@ -52,9 +52,9 @@ val snippetsDir = layout.buildDirectory.dir("generated-snippets")
 val buildInfoPropertiesFile = layout.buildDirectory.file("resources/main/META-INF/build-info.properties")
 val approvedOpenApiFile = layout.projectDirectory.file("src/test/resources/openapi/approved-openapi.json")
 val asciidoctorTask = tasks.named<org.asciidoctor.gradle.jvm.AsciidoctorTask>("asciidoctor")
-val spotbugsSecurityIncludeFile = layout.projectDirectory.file("config/security/spotbugs-security-include.xml")
-val spotbugsSecurityExcludeFile = layout.projectDirectory.file("config/security/spotbugs-security-exclude.xml")
-val trivyIgnoreFile = layout.projectDirectory.file("config/security/trivy.ignore")
+val spotbugsSecurityIncludeFile = layout.projectDirectory.file("tooling/security/spotbugs-security-include.xml")
+val spotbugsSecurityExcludeFile = layout.projectDirectory.file("tooling/security/spotbugs-security-exclude.xml")
+val trivyIgnoreFile = layout.projectDirectory.file("tooling/security/trivy.ignore")
 val trivyContainerImage = providers.gradleProperty("trivyImage").orElse("aquasec/trivy:0.63.0")
 val trivyFailOnSeverities = listOf("HIGH", "CRITICAL")
 val applicationSbomReportDir = layout.buildDirectory.dir("reports/sbom/application")
@@ -328,7 +328,7 @@ tasks.matching { it.name == "compileGatlingJava" }.configureEach {
 pmd {
     toolVersion = pmdVersion
     ruleSets = emptyList()
-    ruleSetFiles = files("config/pmd/pmd-ruleset.xml")
+    ruleSetFiles = files("tooling/pmd/pmd-ruleset.xml")
 }
 
 tasks.withType<Pmd>().configureEach {
