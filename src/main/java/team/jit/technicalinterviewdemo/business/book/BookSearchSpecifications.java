@@ -2,9 +2,7 @@ package team.jit.technicalinterviewdemo.business.book;
 
 import jakarta.persistence.criteria.JoinType;
 
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Locale;
 
 import org.springframework.data.jpa.domain.Specification;
 
@@ -14,23 +12,26 @@ public final class BookSearchSpecifications {
     }
 
     public static Specification<Book> fromSearchRequest(BookSearchRequest request) {
+        return fromCriteria(BookSearchCriteria.fromRequest(request));
+    }
+
+    static Specification<Book> fromCriteria(BookSearchCriteria criteria) {
         Specification<Book> specification = null;
-        specification = and(specification, containsIgnoreCase("title", request.getTitle()));
-        specification = and(specification, containsIgnoreCase("author", request.getAuthor()));
-        specification = and(specification, containsIgnoreCase("isbn", request.getIsbn()));
-        specification = and(specification, hasCategoryName(request.getCategory()));
-        specification = and(specification, publicationYearMatches(request.getYear(), request.getYearFrom(), request.getYearTo()));
+        specification = and(specification, containsIgnoreCase("title", criteria.title()));
+        specification = and(specification, containsIgnoreCase("author", criteria.author()));
+        specification = and(specification, containsIgnoreCase("isbn", criteria.isbn()));
+        specification = and(specification, hasCategoryName(criteria.categories()));
+        specification = and(specification, publicationYearMatches(criteria.year(), criteria.yearFrom(), criteria.yearTo()));
         return specification == null ? (root, query, criteriaBuilder) -> criteriaBuilder.conjunction() : specification;
     }
 
-    private static Specification<Book> containsIgnoreCase(String property, String value) {
-        if (value == null || value.isBlank()) {
+    private static Specification<Book> containsIgnoreCase(String property, String normalizedValue) {
+        if (normalizedValue == null) {
             return null;
         }
 
-        String normalizedValue = "%" + value.trim().toLowerCase(Locale.ROOT) + "%";
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.like(criteriaBuilder.lower(root.get(property)), normalizedValue);
+                criteriaBuilder.like(criteriaBuilder.lower(root.get(property)), "%" + normalizedValue + "%");
     }
 
     private static Specification<Book> publicationYearMatches(Integer year, Integer yearFrom, Integer yearTo) {
@@ -53,23 +54,13 @@ public final class BookSearchSpecifications {
     }
 
     private static Specification<Book> hasCategoryName(List<String> categories) {
-        if (categories == null || categories.isEmpty()) {
-            return null;
-        }
-
-        LinkedHashSet<String> normalizedCategories = new LinkedHashSet<>();
-        for (String category : categories) {
-            if (category != null && !category.isBlank()) {
-                normalizedCategories.add(category.trim().toLowerCase(Locale.ROOT));
-            }
-        }
-        if (normalizedCategories.isEmpty()) {
+        if (categories.isEmpty()) {
             return null;
         }
 
         return (root, query, criteriaBuilder) -> {
             query.distinct(true);
-            return criteriaBuilder.lower(root.join("categories", JoinType.LEFT).get("name")).in(normalizedCategories);
+            return criteriaBuilder.lower(root.join("categories", JoinType.LEFT).get("name")).in(categories);
         };
     }
 
@@ -83,4 +74,3 @@ public final class BookSearchSpecifications {
         return left.and(right);
     }
 }
-

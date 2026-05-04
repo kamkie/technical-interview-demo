@@ -9,6 +9,7 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ### Changed
 - Added book-local regression coverage that pins whitespace-only search filters, trimmed text filters, and repeated category filters for `GET /api/books` ahead of the internal normalization cleanup.
+- Consolidated book-search request validation and normalization into a feature-local criteria helper so `BookService` and `BookSearchSpecifications` follow one internal search-filter path without changing the `GET /api/books` contract.
 
 ## [v2.0.0-M4] - 2026-05-04
 
