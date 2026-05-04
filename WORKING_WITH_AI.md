@@ -171,6 +171,7 @@ It is much cheaper to fix the plan than to unwind a bad implementation stream la
 ### 4. Implementation
 
 Once the plan is ready, use AI to implement either the whole plan or one milestone.
+This section also covers the repo-wide entry prompts that start implementation across every ready or unfinished plan under `ai/`.
 
 Important repo rule:
 
@@ -182,10 +183,12 @@ Useful prompt titles:
 
 - `Implement A Plan Without Releasing`
 - `Implement Only One Milestone`
+- `Execute ALL Ready Plans In Parallel`
+- `Implement All Unfinished Plans In Parallel`
 
-### 5. Implementation Integration
+### 5. Workflow Execution
 
-This is where workflow mode matters.
+This is where workflow mode matters during active execution.
 Use the smallest mode that keeps ownership clear.
 
 #### Single plan file
@@ -200,7 +203,6 @@ When you pass one plan file, there are three useful ways to work:
 
 When you pass multiple plan files, use `Parallel Plans`.
 Use `Execute Multiple Plans In Parallel` when you already know the exact plan-file set.
-Use `Execute ALL Ready Plans In Parallel` when you want AI to select every non-archived `ai/PLAN_*.md` file whose `Lifecycle` status is `Ready`.
 
 #### Workflow mode guide
 
@@ -218,12 +220,18 @@ Useful prompt titles:
 - `Execute One Plan On A Single Branch`
 - `Execute One Plan As Shared Plan`
 - `Execute Multiple Plans In Parallel`
-- `Execute ALL Ready Plans In Parallel`
-- `Integrate Completed Shared-Plan Worker Output`
 - `Check Status On One Worker`
 - `Check Status On Active Workers`
 
-### 6. Implementation Verification
+### 6. Implementation Integration
+
+Use this after worker implementation is already complete and the next task is to fold ready output back into the canonical plan, changelog, and integration branch.
+
+Useful prompt titles:
+
+- `Integrate Completed Shared-Plan Worker Output`
+
+### 7. Implementation Verification
 
 Verification is a separate phase, not an afterthought.
 Use AI to run validation, inspect contract impact, and review the change with a code-review mindset.
@@ -246,7 +254,7 @@ Repository rule:
 
 - run `.\gradlew.bat build` before finishing, unless `pwsh ./scripts/classify-changed-files.ps1 -Uncommitted` reports `skipHeavyValidation=true` for the current uncommitted changes and manual consistency review is sufficient
 
-### 7. Preparing Release
+### 8. Preparing Release
 
 Release preparation starts only after the approved implementation PR has been merged onto `main`.
 
@@ -261,7 +269,7 @@ Typical preparation work includes:
 - checking changelog, roadmap, and plan cleanup
 - preparing the release commit and tag inputs without pushing yet
 
-### 8. Releasing
+### 9. Releasing
 
 Releasing is a maintainer step.
 Do not ask AI to release unmerged branch work.
@@ -310,8 +318,9 @@ For coordinated multi-branch work:
 2. if there is one plan file, use one of the single-plan workflow prompts
 3. if there are multiple plan files and you already know the exact set, use `Execute Multiple Plans In Parallel`
 4. if you want AI to discover every ready plan under `ai/`, use `Execute ALL Ready Plans In Parallel`
-5. use the worker-status prompts while the work is running
-6. integrate, verify, and release only after the normal gates are satisfied
+5. if you want AI to pick up every unfinished plan under `ai/`, use `Implement All Unfinished Plans In Parallel`
+6. use the worker-status prompts while the work is running
+7. integrate, verify, and release only after the normal gates are satisfied
 
 ## When To Slow Down AI
 

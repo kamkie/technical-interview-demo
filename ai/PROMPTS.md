@@ -37,14 +37,17 @@ If a prompt starts reading like policy, move that policy back to the owner guide
 - [Implementation](#implementation)
   - [Implement A Plan Without Releasing](#implement-a-plan-without-releasing)
   - [Implement Only One Milestone](#implement-only-one-milestone)
-- [Implementation Integration](#implementation-integration)
+  - [Execute ALL Ready Plans In Parallel](#execute-all-ready-plans-in-parallel)
+  - [Implement All Unfinished Plans In Parallel](#implement-all-unfinished-plans-in-parallel)
+- [Workflow Execution](#workflow-execution)
   - [Execute One Plan And Infer Workflow Mode](#execute-one-plan-and-infer-workflow-mode)
   - [Execute One Plan On A Single Branch](#execute-one-plan-on-a-single-branch)
   - [Execute One Plan As Shared Plan](#execute-one-plan-as-shared-plan)
   - [Execute Multiple Plans In Parallel](#execute-multiple-plans-in-parallel)
-  - [Integrate Completed Shared-Plan Worker Output](#integrate-completed-shared-plan-worker-output)
   - [Check Status On One Worker](#check-status-on-one-worker)
   - [Check Status On Active Workers](#check-status-on-active-workers)
+- [Implementation Integration](#implementation-integration)
+  - [Integrate Completed Shared-Plan Worker Output](#integrate-completed-shared-plan-worker-output)
 - [Implementation Verification](#implementation-verification)
   - [Run Required Validation Only](#run-required-validation-only)
   - [Verify Contract Impact](#verify-contract-impact)
@@ -61,8 +64,6 @@ If a prompt starts reading like policy, move that policy back to the owner guide
   - [Implement And Then Release](#implement-and-then-release)
   - [Summarize The Current Lifecycle State](#summarize-the-current-lifecycle-state)
   - [Triage A Failed Validation Run](#triage-a-failed-validation-run)
-  - [Execute ALL Ready Plans In Parallel](#execute-all-ready-plans-in-parallel)
-  - [Implement All Unfinished Plans In Parallel](#implement-all-unfinished-plans-in-parallel)
 - [Maintenance](#maintenance)
   - [Compact AI Instruction Files](#compact-ai-instruction-files)
 
@@ -73,8 +74,9 @@ Default read set by task:
 - discovery and roadmap work: `AGENTS.md`, `ROADMAP.md`, `ai/PLAN.md`; add `README.md` or `ai/DESIGN.md` only when relevant
 - planning: `AGENTS.md`, `ai/PLAN.md`, and the governing specs; add `README.md` or `ROADMAP.md` only when relevant
 - plan verification: `AGENTS.md`, `ai/PLAN.md`, and the target plan file
-- implementation: `AGENTS.md`, `ai/EXECUTION.md`, and the target `ai/PLAN_*.md`
-- implementation integration: `AGENTS.md`, `ai/WORKFLOW.md`, `ai/EXECUTION.md`, and the relevant plan files
+- implementation: `AGENTS.md`, `ai/EXECUTION.md`, and the target `ai/PLAN_*.md`; add `ai/WORKFLOW.md` when the request fans out across multiple plans or worktrees
+- workflow execution: `AGENTS.md`, `ai/WORKFLOW.md`, `ai/EXECUTION.md`, and the relevant plan files
+- implementation integration: `AGENTS.md`, `ai/WORKFLOW.md`, `ai/EXECUTION.md`, and the relevant plan files or worker logs
 - implementation verification: `AGENTS.md`, `ai/TESTING.md`, `ai/REVIEWS.md`, plus any owner guide needed to judge artifact impact
 - preparing release: `AGENTS.md`, `ai/RELEASES.md`, the executed plan, and the changed contract docs
 - releasing: `AGENTS.md`, `ai/RELEASES.md`, and the current release state
@@ -245,7 +247,38 @@ Follow `ai/EXECUTION.md`.
 Do not start later milestones, push, open a PR, or release unless I ask.
 ```
 
-## Implementation Integration
+### Execute ALL Ready Plans In Parallel
+
+```text
+Execute every ready plan file under `ai/` in `Parallel Plans` mode using git worktrees.
+
+Treat ready plans as the non-archived `ai/PLAN_*.md` files still present directly under `ai/` whose `Lifecycle` status is `Ready`.
+Use `ai/WORKFLOW.md` and `ai/EXECUTION.md`.
+Restate exactly which ready plan files were selected and which non-archived plan files were skipped because they were not `Ready`.
+If there are no ready plans, stop and say so explicitly.
+If only one ready plan exists, stop and say that a single-plan execution prompt should be used instead.
+Do not silently skip a `Ready` plan just to force a smaller parallel-safe set.
+If any ready plans are too coupled for safe parallel execution, stop and explain why instead of forcing `Parallel Plans`.
+Track per-plan branch, validation, private `CHANGELOG_<topic>.md`, worker log, and PR status.
+Do not release unless I ask.
+```
+
+### Implement All Unfinished Plans In Parallel
+
+```text
+Implement all unfinished plan files under `ai/` in parallel using git worktrees.
+
+Treat unfinished plans as the non-archived `ai/PLAN_*.md` files still present directly under `ai/`.
+Use `ai/WORKFLOW.md` in `Parallel Plans` mode.
+If there are no unfinished plans, stop and say so explicitly.
+Group plans into parallel-safe workstreams only when their source ownership, contract artifacts, rollout order, and validation needs are genuinely disjoint.
+Summarize which plans were completed, grouped together, or left blocked, plus the PR and validation status for each one.
+Do not release unless I ask.
+```
+
+## Workflow Execution
+
+Use these prompts when one request should actively execute planned work while also choosing or coordinating the workflow mode from `ai/WORKFLOW.md`.
 
 ### Execute One Plan And Infer Workflow Mode
 
@@ -292,15 +325,6 @@ If any listed plans are too coupled for safe parallel execution, stop and explai
 Do not release unless I ask.
 ```
 
-### Integrate Completed Shared-Plan Worker Output
-
-```text
-Integrate completed worker output for `<plan_file>`.
-
-Use `ai/WORKFLOW.md` as coordinator in `Shared Plan` mode.
-Merge or cherry-pick ready worker branches, fold accepted worker-log content into the canonical plan and `CHANGELOG.md`, run the required integration validation, and summarize what landed and what remains.
-```
-
 ### Check Status On One Worker
 
 ```text
@@ -318,6 +342,19 @@ Check the status of the active workers in the current workflow execution.
 Use `ai/WORKFLOW.md`.
 For each worker, report mode, branch and worktree, current task, changed files, validations, commit SHA(s), blockers, ready-for-integration status, and the worker-log path when applicable.
 Keep the report concise and factual.
+```
+
+## Implementation Integration
+
+Use these prompts after worker implementation is already done and the next task is to fold ready output back into the canonical plan, changelog, and integration branch.
+
+### Integrate Completed Shared-Plan Worker Output
+
+```text
+Integrate completed worker output for `<plan_file>`.
+
+Use `ai/WORKFLOW.md` as coordinator in `Shared Plan` mode.
+Merge or cherry-pick ready worker branches, fold accepted worker-log content into the canonical plan and `CHANGELOG.md`, run the required integration validation, and summarize what landed and what remains.
 ```
 
 ## Implementation Verification
@@ -440,35 +477,6 @@ Triage the failing validation for `<plan_file>` or `<change>`.
 
 Use `ai/TESTING.md` and `ai/REVIEWS.md`.
 Identify the first real failure, likely root cause, whether it looks like a spec break or implementation bug, and the smallest next fix.
-```
-
-### Execute ALL Ready Plans In Parallel
-
-```text
-Execute every ready plan file under `ai/` in `Parallel Plans` mode using git worktrees.
-
-Treat ready plans as the non-archived `ai/PLAN_*.md` files still present directly under `ai/` whose `Lifecycle` status is `Ready`.
-Use `ai/WORKFLOW.md` and `ai/EXECUTION.md`.
-Restate exactly which ready plan files were selected and which non-archived plan files were skipped because they were not `Ready`.
-If there are no ready plans, stop and say so explicitly.
-If only one ready plan exists, stop and say that a single-plan execution prompt should be used instead.
-Do not silently skip a `Ready` plan just to force a smaller parallel-safe set.
-If any ready plans are too coupled for safe parallel execution, stop and explain why instead of forcing `Parallel Plans`.
-Track per-plan branch, validation, private `CHANGELOG_<topic>.md`, worker log, and PR status.
-Do not release unless I ask.
-```
-
-### Implement All Unfinished Plans In Parallel
-
-```text
-Implement all unfinished plan files under `ai/` in parallel using git worktrees.
-
-Treat unfinished plans as the non-archived `ai/PLAN_*.md` files still present directly under `ai/`.
-Use `ai/WORKFLOW.md` in `Parallel Plans` mode.
-If there are no unfinished plans, stop and say so explicitly.
-Group plans into parallel-safe workstreams only when their source ownership, contract artifacts, rollout order, and validation needs are genuinely disjoint.
-Summarize which plans were completed, grouped together, or left blocked, plus the PR and validation status for each one.
-Do not release unless I ask.
 ```
 
 ## Maintenance
