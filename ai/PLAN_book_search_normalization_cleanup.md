@@ -3,8 +3,8 @@
 ## Lifecycle
 | Field | Value |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Implementation |
+| Status | In Progress |
 
 ## Summary
 - Synthetic workflow-fixture plan: clean up the internal search-filter normalization path in `business.book` without changing the `GET /api/books` contract.
@@ -141,7 +141,7 @@
 - If execution starts to redesign search semantics, stop and write a real public-API plan instead of hiding that scope inside this dummy cleanup.
 
 ## Validation Results
-- Not started. Planning-only dummy plan.
+- 2026-05-04: Milestone 1 completed. `.\gradlew.bat test --tests team.jit.technicalinterviewdemo.business.book.BookServiceTests --tests team.jit.technicalinterviewdemo.business.book.BookApiIntegrationTests` passed after rerunning with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3` because the default shell environment was pinned to Java 11 and no local `.env` file was present.
 
 ## User Validation
 - Call `GET /api/books` with and without filters, including repeated `category` parameters and whitespace around text filters, and confirm the response shape, sort behavior, and validation messages remain unchanged.
