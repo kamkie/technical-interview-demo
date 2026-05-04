@@ -31,23 +31,13 @@ No unrefined tasks currently.
 
 No active priorities currently.
 
-## Locked Framing Decisions
-
-- Post-`1.x` production-ready work keeps browser-oriented auth by adding a first-party UI instead of switching this repo to a stateless token-only contract.
-- That first-party UI belongs in a separate repository; this repository remains the backend/API, auth, and operational contract.
-- The separate first-party UI is expected to share one public origin with the backend through reverse-proxy deployment, so browser flows should target a same-site contract rather than a cross-origin one.
-- The production-ready security-hardening track is an explicit post-`1.x` contract shift rather than additive `1.x` work; treat it as `2.0`-style breaking follow-up planning.
-- Only `/api/**` is externally reachable, through `waf -> frontend -> this application`; `/`, `/hello`, `/docs`, OpenAPI docs, and all actuator endpoints are internal or devops-only surfaces.
-- Restricting technical endpoints means keeping actuator surfaces deployment-scoped and privately reachable, while keeping authenticated operator visibility in the application-owned `/api/operator/surface` instead of turning metrics into an app-auth API.
-- Abuse protection for login bootstrap and write-heavy paths is owned primarily by edge or deployment controls; this roadmap should document and enforce those expectations rather than assuming repo-owned in-app rate limiting is required.
-
 ## Ordered Plan
 
 ### Future: Post-`1.x` Production-Ready Sample App Track
 
 Status: Planned
 
-Goal: evolve the repository into a production-ready backend sample that supports a separate first-party UI behind one public origin deliberately, with explicit contract, rollout, and posture review as a post-`1.x` breaking follow-up instead of treating that shift as a silent extension of the frozen interview-demo `1.x` promise.
+Goal: plan the next explicit post-`1.x` contract-shaping evolution without silently stretching the frozen interview-demo `1.x` promise.
 
 ## Deferred
 
@@ -72,21 +62,3 @@ Status: Deferred until the core roadmap is complete
 - [ ] Add Spring GraphQL only if there is a real client need
 - [ ] Define schema for books, users, and localization data
 - [ ] Implement queries and mutations
-
----
-
-## Quick Reference: Quality Gates
-
-Before completing a task, run:
-
-```powershell
-.\gradlew.bat build
-```
-
-Use `SETUP.md` for environment prerequisites and local verification setup.
-
-## Notes
-
-- Keep the roadmap dependency-ordered so the next implementable task is obvious.
-- Keep `ROADMAP.md` focused on active work only.
-- Maintain alignment between `README.md`, `AGENTS.md`, and `SETUP.md` when project behavior, working rules, or setup guidance change.

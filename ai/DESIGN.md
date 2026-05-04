@@ -231,6 +231,13 @@ That means design work should prefer:
 
 over adding major new features.
 
+## Long-Term Product Framing
+
+- post-`1.x` evolution should keep browser-oriented auth and session flows instead of pivoting this repo to a bearer-token-only public contract
+- any first-party UI remains a separate repository; this repository continues to own backend/API, auth, and operational behavior
+- supported browser usage assumes one public origin through reverse-proxy deployment, so same-site flows are the design target rather than cross-origin browser support
+- moving toward a more production-ready posture is an explicit post-`1.x` contract review, not a silent extension of the frozen interview-demo `1.x` promise
+
 ## Good Design Changes
 
 Usually good:

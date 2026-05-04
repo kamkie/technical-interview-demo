@@ -176,6 +176,15 @@ Important architectural consequence:
 - external identity is not the whole security model
 - application roles and preferred-language behavior depend on persisted `UserAccount` state
 
+## Deployment Boundary
+
+Current deployment-boundary expectations:
+
+- only `/api/**` is intended to be internet-reachable, typically through `waf -> frontend -> this application`
+- `/`, `/hello`, `/docs`, OpenAPI docs, and actuator endpoints exist but are internal or deployment-scoped surfaces rather than public app contract
+- authenticated operator visibility stays in `/api/operator/surface`; actuator endpoints are not the application-auth operational API
+- abuse protection for login bootstrap and write-heavy internet-public paths is primarily an edge or deployment responsibility rather than default in-app rate limiting
+
 ## Localization Model
 
 Localization is a first-class feature and a cross-cutting concern:
