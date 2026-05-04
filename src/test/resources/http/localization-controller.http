@@ -5,10 +5,26 @@
 
 @baseUrl = http://localhost:8080
 @sessionCookie = paste-technical-interview-demo-session-here
-@csrfToken = paste-xsrf-token-from-get-api-session-here
+# csrfToken is populated automatically by the bootstrap request below.
 @localizationId = 1
 @writeLocalizationId = 0
 @demoMessageKey = info.book.created.demo-change-me-if-rerunning
+
+### LocalizationController - bootstrap authenticated CSRF token
+# Run this after login and again after logout or a fresh login before unsafe writes.
+GET {{baseUrl}}/api/session
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/json
+
+> {%
+const csrfCookie = response.cookiesByName("XSRF-TOKEN")[0];
+if (csrfCookie) {
+  client.global.set("csrfToken", csrfCookie.value);
+  client.log("Updated csrfToken from XSRF-TOKEN.");
+} else {
+  client.log("No XSRF-TOKEN cookie was returned; csrfToken was not updated.");
+}
+%}
 
 ### LocalizationController - list localizations with pagination and sorting
 GET {{baseUrl}}/api/localizations?page=0&size=5&sort=messageKey,asc&sort=language,asc
@@ -33,6 +49,7 @@ GET {{baseUrl}}/api/localizations?language=es&sort=messageKey,asc
 Accept: application/json
 
 ### LocalizationController - create localization (ADMIN + authenticated session)
+# Run the bootstrap request above first to populate csrfToken automatically.
 POST {{baseUrl}}/api/localizations
 Cookie: technical-interview-demo-session={{sessionCookie}}
 X-XSRF-TOKEN: {{csrfToken}}

@@ -6,7 +6,24 @@
 
 @baseUrl = http://localhost:8080
 @sessionCookie = paste-technical-interview-demo-session-here
-@csrfToken = paste-xsrf-token-from-get-api-session-here
+# csrfToken is populated automatically by the bootstrap request below.
+
+### UserAccountController - bootstrap authenticated CSRF token
+# Run this after login and again after logout or a fresh login before unsafe writes.
+GET {{baseUrl}}/api/session
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/json
+
+> {%
+const csrfCookie = response.cookiesByName("XSRF-TOKEN")[0];
+if (csrfCookie) {
+  client.global.set("csrfToken", csrfCookie.value);
+  client.log("Updated csrfToken from XSRF-TOKEN.");
+} else {
+  client.log("No XSRF-TOKEN cookie was returned; csrfToken was not updated.");
+}
+%}
+
 ### UserAccountController - current authenticated user
 GET {{baseUrl}}/api/account
 Cookie: technical-interview-demo-session={{sessionCookie}}
@@ -17,6 +34,7 @@ GET {{baseUrl}}/api/account
 Accept: application/problem+json
 
 ### UserAccountController - update preferred language (authenticated session)
+# Run the bootstrap request above first to populate csrfToken automatically.
 PUT {{baseUrl}}/api/account/language
 Cookie: technical-interview-demo-session={{sessionCookie}}
 X-XSRF-TOKEN: {{csrfToken}}

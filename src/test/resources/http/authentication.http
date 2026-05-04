@@ -13,7 +13,7 @@
 @baseUrl = http://localhost:8080
 @oauthProvider = github
 #@sessionCookie = paste-technical-interview-demo-session-here
-#@csrfToken = paste-xsrf-token-from-get-api-session-here
+# csrfToken is captured automatically by the authenticated GET /api/session request below.
 #@providerClientId = paste-provider-client-id-here
 #@providerClientSecret = paste-provider-client-secret-here
 #@providerAuthCode = paste-provider-auth-code-here
@@ -32,10 +32,21 @@ Accept: application/json
 GET {{baseUrl}}/api/session/oauth2/authorization/{{oauthProvider}}
 
 ### App session contract - inspect the authenticated same-site browser session state
-# Use the `Set-Cookie: XSRF-TOKEN=...` value from this response for the unsafe write below.
+# This request stores the `XSRF-TOKEN` cookie value as the global `csrfToken` variable.
+# Run it after login and again after logout or a fresh login before the next unsafe write.
 GET {{baseUrl}}/api/session
 Cookie: technical-interview-demo-session={{sessionCookie}}
 Accept: application/json
+
+> {%
+const csrfCookie = response.cookiesByName("XSRF-TOKEN")[0];
+if (csrfCookie) {
+  client.global.set("csrfToken", csrfCookie.value);
+  client.log("Updated csrfToken from XSRF-TOKEN.");
+} else {
+  client.log("No XSRF-TOKEN cookie was returned; csrfToken was not updated.");
+}
+%}
 
 ### App authentication - verify the authenticated app session cookie
 GET {{baseUrl}}/api/account
@@ -49,3 +60,8 @@ Accept: application/json
 POST {{baseUrl}}/api/session/logout
 Cookie: technical-interview-demo-session={{sessionCookie}}
 X-XSRF-TOKEN: {{csrfToken}}
+
+> {%
+client.global.clear("csrfToken");
+client.log("Cleared csrfToken after logout. Run the authenticated GET /api/session request before the next unsafe write.");
+%}

@@ -6,12 +6,28 @@
 
 @baseUrl = http://localhost:8080
 #@sessionCookie = paste-technical-interview-demo-session-here
-#@csrfToken = paste-xsrf-token-from-get-api-session-here
+# csrfToken is populated automatically by the bootstrap request below.
 @bookId = 1
 @bookVersion = 0
 @writeBookId = 0
 @writeBookVersion = 0
 @demoBookIsbn = demo-book-change-me-if-rerunning
+
+### BookController - bootstrap authenticated CSRF token
+# Run this after login and again after logout or a fresh login before unsafe writes.
+GET {{baseUrl}}/api/session
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/json
+
+> {%
+const csrfCookie = response.cookiesByName("XSRF-TOKEN")[0];
+if (csrfCookie) {
+  client.global.set("csrfToken", csrfCookie.value);
+  client.log("Updated csrfToken from XSRF-TOKEN.");
+} else {
+  client.log("No XSRF-TOKEN cookie was returned; csrfToken was not updated.");
+}
+%}
 
 ### BookController - list books with pagination and sorting
 GET {{baseUrl}}/api/books?page=0&size=5&sort=title,asc&sort=year,desc
@@ -39,8 +55,7 @@ GET {{baseUrl}}/api/books/{{bookId}}
 Accept: application/json
 
 ### BookController - create book (authenticated session)
-# Bootstrap or refresh the CSRF token with GET /api/session after login, then paste the
-# XSRF-TOKEN cookie value into csrfToken before running write requests.
+# Run the bootstrap request above first to populate csrfToken automatically.
 POST {{baseUrl}}/api/books?lang=pl
 Cookie: technical-interview-demo-session={{sessionCookie}}
 X-XSRF-TOKEN: {{csrfToken}}
