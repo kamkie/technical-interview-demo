@@ -96,9 +96,9 @@ You may invoke a prompt in this file by using its `###` title as a reusable comm
 Rules:
 
 - use the exact prompt title or an unmistakably close reference to one prompt title in this file
-- supply the required placeholders or equivalent concrete conmarkdown in the same request
+- supply the required placeholders or equivalent concrete context in the same request
 - treat section headings such as `## Planning` and `## Implementation Verification` as categories, not invocable prompts
-- if the title match is ambiguous or required conmarkdown is missing, stop and ask a targeted clarification question instead of guessing
+- if the title match is ambiguous or required context is missing, stop and ask a targeted clarification question instead of guessing
 
 Example shorthand:
 
@@ -182,7 +182,7 @@ Set the lifecycle state from `ai/PLAN.md` based on the actual readiness of the w
 ```markdown
 Create one coherent `ai/PLAN_<topic>.md` from every checklist item marked `[x]` in `ROADMAP.md`.
 
-Use only the checked items unless the roadmap markdown makes a dependency explicit.
+Use only the checked items unless the roadmap text makes a dependency explicit.
 Restate exactly which checked items were included.
 If the checked items do not form one coherent executable plan, stop and explain the gap instead of guessing.
 Record unresolved requirement gaps and fallback assumptions explicitly.
