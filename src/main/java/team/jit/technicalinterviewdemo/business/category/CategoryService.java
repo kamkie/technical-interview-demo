@@ -1,9 +1,8 @@
 package team.jit.technicalinterviewdemo.business.category;
 
 import java.util.Collection;
-import java.util.Comparator;
-import java.util.LinkedHashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -134,19 +133,12 @@ public class CategoryService {
         }
 
         Map<String, Long> categoryDirectory = getCategoryDirectory();
-        List<String> missingNames = normalizedNames.stream()
-                .filter(name -> !categoryDirectory.containsKey(name.toLowerCase(Locale.ROOT)))
-                .toList();
+        List<String> missingNames = findMissingNames(normalizedNames, categoryDirectory);
         if (!missingNames.isEmpty()) {
             throw new InvalidRequestException("Unknown categories: %s.".formatted(String.join(", ", missingNames)));
         }
 
-        List<Long> categoryIds = normalizedNames.stream()
-                .map(name -> categoryDirectory.get(name.toLowerCase(Locale.ROOT)))
-                .toList();
-        List<Category> categories = categoryRepository.findAllById(categoryIds);
-        categories.sort(Comparator.comparing(Category::getName));
-        return new LinkedHashSet<>(categories);
+        return new LinkedHashSet<>(categoryRepository.findAllByNormalizedNames(normalizeLookupNames(normalizedNames)));
     }
 
     private Category requireCategory(Long id) {
@@ -164,12 +156,31 @@ public class CategoryService {
         }
 
         applicationMetrics.recordCacheEvent(CacheNames.CATEGORY_DIRECTORY, "miss");
-        Map<String, Long> categoryDirectory = new LinkedHashMap<>();
-        for (Category category : categoryRepository.findAllByOrderByNameAsc()) {
-            categoryDirectory.put(category.getName().toLowerCase(Locale.ROOT), category.getId());
-        }
+        Map<String, Long> categoryDirectory = buildCategoryDirectory();
         categoryDirectoryCache.put(CATEGORY_DIRECTORY_CACHE_KEY, categoryDirectory);
         applicationMetrics.recordCacheEvent(CacheNames.CATEGORY_DIRECTORY, "put");
+        return categoryDirectory;
+    }
+
+    private List<String> findMissingNames(Set<String> normalizedNames, Map<String, Long> categoryDirectory) {
+        return normalizedNames.stream()
+                .filter(name -> !categoryDirectory.containsKey(normalizeLookupName(name)))
+                .toList();
+    }
+
+    private Set<String> normalizeLookupNames(Set<String> normalizedNames) {
+        Set<String> lookupNames = new LinkedHashSet<>();
+        for (String normalizedName : normalizedNames) {
+            lookupNames.add(normalizeLookupName(normalizedName));
+        }
+        return lookupNames;
+    }
+
+    private Map<String, Long> buildCategoryDirectory() {
+        Map<String, Long> categoryDirectory = new LinkedHashMap<>();
+        for (Category category : categoryRepository.findAllByOrderByNameAsc()) {
+            categoryDirectory.put(normalizeLookupName(category.getName()), category.getId());
+        }
         return categoryDirectory;
     }
 
@@ -197,6 +208,10 @@ public class CategoryService {
             );
         }
         return normalizedName;
+    }
+
+    private String normalizeLookupName(String name) {
+        return name.toLowerCase(Locale.ROOT);
     }
 
     private void validateUniqueName(String normalizedName, Long id) {

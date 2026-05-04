@@ -9,6 +9,7 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ### Changed
 - Added focused category-service coverage for normalized assignment lookups, directory-cache reuse, duplicate-name validation, and the current missing-category error text.
+- Simplified `CategoryService` directory-cache assembly and normalized assignment lookup flow while keeping cache names, category ordering, and the published category contract unchanged.
 
 ## [v2.0.0-M4] - 2026-05-04
 

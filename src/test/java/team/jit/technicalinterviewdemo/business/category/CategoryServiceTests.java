@@ -71,10 +71,10 @@ class CategoryServiceTests {
         Category bestPractices = category(1L, "Best Practices");
         Category java = category(2L, "Java");
         when(categoryRepository.findAllByOrderByNameAsc()).thenReturn(List.of(bestPractices, java));
-        when(categoryRepository.findAllById(List.of(2L, 1L)))
-                .thenReturn(new java.util.ArrayList<>(List.of(java, bestPractices)));
-        when(categoryRepository.findAllById(List.of(2L)))
-                .thenReturn(new java.util.ArrayList<>(List.of(java)));
+        when(categoryRepository.findAllByNormalizedNames(Set.of("java", "best practices")))
+                .thenReturn(List.of(bestPractices, java));
+        when(categoryRepository.findAllByNormalizedNames(Set.of("java")))
+                .thenReturn(List.of(java));
 
         Set<Category> resolvedCategories = categoryService.resolveForAssignment(List.of("  java  ", "BEST PRACTICES"));
 
@@ -91,6 +91,8 @@ class CategoryServiceTests {
                 .extracting(Category::getName)
                 .containsExactly("Java");
         verify(categoryRepository, times(1)).findAllByOrderByNameAsc();
+        verify(categoryRepository).findAllByNormalizedNames(Set.of("java", "best practices"));
+        verify(categoryRepository).findAllByNormalizedNames(Set.of("java"));
         verify(applicationMetrics, times(2)).recordCategoryOperation("resolve");
         verify(applicationMetrics).recordCacheEvent(CacheNames.CATEGORY_DIRECTORY, "miss");
         verify(applicationMetrics).recordCacheEvent(CacheNames.CATEGORY_DIRECTORY, "put");

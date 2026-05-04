@@ -8,7 +8,7 @@
 - Worktree: `D:\Projects\Jit\technical-interview-demo__category_directory_cache_cleanup`
 - Owned scope: `src/main/java/team/jit/technicalinterviewdemo/business/category/**`, `src/test/java/team/jit/technicalinterviewdemo/business/category/**`, owned plan updates, private changelog, and this worker log
 - Shared files intentionally left untouched: `CHANGELOG.md`, `README.md`, `src/test/resources/openapi/approved-openapi.json`, `src/docs/asciidoc/category-controller.adoc`, `src/test/resources/http/category-controller.http`, `src/test/java/team/jit/technicalinterviewdemo/technical/CachingAndMetricsTests.java`
-- Current status: `Milestone 1 complete; Milestone 2 pending`
+- Current status: `Milestone 2 complete; milestone commit pending`
 
 ## Milestone Checkpoints
 
@@ -24,8 +24,25 @@
 - Proposed changelog text:
   - Added focused category-service coverage for normalized assignment lookups, directory-cache reuse, duplicate-name validation, and the current missing-category error text.
 - Commit:
-  - Pending milestone commit SHA.
+  - `7356932` - `test: add category service coverage`
 - Ready for integration: No
+
+### Milestone 2 - Simplify Directory Cache And Normalization Flow
+- Status: Completed
+- Changed files:
+  - `src/main/java/team/jit/technicalinterviewdemo/business/category/CategoryService.java`
+  - `src/test/java/team/jit/technicalinterviewdemo/business/category/CategoryServiceTests.java`
+  - `ai/PLAN_category_directory_cache_cleanup.md`
+  - `CHANGELOG_category_directory_cache_cleanup.md`
+  - `ai/tmp/workflow/category_directory_cache_cleanup__category_worker.md`
+- Validation:
+  - Passed: `.\gradlew.bat test --tests team.jit.technicalinterviewdemo.business.category.CategoryApiIntegrationTests --tests team.jit.technicalinterviewdemo.business.category.CategoryDataInitializerTests --tests team.jit.technicalinterviewdemo.business.category.CategoryServiceTests`
+  - Passed: `.\gradlew.bat build`
+- Proposed changelog text:
+  - Simplified `CategoryService` directory-cache assembly and normalized assignment lookup flow while keeping cache names, category ordering, and the published category contract unchanged.
+- Commit:
+  - Pending milestone commit SHA.
+- Ready for integration: Yes
 
 ## Blockers, Risks, And Decisions
 - No product blockers.
