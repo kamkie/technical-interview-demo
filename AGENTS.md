@@ -32,6 +32,7 @@ Use these files deliberately:
 - `ai/PLAN.md`: instructions for producing execution plans
 - `ai/PLAN_*.md`: task-specific execution plans and milestone breakdowns
 - `ai/PROMPTS.md`: lean reusable prompt starters that point to the standing guidance in the other AI documents
+- `ai/skills/`: repo-local reusable skills for repetitive planning and validation entry workflows that still defer to the owner guides
 - `ai/REVIEWS.md`: AI-facing code-review and security-review guidance
 - `ai/archive/`: archived AI execution plans that have already been released or otherwise completed
 - `ai/RELEASES.md`: AI-facing release workflow for intentional post-implementation releases
@@ -44,7 +45,9 @@ Rules for maintaining the `ai/` documents:
 - keep AI instruction markdown files under `ai/` by default; `AGENTS.md` is the only standing exception
 - update the relevant `ai/` file in the same change when architecture, code-style expectations, design intent, documentation ownership, durable engineering guidance, release workflow, review/security review guidance, testing/validation guidance, workflow guidance, or an execution plan materially changes
 - keep `ai/PROMPTS.md` lean; put standing workflow rules in the best owning AI document instead of restating them inside prompts
+- keep repo-local skills narrow and workflow-oriented; use them to accelerate repeated entry tasks, not to replace the owner guides
 - keep standing code-style, testing, review, and documentation guidance in their focused owning files instead of redistributing it across prompts or workflow docs
+- when a repo-local skill wraps a workflow owned by another guide, update the skill and the owning guide together if that workflow changes
 - when AI instruction files accumulate overlap, compact them by moving duplicated guidance into the single best owning file and updating cross-references in the same change
 - archive executed `ai/PLAN_*.md` files under `ai/archive/` as part of the release cleanup once that work has been released
 - treat `ai/ARCHITECTURE.md`, `ai/BUSINESS_MODULES.md`, `ai/DESIGN.md`, and `ai/LEARNINGS.md` as descriptive guidance, not executable spec authority

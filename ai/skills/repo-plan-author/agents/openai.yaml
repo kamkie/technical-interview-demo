@@ -1,0 +1,4 @@
+interface:
+  display_name: "Repo Plan Author"
+  short_description: "Create or revise repo execution plans"
+  default_prompt: "Use $repo-plan-author to create or revise a plan file under ai/ for this repository."

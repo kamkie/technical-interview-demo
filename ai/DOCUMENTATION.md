@@ -21,6 +21,7 @@ Update the artifact that owns the truth being changed:
 - delegation and worktree deviations: `ai/WORKFLOW.md`
 - release sequencing and tagging: `ai/RELEASES.md`
 - prompt starters only: `ai/PROMPTS.md`
+- repo-local reusable workflow wrappers: `ai/skills/`
 - current codebase map and structural guidance: `ai/ARCHITECTURE.md`
 - business feature ownership: `ai/BUSINESS_MODULES.md`
 - product and contract direction: `ai/DESIGN.md`
@@ -35,6 +36,7 @@ If ownership is unclear, decide that before editing multiple docs.
 
 - update overlapping human-facing and AI-facing docs in the same change
 - keep prompts lean; move standing policy back to the owning guide
+- keep repo-local skills narrow; route standing policy back to the owning guide instead of duplicating it
 - compact repeated standing guidance into the best owner instead of maintaining parallel copies
 - keep setup detail out of planning, workflow, and release guides
 - keep active or selected work in `ROADMAP.md` and released history in `CHANGELOG.md`
@@ -45,6 +47,7 @@ If ownership is unclear, decide that before editing multiple docs.
 - public behavior change: update the governing spec artifacts first, then the published contract artifacts they drive
 - human-facing AI collaboration workflow change: update `WORKING_WITH_AI.md`, and update overlapping AI-facing guides in the same change when the underlying repository workflow also changed
 - workflow or AI-guidance change: update the owning AI guide first; touch `AGENTS.md` only when the AI-document set or maintenance rules changed
+- repo-local skill change: update the skill plus the owning AI guide when the skill wraps a workflow whose rules changed
 - setup or tooling change: update `SETUP.md`, not `README.md`, `AGENTS.md`, or workflow guides
 - roadmap reprioritization: update `ROADMAP.md`
 - released history: update `CHANGELOG.md`
