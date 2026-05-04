@@ -46,6 +46,7 @@ Key API-shape expectations:
 - account endpoints require an authenticated session
 - category creation and localization writes require `ADMIN`
 - localized errors include `messageKey`, localized `message`, and resolved `language`
+- pageable collection endpoints currently expose Spring Data-style page metadata as part of the reviewed `2.0` contract; replacing that shape with repo-owned pagination envelopes is not selected cleanup work unless an explicit contract review chooses it
 
 ## Top-Level Shape
 
@@ -202,8 +203,12 @@ Observability is built into the main app rather than bolted on later:
 
 - Micrometer application counters and gauges
 - tracing and request-logging filter for request correlation
+- service logging aspect for application-service visibility
 - actuator endpoints for health, readiness, liveness, info, and Prometheus scraping
 - write-operation logging and audit logging
+
+The current `2.0` direction keeps that observability shape in place.
+Reducing or redesigning service-call logging and correlation fields is not selected cleanup work unless operational evidence shows the current signal-to-noise ratio is a real problem.
 
 ## Caching Model
 
@@ -245,6 +250,7 @@ When editing structure:
 - preserve the demo nature of the app and prefer direct feature-local code over repo-internal frameworks
 - keep business behavior near the owning feature package unless the concern is genuinely cross-cutting
 - treat public response-shape changes as contract changes that must flow through specs and docs
+- do not reshape pageable API responses or observability logging only as stylistic cleanup; treat both as deliberate contract or operations decisions
 - do not move setup or workflow process detail into architecture notes
 
 ## Common Safe Changes
