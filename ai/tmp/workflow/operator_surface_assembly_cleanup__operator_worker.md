@@ -23,22 +23,28 @@
 - Proposed private changelog text:
   - Added operator-local `OperatorSurfaceService` tests that pin the ADMIN guard, nested response sections, and the 10-entry recent-audit paging limit before the internal cleanup refactor.
 - Commit:
-  - Pending milestone commit.
+  - `ea03323` - `Add operator surface service coverage`
 - Ready for integration:
   - No.
 
 ### Milestone 2: Split Response Assembly Into Clearer Internal Steps
-- Status: Pending
+- Status: Completed
 - Changed files:
-  - None yet.
+  - `src/main/java/team/jit/technicalinterviewdemo/technical/operator/OperatorSurfaceService.java`
+  - `ai/PLAN_operator_surface_assembly_cleanup.md`
+  - `CHANGELOG_operator_surface_assembly_cleanup.md`
+  - `ai/tmp/workflow/operator_surface_assembly_cleanup__operator_worker.md`
 - Validation:
-  - Not started.
+  - `.\gradlew.bat test --tests team.jit.technicalinterviewdemo.technical.operator.OperatorSurfaceApiIntegrationTests --tests team.jit.technicalinterviewdemo.technical.operator.OperatorSurfaceApiDocumentationTests --tests team.jit.technicalinterviewdemo.technical.operator.OperatorSurfaceServiceTests`
+    - Passed with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`.
+  - `.\gradlew.bat build`
+    - Passed with `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`.
 - Proposed private changelog text:
-  - Pending.
+  - Refactored `OperatorSurfaceService` into explicit admin-guard, audit-section, runtime-section, and operations-section assembly steps without changing the `/api/admin/operator-surface` contract.
 - Commit:
   - Pending milestone commit.
 - Ready for integration:
-  - No.
+  - Yes, pending push and PR handoff.
 
 ## Blockers And Risks
 - None.

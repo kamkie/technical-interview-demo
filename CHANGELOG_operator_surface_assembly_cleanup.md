@@ -10,6 +10,9 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 ### Added
 - Added operator-local `OperatorSurfaceService` tests that pin the ADMIN guard, the nested response sections, and the 10-entry recent-audit paging limit before the internal cleanup refactor.
 
+### Changed
+- Refactored `OperatorSurfaceService` into explicit admin-guard, audit-section, runtime-section, and operations-section assembly steps without changing the `/api/admin/operator-surface` contract.
+
 ## [v2.0.0-M4] - 2026-05-04
 
 ### Added
