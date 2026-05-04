@@ -3,8 +3,8 @@
 ## Lifecycle
 | Field | Value |
 | --- | --- |
-| Phase | Integration |
-| Status | Implemented |
+| Phase | Closed |
+| Status | Released |
 
 ## Summary
 - Move app-owned persisted timestamps from Java `LocalDateTime` plus PostgreSQL `timestamp` to Java `Instant` plus PostgreSQL `timestamptz`.
@@ -70,7 +70,7 @@
   - splitting this work would create constant coordination on the migration file, the plan file, the OpenAPI baseline, and the shared contract wording
   - the repo is small enough that one coherent branch is lower risk than worker fanout here
 - Coordinator-owned or otherwise shared files if the work fans out:
-  - `ai/PLAN_utc_instant_timestamp_migration.md`
+  - `ai/archive/PLAN_utc_instant_timestamp_migration.md`
   - `src/main/resources/db/migration/V10__*.sql`
   - `src/main/resources/db/migration/metadata/V10__*.json`
   - `src/test/resources/openapi/approved-openapi.json`

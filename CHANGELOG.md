@@ -7,8 +7,18 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+## [v2.0.0-M6] - 2026-05-05
+
+### Added
+- Added a repo-local `gh-fix-ci` skill with a bundled GitHub CLI helper for inspecting failing PR checks, pulling actionable GitHub Actions failure context, and routing the resulting fix through the repository's approval, planning, and validation flow.
+- Added a repo-local `gh-fix-security-quality` skill with a bundled GitHub CLI helper for inspecting open code-scanning and Dependabot alerts from the repository Security tab and routing approved fixes through the same repository-local plan and validation flow.
+
 ### Changed
 - Completed the pre-`2.0` UTC timestamp migration by converting app-owned persisted timestamp storage to PostgreSQL `timestamptz`, moving the corresponding domain and response models to Java `Instant`, and publishing the affected API timestamps as UTC instants with a trailing `Z`.
+- Moved checked-in Helm, Kubernetes, and monitoring manifests under `infra/`, keeping infrastructure assets outside the application packages and aligning the repo map with that ownership.
+- Moved the tracked Gatling benchmark baseline into `src/gatling/resources`, updated the benchmark task fallback to derive the default baseline path from the `gatling` source set, and renamed repo-owned PMD, SpotBugs, and Trivy policy files from `config/` to `tooling/`.
+- Updated setup, contributor, and AI validation guidance to prefer a single Gradle invocation such as `./gradlew build gatlingBenchmark --no-daemon` when both build and benchmark verification are required.
+- Refined the human-facing and AI-facing repository guidance so the current prerelease phase, the `v2.0.0-RC1` contract-freeze milestone, UTC instant timestamp direction, durable AI-document ownership, and worker cleanup expectations are aligned across the docs.
 
 ## [v2.0.0-M5] - 2026-05-04
 
