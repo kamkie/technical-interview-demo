@@ -266,6 +266,7 @@ class ExternalTestingConventionsPlugin : Plugin<Project> {
 
     private fun Project.configureGatlingBenchmark() {
         val dockerImageName = providers.gradleProperty("dockerImageName").orElse("technical-interview-demo")
+        val defaultBaselinePath = defaultGatlingBenchmarkBaselinePath()
         tasks.register<GatlingBenchmarkTask>("gatlingBenchmark") {
             group = "verification"
             description = "Runs Docker-backed Gatling benchmarks for public reads and OAuth redirect startup."
@@ -305,13 +306,26 @@ class ExternalTestingConventionsPlugin : Plugin<Project> {
             baselineFile.convention(
                 layout.projectDirectory.file(
                     providers.gradleProperty("benchmark.baselineFile")
-                        .orElse("src/gatling/resources/gatling-benchmark-baseline.json")
+                        .orElse(defaultBaselinePath)
                 )
             )
             latestResultFile.convention(layout.buildDirectory.file("performance/phase-9-latest.json"))
             reportDirectory.convention(layout.buildDirectory.dir("reports/gatling"))
         }
     }
+
+    private fun Project.defaultGatlingBenchmarkBaselinePath() =
+        extensions.getByType<SourceSetContainer>().named(GATLING_SOURCE_SET_NAME).map { gatlingSourceSet ->
+            val resourceDirectories = gatlingSourceSet.resources.srcDirs
+                .map { relativePath(it).replace('\\', '/') }
+                .sorted()
+            val resourceDirectory = resourceDirectories.singleOrNull()
+                ?: throw GradleException(
+                    "gatlingBenchmark requires exactly one Gatling resources directory to derive the default baseline path, but found: " +
+                        resourceDirectories.ifEmpty { listOf("none") }.joinToString(", ")
+                )
+            "$resourceDirectory/$GATLING_BENCHMARK_BASELINE_FILE_NAME"
+        }
 
     private fun Project.intProperty(name: String, defaultValue: Int) =
         providers.gradleProperty(name).map(String::toInt).orElse(defaultValue)
@@ -330,5 +344,7 @@ class ExternalTestingConventionsPlugin : Plugin<Project> {
 
     private companion object {
         const val EXTERNAL_TEST_SOURCE_SET_NAME: String = "externalTest"
+        const val GATLING_SOURCE_SET_NAME: String = "gatling"
+        const val GATLING_BENCHMARK_BASELINE_FILE_NAME: String = "gatling-benchmark-baseline.json"
     }
 }
