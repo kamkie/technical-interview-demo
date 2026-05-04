@@ -93,13 +93,13 @@ You may invoke a prompt in this file by using its `###` title as a reusable comm
 Rules:
 
 - use the exact prompt title or an unmistakably close reference to one prompt title in this file
-- supply the required placeholders or equivalent concrete context in the same request
+- supply the required placeholders or equivalent concrete conmarkdown in the same request
 - treat section headings such as `## Planning` and `## Implementation Verification` as categories, not invocable prompts
-- if the title match is ambiguous or required context is missing, stop and ask a targeted clarification question instead of guessing
+- if the title match is ambiguous or required conmarkdown is missing, stop and ask a targeted clarification question instead of guessing
 
 Example shorthand:
 
-```text
+```markdown
 Use `Implement Plan` for `ai/PLAN_auth_cleanup.md`.
 ```
 
@@ -107,7 +107,7 @@ Use `Implement Plan` for `ai/PLAN_auth_cleanup.md`.
 
 ### Clarify Roadmap Decisions
 
-```text
+```markdown
 Review `ROADMAP.md` for project-framing decisions that must be made before roadmap items can be planned or sequenced confidently.
 
 Read `AGENTS.md`, `README.md`, `ROADMAP.md`, `ai/PLAN.md`, and `ai/DESIGN.md` first.
@@ -122,7 +122,7 @@ Do not create an execution plan unless I ask.
 
 ### Refine Roadmap Intake
 
-```text
+```markdown
 Refine the items under `## Not Yet Refined` in `ROADMAP.md` into concrete roadmap entries.
 
 Treat that section as rough intake only.
@@ -132,7 +132,7 @@ Leave still-ambiguous tasks in place and explain what is missing.
 
 ### Pick Next Roadmap Workstream
 
-```text
+```markdown
 Review `ROADMAP.md` and select the next coherent workstream to move toward planning.
 
 Use `ai/PLAN.md` lifecycle vocabulary.
@@ -143,7 +143,7 @@ Do not create the plan yet unless I ask.
 
 ### Review Roadmap Item
 
-```text
+```markdown
 Review the roadmap item `<task>` before planning implementation.
 
 Explain what behavior would change, which current specs govern it, what is still ambiguous, and whether the task should remain in `Discovery`, move into `Planning`, or be treated as `Needs Input` under `ai/PLAN.md`.
@@ -156,7 +156,7 @@ Do not force a plan into `Phase=Planning` if the work should still be `Discovery
 
 ### Create Plan
 
-```text
+```markdown
 Create `ai/PLAN_<topic>.md` for <topic>.
 
 Follow `ai/PLAN.md`.
@@ -165,7 +165,7 @@ Set the plan lifecycle using `ai/PLAN.md` instead of guessing.
 
 ### Plan From Roadmap
 
-```text
+```markdown
 Create `ai/PLAN_<topic>.md` from this roadmap input:
 - <task 1>
 - <task 2>
@@ -176,10 +176,10 @@ Set the lifecycle state from `ai/PLAN.md` based on the actual readiness of the w
 
 ### Plan Checked Roadmap Items
 
-```text
+```markdown
 Create one coherent `ai/PLAN_<topic>.md` from every checklist item marked `[x]` in `ROADMAP.md`.
 
-Use only the checked items unless the roadmap text makes a dependency explicit.
+Use only the checked items unless the roadmap markdown makes a dependency explicit.
 Restate exactly which checked items were included.
 If the checked items do not form one coherent executable plan, stop and explain the gap instead of guessing.
 Record unresolved requirement gaps and fallback assumptions explicitly.
@@ -188,7 +188,7 @@ Set the lifecycle state from `ai/PLAN.md` based on actual planning readiness.
 
 ### Split Checked Roadmap Items Into Plans
 
-```text
+```markdown
 Create one or more `ai/PLAN_<topic>.md` files from every checklist item marked `[x]` in `ROADMAP.md`.
 
 Split only genuinely disjoint workstreams that can later execute in parallel without overlapping source ownership, contract artifacts, rollout order, or validation.
@@ -199,7 +199,7 @@ Set the lifecycle state for each plan from `ai/PLAN.md`.
 
 ### Revise Plan
 
-```text
+```markdown
 Revise `<plan_file>` for this new requirement or constraint:
 <constraint>
 
@@ -211,7 +211,7 @@ Update the lifecycle state only as far as the revision justifies.
 
 ### Review Plan Readiness
 
-```text
+```markdown
 Review `<plan_file>` against `ai/PLAN.md`.
 
 List concrete gaps or ambiguities first.
@@ -221,7 +221,7 @@ Say explicitly if the plan is ready.
 
 ### Choose Execution Mode
 
-```text
+```markdown
 Review `<plan_file>` and decide which execution mode fits best.
 
 Use `ai/PLAN.md` and `ai/WORKFLOW.md`.
@@ -234,7 +234,7 @@ If the work really needs multiple plan files, say that explicitly instead of for
 
 ### Implement Plan
 
-```text
+```markdown
 Implement `<plan_file>`.
 
 Follow `ai/EXECUTION.md`.
@@ -243,7 +243,7 @@ Do not push, open a PR, or release unless I ask.
 
 ### Implement Milestone
 
-```text
+```markdown
 Implement only `<milestone_name>` from `<plan_file>`.
 
 Follow `ai/EXECUTION.md`.
@@ -256,7 +256,7 @@ Use these prompts when one request should actively execute planned work while al
 
 ### Run Plan With Inferred Mode
 
-```text
+```markdown
 Execute `<plan_file>` using the workflow rules.
 
 Use `ai/WORKFLOW.md` and `ai/EXECUTION.md`.
@@ -267,7 +267,7 @@ If the work actually needs multiple plan files and `Parallel Plans`, stop and sa
 
 ### Run Plan On Single Branch
 
-```text
+```markdown
 Execute `<plan_file>` in `Single Branch` mode.
 
 Use `ai/WORKFLOW.md` and `ai/EXECUTION.md`.
@@ -277,7 +277,7 @@ Do not push, open a PR, or release unless I ask.
 
 ### Run Plan As Shared Plan
 
-```text
+```markdown
 Execute `<plan_file>` in `Shared Plan` mode.
 
 Use `ai/WORKFLOW.md` and `ai/EXECUTION.md`.
@@ -287,7 +287,7 @@ Push only the finished coordinator branch and open one final PR unless I explici
 
 ### Run Plans In Parallel
 
-```text
+```markdown
 Execute these plan files in `Parallel Plans` mode using git worktrees:
 - <plan_file_1>
 - <plan_file_2>
@@ -302,7 +302,7 @@ Do not release unless I ask.
 
 ### Run All Ready Plans
 
-```text
+```markdown
 Select every ready plan file under `ai/`, then execute the selected set using the same flow as `Run Plans In Parallel`.
 
 Treat ready plans as the non-archived `ai/PLAN_*.md` files still present directly under `ai/` whose `Lifecycle` status is `Ready`.
@@ -320,7 +320,7 @@ Do not release unless I ask.
 
 ### Run All Unfinished Plans
 
-```text
+```markdown
 Select every unfinished plan file under `ai/`, then execute the selected set using the same flow as `Run Plans In Parallel`.
 
 Treat unfinished plans as the non-archived `ai/PLAN_*.md` files still present directly under `ai/`.
@@ -337,7 +337,7 @@ Do not release unless I ask.
 
 ### Check Worker Status
 
-```text
+```markdown
 Check the status of worker `<worker name or agent id>` in the current workflow execution.
 
 Report mode, owned plan or slice, branch and worktree, current progress, changed files, validations run with results, commit SHA(s), blockers, ready-for-integration status, PR status, and the worker-log path.
@@ -348,7 +348,7 @@ If the worker has stalled or completed, state that clearly.
 
 ### Check Active Workers
 
-```text
+```markdown
 Check the status of the active workers in the current workflow execution.
 
 Use `ai/WORKFLOW.md`.
@@ -364,7 +364,7 @@ Use these prompts after worker implementation is already done and the next task 
 
 ### Integrate Shared Plan Output
 
-```text
+```markdown
 Integrate completed worker output for `<plan_file>`.
 
 Use `ai/WORKFLOW.md` as coordinator in `Shared Plan` mode.
@@ -375,7 +375,7 @@ Merge or cherry-pick ready worker branches, fold accepted worker-log content int
 
 ### Run Required Validation
 
-```text
+```markdown
 Run only the required validation for `<plan_file>` or `<change>`.
 Do not edit files.
 
@@ -386,7 +386,7 @@ Summarize what ran, what passed, what failed, what was skipped, and what artifac
 
 ### Check Contract Impact
 
-```text
+```markdown
 Review `<change>` for contract and artifact-routing impact.
 
 Use `AGENTS.md`, `ai/DOCUMENTATION.md`, and `ai/TESTING.md`.
@@ -396,7 +396,7 @@ If the change is internal-only, say that explicitly and explain why.
 
 ### Verify Milestone
 
-```text
+```markdown
 Verify `<milestone_name>` from `<plan_file>` after implementation.
 
 Use `ai/TESTING.md`, `ai/DOCUMENTATION.md`, and `ai/REVIEWS.md`.
@@ -406,7 +406,7 @@ List blockers first.
 
 ### Review Diff Risks
 
-```text
+```markdown
 Review this change with a code review mindset.
 
 Use `ai/REVIEWS.md`.
@@ -418,7 +418,7 @@ Keep the summary brief.
 
 ### Check Release Readiness
 
-```text
+```markdown
 Review release readiness for `<plan_file>`.
 
 Use `ai/RELEASES.md` and `ai/DOCUMENTATION.md`.
@@ -428,7 +428,7 @@ Say explicitly if the repository is release-ready.
 
 ### Prepare Release
 
-```text
+```markdown
 Prepare a release for `<plan_file>`.
 
 Follow `ai/RELEASES.md` and `ai/DOCUMENTATION.md`.
@@ -440,7 +440,7 @@ Do not push unless I ask.
 
 ### Push Prepared Release
 
-```text
+```markdown
 Push the current release commit and annotated tag to the remote.
 
 Follow `ai/RELEASES.md` for push and post-push verification.
@@ -448,7 +448,7 @@ Follow `ai/RELEASES.md` for push and post-push verification.
 
 ### Release All Merged Work
 
-```text
+```markdown
 Verify and release all merged but unreleased work currently on `main`.
 
 Use `ai/RELEASES.md`.
@@ -460,7 +460,7 @@ Summarize exactly which merged PRs and executed plan files were included.
 
 ### Check Published Release
 
-```text
+```markdown
 Verify the already pushed release for `<plan_file>`.
 
 Follow `ai/RELEASES.md` for the post-push checks.
@@ -471,7 +471,7 @@ Summarize exactly what was published.
 
 ### Implement Then Release
 
-```text
+```markdown
 Implement `<plan_file>`.
 
 Use `ai/EXECUTION.md` for implementation.
@@ -480,7 +480,7 @@ Use `ai/RELEASES.md` only after the approved implementation PR has been merged o
 
 ### Summarize Lifecycle State
 
-```text
+```markdown
 Summarize the current lifecycle state for `<plan_file>` or the current change.
 
 Use `ai/PLAN.md`, `ai/EXECUTION.md`, and `ai/WORKFLOW.md` as needed.
@@ -489,7 +489,7 @@ Report phase, status, active milestone, mode, pending validations, integration s
 
 ### Triage Validation Failure
 
-```text
+```markdown
 Triage the failing validation for `<plan_file>` or `<change>`.
 
 Use `ai/TESTING.md` and `ai/REVIEWS.md`.
@@ -500,7 +500,7 @@ Identify the first real failure, likely root cause, whether it looks like a spec
 
 ### Compact AI Docs
 
-```text
+```markdown
 Compact the standing AI instruction files.
 
 Read `AGENTS.md` and the current AI instruction files under `ai/` first. Check `WORKING_WITH_AI.md` too when the overlapping workflow wording would drift for human readers.
