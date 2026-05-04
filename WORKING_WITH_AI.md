@@ -171,7 +171,6 @@ It is much cheaper to fix the plan than to unwind a bad implementation stream la
 ### 4. Implementation
 
 Once the plan is ready, use AI to implement either the whole plan or one milestone.
-This section also covers the repo-wide entry prompts that start implementation across every ready or unfinished plan under `ai/`.
 
 Important repo rule:
 
@@ -183,8 +182,6 @@ Useful prompt titles:
 
 - `Implement A Plan Without Releasing`
 - `Implement Only One Milestone`
-- `Execute ALL Ready Plans In Parallel`
-- `Implement All Unfinished Plans In Parallel`
 
 ### 5. Workflow Execution
 
@@ -203,6 +200,8 @@ When you pass one plan file, there are three useful ways to work:
 
 When you pass multiple plan files, use `Parallel Plans`.
 Use `Execute Multiple Plans In Parallel` when you already know the exact plan-file set.
+Use `Execute ALL Ready Plans In Parallel` when you want AI to discover every non-archived ready plan first and then run the same parallel execution flow.
+Use `Implement All Unfinished Plans In Parallel` when you want AI to discover every non-archived unfinished plan first and then run the same parallel execution flow.
 
 #### Workflow mode guide
 
@@ -220,6 +219,8 @@ Useful prompt titles:
 - `Execute One Plan On A Single Branch`
 - `Execute One Plan As Shared Plan`
 - `Execute Multiple Plans In Parallel`
+- `Execute ALL Ready Plans In Parallel`
+- `Implement All Unfinished Plans In Parallel`
 - `Check Status On One Worker`
 - `Check Status On Active Workers`
 
