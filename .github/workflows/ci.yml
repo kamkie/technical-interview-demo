@@ -134,14 +134,14 @@ jobs:
 
       - name: Lint Helm chart
         if: needs.change_detection.outputs.skip_heavy_ci != 'true'
-        run: helm lint helm/technical-interview-demo
+        run: helm lint infra/helm/technical-interview-demo
 
       - name: Render Helm chart
         if: needs.change_detection.outputs.skip_heavy_ci != 'true'
         run: >-
           helm template technical-interview-demo
-          helm/technical-interview-demo
-          -f helm/technical-interview-demo/values-local.yaml
+          infra/helm/technical-interview-demo
+          -f infra/helm/technical-interview-demo/values-local.yaml
 
       - name: Run external smoke validation
         if: needs.change_detection.outputs.skip_heavy_ci != 'true'

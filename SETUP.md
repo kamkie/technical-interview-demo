@@ -97,11 +97,12 @@ The checked-in deployment assets intentionally freeze this posture:
 
 The deployment story is standardized around these artifacts:
 
+- repo-owned infrastructure assets grouped under `infra/`
 - GitHub Actions workflows for CI validation and tag-based release publishing
 - a Docker image built from the packaged Spring Boot boot jar
-- vendor-neutral Kubernetes manifests under `k8s/`
-- checked-in `/api/**` public-edge reference assets under `k8s/edge/`
-- a matching Helm chart under `helm/technical-interview-demo`
+- vendor-neutral Kubernetes manifests under `infra/k8s/`
+- checked-in `/api/**` public-edge reference assets under `infra/k8s/edge/`
+- a matching Helm chart under `infra/helm/technical-interview-demo`
 - monitoring and alerting assets for Prometheus, Grafana, and Alertmanager
 
 ## 2.0 UI Integration References
@@ -111,7 +112,7 @@ Use these checked-in artifacts together when wiring or reviewing the separate fi
 - `src/docs/asciidoc/upgrade-1x-to-2-0.adoc` is the owning `1.x` to `2.0` migration guide and is served by the packaged app at `/docs/upgrade-1x-to-2-0.html`
 - `src/test/resources/http/authentication.http` shows the bootstrap, provider-login, authenticated-session refresh, and logout flow
 - `src/test/resources/http/user-account-controller.http` shows one authenticated unsafe write using the documented `XSRF-TOKEN` cookie plus `X-XSRF-TOKEN` header handshake
-- `k8s/edge/public-api-ingress.yaml` and `k8s/edge/README.md` are the checked-in `/api/**` public-edge reference assets for the one-public-origin deployment model
+- `infra/k8s/edge/public-api-ingress.yaml` and `infra/k8s/edge/README.md` are the checked-in `/api/**` public-edge reference assets for the one-public-origin deployment model
 
 Required runtime environment variables for deployed environments:
 
@@ -278,8 +279,8 @@ The `CI` workflow currently validates the repository with these commands and pre
 ```powershell
 docker version
 .\gradlew.bat build
-helm lint helm/technical-interview-demo
-helm template technical-interview-demo helm/technical-interview-demo -f helm/technical-interview-demo/values-local.yaml
+helm lint infra/helm/technical-interview-demo
+helm template technical-interview-demo infra/helm/technical-interview-demo -f infra/helm/technical-interview-demo/values-local.yaml
 .\gradlew.bat externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo
 ```
 
@@ -292,14 +293,14 @@ The hosted `CI` workflow also uploads `build/reports/jacoco/test/jacocoTestRepor
 Deployment-manifest validation to pair with the CI flow:
 
 ```powershell
-kubectl kustomize k8s/base
-kubectl kustomize k8s/overlays/local
-kubectl apply --dry-run=client -k k8s/overlays/local
-kubectl kustomize k8s/monitoring
-kubectl kustomize monitoring/grafana
-kubectl apply --dry-run=client -k k8s/monitoring
-kubectl apply --dry-run=client -k monitoring/grafana
-kubectl apply --dry-run=client -f k8s/edge/public-api-ingress.yaml
+kubectl kustomize infra/k8s/base
+kubectl kustomize infra/k8s/overlays/local
+kubectl apply --dry-run=client -k infra/k8s/overlays/local
+kubectl kustomize infra/k8s/monitoring
+kubectl kustomize infra/monitoring/grafana
+kubectl apply --dry-run=client -k infra/k8s/monitoring
+kubectl apply --dry-run=client -k infra/monitoring/grafana
+kubectl apply --dry-run=client -f infra/k8s/edge/public-api-ingress.yaml
 ```
 
 Release-note rendering is implemented by `scripts/release/render-release-notes.ps1` and invoked from `.github/workflows/release.yml`; keep script and workflow updates aligned when release-note policy changes.
@@ -380,7 +381,7 @@ Metrics expectations:
 
 - `GET /actuator/prometheus` is available for trusted local inspection or deployment scraping
 - the metrics payload should include both the default Spring/JVM meters and the application-specific `technical_interview_demo_*` meters
-- the Grafana dashboard and Prometheus rules under `monitoring/` and `k8s/monitoring/` assume those metrics stay visible
+- the Grafana dashboard and Prometheus rules under `infra/monitoring/` and `infra/k8s/monitoring/` assume those metrics stay visible
 
 Audit logging expectations:
 
@@ -494,40 +495,40 @@ pwsh ./scripts/release/invoke-restore-drill.ps1 `
 
 ## Kubernetes Deployment
 
-The raw Kubernetes baseline lives under `k8s/base`. The local demo overlay lives under `k8s/overlays/local`.
-The illustrative `/api/**` public-edge reference lives under `k8s/edge/` and is kept separate from the base package because it is a reviewed example, not a turnkey ingress install.
+The raw Kubernetes baseline lives under `infra/k8s/base`. The local demo overlay lives under `infra/k8s/overlays/local`.
+The illustrative `/api/**` public-edge reference lives under `infra/k8s/edge/` and is kept separate from the base package because it is a reviewed example, not a turnkey ingress install.
 
 Secret handling:
 
-- `k8s/base/secret-example.yaml` is an example only and is not included in the base Kustomize package
+- `infra/k8s/base/secret-example.yaml` is an example only and is not included in the base Kustomize package
 - create a real `technical-interview-demo-secrets` secret before applying the manifests
 - the required secret key is `DATABASE_PASSWORD`
 - optional secret keys are `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`, `OIDC_ISSUER_URI`, and `APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES`
 
 Base deployment defaults:
 
-- `k8s/base/horizontalpodautoscaler.yaml` scales the app between 2 and 6 replicas on CPU and memory utilization
-- `k8s/base/poddisruptionbudget.yaml` requires at least one pod to remain available during voluntary disruptions
+- `infra/k8s/base/horizontalpodautoscaler.yaml` scales the app between 2 and 6 replicas on CPU and memory utilization
+- `infra/k8s/base/poddisruptionbudget.yaml` requires at least one pod to remain available during voluntary disruptions
 - patch or replace those resources if your cluster does not provide the metrics APIs needed for HPA or if your rollout policy needs different budgets
 
 Render the manifests:
 
 ```powershell
-kubectl kustomize k8s/base
-kubectl kustomize k8s/overlays/local
+kubectl kustomize infra/k8s/base
+kubectl kustomize infra/k8s/overlays/local
 ```
 
 Prepare the local overlay:
 
 1. Build the image with `.\gradlew.bat dockerBuild -PdockerImageName=technical-interview-demo:local`.
 2. Load that image into your local cluster runtime if needed, for example `kind load docker-image technical-interview-demo:local`.
-3. Make sure a PostgreSQL service named `postgres` exists in the `technical-interview-demo` namespace, or patch `DATABASE_HOST` in `k8s/overlays/local/patch-configmap.yaml`.
-4. Create the deployment secret from `k8s/base/secret-example.yaml` or with `kubectl create secret generic`.
+3. Make sure a PostgreSQL service named `postgres` exists in the `technical-interview-demo` namespace, or patch `DATABASE_HOST` in `infra/k8s/overlays/local/patch-configmap.yaml`.
+4. Create the deployment secret from `infra/k8s/base/secret-example.yaml` or with `kubectl create secret generic`.
 
 Apply the local overlay:
 
 ```powershell
-kubectl apply -k k8s/overlays/local
+kubectl apply -k infra/k8s/overlays/local
 ```
 
 Verify readiness after deployment:
@@ -546,14 +547,14 @@ Use the raw manifests when you want to review or patch explicit YAML checked int
 Validate the chart locally:
 
 ```powershell
-helm lint helm/technical-interview-demo
-helm template technical-interview-demo helm/technical-interview-demo -f helm/technical-interview-demo/values-local.yaml
+helm lint infra/helm/technical-interview-demo
+helm template technical-interview-demo infra/helm/technical-interview-demo -f infra/helm/technical-interview-demo/values-local.yaml
 ```
 
 Install or upgrade the local chart:
 
 ```powershell
-helm upgrade --install technical-interview-demo helm/technical-interview-demo --namespace technical-interview-demo --create-namespace -f helm/technical-interview-demo/values-local.yaml
+helm upgrade --install technical-interview-demo infra/helm/technical-interview-demo --namespace technical-interview-demo --create-namespace -f infra/helm/technical-interview-demo/values-local.yaml
 ```
 
 The chart mirrors the raw manifest contract:
@@ -574,37 +575,37 @@ Install the upstream monitoring stack for a local/demo cluster:
 ```powershell
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
-helm upgrade --install monitoring prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace -f monitoring/kube-prometheus-stack-values.yaml
+helm upgrade --install monitoring prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace -f infra/monitoring/kube-prometheus-stack-values.yaml
 ```
 
 Apply the application monitoring assets:
 
 ```powershell
-kubectl apply -k k8s/monitoring
-kubectl apply -k monitoring/grafana
+kubectl apply -k infra/k8s/monitoring
+kubectl apply -k infra/monitoring/grafana
 ```
 
 What the monitoring assets provide:
 
-- `k8s/monitoring/servicemonitor.yaml` scrapes `GET /actuator/prometheus` from inside the cluster as a trusted deployment concern, not an internet-public endpoint
-- `k8s/monitoring/prometheus-rule.yaml` adds alerts for target-down, readiness failures, repeated restarts, elevated auth failures, session-backed account 5xxs, database pool saturation, database connection timeouts, Flyway-style startup crash loops, and elevated 5xx rates
-- `monitoring/grafana/dashboards/technical-interview-demo.json` adds starter panels for JVM memory, CPU, request throughput/latency, cache events, domain totals, authentication failures, session-backed account health, database pool saturation, and Flyway migration visibility
-- `monitoring/alertmanager/config-example.yaml` is a starting Alertmanager route/receiver config that you should adapt before using real notifications
+- `infra/k8s/monitoring/servicemonitor.yaml` scrapes `GET /actuator/prometheus` from inside the cluster as a trusted deployment concern, not an internet-public endpoint
+- `infra/k8s/monitoring/prometheus-rule.yaml` adds alerts for target-down, readiness failures, repeated restarts, elevated auth failures, session-backed account 5xxs, database pool saturation, database connection timeouts, Flyway-style startup crash loops, and elevated 5xx rates
+- `infra/monitoring/grafana/dashboards/technical-interview-demo.json` adds starter panels for JVM memory, CPU, request throughput/latency, cache events, domain totals, authentication failures, session-backed account health, database pool saturation, and Flyway migration visibility
+- `infra/monitoring/alertmanager/config-example.yaml` is a starting Alertmanager route/receiver config that you should adapt before using real notifications
 
 Production logging and tracing posture:
 
 - `application-prod.properties` keeps the root log level at `INFO`
 - production profile logs are emitted as structured JSON Lines on stdout via `logging.structured.format.console=logstash`
 - trace export stays runtime-configurable through standard OTLP environment variables instead of a repo-mandated vendor backend
-- `k8s/log-forwarding/fluent-bit` is an optional forwarder example that recombines multiline Java stack traces before shipping logs to a centralized HTTP endpoint
+- `infra/k8s/log-forwarding/fluent-bit` is an optional forwarder example that recombines multiline Java stack traces before shipping logs to a centralized HTTP endpoint
 
 Optional log-forwarder example apply command:
 
 ```powershell
-kubectl apply -k k8s/log-forwarding/fluent-bit
+kubectl apply -k infra/k8s/log-forwarding/fluent-bit
 ```
 
-Before applying to a real cluster, update `k8s/log-forwarding/fluent-bit/configmap.yaml` with your destination host, port, URI, and TLS policy.
+Before applying to a real cluster, update `infra/k8s/log-forwarding/fluent-bit/configmap.yaml` with your destination host, port, URI, and TLS policy.
 
 Verify the monitoring setup:
 
@@ -846,8 +847,8 @@ Symptom:
 
 Fix:
 
-1. Confirm the monitoring stack was installed with `monitoring/kube-prometheus-stack-values.yaml`.
-2. Confirm `kubectl apply -k k8s/monitoring` and `kubectl apply -k monitoring/grafana` both succeeded.
+1. Confirm the monitoring stack was installed with `infra/monitoring/kube-prometheus-stack-values.yaml`.
+2. Confirm `kubectl apply -k infra/k8s/monitoring` and `kubectl apply -k infra/monitoring/grafana` both succeeded.
 3. Confirm the `ServiceMonitor` is in the `monitoring` namespace and the app `Service` is in `technical-interview-demo`.
 4. Port-forward the app service and verify `GET /actuator/prometheus` manually.
 5. Confirm the monitoring stack is allowed to watch `technical-interview-demo` and `monitoring` namespaces.

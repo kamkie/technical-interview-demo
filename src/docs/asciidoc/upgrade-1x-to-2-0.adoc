@@ -25,7 +25,7 @@ It is migration guidance, not a second source of truth for the steady-state `2.0
 Public application traffic should target only `/api/**`.
 Internal-only or separately handled paths now include `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, and `/actuator/**`.
 
-The checked-in edge reference asset `k8s/edge/public-api-ingress.yaml` demonstrates the intended `/api/**` public routing shape without claiming to be a full production ingress package.
+The checked-in edge reference asset `infra/k8s/edge/public-api-ingress.yaml` demonstrates the intended `/api/**` public routing shape without claiming to be a full production ingress package.
 
 == Browser Session Changes
 

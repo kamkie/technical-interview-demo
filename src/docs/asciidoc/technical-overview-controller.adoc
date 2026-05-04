@@ -10,7 +10,7 @@ This page documents the internal technical-overview and smoke-test endpoints exp
 
 These paths are intended for trusted internal or devops validation. They are no longer part of the supported external `/api/**` contract.
 
-Use this page together with xref:upgrade-1x-to-2-0.adoc[Upgrade From 1.x To 2.0] when validating that the deployed edge still exposes only `/api/**` publicly. The checked-in repo reference for that boundary is `k8s/edge/public-api-ingress.yaml`.
+Use this page together with xref:upgrade-1x-to-2-0.adoc[Upgrade From 1.x To 2.0] when validating that the deployed edge still exposes only `/api/**` publicly. The checked-in repo reference for that boundary is `infra/k8s/edge/public-api-ingress.yaml`.
 
 == `GET /`
 

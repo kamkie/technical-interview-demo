@@ -70,6 +70,15 @@ The practical split is:
 - entities and request/response types stay close to their feature package
 - technical packages provide shared infrastructure without becoming a generic framework
 
+Checked-in infrastructure assets live outside the application packages under `infra/`:
+
+- `infra/k8s/`
+  - raw Kubernetes manifests, overlays, edge reference assets, and log-forwarding examples
+- `infra/helm/`
+  - Helm chart packaging for the same deployment contract
+- `infra/monitoring/`
+  - Grafana, Alertmanager, and upstream monitoring-stack values owned by this repo
+
 ## Module Map
 
 ### Root

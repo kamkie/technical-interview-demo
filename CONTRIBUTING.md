@@ -196,12 +196,12 @@ Additional validation rules:
 
 When deployment assets are part of the change, also run the relevant checks from `SETUP.md`, usually including:
 
-- `helm lint helm/technical-interview-demo`
-- `helm template technical-interview-demo helm/technical-interview-demo -f helm/technical-interview-demo/values-local.yaml`
-- `kubectl kustomize k8s/overlays/local`
-- `kubectl apply --dry-run=client -k k8s/overlays/local`
-- `kubectl kustomize k8s/monitoring`
-- `kubectl kustomize monitoring/grafana`
+- `helm lint infra/helm/technical-interview-demo`
+- `helm template technical-interview-demo infra/helm/technical-interview-demo -f infra/helm/technical-interview-demo/values-local.yaml`
+- `kubectl kustomize infra/k8s/overlays/local`
+- `kubectl apply --dry-run=client -k infra/k8s/overlays/local`
+- `kubectl kustomize infra/k8s/monitoring`
+- `kubectl kustomize infra/monitoring/grafana`
 
 ## Documentation Expectations
 
