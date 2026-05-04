@@ -61,6 +61,7 @@ If a prompt starts reading like policy, move that policy back to the owner guide
   - [Implement And Then Release](#implement-and-then-release)
   - [Summarize The Current Lifecycle State](#summarize-the-current-lifecycle-state)
   - [Triage A Failed Validation Run](#triage-a-failed-validation-run)
+  - [Execute ALL Ready Plans In Parallel](#execute-all-ready-plans-in-parallel)
   - [Implement All Unfinished Plans In Parallel](#implement-all-unfinished-plans-in-parallel)
 - [Maintenance](#maintenance)
   - [Compact AI Instruction Files](#compact-ai-instruction-files)
@@ -439,6 +440,22 @@ Triage the failing validation for `<plan_file>` or `<change>`.
 
 Use `ai/TESTING.md` and `ai/REVIEWS.md`.
 Identify the first real failure, likely root cause, whether it looks like a spec break or implementation bug, and the smallest next fix.
+```
+
+### Execute ALL Ready Plans In Parallel
+
+```text
+Execute every ready plan file under `ai/` in `Parallel Plans` mode using git worktrees.
+
+Treat ready plans as the non-archived `ai/PLAN_*.md` files still present directly under `ai/` whose `Lifecycle` status is `Ready`.
+Use `ai/WORKFLOW.md` and `ai/EXECUTION.md`.
+Restate exactly which ready plan files were selected and which non-archived plan files were skipped because they were not `Ready`.
+If there are no ready plans, stop and say so explicitly.
+If only one ready plan exists, stop and say that a single-plan execution prompt should be used instead.
+Do not silently skip a `Ready` plan just to force a smaller parallel-safe set.
+If any ready plans are too coupled for safe parallel execution, stop and explain why instead of forcing `Parallel Plans`.
+Track per-plan branch, validation, private `CHANGELOG_<topic>.md`, worker log, and PR status.
+Do not release unless I ask.
 ```
 
 ### Implement All Unfinished Plans In Parallel

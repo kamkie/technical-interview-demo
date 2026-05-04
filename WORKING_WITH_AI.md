@@ -199,7 +199,8 @@ When you pass one plan file, there are three useful ways to work:
 #### Multiple plan files
 
 When you pass multiple plan files, use `Parallel Plans`.
-That is what `Execute Multiple Plans In Parallel` is for.
+Use `Execute Multiple Plans In Parallel` when you already know the exact plan-file set.
+Use `Execute ALL Ready Plans In Parallel` when you want AI to select every non-archived `ai/PLAN_*.md` file whose `Lifecycle` status is `Ready`.
 
 #### Workflow mode guide
 
@@ -217,6 +218,7 @@ Useful prompt titles:
 - `Execute One Plan On A Single Branch`
 - `Execute One Plan As Shared Plan`
 - `Execute Multiple Plans In Parallel`
+- `Execute ALL Ready Plans In Parallel`
 - `Integrate Completed Shared-Plan Worker Output`
 - `Check Status On One Worker`
 - `Check Status On Active Workers`
@@ -306,9 +308,10 @@ For coordinated multi-branch work:
 
 1. create or refine the relevant plan files
 2. if there is one plan file, use one of the single-plan workflow prompts
-3. if there are multiple plan files, use `Execute Multiple Plans In Parallel`
-4. use the worker-status prompts while the work is running
-5. integrate, verify, and release only after the normal gates are satisfied
+3. if there are multiple plan files and you already know the exact set, use `Execute Multiple Plans In Parallel`
+4. if you want AI to discover every ready plan under `ai/`, use `Execute ALL Ready Plans In Parallel`
+5. use the worker-status prompts while the work is running
+6. integrate, verify, and release only after the normal gates are satisfied
 
 ## When To Slow Down AI
 
