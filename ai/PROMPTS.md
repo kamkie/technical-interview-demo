@@ -1,6 +1,7 @@
 # Prompt Library For This Repository
 
 `ai/PROMPTS.md` is a library of short reusable prompt starters for common repository workflows.
+Its `###` prompt titles are reusable commands for the full starters under those headings.
 It does not own standing policy.
 
 Keep prompts lean:
@@ -87,7 +88,7 @@ Prefer filling in placeholders such as `<topic>`, `<plan_file>`, `<milestone_nam
 
 ## Title Shorthand
 
-You may invoke a prompt in this file by using its `###` title as shorthand for the full starter under that heading.
+You may invoke a prompt in this file by using its `###` title as a reusable command and shorthand for the full starter under that heading.
 
 Rules:
 

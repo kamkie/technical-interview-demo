@@ -31,7 +31,7 @@ Before asking AI to do real work, make sure the session is grounded in these rep
 - `README.md` for the project overview, implemented scope, and AI document map
 - `AGENTS.md` for repository-specific AI rules, spec priority, and required artifact updates
 - `SETUP.md` for local tooling, environment, and verification prerequisites
-- `ai/PROMPTS.md` for reusable prompt starters and shorthand titles
+- `ai/PROMPTS.md` for reusable prompt starters whose `###` titles can be used as reusable commands
 - `ai/skills/<skill>/SKILL.md` only when you want a narrower repo-local workflow wrapper for planning or validation
 
 Then add the phase-specific owner guide:
@@ -299,7 +299,7 @@ If you are unsure, ask AI to review the plan first with `Choose Execution Mode`.
 - prefer milestone-sized requests over long open-ended requests
 - ask for validation and contract impact before approving the result
 - keep release work separate from implementation work
-- use the prompt titles in `ai/PROMPTS.md` when you want a consistent repository-local workflow
+- use the prompt titles in `ai/PROMPTS.md` as reusable commands when you want a consistent repository-local workflow
 
 ## A Practical End-To-End Example
 
