@@ -34,6 +34,8 @@ jobs:
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v6
+        with:
+          dependency-graph: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && 'generate-and-upload' || 'disabled' }}
 
       - name: Set up Helm
         uses: azure/setup-helm@v5
@@ -97,4 +99,17 @@ jobs:
           -PdockerImageName=technical-interview-demo
           --no-daemon
 
+  submit-dependency-graph:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Submit Gradle dependency graph
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          dependency-graph: download-and-submit
+          dependency-graph-continue-on-failure: false
 
