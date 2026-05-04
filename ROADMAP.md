@@ -15,6 +15,7 @@ Keep this file focused on work that is still planned or in progress.
 
 ## Current Priorities
 
+- Use the remaining `2.0` prerelease budget for breaking cleanup that lowers production maintenance cost and aligns the app with stronger backend conventions.
 - Freeze the `2.0` published contract and cut `v2.0.0-RC1` from `main` only after the exact candidate passes the required validation.
 
 ## Not Yet Refined
@@ -39,7 +40,19 @@ Status: Planned
 
 Goal: finish the stable `2.0` line now that `v2.0.0-M1`, `v2.0.0-M2`, and `v2.0.0-M3` established the browser-session contract, deployment boundary, upgrade guide, edge reference, and smoke-alignment baseline.
 
+#### Prerelease Maintainability Cleanup
+- [ ] Replace `ADMIN_LOGINS` env-driven role assignment with managed role mapping plus persisted role provenance.
+- [ ] Move demo-friendly defaults such as implicit `local` profile activation, Hibernate statistics, and full tracing sampling out of shared runtime config.
+- [ ] Split public, admin, and internal management surfaces more cleanly and reduce mixed-use internal endpoints before the `2.0` contract freezes.
+- [ ] Replace public Spring `Page<?>` response leakage with repo-owned paginated collection DTOs across the supported API.
+- [ ] Expand audit coverage to all privileged mutations and auth events, store structured change data, and define retention or archival behavior.
+- [ ] Migrate persisted timestamps and API serialization to UTC `Instant` plus PostgreSQL `timestamptz`.
+- [ ] Add PostgreSQL indexes that match supported search, filter, join, and operational query patterns.
+- [ ] Reduce production log noise by removing reflective service-call `INFO` logging and tightening request and error correlation fields.
+- [ ] Harden container and Kubernetes runtime defaults with slimmer base images and stronger pod or container security settings.
+
 #### Release Confidence
+- [ ] Decide which `2.0` prerelease maintainability-cleanup items land before `v2.0.0-RC1` and explicitly defer the rest.
 - [ ] Freeze the `2.0` published contract and cut `v2.0.0-RC1` from `main` only after the exact candidate passes `.\gradlew.bat build`, required smoke checks, and `.\gradlew.bat gatlingBenchmark` when session-startup behavior changes.
 - [ ] Release stable `v2.0.0`, update `CHANGELOG.md`, and remove the completed `2.0` track from `ROADMAP.md`.
 
