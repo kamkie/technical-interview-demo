@@ -3,8 +3,8 @@
 ## Lifecycle
 | Field | Value |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Summary
 - Synthetic workflow-fixture plan: clean up the internal category-directory caching and name-normalization flow in `business.category` without changing the `/api/categories` contract or book-category assignment semantics.
@@ -142,7 +142,14 @@
 - Leave cross-cutting cache metrics coverage to the coordinator if the broader `Parallel Plans` test needs one shared assertion point.
 
 ## Validation Results
-- Not started. Planning-only dummy plan.
+- 2026-05-04 - Milestone 1 completed.
+- Added `CategoryServiceTests` coverage for normalized assignment lookup, directory-cache reuse, duplicate-name validation, and current invalid-request messaging.
+- Passed: `.\gradlew.bat test --tests team.jit.technicalinterviewdemo.business.category.CategoryApiIntegrationTests --tests team.jit.technicalinterviewdemo.business.category.CategoryDataInitializerTests --tests team.jit.technicalinterviewdemo.business.category.CategoryServiceTests`
+- Validation used `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3` because no local `.env` file was present and the default shell JVM was Java 11.
+- 2026-05-04 - Milestone 2 completed.
+- Simplified `CategoryService` directory-cache assembly and normalized assignment lookup flow without changing cache names, category ordering, or public category API behavior.
+- Passed: `.\gradlew.bat test --tests team.jit.technicalinterviewdemo.business.category.CategoryApiIntegrationTests --tests team.jit.technicalinterviewdemo.business.category.CategoryDataInitializerTests --tests team.jit.technicalinterviewdemo.business.category.CategoryServiceTests`
+- Passed: `.\gradlew.bat build`
 
 ## User Validation
 - Call `GET /api/categories`, then create, update, and delete a category as an admin and confirm ordering, duplicate-name handling, and error behavior remain unchanged.
