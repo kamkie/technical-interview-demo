@@ -118,6 +118,15 @@ Reporting rules:
 - do not give a final success summary while any worker is still active
 - if any worker ends blocked or failed, keep that in the final coordinator summary instead of quietly dropping it
 
+## Integration Cleanup
+
+After accepted worker output has been integrated, clean the local worker git trees unless the user explicitly wants them retained.
+
+- remove temporary worker worktrees once their accepted output is integrated and no further local worker work is pending
+- delete no-longer-needed local worker branches when they are not needed for an open PR or other requested follow-up
+- if a worker branch or worktree must be retained, leave it in a clean local state with no uncommitted changes
+- do not delete remote branches or close PRs unless the user explicitly asks for that cleanup
+
 ## Mode 1: Single Branch
 
 Use `Single Branch` as the default execution mode.
@@ -170,6 +179,7 @@ Coordinator rules:
 - merge or cherry-pick completed worker branches onto the coordinator branch
 - integrate accepted worker-log content into the canonical plan file and `CHANGELOG.md`
 - commit each integration checkpoint after the accepted milestone lands on the coordinator branch
+- clean consumed local worker branches or worktrees under `Integration Cleanup`
 - delete consumed worker logs before the final push or PR unless the user explicitly wants them retained for audit
 
 Normal outcome:
@@ -210,6 +220,7 @@ Coordinator rules:
 - resolve cross-plan conflicts only after worker-local execution is complete
 - decide merge order or PR order based on plan dependencies
 - integrate accepted changelog text into canonical `CHANGELOG.md` when preparing the combined integration or release branch
+- clean consumed local worker branches or worktrees under `Integration Cleanup`
 
 Normal outcome:
 
