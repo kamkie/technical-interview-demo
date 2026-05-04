@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminOauthUser;
 import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.oauthUser;
 
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,11 @@ class OperatorSurfaceApiDocumentationTests extends AbstractDocumentationIntegrat
                 AuditAction.CREATE,
                 null,
                 "reader-user",
-                "Created book 'Spring in Action' with ISBN 9781617297571."
+                "Created book 'Spring in Action' with ISBN 9781617297571.",
+                Map.of(
+                        "title", "Spring in Action",
+                        "isbn", "9781617297571"
+                )
         ));
         auditLogRepository.saveAndFlush(new AuditLog(
                 AuditTargetType.LOCALIZATION_MESSAGE,
@@ -44,13 +49,17 @@ class OperatorSurfaceApiDocumentationTests extends AbstractDocumentationIntegrat
                 AuditAction.DELETE,
                 null,
                 "admin-user",
-                "Deleted localization message 'error.book.not_found' in language fr."
+                "Deleted localization message 'error.book.not_found' in language fr.",
+                Map.of(
+                        "messageKey", "error.book.not_found",
+                        "language", "fr"
+                )
         ));
     }
 
     @Test
     void documentGetOperatorSurfaceEndpoint() throws Exception {
-        mockMvc.perform(get("/api/operator/surface")
+        mockMvc.perform(get("/api/admin/operator-surface")
                         .with(adminOauthUser()))
                 .andExpect(status().isOk())
                 .andExpect(header().exists("X-Request-Id"))
@@ -67,6 +76,7 @@ class OperatorSurfaceApiDocumentationTests extends AbstractDocumentationIntegrat
                                 fieldWithPath("audit.recentEntries[].action").description("Recorded action."),
                                 fieldWithPath("audit.recentEntries[].actorLogin").description("Login of the acting user."),
                                 fieldWithPath("audit.recentEntries[].summary").description("Human-readable audit summary."),
+                                subsectionWithPath("audit.recentEntries[].details").description("Compact structured audit details for each recent audit entry."),
                                 fieldWithPath("audit.recentEntries[].createdAt").description("Creation timestamp in UTC."),
                                 fieldWithPath("runtime.technicalOverviewEndpoint").description("Endpoint path for the full technical overview payload."),
                                 subsectionWithPath("runtime.technicalOverview").description("Current technical overview payload from `GET /`."),
@@ -82,7 +92,7 @@ class OperatorSurfaceApiDocumentationTests extends AbstractDocumentationIntegrat
 
     @Test
     void documentGetOperatorSurfaceUnauthorizedError() throws Exception {
-        mockMvc.perform(get("/api/operator/surface"))
+        mockMvc.perform(get("/api/admin/operator-surface"))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.title").value("Unauthorized"))
                 .andDo(documentEndpoint(
@@ -93,7 +103,7 @@ class OperatorSurfaceApiDocumentationTests extends AbstractDocumentationIntegrat
 
     @Test
     void documentGetOperatorSurfaceForbiddenError() throws Exception {
-        mockMvc.perform(get("/api/operator/surface")
+        mockMvc.perform(get("/api/admin/operator-surface")
                         .with(oauthUser("reader-user")))
                 .andExpect(status().isForbidden())
                 .andExpect(header().exists("X-Request-Id"))

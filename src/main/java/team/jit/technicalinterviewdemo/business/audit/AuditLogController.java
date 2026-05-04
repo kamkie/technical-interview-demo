@@ -22,7 +22,7 @@ import team.jit.technicalinterviewdemo.technical.api.ApiProblemResponse;
 import team.jit.technicalinterviewdemo.technical.docs.OpenApiConfiguration;
 
 @RestController
-@RequestMapping("/api/audit-logs")
+@RequestMapping("/api/admin/audit-logs")
 @Tag(name = "Audit Logs", description = "ADMIN-only audit log review endpoint.")
 public class AuditLogController {
 

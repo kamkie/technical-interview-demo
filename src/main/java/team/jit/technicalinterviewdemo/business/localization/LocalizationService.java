@@ -186,7 +186,8 @@ public class LocalizationService {
                 savedMessage.getId(),
                 AuditAction.CREATE,
                 "Created localization message '%s' in language %s."
-                        .formatted(savedMessage.getMessageKey(), savedMessage.getLanguage())
+                        .formatted(savedMessage.getMessageKey(), savedMessage.getLanguage()),
+                auditDetails(savedMessage)
         );
         log.info(
                 "Created localization message id={} key={} language={}",
@@ -218,7 +219,8 @@ public class LocalizationService {
                 updatedMessage.getId(),
                 AuditAction.UPDATE,
                 "Updated localization message '%s' in language %s."
-                        .formatted(updatedMessage.getMessageKey(), updatedMessage.getLanguage())
+                        .formatted(updatedMessage.getMessageKey(), updatedMessage.getLanguage()),
+                auditDetails(updatedMessage)
         );
         log.info(
                 "Updated localization message id={} key={} language={}",
@@ -241,7 +243,8 @@ public class LocalizationService {
                 id,
                 AuditAction.DELETE,
                 "Deleted localization message '%s' in language %s."
-                        .formatted(message.getMessageKey(), message.getLanguage())
+                        .formatted(message.getMessageKey(), message.getLanguage()),
+                auditDetails(message)
         );
         log.info("Deleted localization message id={} key={} language={}", id, message.getMessageKey(), message.getLanguage());
     }
@@ -328,6 +331,13 @@ public class LocalizationService {
             throw new IllegalStateException("Cache '%s' is not configured.".formatted(cacheName));
         }
         return cache;
+    }
+
+    private Map<String, Object> auditDetails(Localization message) {
+        return Map.of(
+                "messageKey", message.getMessageKey(),
+                "language", message.getLanguage()
+        );
     }
 }
 

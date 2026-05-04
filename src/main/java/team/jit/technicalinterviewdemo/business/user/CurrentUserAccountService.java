@@ -2,10 +2,8 @@ package team.jit.technicalinterviewdemo.business.user;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.Set;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,8 +14,8 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team.jit.technicalinterviewdemo.technical.api.ForbiddenOperationException;
+import team.jit.technicalinterviewdemo.technical.bootstrap.BootstrapSettingsProperties;
 import team.jit.technicalinterviewdemo.technical.metrics.ApplicationMetrics;
-import team.jit.technicalinterviewdemo.technical.security.SecuritySettingsProperties;
 
 @Slf4j
 @Service
@@ -27,12 +25,13 @@ public class CurrentUserAccountService {
 
     private final UserAccountRepository userAccountRepository;
     private final ApplicationMetrics applicationMetrics;
-    private final SecuritySettingsProperties securitySettingsProperties;
+    private final BootstrapSettingsProperties bootstrapSettingsProperties;
 
     @Transactional
     public UserAccount synchronizeCurrentAuthenticatedUser() {
         AuthenticatedUserDetails authenticatedUser = currentAuthenticatedUser()
                 .orElseThrow(() -> new ForbiddenOperationException("Authenticated user information is not available."));
+        boolean shouldBootstrapAdmin = shouldBootstrapAdmin(authenticatedUser);
 
         UserAccount userAccount = userAccountRepository.findByProviderAndExternalLogin(
                         authenticatedUser.provider(),
@@ -45,14 +44,17 @@ public class CurrentUserAccountService {
                         authenticatedUser.email(),
                         null,
                         LocalDateTime.now(ZoneOffset.UTC),
-                        determineRoles(authenticatedUser.login())
+                        java.util.Set.of(UserRole.USER)
                 ));
 
         boolean created = userAccount.getId() == null;
         userAccount.setDisplayName(authenticatedUser.displayName());
         userAccount.setEmail(authenticatedUser.email());
         userAccount.setLastLoginAt(LocalDateTime.now(ZoneOffset.UTC));
-        userAccount.setRoles(determineRoles(authenticatedUser.login()));
+        userAccount.ensureRoleGrant(UserRole.USER, UserRoleGrantSource.AUTHENTICATED_LOGIN, null, null);
+        if (shouldBootstrapAdmin) {
+            userAccount.ensureRoleGrant(UserRole.ADMIN, UserRoleGrantSource.BOOTSTRAP, null, null);
+        }
 
         UserAccount savedUser = userAccountRepository.saveAndFlush(userAccount);
         applicationMetrics.recordUserOperation(created ? "create" : "loginSync");
@@ -95,7 +97,7 @@ public class CurrentUserAccountService {
     }
 
     public Optional<String> currentAuthenticatedUserKey() {
-        return currentAuthenticatedUser().map(details -> "%s:%s".formatted(details.provider(), details.login()));
+        return currentAuthenticatedUser().map(AuthenticatedUserDetails::identityKey);
     }
 
     private Optional<AuthenticatedUserDetails> currentAuthenticatedUser() {
@@ -131,17 +133,9 @@ public class CurrentUserAccountService {
         return Optional.of(stringValue.trim());
     }
 
-    private Set<UserRole> determineRoles(String login) {
-        Set<UserRole> roles = new LinkedHashSet<>();
-        roles.add(UserRole.USER);
-        if (adminLogins().contains(login.toLowerCase(Locale.ROOT))) {
-            roles.add(UserRole.ADMIN);
-        }
-        return roles;
-    }
-
-    private Set<String> adminLogins() {
-        return securitySettingsProperties.normalizedAdminLogins();
+    private boolean shouldBootstrapAdmin(AuthenticatedUserDetails authenticatedUser) {
+        return userAccountRepository.countByRole(UserRole.ADMIN) == 0
+                && bootstrapSettingsProperties.normalizedInitialAdminIdentities().contains(authenticatedUser.identityKey());
     }
 
     private String normalizeRequiredPrincipalValue(String value, String fieldName) {
@@ -157,5 +151,8 @@ public class CurrentUserAccountService {
             String displayName,
             String email
     ) {
+        private String identityKey() {
+            return "%s:%s".formatted(provider, login);
+        }
     }
 }

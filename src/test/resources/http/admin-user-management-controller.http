@@ -1,0 +1,53 @@
+# IntelliJ HTTP Client examples for technical-interview-demo
+# Admin user-management requires ADMIN and an authenticated session.
+# Authenticated unsafe writes also require X-XSRF-TOKEN mirrored from the XSRF-TOKEN
+# cookie bootstrapped by GET /api/session.
+
+@baseUrl = http://localhost:8080
+@sessionCookie = paste-technical-interview-demo-session-here
+# csrfToken is populated automatically by the bootstrap request below.
+@managedUserId = 0
+
+### AdminUserManagementController - bootstrap authenticated CSRF token
+# Run this after login and again after logout or a fresh login before unsafe writes.
+GET {{baseUrl}}/api/session
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/json
+
+> {%
+const csrfCookie = response.cookiesByName("XSRF-TOKEN")[0];
+if (csrfCookie) {
+  client.global.set("csrfToken", csrfCookie.value);
+  client.log("Updated csrfToken from XSRF-TOKEN.");
+} else {
+  client.log("No XSRF-TOKEN cookie was returned; csrfToken was not updated.");
+}
+%}
+
+### AdminUserManagementController - list persisted users (ADMIN + authenticated session)
+GET {{baseUrl}}/api/admin/users
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/json
+
+### AdminUserManagementController - list users without authentication (401 localized ProblemDetail)
+GET {{baseUrl}}/api/admin/users
+Accept: application/problem+json
+
+### AdminUserManagementController - list users as non-admin user (403 localized ProblemDetail)
+# Replace the session cookie with a regular authenticated USER session.
+GET {{baseUrl}}/api/admin/users
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/problem+json
+
+### AdminUserManagementController - replace managed user roles (ADMIN + authenticated session)
+# Run the bootstrap request above first and replace managedUserId with an existing persisted user id.
+PUT {{baseUrl}}/api/admin/users/{{managedUserId}}/roles
+Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "roles": ["USER", "ADMIN"],
+  "reason": "Needs audit review access."
+}

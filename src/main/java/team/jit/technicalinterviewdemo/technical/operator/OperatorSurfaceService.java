@@ -20,7 +20,7 @@ import team.jit.technicalinterviewdemo.technical.info.TechnicalOverviewService;
 @RequiredArgsConstructor
 public class OperatorSurfaceService {
 
-    static final String OPERATOR_AUDIT_ENDPOINT = "/api/audit-logs";
+    static final String OPERATOR_AUDIT_ENDPOINT = "/api/admin/audit-logs";
     static final String OPERATOR_TECHNICAL_OVERVIEW_ENDPOINT = "/";
     static final String OPERATOR_ACTUATOR_HEALTH_ENDPOINT = "/actuator/health";
     static final String OPERATOR_ACTUATOR_INFO_ENDPOINT = "/actuator/info";

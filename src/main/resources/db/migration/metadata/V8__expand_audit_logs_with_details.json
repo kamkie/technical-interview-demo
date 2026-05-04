@@ -1,0 +1,7 @@
+{
+  "summary": "Adds structured JSON audit details and allows target ids to be null for authentication events without a persisted domain row.",
+  "rolloutCategory": "expand",
+  "deploymentOrder": "db-first",
+  "rollingCompatible": true,
+  "rollbackPosture": "image-only"
+}

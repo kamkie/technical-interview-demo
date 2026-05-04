@@ -29,9 +29,17 @@ secret:
     databasePassword: DATABASE_PASSWORD
     githubClientId: GITHUB_CLIENT_ID
     githubClientSecret: GITHUB_CLIENT_SECRET
-    adminLogins: ADMIN_LOGINS
+    oidcClientId: OIDC_CLIENT_ID
+    oidcClientSecret: OIDC_CLIENT_SECRET
+    oidcIssuerUri: OIDC_ISSUER_URI
+    initialAdminIdentities: APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES
 
 probes:
+  startup:
+    path: /actuator/health/readiness
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 18
   readiness:
     path: /actuator/health/readiness
     initialDelaySeconds: 20
@@ -66,6 +74,22 @@ podDisruptionBudget:
 
 pod:
   terminationGracePeriodSeconds: 30
+  securityContext:
+    runAsNonRoot: true
+    fsGroup: 10001
+    seccompProfile:
+      type: RuntimeDefault
+
+container:
+  securityContext:
+    runAsUser: 10001
+    runAsGroup: 10001
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
+  tmpMountPath: /tmp
 
 metrics:
   serviceMonitor:

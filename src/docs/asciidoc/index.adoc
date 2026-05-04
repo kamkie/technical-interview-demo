@@ -13,7 +13,7 @@ The current contract keeps the externally supported `/api/**` surface small whil
 
 == Contract Tiers
 
-- Supported external application contract: `/api/books...`, `/api/categories...`, `/api/localizations...`, `/api/session`, `/api/session/logout`, `/api/session/oauth2/authorization/{registrationId}`, `/api/session/login/oauth2/code/{registrationId}`, `/api/account...`, `/api/audit-logs`, `/api/operator/surface`
+- Supported external application contract: `/api/books...`, `/api/categories...`, `/api/localizations...`, `/api/session`, `/api/session/logout`, `/api/session/oauth2/authorization/{registrationId}`, `/api/session/login/oauth2/code/{registrationId}`, `/api/account...`, `/api/admin/audit-logs`, `/api/admin/operator-surface`, `/api/admin/users...`
 - Internal or devops-only validation surface: `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, `/actuator/health`, `/actuator/health/liveness`, `/actuator/health/readiness`, `/actuator/info`
 - Deployment-scoped technical surface: `/actuator/prometheus` is supported for trusted deployment scraping, but it is not part of the internet-public contract
 
@@ -49,7 +49,7 @@ The values below are loaded from `{build-info-path}` during the Asciidoctor buil
 - Supported application languages are `en`, `es`, `de`, `fr`, `pl`, `uk`, and `no`.
 - Public supported external endpoints include the read-only book/category/localization lookups, `GET /api/session`, `POST /api/session/logout`, and `GET /api/session/oauth2/authorization/{registrationId}`.
 - `GET /api/session` is the supported same-site browser session/bootstrap endpoint for the separate first-party UI, while `/api/account` remains the authenticated persisted-profile resource.
-- Protected supported endpoints use an authenticated browser session for `/api/account`, `/api/audit-logs`, `/api/operator/surface`, and for state-changing book, category, and localization operations.
+- Protected supported endpoints use an authenticated browser session for `/api/account`, `/api/admin/audit-logs`, `/api/admin/operator-surface`, `/api/admin/users`, and for state-changing book, category, and localization operations.
 - `GET /api/session` issues or refreshes the readable `XSRF-TOKEN` cookie and publishes the supported `csrf.enabled`, `csrf.cookieName`, and `csrf.headerName` metadata for the same-site UI contract.
 - Unsafe `/api/**` browser writes require the browser to mirror the `XSRF-TOKEN` cookie value into the `X-XSRF-TOKEN` request header when a real current application session exists.
 - Interactive login bootstrap is provider-aware when the optional `oauth` profile is active:
@@ -57,7 +57,7 @@ The values below are loaded from `{build-info-path}` during the Asciidoctor buil
   - `/api/session/login/oauth2/code/{registrationId}` as the reverse-proxy callback path
   - `GET /api/session` exposes `loginProviders[]` so the UI can choose among configured providers without relying on `/login`
 - The supported first-party browser contract assumes one public origin via reverse proxy and does not promise cross-origin browser calls or CORS support.
-- The operator inspection surface at `/api/operator/surface` requires an authenticated session and the `ADMIN` role.
+- The operator inspection surface at `/api/admin/operator-surface` requires an authenticated session and the `ADMIN` role.
 - Authenticated browser sessions are persisted through Spring Session JDBC in PostgreSQL.
 - Edge or gateway controls own abuse protection for `/api/session/oauth2/authorization/{registrationId}` and unsafe internet-public `/api/**` writes.
 - The machine-readable OpenAPI contract is published internally at `/v3/api-docs` and `/v3/api-docs.yaml` for trusted documentation and review workflows.
@@ -74,6 +74,7 @@ The values below are loaded from `{build-info-path}` during the Asciidoctor buil
 - xref:localization-controller.adoc[LocalizationController API]
 - xref:session-controller.adoc[SessionController API]
 - xref:upgrade-1x-to-2-0.adoc[Upgrade From 1.x To 2.0]
+- xref:admin-user-management-controller.adoc[AdminUserManagementController API]
 - xref:audit-log-controller.adoc[AuditLogController API]
 - xref:operator-surface-controller.adoc[OperatorSurfaceController API]
 - xref:technical-endpoints.adoc[Technical Endpoints]

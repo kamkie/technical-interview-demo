@@ -17,14 +17,14 @@ import team.jit.technicalinterviewdemo.technical.api.ApiProblemResponse;
 import team.jit.technicalinterviewdemo.technical.docs.OpenApiConfiguration;
 
 @RestController
-@RequestMapping("/api/operator")
+@RequestMapping("/api/admin")
 @RequiredArgsConstructor
 @Tag(name = "Operator", description = "ADMIN-only operational inspection surface.")
 public class OperatorSurfaceController {
 
     private final OperatorSurfaceService operatorSurfaceService;
 
-    @GetMapping("/surface")
+    @GetMapping("/operator-surface")
     @Operation(
             summary = "Get operator inspection surface",
             description = "Requires an authenticated session with the ADMIN role and returns audit, runtime, and operational visibility in one payload.",

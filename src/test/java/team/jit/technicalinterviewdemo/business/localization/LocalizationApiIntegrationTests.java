@@ -310,13 +310,21 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .andExpect(jsonPath("$.content.length()").value(documentedKeyCount()))
                 .andExpect(jsonPath("$.content[0].language").value("es"))
                 .andExpect(jsonPath("$.content[0].messageKey").value("error.book.isbn_duplicate"))
-                .andExpect(jsonPath("$.content[%d].messageKey".formatted(documentedKeyCount() - 1)).value("error.server.internal"))
+                .andExpect(jsonPath("$.content[%d].messageKey".formatted(documentedKeyCount() - 1))
+                        .value(lastDocumentedKeySortedByMessageKey()))
                 .andExpect(jsonPath("$.totalElements").value(documentedKeyCount()))
                 .andExpect(jsonPath("$.totalPages").value(1));
     }
 
     private int documentedKeyCount() {
         return LocalizationSeedData.documentedKeys().size();
+    }
+
+    private String lastDocumentedKeySortedByMessageKey() {
+        return LocalizationSeedData.documentedKeys().stream()
+                .sorted()
+                .toList()
+                .get(documentedKeyCount() - 1);
     }
 
     private int totalSeededLocalizations() {

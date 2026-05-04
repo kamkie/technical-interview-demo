@@ -74,7 +74,8 @@ public class BookService {
                 AuditTargetType.BOOK,
                 savedBook.getId(),
                 AuditAction.CREATE,
-                "Created book '%s' with ISBN %s.".formatted(savedBook.getTitle(), savedBook.getIsbn())
+                "Created book '%s' with ISBN %s.".formatted(savedBook.getTitle(), savedBook.getIsbn()),
+                auditDetails(savedBook)
         );
         log.info("Created book id={} isbn={} title={}", savedBook.getId(), savedBook.getIsbn(), savedBook.getTitle());
         return savedBook;
@@ -103,7 +104,8 @@ public class BookService {
                 AuditTargetType.BOOK,
                 updatedBook.getId(),
                 AuditAction.UPDATE,
-                "Updated book '%s' with ISBN %s.".formatted(updatedBook.getTitle(), updatedBook.getIsbn())
+                "Updated book '%s' with ISBN %s.".formatted(updatedBook.getTitle(), updatedBook.getIsbn()),
+                auditDetails(updatedBook)
         );
         log.info("Updated book id={} isbn={} title={}", updatedBook.getId(), updatedBook.getIsbn(), updatedBook.getTitle());
         return updatedBook;
@@ -118,7 +120,8 @@ public class BookService {
                 AuditTargetType.BOOK,
                 id,
                 AuditAction.DELETE,
-                "Deleted book '%s' with ISBN %s.".formatted(book.getTitle(), book.getIsbn())
+                "Deleted book '%s' with ISBN %s.".formatted(book.getTitle(), book.getIsbn()),
+                auditDetails(book)
         );
         log.info("Deleted book id={}", id);
     }
@@ -224,6 +227,19 @@ public class BookService {
         for (String category : categories) {
             validateTextFilter("category", category, MAX_TEXT_FILTER_LENGTH);
         }
+    }
+
+    private Map<String, Object> auditDetails(Book book) {
+        return Map.of(
+                "title", book.getTitle(),
+                "author", book.getAuthor(),
+                "isbn", book.getIsbn(),
+                "publicationYear", book.getPublicationYear(),
+                "categories", book.getCategories().stream()
+                        .map(Category::getName)
+                        .sorted()
+                        .toList()
+        );
     }
 }
 

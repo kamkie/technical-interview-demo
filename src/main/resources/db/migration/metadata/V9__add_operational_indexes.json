@@ -1,0 +1,7 @@
+{
+  "summary": "Adds PostgreSQL trigram and lookup indexes for book search, category name resolution, and admin audit filtering.",
+  "rolloutCategory": "expand",
+  "deploymentOrder": "db-first",
+  "rollingCompatible": true,
+  "rollbackPosture": "image-only"
+}

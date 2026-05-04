@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpSession;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
@@ -20,6 +21,11 @@ import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.session.Session;
 import org.springframework.session.SessionRepository;
 import org.springframework.stereotype.Service;
+import team.jit.technicalinterviewdemo.business.audit.AuditAction;
+import team.jit.technicalinterviewdemo.business.audit.AuditLogService;
+import team.jit.technicalinterviewdemo.business.audit.AuditTargetType;
+import team.jit.technicalinterviewdemo.business.user.CurrentUserAccountService;
+import team.jit.technicalinterviewdemo.business.user.UserAccount;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +40,8 @@ public class SessionService {
     private final CurrentApplicationSessionResolver currentApplicationSessionResolver;
     private final SessionRepository<? extends Session> sessionRepository;
     private final CsrfTokenRepository csrfTokenRepository;
+    private final CurrentUserAccountService currentUserAccountService;
+    private final AuditLogService auditLogService;
 
     public SessionResponse currentSession(HttpServletRequest request, HttpServletResponse response) {
         SecuritySettingsProperties.Session session = securitySettingsProperties.getSession();
@@ -59,11 +67,24 @@ public class SessionService {
 
     public void logoutCurrentSession(HttpServletRequest request, HttpServletResponse response) {
         Optional<String> sessionId = currentApplicationSessionResolver.currentSessionId(request);
+        Optional<UserAccount> currentUser = currentUserAccountService.findCurrentUser();
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.invalidate();
         }
         sessionId.ifPresent(sessionRepository::deleteById);
+        currentUser.ifPresent(userAccount -> auditLogService.recordWithActor(
+                AuditTargetType.AUTHENTICATION,
+                userAccount.getId(),
+                AuditAction.LOGOUT,
+                userAccount,
+                userAccount.getExternalLogin(),
+                "Logged out current session for '%s'.".formatted(userAccount.getExternalLogin()),
+                Map.of(
+                        "provider", userAccount.getProvider(),
+                        "login", userAccount.getExternalLogin()
+                )
+        ));
         SecurityContextHolder.clearContext();
         response.addHeader(HttpHeaders.SET_COOKIE, expiredSessionCookie().toString());
         csrfTokenRepository.saveToken(null, request, response);

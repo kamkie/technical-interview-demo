@@ -7,6 +7,14 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Added
+- Added persisted role-grant provenance plus an ADMIN-only `/api/admin/users` management API for listing persisted users and replacing managed role grants, together with aligned REST Docs, reviewer HTTP examples, and approved OpenAPI coverage.
+- Added structured audit `details` payloads and auth-lifecycle audit events for login success, login failure, logout, and session-cap rejection.
+
+### Changed
+- Replaced runtime `ADMIN_LOGINS` role assignment with bootstrap-only `APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES`, moved the admin operational APIs under `/api/admin/**`, and refreshed README, setup guidance, REST Docs, HTTP examples, OpenAPI, and monitoring assets to match the `v2.0.0-M4` prerelease contract.
+- Added the planned PostgreSQL indexes for the current search and audit query shapes, and hardened the shipped Docker, Kubernetes, and Helm defaults with a pinned JRE image, non-root execution, a read-only root filesystem, a writable `/tmp` mount, a startup probe, and stricter container security contexts.
+
 ## [v2.0.0-M3] - 2026-05-04
 
 ### Added

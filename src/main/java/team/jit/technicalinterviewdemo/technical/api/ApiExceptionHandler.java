@@ -31,6 +31,7 @@ import team.jit.technicalinterviewdemo.business.category.CategoryInUseException;
 import team.jit.technicalinterviewdemo.business.category.CategoryNotFoundException;
 import team.jit.technicalinterviewdemo.business.localization.DuplicateLocalizationException;
 import team.jit.technicalinterviewdemo.business.localization.LocalizationNotFoundException;
+import team.jit.technicalinterviewdemo.business.user.UserAccountNotFoundException;
 
 @RestControllerAdvice
 @RequiredArgsConstructor
@@ -69,6 +70,18 @@ public class ApiExceptionHandler {
                 "Category Not Found",
                 exception.getMessage(),
                 "error.category.not_found",
+                request,
+                Map.of("exception", exception.getClass().getSimpleName())
+        );
+    }
+
+    @ExceptionHandler(UserAccountNotFoundException.class)
+    ProblemDetail handleUserAccountNotFound(UserAccountNotFoundException exception, HttpServletRequest request) {
+        return apiProblemFactory.clientProblem(
+                HttpStatus.NOT_FOUND,
+                "User Account Not Found",
+                exception.getMessage(),
+                "error.user.not_found",
                 request,
                 Map.of("exception", exception.getClass().getSimpleName())
         );

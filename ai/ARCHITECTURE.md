@@ -35,7 +35,9 @@ Current implemented endpoint surface:
 - `GET|POST /api/categories`
 - `GET|POST|PUT|DELETE /api/localizations...`
 - `GET|PUT /api/account...`
-- `GET /api/operator/surface`
+- `GET /api/admin/audit-logs`
+- `GET /api/admin/operator-surface`
+- `GET|PUT /api/admin/users...`
 - actuator health, info, and Prometheus endpoints
 - OpenAPI docs at `/v3/api-docs` and `/v3/api-docs.yaml`
 
@@ -183,7 +185,7 @@ Current deployment-boundary expectations:
 
 - only `/api/**` is intended to be internet-reachable, typically through `waf -> frontend -> this application`
 - `/`, `/hello`, `/docs`, OpenAPI docs, and actuator endpoints exist but are internal or deployment-scoped surfaces rather than public app contract
-- authenticated operator visibility stays in `/api/operator/surface`; actuator endpoints are not the application-auth operational API
+- authenticated operator visibility stays under `/api/admin/**`; actuator endpoints are not the application-auth operational API
 - abuse protection for login bootstrap and write-heavy internet-public paths is primarily an edge or deployment responsibility rather than default in-app rate limiting
 
 ## Localization Model

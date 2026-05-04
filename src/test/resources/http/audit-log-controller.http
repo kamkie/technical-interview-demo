@@ -6,21 +6,21 @@
 @sessionCookie = paste-technical-interview-demo-session-here
 
 ### AuditLogController - list audit logs (ADMIN + authenticated session)
-GET {{baseUrl}}/api/audit-logs?page=0&size=20&sort=id,desc
+GET {{baseUrl}}/api/admin/audit-logs?page=0&size=20&sort=id,desc
 Cookie: technical-interview-demo-session={{sessionCookie}}
 Accept: application/json
 
 ### AuditLogController - filter audit logs by target type, action, and actor login
-GET {{baseUrl}}/api/audit-logs?targetType=BOOK&action=UPDATE&actorLogin=admin-user
+GET {{baseUrl}}/api/admin/audit-logs?targetType=AUTHENTICATION&action=LOGIN_SUCCESS&actorLogin=admin-user
 Cookie: technical-interview-demo-session={{sessionCookie}}
 Accept: application/json
 
 ### AuditLogController - list audit logs without authentication (401 localized ProblemDetail)
-GET {{baseUrl}}/api/audit-logs
+GET {{baseUrl}}/api/admin/audit-logs
 Accept: application/problem+json
 
 ### AuditLogController - list audit logs as non-admin user (403 localized ProblemDetail)
 # Replace the session cookie with a regular authenticated USER session.
-GET {{baseUrl}}/api/audit-logs
+GET {{baseUrl}}/api/admin/audit-logs
 Cookie: technical-interview-demo-session={{sessionCookie}}
 Accept: application/problem+json

@@ -9,6 +9,7 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import team.jit.technicalinterviewdemo.technical.bootstrap.BootstrapSettingsProperties;
 
 class OAuthProviderConfigurationTests {
 
@@ -80,8 +81,7 @@ class OAuthProviderConfigurationTests {
         environment.setActiveProfiles("prod");
         environment.setProperty("server.forward-headers-strategy", "framework");
 
-        ProductionSecurityConfigurationValidator validator =
-                new ProductionSecurityConfigurationValidator(settings, environment);
+        ProductionSecurityConfigurationValidator validator = validator(settings, environment);
 
         assertThatCode(validator::afterPropertiesSet).doesNotThrowAnyException();
     }
@@ -97,8 +97,7 @@ class OAuthProviderConfigurationTests {
         environment.setActiveProfiles("prod", "oauth");
         environment.setProperty("server.forward-headers-strategy", "framework");
 
-        ProductionSecurityConfigurationValidator validator =
-                new ProductionSecurityConfigurationValidator(settings, environment);
+        ProductionSecurityConfigurationValidator validator = validator(settings, environment);
 
         assertThatThrownBy(validator::afterPropertiesSet)
                 .isInstanceOf(IllegalStateException.class)
@@ -117,8 +116,7 @@ class OAuthProviderConfigurationTests {
         environment.setActiveProfiles("prod", "oauth");
         environment.setProperty("server.forward-headers-strategy", "framework");
 
-        ProductionSecurityConfigurationValidator validator =
-                new ProductionSecurityConfigurationValidator(settings, environment);
+        ProductionSecurityConfigurationValidator validator = validator(settings, environment);
 
         assertThatThrownBy(validator::afterPropertiesSet)
                 .isInstanceOf(IllegalStateException.class)
@@ -138,8 +136,7 @@ class OAuthProviderConfigurationTests {
         environment.setActiveProfiles("prod", "oauth");
         environment.setProperty("server.forward-headers-strategy", "framework");
 
-        ProductionSecurityConfigurationValidator validator =
-                new ProductionSecurityConfigurationValidator(settings, environment);
+        ProductionSecurityConfigurationValidator validator = validator(settings, environment);
 
         assertThatThrownBy(validator::afterPropertiesSet)
                 .isInstanceOf(IllegalStateException.class)
@@ -158,8 +155,7 @@ class OAuthProviderConfigurationTests {
         environment.setActiveProfiles("prod", "oauth");
         environment.setProperty("server.forward-headers-strategy", "framework");
 
-        ProductionSecurityConfigurationValidator validator =
-                new ProductionSecurityConfigurationValidator(settings, environment);
+        ProductionSecurityConfigurationValidator validator = validator(settings, environment);
 
         assertThatCode(validator::afterPropertiesSet).doesNotThrowAnyException();
     }
@@ -172,8 +168,7 @@ class OAuthProviderConfigurationTests {
         environment.setProperty("OAUTH_DEFAULT_PROVIDER", "github");
         environment.setProperty("server.forward-headers-strategy", "framework");
 
-        ProductionSecurityConfigurationValidator validator =
-                new ProductionSecurityConfigurationValidator(settings, environment);
+        ProductionSecurityConfigurationValidator validator = validator(settings, environment);
 
         assertThatThrownBy(validator::afterPropertiesSet)
                 .isInstanceOf(IllegalStateException.class)
@@ -187,8 +182,7 @@ class OAuthProviderConfigurationTests {
         environment.setActiveProfiles("prod");
         environment.setProperty("server.forward-headers-strategy", "native");
 
-        ProductionSecurityConfigurationValidator validator =
-                new ProductionSecurityConfigurationValidator(settings, environment);
+        ProductionSecurityConfigurationValidator validator = validator(settings, environment);
 
         assertThatThrownBy(validator::afterPropertiesSet)
                 .isInstanceOf(IllegalStateException.class)
@@ -199,6 +193,13 @@ class OAuthProviderConfigurationTests {
         SecuritySettingsProperties settings = new SecuritySettingsProperties();
         settings.getSession().setCookieSecure(true);
         return settings;
+    }
+
+    private ProductionSecurityConfigurationValidator validator(
+            SecuritySettingsProperties settings,
+            MockEnvironment environment
+    ) {
+        return new ProductionSecurityConfigurationValidator(new BootstrapSettingsProperties(), settings, environment);
     }
 
     private SecuritySettingsProperties.OAuth.Provider provider(

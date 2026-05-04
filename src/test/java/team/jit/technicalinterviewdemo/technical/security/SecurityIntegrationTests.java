@@ -4,18 +4,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.Map;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2Error;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -29,6 +28,12 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 import team.jit.technicalinterviewdemo.testing.IntegrationSpringBootTest;
+import team.jit.technicalinterviewdemo.business.audit.AuditAction;
+import team.jit.technicalinterviewdemo.business.audit.AuditLog;
+import team.jit.technicalinterviewdemo.business.audit.AuditLogRepository;
+import team.jit.technicalinterviewdemo.business.audit.AuditTargetType;
+import team.jit.technicalinterviewdemo.business.user.UserAccount;
+import team.jit.technicalinterviewdemo.business.user.UserAccountRepository;
 
 @IntegrationSpringBootTest
 class SecurityIntegrationTests {
@@ -48,15 +53,23 @@ class SecurityIntegrationTests {
     @Autowired
     private AuthenticationFailureHandler oauthAuthenticationFailureHandler;
 
+    @Autowired
+    private AuditLogRepository auditLogRepository;
+
+    @Autowired
+    private UserAccountRepository userAccountRepository;
+
     @SuppressWarnings({"rawtypes", "unchecked"})
     private SessionRepository<Session> httpSessionRepository() {
         return (SessionRepository) sessionRepository;
     }
 
     @BeforeEach
-    void clearSessions() {
+    void clearState() {
         jdbcTemplate.update("DELETE FROM SPRING_SESSION_ATTRIBUTES");
         jdbcTemplate.update("DELETE FROM SPRING_SESSION");
+        auditLogRepository.deleteAll();
+        userAccountRepository.deleteAll();
     }
 
     @Test
@@ -127,19 +140,70 @@ class SecurityIntegrationTests {
         );
 
         assertThat(response.getRedirectedUrl()).isEqualTo("/");
+        UserAccount userAccount = userAccountRepository.findByProviderAndExternalLogin("github", "demo-user")
+                .orElseThrow();
+        assertThat(auditLogRepository.findAll()).hasSize(1);
+        AuditLog auditLog = auditLogRepository.findAll().getFirst();
+        assertThat(auditLog.getTargetType()).isEqualTo(AuditTargetType.AUTHENTICATION);
+        assertThat(auditLog.getTargetId()).isEqualTo(userAccount.getId());
+        assertThat(auditLog.getAction()).isEqualTo(AuditAction.LOGIN_SUCCESS);
+        assertThat(auditLog.getActorLogin()).isEqualTo("demo-user");
+        assertThat(auditLog.getSummary()).isEqualTo("Successful OAuth login for 'demo-user'.");
+        assertThat(auditLog.getDetails())
+                .containsEntry("provider", "github")
+                .containsEntry("login", "demo-user");
     }
 
     @Test
     void oauthFailureHandlerAlwaysRedirectsToLoginFailedMarker() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/api/session/login/oauth2/code/github");
         MockHttpServletResponse response = new MockHttpServletResponse();
 
         oauthAuthenticationFailureHandler.onAuthenticationFailure(
-                new MockHttpServletRequest(),
+                request,
                 response,
                 new OAuth2AuthenticationException(new OAuth2Error("invalid_token"))
         );
 
         assertThat(response.getRedirectedUrl()).isEqualTo("/?login=failed");
+        assertThat(auditLogRepository.findAll()).hasSize(1);
+        AuditLog auditLog = auditLogRepository.findAll().getFirst();
+        assertThat(auditLog.getTargetType()).isEqualTo(AuditTargetType.AUTHENTICATION);
+        assertThat(auditLog.getTargetId()).isNull();
+        assertThat(auditLog.getAction()).isEqualTo(AuditAction.LOGIN_FAILURE);
+        assertThat(auditLog.getActorLogin()).isNull();
+        assertThat(auditLog.getSummary()).isEqualTo("OAuth login failed.");
+        assertThat(auditLog.getDetails())
+                .containsEntry("provider", "github")
+                .containsEntry("failureType", "oauth_authentication_failure")
+                .containsEntry("errorCode", "invalid_token");
+    }
+
+    @Test
+    void oauthFailureHandlerRecordsSessionRejectionAuditEntry() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/api/session/login/oauth2/code/github");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        oauthAuthenticationFailureHandler.onAuthenticationFailure(
+                request,
+                response,
+                new SessionAuthenticationException("Maximum sessions of 1 exceeded")
+        );
+
+        assertThat(response.getRedirectedUrl()).isEqualTo("/?login=failed");
+        assertThat(auditLogRepository.findAll()).hasSize(1);
+        AuditLog auditLog = auditLogRepository.findAll().getFirst();
+        assertThat(auditLog.getTargetType()).isEqualTo(AuditTargetType.AUTHENTICATION);
+        assertThat(auditLog.getTargetId()).isNull();
+        assertThat(auditLog.getAction()).isEqualTo(AuditAction.SESSION_REJECTION);
+        assertThat(auditLog.getActorLogin()).isNull();
+        assertThat(auditLog.getSummary()).isEqualTo(
+                "Rejected OAuth login because the concurrent session limit was reached."
+        );
+        assertThat(auditLog.getDetails())
+                .containsEntry("provider", "github")
+                .containsEntry("failureType", "maximum_sessions_exceeded");
+        assertThat(auditLog.getDetails()).doesNotContainKey("errorCode");
     }
 
     private OAuth2AuthenticationToken authentication(String login) {

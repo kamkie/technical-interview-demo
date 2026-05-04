@@ -17,25 +17,8 @@ import org.springframework.validation.annotation.Validated;
 @ConfigurationProperties(prefix = "app.security")
 public class SecuritySettingsProperties {
 
-    private Set<String> adminLogins = new LinkedHashSet<>();
     private final Session session = new Session();
     private final OAuth oauth = new OAuth();
-
-    public Set<String> normalizedAdminLogins() {
-        return adminLogins.stream()
-                .map(String::trim)
-                .filter(value -> !value.isBlank())
-                .map(value -> value.toLowerCase(Locale.ROOT))
-                .collect(Collectors.toCollection(LinkedHashSet::new));
-    }
-
-    public Set<String> getAdminLogins() {
-        return adminLogins;
-    }
-
-    public void setAdminLogins(Set<String> adminLogins) {
-        this.adminLogins = adminLogins;
-    }
 
     public Session getSession() {
         return session;

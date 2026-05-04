@@ -19,13 +19,12 @@ import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
 import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.session.Session;
 import org.springframework.session.security.SpringSessionBackedSessionRegistry;
+import team.jit.technicalinterviewdemo.business.audit.AuditLogService;
 import team.jit.technicalinterviewdemo.business.user.CurrentUserAccountService;
 
 @Configuration
@@ -72,9 +71,8 @@ public class SecurityConfiguration {
                         .requestMatchers(SecuritySettingsProperties.OAuth.CALLBACK_BASE_URI + "/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/session").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/session/logout").permitAll()
+                        .requestMatchers("/api/admin/**").authenticated()
                         .requestMatchers("/api/account", "/api/account/**").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/api/audit-logs").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/api/operator/surface").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/actuator/health", "/actuator/health/**").permitAll()
                         // Prometheus stays reachable for trusted deployment scraping; deployment boundaries keep it off the internet.
@@ -173,14 +171,15 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    AuthenticationSuccessHandler oauthAuthenticationSuccessHandler() {
-        SimpleUrlAuthenticationSuccessHandler successHandler = new SimpleUrlAuthenticationSuccessHandler("/");
-        successHandler.setAlwaysUseDefaultTargetUrl(true);
-        return successHandler;
+    AuthenticationSuccessHandler oauthAuthenticationSuccessHandler(
+            CurrentUserAccountService currentUserAccountService,
+            AuditLogService auditLogService
+    ) {
+        return new AuditingAuthenticationSuccessHandler(currentUserAccountService, auditLogService);
     }
 
     @Bean
-    AuthenticationFailureHandler oauthAuthenticationFailureHandler() {
-        return new SimpleUrlAuthenticationFailureHandler("/?login=failed");
+    AuthenticationFailureHandler oauthAuthenticationFailureHandler(AuditLogService auditLogService) {
+        return new AuditingAuthenticationFailureHandler(auditLogService);
     }
 }

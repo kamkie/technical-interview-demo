@@ -150,12 +150,12 @@
       "id": 5,
       "targets": [
         {
-          "expr": "sum(rate(http_server_requests_seconds_count{namespace=\"technical-interview-demo\",uri=~\"/api/account|/api/account/language|/api/audit-logs\",status=\"401\"}[10m])) + sum(rate(http_server_requests_seconds_count{namespace=\"technical-interview-demo\",method=~\"POST|PUT|DELETE\",uri=~\"/api/categories|/api/categories/.+|/api/localizations|/api/localizations/.+\",status=\"401\"}[10m]))",
+          "expr": "sum(rate(http_server_requests_seconds_count{namespace=\"technical-interview-demo\",uri=~\"/api/account|/api/account/language|/api/admin/audit-logs|/api/admin/operator-surface|/api/admin/users|/api/admin/users/.+\",status=\"401\"}[10m])) + sum(rate(http_server_requests_seconds_count{namespace=\"technical-interview-demo\",method=~\"POST|PUT|DELETE\",uri=~\"/api/categories|/api/categories/.+|/api/localizations|/api/localizations/.+\",status=\"401\"}[10m]))",
           "legendFormat": "401 responses",
           "refId": "A"
         },
         {
-          "expr": "sum(rate(http_server_requests_seconds_count{namespace=\"technical-interview-demo\",uri=~\"/api/account|/api/account/language|/api/audit-logs\",status=\"403\"}[10m])) + sum(rate(http_server_requests_seconds_count{namespace=\"technical-interview-demo\",method=~\"POST|PUT|DELETE\",uri=~\"/api/categories|/api/categories/.+|/api/localizations|/api/localizations/.+\",status=\"403\"}[10m]))",
+          "expr": "sum(rate(http_server_requests_seconds_count{namespace=\"technical-interview-demo\",uri=~\"/api/account|/api/account/language|/api/admin/audit-logs|/api/admin/operator-surface|/api/admin/users|/api/admin/users/.+\",status=\"403\"}[10m])) + sum(rate(http_server_requests_seconds_count{namespace=\"technical-interview-demo\",method=~\"POST|PUT|DELETE\",uri=~\"/api/categories|/api/categories/.+|/api/localizations|/api/localizations/.+\",status=\"403\"}[10m]))",
           "legendFormat": "403 responses",
           "refId": "B"
         }

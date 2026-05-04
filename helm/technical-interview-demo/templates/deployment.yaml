@@ -14,11 +14,15 @@ spec:
       labels:
         {{- include "technical-interview-demo.selectorLabels" . | nindent 8 }}
     spec:
+      securityContext:
+        {{- toYaml .Values.pod.securityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.pod.terminationGracePeriodSeconds }}
       containers:
         - name: technical-interview-demo
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.container.securityContext | nindent 12 }}
           ports:
             - name: http
               containerPort: {{ .Values.service.targetPort }}
@@ -70,12 +74,40 @@ spec:
                   name: {{ .Values.secret.existingSecret }}
                   key: {{ .Values.secret.keys.githubClientSecret }}
                   optional: true
-            - name: ADMIN_LOGINS
+            - name: OIDC_CLIENT_ID
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.secret.existingSecret }}
-                  key: {{ .Values.secret.keys.adminLogins }}
+                  key: {{ .Values.secret.keys.oidcClientId }}
                   optional: true
+            - name: OIDC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secret.existingSecret }}
+                  key: {{ .Values.secret.keys.oidcClientSecret }}
+                  optional: true
+            - name: OIDC_ISSUER_URI
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secret.existingSecret }}
+                  key: {{ .Values.secret.keys.oidcIssuerUri }}
+                  optional: true
+            - name: APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secret.existingSecret }}
+                  key: {{ .Values.secret.keys.initialAdminIdentities }}
+                  optional: true
+          volumeMounts:
+            - name: tmp
+              mountPath: {{ .Values.container.tmpMountPath }}
+          startupProbe:
+            httpGet:
+              path: {{ .Values.probes.startup.path }}
+              port: http
+            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.startup.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
           readinessProbe:
             httpGet:
               path: {{ .Values.probes.readiness.path }}
@@ -94,3 +126,6 @@ spec:
             failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: tmp
+          emptyDir: {}

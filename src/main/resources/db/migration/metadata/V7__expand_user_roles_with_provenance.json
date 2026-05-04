@@ -1,0 +1,7 @@
+{
+  "summary": "Adds persisted provenance fields to user role grants so admin roles can be bootstrapped once and managed explicitly afterward.",
+  "rolloutCategory": "expand",
+  "deploymentOrder": "db-first",
+  "rollingCompatible": true,
+  "rollbackPosture": "image-only"
+}

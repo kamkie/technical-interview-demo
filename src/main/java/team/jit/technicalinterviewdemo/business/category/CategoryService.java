@@ -16,6 +16,9 @@ import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
+import team.jit.technicalinterviewdemo.business.audit.AuditAction;
+import team.jit.technicalinterviewdemo.business.audit.AuditLogService;
+import team.jit.technicalinterviewdemo.business.audit.AuditTargetType;
 import team.jit.technicalinterviewdemo.business.user.CurrentUserAccountService;
 import team.jit.technicalinterviewdemo.business.user.UserRole;
 import team.jit.technicalinterviewdemo.technical.api.InvalidRequestException;
@@ -37,6 +40,7 @@ public class CategoryService {
     private final CacheManager cacheManager;
     private final ApplicationMetrics applicationMetrics;
     private final CurrentUserAccountService currentUserAccountService;
+    private final AuditLogService auditLogService;
 
     public List<Category> findAll() {
         applicationMetrics.recordCategoryOperation("list");
@@ -64,6 +68,13 @@ public class CategoryService {
         Category savedCategory = categoryRepository.saveAndFlush(new Category(normalizedName));
         evictCategoryCaches();
         applicationMetrics.recordCategoryOperation("create");
+        auditLogService.record(
+                AuditTargetType.CATEGORY,
+                savedCategory.getId(),
+                AuditAction.CREATE,
+                "Created category '%s'.".formatted(savedCategory.getName()),
+                auditDetails(savedCategory.getName())
+        );
         log.info("Created category id={} name={}", savedCategory.getId(), savedCategory.getName());
         return savedCategory;
     }
@@ -72,6 +83,7 @@ public class CategoryService {
     public Category update(Long id, CategoryUpdateRequest request) {
         currentUserAccountService.requireRole(UserRole.ADMIN, "Category management requires the ADMIN role.");
         Category category = requireCategory(id);
+        String previousName = category.getName();
         String normalizedName = normalizeName(request.name());
         validateUniqueName(normalizedName, id);
 
@@ -79,6 +91,16 @@ public class CategoryService {
         Category updatedCategory = categoryRepository.saveAndFlush(category);
         evictCategoryCaches();
         applicationMetrics.recordCategoryOperation("update");
+        auditLogService.record(
+                AuditTargetType.CATEGORY,
+                updatedCategory.getId(),
+                AuditAction.UPDATE,
+                "Updated category '%s'.".formatted(updatedCategory.getName()),
+                Map.of(
+                        "previousName", previousName,
+                        "name", updatedCategory.getName()
+                )
+        );
         log.info("Updated category id={} name={}", updatedCategory.getId(), updatedCategory.getName());
         return updatedCategory;
     }
@@ -94,6 +116,13 @@ public class CategoryService {
         categoryRepository.delete(category);
         evictCategoryCaches();
         applicationMetrics.recordCategoryOperation("delete");
+        auditLogService.record(
+                AuditTargetType.CATEGORY,
+                id,
+                AuditAction.DELETE,
+                "Deleted category '%s'.".formatted(category.getName()),
+                auditDetails(category.getName())
+        );
         log.info("Deleted category id={} name={}", id, category.getName());
     }
 
@@ -192,5 +221,9 @@ public class CategoryService {
             throw new IllegalStateException("Cache '%s' is not configured.".formatted(cacheName));
         }
         return cache;
+    }
+
+    private Map<String, Object> auditDetails(String name) {
+        return Map.of("name", name);
     }
 }

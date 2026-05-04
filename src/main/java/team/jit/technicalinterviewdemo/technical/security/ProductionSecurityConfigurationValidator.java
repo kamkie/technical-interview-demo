@@ -8,16 +8,18 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
 import org.springframework.stereotype.Component;
+import team.jit.technicalinterviewdemo.technical.bootstrap.BootstrapSettingsProperties;
 
 @Component
 @RequiredArgsConstructor
 public class ProductionSecurityConfigurationValidator implements InitializingBean {
 
-    private static final Pattern ADMIN_LOGIN_PATTERN =
+    private static final Pattern EXTERNAL_LOGIN_PATTERN =
             Pattern.compile("^[A-Za-z\\d](?:[A-Za-z\\d._@-]{0,126}[A-Za-z\\d])?$");
     private static final Pattern PROVIDER_ID_PATTERN =
             Pattern.compile("^[a-z\\d](?:[a-z\\d-]{0,48}[a-z\\d])?$");
 
+    private final BootstrapSettingsProperties bootstrapSettingsProperties;
     private final SecuritySettingsProperties securitySettingsProperties;
     private final Environment environment;
 
@@ -28,7 +30,7 @@ public class ProductionSecurityConfigurationValidator implements InitializingBea
             return;
         }
         validateSessionContract();
-        validateAdminLogins();
+        validateInitialAdminIdentities();
         validateForwardedHeaderStrategy();
         validateOAuthSettings();
     }
@@ -58,16 +60,6 @@ public class ProductionSecurityConfigurationValidator implements InitializingBea
         }
     }
 
-    private void validateAdminLogins() {
-        for (String login : securitySettingsProperties.normalizedAdminLogins()) {
-            if (!ADMIN_LOGIN_PATTERN.matcher(login).matches()) {
-                throw new IllegalStateException(
-                        "ADMIN_LOGINS must contain comma-separated external login identifiers. Invalid value: " + login
-                );
-            }
-        }
-    }
-
     private void validateRemovedSettings() {
         String deprecatedDefaultProvider = firstNonBlank(
                 environment.getProperty("OAUTH_DEFAULT_PROVIDER"),
@@ -78,6 +70,15 @@ public class ProductionSecurityConfigurationValidator implements InitializingBea
                     "OAUTH_DEFAULT_PROVIDER has been removed. Expose provider choices through GET /api/session loginProviders[]."
             );
         }
+        String deprecatedAdminLogins = firstNonBlank(
+                environment.getProperty("ADMIN_LOGINS"),
+                environment.getProperty("app.security.admin-logins")
+        );
+        if (deprecatedAdminLogins != null) {
+            throw new IllegalStateException(
+                    "ADMIN_LOGINS has been removed. Use APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES only for zero-admin bootstrap, then manage roles through /api/admin/users."
+            );
+        }
     }
 
     private void validateForwardedHeaderStrategy() {
@@ -86,6 +87,22 @@ public class ProductionSecurityConfigurationValidator implements InitializingBea
             throw new IllegalStateException(
                     "Prod profile requires server.forward-headers-strategy=framework."
             );
+        }
+    }
+
+    private void validateInitialAdminIdentities() {
+        for (String identity : bootstrapSettingsProperties.normalizedInitialAdminIdentities()) {
+            int separatorIndex = identity.indexOf(':');
+            if (separatorIndex <= 0 || separatorIndex == identity.length() - 1) {
+                throw invalidInitialAdminIdentities(identity);
+            }
+
+            String providerId = identity.substring(0, separatorIndex);
+            String externalLogin = identity.substring(separatorIndex + 1);
+            if (!PROVIDER_ID_PATTERN.matcher(providerId).matches()
+                    || !EXTERNAL_LOGIN_PATTERN.matcher(externalLogin).matches()) {
+                throw invalidInitialAdminIdentities(identity);
+            }
         }
     }
 
@@ -179,5 +196,12 @@ public class ProductionSecurityConfigurationValidator implements InitializingBea
             return second;
         }
         return null;
+    }
+
+    private IllegalStateException invalidInitialAdminIdentities(String identity) {
+        return new IllegalStateException(
+                "APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES must contain comma-separated provider:externalLogin values. Invalid value: "
+                        + identity
+        );
     }
 }

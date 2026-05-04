@@ -17,10 +17,10 @@ Current scope:
 - `Localization` API under `/api/localizations` with CRUD plus collection filtering by `messageKey` and `language`
 - same-site browser session/bootstrap API under `/api/session` for a separate first-party UI behind one public origin
 - authenticated account API under `/api/account`
-- ADMIN audit review API at `/api/audit-logs`
+- ADMIN audit review API at `/api/admin/audit-logs`, operator surface at `/api/admin/operator-surface`, and user-management API at `/api/admin/users`
 - configuration-driven demo data bootstrap with production-safe defaults
 - OAuth 2.0 protected write endpoints with JDBC-backed HTTP sessions
-- append-only audit logging for state-changing `Book` and `Localization` operations plus admin review access
+- append-only audit logging for `Book`, `Category`, and `Localization` writes, admin role changes, and authentication lifecycle events
 - generated REST Docs and an approved OpenAPI baseline
 - PostgreSQL runtime profiles and PostgreSQL-backed integration tests via Testcontainers
 - request tracing, structured logging, in-memory caches, application-specific Prometheus metrics, and tracked Gatling baselines
@@ -78,8 +78,10 @@ Supported external application contract:
 - externally reachable authenticated paths under `/api/**`:
   - `GET /api/account`
   - `PUT /api/account/language`
-  - `GET /api/audit-logs`
-  - `GET /api/operator/surface`
+  - `GET /api/admin/audit-logs`
+  - `GET /api/admin/operator-surface`
+  - `GET /api/admin/users`
+  - `PUT /api/admin/users/{id}/roles`
   - `POST /api/books`
   - `PUT /api/books/{id}`
   - `DELETE /api/books/{id}`
@@ -125,13 +127,16 @@ Supported technical bootstrap:
 - `APP_BOOTSTRAP_SEED_DEMO_DATA`
   - controls startup seeding for demo categories, books, and localization messages
   - defaults to `true` in `local` and `test`, defaults to `false` in `prod`
+- `APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES`
+  - optional bootstrap-only first-admin list using normalized `provider:externalLogin` values such as `github:admin-user`
+  - only applies while no persisted `ADMIN` role grant exists; later role changes go through `GET /api/admin/users` and `PUT /api/admin/users/{id}/roles`
 
 Security summary:
 
 - public supported external endpoints: read-only `/api/books/**`, `GET /api/categories`, read-only `/api/localizations/**`, `GET /api/session`, `POST /api/session/logout`, and `GET /api/session/oauth2/authorization/{registrationId}`
-- authenticated session required on the external `/api/**` surface: `/api/account`, `PUT /api/account/language`, `GET /api/audit-logs`, `GET /api/operator/surface`, and the state-changing book, category, and localization endpoints
+- authenticated session required on the external `/api/**` surface: `/api/account`, `PUT /api/account/language`, `/api/admin/audit-logs`, `/api/admin/operator-surface`, `/api/admin/users`, and the state-changing book, category, and localization endpoints
 - unsafe same-site browser writes under `/api/**` also require a valid `X-XSRF-TOKEN` header mirrored from the readable `XSRF-TOKEN` cookie bootstrapped by `GET /api/session`; safe `GET` requests remain CSRF-free
-- `ADMIN` role required: audit log review, operator surface access, category create/update/delete, and localization create/update/delete
+- `ADMIN` role required: audit log review, operator surface access, admin user-management, category create/update/delete, and localization create/update/delete
 - interactive login and provider callbacks stay under `/api/session/**` when the `oauth` profile is active
 - the supported first-party browser contract assumes one public origin via reverse proxy; cross-origin browser support and CORS guarantees are not part of the supported contract
 - edge or gateway controls own abuse protection for `/api/session/oauth2/authorization/{registrationId}` and unsafe internet-public `/api/**` writes
@@ -139,8 +144,9 @@ Security summary:
 
 Contract notes:
 
-- `GET /api/audit-logs` is paginated and supports optional exact `targetType`, `action`, and `actorLogin` filters
-- `GET /api/operator/surface` returns one ADMIN-only payload that combines recent audit history, runtime diagnostics, and operational status links
+- `GET /api/admin/audit-logs` is paginated, supports optional exact `targetType`, `action`, and `actorLogin` filters, and exposes compact structured `details` for audit review
+- `GET /api/admin/operator-surface` returns one ADMIN-only payload that combines recent audit history, runtime diagnostics, and operational status links
+- `GET /api/admin/users` lists persisted users together with current roles and role-grant provenance, and `PUT /api/admin/users/{id}/roles` replaces the non-bootstrap role set for one persisted user
 - `GET /api/session` is the supported same-site UI bootstrap/state endpoint, while `GET /api/account` remains the authenticated persisted-profile endpoint; it issues or refreshes `XSRF-TOKEN` and returns `csrf.enabled`, `csrf.cookieName`, and `csrf.headerName`
 - OAuth success redirects to `/` and failures redirect to `/?login=failed` for the separate first-party UI
 - after login success or logout, call `GET /api/session` again before the next unsafe write so the browser receives the current `XSRF-TOKEN` cookie for the current session state
@@ -149,6 +155,7 @@ Contract notes:
 - `DELETE /api/categories/{id}` fails with a localized conflict if the category is still assigned to one or more books
 - `GET /api/books` is paginated and supports text, category, and year filters
 - `GET /api/localizations` is paginated and supports optional exact `messageKey` and `language` filters
+- audit retention and archival are deployment-managed responsibilities; the application does not purge `audit_logs` rows
 - localized error responses include `messageKey`, localized `message`, and resolved `language`
 - protected API `401` and `403` responses use that same localized `ProblemDetail` structure
 - authenticated-user preferred language is the last localization fallback before English
@@ -267,13 +274,13 @@ Optional deployment environment variables:
 - `OIDC_CLIENT_ID`
 - `OIDC_CLIENT_SECRET`
 - `OIDC_ISSUER_URI`
-- `ADMIN_LOGINS`
+- `APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES`
 
 Current production posture:
 
 - `prod` remains the deployment profile baseline
 - OAuth login remains opt-in through the `oauth` profile and requires at least one configured provider (`github` or `oidc`) with client credentials, with `OIDC_ISSUER_URI` required for OIDC
-- `ADMIN_LOGINS` remains the environment-driven admin bootstrap mechanism and is validated as a comma-separated list of external login identifiers when present
+- `APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES` is a bootstrap-only first-admin mechanism, validated as comma-separated `provider:externalLogin` values, and ignored after a persisted `ADMIN` grant exists
 - demo data bootstrap remains disabled by default in `prod` through `APP_BOOTSTRAP_SEED_DEMO_DATA=false`
 - `SESSION_COOKIE_SECURE` remains optional with a secure-by-default value of `true`, but disabling it in `prod` is rejected at startup
 - `server.forward-headers-strategy=framework` is part of the supported `prod` posture so trusted reverse-proxy headers drive redirect and scheme handling correctly

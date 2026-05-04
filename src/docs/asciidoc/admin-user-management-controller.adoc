@@ -1,0 +1,44 @@
+= AdminUserManagementController API
+:toc:
+:toclevels: 2
+:sectanchors:
+:source-highlighter: highlight.js
+
+xref:index.adoc[Back to API overview]
+
+This page documents the ADMIN-only persisted user and role-management endpoints exposed by `AdminUserManagementController`.
+
+== `GET /api/admin/users`
+
+Lists persisted application users together with current roles and role-grant provenance.
+
+include::{snippets}/admin-users/list-admin-users/curl-request.adoc[]
+include::{snippets}/admin-users/list-admin-users/http-request.adoc[]
+include::{snippets}/admin-users/list-admin-users/http-response.adoc[]
+include::{snippets}/admin-users/list-admin-users/response-headers.adoc[]
+include::{snippets}/admin-users/list-admin-users/response-fields.adoc[]
+
+== `PUT /api/admin/users/{id}/roles`
+
+Replaces the non-bootstrap role set for one persisted user. The request must keep `USER` in the role set, bootstrap grants stay preserved, and manually managed grants record the acting admin plus the supplied reason.
+
+include::{snippets}/admin-users/replace-managed-user-roles/curl-request.adoc[]
+include::{snippets}/admin-users/replace-managed-user-roles/http-request.adoc[]
+include::{snippets}/admin-users/replace-managed-user-roles/path-parameters.adoc[]
+include::{snippets}/admin-users/replace-managed-user-roles/request-body.adoc[]
+include::{snippets}/admin-users/replace-managed-user-roles/request-fields.adoc[]
+include::{snippets}/admin-users/replace-managed-user-roles/http-response.adoc[]
+include::{snippets}/admin-users/replace-managed-user-roles/response-headers.adoc[]
+include::{snippets}/admin-users/replace-managed-user-roles/response-fields.adoc[]
+
+== Error Response Example
+
+=== `GET /api/admin/users` forbidden
+
+Example response when the session is authenticated but the user does not have the `ADMIN` role.
+
+include::{snippets}/errors/list-admin-users-forbidden/curl-request.adoc[]
+include::{snippets}/errors/list-admin-users-forbidden/http-request.adoc[]
+include::{snippets}/errors/list-admin-users-forbidden/http-response.adoc[]
+include::{snippets}/errors/list-admin-users-forbidden/response-headers.adoc[]
+include::{snippets}/errors/list-admin-users-forbidden/response-fields.adoc[]

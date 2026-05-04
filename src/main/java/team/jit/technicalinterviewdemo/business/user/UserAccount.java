@@ -1,25 +1,27 @@
 package team.jit.technicalinterviewdemo.business.user;
 
-import jakarta.persistence.CollectionTable;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.LinkedHashSet;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 import lombok.AccessLevel;
@@ -70,11 +72,9 @@ public class UserAccount {
     @Setter(AccessLevel.NONE)
     private LocalDateTime updatedAt;
 
-    @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false, length = 50)
-    private Set<UserRole> roles = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("role ASC")
+    private List<UserRoleGrant> roleGrants = new ArrayList<>();
 
     public UserAccount(
             String provider,
@@ -91,7 +91,7 @@ public class UserAccount {
         setEmail(email);
         setPreferredLanguage(preferredLanguage);
         setLastLoginAt(lastLoginAt);
-        setRoles(roles);
+        initializeRoleGrants(roles);
     }
 
     public void setProvider(String provider) {
@@ -125,11 +125,49 @@ public class UserAccount {
         this.lastLoginAt = lastLoginAt;
     }
 
-    public void setRoles(Set<UserRole> roles) {
-        if (roles == null || roles.isEmpty()) {
-            throw new IllegalArgumentException("roles are required");
+    public Set<UserRole> getRoles() {
+        return roleGrants.stream()
+                .map(UserRoleGrant::getRole)
+                .collect(java.util.stream.Collectors.toCollection(LinkedHashSet::new));
+    }
+
+    public List<UserRoleGrant> getRoleGrants() {
+        return roleGrants.stream()
+                .sorted(Comparator.comparing(grant -> grant.getRole().name()))
+                .toList();
+    }
+
+    public boolean hasRole(UserRole role) {
+        return findRoleGrant(role).isPresent();
+    }
+
+    public void ensureRoleGrant(
+            UserRole role,
+            UserRoleGrantSource grantSource,
+            UserAccount grantedByUser,
+            String reason
+    ) {
+        if (findRoleGrant(role).isPresent()) {
+            return;
         }
-        this.roles = new LinkedHashSet<>(roles);
+        roleGrants.add(new UserRoleGrant(this, role, grantSource, grantedByUser, reason));
+    }
+
+    public void replaceManagedRoleGrants(Set<UserRole> roles, UserAccount grantedByUser, String reason) {
+        Set<UserRole> normalizedRoles = normalizeManagedRoles(roles);
+        UserAccount normalizedGrantor = Objects.requireNonNull(grantedByUser, "grantedByUser is required");
+        String normalizedReason = normalizeRequired(reason, "reason");
+
+        roleGrants.removeIf(grant -> grant.getGrantSource() != UserRoleGrantSource.BOOTSTRAP);
+        for (UserRole role : normalizedRoles) {
+            roleGrants.add(new UserRoleGrant(
+                    this,
+                    role,
+                    UserRoleGrantSource.ADMIN_MANAGED,
+                    normalizedGrantor,
+                    normalizedReason
+            ));
+        }
     }
 
     @PrePersist
@@ -142,6 +180,43 @@ public class UserAccount {
     @PreUpdate
     void onUpdate() {
         updatedAt = LocalDateTime.now(ZoneOffset.UTC);
+    }
+
+    private void initializeRoleGrants(Set<UserRole> roles) {
+        Set<UserRole> normalizedRoles = normalizeRequiredRoles(roles);
+        roleGrants.clear();
+        for (UserRole role : normalizedRoles) {
+            roleGrants.add(new UserRoleGrant(this, role, UserRoleGrantSource.AUTHENTICATED_LOGIN, null, null));
+        }
+    }
+
+    private Set<UserRole> normalizeManagedRoles(Set<UserRole> roles) {
+        Set<UserRole> normalizedRoles = normalizeRequiredRoles(roles);
+        if (!normalizedRoles.contains(UserRole.USER)) {
+            throw new IllegalArgumentException("USER role is required");
+        }
+        return normalizedRoles;
+    }
+
+    private Set<UserRole> normalizeRequiredRoles(Set<UserRole> roles) {
+        if (roles == null || roles.isEmpty()) {
+            throw new IllegalArgumentException("roles are required");
+        }
+
+        Set<UserRole> normalizedRoles = new LinkedHashSet<>();
+        for (UserRole role : roles) {
+            if (role == null) {
+                throw new IllegalArgumentException("roles must not contain null values");
+            }
+            normalizedRoles.add(role);
+        }
+        return normalizedRoles;
+    }
+
+    private Optional<UserRoleGrant> findRoleGrant(UserRole role) {
+        return roleGrants.stream()
+                .filter(grant -> grant.getRole() == role)
+                .findFirst();
     }
 
     private String normalizeRequired(String value, String fieldName) {

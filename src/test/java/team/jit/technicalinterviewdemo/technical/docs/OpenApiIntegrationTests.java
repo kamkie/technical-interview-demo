@@ -88,13 +88,27 @@ class OpenApiIntegrationTests extends AbstractRandomPortIntegrationTest {
                         .contains("X-XSRF-TOKEN")
         );
 
-        JsonNode auditLogSecurity = openApi.at("/paths/~1api~1audit-logs/get/security");
+        assertTrue(openApi.at("/paths/~1api~1audit-logs/get").isMissingNode());
+        JsonNode auditLogSecurity = openApi.at("/paths/~1api~1admin~1audit-logs/get/security");
         assertFalse(auditLogSecurity.isMissingNode());
         assertEquals("sessionCookie", auditLogSecurity.get(0).fieldNames().next());
 
-        JsonNode operatorSurfaceSecurity = openApi.at("/paths/~1api~1operator~1surface/get/security");
+        assertTrue(openApi.at("/paths/~1api~1operator~1surface/get").isMissingNode());
+        JsonNode operatorSurfaceSecurity = openApi.at("/paths/~1api~1admin~1operator-surface/get/security");
         assertFalse(operatorSurfaceSecurity.isMissingNode());
         assertEquals("sessionCookie", operatorSurfaceSecurity.get(0).fieldNames().next());
+
+        JsonNode adminUsersSecurity = openApi.at("/paths/~1api~1admin~1users/get/security");
+        assertFalse(adminUsersSecurity.isMissingNode());
+        assertEquals("sessionCookie", adminUsersSecurity.get(0).fieldNames().next());
+
+        JsonNode replaceManagedRolesSecurity = openApi.at("/paths/~1api~1admin~1users~1{id}~1roles/put/security");
+        assertFalse(replaceManagedRolesSecurity.isMissingNode());
+        assertEquals("sessionCookie", replaceManagedRolesSecurity.get(0).fieldNames().next());
+        assertTrue(
+                openApi.at("/paths/~1api~1admin~1users~1{id}~1roles/put/parameters").findValuesAsText("name")
+                        .contains("X-XSRF-TOKEN")
+        );
 
         JsonNode updateCategorySecurity = openApi.at("/paths/~1api~1categories~1{id}/put/security");
         assertFalse(updateCategorySecurity.isMissingNode());
@@ -131,7 +145,7 @@ class OpenApiIntegrationTests extends AbstractRandomPortIntegrationTest {
                 .findValuesAsText("name");
         assertTrue(localizationParameters.containsAll(List.of("messageKey", "language", "page", "size", "sort")));
 
-        List<String> auditLogParameters = openApi.at("/paths/~1api~1audit-logs/get/parameters")
+        List<String> auditLogParameters = openApi.at("/paths/~1api~1admin~1audit-logs/get/parameters")
                 .findValuesAsText("name");
         assertTrue(auditLogParameters.containsAll(List.of("targetType", "action", "actorLogin", "page", "size", "sort")));
 
@@ -139,32 +153,52 @@ class OpenApiIntegrationTests extends AbstractRandomPortIntegrationTest {
         assertEquals("Account", openApi.at("/paths/~1api~1account/get/tags/0").asText());
         assertEquals("Session", openApi.at("/paths/~1api~1session/get/tags/0").asText());
         assertEquals("Session", openApi.at("/paths/~1api~1session~1logout/post/tags/0").asText());
-        assertEquals("Audit Logs", openApi.at("/paths/~1api~1audit-logs/get/tags/0").asText());
-        assertEquals("Operator", openApi.at("/paths/~1api~1operator~1surface/get/tags/0").asText());
+        assertEquals("Audit Logs", openApi.at("/paths/~1api~1admin~1audit-logs/get/tags/0").asText());
+        assertEquals("Operator", openApi.at("/paths/~1api~1admin~1operator-surface/get/tags/0").asText());
+        assertEquals("Admin Users", openApi.at("/paths/~1api~1admin~1users/get/tags/0").asText());
+        assertEquals("Admin Users", openApi.at("/paths/~1api~1admin~1users~1{id}~1roles/put/tags/0").asText());
         assertEquals("Localizations", openApi.at("/paths/~1api~1localizations/get/tags/0").asText());
         assertEquals("Categories", openApi.at("/paths/~1api~1categories~1{id}/put/tags/0").asText());
         assertEquals("Categories", openApi.at("/paths/~1api~1categories~1{id}/delete/tags/0").asText());
         assertFalse(openApi.at("/paths/~1api~1session/get/responses/200").isMissingNode());
         assertFalse(openApi.at("/paths/~1api~1session~1logout/post/responses/204").isMissingNode());
-        assertFalse(openApi.at("/paths/~1api~1audit-logs/get/responses/401").isMissingNode());
-        assertFalse(openApi.at("/paths/~1api~1audit-logs/get/responses/403").isMissingNode());
+        assertFalse(openApi.at("/paths/~1api~1admin~1audit-logs/get/responses/401").isMissingNode());
+        assertFalse(openApi.at("/paths/~1api~1admin~1audit-logs/get/responses/403").isMissingNode());
         assertEquals(
                 "#/components/schemas/ApiProblemResponse",
-                openApi.at("/paths/~1api~1audit-logs/get/responses/401/content/application~1problem+json/schema/$ref").asText()
+                openApi.at("/paths/~1api~1admin~1audit-logs/get/responses/401/content/application~1problem+json/schema/$ref").asText()
         );
         assertEquals(
                 "#/components/schemas/ApiProblemResponse",
-                openApi.at("/paths/~1api~1audit-logs/get/responses/403/content/application~1problem+json/schema/$ref").asText()
+                openApi.at("/paths/~1api~1admin~1audit-logs/get/responses/403/content/application~1problem+json/schema/$ref").asText()
         );
-        assertFalse(openApi.at("/paths/~1api~1operator~1surface/get/responses/401").isMissingNode());
-        assertFalse(openApi.at("/paths/~1api~1operator~1surface/get/responses/403").isMissingNode());
+        assertFalse(openApi.at("/paths/~1api~1admin~1operator-surface/get/responses/401").isMissingNode());
+        assertFalse(openApi.at("/paths/~1api~1admin~1operator-surface/get/responses/403").isMissingNode());
         assertEquals(
                 "#/components/schemas/ApiProblemResponse",
-                openApi.at("/paths/~1api~1operator~1surface/get/responses/401/content/application~1problem+json/schema/$ref").asText()
+                openApi.at("/paths/~1api~1admin~1operator-surface/get/responses/401/content/application~1problem+json/schema/$ref").asText()
         );
         assertEquals(
                 "#/components/schemas/ApiProblemResponse",
-                openApi.at("/paths/~1api~1operator~1surface/get/responses/403/content/application~1problem+json/schema/$ref").asText()
+                openApi.at("/paths/~1api~1admin~1operator-surface/get/responses/403/content/application~1problem+json/schema/$ref").asText()
+        );
+        assertFalse(openApi.at("/paths/~1api~1admin~1users/get/responses/401").isMissingNode());
+        assertFalse(openApi.at("/paths/~1api~1admin~1users/get/responses/403").isMissingNode());
+        assertEquals(
+                "#/components/schemas/ApiProblemResponse",
+                openApi.at("/paths/~1api~1admin~1users/get/responses/401/content/application~1problem+json/schema/$ref").asText()
+        );
+        assertEquals(
+                "#/components/schemas/ApiProblemResponse",
+                openApi.at("/paths/~1api~1admin~1users/get/responses/403/content/application~1problem+json/schema/$ref").asText()
+        );
+        assertFalse(openApi.at("/paths/~1api~1admin~1users~1{id}~1roles/put/responses/400").isMissingNode());
+        assertFalse(openApi.at("/paths/~1api~1admin~1users~1{id}~1roles/put/responses/401").isMissingNode());
+        assertFalse(openApi.at("/paths/~1api~1admin~1users~1{id}~1roles/put/responses/403").isMissingNode());
+        assertFalse(openApi.at("/paths/~1api~1admin~1users~1{id}~1roles/put/responses/404").isMissingNode());
+        assertEquals(
+                "#/components/schemas/ApiProblemResponse",
+                openApi.at("/paths/~1api~1admin~1users~1{id}~1roles/put/responses/404/content/application~1problem+json/schema/$ref").asText()
         );
         assertFalse(openApi.at("/paths/~1api~1categories/post/responses/401").isMissingNode());
         assertFalse(openApi.at("/paths/~1api~1categories/post/responses/403").isMissingNode());
@@ -194,12 +228,16 @@ class OpenApiIntegrationTests extends AbstractRandomPortIntegrationTest {
         assertFalse(openApi.at("/components/schemas/Book").isMissingNode());
         assertFalse(openApi.at("/components/schemas/ApiProblemResponse").isMissingNode());
         assertFalse(openApi.at("/components/schemas/AuditLogResponse").isMissingNode());
+        assertFalse(openApi.at("/components/schemas/AdminUserAccountResponse").isMissingNode());
+        assertFalse(openApi.at("/components/schemas/AdminUserRoleGrantResponse").isMissingNode());
+        assertFalse(openApi.at("/components/schemas/AdminUserRoleUpdateRequest").isMissingNode());
         assertFalse(openApi.at("/components/schemas/BookCreateRequest").isMissingNode());
         assertFalse(openApi.at("/components/schemas/CategoryUpdateRequest").isMissingNode());
         assertFalse(openApi.at("/components/schemas/LocalizationResponse").isMissingNode());
         assertFalse(openApi.at("/components/schemas/OperatorSurfaceResponse").isMissingNode());
         assertFalse(openApi.at("/components/schemas/SessionResponse").isMissingNode());
         assertFalse(openApi.at("/components/schemas/UserAccountResponse").isMissingNode());
+        assertFalse(openApi.at("/components/schemas/AuditLogResponse/properties/details").isMissingNode());
         assertFalse(openApi.at("/components/schemas/SessionLoginProvider").isMissingNode());
         assertFalse(openApi.at("/components/schemas/SessionCsrfContract").isMissingNode());
         assertTrue(openApi.at("/components/schemas/SessionResponse/properties/loginPath")

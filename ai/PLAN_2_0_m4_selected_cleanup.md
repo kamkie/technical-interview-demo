@@ -3,8 +3,8 @@
 ## Lifecycle
 | Field | Value |
 | --- | --- |
-| Phase | Implementation |
-| Status | In Progress |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Summary
 - Execute the currently selected `ROADMAP.md` cleanup tasks as the next prerelease batch, to be delivered in `v2.0.0-M4` before the later `RC1` contract-freeze milestone.
@@ -266,7 +266,22 @@
 - The container hardening work should stay inside repo-owned image and manifest defaults. Network policies, service mesh policy, and external admission controls are follow-up deployment concerns, not part of this selected roadmap batch.
 
 ## Validation Results
-- To be filled in during execution.
+- 2026-05-04: `. .\scripts\load-dotenv.ps1; .\gradlew.bat test --tests team.jit.technicalinterviewdemo.business.user.UserManagementIntegrationTests --tests team.jit.technicalinterviewdemo.business.user.AdminUserManagementApiIntegrationTests --tests team.jit.technicalinterviewdemo.business.user.AdminUserManagementApiDocumentationTests --tests team.jit.technicalinterviewdemo.business.audit.AuditLogIntegrationTests --tests team.jit.technicalinterviewdemo.business.audit.AuditLogApiIntegrationTests --tests team.jit.technicalinterviewdemo.business.audit.AuditLogApiDocumentationTests --tests team.jit.technicalinterviewdemo.technical.operator.OperatorSurfaceApiIntegrationTests --tests team.jit.technicalinterviewdemo.technical.operator.OperatorSurfaceApiDocumentationTests --tests team.jit.technicalinterviewdemo.technical.security.SecurityIntegrationTests --tests team.jit.technicalinterviewdemo.technical.security.SessionApiOauthIntegrationTests --tests team.jit.technicalinterviewdemo.technical.security.SecurityHeadersIntegrationTests --tests team.jit.technicalinterviewdemo.technical.ProductionConfigurationTests --tests team.jit.technicalinterviewdemo.technical.docs.OpenApiIntegrationTests`
+  - result: passed; validated the persisted admin-role bootstrap and management flow, renamed `/api/admin/**` routes, structured audit details, auth-event auditing, updated security behavior, and generated-doc/OpenAPI coverage across the affected slices
+- 2026-05-04: `. .\scripts\load-dotenv.ps1; .\gradlew.bat refreshOpenApiBaseline`
+  - result: passed; intentionally refreshed `src/test/resources/openapi/approved-openapi.json` after reviewing the `v2.0.0-M4` contract changes for `/api/admin/audit-logs`, `/api/admin/operator-surface`, `/api/admin/users`, `/api/admin/users/{id}/roles`, and the new audit `details` payload
+- 2026-05-04: `. .\scripts\load-dotenv.ps1; .\gradlew.bat test --tests team.jit.technicalinterviewdemo.technical.docs.OpenApiCompatibilityIntegrationTests`
+  - result: passed; confirmed the refreshed approved OpenAPI baseline stayed aligned with the implemented prerelease contract
+- 2026-05-04: `helm template technical-interview-demo helm/technical-interview-demo -f helm/technical-interview-demo/values-local.yaml`
+  - result: passed; rendered the hardened Helm deployment defaults, including the new security contexts, temp mount, startup probe, and renamed bootstrap-admin environment variable wiring
+- 2026-05-04: `kubectl kustomize k8s/overlays/local`
+  - result: passed; rendered the Kubernetes overlay successfully after the deployment hardening and secret-example updates
+- 2026-05-04: `. .\scripts\load-dotenv.ps1; .\gradlew.bat gatlingBenchmark`
+  - result: passed; benchmark validation stayed green for the current book, localization, and auth/session workload after fixing the full-suite localization seed-order assertion to derive its expected value from sorted seed keys
+- 2026-05-04: `. .\scripts\load-dotenv.ps1; .\gradlew.bat externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo`
+  - result: passed; validated the packaged image, the hardened runtime/container posture, Flyway-backed startup, and the external smoke path against the built Docker image
+- 2026-05-04: `. .\scripts\load-dotenv.ps1; .\gradlew.bat build`
+  - result: passed; full repository validation succeeded after preserving the original `IllegalArgumentException` cause when rethrowing `InvalidRequestException` from admin role replacement so `pmdMain` also stayed clean
 
 ## User Validation
 - Start from an empty database, authenticate as the configured bootstrap admin identity, and confirm that the user becomes an ADMIN without relying on a standing `ADMIN_LOGINS` runtime contract.

@@ -46,13 +46,13 @@ spec:
           expr: >-
             (
               (
-                sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo",uri=~"/api/account|/api/account/language|/api/audit-logs",status=~"401|403"}[10m]))
+                sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo",uri=~"/api/account|/api/account/language|/api/admin/audit-logs|/api/admin/operator-surface|/api/admin/users|/api/admin/users/.+",status=~"401|403"}[10m]))
                 +
                 sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo",method=~"POST|PUT|DELETE",uri=~"/api/categories|/api/categories/.+|/api/localizations|/api/localizations/.+",status=~"401|403"}[10m]))
               )
               /
               clamp_min(
-                sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo",uri=~"/api/account|/api/account/language|/api/audit-logs"}[10m]))
+                sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo",uri=~"/api/account|/api/account/language|/api/admin/audit-logs|/api/admin/operator-surface|/api/admin/users|/api/admin/users/.+"}[10m]))
                 +
                 sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo",method=~"POST|PUT|DELETE",uri=~"/api/categories|/api/categories/.+|/api/localizations|/api/localizations/.+"}[10m])),
                 0.001
@@ -60,7 +60,7 @@ spec:
             ) > 0.20
             and
             (
-              sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo",uri=~"/api/account|/api/account/language|/api/audit-logs"}[10m]))
+              sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo",uri=~"/api/account|/api/account/language|/api/admin/audit-logs|/api/admin/operator-surface|/api/admin/users|/api/admin/users/.+"}[10m]))
               +
               sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo",method=~"POST|PUT|DELETE",uri=~"/api/categories|/api/categories/.+|/api/localizations|/api/localizations/.+"}[10m]))
             ) > 0.02

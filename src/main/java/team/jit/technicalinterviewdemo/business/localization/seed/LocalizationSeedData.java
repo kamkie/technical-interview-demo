@@ -28,6 +28,7 @@ public final class LocalizationSeedData {
             "error.request.unauthorized",
             "error.request.unsupported_media_type",
             "error.request.validation_failed",
+            "error.user.not_found",
             "error.server.internal"
     );
 
@@ -276,6 +277,17 @@ public final class LocalizationSeedData {
                 "Walidacja tresci zadania nie powiodla sie.",
                 "Validatsiia tila zapytu ne vdalsia.",
                 "Validering av foresporselskroppen mislyktes."
+        );
+        addTranslations(
+                messages,
+                "error.user.not_found",
+                "The requested user account was not found.",
+                "No se encontro la cuenta de usuario solicitada.",
+                "Das angeforderte Benutzerkonto wurde nicht gefunden.",
+                "Le compte utilisateur demande est introuvable.",
+                "Nie znaleziono zadanego konta uzytkownika.",
+                "Zapytanyi oblikovyi zapys korystuvacha ne znaideno.",
+                "Den forespurte brukerkontoen ble ikke funnet."
         );
         addTranslations(
                 messages,

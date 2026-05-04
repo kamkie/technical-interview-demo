@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminOauthUser;
 import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.oauthUser;
 
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,11 @@ class OperatorSurfaceApiIntegrationTests extends AbstractMockMvcIntegrationTest 
                 AuditAction.CREATE,
                 null,
                 "reader-user",
-                "Created book 'Spring in Action' with ISBN 9781617297571."
+                "Created book 'Spring in Action' with ISBN 9781617297571.",
+                Map.of(
+                        "title", "Spring in Action",
+                        "isbn", "9781617297571"
+                )
         ));
         auditLogRepository.saveAndFlush(new AuditLog(
                 AuditTargetType.BOOK,
@@ -41,7 +46,11 @@ class OperatorSurfaceApiIntegrationTests extends AbstractMockMvcIntegrationTest 
                 AuditAction.UPDATE,
                 null,
                 "admin-user",
-                "Updated book 'Clean Code' with ISBN 9780132350884."
+                "Updated book 'Clean Code' with ISBN 9780132350884.",
+                Map.of(
+                        "title", "Clean Code",
+                        "isbn", "9780132350884"
+                )
         ));
         newestAuditLog = auditLogRepository.saveAndFlush(new AuditLog(
                 AuditTargetType.LOCALIZATION_MESSAGE,
@@ -49,13 +58,17 @@ class OperatorSurfaceApiIntegrationTests extends AbstractMockMvcIntegrationTest 
                 AuditAction.DELETE,
                 null,
                 "admin-user",
-                "Deleted localization message 'error.book.not_found' in language fr."
+                "Deleted localization message 'error.book.not_found' in language fr.",
+                Map.of(
+                        "messageKey", "error.book.not_found",
+                        "language", "fr"
+                )
         ));
     }
 
     @Test
     void getOperatorSurfaceWithoutAuthenticationReturnsUnauthorized() throws Exception {
-        mockMvc.perform(get("/api/operator/surface"))
+        mockMvc.perform(get("/api/admin/operator-surface"))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.title").value("Unauthorized"))
                 .andExpect(jsonPath("$.messageKey").value("error.request.unauthorized"));
@@ -63,7 +76,7 @@ class OperatorSurfaceApiIntegrationTests extends AbstractMockMvcIntegrationTest 
 
     @Test
     void getOperatorSurfaceAsRegularUserReturnsForbidden() throws Exception {
-        mockMvc.perform(get("/api/operator/surface")
+        mockMvc.perform(get("/api/admin/operator-surface")
                         .with(oauthUser("reader-user")))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.title").value("Forbidden"))
@@ -73,13 +86,15 @@ class OperatorSurfaceApiIntegrationTests extends AbstractMockMvcIntegrationTest 
 
     @Test
     void getOperatorSurfaceAsAdminReturnsAuditRuntimeAndOperationalSections() throws Exception {
-        mockMvc.perform(get("/api/operator/surface")
+        mockMvc.perform(get("/api/admin/operator-surface")
                         .with(adminOauthUser()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.audit.auditLogEndpoint").value("/api/audit-logs"))
+                .andExpect(jsonPath("$.audit.auditLogEndpoint").value("/api/admin/audit-logs"))
                 .andExpect(jsonPath("$.audit.totalEntries").value(3))
                 .andExpect(jsonPath("$.audit.recentEntries.length()").value(3))
                 .andExpect(jsonPath("$.audit.recentEntries[0].id").value(newestAuditLog.getId()))
+                .andExpect(jsonPath("$.audit.recentEntries[0].details.messageKey").value("error.book.not_found"))
+                .andExpect(jsonPath("$.audit.recentEntries[0].details.language").value("fr"))
                 .andExpect(jsonPath("$.runtime.technicalOverviewEndpoint").value("/"))
                 .andExpect(jsonPath("$.runtime.technicalOverview.runtime.applicationName").value("technical-interview-demo"))
                 .andExpect(jsonPath("$.runtime.technicalOverview.configuration.security.csrfEnabled").value(true))

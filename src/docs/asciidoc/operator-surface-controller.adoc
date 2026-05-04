@@ -8,11 +8,11 @@ xref:index.adoc[Back to API overview]
 
 This page documents the explicit ADMIN-only operator inspection surface exposed by `OperatorSurfaceController`.
 
-== `GET /api/operator/surface`
+== `GET /api/admin/operator-surface`
 
 Returns one ADMIN-only payload that combines recent audit history, runtime diagnostics, and operational status links without requiring direct database access. Links to overview and actuator paths are internal or devops references, not internet-public contract endpoints.
 
-The embedded `runtime.technicalOverview` section repeats the same repo-owned security posture published by `GET /`, including the same-site CSRF contract and the edge-or-gateway abuse-protection ownership metadata used by smoke and restore validation.
+The embedded `runtime.technicalOverview` section repeats the same repo-owned security posture published by `GET /`, including the same-site CSRF contract and the edge-or-gateway abuse-protection ownership metadata used by smoke and restore validation. The audit section links back to `GET /api/admin/audit-logs`.
 
 include::{snippets}/operator/get-operator-surface/curl-request.adoc[]
 include::{snippets}/operator/get-operator-surface/http-request.adoc[]
@@ -22,7 +22,7 @@ include::{snippets}/operator/get-operator-surface/response-fields.adoc[]
 
 == Error Response Examples
 
-=== `GET /api/operator/surface` unauthorized
+=== `GET /api/admin/operator-surface` unauthorized
 
 Example response when the request does not include an authenticated session.
 
@@ -31,7 +31,7 @@ include::{snippets}/errors/get-operator-surface-unauthorized/http-request.adoc[]
 include::{snippets}/errors/get-operator-surface-unauthorized/http-response.adoc[]
 include::{snippets}/errors/get-operator-surface-unauthorized/response-fields.adoc[]
 
-=== `GET /api/operator/surface` forbidden
+=== `GET /api/admin/operator-surface` forbidden
 
 Example response when the session is authenticated but the user does not have the `ADMIN` role.
 

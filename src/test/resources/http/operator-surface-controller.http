@@ -6,16 +6,16 @@
 @sessionCookie = paste-technical-interview-demo-session-here
 
 ### OperatorSurfaceController - get operator inspection surface (ADMIN + authenticated session)
-GET {{baseUrl}}/api/operator/surface
+GET {{baseUrl}}/api/admin/operator-surface
 Cookie: technical-interview-demo-session={{sessionCookie}}
 Accept: application/json
 
 ### OperatorSurfaceController - get operator inspection surface without authentication (401 localized ProblemDetail)
-GET {{baseUrl}}/api/operator/surface
+GET {{baseUrl}}/api/admin/operator-surface
 Accept: application/problem+json
 
 ### OperatorSurfaceController - get operator inspection surface as non-admin user (403 localized ProblemDetail)
 # Replace the session cookie with a regular authenticated USER session.
-GET {{baseUrl}}/api/operator/surface
+GET {{baseUrl}}/api/admin/operator-surface
 Cookie: technical-interview-demo-session={{sessionCookie}}
 Accept: application/problem+json

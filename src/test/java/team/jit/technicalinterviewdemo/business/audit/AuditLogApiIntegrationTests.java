@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminOauthUser;
 import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.oauthUser;
 
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,11 @@ class AuditLogApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 AuditAction.CREATE,
                 null,
                 "reader-user",
-                "Created book 'Spring in Action' with ISBN 9781617297571."
+                "Created book 'Spring in Action' with ISBN 9781617297571.",
+                Map.of(
+                        "title", "Spring in Action",
+                        "isbn", "9781617297571"
+                )
         ));
         updateBookLog = auditLogRepository.saveAndFlush(new AuditLog(
                 AuditTargetType.BOOK,
@@ -38,7 +43,12 @@ class AuditLogApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 AuditAction.UPDATE,
                 null,
                 "admin-user",
-                "Updated book 'Clean Code' with ISBN 9780132350884."
+                "Updated book 'Clean Code' with ISBN 9780132350884.",
+                Map.of(
+                        "title", "Clean Code",
+                        "isbn", "9780132350884",
+                        "publicationYear", 2008
+                )
         ));
         deleteLocalizationLog = auditLogRepository.saveAndFlush(new AuditLog(
                 AuditTargetType.LOCALIZATION_MESSAGE,
@@ -46,13 +56,17 @@ class AuditLogApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 AuditAction.DELETE,
                 null,
                 "admin-user",
-                "Deleted localization message 'error.book.not_found' in language fr."
+                "Deleted localization message 'error.book.not_found' in language fr.",
+                Map.of(
+                        "messageKey", "error.book.not_found",
+                        "language", "fr"
+                )
         ));
     }
 
     @Test
     void listAuditLogsWithoutAuthenticationReturnsUnauthorized() throws Exception {
-        mockMvc.perform(get("/api/audit-logs"))
+        mockMvc.perform(get("/api/admin/audit-logs"))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.title").value("Unauthorized"))
                 .andExpect(jsonPath("$.messageKey").value("error.request.unauthorized"));
@@ -60,7 +74,7 @@ class AuditLogApiIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
     void listAuditLogsAsRegularUserReturnsForbidden() throws Exception {
-        mockMvc.perform(get("/api/audit-logs")
+        mockMvc.perform(get("/api/admin/audit-logs")
                         .with(oauthUser("reader-user")))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.title").value("Forbidden"))
@@ -71,7 +85,7 @@ class AuditLogApiIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
     void listAuditLogsReturnsNewestFirstPaginatedResponse() throws Exception {
-        mockMvc.perform(get("/api/audit-logs")
+        mockMvc.perform(get("/api/admin/audit-logs")
                         .with(adminOauthUser())
                         .queryParam("page", "0")
                         .queryParam("size", "2"))
@@ -81,7 +95,11 @@ class AuditLogApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .andExpect(jsonPath("$.content[0].targetType").value("LOCALIZATION_MESSAGE"))
                 .andExpect(jsonPath("$.content[0].action").value("DELETE"))
                 .andExpect(jsonPath("$.content[0].actorLogin").value("admin-user"))
+                .andExpect(jsonPath("$.content[0].details.messageKey").value("error.book.not_found"))
+                .andExpect(jsonPath("$.content[0].details.language").value("fr"))
                 .andExpect(jsonPath("$.content[1].id").value(updateBookLog.getId()))
+                .andExpect(jsonPath("$.content[1].details.title").value("Clean Code"))
+                .andExpect(jsonPath("$.content[1].details.publicationYear").value(2008))
                 .andExpect(jsonPath("$.totalElements").value(3))
                 .andExpect(jsonPath("$.totalPages").value(2))
                 .andExpect(jsonPath("$.number").value(0))
@@ -90,7 +108,7 @@ class AuditLogApiIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
     void listAuditLogsCanFilterByTargetTypeActionAndActorLogin() throws Exception {
-        mockMvc.perform(get("/api/audit-logs")
+        mockMvc.perform(get("/api/admin/audit-logs")
                         .with(adminOauthUser())
                         .queryParam("targetType", "LOCALIZATION_MESSAGE")
                         .queryParam("action", "DELETE")
@@ -102,13 +120,15 @@ class AuditLogApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .andExpect(jsonPath("$.content[0].summary").value(
                         "Deleted localization message 'error.book.not_found' in language fr."
                 ))
+                .andExpect(jsonPath("$.content[0].details.messageKey").value("error.book.not_found"))
+                .andExpect(jsonPath("$.content[0].details.language").value("fr"))
                 .andExpect(jsonPath("$.totalElements").value(1))
                 .andExpect(jsonPath("$.totalPages").value(1));
     }
 
     @Test
     void listAuditLogsWithUnsupportedSortReturnsBadRequest() throws Exception {
-        mockMvc.perform(get("/api/audit-logs")
+        mockMvc.perform(get("/api/admin/audit-logs")
                         .with(adminOauthUser())
                         .queryParam("sort", "dropTable,asc"))
                 .andExpect(status().isBadRequest())

@@ -26,6 +26,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.util.UriComponentsBuilder;
+import team.jit.technicalinterviewdemo.business.audit.AuditAction;
+import team.jit.technicalinterviewdemo.business.audit.AuditLog;
+import team.jit.technicalinterviewdemo.business.audit.AuditLogRepository;
+import team.jit.technicalinterviewdemo.business.audit.AuditTargetType;
+import team.jit.technicalinterviewdemo.business.user.UserAccountRepository;
 import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
 import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
 import team.jit.technicalinterviewdemo.testing.SecurityTestSupport.BrowserSession;
@@ -44,6 +49,12 @@ class SessionApiOauthIntegrationTests extends AbstractMockMvcIntegrationTest {
     @Autowired
     private JdbcIndexedSessionRepository sessionRepository;
 
+    @Autowired
+    private AuditLogRepository auditLogRepository;
+
+    @Autowired
+    private UserAccountRepository userAccountRepository;
+
     @SuppressWarnings({"rawtypes", "unchecked"})
     private SessionRepository<Session> httpSessionRepository() {
         return (SessionRepository) sessionRepository;
@@ -53,6 +64,8 @@ class SessionApiOauthIntegrationTests extends AbstractMockMvcIntegrationTest {
     void clearSessions() {
         jdbcTemplate.update("DELETE FROM SPRING_SESSION_ATTRIBUTES");
         jdbcTemplate.update("DELETE FROM SPRING_SESSION");
+        auditLogRepository.deleteAll();
+        userAccountRepository.deleteAll();
     }
 
     @Test
@@ -125,6 +138,10 @@ class SessionApiOauthIntegrationTests extends AbstractMockMvcIntegrationTest {
         String sessionId = createAuthenticatedSession(httpSessionRepository(), "reader-user");
         BrowserSession browserSession = browserSession(sessionId, "reader-user");
 
+        mockMvc.perform(get("/api/account")
+                        .with(browserSession.authenticatedSession()))
+                .andExpect(status().isOk());
+
         mockMvc.perform(post("/api/session/logout")
                         .with(browserSession.unsafeWrite()))
                 .andExpect(status().isNoContent())
@@ -155,6 +172,15 @@ class SessionApiOauthIntegrationTests extends AbstractMockMvcIntegrationTest {
                         .cookie(sessionCookie(sessionId)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.authenticated").value(false));
+
+        assertThat(auditLogRepository.findAll()).hasSize(1);
+        AuditLog auditLog = auditLogRepository.findAll().getFirst();
+        assertThat(auditLog.getTargetType()).isEqualTo(AuditTargetType.AUTHENTICATION);
+        assertThat(auditLog.getAction()).isEqualTo(AuditAction.LOGOUT);
+        assertThat(auditLog.getActorLogin()).isEqualTo("reader-user");
+        assertThat(auditLog.getDetails())
+                .containsEntry("provider", "github")
+                .containsEntry("login", "reader-user");
     }
 
     @Test

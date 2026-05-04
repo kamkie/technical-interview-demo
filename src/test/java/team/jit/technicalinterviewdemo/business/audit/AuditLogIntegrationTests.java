@@ -2,6 +2,7 @@ package team.jit.technicalinterviewdemo.business.audit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -17,6 +18,8 @@ import org.springframework.http.MediaType;
 import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
 import team.jit.technicalinterviewdemo.business.book.Book;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
+import team.jit.technicalinterviewdemo.business.category.Category;
+import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
 import team.jit.technicalinterviewdemo.business.localization.Localization;
 import team.jit.technicalinterviewdemo.business.localization.LocalizationRepository;
 import team.jit.technicalinterviewdemo.business.user.UserAccountRepository;
@@ -40,6 +43,9 @@ class AuditLogIntegrationTests extends AbstractMockMvcIntegrationTest {
     private BookRepository bookRepository;
 
     @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
     private LocalizationRepository localizationMessageRepository;
 
     @Autowired
@@ -53,6 +59,7 @@ class AuditLogIntegrationTests extends AbstractMockMvcIntegrationTest {
         auditLogRepository.deleteAll();
         userAccountRepository.deleteAll();
         bookRepository.deleteAll();
+        categoryRepository.deleteAll();
         localizationMessageRepository.findByMessageKeyAndLanguage(EXISTING_LOCALIZATION_KEY, "en")
                 .ifPresent(localizationMessageRepository::delete);
         localizationMessageRepository.findByMessageKeyAndLanguage(CREATED_LOCALIZATION_KEY, "fr")
@@ -121,6 +128,7 @@ class AuditLogIntegrationTests extends AbstractMockMvcIntegrationTest {
             assertThat(auditLog.getActorUser()).isNotNull();
             assertThat(auditLog.getCreatedAt()).isNotNull();
             assertThat(auditLog.getSummary()).isNotBlank();
+            assertThat(auditLog.getDetails()).isNotEmpty();
         });
     }
 
@@ -181,7 +189,84 @@ class AuditLogIntegrationTests extends AbstractMockMvcIntegrationTest {
             assertThat(auditLog.getActorUser()).isNotNull();
             assertThat(auditLog.getCreatedAt()).isNotNull();
             assertThat(auditLog.getSummary()).isNotBlank();
-                });
+            assertThat(auditLog.getDetails()).isNotEmpty();
+        });
+    }
+
+    @Test
+    void categoryCreateUpdateAndDeleteProduceAuditLogsWithAdminActorAndStructuredDetails() throws Exception {
+        BrowserSession adminSession = adminSession();
+
+        mockMvc.perform(post("/api/categories")
+                        .with(adminSession.unsafeWrite())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "name": "Architecture"
+                                }
+                                """))
+                .andExpect(status().isCreated());
+
+        Category createdCategory = categoryRepository.findAllByOrderByNameAsc().stream()
+                .filter(category -> "Architecture".equals(category.getName()))
+                .findFirst()
+                .orElseThrow();
+
+        mockMvc.perform(put("/api/categories/{id}", createdCategory.getId())
+                        .with(adminSession.unsafeWrite())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "name": "Platform"
+                                }
+                                """))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(delete("/api/categories/{id}", createdCategory.getId())
+                        .with(adminSession.unsafeWrite()))
+                .andExpect(status().isNoContent());
+
+        List<AuditLog> auditLogs = auditLogRepository.findAllByOrderByIdAsc();
+
+        assertThat(auditLogs).hasSize(3);
+        assertThat(auditLogs).extracting(AuditLog::getTargetType)
+                .containsExactly(AuditTargetType.CATEGORY, AuditTargetType.CATEGORY, AuditTargetType.CATEGORY);
+        assertThat(auditLogs).extracting(AuditLog::getAction)
+                .containsExactly(AuditAction.CREATE, AuditAction.UPDATE, AuditAction.DELETE);
+        assertThat(auditLogs).extracting(AuditLog::getTargetId)
+                .containsExactly(createdCategory.getId(), createdCategory.getId(), createdCategory.getId());
+        assertThat(auditLogs).extracting(AuditLog::getActorLogin)
+                .containsOnly("admin-user");
+        assertThat(auditLogs.get(0).getDetails()).containsEntry("name", "Architecture");
+        assertThat(auditLogs.get(1).getDetails())
+                .containsEntry("previousName", "Architecture")
+                .containsEntry("name", "Platform");
+        assertThat(auditLogs.get(2).getDetails()).containsEntry("name", "Platform");
+    }
+
+    @Test
+    void logoutProducesAuthenticationAuditLog() throws Exception {
+        BrowserSession readerSession = readerSession();
+
+        mockMvc.perform(get("/api/account")
+                        .with(readerSession.authenticatedSession()))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/api/session/logout")
+                        .with(readerSession.unsafeWrite()))
+                .andExpect(status().isNoContent());
+
+        List<AuditLog> auditLogs = auditLogRepository.findAllByOrderByIdAsc();
+
+        assertThat(auditLogs).hasSize(1);
+        AuditLog logoutAuditLog = auditLogs.getFirst();
+        assertThat(logoutAuditLog.getTargetType()).isEqualTo(AuditTargetType.AUTHENTICATION);
+        assertThat(logoutAuditLog.getAction()).isEqualTo(AuditAction.LOGOUT);
+        assertThat(logoutAuditLog.getActorLogin()).isEqualTo("reader-user");
+        assertThat(logoutAuditLog.getSummary()).isEqualTo("Logged out current session for 'reader-user'.");
+        assertThat(logoutAuditLog.getDetails())
+                .containsEntry("provider", "github")
+                .containsEntry("login", "reader-user");
     }
 
     private BrowserSession adminSession() {

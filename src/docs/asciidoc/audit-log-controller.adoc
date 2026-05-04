@@ -8,9 +8,11 @@ xref:index.adoc[Back to API overview]
 
 This page documents the audit review endpoint exposed by `AuditLogController`.
 
-== `GET /api/audit-logs`
+== `GET /api/admin/audit-logs`
 
 Lists recorded audit entries in a paginated response. Requires an authenticated session with the `ADMIN` role. Supports optional exact-match `targetType`, `action`, and `actorLogin` filters, plus `page`, `size`, and repeated `sort` query parameters.
+
+The response exposes compact structured `details` for role-management changes, category writes, and owned authentication lifecycle events. Audit retention and archival remain deployment responsibilities; the application does not purge audit rows itself.
 
 include::{snippets}/audit/list-audit-logs/curl-request.adoc[]
 include::{snippets}/audit/list-audit-logs/http-request.adoc[]
@@ -21,7 +23,7 @@ include::{snippets}/audit/list-audit-logs/response-fields.adoc[]
 
 == Error Response Examples
 
-=== `GET /api/audit-logs` unauthorized
+=== `GET /api/admin/audit-logs` unauthorized
 
 Example response when the request does not include an authenticated session.
 
@@ -30,7 +32,7 @@ include::{snippets}/errors/list-audit-logs-unauthorized/http-request.adoc[]
 include::{snippets}/errors/list-audit-logs-unauthorized/http-response.adoc[]
 include::{snippets}/errors/list-audit-logs-unauthorized/response-fields.adoc[]
 
-=== `GET /api/audit-logs` forbidden
+=== `GET /api/admin/audit-logs` forbidden
 
 Example response when the session is authenticated but the user does not have the `ADMIN` role.
 

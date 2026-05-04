@@ -12,6 +12,9 @@
     "name" : "Categories",
     "description" : "Public category reads with ADMIN-only category management."
   }, {
+    "name" : "Admin Users",
+    "description" : "ADMIN-only persisted user and role-management endpoints."
+  }, {
     "name" : "Account",
     "description" : "Authenticated account endpoints."
   }, {
@@ -370,6 +373,93 @@
         "responses" : {
           "200" : {
             "description" : "OK"
+          }
+        },
+        "security" : [ {
+          "sessionCookie" : [ ]
+        } ]
+      }
+    },
+    "/api/admin/users/{id}/roles" : {
+      "put" : {
+        "tags" : [ "Admin Users" ],
+        "summary" : "Replace managed user roles",
+        "description" : "Requires an authenticated session with the ADMIN role, a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie, and replaces the non-bootstrap role set for one persisted user.",
+        "operationId" : "replaceRoles",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "X-XSRF-TOKEN",
+          "in" : "header",
+          "description" : "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
+          "required" : true
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AdminUserRoleUpdateRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AdminUserAccountResponse"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid request payload.",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiProblemResponse"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Missing or invalid authenticated session.",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiProblemResponse"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Authenticated user does not have the ADMIN role.",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiProblemResponse"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Persisted user was not found.",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiProblemResponse"
+                }
+              }
+            }
           }
         },
         "security" : [ {
@@ -811,7 +901,53 @@
         }
       }
     },
-    "/api/operator/surface" : {
+    "/api/admin/users" : {
+      "get" : {
+        "tags" : [ "Admin Users" ],
+        "summary" : "List persisted users",
+        "description" : "Requires an authenticated session with the ADMIN role and returns persisted users together with current roles and role-grant provenance.",
+        "operationId" : "listUsers",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/AdminUserAccountResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Missing or invalid authenticated session.",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiProblemResponse"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Authenticated user does not have the ADMIN role.",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiProblemResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "sessionCookie" : [ ]
+        } ]
+      }
+    },
+    "/api/admin/operator-surface" : {
       "get" : {
         "tags" : [ "Operator" ],
         "summary" : "Get operator inspection surface",
@@ -854,7 +990,7 @@
         } ]
       }
     },
-    "/api/audit-logs" : {
+    "/api/admin/audit-logs" : {
       "get" : {
         "tags" : [ "Audit Logs" ],
         "summary" : "List audit logs",
@@ -866,7 +1002,7 @@
           "required" : false,
           "schema" : {
             "type" : "string",
-            "enum" : [ "BOOK", "LOCALIZATION_MESSAGE" ]
+            "enum" : [ "BOOK", "CATEGORY", "LOCALIZATION_MESSAGE", "USER_ACCOUNT", "AUTHENTICATION" ]
           }
         }, {
           "name" : "action",
@@ -874,7 +1010,7 @@
           "required" : false,
           "schema" : {
             "type" : "string",
-            "enum" : [ "CREATE", "UPDATE", "DELETE" ]
+            "enum" : [ "CREATE", "UPDATE", "DELETE", "LOGIN_SUCCESS", "LOGIN_FAILURE", "LOGOUT", "SESSION_REJECTION" ]
           }
         }, {
           "name" : "actorLogin",
@@ -1209,6 +1345,135 @@
         },
         "description" : "Book resource returned by the API."
       },
+      "AdminUserRoleUpdateRequest" : {
+        "required" : [ "reason", "roles" ],
+        "type" : "object",
+        "properties" : {
+          "roles" : {
+            "minItems" : 1,
+            "uniqueItems" : true,
+            "type" : "array",
+            "description" : "Replacement role set. `USER` must always be present.",
+            "items" : {
+              "type" : "string",
+              "description" : "Role name to keep assigned after replacement.",
+              "example" : "ADMIN",
+              "enum" : [ "USER", "ADMIN" ]
+            }
+          },
+          "reason" : {
+            "maxLength" : 255,
+            "minLength" : 0,
+            "type" : "string",
+            "description" : "Short operator-supplied explanation for the role change.",
+            "example" : "Needs audit review access."
+          }
+        },
+        "description" : "Payload for replacing the managed role set of one persisted user."
+      },
+      "AdminUserAccountResponse" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "description" : "Database identifier.",
+            "format" : "int64",
+            "example" : 1
+          },
+          "provider" : {
+            "type" : "string",
+            "description" : "OAuth provider name.",
+            "example" : "github"
+          },
+          "login" : {
+            "type" : "string",
+            "description" : "External login from the authenticated OAuth provider.",
+            "example" : "kamkie"
+          },
+          "displayName" : {
+            "type" : "string",
+            "description" : "Display name from the OAuth provider.",
+            "example" : "Kamil Kiewisz"
+          },
+          "email" : {
+            "type" : "string",
+            "description" : "Email address when available from the provider."
+          },
+          "preferredLanguage" : {
+            "type" : "string",
+            "description" : "Preferred two-letter language code used as the last localization fallback."
+          },
+          "roles" : {
+            "type" : "array",
+            "description" : "Current roles assigned to the persisted user.",
+            "items" : {
+              "type" : "string",
+              "description" : "Granted role name.",
+              "example" : "USER"
+            }
+          },
+          "roleGrants" : {
+            "type" : "array",
+            "description" : "Persisted role-grant provenance entries.",
+            "items" : {
+              "$ref" : "#/components/schemas/AdminUserRoleGrantResponse"
+            }
+          },
+          "lastLoginAt" : {
+            "type" : "string",
+            "description" : "Timestamp of the latest authenticated request.",
+            "format" : "date-time"
+          },
+          "createdAt" : {
+            "type" : "string",
+            "description" : "Creation timestamp.",
+            "format" : "date-time"
+          },
+          "updatedAt" : {
+            "type" : "string",
+            "description" : "Last update timestamp.",
+            "format" : "date-time"
+          }
+        },
+        "description" : "Persisted application user profile plus role-grant provenance for ADMIN review."
+      },
+      "AdminUserRoleGrantResponse" : {
+        "type" : "object",
+        "properties" : {
+          "role" : {
+            "type" : "string",
+            "description" : "Granted role name.",
+            "example" : "ADMIN"
+          },
+          "source" : {
+            "type" : "string",
+            "description" : "How the role grant entered application state.",
+            "example" : "BOOTSTRAP",
+            "enum" : [ "AUTHENTICATED_LOGIN", "BOOTSTRAP", "ADMIN_MANAGED" ]
+          },
+          "grantedAt" : {
+            "type" : "string",
+            "description" : "UTC timestamp when this role grant was recorded.",
+            "format" : "date-time"
+          },
+          "grantedByUserId" : {
+            "type" : "integer",
+            "description" : "Granting application user id when the role was assigned manually.",
+            "format" : "int64",
+            "example" : 1
+          },
+          "grantedByLogin" : {
+            "type" : "string",
+            "description" : "Granting application user login when the role was assigned manually.",
+            "example" : "admin-user"
+          },
+          "reason" : {
+            "type" : "string",
+            "description" : "Optional operator-supplied reason captured for manually managed grants."
+          }
+        },
+        "description" : "Persisted provenance for one granted application role."
+      },
       "UserAccountLanguageRequest" : {
         "type" : "object",
         "properties" : {
@@ -1434,6 +1699,138 @@
         },
         "description" : "Same-site browser session contract for the separate first-party UI."
       },
+      "PageLocalizationResponse" : {
+        "type" : "object",
+        "properties" : {
+          "totalPages" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "totalElements" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "size" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "content" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/LocalizationResponse"
+            }
+          },
+          "number" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "first" : {
+            "type" : "boolean"
+          },
+          "last" : {
+            "type" : "boolean"
+          },
+          "numberOfElements" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "sort" : {
+            "$ref" : "#/components/schemas/SortObject"
+          },
+          "pageable" : {
+            "$ref" : "#/components/schemas/PageableObject"
+          },
+          "empty" : {
+            "type" : "boolean"
+          }
+        }
+      },
+      "PageableObject" : {
+        "type" : "object",
+        "properties" : {
+          "paged" : {
+            "type" : "boolean"
+          },
+          "sort" : {
+            "$ref" : "#/components/schemas/SortObject"
+          },
+          "pageSize" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "pageNumber" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "unpaged" : {
+            "type" : "boolean"
+          },
+          "offset" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      },
+      "SortObject" : {
+        "type" : "object",
+        "properties" : {
+          "empty" : {
+            "type" : "boolean"
+          },
+          "sorted" : {
+            "type" : "boolean"
+          },
+          "unsorted" : {
+            "type" : "boolean"
+          }
+        }
+      },
+      "PageBook" : {
+        "type" : "object",
+        "properties" : {
+          "totalPages" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "totalElements" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "size" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "content" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Book"
+            }
+          },
+          "number" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "first" : {
+            "type" : "boolean"
+          },
+          "last" : {
+            "type" : "boolean"
+          },
+          "numberOfElements" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "sort" : {
+            "$ref" : "#/components/schemas/SortObject"
+          },
+          "pageable" : {
+            "$ref" : "#/components/schemas/PageableObject"
+          },
+          "empty" : {
+            "type" : "boolean"
+          }
+        }
+      },
       "AbuseProtectionDetails" : {
         "type" : "object",
         "properties" : {
@@ -1479,7 +1876,7 @@
             "type" : "string",
             "description" : "Type of audited target.",
             "example" : "BOOK",
-            "enum" : [ "BOOK", "LOCALIZATION_MESSAGE" ]
+            "enum" : [ "BOOK", "CATEGORY", "LOCALIZATION_MESSAGE", "USER_ACCOUNT", "AUTHENTICATION" ]
           },
           "targetId" : {
             "type" : "integer",
@@ -1491,17 +1888,25 @@
             "type" : "string",
             "description" : "Recorded action.",
             "example" : "UPDATE",
-            "enum" : [ "CREATE", "UPDATE", "DELETE" ]
+            "enum" : [ "CREATE", "UPDATE", "DELETE", "LOGIN_SUCCESS", "LOGIN_FAILURE", "LOGOUT", "SESSION_REJECTION" ]
           },
           "actorLogin" : {
             "type" : "string",
-            "description" : "Login of the acting user, or `system` for non-user writes.",
+            "description" : "Login of the acting user when known, or `system` for non-user writes.",
             "example" : "admin-user"
           },
           "summary" : {
             "type" : "string",
             "description" : "Human-readable audit summary.",
             "example" : "Updated book 'Clean Code' with ISBN 9780132350884."
+          },
+          "details" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "object",
+              "description" : "Structured audit details kept compact and safe for ADMIN review."
+            },
+            "description" : "Structured audit details kept compact and safe for ADMIN review."
           },
           "createdAt" : {
             "type" : "string",
@@ -1614,7 +2019,7 @@
           "auditLogEndpoint" : {
             "type" : "string",
             "description" : "Endpoint path for full audit log pagination.",
-            "example" : "/api/audit-logs"
+            "example" : "/api/admin/audit-logs"
           },
           "totalEntries" : {
             "type" : "integer",
@@ -1816,138 +2221,6 @@
           }
         },
         "description" : "Current technical overview payload."
-      },
-      "PageLocalizationResponse" : {
-        "type" : "object",
-        "properties" : {
-          "totalPages" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "totalElements" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
-          "size" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "content" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/LocalizationResponse"
-            }
-          },
-          "number" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "last" : {
-            "type" : "boolean"
-          },
-          "first" : {
-            "type" : "boolean"
-          },
-          "numberOfElements" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "sort" : {
-            "$ref" : "#/components/schemas/SortObject"
-          },
-          "pageable" : {
-            "$ref" : "#/components/schemas/PageableObject"
-          },
-          "empty" : {
-            "type" : "boolean"
-          }
-        }
-      },
-      "PageableObject" : {
-        "type" : "object",
-        "properties" : {
-          "offset" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
-          "paged" : {
-            "type" : "boolean"
-          },
-          "sort" : {
-            "$ref" : "#/components/schemas/SortObject"
-          },
-          "unpaged" : {
-            "type" : "boolean"
-          },
-          "pageNumber" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "pageSize" : {
-            "type" : "integer",
-            "format" : "int32"
-          }
-        }
-      },
-      "SortObject" : {
-        "type" : "object",
-        "properties" : {
-          "empty" : {
-            "type" : "boolean"
-          },
-          "sorted" : {
-            "type" : "boolean"
-          },
-          "unsorted" : {
-            "type" : "boolean"
-          }
-        }
-      },
-      "PageBook" : {
-        "type" : "object",
-        "properties" : {
-          "totalPages" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "totalElements" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
-          "size" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "content" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/Book"
-            }
-          },
-          "number" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "last" : {
-            "type" : "boolean"
-          },
-          "first" : {
-            "type" : "boolean"
-          },
-          "numberOfElements" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "sort" : {
-            "$ref" : "#/components/schemas/SortObject"
-          },
-          "pageable" : {
-            "$ref" : "#/components/schemas/PageableObject"
-          },
-          "empty" : {
-            "type" : "boolean"
-          }
-        }
       },
       "AuditLogPageResponse" : {
         "type" : "object",

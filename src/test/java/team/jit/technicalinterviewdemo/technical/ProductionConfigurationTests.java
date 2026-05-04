@@ -84,9 +84,17 @@ class ProductionConfigurationTests {
     }
 
     @Test
-    void prodProfileFailsFastWhenAdminLoginsContainInvalidGithubUsernames() {
-        assertThatThrownBy(() -> runProdApplication("--ADMIN_LOGINS=invalid login"))
-                .hasStackTraceContaining("ADMIN_LOGINS must contain comma-separated external login identifiers");
+    void prodProfileFailsFastWhenDeprecatedAdminLoginsSettingIsPresent() {
+        assertThatThrownBy(() -> runProdApplication("--ADMIN_LOGINS=admin-user"))
+                .hasStackTraceContaining("ADMIN_LOGINS has been removed");
+    }
+
+    @Test
+    void prodProfileFailsFastWhenInitialAdminIdentitiesContainInvalidValue() {
+        assertThatThrownBy(() -> runProdApplication("--APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES=invalid login"))
+                .hasStackTraceContaining(
+                        "APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES must contain comma-separated provider:externalLogin values"
+                );
     }
 
     @Test

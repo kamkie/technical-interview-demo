@@ -1,6 +1,7 @@
 package team.jit.technicalinterviewdemo.business.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -94,7 +95,7 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
     }
 
     @Test
-    void adminLoginGetsAdminRoleAndCanManageCategories() throws Exception {
+    void bootstrapAdminIdentityGetsPersistedAdminGrantAndCanManageCategories() throws Exception {
         BrowserSession adminSession = adminSession();
 
         mockMvc.perform(post("/api/categories")
@@ -111,6 +112,47 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .orElseThrow();
 
         assertThat(userAccount.getRoles()).containsExactlyInAnyOrder(UserRole.USER, UserRole.ADMIN);
+        assertThat(userAccount.getRoleGrants())
+                .extracting(UserRoleGrant::getRole, UserRoleGrant::getGrantSource)
+                .containsExactlyInAnyOrder(
+                        tuple(UserRole.ADMIN, UserRoleGrantSource.BOOTSTRAP),
+                        tuple(UserRole.USER, UserRoleGrantSource.AUTHENTICATED_LOGIN)
+                );
+    }
+
+    @Test
+    void secondBootstrapIdentityDoesNotReceiveAdminRoleAfterFirstAdminExists() throws Exception {
+        BrowserSession adminSession = adminSession();
+        BrowserSession secondAdminSession = authenticatedBrowserSession(sessionRepository, "second-admin");
+
+        mockMvc.perform(post("/api/categories")
+                        .with(adminSession.unsafeWrite())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "name": "Architecture"
+                                }
+                                """))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(post("/api/categories")
+                        .with(secondAdminSession.unsafeWrite())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "name": "Operations"
+                                }
+                                """))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.detail").value("Category management requires the ADMIN role."));
+
+        UserAccount secondAdmin = userAccountRepository.findByProviderAndExternalLogin("github", "second-admin")
+                .orElseThrow();
+
+        assertThat(secondAdmin.getRoles()).containsExactly(UserRole.USER);
+        assertThat(secondAdmin.getRoleGrants())
+                .extracting(UserRoleGrant::getRole, UserRoleGrant::getGrantSource)
+                .containsExactly(tuple(UserRole.USER, UserRoleGrantSource.AUTHENTICATED_LOGIN));
     }
 
     @Test

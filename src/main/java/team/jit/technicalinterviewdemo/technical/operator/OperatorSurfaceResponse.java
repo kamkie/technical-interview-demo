@@ -18,7 +18,7 @@ public record OperatorSurfaceResponse(
 
     @Schema(name = "OperatorAuditSection", description = "Audit endpoint summary for operators.")
     public record AuditSection(
-            @Schema(description = "Endpoint path for full audit log pagination.", example = "/api/audit-logs")
+            @Schema(description = "Endpoint path for full audit log pagination.", example = "/api/admin/audit-logs")
             String auditLogEndpoint,
             @Schema(description = "Total number of audit log entries currently stored.", example = "42")
             long totalEntries,

@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminOauthUser;
 import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.oauthUser;
 
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,11 @@ class AuditLogApiDocumentationTests extends AbstractDocumentationIntegrationTest
                 AuditAction.CREATE,
                 null,
                 "reader-user",
-                "Created book 'Spring in Action' with ISBN 9781617297571."
+                "Created book 'Spring in Action' with ISBN 9781617297571.",
+                Map.of(
+                        "title", "Spring in Action",
+                        "isbn", "9781617297571"
+                )
         ));
         auditLogRepository.saveAndFlush(new AuditLog(
                 AuditTargetType.LOCALIZATION_MESSAGE,
@@ -42,13 +47,17 @@ class AuditLogApiDocumentationTests extends AbstractDocumentationIntegrationTest
                 AuditAction.DELETE,
                 null,
                 "admin-user",
-                "Deleted localization message 'error.book.not_found' in language fr."
+                "Deleted localization message 'error.book.not_found' in language fr.",
+                Map.of(
+                        "messageKey", "error.book.not_found",
+                        "language", "fr"
+                )
         ));
     }
 
     @Test
     void documentListAuditLogsEndpoint() throws Exception {
-        mockMvc.perform(get("/api/audit-logs")
+        mockMvc.perform(get("/api/admin/audit-logs")
                         .with(adminOauthUser())
                         .queryParam("targetType", "LOCALIZATION_MESSAGE")
                         .queryParam("actorLogin", "admin-user")
@@ -62,10 +71,10 @@ class AuditLogApiDocumentationTests extends AbstractDocumentationIntegrationTest
                         "audit/list-audit-logs",
                         queryParameters(
                                 parameterWithName("targetType").optional().description(
-                                        "Exact audit target type filter. Supported values: `BOOK`, `LOCALIZATION_MESSAGE`."
+                                        "Exact audit target type filter. Supported values: `BOOK`, `CATEGORY`, `LOCALIZATION_MESSAGE`, `USER_ACCOUNT`, `AUTHENTICATION`."
                                 ),
                                 parameterWithName("action").optional().description(
-                                        "Exact audit action filter. Supported values: `CREATE`, `UPDATE`, `DELETE`."
+                                        "Exact audit action filter. Supported values: `CREATE`, `UPDATE`, `DELETE`, `LOGIN_SUCCESS`, `LOGIN_FAILURE`, `LOGOUT`, `SESSION_REJECTION`."
                                 ),
                                 parameterWithName("actorLogin").optional().description("Exact actor login filter."),
                                 parameterWithName("page").optional().description("Zero-based page index."),
@@ -82,6 +91,7 @@ class AuditLogApiDocumentationTests extends AbstractDocumentationIntegrationTest
                                 fieldWithPath("content[].action").description("Recorded action."),
                                 fieldWithPath("content[].actorLogin").description("Login of the acting user, or `system` for non-user writes."),
                                 fieldWithPath("content[].summary").description("Human-readable audit summary."),
+                                subsectionWithPath("content[].details").description("Compact structured audit details for ADMIN review."),
                                 fieldWithPath("content[].createdAt").description("Creation timestamp in UTC."),
                                 subsectionWithPath("pageable").description("Pagination request metadata."),
                                 subsectionWithPath("sort").description("Applied sort metadata."),
@@ -99,7 +109,7 @@ class AuditLogApiDocumentationTests extends AbstractDocumentationIntegrationTest
 
     @Test
     void documentListAuditLogsUnauthorizedError() throws Exception {
-        mockMvc.perform(get("/api/audit-logs"))
+        mockMvc.perform(get("/api/admin/audit-logs"))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.title").value("Unauthorized"))
                 .andDo(documentEndpoint(
@@ -110,7 +120,7 @@ class AuditLogApiDocumentationTests extends AbstractDocumentationIntegrationTest
 
     @Test
     void documentListAuditLogsForbiddenError() throws Exception {
-        mockMvc.perform(get("/api/audit-logs")
+        mockMvc.perform(get("/api/admin/audit-logs")
                         .with(oauthUser("reader-user")))
                 .andExpect(status().isForbidden())
                 .andExpect(header().exists("X-Request-Id"))

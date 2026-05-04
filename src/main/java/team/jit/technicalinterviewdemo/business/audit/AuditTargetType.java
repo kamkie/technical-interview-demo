@@ -2,5 +2,8 @@ package team.jit.technicalinterviewdemo.business.audit;
 
 public enum AuditTargetType {
     BOOK,
-    LOCALIZATION_MESSAGE
+    CATEGORY,
+    LOCALIZATION_MESSAGE,
+    USER_ACCOUNT,
+    AUTHENTICATION
 }

@@ -75,7 +75,7 @@ Variables you are most likely to need:
 - `DATABASE_*` variables when overriding the default PostgreSQL connection
 - `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` for the built-in GitHub provider when enabling the optional `oauth` profile
 - `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`, and `OIDC_ISSUER_URI` for the built-in issuer-driven OIDC provider when enabling `oauth`
-- `ADMIN_LOGINS` when you want one or more external logins to receive the persisted `ADMIN` role
+- `APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES` when you want to bootstrap the first persisted `ADMIN` role from one or more `provider:externalLogin` identities
 - `APP_BOOTSTRAP_SEED_DEMO_DATA` when you want to override demo-data seeding for categories, books, and localization messages
 - `SESSION_COOKIE_SECURE` when you want to override the `prod` profile session-cookie default of `true` for local HTTP testing or a specific deployment environment
 
@@ -88,7 +88,7 @@ The checked-in deployment assets intentionally freeze this posture:
 - `prod` is the default deployment profile in the raw manifests and Helm chart
 - browser sessions use secure cookies by default through `SESSION_COOKIE_SECURE=true`
 - OAuth stays opt-in through the `oauth` profile; bare `prod` does not require identity-provider credentials
-- admin bootstrap remains environment-driven through `ADMIN_LOGINS`
+- first-admin bootstrap remains environment-driven through `APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES` and only applies while no persisted admin grant exists
 - demo data bootstrap defaults to disabled in `prod` and enabled in `local` and `test` through `APP_BOOTSTRAP_SEED_DEMO_DATA`
 - same-site browser writes use a readable `XSRF-TOKEN` cookie plus a required `X-XSRF-TOKEN` header on unsafe `/api/**` requests when a real current application session exists
 - `/api/session/oauth2/authorization/{registrationId}` must be protected by edge burst limiting plus suspicious-client challenge or block capability, and unsafe internet-public `/api/**` writes must be protected by edge per-client throttling, request-size enforcement, and rejection visibility
@@ -126,7 +126,7 @@ Optional runtime environment variables:
 - `SESSION_COOKIE_SECURE` with a secure-by-default value of `true`
 - `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` for the built-in GitHub provider when the `oauth` profile is active
 - `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`, and `OIDC_ISSUER_URI` for the built-in issuer-driven OIDC provider when the `oauth` profile is active
-- `ADMIN_LOGINS`
+- `APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES`
 - `APP_BOOTSTRAP_SEED_DEMO_DATA` when you need to opt in or out of demo-data seeding outside the profile defaults
 
 CI and release workflow expectations:
@@ -219,7 +219,8 @@ Useful endpoints once the app is running:
 - `GET /`
 - `GET /hello`
 - `GET /api/books`
-- `GET /api/operator/surface` with an authenticated `ADMIN` session
+- `GET /api/admin/operator-surface` with an authenticated `ADMIN` session
+- `GET /api/admin/users` with an authenticated `ADMIN` session
 - `GET /docs`
 - `GET /v3/api-docs`
 - `GET /v3/api-docs.yaml`
@@ -371,8 +372,9 @@ Metrics expectations:
 
 Audit logging expectations:
 
-- successful create, update, and delete operations for `Book` and `Localization` write an append-only row to `audit_logs`
-- healthy audit rows include a target type, target id, action, actor login, summary, and creation timestamp
+- successful `Book`, `Category`, and `Localization` writes, admin role changes, and owned authentication lifecycle events write append-only rows to `audit_logs`
+- healthy audit rows include a target type, target id when applicable, action, actor login, summary, structured `details`, and creation timestamp
+- retention and archival for `audit_logs` are deployment responsibilities; the application does not run an in-app cleanup job
 - if state-changing requests succeed but `audit_logs` stays empty, treat that as a runtime problem rather than a documentation gap
 
 Session persistence expectations:
@@ -488,7 +490,7 @@ Secret handling:
 - `k8s/base/secret-example.yaml` is an example only and is not included in the base Kustomize package
 - create a real `technical-interview-demo-secrets` secret before applying the manifests
 - the required secret key is `DATABASE_PASSWORD`
-- optional secret keys are `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`, `OIDC_ISSUER_URI`, and `ADMIN_LOGINS`
+- optional secret keys are `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`, `OIDC_ISSUER_URI`, and `APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES`
 
 Base deployment defaults:
 
@@ -627,7 +629,7 @@ Then export credentials and start the app:
 ```powershell
 $env:GITHUB_CLIENT_ID='your-github-client-id'
 $env:GITHUB_CLIENT_SECRET='your-github-client-secret'
-$env:ADMIN_LOGINS='your-login'
+$env:APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES='github:your-login'
 $env:SPRING_PROFILES_ACTIVE='local,oauth'
 
 docker-compose up -d
@@ -646,7 +648,7 @@ Provide OIDC issuer metadata plus credentials, then start the app:
 $env:OIDC_CLIENT_ID='your-oidc-client-id'
 $env:OIDC_CLIENT_SECRET='your-oidc-client-secret'
 $env:OIDC_ISSUER_URI='https://your-issuer.example.com/realms/demo'
-$env:ADMIN_LOGINS='your-login'
+$env:APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES='oidc:your-login'
 $env:SPRING_PROFILES_ACTIVE='local,oauth'
 
 docker-compose up -d
@@ -670,7 +672,8 @@ Authenticated sessions are persisted in PostgreSQL through Spring Session JDBC, 
 Role behavior:
 
 - every authenticated provider login is persisted as an application user with the `USER` role
-- logins listed in `ADMIN_LOGINS` also receive the `ADMIN` role
+- a login matching `APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES` receives the first persisted `ADMIN` grant only while no admin grant exists yet
+- later role changes go through `GET /api/admin/users` and `PUT /api/admin/users/{id}/roles`
 - category creation and localization-message management require `ADMIN`
 - the current persisted user profile is available at `GET /api/account`
 - preferred-language updates are available at `PUT /api/account/language`
