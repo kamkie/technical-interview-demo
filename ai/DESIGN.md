@@ -68,6 +68,15 @@ Current preferences:
 
 Avoid overloaded endpoints, inconsistent status handling, or letting persistence shape harden into the long-term public contract.
 
+## Release Phase Direction
+
+Current release-phase intent is explicit:
+
+- the repository is still in the pre-`2.0` prerelease phase on the `v2.0.0-M*` line
+- intentional breaking changes are still allowed when they are needed to finish and simplify the `2.0` contract before the release candidate
+- `v2.0.0-RC1` is the contract-freeze milestone; after that point, avoid breaking published behavior while preparing the stable release
+- once `v2.0.0` is released, treat the `2.x` line as stable and do not introduce routine breaking changes without a deliberate next-major-version decision
+
 ## Security And Deployment Direction
 
 The security posture is pragmatic for a demo application:
