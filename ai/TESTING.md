@@ -38,6 +38,7 @@ Treat validation as part of the product:
 ### Documentation-only or lightweight support-file work
 
 - when `pwsh ./scripts/classify-changed-files.ps1 -Uncommitted` reports `skipHeavyValidation=true`, do manual consistency review only
+- repo-local skills under `ai/skills/` count as lightweight support-file work for classifier purposes unless they accompany a non-lightweight change
 - skip `.\gradlew.bat build`, benchmarks, external smoke, vulnerability scans, and other heavyweight validation unless the user explicitly asks for more
 - if lightweight edits accompany any non-lightweight change, validate based on the non-lightweight artifacts and repo rules
 

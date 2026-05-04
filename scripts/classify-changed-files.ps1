@@ -28,7 +28,8 @@ $lightweightPatterns = @(
     ".run/*.run.xml",
     ".githooks/*.sample",
     ".env.example",
-    "*/.env.example"
+    "*/.env.example",
+    "ai/skills/*"
 )
 
 function Invoke-Git {
