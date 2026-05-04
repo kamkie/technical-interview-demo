@@ -15,8 +15,7 @@ Keep rough candidate tasks here for manual editing before they are promoted into
 
 Add new rough tasks below.
 
-- design requirements for frontend integration
-- implement gradle Dependency submission for github 
+No unrefined tasks currently.
 
 ## How To Use This File
 
@@ -38,17 +37,29 @@ No active priorities currently.
 
 Status: Planned
 
-Goal: finish the stable `2.0` line now that the `v2.0.0-M1` and `v2.0.0-M2` contract-shaping slices are already released.
+Goal: finish the stable `2.0` line now that `v2.0.0-M1` and `v2.0.0-M2` already established the new browser-session and deployment-boundary contract.
 
+#### Contract And Integration
+- [ ] Define first-party UI integration requirements for login bootstrap, logout, session refresh, CSRF refresh, and one-public-origin reverse-proxy deployment.
 - [ ] Publish a `1.x` to `2.0` upgrade guide for the `/api/**` boundary, `/api/session/**` auth routes, `loginProviders[]`, and CSRF-protected unsafe writes.
-- [ ] Add checked-in reverse-proxy or ingress reference assets for the one-public-origin boundary, private non-`/api/**` surfaces, and edge-owned abuse protection.
+
+#### Deployment Assets
+- [ ] Add checked-in reverse-proxy or ingress reference assets for `/api/**`-only exposure, private non-`/api/**` surfaces, and edge-owned abuse protection.
+
+#### Release Confidence
 - [ ] Extend `externalSmokeTest` and post-deploy smoke to prove `GET /api/session`, CSRF cookie bootstrap, and one authenticated unsafe `/api/**` write.
 - [ ] Freeze the `2.0` published contract and cut `v2.0.0-RC1` from `main` only after the exact candidate passes `.\gradlew.bat build`, required smoke checks, and `.\gradlew.bat gatlingBenchmark` when session-startup behavior changes.
 - [ ] Release stable `v2.0.0`, update `CHANGELOG.md`, and remove the completed `2.0` track from `ROADMAP.md`.
 
 ## Deferred
 
-### Milestone X: Optional Future Enhancements
+### Delivery Tooling
+
+Status: Deferred until `2.0` is stable
+
+- [ ] Add GitHub dependency submission for Gradle dependencies so GitHub dependency graph data stays aligned with CI builds.
+
+### Optional Future Enhancements
 
 Status: Deferred until the core roadmap is complete
 
