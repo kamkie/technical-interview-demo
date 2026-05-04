@@ -79,6 +79,7 @@ At minimum, inspect:
 
 - `AGENTS.md`
 - `README.md`
+- the owning AI guide when the work changes durable repo guidance, usually `ai/ARCHITECTURE.md`, `ai/DESIGN.md`, or `ai/LEARNINGS.md`
 - `ROADMAP.md` if the work touches roadmap sequencing
 - relevant tests under `src/test/java/`
 - relevant docs under `src/docs/asciidoc/`
@@ -167,6 +168,12 @@ A plan is not ready until it answers all of these:
 If the plan changes request handling, response shape, documented errors, security requirements, pagination, filtering, or endpoint behavior, the plan must name all affected contract artifacts required by `AGENTS.md` and routed through `ai/DOCUMENTATION.md`.
 The plan must also state whether extra validation from `ai/TESTING.md` is required, especially benchmark reruns for book list/search, localization lookup, or OAuth/session startup changes.
 
+### Durable AI guidance changes
+
+If the work changes a cross-cutting architectural or product convention that should remain true after the task-specific plan is archived, the plan must name the owning AI guide update explicitly.
+Examples include persistence or serialization conventions, package ownership changes, and durable design or engineering lessons.
+Do not treat the temporary `ai/PLAN_*.md` file as a substitute for updating `ai/ARCHITECTURE.md`, `ai/DESIGN.md`, or `ai/LEARNINGS.md` when one of those guides is the durable owner.
+
 ### Internal refactors
 
 If the work is a refactor with no contract change, the plan should preserve existing specs and avoid unnecessary doc or OpenAPI edits.
@@ -231,6 +238,7 @@ Use this structure:
 - OpenAPI
 - HTTP examples
 - Source files
+- Owning AI guide updates when durable repo guidance changes
 - Build or benchmark checks
 
 ## Execution Milestones

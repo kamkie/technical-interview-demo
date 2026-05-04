@@ -48,6 +48,7 @@ Key API-shape expectations:
 - account endpoints require an authenticated session
 - category creation and localization writes require `ADMIN`
 - localized errors include `messageKey`, localized `message`, and resolved `language`
+- app-owned persisted timestamp fields exposed through the API serialize as UTC instants with a trailing `Z`
 - pageable collection endpoints currently expose Spring Data-style page metadata as part of the reviewed `2.0` contract; replacing that shape with repo-owned pagination envelopes is not selected cleanup work unless an explicit contract review chooses it
 
 ## Top-Level Shape
@@ -163,6 +164,8 @@ Current persistence style:
 - public controllers use feature-local response DTOs instead of exposing JPA entities directly
 - request and response types stay feature-local so public contract shaping remains explicit and reviewable
 - repositories stay feature-local instead of being abstracted behind extra data-access layers
+- app-owned persisted timestamps use Java `Instant` in the domain model and PostgreSQL `timestamptz` in the application schema
+- timestamp migrations preserve existing UTC meaning explicitly during type rewrites instead of relying on the database session timezone
 
 ## Security Model
 
