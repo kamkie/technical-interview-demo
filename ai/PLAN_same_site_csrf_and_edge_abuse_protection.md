@@ -4,7 +4,7 @@
 | Field | Value |
 | --- | --- |
 | Phase | Planning |
-| Status | Ready |
+| Status | Needs Input |
 
 ## Summary
 - Replace the current reviewer-oriented `csrf.enabled=false` browser-write posture with a production-grade same-site CSRF contract for the separate first-party UI behind one public origin.
@@ -60,21 +60,29 @@
   - deployment/post-release validation: `src/externalTest/java/team/jit/technicalinterviewdemo/external/ExternalSmokeTests.java`, `.github/workflows/post-deploy-smoke.yml`, `scripts/release/invoke-restore-drill.ps1`
 
 ## Requirement Gaps And Open Questions
-- No blocking user-input gap remains after the locked roadmap framing decisions. The remaining work is choosing the smallest explicit CSRF and abuse-protection contract that fits the current same-site browser model.
 - CSRF token transport for the separate UI is a material design choice.
   - Why it matters: the UI is in a separate repository and cannot depend on server-rendered hidden form fields.
   - Fallback assumption used by this plan: adopt a same-site SPA-style CSRF contract with a dedicated readable CSRF cookie plus a required request header on unsafe browser writes. `GET /api/session` remains the canonical bootstrap path that publishes the header and cookie names and triggers token issuance or refresh.
 - Naive CSRF enablement would change many current missing-session write failures from localized `401` into `403`.
   - Why it matters: the current API contract and reviewer docs intentionally distinguish missing authentication from forbidden access.
-  - Fallback assumption used by this plan: require CSRF only for unsafe requests backed by a real current application session, so requests without a real authenticated session continue to use the existing localized `401` or role-based `403` path instead of an early generic CSRF failure.
+  - Blocking question: should `v2.0.0-M2` preserve the current localized `401` semantics for unsafe writes when there is no real current application session, or is it acceptable in this breaking phase to let those requests fail as CSRF-driven `403` responses?
+  - Recommended option: preserve the current `401` semantics. It keeps the auth contract easier to reason about and limits the breaking surface to the new CSRF handshake itself.
 - Edge-owned abuse protection can be documented too vaguely to be actionable.
   - Why it matters: "deployment-owned" is not enough unless the repo names both the protected path families and the minimum expected capabilities.
   - Fallback assumption used by this plan: document two required edge-protection groups:
     - login-bootstrap protection for `/api/session/oauth2/authorization/{registrationId}` with burst limiting plus challenge or block capability for suspicious clients
     - per-client throttling and rejection visibility for unsafe internet-public `/api/**` operations, including logout and the write paths under books, categories, localizations, and account-language update
+- Logout CSRF semantics need an explicit contract choice.
+  - Why it matters: `POST /api/session/logout` is currently public and idempotent, while a production-grade CSRF posture usually protects authenticated logout.
+  - Blocking question: when an authenticated session exists, should logout require a valid CSRF token, or should logout remain fully exempt from CSRF to keep the current simpler client contract?
+  - Recommended option: require CSRF when a current session exists, but keep no-session logout idempotent and `204` so the separate UI can still call it safely after local state drift.
+- The breaking-change rollout label is now explicit.
+  - Why it matters: the plan should not pretend this is preserving the frozen `1.x` browser-write contract.
+  - User decision recorded here: treat this work as `v2.0.0-M2` planning, and assume breaking public-contract changes are allowed in this phase.
 
 ## Locked Decisions And Assumptions
 - Treat the two checked roadmap items as one coherent plan because they both modify the same browser security contract, runtime posture reporting, and deployment guidance.
+- This plan targets the breaking-change prerelease line `v2.0.0-M2`.
 - Preserve the current architectural direction already locked by earlier roadmap decisions:
   - separate first-party UI repository
   - one public origin behind `waf -> frontend -> this application`
@@ -220,7 +228,7 @@
   - `src/main/java/team/jit/technicalinterviewdemo/technical/security/SessionService.java`
   - `src/main/java/team/jit/technicalinterviewdemo/technical/security/SessionResponse.java`
   - `src/main/java/team/jit/technicalinterviewdemo/technical/security/ApiAccessDeniedHandler.java`
-  - `src/main/java/team/jit/technicalinterviewdemo/testing/SecurityTestSupport.java`
+  - `src/test/java/team/jit/technicalinterviewdemo/testing/SecurityTestSupport.java`
   - `src/main/java/team/jit/technicalinterviewdemo/business/localization/seed/LocalizationSeedData.java`
   - `src/main/java/team/jit/technicalinterviewdemo/technical/info/TechnicalOverviewService.java`
   - `src/main/java/team/jit/technicalinterviewdemo/technical/info/TechnicalOverviewResponse.java`
