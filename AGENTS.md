@@ -36,7 +36,7 @@ Use these files deliberately:
 - `ai/archive/`: archived AI execution plans that have already been released or otherwise completed
 - `ai/RELEASES.md`: AI-facing release workflow for intentional post-implementation releases
 - `ai/TESTING.md`: AI-facing testing and validation guidance
-- `ai/WORKFLOW.md`: AI-facing multi-agent workflow for delegation, worktree usage, integration, and release handoff
+- `ai/WORKFLOW.md`: AI-facing execution workflow for single-branch, delegation, worktree usage, integration, and release handoff
 
 Rules for maintaining the `ai/` documents:
 

@@ -1,13 +1,47 @@
-# Codex Multi-Agent Workflow
+# Codex Workflow
 
-`ai/WORKFLOW.md` owns delegation-specific rules.
+`ai/WORKFLOW.md` owns execution-mode selection, branch/worktree topology, and coordinator or worker integration rules.
 Anything not overridden here should follow `ai/EXECUTION.md`.
 
-Use this file only when the user explicitly wants delegation, sub-agents, parallel work, or a multi-worktree execution model.
+Use this file when the user explicitly wants delegation, sub-agents, parallel work, or a multi-worktree execution model.
+It also defines the default `Single Branch` mode so planning and execution stay consistent across all approved plans.
 
-## When To Delegate
+## Codex-Aligned Defaults
 
-Prefer a single agent when:
+Use these defaults unless the user explicitly wants another workflow:
+
+- plan first, then execute against named milestones
+- keep current work committed or at least stashed before branching or worktree fanout
+- use isolated branches or worktrees for background or delegated work
+- never rely on the same checked-out branch in more than one worktree at a time
+- review work at milestone checkpoints and commit after each completed milestone
+- prefer the smallest mode that preserves clear ownership and low coordination cost
+
+## Supported Modes
+
+Three execution modes are supported:
+
+1. `Single Branch`
+   - one agent works on one branch
+   - one canonical plan file stays authoritative
+   - one canonical `CHANGELOG.md` stays authoritative
+
+2. `Shared Plan`
+   - one current `ai/PLAN_*.md` stays authoritative
+   - an orchestrator fans out worker branches or worktrees for disjoint slices of that plan
+   - workers avoid shared files and report milestone output back through worker logs
+
+3. `Parallel Plans`
+   - different workers execute different `ai/PLAN_*.md` files in parallel
+   - each worker keeps a private `CHANGELOG_<topic>.md` copy instead of editing `CHANGELOG.md`
+   - the coordinator tracks integration order and later folds accepted changelog text back into `CHANGELOG.md`
+
+Choose the mode before execution starts.
+Do not mix modes inside one plan unless the boundary is explicit and documented in the relevant plan files.
+
+## When To Stay Single-Branch
+
+Prefer `Single Branch` when:
 
 - the change is small
 - workers would touch the same files or public contract artifacts
@@ -15,24 +49,43 @@ Prefer a single agent when:
 - coordination cost is higher than the parallelism benefit
 - the review, testing, or documentation slice is too small to justify handoff
 
-Use multi-agent work only when the split is defensible in file ownership, validation scope, and integration order.
+Use `Shared Plan` or `Parallel Plans` only when the split is defensible in file ownership, validation scope, and integration order.
 
-## Supported Modes
+## Common Rules For All Modes
 
-Only two modes are supported:
+All three modes use the same milestone rhythm from `ai/EXECUTION.md`.
+The branch layout changes, but the milestone checkpoint rules do not.
 
-1. `Parallel Plans`
-   - different workers execute different `ai/PLAN_*.md` files
-   - each worker follows `ai/EXECUTION.md`, except unreleased changelog text lives in a worker-owned `CHANGELOG_<topic>.md`
-2. `Shared Plan`
-   - several workers execute disjoint slices of one `ai/PLAN_*.md`
-   - workers do not edit the canonical plan file or `CHANGELOG.md` directly while the plan is split
+- execute against an approved plan with explicit milestones
+- complete, validate, and commit each milestone before claiming it is done
+- keep the plan or worker log current as milestones land
+- keep the correct changelog artifact current as milestones land
+- finish local validation before any push or PR handoff
+- keep release work out of scope until the approved PR has been merged onto `main`
 
-Choose the mode before delegating. Do not mix modes inside one plan unless the boundary is explicit.
+For any forked worker, create and maintain a committed temporary worker log at:
+
+`ai/tmp/workflow/<plan_stem_or_topic>__<worker_name>.md`
+
+Create the directory if it does not exist.
+
+Each worker log records:
+
+- execution mode
+- target plan file or topic token
+- worker branch and worktree
+- exact owned scope or milestones
+- files intentionally left shared
+- changed files
+- validation commands run and their pass or fail result
+- proposed changelog text
+- commit SHA(s)
+- blockers, risks, and coordinator decisions still needed
+- whether the current milestone or slice is ready for integration
 
 ## Coordinator Ownership
 
-The coordinator always owns:
+The coordinator or orchestrator always owns:
 
 - reading the governing docs, specs, and target plans
 - deciding whether the work is worth splitting
@@ -41,70 +94,105 @@ The coordinator always owns:
 - deciding integration order
 - final validation from `ai/TESTING.md`
 - final review and documentation alignment using `ai/REVIEWS.md` and `ai/DOCUMENTATION.md`
-- keeping release work out of scope until the approved PR is merged onto `main`
+- keeping release work out of scope until the approved PR has been merged onto `main`
 
-## Parallel Plans
+## Mode 1: Single Branch
+
+Use `Single Branch` as the default execution mode.
+
+Ownership rules:
+
+- one agent owns the active branch
+- the canonical `ai/PLAN_*.md` is updated directly
+- `CHANGELOG.md` is updated directly under `## [Unreleased]`
+
+Milestone rules:
+
+- implement exactly the current milestone checkpoint
+- run the planned validation
+- update the canonical plan `Lifecycle` and `Validation Results`
+- update `CHANGELOG.md`
+- commit after the milestone is complete
+
+Remote handoff:
+
+- push or open a PR only when the user explicitly asks for it or the active repository workflow requires it
+
+## Mode 2: Shared Plan
+
+Use `Shared Plan` when one current `ai/PLAN_*.md` can be split into disjoint worker-owned slices but should still land as one coordinated stream.
+
+Topology:
+
+- one coordinator integration branch for the current shared plan
+- one worker branch or worktree per disjoint slice
+- one canonical plan file remains the source of truth for the plan
+
+Shared-file rules:
+
+- workers do not edit shared files directly
+- the minimum shared files are the canonical `ai/PLAN_*.md` and `CHANGELOG.md`
+- the coordinator may reserve additional shared files when several workers would otherwise collide, such as common integration tests, REST Docs pages, the OpenAPI baseline, or `README.md`
+
+Worker rules:
+
+- implement only the assigned slice or milestone ownership
+- update the worker log after each completed milestone
+- record proposed shared-file edits in the worker log instead of editing the shared files directly
+- commit the worker-owned changes and worker log after each completed milestone
+- hand off the completed branch, worktree, and worker log to the coordinator
+
+Coordinator rules:
+
+- keep the current shared plan authoritative
+- merge or cherry-pick completed worker branches onto the coordinator branch
+- integrate accepted worker-log content into the canonical plan file and `CHANGELOG.md`
+- commit each integration checkpoint after the accepted milestone lands on the coordinator branch
+- delete consumed worker logs before the final push or PR unless the user explicitly wants them retained for audit
+
+Normal outcome:
+
+- one coordinator branch
+- one final PR for the full shared plan unless the user explicitly asks for intermediate worker PRs
+
+## Mode 3: Parallel Plans
 
 Use `Parallel Plans` when plan files are genuinely disjoint in source ownership, contract artifacts, rollout order, and validation needs.
+
+Topology:
+
+- one branch or worktree per owned plan file or explicitly grouped disjoint plan set
+- one worker per plan or plan group
+- one coordinator tracking all plan branches, worktrees, validation state, and PR state
+
+Private changelog rules:
+
+- assign a unique stable `<topic>` token before execution starts
+- create a private changelog copy named `CHANGELOG_<topic>.md`
+- initialize `CHANGELOG_<topic>.md` from the current `CHANGELOG.md`
+- update `CHANGELOG_<topic>.md` after each completed milestone instead of editing `CHANGELOG.md`
+- keep the private changelog committed with the worker branch so review and later release preparation can inspect it
 
 Worker rules:
 
 - own one plan file, or one explicitly grouped set of disjoint plan files
-- create and maintain a root-level temporary changelog file named `CHANGELOG_<topic>.md`
-- update `CHANGELOG_<topic>.md` after each completed milestone instead of editing `CHANGELOG.md`
-- keep the temporary changelog committed with the worker branch so review and later release preparation can inspect it
+- update the owned plan `Lifecycle` and `Validation Results`
+- update the private `CHANGELOG_<topic>.md` after each completed milestone
+- update the worker log after each completed milestone
+- commit the milestone, plan update, private changelog update, and worker log together
 
 Coordinator rules:
 
-- assign a unique stable `<topic>` token before delegation
 - prevent overlapping ownership across workers
-- track worker branch, worktree, validation, and PR status
-- track which temporary changelog files must later be merged into `CHANGELOG.md`
+- track which private changelog files must later be folded back into `CHANGELOG.md`
 - resolve cross-plan conflicts only after worker-local execution is complete
+- decide merge order or PR order based on plan dependencies
+- integrate accepted changelog text into canonical `CHANGELOG.md` when preparing the combined integration or release branch
 
-## Shared Plan
+Normal outcome:
 
-Use `Shared Plan` when one `ai/PLAN_*.md` can be split into disjoint file-owned slices but should still land as one coordinated execution stream.
-
-Only the coordinator edits these canonical shared files:
-
-- the target `ai/PLAN_*.md`
-- `CHANGELOG.md`
-
-Each worker must create and maintain a committed progress file at:
-
-`ai/tmp/workflow/<plan_stem>__<worker_name>.md`
-
-Create the directory if it does not exist.
-
-Each progress file records:
-
-- the target plan file
-- the worker branch and worktree
-- the exact owned scope
-- completed milestones, tasks, or slices
-- changed files
-- validation commands run and their pass/fail result
-- proposed `CHANGELOG.md` bullets
-- commit SHA(s)
-- blockers, risks, and coordinator decisions still needed
-- whether the slice is ready for integration
-
-Worker rules:
-
-- implement only the assigned disjoint slice
-- update the worker progress file instead of the canonical plan file's `Validation Results`
-- propose changelog bullets in the progress file instead of editing `CHANGELOG.md`
-- hand off the completed branch plus progress file to the coordinator
-
-Coordinator integration rules:
-
-- merge or cherry-pick completed worker branches onto the coordinator branch
-- integrate accepted progress into the canonical plan file
-- integrate accepted changelog text into `CHANGELOG.md`
-- delete consumed worker progress files before the final push or PR unless the user explicitly wants them retained for audit
-
-The normal outcome for `Shared Plan` is one coordinator branch and one PR for the full plan. Push worker branches only when the user explicitly wants remote visibility for intermediate worker output.
+- multiple worker branches or PRs can move in parallel
+- canonical `CHANGELOG.md` stays untouched until the coordinator is ready to consolidate the accepted private changelog entries
 
 ## Task Slicing Rules
 
@@ -131,27 +219,34 @@ Do not split work when workers would overlap on:
 - `main` remains the only integration and release target
 - worktree branches are temporary execution branches, not release branches
 - do not cut a release from a worktree branch or detached `HEAD`
+- when fanout begins, start from a committed or stashed state so the new branches or worktrees are comparable and reviewable
+- use unique worker branches for forked work; do not try to check out the same branch in multiple worktrees
 
-For `Parallel Plans`:
+For `Single Branch`:
 
-- use one worktree branch per plan or per explicitly grouped disjoint plan set
-- each worker branch is complete only when local validation is done and the branch has been pushed and the PR is open or merged, matching `AGENTS.md`
+- one branch is enough unless the user explicitly asks for a worktree-backed thread
 
 For `Shared Plan`:
 
-- use one coordinator integration branch for the plan
+- use one coordinator branch for the canonical plan
 - use temporary worker branches or worktrees for the disjoint slices
 - push the coordinator branch and open one PR only after the full plan is integrated and validated, unless the user explicitly asks for another remote handoff model
 
+For `Parallel Plans`:
+
+- use one worker branch per plan or grouped disjoint plan set
+- each worker branch is complete only when local validation is done and the branch has been pushed and the PR is open or merged, matching `AGENTS.md`
+
 Optional local-only progress log for any worktree worker:
 
-`ai/tmp/workflow-local/<plan_stem>__<worker_name>.local.md`
+`ai/tmp/workflow-local/<plan_stem_or_topic>__<worker_name>.local.md`
 
-Use it for concise in-progress notes for the user. It may stay local-only and does not replace any required committed artifact.
+Use it for concise in-progress notes for the user.
+It may stay local-only and does not replace any required committed worker log.
 
 ## Reporting Expectations
 
-In both modes, report:
+In all modes, report:
 
 - mode used
 - owned plan or slice
@@ -159,14 +254,16 @@ In both modes, report:
 - validation run
 - commit SHA(s)
 - blockers
-- ready-for-integration or final status
+- final status or ready-for-integration status
+
+Extra for `Shared Plan`:
+
+- worker-log path
+- which shared files were intentionally left to the coordinator
+- which worker logs the coordinator has already integrated
 
 Extra for `Parallel Plans`:
 
 - `CHANGELOG_<topic>.md` path
+- worker-log path
 - branch, worktree, and PR status
-
-Extra for `Shared Plan`:
-
-- worker progress-file path
-- which progress files the coordinator has already integrated
