@@ -3,8 +3,6 @@
 [![CI](https://github.com/kamkie/technical-interview-demo/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/kamkie/technical-interview-demo/actions/workflows/ci.yml)
 [![Codecov](https://codecov.io/gh/kamkie/technical-interview-demo/graph/badge.svg)](https://codecov.io/gh/kamkie/technical-interview-demo)
 
-`AGENTS.md` is the AI-facing counterpart of this file. Keep both files aligned when project behavior, public API contracts, formatter usage, logging/tracing behavior, or quality gates change.
-
 ## Overview
 
 Small Spring Boot demo application for technical interview exercises.
@@ -61,41 +59,6 @@ What that means in practice:
 - If a public API changes, update tests, REST Docs, OpenAPI, and HTTP examples in the same change.
 - If a refactor should not change behavior, the existing specs should keep passing without contract edits.
 - If the intended behavior is unclear, define the missing spec first or stop and clarify it before coding.
-
-## Working With AI
-
-For human-facing guidance on using AI through discovery, planning, implementation, integration, verification, and release, use [WORKING_WITH_AI.md](WORKING_WITH_AI.md).
-That guide explains how to direct AI in this repository without duplicating the AI-only policy under `AGENTS.md` and `ai/`.
-
-## Shared Reference Sections
-
-Some AI-facing docs also contain short descriptive or workflow sections that are readable to human maintainers.
-Use these links when you want a focused entry point instead of reading a whole AI guide end to end.
-
-Architecture and product direction:
-
-- [System Purpose](ai/ARCHITECTURE.md#system-purpose)
-- [API Shape](ai/ARCHITECTURE.md#api-shape)
-- [Feature Packages](ai/BUSINESS_MODULES.md#feature-packages)
-- [Product Intent](ai/DESIGN.md#product-intent)
-- [Non-Goals](ai/DESIGN.md#non-goals)
-
-Planning and execution:
-
-- [Lifecycle Metadata](ai/PLAN.md#lifecycle-metadata)
-- [Plan Output Format](ai/PLAN.md#plan-output-format)
-- [Common Milestone Loop](ai/EXECUTION.md#common-milestone-loop)
-- [Supported Modes](ai/WORKFLOW.md#supported-modes)
-
-Validation and release:
-
-- [Change-Type Expectations](ai/TESTING.md#change-type-expectations)
-- [Standard Command](ai/TESTING.md#standard-command)
-- [Release Preconditions](ai/RELEASES.md#release-preconditions)
-- [Release Checklist](ai/RELEASES.md#release-checklist)
-
-Treat these as shared guidance and codebase maps.
-Behavioral and public-contract truth still lives in the executable specs and published contract artifacts listed in `Spec-Driven Development`.
 
 ## Supported Contract
 
@@ -372,21 +335,9 @@ The optional `k8s/log-forwarding/fluent-bit` bundle shows one deployment-facing 
 
 - `SETUP.md`: developer onboarding, local environment setup, OAuth setup, Docker workflow, and troubleshooting
 - `WORKING_WITH_AI.md`: human-facing guide for using AI across discovery, planning, implementation, integration, verification, and release
-- `ai/ARCHITECTURE.md`: AI-facing architecture map, API shape summary, and structural guidance
-- `ai/BUSINESS_MODULES.md`: AI-facing business-feature package map and ownership guide
-- `ai/PLAN.md`: AI-facing planning rules for execution plans and milestone-ready plan files
-- `ai/EXECUTION.md`: AI-facing common milestone execution workflow for approved plan work
-- `ai/RELEASES.md`: AI-facing maintainer release workflow after approved work is merged onto `main`
-- `ai/PROMPTS.md`: reusable prompt library for repository-specific discovery, planning, implementation, integration, verification, and release requests; its prompt entry titles can be used as shorthand when the request includes the needed concrete context
-- `ai/WORKFLOW.md`: Codex execution workflow for `Single Branch`, `Shared Plan`, and `Parallel Plans`
-- `ai/CODE_STYLE.md`: AI-facing code-style and change-shaping guidance for repo edits
-- `ai/TESTING.md`: AI-facing testing and validation guidance
-- `ai/REVIEWS.md`: AI-facing code-review and security-review guidance
-- `ai/DOCUMENTATION.md`: AI-facing documentation ownership and update guidance
-- `AGENTS.md`: AI-facing project rules and spec-driven working contract
+- `CONTRIBUTING.md`: contributor workflow, review expectations, and development constraints
 - `ROADMAP.md`: active roadmap only; `[x]` marks selected work, not completed history
 - `CHANGELOG.md`: released history only
-- `CONTRIBUTING.md`: contributor workflow and review expectations
 - `k8s/`: raw Kubernetes deployment, edge-reference, and monitoring manifests
 - `helm/technical-interview-demo/`: Helm chart for the application deployment contract
 - `monitoring/`: upstream-stack values, Grafana dashboards, and Alertmanager examples
@@ -398,15 +349,6 @@ The optional `k8s/log-forwarding/fluent-bit` bundle shows one deployment-facing 
 ## Local Development
 
 For onboarding, IDE setup, Docker usage, OAuth setup, local PostgreSQL, and troubleshooting, use `SETUP.md`.
-
-## Development Constraints
-
-- preserve the demo nature of the project
-- prefer direct Spring MVC, Spring Data JPA, and `@Service` code over extra abstraction
-- keep package names under `team.jit.technicalinterviewdemo`
-- avoid unnecessary new infrastructure or libraries unless there is a real requirement
-- do not remove the existing `hello` or `book` endpoints unless the demo scope is intentionally changing
-- add or update tests when API behavior changes
 
 ## Definition Of Done
 

@@ -41,6 +41,33 @@ Then add the phase-specific owner guide:
 - verification: `ai/TESTING.md` and `ai/REVIEWS.md`
 - release preparation and release: `ai/RELEASES.md`
 
+## Useful Shared Reference Sections
+
+Some AI-facing docs are also readable by human maintainers when you want a short codebase map or workflow summary.
+Use these as focused entry points instead of reading every AI guide end to end.
+
+Architecture and product direction:
+
+- [System Purpose](ai/ARCHITECTURE.md#system-purpose)
+- [API Shape](ai/ARCHITECTURE.md#api-shape)
+- [Feature Packages](ai/BUSINESS_MODULES.md#feature-packages)
+- [Product Intent](ai/DESIGN.md#product-intent)
+- [Non-Goals](ai/DESIGN.md#non-goals)
+
+Planning and execution:
+
+- [Lifecycle Metadata](ai/PLAN.md#lifecycle-metadata)
+- [Plan Output Format](ai/PLAN.md#plan-output-format)
+- [Common Milestone Loop](ai/EXECUTION.md#common-milestone-loop)
+- [Supported Modes](ai/WORKFLOW.md#supported-modes)
+
+Validation and release:
+
+- [Change-Type Expectations](ai/TESTING.md#change-type-expectations)
+- [Standard Command](ai/TESTING.md#standard-command)
+- [Release Preconditions](ai/RELEASES.md#release-preconditions)
+- [Release Checklist](ai/RELEASES.md#release-checklist)
+
 ## A Good Request To AI
 
 Good requests in this repository are concrete.
