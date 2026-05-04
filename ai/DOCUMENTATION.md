@@ -10,6 +10,7 @@ Other guides should link here instead of re-listing ownership rules.
 Update the artifact that owns the truth being changed:
 
 - runtime behavior and public API contract: executable tests, `src/docs/asciidoc/`, `src/test/resources/http/`, `src/test/resources/openapi/approved-openapi.json`, and `README.md`
+- human-facing guide for developers using AI through the application lifecycle: `WORKING_WITH_AI.md`
 - AI repository rules and AI-document inventory: `AGENTS.md`
 - local setup, tools, troubleshooting, and onboarding: `SETUP.md`
 - contributor workflow and maintainer expectations: `CONTRIBUTING.md`
@@ -42,6 +43,7 @@ If ownership is unclear, decide that before editing multiple docs.
 ## Common Routing
 
 - public behavior change: update the governing spec artifacts first, then the published contract artifacts they drive
+- human-facing AI collaboration workflow change: update `WORKING_WITH_AI.md`, and update overlapping AI-facing guides in the same change when the underlying repository workflow also changed
 - workflow or AI-guidance change: update the owning AI guide first; touch `AGENTS.md` only when the AI-document set or maintenance rules changed
 - setup or tooling change: update `SETUP.md`, not `README.md`, `AGENTS.md`, or workflow guides
 - roadmap reprioritization: update `ROADMAP.md`

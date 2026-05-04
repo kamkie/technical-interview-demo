@@ -62,6 +62,11 @@ What that means in practice:
 - If a refactor should not change behavior, the existing specs should keep passing without contract edits.
 - If the intended behavior is unclear, define the missing spec first or stop and clarify it before coding.
 
+## Working With AI
+
+For human-facing guidance on using AI through discovery, planning, implementation, integration, verification, and release, use [WORKING_WITH_AI.md](WORKING_WITH_AI.md).
+That guide explains how to direct AI in this repository without duplicating the AI-only policy under `AGENTS.md` and `ai/`.
+
 ## Supported Contract
 
 Supported external application contract:
@@ -336,13 +341,14 @@ The optional `k8s/log-forwarding/fluent-bit` bundle shows one deployment-facing 
 ## Project Map
 
 - `SETUP.md`: developer onboarding, local environment setup, OAuth setup, Docker workflow, and troubleshooting
+- `WORKING_WITH_AI.md`: human-facing guide for using AI across discovery, planning, implementation, integration, verification, and release
 - `ai/ARCHITECTURE.md`: AI-facing architecture map, API shape summary, and structural guidance
 - `ai/BUSINESS_MODULES.md`: AI-facing business-feature package map and ownership guide
 - `ai/PLAN.md`: AI-facing planning rules for execution plans and milestone-ready plan files
-- `ai/EXECUTION.md`: AI-facing single-agent execution workflow for local implementation, validation, and PR-ready handoff
+- `ai/EXECUTION.md`: AI-facing common milestone execution workflow for approved plan work
 - `ai/RELEASES.md`: AI-facing maintainer release workflow after approved work is merged onto `main`
-- `ai/PROMPTS.md`: reusable prompt library for repository-specific planning, implementation, release, and multi-agent requests; its prompt entry titles can be used as shorthand when the request includes the needed concrete context
-- `ai/WORKFLOW.md`: Codex multi-agent workflow, task integration, and release handoff rules for this repository
+- `ai/PROMPTS.md`: reusable prompt library for repository-specific discovery, planning, implementation, integration, verification, and release requests; its prompt entry titles can be used as shorthand when the request includes the needed concrete context
+- `ai/WORKFLOW.md`: Codex execution workflow for `Single Branch`, `Shared Plan`, and `Parallel Plans`
 - `ai/CODE_STYLE.md`: AI-facing code-style and change-shaping guidance for repo edits
 - `ai/TESTING.md`: AI-facing testing and validation guidance
 - `ai/REVIEWS.md`: AI-facing code-review and security-review guidance
