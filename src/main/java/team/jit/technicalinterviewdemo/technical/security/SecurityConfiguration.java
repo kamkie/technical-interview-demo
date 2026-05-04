@@ -13,6 +13,9 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -45,6 +48,9 @@ public class SecurityConfiguration {
             SessionRegistry sessionRegistry,
             SecuritySettingsProperties securitySettingsProperties,
             Environment environment,
+            CurrentApplicationSessionResolver currentApplicationSessionResolver,
+            CsrfTokenRepository csrfTokenRepository,
+            CsrfTokenRequestHandler csrfTokenRequestHandler,
             AuthenticationSuccessHandler oauthAuthenticationSuccessHandler,
             AuthenticationFailureHandler oauthAuthenticationFailureHandler
     ) throws Exception {
@@ -53,8 +59,11 @@ public class SecurityConfiguration {
         http
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
-                // 1.0 keeps CSRF disabled to preserve reviewer-friendly session flows in the demo.
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf(csrf -> csrf
+                        .csrfTokenRepository(csrfTokenRepository)
+                        .csrfTokenRequestHandler(csrfTokenRequestHandler)
+                        .requireCsrfProtectionMatcher(new CurrentSessionCsrfProtectionMatcher(currentApplicationSessionResolver))
+                )
                 .headers(headers -> configureSecurityHeaders(headers, prodProfileActive))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/error", "/", "/docs", "/docs/**", "/hello").permitAll()
@@ -118,6 +127,27 @@ public class SecurityConfiguration {
         }
 
         return http.build();
+    }
+
+    @Bean
+    CsrfTokenRepository csrfTokenRepository(SecuritySettingsProperties securitySettingsProperties) {
+        SecuritySettingsProperties.Session session = securitySettingsProperties.getSession();
+        CookieCsrfTokenRepository repository = CookieCsrfTokenRepository.withHttpOnlyFalse();
+        repository.setCookieName(SameSiteCsrfContract.COOKIE_NAME);
+        repository.setHeaderName(SameSiteCsrfContract.HEADER_NAME);
+        repository.setCookiePath("/");
+        repository.setCookieCustomizer(cookie -> {
+            cookie.secure(session.isCookieSecure());
+            if (session.getCookieSameSite() != null && !session.getCookieSameSite().isBlank()) {
+                cookie.sameSite(session.getCookieSameSite());
+            }
+        });
+        return repository;
+    }
+
+    @Bean
+    CsrfTokenRequestHandler csrfTokenRequestHandler() {
+        return new SpaCsrfTokenRequestHandler();
     }
 
     private void configureSecurityHeaders(HeadersConfigurer<HttpSecurity> headers, boolean prodProfileActive) {

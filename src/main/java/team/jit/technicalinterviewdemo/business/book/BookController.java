@@ -3,6 +3,8 @@ package team.jit.technicalinterviewdemo.business.book;
 import jakarta.validation.Valid;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import team.jit.technicalinterviewdemo.technical.docs.OpenApiConfiguration;
+import team.jit.technicalinterviewdemo.technical.security.SameSiteCsrfContract;
 
 @RequiredArgsConstructor
 @RestController
@@ -52,8 +55,14 @@ public class BookController {
     @PostMapping
     @Operation(
             summary = "Create a book",
-            description = "Requires an authenticated session established through the configured OAuth provider login flow.",
+            description = "Requires an authenticated session established through the configured OAuth provider login flow and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.",
             security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
+    )
+    @Parameter(
+            name = SameSiteCsrfContract.HEADER_NAME,
+            in = ParameterIn.HEADER,
+            required = true,
+            description = "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie."
     )
     public ResponseEntity<BookResponse> create(@Valid @RequestBody BookCreateRequest request) {
         BookResponse payload = BookResponse.from(bookService.create(request));
@@ -63,8 +72,14 @@ public class BookController {
     @PutMapping("/{id}")
     @Operation(
             summary = "Update a book",
-            description = "Requires an authenticated session and the current optimistic-lock version.",
+            description = "Requires an authenticated session, a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie, and the current optimistic-lock version.",
             security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
+    )
+    @Parameter(
+            name = SameSiteCsrfContract.HEADER_NAME,
+            in = ParameterIn.HEADER,
+            required = true,
+            description = "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie."
     )
     public ResponseEntity<BookResponse> update(@PathVariable Long id, @Valid @RequestBody BookUpdateRequest request) {
         BookResponse payload = BookResponse.from(bookService.update(id, request));
@@ -74,8 +89,14 @@ public class BookController {
     @DeleteMapping("/{id}")
     @Operation(
             summary = "Delete a book",
-            description = "Requires an authenticated session.",
+            description = "Requires an authenticated session and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.",
             security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
+    )
+    @Parameter(
+            name = SameSiteCsrfContract.HEADER_NAME,
+            in = ParameterIn.HEADER,
+            required = true,
+            description = "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie."
     )
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         bookService.delete(id);

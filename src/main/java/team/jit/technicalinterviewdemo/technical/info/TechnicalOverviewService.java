@@ -19,6 +19,7 @@ import org.springframework.security.core.SpringSecurityCoreVersion;
 import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
 import org.springframework.stereotype.Service;
 import team.jit.technicalinterviewdemo.technical.security.SecuritySettingsProperties;
+import team.jit.technicalinterviewdemo.technical.security.SameSiteCsrfContract;
 
 @Service
 @RequiredArgsConstructor
@@ -80,12 +81,28 @@ public class TechnicalOverviewService {
                                 property("springdoc.api-docs.version", "unknown")
                         ),
                         new TechnicalOverviewResponse.SecurityDetails(
-                                false,
+                                true,
+                                SameSiteCsrfContract.COOKIE_NAME,
+                                SameSiteCsrfContract.HEADER_NAME,
                                 activeProfiles.contains("oauth"),
                                 PUBLIC_API_PATH_PATTERN,
                                 SecuritySettingsProperties.OAuth.AUTHORIZATION_BASE_URI,
                                 SecuritySettingsProperties.OAuth.CALLBACK_BASE_URI + "/{registrationId}",
-                                property("server.forward-headers-strategy", "none")
+                                property("server.forward-headers-strategy", "none"),
+                                new TechnicalOverviewResponse.AbuseProtectionDetails(
+                                        "edge-or-gateway",
+                                        SecuritySettingsProperties.OAuth.AUTHORIZATION_BASE_URI + "/{registrationId}",
+                                        List.of("burst-rate-limiting", "challenge-or-block-suspicious-clients"),
+                                        PUBLIC_API_PATH_PATTERN,
+                                        List.of(
+                                                "/api/session/logout",
+                                                "/api/books",
+                                                "/api/categories",
+                                                "/api/localizations",
+                                                "/api/account/language"
+                                        ),
+                                        List.of("per-client-throttling", "request-size-enforcement", "rejection-visibility")
+                                )
                         ),
                         new TechnicalOverviewResponse.ShutdownDetails(
                                 property("server.shutdown", "unknown"),

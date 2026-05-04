@@ -6,15 +6,21 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.oauthUser;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.authenticatedBrowserSession;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
 import team.jit.technicalinterviewdemo.testing.AbstractBookCatalogMockMvcIntegrationTest;
 import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
+import team.jit.technicalinterviewdemo.testing.SecurityTestSupport.BrowserSession;
 
 @MockMvcIntegrationSpringBootTest
 class BookApiIntegrationTests extends AbstractBookCatalogMockMvcIntegrationTest {
+
+    @Autowired
+    private JdbcIndexedSessionRepository sessionRepository;
 
     @Test
     void listBooksReturnsSeededBooks() throws Exception {
@@ -132,8 +138,10 @@ class BookApiIntegrationTests extends AbstractBookCatalogMockMvcIntegrationTest 
 
     @Test
     void createBookReturnsCreatedBook() throws Exception {
+        BrowserSession browserSession = readerSession();
+
         mockMvc.perform(post("/api/books")
-                        .with(oauthUser())
+                        .with(browserSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -172,9 +180,11 @@ class BookApiIntegrationTests extends AbstractBookCatalogMockMvcIntegrationTest 
     }
 
     @Test
-    void createBookWithoutCsrfStillSucceedsWhenAuthenticated() throws Exception {
+    void createBookWithoutCsrfReturnsForbiddenWhenSessionIsAuthenticated() throws Exception {
+        BrowserSession browserSession = readerSession();
+
         mockMvc.perform(post("/api/books")
-                        .with(oauthUser())
+                        .with(browserSession.authenticatedSession())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -184,13 +194,40 @@ class BookApiIntegrationTests extends AbstractBookCatalogMockMvcIntegrationTest 
                                   "publicationYear": 2022
                                 }
                                 """))
-                .andExpect(status().isCreated());
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.title").value("Invalid CSRF Token"))
+                .andExpect(jsonPath("$.detail").value("A valid CSRF token is required to perform this operation."))
+                .andExpect(jsonPath("$.messageKey").value("error.request.csrf_invalid"))
+                .andExpect(jsonPath("$.message").value("A valid CSRF token is required to perform this operation."))
+                .andExpect(jsonPath("$.language").value("en"));
+    }
+
+    @Test
+    void createBookWithInvalidCsrfReturnsForbidden() throws Exception {
+        BrowserSession browserSession = readerSession();
+
+        mockMvc.perform(post("/api/books")
+                        .with(browserSession.unsafeWriteWithInvalidCsrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "title": "Spring in Action",
+                                  "author": "Craig Walls",
+                                  "isbn": "9781617297571",
+                                  "publicationYear": 2022
+                                }
+                                """))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.title").value("Invalid CSRF Token"))
+                .andExpect(jsonPath("$.messageKey").value("error.request.csrf_invalid"));
     }
 
     @Test
     void createBookWithDuplicateIsbnReturnsConflict() throws Exception {
+        BrowserSession browserSession = readerSession();
+
         mockMvc.perform(post("/api/books")
-                        .with(oauthUser())
+                        .with(browserSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -212,8 +249,10 @@ class BookApiIntegrationTests extends AbstractBookCatalogMockMvcIntegrationTest 
 
     @Test
     void createBookWithUnknownCategoryReturnsBadRequest() throws Exception {
+        BrowserSession browserSession = readerSession();
+
         mockMvc.perform(post("/api/books")
-                        .with(oauthUser())
+                        .with(browserSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -233,8 +272,10 @@ class BookApiIntegrationTests extends AbstractBookCatalogMockMvcIntegrationTest 
 
     @Test
     void updateBookReturnsUpdatedBook() throws Exception {
+        BrowserSession browserSession = readerSession();
+
         mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
-                        .with(oauthUser())
+                        .with(browserSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -257,8 +298,10 @@ class BookApiIntegrationTests extends AbstractBookCatalogMockMvcIntegrationTest 
 
     @Test
     void updateBookIgnoresProvidedIsbn() throws Exception {
+        BrowserSession browserSession = readerSession();
+
         mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
-                        .with(oauthUser())
+                        .with(browserSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -295,9 +338,10 @@ class BookApiIntegrationTests extends AbstractBookCatalogMockMvcIntegrationTest 
     @Test
     void updateBookWithStaleVersionReturnsConflict() throws Exception {
         long staleVersion = cleanCode.getVersion();
+        BrowserSession browserSession = readerSession();
 
         mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
-                        .with(oauthUser())
+                        .with(browserSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -310,7 +354,7 @@ class BookApiIntegrationTests extends AbstractBookCatalogMockMvcIntegrationTest 
                 .andExpect(status().isOk());
 
         mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
-                        .with(oauthUser())
+                        .with(browserSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -330,8 +374,10 @@ class BookApiIntegrationTests extends AbstractBookCatalogMockMvcIntegrationTest 
 
     @Test
     void deleteBookRemovesBook() throws Exception {
+        BrowserSession browserSession = readerSession();
+
         mockMvc.perform(delete("/api/books/{id}", cleanCode.getId())
-                        .with(oauthUser()))
+                        .with(browserSession.unsafeWrite()))
                 .andExpect(status().isNoContent());
 
         mockMvc.perform(get("/api/books/{id}", cleanCode.getId()))
@@ -349,5 +395,9 @@ class BookApiIntegrationTests extends AbstractBookCatalogMockMvcIntegrationTest 
     void deleteBookWithoutAuthenticationReturnsUnauthorized() throws Exception {
         mockMvc.perform(delete("/api/books/{id}", cleanCode.getId()))
                 .andExpect(status().isUnauthorized());
+    }
+
+    private BrowserSession readerSession() {
+        return authenticatedBrowserSession(sessionRepository, "reader-user");
     }
 }

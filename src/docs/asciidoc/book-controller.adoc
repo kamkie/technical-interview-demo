@@ -8,6 +8,8 @@ xref:index.adoc[Back to API overview]
 
 This page documents the CRUD and search endpoints exposed by `BookController`.
 
+Authenticated same-site browser writes on this controller use the session cookie plus the CSRF handshake from `GET /api/session`: the browser reads `XSRF-TOKEN` and mirrors it into the `X-XSRF-TOKEN` header on unsafe requests.
+
 == `GET /api/books`
 
 Lists books in a paginated response. Supports `page`, `size`, `sort`, `title`, `author`, `isbn`, repeated `category`, `year`, `yearFrom`, and `yearTo` query parameters.

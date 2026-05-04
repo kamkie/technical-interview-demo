@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import team.jit.technicalinterviewdemo.technical.docs.OpenApiConfiguration;
+import team.jit.technicalinterviewdemo.technical.security.SameSiteCsrfContract;
 
 @Validated
 @RestController
@@ -61,8 +64,14 @@ public class LocalizationController {
     @PostMapping
     @Operation(
             summary = "Create a localization",
-            description = "Requires an authenticated session with the ADMIN role.",
+            description = "Requires an authenticated session with the ADMIN role and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.",
             security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
+    )
+    @Parameter(
+            name = SameSiteCsrfContract.HEADER_NAME,
+            in = ParameterIn.HEADER,
+            required = true,
+            description = "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie."
     )
     public ResponseEntity<LocalizationResponse> create(@Valid @RequestBody LocalizationRequest request) {
         LocalizationResponse payload = LocalizationResponse.from(localizationService.create(request));
@@ -72,8 +81,14 @@ public class LocalizationController {
     @PutMapping("/{id}")
     @Operation(
             summary = "Update a localization",
-            description = "Requires an authenticated session with the ADMIN role.",
+            description = "Requires an authenticated session with the ADMIN role and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.",
             security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
+    )
+    @Parameter(
+            name = SameSiteCsrfContract.HEADER_NAME,
+            in = ParameterIn.HEADER,
+            required = true,
+            description = "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie."
     )
     public ResponseEntity<LocalizationResponse> update(
             @PathVariable Long id,
@@ -86,8 +101,14 @@ public class LocalizationController {
     @DeleteMapping("/{id}")
     @Operation(
             summary = "Delete a localization",
-            description = "Requires an authenticated session with the ADMIN role.",
+            description = "Requires an authenticated session with the ADMIN role and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.",
             security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
+    )
+    @Parameter(
+            name = SameSiteCsrfContract.HEADER_NAME,
+            in = ParameterIn.HEADER,
+            required = true,
+            description = "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie."
     )
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         localizationService.delete(id);

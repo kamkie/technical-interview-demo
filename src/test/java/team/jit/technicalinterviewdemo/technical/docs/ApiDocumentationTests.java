@@ -20,13 +20,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.oauthUser;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.authenticatedBrowserSession;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
+import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
 import team.jit.technicalinterviewdemo.business.book.Book;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
 import team.jit.technicalinterviewdemo.business.category.Category;
@@ -34,6 +35,7 @@ import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
 import team.jit.technicalinterviewdemo.testing.AbstractDocumentationIntegrationTest;
 import team.jit.technicalinterviewdemo.testdata.BookCatalogTestData;
 import team.jit.technicalinterviewdemo.testing.RestDocsIntegrationSpringBootTest;
+import team.jit.technicalinterviewdemo.testing.SecurityTestSupport.BrowserSession;
 
 @RestDocsIntegrationSpringBootTest
 class ApiDocumentationTests extends AbstractDocumentationIntegrationTest {
@@ -47,9 +49,13 @@ class ApiDocumentationTests extends AbstractDocumentationIntegrationTest {
     @Autowired
     private CacheManager cacheManager;
 
+    @Autowired
+    private JdbcIndexedSessionRepository sessionRepository;
+
     private Book cleanCode;
     private Book effectiveJava;
     private Category bestPractices;
+    private BrowserSession readerSession;
 
     @BeforeEach
     void setUp() {
@@ -58,6 +64,7 @@ class ApiDocumentationTests extends AbstractDocumentationIntegrationTest {
         cleanCode = catalog.cleanCode();
         effectiveJava = catalog.effectiveJava();
         bestPractices = catalog.bestPractices();
+        readerSession = authenticatedBrowserSession(sessionRepository, "reader-user");
     }
 
     @Test
@@ -120,7 +127,13 @@ class ApiDocumentationTests extends AbstractDocumentationIntegrationTest {
                                 fieldWithPath("configuration.documentation.openApiYaml").description("OpenAPI YAML endpoint path."),
                                 fieldWithPath("configuration.documentation.openApiVersion").description("Configured OpenAPI document dialect."),
                                 fieldWithPath("configuration.security.csrfEnabled").description(
-                                        "Whether CSRF protection is enabled. It remains disabled in the current same-site demo contract as a deliberate tradeoff for reviewer-oriented session flows."
+                                        "Whether same-site CSRF protection is enabled for unsafe browser writes."
+                                ),
+                                fieldWithPath("configuration.security.csrfCookieName").description(
+                                        "Readable CSRF cookie name mirrored by the separate first-party UI."
+                                ),
+                                fieldWithPath("configuration.security.csrfHeaderName").description(
+                                        "Request header name required on unsafe browser writes."
                                 ),
                                 fieldWithPath("configuration.security.oauthProfileActive").description(
                                         "Whether the optional oauth profile is currently active. The base runtime remains deployable without it."
@@ -136,6 +149,24 @@ class ApiDocumentationTests extends AbstractDocumentationIntegrationTest {
                                 ),
                                 fieldWithPath("configuration.security.forwardHeadersStrategy").description(
                                         "Configured Spring forwarded-header handling strategy used to honor trusted reverse-proxy headers."
+                                ),
+                                fieldWithPath("configuration.security.abuseProtection.owner").description(
+                                        "Deployment owner for abusive-client controls on login bootstrap and unsafe internet-public write paths."
+                                ),
+                                fieldWithPath("configuration.security.abuseProtection.loginBootstrapPathTemplate").description(
+                                        "Path template whose OAuth login bootstrap traffic requires edge burst limiting plus challenge-or-block capability."
+                                ),
+                                fieldWithPath("configuration.security.abuseProtection.loginBootstrapControls").description(
+                                        "Minimum edge-owned controls required on the OAuth login bootstrap path."
+                                ),
+                                fieldWithPath("configuration.security.abuseProtection.unsafeWritePathPattern").description(
+                                        "Unsafe request path family whose internet-public traffic requires edge throttling and request-size enforcement."
+                                ),
+                                fieldWithPath("configuration.security.abuseProtection.unsafeWriteExamples").description(
+                                        "Representative unsafe write endpoints covered by the edge-owned abuse-protection posture."
+                                ),
+                                fieldWithPath("configuration.security.abuseProtection.unsafeWriteControls").description(
+                                        "Minimum edge-owned controls required on unsafe internet-public writes."
                                 ),
                                 fieldWithPath("configuration.shutdown.serverShutdown").description("Server shutdown mode."),
                                 fieldWithPath("configuration.shutdown.timeoutPerShutdownPhase").description("Per-phase graceful shutdown timeout.")
@@ -273,7 +304,7 @@ class ApiDocumentationTests extends AbstractDocumentationIntegrationTest {
     @Test
     void documentCreateBookEndpoint() throws Exception {
         mockMvc.perform(post("/api/books")
-                        .with(oauthUser())
+                        .with(readerSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -315,7 +346,7 @@ class ApiDocumentationTests extends AbstractDocumentationIntegrationTest {
     @Test
     void documentCreateBookValidationError() throws Exception {
         mockMvc.perform(post("/api/books")
-                        .with(oauthUser())
+                        .with(readerSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -340,7 +371,7 @@ class ApiDocumentationTests extends AbstractDocumentationIntegrationTest {
     @Test
     void documentCreateBookDuplicateIsbnError() throws Exception {
         mockMvc.perform(post("/api/books")
-                        .with(oauthUser())
+                        .with(readerSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -365,7 +396,7 @@ class ApiDocumentationTests extends AbstractDocumentationIntegrationTest {
     @Test
     void documentUpdateBookEndpoint() throws Exception {
         mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
-                        .with(oauthUser())
+                        .with(readerSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -412,7 +443,7 @@ class ApiDocumentationTests extends AbstractDocumentationIntegrationTest {
         long staleVersion = cleanCode.getVersion();
 
         mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
-                        .with(oauthUser())
+                        .with(readerSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -425,7 +456,7 @@ class ApiDocumentationTests extends AbstractDocumentationIntegrationTest {
                 .andExpect(status().isOk());
 
         mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
-                        .with(oauthUser())
+                        .with(readerSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -492,7 +523,7 @@ class ApiDocumentationTests extends AbstractDocumentationIntegrationTest {
     @Test
     void documentDeleteBookEndpoint() throws Exception {
         mockMvc.perform(delete("/api/books/{id}", cleanCode.getId())
-                        .with(oauthUser()))
+                        .with(readerSession.unsafeWrite()))
                 .andExpect(status().isNoContent())
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))

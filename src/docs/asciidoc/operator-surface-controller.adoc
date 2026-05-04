@@ -12,6 +12,8 @@ This page documents the explicit ADMIN-only operator inspection surface exposed 
 
 Returns one ADMIN-only payload that combines recent audit history, runtime diagnostics, and operational status links without requiring direct database access. Links to overview and actuator paths are internal or devops references, not internet-public contract endpoints.
 
+The embedded `runtime.technicalOverview` section repeats the same repo-owned security posture published by `GET /`, including the same-site CSRF contract and the edge-or-gateway abuse-protection ownership metadata used by smoke and restore validation.
+
 include::{snippets}/operator/get-operator-surface/curl-request.adoc[]
 include::{snippets}/operator/get-operator-surface/http-request.adoc[]
 include::{snippets}/operator/get-operator-surface/http-response.adoc[]

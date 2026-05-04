@@ -3,8 +3,8 @@
 ## Lifecycle
 | Field | Value |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Summary
 - Replace the current reviewer-oriented `csrf.enabled=false` browser-write posture with a production-grade same-site CSRF contract for the separate first-party UI behind one public origin.
@@ -322,7 +322,18 @@
 - This is not a hidden refactor. It is a public contract change because session bootstrap fields, write requirements, reviewer HTTP examples, OpenAPI, and deployment posture checks all move together.
 
 ## Validation Results
-- To be filled in during execution.
+- Passed: `.\gradlew.bat test --tests team.jit.technicalinterviewdemo.technical.security.SessionApiIntegrationTests --tests team.jit.technicalinterviewdemo.technical.security.SessionApiOauthIntegrationTests --tests team.jit.technicalinterviewdemo.technical.security.SessionApiDocumentationTests`
+  - confirmed the updated session bootstrap, logout, and CSRF cookie assertions after aligning the MockMvc `Set-Cookie` expectations with the actual emitted headers
+- Passed: `.\gradlew.bat test --tests team.jit.technicalinterviewdemo.business.book.BookApiIntegrationTests --tests team.jit.technicalinterviewdemo.business.category.CategoryApiIntegrationTests --tests team.jit.technicalinterviewdemo.business.localization.LocalizationApiIntegrationTests --tests team.jit.technicalinterviewdemo.business.user.UserManagementIntegrationTests --tests team.jit.technicalinterviewdemo.technical.api.ApiErrorHandlingIntegrationTests --tests team.jit.technicalinterviewdemo.business.audit.AuditLogIntegrationTests --tests team.jit.technicalinterviewdemo.technical.security.SessionApiIntegrationTests --tests team.jit.technicalinterviewdemo.technical.security.SessionApiOauthIntegrationTests --tests team.jit.technicalinterviewdemo.technical.security.SessionApiDocumentationTests --tests team.jit.technicalinterviewdemo.technical.security.ApiSecurityErrorHandlerTests --tests team.jit.technicalinterviewdemo.technical.info.TechnicalOverviewControllerIntegrationTests --tests team.jit.technicalinterviewdemo.technical.operator.OperatorSurfaceApiIntegrationTests --tests team.jit.technicalinterviewdemo.technical.docs.ApiDocumentationTests --tests team.jit.technicalinterviewdemo.business.category.CategoryApiDocumentationTests --tests team.jit.technicalinterviewdemo.business.localization.LocalizationApiDocumentationTests --tests team.jit.technicalinterviewdemo.technical.docs.OpenApiIntegrationTests`
+  - validated the unsafe-write CSRF contract, localized CSRF failures, REST Docs generation, and technical overview/operator posture assertions across the affected slices
+- Passed: `.\gradlew.bat refreshOpenApiBaseline`
+  - intentionally refreshed `src/test/resources/openapi/approved-openapi.json` after reviewing the public contract changes for `GET /api/session`, authenticated unsafe writes, and the documented CSRF header requirements
+- Passed: `.\gradlew.bat gatlingBenchmark`
+  - both `PublicApiSimulation` and `AuthenticationRedirectSimulation` passed; all baseline decisions were `PASS`, and the tracked Gatling baseline remained unchanged
+- Passed: `.\gradlew.bat externalSmokeTest`
+  - validated the packaged docs/OpenAPI endpoints, the published CSRF and abuse-protection posture on `GET /`, Flyway visibility, and a JDBC-backed authenticated `GET /api/account` flow against the Dockerized smoke environment
+- Passed: `.\gradlew.bat build`
+  - full repository validation succeeded after the CSRF/runtime/docs/OpenAPI changes
 
 ## User Validation
 - Open the generated session docs and confirm `GET /api/session` now describes a CSRF-enabled same-site browser contract instead of `csrf.enabled=false`.

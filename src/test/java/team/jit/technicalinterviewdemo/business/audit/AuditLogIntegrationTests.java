@@ -5,8 +5,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminOauthUser;
-import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.oauthUser;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminBrowserSession;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.authenticatedBrowserSession;
 
 import java.util.List;
 
@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
 import team.jit.technicalinterviewdemo.business.book.Book;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
 import team.jit.technicalinterviewdemo.business.localization.Localization;
@@ -21,6 +22,7 @@ import team.jit.technicalinterviewdemo.business.localization.LocalizationReposit
 import team.jit.technicalinterviewdemo.business.user.UserAccountRepository;
 import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
 import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
+import team.jit.technicalinterviewdemo.testing.SecurityTestSupport.BrowserSession;
 
 @MockMvcIntegrationSpringBootTest
 class AuditLogIntegrationTests extends AbstractMockMvcIntegrationTest {
@@ -39,6 +41,9 @@ class AuditLogIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Autowired
     private LocalizationRepository localizationMessageRepository;
+
+    @Autowired
+    private JdbcIndexedSessionRepository sessionRepository;
 
     private Book cleanCode;
     private Localization bookNotFoundEn;
@@ -64,8 +69,10 @@ class AuditLogIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
     void bookCreateUpdateAndDeleteProduceAuditLogsWithActor() throws Exception {
+        BrowserSession readerSession = readerSession();
+
         mockMvc.perform(post("/api/books")
-                        .with(oauthUser("reader-user"))
+                        .with(readerSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -83,7 +90,7 @@ class AuditLogIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .orElseThrow();
 
         mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
-                        .with(oauthUser("reader-user"))
+                        .with(readerSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -96,7 +103,7 @@ class AuditLogIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .andExpect(status().isOk());
 
         mockMvc.perform(delete("/api/books/{id}", cleanCode.getId())
-                        .with(oauthUser("reader-user")))
+                        .with(readerSession.unsafeWrite()))
                 .andExpect(status().isNoContent());
 
         List<AuditLog> auditLogs = auditLogRepository.findAllByOrderByIdAsc();
@@ -119,8 +126,10 @@ class AuditLogIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
     void localizationCreateUpdateAndDeleteProduceAuditLogsWithAdminActor() throws Exception {
+        BrowserSession adminSession = adminSession();
+
         mockMvc.perform(post("/api/localizations")
-                        .with(adminOauthUser())
+                        .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -137,7 +146,7 @@ class AuditLogIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .orElseThrow();
 
         mockMvc.perform(put("/api/localizations/{id}", bookNotFoundEn.getId())
-                        .with(adminOauthUser())
+                        .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -150,7 +159,7 @@ class AuditLogIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .andExpect(status().isOk());
 
         mockMvc.perform(delete("/api/localizations/{id}", bookNotFoundEn.getId())
-                        .with(adminOauthUser()))
+                        .with(adminSession.unsafeWrite()))
                 .andExpect(status().isNoContent());
 
         List<AuditLog> auditLogs = auditLogRepository.findAllByOrderByIdAsc();
@@ -172,7 +181,14 @@ class AuditLogIntegrationTests extends AbstractMockMvcIntegrationTest {
             assertThat(auditLog.getActorUser()).isNotNull();
             assertThat(auditLog.getCreatedAt()).isNotNull();
             assertThat(auditLog.getSummary()).isNotBlank();
-        });
+                });
+    }
+
+    private BrowserSession adminSession() {
+        return adminBrowserSession(sessionRepository);
+    }
+
+    private BrowserSession readerSession() {
+        return authenticatedBrowserSession(sessionRepository, "reader-user");
     }
 }
-

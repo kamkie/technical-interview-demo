@@ -79,11 +79,24 @@ public record TechnicalOverviewResponse(
 
     public record SecurityDetails(
             boolean csrfEnabled,
+            String csrfCookieName,
+            String csrfHeaderName,
             boolean oauthProfileActive,
             String publicApiPathPattern,
             String oauthAuthorizationBasePath,
             String oauthCallbackPathTemplate,
-            String forwardHeadersStrategy
+            String forwardHeadersStrategy,
+            AbuseProtectionDetails abuseProtection
+    ) {
+    }
+
+    public record AbuseProtectionDetails(
+            String owner,
+            String loginBootstrapPathTemplate,
+            List<String> loginBootstrapControls,
+            String unsafeWritePathPattern,
+            List<String> unsafeWriteExamples,
+            List<String> unsafeWriteControls
     ) {
     }
 

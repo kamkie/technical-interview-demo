@@ -59,7 +59,7 @@
       "put" : {
         "tags" : [ "Localizations" ],
         "summary" : "Update a localization",
-        "description" : "Requires an authenticated session with the ADMIN role.",
+        "description" : "Requires an authenticated session with the ADMIN role and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.",
         "operationId" : "update",
         "parameters" : [ {
           "name" : "id",
@@ -69,6 +69,11 @@
             "type" : "integer",
             "format" : "int64"
           }
+        }, {
+          "name" : "X-XSRF-TOKEN",
+          "in" : "header",
+          "description" : "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
+          "required" : true
         } ],
         "requestBody" : {
           "content" : {
@@ -99,7 +104,7 @@
       "delete" : {
         "tags" : [ "Localizations" ],
         "summary" : "Delete a localization",
-        "description" : "Requires an authenticated session with the ADMIN role.",
+        "description" : "Requires an authenticated session with the ADMIN role and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.",
         "operationId" : "delete",
         "parameters" : [ {
           "name" : "id",
@@ -109,6 +114,11 @@
             "type" : "integer",
             "format" : "int64"
           }
+        }, {
+          "name" : "X-XSRF-TOKEN",
+          "in" : "header",
+          "description" : "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
+          "required" : true
         } ],
         "responses" : {
           "200" : {
@@ -124,7 +134,7 @@
       "put" : {
         "tags" : [ "Categories" ],
         "summary" : "Update a category",
-        "description" : "Requires an authenticated session with the ADMIN role.",
+        "description" : "Requires an authenticated session with the ADMIN role and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.",
         "operationId" : "update_1",
         "parameters" : [ {
           "name" : "id",
@@ -134,6 +144,11 @@
             "type" : "integer",
             "format" : "int64"
           }
+        }, {
+          "name" : "X-XSRF-TOKEN",
+          "in" : "header",
+          "description" : "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
+          "required" : true
         } ],
         "requestBody" : {
           "content" : {
@@ -194,7 +209,7 @@
       "delete" : {
         "tags" : [ "Categories" ],
         "summary" : "Delete a category",
-        "description" : "Requires an authenticated session with the ADMIN role. Categories assigned to books cannot be deleted.",
+        "description" : "Requires an authenticated session with the ADMIN role, a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie, and a category that is not still assigned to books.",
         "operationId" : "delete_1",
         "parameters" : [ {
           "name" : "id",
@@ -204,6 +219,11 @@
             "type" : "integer",
             "format" : "int64"
           }
+        }, {
+          "name" : "X-XSRF-TOKEN",
+          "in" : "header",
+          "description" : "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
+          "required" : true
         } ],
         "responses" : {
           "204" : {
@@ -286,7 +306,7 @@
       "put" : {
         "tags" : [ "Books" ],
         "summary" : "Update a book",
-        "description" : "Requires an authenticated session and the current optimistic-lock version.",
+        "description" : "Requires an authenticated session, a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie, and the current optimistic-lock version.",
         "operationId" : "update_2",
         "parameters" : [ {
           "name" : "id",
@@ -296,6 +316,11 @@
             "type" : "integer",
             "format" : "int64"
           }
+        }, {
+          "name" : "X-XSRF-TOKEN",
+          "in" : "header",
+          "description" : "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
+          "required" : true
         } ],
         "requestBody" : {
           "content" : {
@@ -326,7 +351,7 @@
       "delete" : {
         "tags" : [ "Books" ],
         "summary" : "Delete a book",
-        "description" : "Requires an authenticated session.",
+        "description" : "Requires an authenticated session and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.",
         "operationId" : "delete_2",
         "parameters" : [ {
           "name" : "id",
@@ -336,6 +361,11 @@
             "type" : "integer",
             "format" : "int64"
           }
+        }, {
+          "name" : "X-XSRF-TOKEN",
+          "in" : "header",
+          "description" : "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
+          "required" : true
         } ],
         "responses" : {
           "200" : {
@@ -351,8 +381,14 @@
       "put" : {
         "tags" : [ "Account" ],
         "summary" : "Update the account language",
-        "description" : "Requires an authenticated session. Blank or null clears the preference.",
+        "description" : "Requires an authenticated session and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie. Blank or null clears the preference.",
         "operationId" : "updatePreferredLanguage",
+        "parameters" : [ {
+          "name" : "X-XSRF-TOKEN",
+          "in" : "header",
+          "description" : "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
+          "required" : true
+        } ],
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -384,8 +420,13 @@
       "post" : {
         "tags" : [ "Session" ],
         "summary" : "Log out the current browser session",
-        "description" : "Same-site logout endpoint for the separate first-party UI. Invalidates the current application session if present, clears the session cookie, and returns 204 even when no session exists.",
+        "description" : "Same-site logout endpoint for the separate first-party UI. Invalidates the current application session when present, clears both the session and readable CSRF cookies, requires a valid CSRF header when a current application session exists, and still returns 204 when no session exists.",
         "operationId" : "logout",
+        "parameters" : [ {
+          "name" : "X-XSRF-TOKEN",
+          "in" : "header",
+          "description" : "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie when the browser currently has an authenticated application session."
+        } ],
         "responses" : {
           "204" : {
             "description" : "Current session invalidated and cookie cleared."
@@ -463,8 +504,14 @@
       "post" : {
         "tags" : [ "Localizations" ],
         "summary" : "Create a localization",
-        "description" : "Requires an authenticated session with the ADMIN role.",
+        "description" : "Requires an authenticated session with the ADMIN role and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.",
         "operationId" : "create",
+        "parameters" : [ {
+          "name" : "X-XSRF-TOKEN",
+          "in" : "header",
+          "description" : "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
+          "required" : true
+        } ],
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -517,8 +564,14 @@
       "post" : {
         "tags" : [ "Categories" ],
         "summary" : "Create a category",
-        "description" : "Requires an authenticated session with the ADMIN role.",
+        "description" : "Requires an authenticated session with the ADMIN role and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.",
         "operationId" : "create_1",
+        "parameters" : [ {
+          "name" : "X-XSRF-TOKEN",
+          "in" : "header",
+          "description" : "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
+          "required" : true
+        } ],
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -703,8 +756,14 @@
       "post" : {
         "tags" : [ "Books" ],
         "summary" : "Create a book",
-        "description" : "Requires an authenticated session established through the configured OAuth provider login flow.",
+        "description" : "Requires an authenticated session established through the configured OAuth provider login flow and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.",
         "operationId" : "create_2",
+        "parameters" : [ {
+          "name" : "X-XSRF-TOKEN",
+          "in" : "header",
+          "description" : "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
+          "required" : true
+        } ],
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -736,7 +795,7 @@
       "get" : {
         "tags" : [ "Session" ],
         "summary" : "Get the current browser session contract",
-        "description" : "Public same-site session/bootstrap endpoint for the separate first-party UI. Returns the current authenticated state, persisted-account path, available OAuth login providers, logout path, cookie contract, and current CSRF mode.",
+        "description" : "Public same-site session/bootstrap endpoint for the separate first-party UI. Returns the current authenticated state, persisted-account path, available OAuth login providers, logout path, session-cookie contract, and the readable CSRF cookie plus request-header names required for unsafe browser writes.",
         "operationId" : "currentSession",
         "responses" : {
           "200" : {
@@ -1305,7 +1364,17 @@
           "enabled" : {
             "type" : "boolean",
             "description" : "Whether CSRF protection is currently enabled for browser writes.",
-            "example" : false
+            "example" : true
+          },
+          "cookieName" : {
+            "type" : "string",
+            "description" : "Readable CSRF cookie name that the browser UI mirrors into the request header.",
+            "example" : "XSRF-TOKEN"
+          },
+          "headerName" : {
+            "type" : "string",
+            "description" : "Request header name required on unsafe browser writes.",
+            "example" : "X-XSRF-TOKEN"
           }
         },
         "description" : "Current CSRF contract for browser writes."
@@ -1364,6 +1433,38 @@
           }
         },
         "description" : "Same-site browser session contract for the separate first-party UI."
+      },
+      "AbuseProtectionDetails" : {
+        "type" : "object",
+        "properties" : {
+          "owner" : {
+            "type" : "string"
+          },
+          "loginBootstrapPathTemplate" : {
+            "type" : "string"
+          },
+          "loginBootstrapControls" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "unsafeWritePathPattern" : {
+            "type" : "string"
+          },
+          "unsafeWriteExamples" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "unsafeWriteControls" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }
       },
       "AuditLogResponse" : {
         "type" : "object",
@@ -1635,6 +1736,12 @@
           "csrfEnabled" : {
             "type" : "boolean"
           },
+          "csrfCookieName" : {
+            "type" : "string"
+          },
+          "csrfHeaderName" : {
+            "type" : "string"
+          },
           "oauthProfileActive" : {
             "type" : "boolean"
           },
@@ -1649,6 +1756,9 @@
           },
           "forwardHeadersStrategy" : {
             "type" : "string"
+          },
+          "abuseProtection" : {
+            "$ref" : "#/components/schemas/AbuseProtectionDetails"
           }
         }
       },
@@ -1710,13 +1820,13 @@
       "PageLocalizationResponse" : {
         "type" : "object",
         "properties" : {
-          "totalElements" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
           "totalPages" : {
             "type" : "integer",
             "format" : "int32"
+          },
+          "totalElements" : {
+            "type" : "integer",
+            "format" : "int64"
           },
           "size" : {
             "type" : "integer",
@@ -1732,9 +1842,6 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "pageable" : {
-            "$ref" : "#/components/schemas/PageableObject"
-          },
           "last" : {
             "type" : "boolean"
           },
@@ -1748,6 +1855,9 @@
           "sort" : {
             "$ref" : "#/components/schemas/SortObject"
           },
+          "pageable" : {
+            "$ref" : "#/components/schemas/PageableObject"
+          },
           "empty" : {
             "type" : "boolean"
           }
@@ -1756,13 +1866,9 @@
       "PageableObject" : {
         "type" : "object",
         "properties" : {
-          "pageNumber" : {
+          "offset" : {
             "type" : "integer",
-            "format" : "int32"
-          },
-          "pageSize" : {
-            "type" : "integer",
-            "format" : "int32"
+            "format" : "int64"
           },
           "paged" : {
             "type" : "boolean"
@@ -1773,9 +1879,13 @@
           "unpaged" : {
             "type" : "boolean"
           },
-          "offset" : {
+          "pageNumber" : {
             "type" : "integer",
-            "format" : "int64"
+            "format" : "int32"
+          },
+          "pageSize" : {
+            "type" : "integer",
+            "format" : "int32"
           }
         }
       },
@@ -1796,13 +1906,13 @@
       "PageBook" : {
         "type" : "object",
         "properties" : {
-          "totalElements" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
           "totalPages" : {
             "type" : "integer",
             "format" : "int32"
+          },
+          "totalElements" : {
+            "type" : "integer",
+            "format" : "int64"
           },
           "size" : {
             "type" : "integer",
@@ -1818,9 +1928,6 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "pageable" : {
-            "$ref" : "#/components/schemas/PageableObject"
-          },
           "last" : {
             "type" : "boolean"
           },
@@ -1833,6 +1940,9 @@
           },
           "sort" : {
             "$ref" : "#/components/schemas/SortObject"
+          },
+          "pageable" : {
+            "$ref" : "#/components/schemas/PageableObject"
           },
           "empty" : {
             "type" : "boolean"
@@ -1908,7 +2018,7 @@
     "securitySchemes" : {
       "sessionCookie" : {
         "type" : "apiKey",
-        "description" : "Authenticated browser session cookie used by protected operations. It is established through a configured identity provider login path under /api/session/oauth2/authorization/{registrationId} when the optional oauth profile is active.",
+        "description" : "Authenticated browser session cookie used by protected operations. It is established through a configured identity provider login path under /api/session/oauth2/authorization/{registrationId} when the optional oauth profile is active. Unsafe browser writes also require the X-XSRF-TOKEN request header mirrored from the readable XSRF-TOKEN cookie.",
         "name" : "technical-interview-demo-session",
         "in" : "cookie"
       }

@@ -7,6 +7,7 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import team.jit.technicalinterviewdemo.technical.security.SameSiteCsrfContract;
 
 @Configuration
 public class OpenApiConfiguration {
@@ -23,7 +24,11 @@ public class OpenApiConfiguration {
                         "Authenticated browser session cookie used by protected operations."
                                 + " It is established through a configured identity provider login path"
                                 + " under /api/session/oauth2/authorization/{registrationId} when the optional oauth profile"
-                                + " is active."
+                                + " is active. Unsafe browser writes also require the "
+                                + SameSiteCsrfContract.HEADER_NAME
+                                + " request header mirrored from the readable "
+                                + SameSiteCsrfContract.COOKIE_NAME
+                                + " cookie."
                 );
 
         return new OpenAPI()

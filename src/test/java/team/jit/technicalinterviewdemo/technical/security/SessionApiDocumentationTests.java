@@ -10,20 +10,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.browserSession;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.createAuthenticatedSession;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.sessionCookie;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.Map;
-import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.context.SecurityContextImpl;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.session.Session;
 import org.springframework.session.SessionRepository;
 import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
@@ -31,6 +25,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import team.jit.technicalinterviewdemo.testing.AbstractDocumentationIntegrationTest;
 import team.jit.technicalinterviewdemo.testing.RestDocsIntegrationSpringBootTest;
+import team.jit.technicalinterviewdemo.testing.SecurityTestSupport.BrowserSession;
 
 @RestDocsIntegrationSpringBootTest
 @ActiveProfiles(value = {"test", "oauth"}, inheritProfiles = false)
@@ -65,7 +60,11 @@ class SessionApiDocumentationTests extends AbstractDocumentationIntegrationTest 
                 .andExpect(jsonPath("$.loginProviders.length()").value(1))
                 .andDo(documentEndpoint(
                         "session/get-session",
-                        responseHeaders(commonResponseHeaders()),
+                        responseHeaders(commonResponseHeaders(
+                                headerWithName("Set-Cookie").description(
+                                        "Bootstraps or refreshes the readable CSRF cookie used by the same-site browser UI."
+                                )
+                        )),
                         responseFields(
                                 fieldWithPath("authenticated").description("Whether the current browser request is backed by an authenticated application session."),
                                 fieldWithPath("accountPath").description("Endpoint path for the authenticated persisted-account resource."),
@@ -77,14 +76,16 @@ class SessionApiDocumentationTests extends AbstractDocumentationIntegrationTest 
                                 fieldWithPath("sessionCookie.httpOnly").description("Whether the session cookie is HTTP-only."),
                                 fieldWithPath("sessionCookie.sameSite").description("Session cookie SameSite mode."),
                                 fieldWithPath("sessionCookie.secure").description("Whether the session cookie requires HTTPS."),
-                                fieldWithPath("csrf.enabled").description("Whether CSRF protection is currently enabled for browser writes.")
+                                fieldWithPath("csrf.enabled").description("Whether CSRF protection is currently enabled for browser writes."),
+                                fieldWithPath("csrf.cookieName").description("Readable CSRF cookie name mirrored by the browser UI."),
+                                fieldWithPath("csrf.headerName").description("Request header name required on unsafe browser writes.")
                         )
                 ));
     }
 
     @Test
     void documentGetSessionEndpointForAuthenticatedBrowserState() throws Exception {
-        String sessionId = createAuthenticatedSession("reader-user");
+        String sessionId = createAuthenticatedSession(httpSessionRepository(), "reader-user");
 
         mockMvc.perform(get("/api/session")
                         .cookie(sessionCookie(sessionId)))
@@ -93,7 +94,11 @@ class SessionApiDocumentationTests extends AbstractDocumentationIntegrationTest 
                 .andExpect(jsonPath("$.loginProviders.length()").value(1))
                 .andDo(documentEndpoint(
                         "session/get-session-authenticated",
-                        responseHeaders(commonResponseHeaders()),
+                        responseHeaders(commonResponseHeaders(
+                                headerWithName("Set-Cookie").description(
+                                        "Bootstraps or refreshes the readable CSRF cookie for the current authenticated browser session."
+                                )
+                        )),
                         responseFields(
                                 fieldWithPath("authenticated").description("Whether the current browser request is backed by an authenticated application session."),
                                 fieldWithPath("accountPath").description("Endpoint path for the authenticated persisted-account resource."),
@@ -105,52 +110,29 @@ class SessionApiDocumentationTests extends AbstractDocumentationIntegrationTest 
                                 fieldWithPath("sessionCookie.httpOnly").description("Whether the session cookie is HTTP-only."),
                                 fieldWithPath("sessionCookie.sameSite").description("Session cookie SameSite mode."),
                                 fieldWithPath("sessionCookie.secure").description("Whether the session cookie requires HTTPS."),
-                                fieldWithPath("csrf.enabled").description("Whether CSRF protection is currently enabled for browser writes.")
+                                fieldWithPath("csrf.enabled").description("Whether CSRF protection is currently enabled for browser writes."),
+                                fieldWithPath("csrf.cookieName").description("Readable CSRF cookie name mirrored by the browser UI."),
+                                fieldWithPath("csrf.headerName").description("Request header name required on unsafe browser writes.")
                         )
                 ));
     }
 
     @Test
     void documentLogoutEndpoint() throws Exception {
-        String sessionId = createAuthenticatedSession("reader-user");
+        String sessionId = createAuthenticatedSession(httpSessionRepository(), "reader-user");
+        BrowserSession browserSession = browserSession(sessionId, "reader-user");
 
         mockMvc.perform(post("/api/session/logout")
-                        .cookie(sessionCookie(sessionId)))
+                        .with(browserSession.unsafeWrite()))
                 .andExpect(status().isNoContent())
                 .andExpect(header().string("Set-Cookie", containsString("Max-Age=0")))
                 .andDo(documentEndpoint(
                         "session/post-session-logout",
                         responseHeaders(commonResponseHeaders(
-                                headerWithName("Set-Cookie").description("Clears the session cookie at the application root path.")
+                                headerWithName("Set-Cookie").description(
+                                        "Clears both the session cookie and the readable CSRF cookie at the application root path."
+                                )
                         ))
                 ));
-    }
-
-    private String createAuthenticatedSession(String login) {
-        Session session = httpSessionRepository().createSession();
-        session.setAttribute(
-                HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
-                new SecurityContextImpl(authentication(login))
-        );
-        httpSessionRepository().save(session);
-        return session.getId();
-    }
-
-    private Cookie sessionCookie(String sessionId) {
-        String encodedSessionId = Base64.getEncoder().encodeToString(sessionId.getBytes(StandardCharsets.UTF_8));
-        return new Cookie("technical-interview-demo-session", encodedSessionId);
-    }
-
-    private OAuth2AuthenticationToken authentication(String login) {
-        DefaultOAuth2User oauth2User = new DefaultOAuth2User(
-                AuthorityUtils.createAuthorityList("ROLE_USER"),
-                Map.of(
-                        "login", login,
-                        "name", login + " display",
-                        "email", login + "@example.test"
-                ),
-                "login"
-        );
-        return new OAuth2AuthenticationToken(oauth2User, oauth2User.getAuthorities(), "github");
     }
 }

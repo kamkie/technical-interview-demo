@@ -6,23 +6,28 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminOauthUser;
-import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.oauthUser;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminBrowserSession;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.authenticatedBrowserSession;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
 import team.jit.technicalinterviewdemo.business.localization.seed.LocalizationSeedData;
 import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
 import team.jit.technicalinterviewdemo.testdata.LocalizationTestData;
 import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
+import team.jit.technicalinterviewdemo.testing.SecurityTestSupport.BrowserSession;
 
 @MockMvcIntegrationSpringBootTest
 class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Autowired
     private LocalizationRepository localizationRepository;
+
+    @Autowired
+    private JdbcIndexedSessionRepository sessionRepository;
 
     private Localization bookNotFoundEn;
     private Localization bookNotFoundEs;
@@ -102,8 +107,10 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
     void createLocalizationReturnsCreatedMessage() throws Exception {
+        BrowserSession adminSession = adminSession();
+
         mockMvc.perform(post("/api/localizations")
-                        .with(adminOauthUser())
+                        .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -140,8 +147,10 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
     void createLocalizationWithDuplicateKeyAndLanguageReturnsConflict() throws Exception {
+        BrowserSession adminSession = adminSession();
+
         mockMvc.perform(post("/api/localizations")
-                        .with(adminOauthUser())
+                        .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -161,8 +170,10 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
     void createLocalizationWithInvalidPayloadReturnsBadRequest() throws Exception {
+        BrowserSession adminSession = adminSession();
+
         mockMvc.perform(post("/api/localizations")
-                        .with(adminOauthUser())
+                        .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -184,8 +195,10 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
     void createLocalizationWithUnsupportedLanguageReturnsBadRequest() throws Exception {
+        BrowserSession adminSession = adminSession();
+
         mockMvc.perform(post("/api/localizations")
-                        .with(adminOauthUser())
+                        .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -205,8 +218,10 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
     void updateLocalizationReturnsUpdatedMessage() throws Exception {
+        BrowserSession adminSession = adminSession();
+
         mockMvc.perform(put("/api/localizations/{id}", bookNotFoundEn.getId())
-                        .with(adminOauthUser())
+                        .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -232,8 +247,10 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
     void deleteLocalizationRemovesMessage() throws Exception {
+        BrowserSession adminSession = adminSession();
+
         mockMvc.perform(delete("/api/localizations/{id}", bookNotFoundEn.getId())
-                        .with(adminOauthUser()))
+                        .with(adminSession.unsafeWrite()))
                 .andExpect(status().isNoContent());
 
         mockMvc.perform(get("/api/localizations/{id}", bookNotFoundEn.getId()))
@@ -243,8 +260,10 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
     void createLocalizationAsRegularUserReturnsForbidden() throws Exception {
+        BrowserSession userSession = userSession();
+
         mockMvc.perform(post("/api/localizations")
-                        .with(oauthUser())
+                        .with(userSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -259,6 +278,26 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .andExpect(jsonPath("$.detail").value("Localization management requires the ADMIN role."))
                 .andExpect(jsonPath("$.messageKey").value("error.request.forbidden"))
                 .andExpect(jsonPath("$.language").value("en"));
+    }
+
+    @Test
+    void createLocalizationWithoutCsrfReturnsDedicatedForbiddenProblem() throws Exception {
+        BrowserSession adminSession = adminSession();
+
+        mockMvc.perform(post("/api/localizations")
+                        .with(adminSession.authenticatedSession())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "messageKey": "info.book.created",
+                                  "language": "fr",
+                                  "messageText": "Le livre a ete cree.",
+                                  "description": "French success message for new books."
+                                }
+                                """))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.title").value("Invalid CSRF Token"))
+                .andExpect(jsonPath("$.messageKey").value("error.request.csrf_invalid"));
     }
 
     @Test
@@ -286,5 +325,13 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     private int totalPagesForPageSize(int pageSize) {
         return (totalSeededLocalizations() + pageSize - 1) / pageSize;
+    }
+
+    private BrowserSession adminSession() {
+        return adminBrowserSession(sessionRepository);
+    }
+
+    private BrowserSession userSession() {
+        return authenticatedBrowserSession(sessionRepository, "reader-user");
     }
 }

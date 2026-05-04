@@ -1,9 +1,12 @@
 # IntelliJ HTTP Client examples for technical-interview-demo
 # Public GET requests work as-is.
 # Protected requests require the app to run with the oauth profile and an authenticated session.
+# Unsafe writes also require X-XSRF-TOKEN mirrored from the XSRF-TOKEN cookie
+# bootstrapped by GET /api/session.
 
 @baseUrl = http://localhost:8080
 #@sessionCookie = paste-technical-interview-demo-session-here
+#@csrfToken = paste-xsrf-token-from-get-api-session-here
 @bookId = 1
 @bookVersion = 0
 @writeBookId = 0
@@ -36,8 +39,11 @@ GET {{baseUrl}}/api/books/{{bookId}}
 Accept: application/json
 
 ### BookController - create book (authenticated session)
+# Bootstrap or refresh the CSRF token with GET /api/session after login, then paste the
+# XSRF-TOKEN cookie value into csrfToken before running write requests.
 POST {{baseUrl}}/api/books?lang=pl
 Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
 Content-Type: application/json
 Accept: application/json
 
@@ -58,6 +64,7 @@ if (response.status === 201) {
 ### BookController - update the book created above (run create first)
 PUT {{baseUrl}}/api/books/{{writeBookId}}
 Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
 Content-Type: application/json
 Accept: application/json
 
@@ -77,11 +84,14 @@ if (response.status === 200) {
 ### BookController - delete the book created above (run create first)
 DELETE {{baseUrl}}/api/books/{{writeBookId}}
 Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
 
 ### BookController - delete not exiusting book to see 404 handling
 DELETE {{baseUrl}}/api/books/9999
 Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
 
 ### BookController - delete not exiusting book to see 404 handling with Polish localization (run with "pl" locale to see localized message)
 DELETE {{baseUrl}}/api/books/9999?lang=pl
 Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}

@@ -16,6 +16,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
+import org.springframework.security.web.csrf.MissingCsrfTokenException;
 import team.jit.technicalinterviewdemo.business.localization.Localization;
 import team.jit.technicalinterviewdemo.business.localization.LocalizationService;
 import team.jit.technicalinterviewdemo.technical.api.ApiProblemFactory;
@@ -102,6 +103,26 @@ class ApiSecurityErrorHandlerTests {
         assertThat(body.get("detail").asText()).isEqualTo("Access is denied.");
         assertThat(body.get("messageKey").asText()).isEqualTo("error.request.forbidden");
         assertThat(body.get("language").asText()).isEqualTo("en");
+    }
+
+    @Test
+    void accessDeniedHandlerMapsCsrfFailuresToDedicatedLocalizedProblem() throws Exception {
+        when(localizationService.findByMessageKeyForCurrentLanguageWithFallback(eq("error.request.csrf_invalid")))
+                .thenReturn(localizedMessage("error.request.csrf_invalid", "CSRF message.", "fr"));
+
+        MockHttpServletRequest request = new MockHttpServletRequest("POST", "/api/books");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        apiAccessDeniedHandler.handle(request, response, new MissingCsrfTokenException("missing"));
+
+        JsonNode body = JSON_MAPPER.readTree(response.getContentAsString());
+        assertThat(response.getStatus()).isEqualTo(403);
+        assertThat(body.get("title").asText()).isEqualTo("Invalid CSRF Token");
+        assertThat(body.get("status").asInt()).isEqualTo(403);
+        assertThat(body.get("detail").asText()).isEqualTo("A valid CSRF token is required to perform this operation.");
+        assertThat(body.get("messageKey").asText()).isEqualTo("error.request.csrf_invalid");
+        assertThat(body.get("message").asText()).isEqualTo("CSRF message.");
+        assertThat(body.get("language").asText()).isEqualTo("fr");
     }
 
     private Localization localizedMessage(String messageKey, String messageText, String language) {

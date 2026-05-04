@@ -109,7 +109,8 @@ Supported technical bootstrap:
 
 - `GET /api/session`
   - public same-site browser session/bootstrap endpoint for the separate first-party UI
-  - returns `authenticated`, `accountPath`, `loginProviders[]`, `logoutPath`, `sessionCookie`, and `csrf.enabled`
+  - returns `authenticated`, `accountPath`, `loginProviders[]`, `logoutPath`, `sessionCookie`, and `csrf` metadata with `enabled`, `cookieName`, and `headerName`
+  - issues or refreshes the readable `XSRF-TOKEN` cookie used for same-site browser writes; the raw token is not exposed in JSON
   - `loginProviders` is `[]` when the optional `oauth` profile is inactive
   - each `loginProviders[]` item exposes `registrationId`, `clientName`, and a relative `authorizationPath`
 - `GET /api/session/oauth2/authorization/{registrationId}`
@@ -119,7 +120,8 @@ Supported technical bootstrap:
   - reverse-proxy callback path expected from the external identity provider
 - `POST /api/session/logout`
   - public idempotent logout endpoint for the same-site browser session contract
-  - clears the configured session cookie and invalidates the current server-side session when present
+  - requires a valid `X-XSRF-TOKEN` header only when a real current application session exists; otherwise it still returns `204 No Content`
+  - clears the configured session cookie, clears `XSRF-TOKEN`, and invalidates the current server-side session when present
 - `APP_BOOTSTRAP_SEED_DEMO_DATA`
   - controls startup seeding for demo categories, books, and localization messages
   - defaults to `true` in `local` and `test`, defaults to `false` in `prod`
@@ -128,18 +130,22 @@ Security summary:
 
 - public supported external endpoints: read-only `/api/books/**`, `GET /api/categories`, read-only `/api/localizations/**`, `GET /api/session`, `POST /api/session/logout`, and `GET /api/session/oauth2/authorization/{registrationId}`
 - authenticated session required on the external `/api/**` surface: `/api/account`, `PUT /api/account/language`, `GET /api/audit-logs`, `GET /api/operator/surface`, and the state-changing book, category, and localization endpoints
+- unsafe same-site browser writes under `/api/**` also require a valid `X-XSRF-TOKEN` header mirrored from the readable `XSRF-TOKEN` cookie bootstrapped by `GET /api/session`; safe `GET` requests remain CSRF-free
 - `ADMIN` role required: audit log review, operator surface access, category create/update/delete, and localization create/update/delete
 - interactive login and provider callbacks stay under `/api/session/**` when the `oauth` profile is active
 - the supported first-party browser contract assumes one public origin via reverse proxy; cross-origin browser support and CORS guarantees are not part of the supported contract
+- edge or gateway controls own abuse protection for `/api/session/oauth2/authorization/{registrationId}` and unsafe internet-public `/api/**` writes
 - conservative browser security headers apply to application responses, with HSTS added on secure `prod` requests
 
 Contract notes:
 
 - `GET /api/audit-logs` is paginated and supports optional exact `targetType`, `action`, and `actorLogin` filters
 - `GET /api/operator/surface` returns one ADMIN-only payload that combines recent audit history, runtime diagnostics, and operational status links
-- `GET /api/session` is the supported same-site UI bootstrap/state endpoint, while `GET /api/account` remains the authenticated persisted-profile endpoint
+- `GET /api/session` is the supported same-site UI bootstrap/state endpoint, while `GET /api/account` remains the authenticated persisted-profile endpoint; it issues or refreshes `XSRF-TOKEN` and returns `csrf.enabled`, `csrf.cookieName`, and `csrf.headerName`
 - OAuth success redirects to `/` and failures redirect to `/?login=failed` for the separate first-party UI
-- `POST /api/session/logout` always returns `204 No Content`, clears the configured session cookie, and is safe to call even when no session exists
+- after login success or logout, call `GET /api/session` again before the next unsafe write so the browser receives the current `XSRF-TOKEN` cookie for the current session state
+- missing or invalid CSRF tokens on active-session unsafe writes return a localized `403 ProblemDetail` with `messageKey=error.request.csrf_invalid`
+- `POST /api/session/logout` always returns `204 No Content`, clears the configured session cookie plus `XSRF-TOKEN`, requires a valid CSRF token only when a real current session exists, and is safe to call even when no session exists
 - `DELETE /api/categories/{id}` fails with a localized conflict if the category is still assigned to one or more books
 - `GET /api/books` is paginated and supports text, category, and year filters
 - `GET /api/localizations` is paginated and supports optional exact `messageKey` and `language` filters
@@ -212,9 +218,9 @@ Supported delivery path:
 - GitHub Actions is the repository CI/CD platform
 - pull requests to `main` and pushes to `main` run the `CI` workflow, which executes `./gradlew build` and `./gradlew externalSmokeTest`
 - a dedicated `CodeQL` workflow runs on pull requests, pushes to `main`, and a weekly schedule using repository-owned configuration; its SARIF results appear in GitHub code scanning and are additive to the Gradle-owned SpotBugs plus FindSecBugs and PMD gates
-- `externalSmokeTest` now verifies the packaged docs HTML, OpenAPI JSON/YAML endpoints, and one JDBC-backed authenticated `GET /api/account` session path in addition to the existing public/readiness smoke checks
+- `externalSmokeTest` now verifies the packaged docs HTML, OpenAPI JSON/YAML endpoints, the published CSRF and abuse-protection posture on `GET /`, and one JDBC-backed authenticated `GET /api/account` session path in addition to the existing public/readiness smoke checks
 - the scheduled `Post-Deploy Smoke` workflow runs `./gradlew scheduledExternalCheck` every six hours and on manual dispatch, using `EXTERNAL_CHECK_BASE_URL` plus optional JDBC secrets for deeper JDBC-backed session and Flyway checks
-- manual `Post-Deploy Smoke` runs can also assert the exact published release identity through `build.version` and `git.shortCommitId`, plus the documented prod runtime posture through `runtime.activeProfiles`, `configuration.session.storeType`, `configuration.session.timeout`, and `configuration.security.csrfEnabled=false`
+- manual `Post-Deploy Smoke` runs can also assert the exact published release identity through `build.version` and `git.shortCommitId`, plus the documented prod runtime posture through `runtime.activeProfiles`, `configuration.session.storeType`, `configuration.session.timeout`, `configuration.security.csrfEnabled=true`, `configuration.security.csrfCookieName=XSRF-TOKEN`, `configuration.security.csrfHeaderName=X-XSRF-TOKEN`, and `configuration.security.abuseProtection.owner=edge-or-gateway`
 - the `CI` workflow uploads `build/reports/jacoco/test/jacocoTestReport.xml` to Codecov after the Gradle build, so the repository must be onboarded for Codecov uploads before that signal is expected to pass consistently
 - Dependabot opens grouped weekly update PRs for Gradle, GitHub Actions, and Docker, and those PRs are expected to pass the same `CI` workflow before merge
 - the `CI` workflow uploads generated vulnerability scan artifacts from `build/reports/security/`, static-analysis artifacts from `build/reports/pmd/` plus `build/reports/security/static/`, and SBOM artifacts from `build/reports/sbom/` so blocked runs remain reviewable
@@ -255,7 +261,10 @@ Current production posture:
 - `SESSION_COOKIE_SECURE` remains optional with a secure-by-default value of `true`, but disabling it in `prod` is rejected at startup
 - `server.forward-headers-strategy=framework` is part of the supported `prod` posture so trusted reverse-proxy headers drive redirect and scheme handling correctly
 - `prod` enforces a 15 minute session timeout, one active session per login, and login rejection when that session cap is already reached
-- browser-session write flows keep CSRF disabled as a deliberate demo tradeoff for reviewer-friendly session-based API exercise flows
+- browser-session unsafe writes use same-site CSRF protection with a readable `XSRF-TOKEN` cookie and a required `X-XSRF-TOKEN` header on unsafe `/api/**` requests that have a real current application session
+- the supported first-party UI flow calls `GET /api/session` after login success and after logout before the next unsafe write so the browser receives the current CSRF cookie for that session state
+- edge or gateway controls own burst limiting plus suspicious-client challenge or block capability for `/api/session/oauth2/authorization/{registrationId}`
+- edge or gateway controls also own per-client throttling, request-size enforcement, and rejection visibility for unsafe internet-public `/api/**` writes
 - production logging uses `INFO` at the root logger and emits structured JSON Lines on stdout (`logging.structured.format.console=logstash`) while keeping trace export runtime-configurable through standard OTLP environment variables
 - non-`/api/**` paths remain internal or devops-only; internet reachability for those paths is intentionally owned by deployment and reverse-proxy configuration
 - `GET /actuator/prometheus` remains available for trusted deployment scraping, but it is not part of the internet-public contract
@@ -263,6 +272,8 @@ Current production posture:
 Trusted deployment topology assumption:
 
 - only `/api/**` is intended to be internet-reachable, via `waf -> frontend -> this application`
+- `/api/session/oauth2/authorization/{registrationId}` must be protected by edge burst limiting plus suspicious-client challenge or block capability
+- unsafe internet-public `/api/**` writes must be protected by edge per-client throttling, request-size enforcement, and rejection visibility
 - `/`, `/hello`, `/docs`, OpenAPI publication, and actuator paths are expected to stay private to trusted internal or devops access paths
 - Prometheus scraping is expected to happen from trusted internal infrastructure such as cluster-local monitoring, not from arbitrary public clients
 
@@ -287,7 +298,7 @@ Restore-drill baseline for this repository:
 
 1. restore a recent backup to a separate PostgreSQL instance
 2. run `pwsh ./scripts/release/invoke-restore-drill.ps1 -ImageReference <image> -BaseUrl http://127.0.0.1:18080 -JdbcUrl <jdbc-url> -JdbcUser <user> -JdbcPassword <password> -ExpectedBuildVersion <tag> -ExpectedShortCommitId <12-char-sha>`
-3. confirm the drill proves readiness, `build.version`, `git.shortCommitId`, `prod` profile activation, JDBC session storage, the `15m` session timeout, `csrfEnabled=false`, Flyway history, and an authenticated `GET /api/account` check against the restored database
+3. confirm the drill proves readiness, `build.version`, `git.shortCommitId`, `prod` profile activation, JDBC session storage, the `15m` session timeout, `csrfEnabled=true`, `csrfCookieName=XSRF-TOKEN`, `csrfHeaderName=X-XSRF-TOKEN`, edge-owned abuse-protection metadata, Flyway history, and an authenticated `GET /api/account` check against the restored database
 4. keep the restore evidence with the release notes for every `restore-sensitive` rollout
 
 Use the raw manifests under `k8s/` when you want explicit repo-owned YAML. Use the Helm chart under `helm/technical-interview-demo` when you want the same deployment contract packaged behind values files.

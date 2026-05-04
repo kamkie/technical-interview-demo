@@ -189,6 +189,7 @@ try {
 
     Write-Host "Waiting for readiness at '$BaseUrl'."
     Wait-ForReadiness -TargetBaseUrl $BaseUrl -TimeoutSeconds $TimeoutSeconds
+    Write-Host "Runtime posture validation will confirm the published CSRF and edge abuse-protection metadata from GET /."
 
     $gradleCommand = Join-Path $repoRoot "gradlew.bat"
     $gradleArguments = @(

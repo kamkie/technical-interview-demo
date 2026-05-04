@@ -61,22 +61,32 @@ class OpenApiIntegrationTests extends AbstractRandomPortIntegrationTest {
                 "Authenticated browser session cookie used by protected operations. It is established through a"
                         + " configured identity provider login path under"
                         + " /api/session/oauth2/authorization/{registrationId} when the optional oauth profile is"
-                        + " active.",
+                        + " active. Unsafe browser writes also require the X-XSRF-TOKEN request header"
+                        + " mirrored from the readable XSRF-TOKEN cookie.",
                 openApi.at("/components/securitySchemes/sessionCookie/description").asText()
         );
 
         JsonNode createBookSecurity = openApi.at("/paths/~1api~1books/post/security");
         assertFalse(createBookSecurity.isMissingNode());
         assertEquals("sessionCookie", createBookSecurity.get(0).fieldNames().next());
+        assertTrue(openApi.at("/paths/~1api~1books/post/parameters").findValuesAsText("name").contains("X-XSRF-TOKEN"));
 
         JsonNode accountSecurity = openApi.at("/paths/~1api~1account/get/security");
         assertFalse(accountSecurity.isMissingNode());
         assertEquals("sessionCookie", accountSecurity.get(0).fieldNames().next());
+        assertTrue(
+                openApi.at("/paths/~1api~1account~1language/put/parameters").findValuesAsText("name")
+                        .contains("X-XSRF-TOKEN")
+        );
 
         assertFalse(openApi.at("/paths/~1api~1session/get").isMissingNode());
         assertTrue(openApi.at("/paths/~1api~1session/get/security").isMissingNode());
         assertFalse(openApi.at("/paths/~1api~1session~1logout/post").isMissingNode());
         assertTrue(openApi.at("/paths/~1api~1session~1logout/post/security").isMissingNode());
+        assertTrue(
+                openApi.at("/paths/~1api~1session~1logout/post/parameters").findValuesAsText("name")
+                        .contains("X-XSRF-TOKEN")
+        );
 
         JsonNode auditLogSecurity = openApi.at("/paths/~1api~1audit-logs/get/security");
         assertFalse(auditLogSecurity.isMissingNode());
@@ -89,10 +99,18 @@ class OpenApiIntegrationTests extends AbstractRandomPortIntegrationTest {
         JsonNode updateCategorySecurity = openApi.at("/paths/~1api~1categories~1{id}/put/security");
         assertFalse(updateCategorySecurity.isMissingNode());
         assertEquals("sessionCookie", updateCategorySecurity.get(0).fieldNames().next());
+        assertTrue(
+                openApi.at("/paths/~1api~1categories~1{id}/put/parameters").findValuesAsText("name")
+                        .contains("X-XSRF-TOKEN")
+        );
 
         JsonNode deleteCategorySecurity = openApi.at("/paths/~1api~1categories~1{id}/delete/security");
         assertFalse(deleteCategorySecurity.isMissingNode());
         assertEquals("sessionCookie", deleteCategorySecurity.get(0).fieldNames().next());
+        assertTrue(
+                openApi.at("/paths/~1api~1categories~1{id}/delete/parameters").findValuesAsText("name")
+                        .contains("X-XSRF-TOKEN")
+        );
 
         List<String> listBookParameters = openApi.at("/paths/~1api~1books/get/parameters")
                 .findValuesAsText("name");
@@ -183,6 +201,7 @@ class OpenApiIntegrationTests extends AbstractRandomPortIntegrationTest {
         assertFalse(openApi.at("/components/schemas/SessionResponse").isMissingNode());
         assertFalse(openApi.at("/components/schemas/UserAccountResponse").isMissingNode());
         assertFalse(openApi.at("/components/schemas/SessionLoginProvider").isMissingNode());
+        assertFalse(openApi.at("/components/schemas/SessionCsrfContract").isMissingNode());
         assertTrue(openApi.at("/components/schemas/SessionResponse/properties/loginPath")
                 .isMissingNode());
         assertEquals(
@@ -190,6 +209,12 @@ class OpenApiIntegrationTests extends AbstractRandomPortIntegrationTest {
                 openApi.at("/components/schemas/SessionResponse/properties/loginProviders/items/$ref")
                         .asText()
         );
+        assertEquals(
+                "#/components/schemas/SessionCsrfContract",
+                openApi.at("/components/schemas/SessionResponse/properties/csrf/$ref").asText()
+        );
+        assertFalse(openApi.at("/components/schemas/SessionCsrfContract/properties/cookieName").isMissingNode());
+        assertFalse(openApi.at("/components/schemas/SessionCsrfContract/properties/headerName").isMissingNode());
     }
 
     private JsonNode fetchOpenApiJson() throws IOException, InterruptedException {

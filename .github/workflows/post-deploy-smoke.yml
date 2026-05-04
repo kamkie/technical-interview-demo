@@ -127,7 +127,7 @@ jobs:
             echo "Manual dispatch will also verify build.version=${INPUT_EXPECTED_BUILD_VERSION} and git.shortCommitId=${INPUT_EXPECTED_SHORT_COMMIT_ID} from GET /." >> "${GITHUB_STEP_SUMMARY}"
           fi
           if [ "${posture_values_present}" -eq 3 ]; then
-            echo "Runtime posture validation expects profile=${INPUT_EXPECTED_ACTIVE_PROFILE}, session store=${INPUT_EXPECTED_SESSION_STORE_TYPE}, session timeout=${INPUT_EXPECTED_SESSION_TIMEOUT}, and csrfEnabled=false." >> "${GITHUB_STEP_SUMMARY}"
+            echo "Runtime posture validation expects profile=${INPUT_EXPECTED_ACTIVE_PROFILE}, session store=${INPUT_EXPECTED_SESSION_STORE_TYPE}, session timeout=${INPUT_EXPECTED_SESSION_TIMEOUT}, csrfEnabled=true, csrfCookieName=XSRF-TOKEN, csrfHeaderName=X-XSRF-TOKEN, and abuseProtection.owner=edge-or-gateway." >> "${GITHUB_STEP_SUMMARY}"
           fi
 
       - name: Set up Java 25

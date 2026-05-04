@@ -17,15 +17,17 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminOauthUser;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminBrowserSession;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
 import team.jit.technicalinterviewdemo.testing.AbstractDocumentationIntegrationTest;
 import team.jit.technicalinterviewdemo.testdata.LocalizationTestData;
 import team.jit.technicalinterviewdemo.testing.RestDocsIntegrationSpringBootTest;
+import team.jit.technicalinterviewdemo.testing.SecurityTestSupport.BrowserSession;
 
 @RestDocsIntegrationSpringBootTest
 class LocalizationApiDocumentationTests extends AbstractDocumentationIntegrationTest {
@@ -33,8 +35,12 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
     @Autowired
     private LocalizationRepository localizationRepository;
 
+    @Autowired
+    private JdbcIndexedSessionRepository sessionRepository;
+
     private Localization bookNotFoundEn;
     private Localization bookNotFoundEs;
+    private BrowserSession adminSession;
 
     @BeforeEach
     void setUp() {
@@ -42,6 +48,7 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                 LocalizationTestData.reloadDefaultMessages(localizationRepository);
         bookNotFoundEn = messages.bookNotFoundEn();
         bookNotFoundEs = messages.bookNotFoundEs();
+        adminSession = adminBrowserSession(sessionRepository);
     }
 
     @Test
@@ -153,7 +160,7 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
     @Test
     void documentCreateLocalizationEndpoint() throws Exception {
         mockMvc.perform(post("/api/localizations")
-                        .with(adminOauthUser())
+                        .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -183,7 +190,7 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
     @Test
     void documentUpdateLocalizationEndpoint() throws Exception {
         mockMvc.perform(put("/api/localizations/{id}", bookNotFoundEn.getId())
-                        .with(adminOauthUser())
+                        .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -216,7 +223,7 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
     @Test
     void documentDeleteLocalizationEndpoint() throws Exception {
         mockMvc.perform(delete("/api/localizations/{id}", bookNotFoundEn.getId())
-                        .with(adminOauthUser()))
+                        .with(adminSession.unsafeWrite()))
                 .andExpect(status().isNoContent())
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
@@ -276,7 +283,7 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
     @Test
     void documentCreateLocalizationValidationError() throws Exception {
         mockMvc.perform(post("/api/localizations")
-                        .with(adminOauthUser())
+                        .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -300,7 +307,7 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
     @Test
     void documentCreateLocalizationUnsupportedLanguageError() throws Exception {
         mockMvc.perform(post("/api/localizations")
-                        .with(adminOauthUser())
+                        .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -324,7 +331,7 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
     @Test
     void documentCreateLocalizationDuplicateError() throws Exception {
         mockMvc.perform(post("/api/localizations")
-                        .with(adminOauthUser())
+                        .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {

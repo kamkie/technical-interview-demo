@@ -14,6 +14,8 @@ These paths are intended for trusted internal or devops validation. They are no 
 
 Returns a technical application overview that combines build metadata, git metadata, selected dependency versions, and important runtime configuration values.
 
+The security section is the repo-owned runtime posture source for same-site CSRF and deployment-owned abuse protection. It reports `csrfEnabled=true`, the supported `csrfCookieName` and `csrfHeaderName`, plus the vendor-neutral edge or gateway controls expected for login bootstrap and unsafe internet-public writes.
+
 include::{snippets}/technical/get-root/curl-request.adoc[]
 include::{snippets}/technical/get-root/http-request.adoc[]
 include::{snippets}/technical/get-root/http-response.adoc[]

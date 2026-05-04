@@ -50,6 +50,8 @@ The values below are loaded from `{build-info-path}` during the Asciidoctor buil
 - Public supported external endpoints include the read-only book/category/localization lookups, `GET /api/session`, `POST /api/session/logout`, and `GET /api/session/oauth2/authorization/{registrationId}`.
 - `GET /api/session` is the supported same-site browser session/bootstrap endpoint for the separate first-party UI, while `/api/account` remains the authenticated persisted-profile resource.
 - Protected supported endpoints use an authenticated browser session for `/api/account`, `/api/audit-logs`, `/api/operator/surface`, and for state-changing book, category, and localization operations.
+- `GET /api/session` issues or refreshes the readable `XSRF-TOKEN` cookie and publishes the supported `csrf.enabled`, `csrf.cookieName`, and `csrf.headerName` metadata for the same-site UI contract.
+- Unsafe `/api/**` browser writes require the browser to mirror the `XSRF-TOKEN` cookie value into the `X-XSRF-TOKEN` request header when a real current application session exists.
 - Interactive login bootstrap is provider-aware when the optional `oauth` profile is active:
   - `/api/session/oauth2/authorization/{registrationId}` for direct provider entry points
   - `/api/session/login/oauth2/code/{registrationId}` as the reverse-proxy callback path
@@ -57,7 +59,7 @@ The values below are loaded from `{build-info-path}` during the Asciidoctor buil
 - The supported first-party browser contract assumes one public origin via reverse proxy and does not promise cross-origin browser calls or CORS support.
 - The operator inspection surface at `/api/operator/surface` requires an authenticated session and the `ADMIN` role.
 - Authenticated browser sessions are persisted through Spring Session JDBC in PostgreSQL.
-- CSRF remains disabled for browser-session writes as a deliberate demo tradeoff for reviewer-oriented workflows.
+- Edge or gateway controls own abuse protection for `/api/session/oauth2/authorization/{registrationId}` and unsafe internet-public `/api/**` writes.
 - The machine-readable OpenAPI contract is published internally at `/v3/api-docs` and `/v3/api-docs.yaml` for trusted documentation and review workflows.
 - Collection endpoints use Spring pagination conventions such as `page`, `size`, and repeated `sort` parameters.
 - Update operations that modify books require a `version` field for optimistic locking.

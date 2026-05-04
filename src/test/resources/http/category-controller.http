@@ -1,9 +1,12 @@
 # IntelliJ HTTP Client examples for technical-interview-demo
 # Category creation requires ADMIN and an authenticated session.
 # Auth errors use the localized ProblemDetail shape with title/status/detail/messageKey/message/language.
+# Authenticated unsafe writes also require X-XSRF-TOKEN mirrored from the XSRF-TOKEN
+# cookie bootstrapped by GET /api/session.
 
 @baseUrl = http://localhost:8080
 @sessionCookie = paste-technical-interview-demo-session-here
+@csrfToken = paste-xsrf-token-from-get-api-session-here
 @writeCategoryId = 0
 ### CategoryController - list categories
 GET {{baseUrl}}/api/categories
@@ -12,6 +15,7 @@ Accept: application/json
 ### CategoryController - create category (ADMIN + authenticated session)
 POST {{baseUrl}}/api/categories
 Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
 Content-Type: application/json
 Accept: application/json
 
@@ -34,9 +38,11 @@ Accept: application/problem+json
 }
 
 ### CategoryController - create category as non-admin user (403 localized ProblemDetail)
-# Replace the session cookie with a regular authenticated USER session.
+# Replace the session cookie with a regular authenticated USER session. The CSRF header
+# is still required so the request reaches the role check instead of failing earlier.
 POST {{baseUrl}}/api/categories
 Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
 Content-Type: application/json
 Accept: application/problem+json
 
@@ -48,6 +54,7 @@ Accept: application/problem+json
 # Run the create request first or replace the id with an existing category.
 PUT {{baseUrl}}/api/categories/{{writeCategoryId}}
 Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
 Content-Type: application/json
 Accept: application/json
 
@@ -59,8 +66,10 @@ Accept: application/json
 # Run the create request first.
 DELETE {{baseUrl}}/api/categories/{{writeCategoryId}}
 Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
 
 ### CategoryController - delete category assigned to books (409 localized ProblemDetail)
 DELETE {{baseUrl}}/api/categories/1
 Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
 Accept: application/problem+json

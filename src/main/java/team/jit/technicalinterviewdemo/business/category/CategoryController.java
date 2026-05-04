@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import team.jit.technicalinterviewdemo.technical.api.ApiProblemResponse;
 import team.jit.technicalinterviewdemo.technical.docs.OpenApiConfiguration;
+import team.jit.technicalinterviewdemo.technical.security.SameSiteCsrfContract;
 
 @RequiredArgsConstructor
 @RestController
@@ -45,8 +48,14 @@ public class CategoryController {
     @PostMapping
     @Operation(
             summary = "Create a category",
-            description = "Requires an authenticated session with the ADMIN role.",
+            description = "Requires an authenticated session with the ADMIN role and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.",
             security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
+    )
+    @Parameter(
+            name = SameSiteCsrfContract.HEADER_NAME,
+            in = ParameterIn.HEADER,
+            required = true,
+            description = "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie."
     )
     @ApiResponses({
             @ApiResponse(
@@ -82,8 +91,14 @@ public class CategoryController {
     @PutMapping("/{id}")
     @Operation(
             summary = "Update a category",
-            description = "Requires an authenticated session with the ADMIN role.",
+            description = "Requires an authenticated session with the ADMIN role and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.",
             security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
+    )
+    @Parameter(
+            name = SameSiteCsrfContract.HEADER_NAME,
+            in = ParameterIn.HEADER,
+            required = true,
+            description = "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie."
     )
     @ApiResponses({
             @ApiResponse(
@@ -130,8 +145,14 @@ public class CategoryController {
     @DeleteMapping("/{id}")
     @Operation(
             summary = "Delete a category",
-            description = "Requires an authenticated session with the ADMIN role. Categories assigned to books cannot be deleted.",
+            description = "Requires an authenticated session with the ADMIN role, a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie, and a category that is not still assigned to books.",
             security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
+    )
+    @Parameter(
+            name = SameSiteCsrfContract.HEADER_NAME,
+            in = ParameterIn.HEADER,
+            required = true,
+            description = "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie."
     )
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "No Content"),

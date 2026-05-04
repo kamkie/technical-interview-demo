@@ -7,6 +7,13 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Added
+- Added a same-site browser CSRF contract for authenticated unsafe `/api/**` writes with `GET /api/session` bootstrap metadata, a readable `XSRF-TOKEN` cookie, a required `X-XSRF-TOKEN` header, a dedicated localized CSRF error contract, and shared CSRF-aware test helpers.
+
+### Changed
+- Updated unsafe write endpoint specs, REST Docs, reviewer HTTP examples, and the approved OpenAPI baseline so the supported first-party browser contract now documents CSRF-protected writes and conditional CSRF protection for authenticated-session logout.
+- Extended the internal technical overview, operator diagnostics, external smoke checks, post-deploy smoke workflow, restore-drill helper output, README, and setup guidance so the documented production posture now reports CSRF enabled plus edge-or-gateway abuse-protection ownership for OAuth login bootstrap and unsafe internet-public writes.
+
 ## [v2.0.0-M1] - 2026-05-04
 
 ### Added

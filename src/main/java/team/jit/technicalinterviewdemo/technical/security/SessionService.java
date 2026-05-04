@@ -1,30 +1,25 @@
 package team.jit.technicalinterviewdemo.technical.security;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.session.Session;
 import org.springframework.session.SessionRepository;
 import org.springframework.stereotype.Service;
-import team.jit.technicalinterviewdemo.business.user.CurrentUserAccountService;
 
 @Service
 @RequiredArgsConstructor
@@ -36,13 +31,15 @@ public class SessionService {
     private final SecuritySettingsProperties securitySettingsProperties;
     private final Environment environment;
     private final ObjectProvider<ClientRegistrationRepository> clientRegistrationRepository;
-    private final CurrentUserAccountService currentUserAccountService;
+    private final CurrentApplicationSessionResolver currentApplicationSessionResolver;
     private final SessionRepository<? extends Session> sessionRepository;
+    private final CsrfTokenRepository csrfTokenRepository;
 
-    public SessionResponse currentSession(HttpServletRequest request) {
+    public SessionResponse currentSession(HttpServletRequest request, HttpServletResponse response) {
         SecuritySettingsProperties.Session session = securitySettingsProperties.getSession();
+        csrfTokenRepository.loadDeferredToken(request, response).get();
         return new SessionResponse(
-                isAuthenticated(request),
+                currentApplicationSessionResolver.hasAuthenticatedSession(request),
                 ACCOUNT_PATH,
                 loginProviders(),
                 LOGOUT_PATH,
@@ -52,68 +49,24 @@ public class SessionService {
                         session.getCookieSameSite(),
                         session.isCookieSecure()
                 ),
-                new SessionResponse.Csrf(false)
+                new SessionResponse.Csrf(
+                        true,
+                        SameSiteCsrfContract.COOKIE_NAME,
+                        SameSiteCsrfContract.HEADER_NAME
+                )
         );
     }
 
-    public ResponseCookie logoutCurrentSession(HttpServletRequest request) {
-        Optional<String> sessionId = sessionIdFrom(request);
+    public void logoutCurrentSession(HttpServletRequest request, HttpServletResponse response) {
+        Optional<String> sessionId = currentApplicationSessionResolver.currentSessionId(request);
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.invalidate();
         }
         sessionId.ifPresent(sessionRepository::deleteById);
         SecurityContextHolder.clearContext();
-        return expiredSessionCookie();
-    }
-
-    private boolean isAuthenticated(HttpServletRequest request) {
-        if (currentUserAccountService.currentAuthenticatedUserKey().isPresent()) {
-            return true;
-        }
-
-        return sessionIdFrom(request)
-                .map(sessionRepository::findById)
-                .filter(this::hasAuthenticatedSecurityContext)
-                .isPresent();
-    }
-
-    private boolean hasAuthenticatedSecurityContext(Session session) {
-        Object storedSecurityContext =
-                session.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
-        if (!(storedSecurityContext instanceof SecurityContext securityContext)) {
-            return false;
-        }
-
-        Authentication authentication = securityContext.getAuthentication();
-        return authentication != null && authentication.isAuthenticated();
-    }
-
-    private Optional<String> sessionIdFrom(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies == null) {
-            return Optional.empty();
-        }
-
-        return Arrays.stream(cookies)
-                .filter(cookie -> sessionCookieName().equals(cookie.getName()))
-                .map(Cookie::getValue)
-                .map(this::decodeSessionId)
-                .flatMap(Optional::stream)
-                .findFirst();
-    }
-
-    private Optional<String> decodeSessionId(String encodedSessionId) {
-        if (encodedSessionId == null || encodedSessionId.isBlank()) {
-            return Optional.empty();
-        }
-
-        try {
-            byte[] decoded = Base64.getDecoder().decode(encodedSessionId);
-            return Optional.of(new String(decoded, StandardCharsets.UTF_8));
-        } catch (IllegalArgumentException ignored) {
-            return Optional.empty();
-        }
+        response.addHeader(HttpHeaders.SET_COOKIE, expiredSessionCookie().toString());
+        csrfTokenRepository.saveToken(null, request, response);
     }
 
     private List<SessionResponse.LoginProvider> loginProviders() {

@@ -90,7 +90,8 @@ The checked-in deployment assets intentionally freeze this posture:
 - OAuth stays opt-in through the `oauth` profile; bare `prod` does not require identity-provider credentials
 - admin bootstrap remains environment-driven through `ADMIN_LOGINS`
 - demo data bootstrap defaults to disabled in `prod` and enabled in `local` and `test` through `APP_BOOTSTRAP_SEED_DEMO_DATA`
-- CSRF remains disabled as a deliberate demo tradeoff for reviewer-oriented session workflows
+- same-site browser writes use a readable `XSRF-TOKEN` cookie plus a required `X-XSRF-TOKEN` header on unsafe `/api/**` requests when a real current application session exists
+- `/api/session/oauth2/authorization/{registrationId}` must be protected by edge burst limiting plus suspicious-client challenge or block capability, and unsafe internet-public `/api/**` writes must be protected by edge per-client throttling, request-size enforcement, and rejection visibility
 - trusted reverse-proxy headers are part of the `prod` runtime contract through `server.forward-headers-strategy=framework`
 - `GET /actuator/prometheus` stays supported for trusted deployment scraping, but it is not part of the internet-public endpoint contract
 
@@ -335,7 +336,7 @@ Workflow contract:
 - if only `EXTERNAL_CHECK_BASE_URL` is configured, the scheduled run performs HTTP-only smoke assertions
 - if the JDBC secrets are configured as a complete set, the scheduled run also verifies JDBC-backed authenticated-session behavior and confirms Flyway history is present
 - manual dispatch can override the base URL and assert exact release identity with `expected_build_version` plus `expected_short_commit_id`
-- manual dispatch can assert the documented prod posture with `expected_active_profile=prod`, `expected_session_store_type=jdbc`, and `expected_session_timeout=15m`; when those inputs are present the check also expects `configuration.security.csrfEnabled=false`
+- manual dispatch can assert the documented prod posture with `expected_active_profile=prod`, `expected_session_store_type=jdbc`, and `expected_session_timeout=15m`; when those inputs are present the check also expects `configuration.security.csrfEnabled=true`, `configuration.security.csrfCookieName=XSRF-TOKEN`, `configuration.security.csrfHeaderName=X-XSRF-TOKEN`, and `configuration.security.abuseProtection.owner=edge-or-gateway`
 - the workflow uploads test reports from `build/reports/tests/externalDeploymentCheck/` and `build/test-results/externalDeploymentCheck/`
 
 ## Healthy Runtime Expectations
@@ -364,6 +365,8 @@ Session persistence expectations:
 
 - authenticated browser sessions use Spring Session JDBC with the `technical-interview-demo-session` cookie
 - the `prod` profile tightens the session contract to a 15 minute timeout, secure cookies, and one active session per login with login rejection on concurrent attempts
+- `GET /api/session` issues or refreshes the readable `XSRF-TOKEN` cookie and returns the required CSRF metadata (`csrf.enabled`, `csrf.cookieName`, `csrf.headerName`) for the same-site UI contract
+- unsafe `/api/**` writes with a real current session must send the matching `X-XSRF-TOKEN` header, and missing or invalid tokens return a localized `403 ProblemDetail` with `messageKey=error.request.csrf_invalid`
 - healthy authenticated-session behavior means rows appear in `SPRING_SESSION` and `SPRING_SESSION_ATTRIBUTES` after a successful login flow
 - if `/api/account` starts returning unauthorized responses for an otherwise valid login, inspect those tables before assuming an OAuth redirect problem
 
@@ -427,7 +430,7 @@ Upgrade flow:
    - `expected_active_profile=prod`
    - `expected_session_store_type=jdbc`
    - `expected_session_timeout=15m`
-5. Confirm the deployed `GET /` overview reports the expected `build.version`, `git.shortCommitId`, `runtime.activeProfiles`, `configuration.session.storeType`, `configuration.session.timeout`, and `configuration.security.csrfEnabled=false`.
+5. Confirm the deployed `GET /` overview reports the expected `build.version`, `git.shortCommitId`, `runtime.activeProfiles`, `configuration.session.storeType`, `configuration.session.timeout`, `configuration.security.csrfEnabled=true`, `configuration.security.csrfCookieName=XSRF-TOKEN`, `configuration.security.csrfHeaderName=X-XSRF-TOKEN`, and `configuration.security.abuseProtection.owner=edge-or-gateway`.
 6. Confirm trusted Prometheus scraping still works and that authenticated browser-session flows can create rows in `SPRING_SESSION`.
 
 Rollback expectations:
@@ -457,7 +460,7 @@ pwsh ./scripts/release/invoke-restore-drill.ps1 `
   -ExpectedShortCommitId <12-char-commit>
 ```
 
-3. Verify the helper reaches readiness, proves `build.version` plus `git.shortCommitId`, confirms `prod` profile activation, JDBC session storage, the `15m` session timeout, `csrfEnabled=false`, Flyway history, and an authenticated `GET /api/account` request against the restored database.
+3. Verify the helper reaches readiness, proves `build.version` plus `git.shortCommitId`, confirms `prod` profile activation, JDBC session storage, the `15m` session timeout, `csrfEnabled=true`, `csrfCookieName=XSRF-TOKEN`, `csrfHeaderName=X-XSRF-TOKEN`, edge-owned abuse-protection metadata, Flyway history, and an authenticated `GET /api/account` request against the restored database.
 4. Keep the console output or captured CI log as restore evidence for every `restore-sensitive` release.
 
 ## Kubernetes Deployment
@@ -640,7 +643,11 @@ Start the login flow at:
 
 Protected requests use the authenticated session cookie, so you can replay state-changing requests from an HTTP client once you have signed in and captured `technical-interview-demo-session`.
 
-For `1.0`, this reviewer-oriented session flow keeps CSRF disabled as a deliberate demo tradeoff.
+Unsafe `/api/**` writes now also require the same-site CSRF handshake:
+
+- call `GET /api/session` to issue or refresh the readable `XSRF-TOKEN` cookie
+- mirror that cookie value into the `X-XSRF-TOKEN` header on authenticated `POST`, `PUT`, and `DELETE` requests
+- after login success or logout, call `GET /api/session` again before the next unsafe write because Spring refreshes or clears the CSRF token when the browser session state changes
 
 Authenticated sessions are persisted in PostgreSQL through Spring Session JDBC, using tables `SPRING_SESSION` and `SPRING_SESSION_ATTRIBUTES`.
 
@@ -756,6 +763,20 @@ Fix:
 3. If the tables are missing, confirm Flyway ran successfully and that `V4__create_spring_session_tables.sql` is present in the target build.
 4. If the tables exist but stay empty, confirm the app can still reach PostgreSQL with the configured datasource settings.
 5. Repeat the login flow and verify `GET /api/account` with the captured `technical-interview-demo-session` cookie from `src/test/resources/http/authentication.http`.
+
+### Unsafe write returns `Invalid CSRF Token`
+
+Symptom:
+
+- `POST`, `PUT`, or `DELETE` on `/api/**` returns `HTTP 403`
+- the response uses `messageKey=error.request.csrf_invalid`
+
+Fix:
+
+1. Call `GET /api/session` and confirm the response reports `csrf.enabled=true`, `csrf.cookieName=XSRF-TOKEN`, and `csrf.headerName=X-XSRF-TOKEN`.
+2. Capture the readable `XSRF-TOKEN` cookie value and send it back in the `X-XSRF-TOKEN` header on the unsafe request, alongside the `technical-interview-demo-session` cookie.
+3. If login just completed or logout just ran, call `GET /api/session` again before retrying the write so the browser receives the current CSRF cookie for the new session state.
+4. Confirm the request still targets the same public origin exposed by the reverse proxy; this repo does not support cross-origin browser flows.
 
 ### Container smoke validation fails on database startup
 

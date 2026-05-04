@@ -3,7 +3,8 @@
 # Protected app requests use the configured OAuth provider login flow plus the
 # technical-interview-demo-session cookie created by Spring Session.
 # The supported first-party browser contract assumes one public origin via reverse proxy.
-# For the current demo posture, browser-session writes deliberately keep CSRF disabled.
+# Unsafe same-site writes also require the readable XSRF token from GET /api/session
+# to be mirrored into the X-XSRF-TOKEN header.
 #
 # Provider token exchange examples are for diagnostics only.
 # External provider access tokens are for provider APIs, not for this app,
@@ -12,6 +13,7 @@
 @baseUrl = http://localhost:8080
 @oauthProvider = github
 #@sessionCookie = paste-technical-interview-demo-session-here
+#@csrfToken = paste-xsrf-token-from-get-api-session-here
 #@providerClientId = paste-provider-client-id-here
 #@providerClientSecret = paste-provider-client-secret-here
 #@providerAuthCode = paste-provider-auth-code-here
@@ -19,7 +21,9 @@
 
 ### App session contract - inspect the current same-site browser session state
 # Use this endpoint to discover the current `loginProviders[]` contract instead of
-# hard-coding provider authorization paths into the client.
+# hard-coding provider authorization paths into the client. The response also sets
+# `XSRF-TOKEN=<token>` and reports `csrf.cookieName=XSRF-TOKEN` plus
+# `csrf.headerName=X-XSRF-TOKEN`.
 GET {{baseUrl}}/api/session
 Accept: application/json
 
@@ -28,6 +32,7 @@ Accept: application/json
 GET {{baseUrl}}/api/session/oauth2/authorization/{{oauthProvider}}
 
 ### App session contract - inspect the authenticated same-site browser session state
+# Use the `Set-Cookie: XSRF-TOKEN=...` value from this response for the unsafe write below.
 GET {{baseUrl}}/api/session
 Cookie: technical-interview-demo-session={{sessionCookie}}
 Accept: application/json
@@ -39,5 +44,8 @@ Accept: application/json
 
 ### App authentication - log out the current app session
 # The logout contract is idempotent and still returns 204 when no session exists.
+# When a real current session exists, send both the session cookie and X-XSRF-TOKEN.
+# After logout, call GET /api/session again before the next unsafe write.
 POST {{baseUrl}}/api/session/logout
 Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}

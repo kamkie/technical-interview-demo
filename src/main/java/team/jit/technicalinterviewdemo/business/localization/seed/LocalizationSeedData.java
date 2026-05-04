@@ -16,6 +16,7 @@ public final class LocalizationSeedData {
             "error.localization.duplicate",
             "error.localization.not_found",
             "error.request.constraint_violation",
+            "error.request.csrf_invalid",
             "error.request.forbidden",
             "error.request.invalid",
             "error.request.invalid_parameter",
@@ -143,6 +144,17 @@ public final class LocalizationSeedData {
                 "Naruszono ograniczenia walidacji zadania.",
                 "Porusheno obmezhennia validatsii zapytu.",
                 "Valideringsregler for foresporselen ble brutt."
+        );
+        addTranslations(
+                messages,
+                "error.request.csrf_invalid",
+                "A valid CSRF token is required to perform this operation.",
+                "Se requiere un token CSRF valido para realizar esta operacion.",
+                "Fuer diesen Vorgang ist ein gueltiges CSRF-Token erforderlich.",
+                "Un jeton CSRF valide est requis pour effectuer cette operation.",
+                "Do wykonania tej operacji wymagany jest prawidlowy token CSRF.",
+                "Dlia vykonannia tsiiei operatsii potriben diisnyi token CSRF.",
+                "Et gyldig CSRF-token kreves for aa utfore denne operasjonen."
         );
         addTranslations(
                 messages,

@@ -5,20 +5,28 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.oauthUser;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.authenticatedBrowserSession;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
 import team.jit.technicalinterviewdemo.testing.AbstractBookCatalogMockMvcIntegrationTest;
 import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
+import team.jit.technicalinterviewdemo.testing.SecurityTestSupport.BrowserSession;
 
 @MockMvcIntegrationSpringBootTest
 class ApiErrorHandlingIntegrationTests extends AbstractBookCatalogMockMvcIntegrationTest {
 
+    @Autowired
+    private JdbcIndexedSessionRepository sessionRepository;
+
     @Test
     void createBookWithInvalidPayloadReturnsBadRequest() throws Exception {
+        BrowserSession browserSession = readerSession();
+
         mockMvc.perform(post("/api/books")
-                        .with(oauthUser())
+                        .with(browserSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -41,8 +49,10 @@ class ApiErrorHandlingIntegrationTests extends AbstractBookCatalogMockMvcIntegra
 
     @Test
     void createBookWithMalformedJsonReturnsBadRequest() throws Exception {
+        BrowserSession browserSession = readerSession();
+
         mockMvc.perform(post("/api/books")
-                        .with(oauthUser())
+                        .with(browserSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -56,8 +66,10 @@ class ApiErrorHandlingIntegrationTests extends AbstractBookCatalogMockMvcIntegra
 
     @Test
     void createBookWithUnsupportedMediaTypeReturnsUnsupportedMediaType() throws Exception {
+        BrowserSession browserSession = readerSession();
+
         mockMvc.perform(post("/api/books")
-                        .with(oauthUser())
+                        .with(browserSession.unsafeWrite())
                         .contentType(MediaType.TEXT_PLAIN)
                         .content("not-json"))
                 .andExpect(status().isUnsupportedMediaType())
@@ -89,5 +101,9 @@ class ApiErrorHandlingIntegrationTests extends AbstractBookCatalogMockMvcIntegra
                 .andExpect(jsonPath("$.messageKey").value("error.request.resource_not_found"))
                 .andExpect(jsonPath("$.message").value("The requested resource was not found."))
                 .andExpect(jsonPath("$.language").value("en"));
+    }
+
+    private BrowserSession readerSession() {
+        return authenticatedBrowserSession(sessionRepository, "reader-user");
     }
 }

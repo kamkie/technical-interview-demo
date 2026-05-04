@@ -1,8 +1,11 @@
 # IntelliJ HTTP Client examples for technical-interview-demo
 # Localization writes require ADMIN and an authenticated session.
+# Authenticated unsafe writes also require X-XSRF-TOKEN mirrored from the XSRF-TOKEN
+# cookie bootstrapped by GET /api/session.
 
 @baseUrl = http://localhost:8080
 @sessionCookie = paste-technical-interview-demo-session-here
+@csrfToken = paste-xsrf-token-from-get-api-session-here
 @localizationId = 1
 @writeLocalizationId = 0
 @demoMessageKey = info.book.created.demo-change-me-if-rerunning
@@ -32,6 +35,7 @@ Accept: application/json
 ### LocalizationController - create localization (ADMIN + authenticated session)
 POST {{baseUrl}}/api/localizations
 Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
 Content-Type: application/json
 Accept: application/json
 
@@ -50,6 +54,7 @@ if (response.status === 201) {
 ### LocalizationController - update the localization message created above (run create first)
 PUT {{baseUrl}}/api/localizations/{{writeLocalizationId}}
 Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
 Content-Type: application/json
 Accept: application/json
 
@@ -63,3 +68,4 @@ Accept: application/json
 ### LocalizationController - delete the localization created above (run create first)
 DELETE {{baseUrl}}/api/localizations/{{writeLocalizationId}}
 Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}

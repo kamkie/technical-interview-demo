@@ -7,18 +7,20 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminOauthUser;
-import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.oauthUser;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminBrowserSession;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.authenticatedBrowserSession;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
+import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
 import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
 import team.jit.technicalinterviewdemo.testdata.BookCatalogTestData;
 import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
+import team.jit.technicalinterviewdemo.testing.SecurityTestSupport.BrowserSession;
 
 @MockMvcIntegrationSpringBootTest
 class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
@@ -31,6 +33,9 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Autowired
     private CacheManager cacheManager;
+
+    @Autowired
+    private JdbcIndexedSessionRepository sessionRepository;
 
     @BeforeEach
     void setUp() {
@@ -47,8 +52,10 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
     void createCategoryReturnsCreatedCategory() throws Exception {
+        BrowserSession adminSession = adminSession();
+
         mockMvc.perform(post("/api/categories")
-                        .with(adminOauthUser())
+                        .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -62,8 +69,10 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
     void createCategoryAsRegularUserReturnsForbidden() throws Exception {
+        BrowserSession userSession = userSession();
+
         mockMvc.perform(post("/api/categories")
-                        .with(oauthUser())
+                        .with(userSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -114,9 +123,29 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
     }
 
     @Test
-    void createCategoryWithDuplicateNameReturnsBadRequest() throws Exception {
+    void createCategoryWithoutCsrfReturnsDedicatedForbiddenProblem() throws Exception {
+        BrowserSession adminSession = adminSession();
+
         mockMvc.perform(post("/api/categories")
-                        .with(adminOauthUser())
+                        .with(adminSession.authenticatedSession())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "name": "Architecture"
+                                }
+                                """))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.title").value("Invalid CSRF Token"))
+                .andExpect(jsonPath("$.detail").value("A valid CSRF token is required to perform this operation."))
+                .andExpect(jsonPath("$.messageKey").value("error.request.csrf_invalid"));
+    }
+
+    @Test
+    void createCategoryWithDuplicateNameReturnsBadRequest() throws Exception {
+        BrowserSession adminSession = adminSession();
+
+        mockMvc.perform(post("/api/categories")
+                        .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -136,9 +165,10 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .filter(category -> "Java".equals(category.getName()))
                 .findFirst()
                 .orElseThrow();
+        BrowserSession adminSession = adminSession();
 
         mockMvc.perform(put("/api/categories/{id}", javaCategory.getId())
-                        .with(adminOauthUser())
+                        .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -156,9 +186,10 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .filter(category -> "Java".equals(category.getName()))
                 .findFirst()
                 .orElseThrow();
+        BrowserSession adminSession = adminSession();
 
         mockMvc.perform(put("/api/categories/{id}", javaCategory.getId())
-                        .with(adminOauthUser())
+                        .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -173,8 +204,10 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
     void updateCategoryMissingIdReturnsNotFound() throws Exception {
+        BrowserSession adminSession = adminSession();
+
         mockMvc.perform(put("/api/categories/{id}", 9999)
-                        .with(adminOauthUser())
+                        .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -194,9 +227,10 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .filter(category -> "Java".equals(category.getName()))
                 .findFirst()
                 .orElseThrow();
+        BrowserSession userSession = userSession();
 
         mockMvc.perform(put("/api/categories/{id}", javaCategory.getId())
-                        .with(oauthUser())
+                        .with(userSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -211,9 +245,10 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
     @Test
     void deleteUnusedCategoryReturnsNoContent() throws Exception {
         Category architecture = categoryRepository.saveAndFlush(new Category("Architecture"));
+        BrowserSession adminSession = adminSession();
 
         mockMvc.perform(delete("/api/categories/{id}", architecture.getId())
-                        .with(adminOauthUser()))
+                        .with(adminSession.unsafeWrite()))
                 .andExpect(status().isNoContent());
 
         assertThat(categoryRepository.findById(architecture.getId())).isEmpty();
@@ -225,9 +260,10 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .filter(category -> "Java".equals(category.getName()))
                 .findFirst()
                 .orElseThrow();
+        BrowserSession adminSession = adminSession();
 
         mockMvc.perform(delete("/api/categories/{id}", javaCategory.getId())
-                        .with(adminOauthUser()))
+                        .with(adminSession.unsafeWrite()))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.title").value("Category In Use"))
                 .andExpect(jsonPath("$.detail").value(
@@ -240,8 +276,10 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
     void deleteMissingCategoryReturnsNotFound() throws Exception {
+        BrowserSession adminSession = adminSession();
+
         mockMvc.perform(delete("/api/categories/{id}", 9999)
-                        .with(adminOauthUser()))
+                        .with(adminSession.unsafeWrite()))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.title").value("Category Not Found"))
                 .andExpect(jsonPath("$.detail").value("Category with id 9999 was not found."))
@@ -258,5 +296,13 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
         mockMvc.perform(delete("/api/categories/{id}", javaCategory.getId()))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.messageKey").value("error.request.unauthorized"));
+    }
+
+    private BrowserSession adminSession() {
+        return adminBrowserSession(sessionRepository);
+    }
+
+    private BrowserSession userSession() {
+        return authenticatedBrowserSession(sessionRepository, "reader-user");
     }
 }

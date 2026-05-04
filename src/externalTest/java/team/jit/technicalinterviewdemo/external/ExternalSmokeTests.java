@@ -18,11 +18,24 @@ class ExternalSmokeTests extends ExternalHttpTestSupport {
     @Test
     void rootEndpointReturnsOverviewPayload() throws IOException, InterruptedException {
         HttpResponse<String> response = get("/", "application/json");
+        JsonNode overview = jsonBody(response);
 
         assertEquals(200, response.statusCode());
         assertTrue(requiredHeader(response, "content-type").contains("application/json"));
         assertTrue(response.body().contains("\"build\""));
         assertTrue(response.body().contains("\"configuration\""));
+        assertTrue(
+                overview.path("configuration").path("security").path("csrfEnabled").asBoolean(false),
+                "Expected the published overview to report CSRF enabled."
+        );
+        assertEquals("XSRF-TOKEN", textAt(overview, "configuration", "security", "csrfCookieName"));
+        assertEquals("X-XSRF-TOKEN", textAt(overview, "configuration", "security", "csrfHeaderName"));
+        assertEquals("edge-or-gateway", textAt(overview, "configuration", "security", "abuseProtection", "owner"));
+        assertEquals(
+                "/api/session/oauth2/authorization/{registrationId}",
+                textAt(overview, "configuration", "security", "abuseProtection", "loginBootstrapPathTemplate")
+        );
+        assertEquals("/api/**", textAt(overview, "configuration", "security", "abuseProtection", "unsafeWritePathPattern"));
     }
 
     @Test
@@ -81,10 +94,13 @@ class ExternalSmokeTests extends ExternalHttpTestSupport {
         );
         assertEquals(expectedSessionStoreType, textAt(overview, "configuration", "session", "storeType"));
         assertEquals(expectedSessionTimeout, textAt(overview, "configuration", "session", "timeout"));
-        assertFalse(
-                overview.path("configuration").path("security").path("csrfEnabled").asBoolean(true),
-                "Expected CSRF to remain disabled for the documented prod posture."
+        assertTrue(
+                overview.path("configuration").path("security").path("csrfEnabled").asBoolean(false),
+                "Expected CSRF to remain enabled for the documented prod posture."
         );
+        assertEquals("XSRF-TOKEN", textAt(overview, "configuration", "security", "csrfCookieName"));
+        assertEquals("X-XSRF-TOKEN", textAt(overview, "configuration", "security", "csrfHeaderName"));
+        assertEquals("edge-or-gateway", textAt(overview, "configuration", "security", "abuseProtection", "owner"));
     }
 
     @Test

@@ -2,6 +2,8 @@ package team.jit.technicalinterviewdemo.technical.security;
 
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -32,7 +34,17 @@ class SessionApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .andExpect(jsonPath("$.sessionCookie.httpOnly").value(true))
                 .andExpect(jsonPath("$.sessionCookie.sameSite").value("lax"))
                 .andExpect(jsonPath("$.sessionCookie.secure").value(false))
-                .andExpect(jsonPath("$.csrf.enabled").value(false));
+                .andExpect(jsonPath("$.csrf.enabled").value(true))
+                .andExpect(jsonPath("$.csrf.cookieName").value("XSRF-TOKEN"))
+                .andExpect(jsonPath("$.csrf.headerName").value("X-XSRF-TOKEN"))
+                .andExpect(header().string(
+                        HttpHeaders.SET_COOKIE,
+                        allOf(
+                                containsString("XSRF-TOKEN="),
+                                containsString("Path=/"),
+                                not(containsString("HttpOnly"))
+                        )
+                ));
     }
 
     @Test
@@ -41,13 +53,19 @@ class SessionApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .andExpect(status().isNoContent())
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
-                .andExpect(header().string(
+                .andExpect(header().stringValues(
                         HttpHeaders.SET_COOKIE,
                         allOf(
-                                containsString("technical-interview-demo-session="),
-                                containsString("Max-Age=0"),
-                                containsString("HttpOnly"),
-                                containsString("SameSite=lax")
+                                hasItem(allOf(
+                                        containsString("technical-interview-demo-session="),
+                                        containsString("Max-Age=0"),
+                                        containsString("HttpOnly")
+                                )),
+                                hasItem(allOf(
+                                        containsString("XSRF-TOKEN="),
+                                        containsString("Max-Age=0"),
+                                        not(containsString("HttpOnly"))
+                                ))
                         )
                 ))
                 .andExpect(content().string(""));

@@ -6,8 +6,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminOauthUser;
-import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.oauthUser;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminBrowserSession;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.authenticatedBrowserSession;
 
 import io.micrometer.core.instrument.MeterRegistry;
 
@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
+import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
 import team.jit.technicalinterviewdemo.business.audit.AuditLogRepository;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
 import team.jit.technicalinterviewdemo.technical.cache.CacheNames;
@@ -27,6 +28,7 @@ import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
 import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
 import team.jit.technicalinterviewdemo.testing.CacheTestSupport;
 import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
+import team.jit.technicalinterviewdemo.testing.SecurityTestSupport.BrowserSession;
 
 @MockMvcIntegrationSpringBootTest
 class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
@@ -53,6 +55,9 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
     @Autowired
     private MeterRegistry meterRegistry;
 
+    @Autowired
+    private JdbcIndexedSessionRepository sessionRepository;
+
     @BeforeEach
     void setUp() {
         auditLogRepository.deleteAll();
@@ -64,8 +69,10 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
     void authenticatedBookWritePersistsUserWithDefaultUserRole() throws Exception {
+        BrowserSession readerSession = readerSession();
+
         mockMvc.perform(post("/api/books")
-                        .with(oauthUser("reader-user"))
+                        .with(readerSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -88,8 +95,10 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
     void adminLoginGetsAdminRoleAndCanManageCategories() throws Exception {
+        BrowserSession adminSession = adminSession();
+
         mockMvc.perform(post("/api/categories")
-                        .with(adminOauthUser())
+                        .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -106,8 +115,10 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
     void currentUserEndpointReturnsPersistedProfile() throws Exception {
+        BrowserSession readerSession = readerSession();
+
         mockMvc.perform(get("/api/account")
-                        .with(oauthUser("reader-user")))
+                        .with(readerSession.authenticatedSession()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.provider").value("github"))
                 .andExpect(jsonPath("$.login").value("reader-user"))
@@ -118,8 +129,10 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
     void preferredLanguageIsStoredAndUsedAsFallbackForAuthenticatedErrors() throws Exception {
+        BrowserSession readerSession = readerSession();
+
         mockMvc.perform(put("/api/account/language")
-                        .with(oauthUser("reader-user"))
+                        .with(readerSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -130,7 +143,7 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .andExpect(jsonPath("$.preferredLanguage").value("pl"));
 
         mockMvc.perform(post("/api/categories")
-                        .with(oauthUser("reader-user"))
+                        .with(readerSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -147,9 +160,28 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
     }
 
     @Test
+    void updatePreferredLanguageWithInvalidCsrfReturnsDedicatedForbiddenProblem() throws Exception {
+        BrowserSession readerSession = readerSession();
+
+        mockMvc.perform(put("/api/account/language")
+                        .with(readerSession.unsafeWriteWithInvalidCsrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "preferredLanguage": "pl"
+                                }
+                                """))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.title").value("Invalid CSRF Token"))
+                .andExpect(jsonPath("$.messageKey").value("error.request.csrf_invalid"));
+    }
+
+    @Test
     void repeatedAuthenticatedRequestsRefreshLastLoginTimestamp() throws Exception {
+        BrowserSession readerSession = readerSession();
+
         mockMvc.perform(get("/api/account")
-                        .with(oauthUser("reader-user")))
+                        .with(readerSession.authenticatedSession()))
                 .andExpect(status().isOk());
 
         UserAccount storedUser = userAccountRepository.findByProviderAndExternalLogin("github", "reader-user")
@@ -158,7 +190,7 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
         userAccountRepository.saveAndFlush(storedUser);
 
         mockMvc.perform(get("/api/account")
-                        .with(oauthUser("reader-user")))
+                        .with(readerSession.authenticatedSession()))
                 .andExpect(status().isOk());
 
         UserAccount refreshedUser = userAccountRepository.findByProviderAndExternalLogin("github", "reader-user")
@@ -170,12 +202,14 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
     void userOperationsPublishMetricsAndGauges() throws Exception {
         double createBefore = counterValue(USER_OPERATIONS, "operation", "create");
         double updatePreferenceBefore = counterValue(USER_OPERATIONS, "operation", "updatePreferredLanguage");
+        BrowserSession readerSession = readerSession();
+        BrowserSession adminSession = adminSession();
 
         mockMvc.perform(get("/api/account")
-                        .with(oauthUser("reader-user")))
+                        .with(readerSession.authenticatedSession()))
                 .andExpect(status().isOk());
         mockMvc.perform(put("/api/account/language")
-                        .with(oauthUser("reader-user"))
+                        .with(readerSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -184,7 +218,7 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
                                 """))
                 .andExpect(status().isOk());
         mockMvc.perform(post("/api/categories")
-                        .with(adminOauthUser())
+                        .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -212,5 +246,13 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
         io.micrometer.core.instrument.Gauge gauge = meterRegistry.find(meterName).gauge();
         assertThat(gauge).isNotNull();
         return gauge.value();
+    }
+
+    private BrowserSession adminSession() {
+        return adminBrowserSession(sessionRepository);
+    }
+
+    private BrowserSession readerSession() {
+        return authenticatedBrowserSession(sessionRepository, "reader-user");
     }
 }

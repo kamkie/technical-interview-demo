@@ -1,9 +1,12 @@
 # IntelliJ HTTP Client examples for technical-interview-demo
 # User profile requests require an authenticated session.
 # Missing-session responses use the same localized ProblemDetail shape as other API errors.
+# Unsafe writes also require X-XSRF-TOKEN mirrored from the XSRF-TOKEN cookie
+# bootstrapped by GET /api/session.
 
 @baseUrl = http://localhost:8080
 @sessionCookie = paste-technical-interview-demo-session-here
+@csrfToken = paste-xsrf-token-from-get-api-session-here
 ### UserAccountController - current authenticated user
 GET {{baseUrl}}/api/account
 Cookie: technical-interview-demo-session={{sessionCookie}}
@@ -16,6 +19,7 @@ Accept: application/problem+json
 ### UserAccountController - update preferred language (authenticated session)
 PUT {{baseUrl}}/api/account/language
 Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
 Content-Type: application/json
 Accept: application/json
 

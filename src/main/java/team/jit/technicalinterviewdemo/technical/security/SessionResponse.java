@@ -50,8 +50,12 @@ public record SessionResponse(
 
     @Schema(name = "SessionCsrfContract", description = "Current CSRF contract for browser writes.")
     public record Csrf(
-            @Schema(description = "Whether CSRF protection is currently enabled for browser writes.", example = "false")
-            boolean enabled
+            @Schema(description = "Whether CSRF protection is currently enabled for browser writes.", example = "true")
+            boolean enabled,
+            @Schema(description = "Readable CSRF cookie name that the browser UI mirrors into the request header.", example = "XSRF-TOKEN")
+            String cookieName,
+            @Schema(description = "Request header name required on unsafe browser writes.", example = "X-XSRF-TOKEN")
+            String headerName
     ) {
     }
 }

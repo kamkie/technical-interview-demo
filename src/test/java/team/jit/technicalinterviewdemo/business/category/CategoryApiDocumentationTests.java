@@ -15,18 +15,20 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminOauthUser;
-import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.oauthUser;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminBrowserSession;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.authenticatedBrowserSession;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
+import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
 import team.jit.technicalinterviewdemo.testing.AbstractDocumentationIntegrationTest;
 import team.jit.technicalinterviewdemo.testdata.BookCatalogTestData;
 import team.jit.technicalinterviewdemo.testing.RestDocsIntegrationSpringBootTest;
+import team.jit.technicalinterviewdemo.testing.SecurityTestSupport.BrowserSession;
 
 @RestDocsIntegrationSpringBootTest
 class CategoryApiDocumentationTests extends AbstractDocumentationIntegrationTest {
@@ -40,9 +42,17 @@ class CategoryApiDocumentationTests extends AbstractDocumentationIntegrationTest
     @Autowired
     private CacheManager cacheManager;
 
+    @Autowired
+    private JdbcIndexedSessionRepository sessionRepository;
+
+    private BrowserSession adminSession;
+    private BrowserSession userSession;
+
     @BeforeEach
     void setUp() {
         BookCatalogTestData.seedDefaultCatalog(bookRepository, categoryRepository, cacheManager);
+        adminSession = adminBrowserSession(sessionRepository);
+        userSession = authenticatedBrowserSession(sessionRepository, "reader-user");
     }
 
     @Test
@@ -64,7 +74,7 @@ class CategoryApiDocumentationTests extends AbstractDocumentationIntegrationTest
     @Test
     void documentCreateCategoryEndpoint() throws Exception {
         mockMvc.perform(post("/api/categories")
-                        .with(adminOauthUser())
+                        .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -91,7 +101,7 @@ class CategoryApiDocumentationTests extends AbstractDocumentationIntegrationTest
     @Test
     void documentCreateCategoryDuplicateError() throws Exception {
         mockMvc.perform(post("/api/categories")
-                        .with(adminOauthUser())
+                        .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -131,7 +141,7 @@ class CategoryApiDocumentationTests extends AbstractDocumentationIntegrationTest
     @Test
     void documentCreateCategoryForbiddenError() throws Exception {
         mockMvc.perform(post("/api/categories")
-                        .with(oauthUser())
+                        .with(userSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -158,7 +168,7 @@ class CategoryApiDocumentationTests extends AbstractDocumentationIntegrationTest
                 .orElseThrow();
 
         mockMvc.perform(put("/api/categories/{id}", javaCategory.getId())
-                        .with(adminOauthUser())
+                        .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -190,7 +200,7 @@ class CategoryApiDocumentationTests extends AbstractDocumentationIntegrationTest
         Category architecture = categoryRepository.saveAndFlush(new Category("Architecture"));
 
         mockMvc.perform(delete("/api/categories/{id}", architecture.getId())
-                        .with(adminOauthUser()))
+                        .with(adminSession.unsafeWrite()))
                 .andExpect(status().isNoContent())
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
@@ -206,7 +216,7 @@ class CategoryApiDocumentationTests extends AbstractDocumentationIntegrationTest
     @Test
     void documentDeleteCategoryNotFoundError() throws Exception {
         mockMvc.perform(delete("/api/categories/{id}", 9999)
-                        .with(adminOauthUser()))
+                        .with(adminSession.unsafeWrite()))
                 .andExpect(status().isNotFound())
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
@@ -229,7 +239,7 @@ class CategoryApiDocumentationTests extends AbstractDocumentationIntegrationTest
                 .orElseThrow();
 
         mockMvc.perform(delete("/api/categories/{id}", javaCategory.getId())
-                        .with(adminOauthUser()))
+                        .with(adminSession.unsafeWrite()))
                 .andExpect(status().isConflict())
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
