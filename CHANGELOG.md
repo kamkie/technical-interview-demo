@@ -7,6 +7,18 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Added
+- Added operator-local `OperatorSurfaceService` tests that pin the ADMIN guard, the nested response sections, and the 10-entry recent-audit paging limit before the internal cleanup refactor.
+
+### Changed
+- Added book-local regression coverage that pins whitespace-only search filters, trimmed text filters, and repeated category filters for `GET /api/books` ahead of the internal normalization cleanup.
+- Added focused category-service coverage for normalized assignment lookups, directory-cache reuse, duplicate-name validation, and the current missing-category error text.
+- Locked localization-local lookup, fallback-miss, and write-driven cache-eviction coverage ahead of the localization cache-flow cleanup.
+- Consolidated book-search request validation and normalization into a feature-local criteria helper so `BookService` and `BookSearchSpecifications` follow one internal search-filter path without changing the `GET /api/books` contract.
+- Simplified `CategoryService` directory-cache assembly and normalized assignment lookup flow while keeping cache names, category ordering, and the published category contract unchanged.
+- Simplified localization lookup and language-scoped cache access so normalized lookup requests and supported-language cache reads follow one internal flow without changing the public localization contract.
+- Refactored `OperatorSurfaceService` into explicit admin-guard, audit-section, runtime-section, and operations-section assembly steps without changing the `/api/admin/operator-surface` contract.
+
 ## [v2.0.0-M4] - 2026-05-04
 
 ### Added
