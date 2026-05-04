@@ -41,8 +41,7 @@ Status: Planned
 Goal: finish the stable `2.0` line now that `v2.0.0-M1` through `v2.0.0-M4` established the browser-session contract, deployment boundary, upgrade guide, edge reference, smoke-alignment baseline, and the selected maintainability cleanup.
 
 #### Prerelease Maintainability Cleanup
-- [ ] Move demo-friendly defaults such as implicit `local` profile activation, Hibernate statistics, and full tracing sampling out of shared runtime config.
-- [ ] Migrate persisted timestamps and API serialization to UTC `Instant` plus PostgreSQL `timestamptz`.
+- [x] Migrate persisted timestamps and API serialization to UTC `Instant` plus PostgreSQL `timestamptz`.
 
 #### Release Confidence
 - [ ] Decide which remaining `2.0` prerelease maintainability-cleanup items land before `v2.0.0-RC1` and explicitly defer the rest.
