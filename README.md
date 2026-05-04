@@ -13,10 +13,18 @@ Technical Interview Demo is a small, spec-driven Spring Boot application for int
 ## Project Map
 
 - [SETUP.md](SETUP.md): local environment, prerequisites, and run commands
+- [CONTRIBUTING.md](CONTRIBUTING.md): contributor workflow, validation expectations, and PR or release handoff
 - [ROADMAP.md](ROADMAP.md): active and planned work only
 - [WORKING_WITH_AI.md](WORKING_WITH_AI.md): how to use AI effectively in this repository
 - `src/docs/asciidoc/`: published API documentation sources
 - `src/test/resources/openapi/approved-openapi.json`: approved machine-readable API contract
+
+## How To Contribute To This Repo
+
+- start with [SETUP.md](SETUP.md) to get Java 25, Docker, and local commands working
+- use [CONTRIBUTING.md](CONTRIBUTING.md) for branch, validation, PR, and release expectations
+- make changes spec-first: update the governing tests, docs, or contract artifacts before or alongside implementation
+- use [WORKING_WITH_AI.md](WORKING_WITH_AI.md) when you want AI help with planning, implementation, verification, or release preparation
 
 ## AI Guidance Files
 
