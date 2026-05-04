@@ -41,11 +41,13 @@
 
 ## Commits
 - `6e76b64` - `test(book): lock search normalization behavior`
-- Pending current milestone checkpoint commit for the normalization refactor.
+- `cf41c41` - `refactor(book): unify search normalization flow`
 
 ## Blockers And Risks
 - Resolved: local validation needed an explicit Java 25 runtime because the default shell environment was pinned to Java 11.
 - Open: `gatlingBenchmark` is still blocked by shared baseline regressions that include endpoints outside this worker's owned slice.
 
 ## Integration Status
+- Branch pushed: Yes (`origin/codex/run-all-ready/book-search-normalization-cleanup`)
+- Pull request: `#13`
 - Ready for integration: No
