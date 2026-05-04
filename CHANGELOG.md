@@ -7,6 +7,13 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Added
+- Added a published `1.x` to `2.0` upgrade guide plus checked-in `/api/**` public-edge reference assets for the same-site first-party UI deployment model.
+
+### Changed
+- Aligned README, setup guidance, REST Docs, and reviewer HTTP examples on the supported `GET /api/session` bootstrap, provider-aware login bootstrap, logout refresh, and CSRF-backed unsafe-write flow.
+- Expanded packaged and deployed smoke guidance so JDBC-enabled runs prove `GET /api/session`, `XSRF-TOKEN` bootstrap, and an authenticated `PUT /api/account/language` write, while HTTP-only post-deploy smoke remains acceptable when JDBC access is intentionally unavailable.
+
 ## [v2.0.0-M2] - 2026-05-04
 
 ### Added

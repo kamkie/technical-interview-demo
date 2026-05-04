@@ -3,6 +3,8 @@
 # Missing-session responses use the same localized ProblemDetail shape as other API errors.
 # Unsafe writes also require X-XSRF-TOKEN mirrored from the XSRF-TOKEN cookie
 # bootstrapped by GET /api/session.
+# Use authentication.http first when you need to obtain or refresh sessionCookie through the
+# supported bootstrap/login/logout flow.
 
 @baseUrl = http://localhost:8080
 @sessionCookie = paste-technical-interview-demo-session-here
@@ -10,6 +12,7 @@
 
 ### UserAccountController - bootstrap authenticated CSRF token
 # Run this after login and again after logout or a fresh login before unsafe writes.
+# This is the supported refresh step before `PUT /api/account/language`.
 GET {{baseUrl}}/api/session
 Cookie: technical-interview-demo-session={{sessionCookie}}
 Accept: application/json

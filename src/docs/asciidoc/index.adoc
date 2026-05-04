@@ -73,6 +73,7 @@ The values below are loaded from `{build-info-path}` during the Asciidoctor buil
 - xref:category-controller.adoc[CategoryController API]
 - xref:localization-controller.adoc[LocalizationController API]
 - xref:session-controller.adoc[SessionController API]
+- xref:upgrade-1x-to-2-0.adoc[Upgrade From 1.x To 2.0]
 - xref:audit-log-controller.adoc[AuditLogController API]
 - xref:operator-surface-controller.adoc[OperatorSurfaceController API]
 - xref:technical-endpoints.adoc[Technical Endpoints]

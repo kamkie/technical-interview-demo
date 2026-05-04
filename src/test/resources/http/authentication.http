@@ -24,16 +24,20 @@
 # hard-coding provider authorization paths into the client. The response also sets
 # `XSRF-TOKEN=<token>` and reports `csrf.cookieName=XSRF-TOKEN` plus
 # `csrf.headerName=X-XSRF-TOKEN`.
+# This is step 1 of the supported browser flow.
 GET {{baseUrl}}/api/session
 Accept: application/json
 
 ### App authentication - start the optional OAuth login flow in a browser-capable client
 # This endpoint is active only when the oauth profile is enabled and the provider registration exists.
+# In the real UI flow, read the relative `authorizationPath` from `GET /api/session`
+# instead of hard-coding `@oauthProvider`. The variable stays here for reviewer convenience.
 GET {{baseUrl}}/api/session/oauth2/authorization/{{oauthProvider}}
 
 ### App session contract - inspect the authenticated same-site browser session state
 # This request stores the `XSRF-TOKEN` cookie value as the global `csrfToken` variable.
 # Run it after login and again after logout or a fresh login before the next unsafe write.
+# This is the required authenticated bootstrap/refresh step before `PUT`, `POST`, or `DELETE` on `/api/**`.
 GET {{baseUrl}}/api/session
 Cookie: technical-interview-demo-session={{sessionCookie}}
 Accept: application/json
@@ -49,6 +53,7 @@ if (csrfCookie) {
 %}
 
 ### App authentication - verify the authenticated app session cookie
+# `GET /api/account` remains the authenticated persisted-profile read, not the bootstrap endpoint.
 GET {{baseUrl}}/api/account
 Cookie: technical-interview-demo-session={{sessionCookie}}
 Accept: application/json
@@ -56,7 +61,7 @@ Accept: application/json
 ### App authentication - log out the current app session
 # The logout contract is idempotent and still returns 204 when no session exists.
 # When a real current session exists, send both the session cookie and X-XSRF-TOKEN.
-# After logout, call GET /api/session again before the next unsafe write.
+# After logout, call GET /api/session again before the next login-backed unsafe write.
 POST {{baseUrl}}/api/session/logout
 Cookie: technical-interview-demo-session={{sessionCookie}}
 X-XSRF-TOKEN: {{csrfToken}}
@@ -65,3 +70,6 @@ X-XSRF-TOKEN: {{csrfToken}}
 client.global.clear("csrfToken");
 client.log("Cleared csrfToken after logout. Run the authenticated GET /api/session request before the next unsafe write.");
 %}
+
+### Next step
+# Continue with user-account-controller.http for one authenticated CSRF-backed `/api/**` write.

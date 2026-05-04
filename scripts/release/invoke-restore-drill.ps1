@@ -189,7 +189,7 @@ try {
 
     Write-Host "Waiting for readiness at '$BaseUrl'."
     Wait-ForReadiness -TargetBaseUrl $BaseUrl -TimeoutSeconds $TimeoutSeconds
-    Write-Host "Runtime posture validation will confirm the published CSRF and edge abuse-protection metadata from GET /."
+    Write-Host "Runtime posture validation will confirm the published CSRF and edge abuse-protection metadata from GET /, then prove GET /api/session plus the CSRF-backed smoke write."
 
     $gradleCommand = Join-Path $repoRoot "gradlew.bat"
     $gradleArguments = @(
@@ -214,7 +214,7 @@ try {
         throw "externalDeploymentCheck failed during the restore drill."
     }
 
-    Write-Host "Restore drill completed successfully."
+    Write-Host "Restore drill completed successfully with the documented session bootstrap and CSRF-backed write flow."
 } catch {
     Write-Warning $_
     Write-Host "Container logs for '$ContainerName':"

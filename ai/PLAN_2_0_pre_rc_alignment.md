@@ -3,8 +3,8 @@
 ## Lifecycle
 | Field | Value |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Summary
 - Plan the next pre-RC `2.0` batch: formalize first-party UI integration requirements, publish the `1.x` to `2.0` upgrade guide, add checked-in edge reference assets, and extend local plus deployed smoke validation to prove the documented session and CSRF flow.
@@ -172,7 +172,14 @@
 - Do not fold the RC1 freeze or stable-release work into this batch. Those roadmap items should start only after this plan’s docs, edge references, and smoke proof are complete and validated.
 
 ## Validation Results
-- To be filled in during execution.
+- 2026-05-04: `git diff --check`
+  - result: passed; no whitespace errors were introduced, and the new `k8s/edge/public-api-ingress.yaml` asset was manually reviewed against the current `technical-interview-demo` service name, namespace, and `/api/**` routing assumption
+- 2026-05-04: `. .\scripts\load-dotenv.ps1 -Quiet; .\gradlew.bat test --tests team.jit.technicalinterviewdemo.technical.security.SessionApiIntegrationTests --tests team.jit.technicalinterviewdemo.technical.security.SessionApiDocumentationTests --tests team.jit.technicalinterviewdemo.business.user.UserManagementIntegrationTests --no-daemon`
+  - result: passed; validated the existing session/bootstrap contract docs and the `PUT /api/account/language` behavior that the external smoke flow now uses for the authenticated unsafe-write proof
+- 2026-05-04: `. .\scripts\load-dotenv.ps1 -Quiet; .\gradlew.bat externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo --no-daemon`
+  - result: passed; the packaged smoke environment proved readiness, docs/OpenAPI reachability, the published CSRF and abuse-protection posture on `GET /`, JDBC-backed `GET /api/session` bootstrap with readable `XSRF-TOKEN`, an authenticated `PUT /api/account/language`, a persisted `GET /api/account` readback, and Flyway visibility; release-identity and expected-runtime-posture checks were skipped in this local run because no expected deployed values were configured
+- 2026-05-04: `. .\scripts\load-dotenv.ps1 -Quiet; .\gradlew.bat build --no-daemon`
+  - result: passed; full repository validation succeeded, including test execution, Asciidoctor rendering for the new upgrade guide, security scans, SBOM generation, and Docker image packaging
 
 ## User Validation
 - Read the new upgrade guide and confirm it cleanly answers what a `1.x` consumer must change for `2.0`.

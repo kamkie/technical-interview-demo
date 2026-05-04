@@ -1,0 +1,76 @@
+= Upgrade From 1.x To 2.0
+:toc:
+:toclevels: 2
+:sectanchors:
+:source-highlighter: highlight.js
+
+xref:index.adoc[Back to API overview]
+
+This guide is for clients moving from the `1.x` contract to the current `2.0` same-site browser and `/api/**` deployment boundary.
+
+It is migration guidance, not a second source of truth for the steady-state `2.0` contract. Use xref:index.adoc[the API overview] and xref:session-controller.adoc[the session API docs] for the standing `2.0` contract after migration.
+
+== What Changed
+
+- only `/api/**` is intended to be internet-public from this application
+- login bootstrap and provider callbacks live under `/api/session/**`
+- `GET /api/session` is now the supported browser bootstrap and refresh endpoint
+- `GET /api/account` remains the authenticated persisted-profile resource and should not be used as anonymous session discovery
+- unsafe browser writes now require the readable `XSRF-TOKEN` cookie value to be mirrored into the `X-XSRF-TOKEN` request header
+
+== Public Boundary Changes
+
+`2.0` draws a harder boundary between the supported application API and the trusted internal or devops-only validation surface.
+
+Public application traffic should target only `/api/**`.
+Internal-only or separately handled paths now include `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, and `/actuator/**`.
+
+The checked-in edge reference asset `k8s/edge/public-api-ingress.yaml` demonstrates the intended `/api/**` public routing shape without claiming to be a full production ingress package.
+
+== Browser Session Changes
+
+The supported browser flow is now:
+
+1. call `GET /api/session` on initial load
+2. read `loginProviders[]` and render the available login options from the returned relative `authorizationPath` values
+3. send the browser to `/api/session/oauth2/authorization/{registrationId}` for the selected provider
+4. let the identity provider return to `/api/session/login/oauth2/code/{registrationId}`
+5. call `GET /api/session` again after login success so the browser has the current session and CSRF state
+6. call `GET /api/account` only after the session is established when the UI needs the persisted profile
+
+Do not hard-code `/login`, `/oauth2/authorization/github`, or provider-specific callback assumptions into the UI.
+Use the `GET /api/session` payload as the source of truth for the supported login bootstrap contract.
+
+== CSRF-Protected Unsafe Writes
+
+`2.0` keeps the session-cookie auth model and adds the documented same-site CSRF handshake for unsafe `/api/**` requests:
+
+1. call `GET /api/session`
+2. read the `XSRF-TOKEN` cookie and the published `csrf.cookieName` plus `csrf.headerName` metadata
+3. on `POST`, `PUT`, or `DELETE`, send the authenticated `technical-interview-demo-session` cookie and the `X-XSRF-TOKEN` header whose value matches the readable `XSRF-TOKEN` cookie
+
+The intended low-noise example write is `PUT /api/account/language`.
+
+After login success or logout, call `GET /api/session` again before the next unsafe write because the browser session state changed and the CSRF token may have been refreshed or cleared.
+
+== Reverse Proxy Expectations
+
+The supported browser contract still assumes one public origin via reverse proxy.
+This repository does not promise cross-origin browser flows or CORS support.
+
+Deployment is expected to:
+
+- expose only `/api/**` from this application to the public internet
+- keep `/`, `/hello`, `/docs`, `/v3/api-docs*`, and `/actuator/**` private or trusted-only
+- own abuse protection for `/api/session/oauth2/authorization/{registrationId}` and unsafe internet-public `/api/**` writes
+
+That means burst limiting, suspicious-client challenge or block capability, per-client throttling, request-size enforcement, and rejection visibility belong at the edge or gateway layer, not inside the application.
+
+== Migration Checklist
+
+1. Move the public backend boundary to `/api/**` only.
+2. Switch anonymous session/bootstrap reads from inferred protected-resource behavior to `GET /api/session`.
+3. Render login choices from `loginProviders[]` and start login from the returned relative `authorizationPath`.
+4. Keep `GET /api/account` for authenticated persisted-profile reads.
+5. Add the `XSRF-TOKEN` cookie plus `X-XSRF-TOKEN` header handshake to unsafe `/api/**` requests.
+6. Refresh `GET /api/session` after login success and after logout before the next unsafe write.

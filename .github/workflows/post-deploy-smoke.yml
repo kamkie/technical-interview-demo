@@ -119,9 +119,9 @@ jobs:
             echo "expected_session_timeout=${INPUT_EXPECTED_SESSION_TIMEOUT}"
           } >> "${GITHUB_OUTPUT}"
           if [ "${jdbc_values_present}" -eq 3 ]; then
-            echo "Scheduled smoke will run with HTTP, JDBC-backed session, and Flyway assertions." >> "${GITHUB_STEP_SUMMARY}"
+            echo "Scheduled smoke will run with HTTP assertions plus JDBC-backed GET /api/session, XSRF bootstrap, authenticated PUT /api/account/language, and Flyway assertions." >> "${GITHUB_STEP_SUMMARY}"
           else
-            echo "Scheduled smoke will run HTTP-only assertions because JDBC access is not configured." >> "${GITHUB_STEP_SUMMARY}"
+            echo "Scheduled smoke will run HTTP-only assertions because JDBC access is not configured; authenticated session bootstrap and write proof are skipped by design." >> "${GITHUB_STEP_SUMMARY}"
           fi
           if [ "${identity_values_present}" -eq 2 ]; then
             echo "Manual dispatch will also verify build.version=${INPUT_EXPECTED_BUILD_VERSION} and git.shortCommitId=${INPUT_EXPECTED_SHORT_COMMIT_ID} from GET /." >> "${GITHUB_STEP_SUMMARY}"

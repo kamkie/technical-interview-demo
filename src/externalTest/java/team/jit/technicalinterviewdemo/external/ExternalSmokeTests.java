@@ -9,11 +9,15 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
 import java.net.http.HttpResponse;
+import java.util.Map;
 import java.util.stream.StreamSupport;
 
 import org.junit.jupiter.api.Test;
 
 class ExternalSmokeTests extends ExternalHttpTestSupport {
+
+    private static final String SMOKE_LOGIN = "smoke-user";
+    private static final String SMOKE_PREFERRED_LANGUAGE = "pl";
 
     @Test
     void rootEndpointReturnsOverviewPayload() throws IOException, InterruptedException {
@@ -169,25 +173,76 @@ class ExternalSmokeTests extends ExternalHttpTestSupport {
     }
 
     @Test
-    void accountEndpointAcceptsJdbcBackedAuthenticatedSession() throws IOException, InterruptedException {
+    void sessionEndpointBootstrapsCsrfCookieForJdbcBackedAuthenticatedSession() throws IOException, InterruptedException {
         assumeTrue(
                 ExternalSessionSupport.isJdbcConfigured(),
                 "Skipping JDBC-backed session smoke assertions because external JDBC configuration is not available."
         );
         try (ExternalSessionSupport sessionSupport = ExternalSessionSupport.create()) {
-            String sessionId = sessionSupport.createAuthenticatedSession("smoke-user");
+            String sessionId = sessionSupport.createAuthenticatedSession(SMOKE_LOGIN);
+
+            HttpResponse<String> response = getWithSession("/api/session", "application/json", sessionId);
+            JsonNode session = jsonBody(response);
+
+            assertEquals(200, response.statusCode());
+            assertTrue(requiredHeader(response, "content-type").contains("application/json"));
+            assertTrue(session.path("authenticated").asBoolean(false));
+            assertEquals("/api/account", textAt(session, "accountPath"));
+            assertEquals("/api/session/logout", textAt(session, "logoutPath"));
+            assertEquals(SESSION_COOKIE_NAME, textAt(session, "sessionCookie", "name"));
+            assertTrue(session.path("csrf").path("enabled").asBoolean(false));
+            assertEquals(CSRF_COOKIE_NAME, textAt(session, "csrf", "cookieName"));
+            assertEquals("X-XSRF-TOKEN", textAt(session, "csrf", "headerName"));
+            assertFalse(requiredCookie(response, CSRF_COOKIE_NAME).isBlank());
+        }
+    }
+
+    @Test
+    void accountLanguageWriteAcceptsJdbcBackedAuthenticatedSessionAndBootstrappedCsrfToken()
+            throws IOException, InterruptedException {
+        assumeTrue(
+                ExternalSessionSupport.isJdbcConfigured(),
+                "Skipping JDBC-backed session smoke assertions because external JDBC configuration is not available."
+        );
+        try (ExternalSessionSupport sessionSupport = ExternalSessionSupport.create()) {
+            String sessionId = sessionSupport.createAuthenticatedSession(SMOKE_LOGIN);
 
             assertEquals(1, sessionSupport.sessionRowCount(sessionId));
             assertTrue(sessionSupport.sessionAttributeCount(sessionId) > 0);
             assertTrue(sessionSupport.hasStoredSecurityContext(sessionId));
 
-            HttpResponse<String> response = getWithSession("/api/account", "application/json", sessionId);
+            HttpResponse<String> sessionResponse = getWithSession("/api/session", "application/json", sessionId);
+            String csrfToken = requiredCookie(sessionResponse, CSRF_COOKIE_NAME);
+
+            HttpResponse<String> response = putJsonWithCookies(
+                    "/api/account/language",
+                    "application/json",
+                    Map.of("X-XSRF-TOKEN", csrfToken),
+                    Map.of(
+                            SESSION_COOKIE_NAME, encodedSessionCookieValue(sessionId),
+                            CSRF_COOKIE_NAME, csrfToken
+                    ),
+                    """
+                    {
+                      "preferredLanguage": "pl"
+                    }
+                    """
+            );
+            JsonNode account = jsonBody(response);
 
             assertEquals(200, response.statusCode());
             assertTrue(requiredHeader(response, "content-type").contains("application/json"));
-            assertTrue(response.body().contains("\"provider\":\"github\""));
-            assertTrue(response.body().contains("\"login\":\"smoke-user\""));
-            assertTrue(response.body().contains("\"displayName\":\"smoke-user display\""));
+            assertEquals("github", textAt(account, "provider"));
+            assertEquals(SMOKE_LOGIN, textAt(account, "login"));
+            assertEquals(SMOKE_LOGIN + " display", textAt(account, "displayName"));
+            assertEquals(SMOKE_PREFERRED_LANGUAGE, textAt(account, "preferredLanguage"));
+
+            HttpResponse<String> accountResponse = getWithSession("/api/account", "application/json", sessionId);
+            JsonNode persistedAccount = jsonBody(accountResponse);
+
+            assertEquals(200, accountResponse.statusCode());
+            assertTrue(requiredHeader(accountResponse, "content-type").contains("application/json"));
+            assertEquals(SMOKE_PREFERRED_LANGUAGE, textAt(persistedAccount, "preferredLanguage"));
         }
     }
 

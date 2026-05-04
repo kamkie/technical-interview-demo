@@ -1,0 +1,25 @@
+# Reference ingress for the documented 2.0 public boundary.
+# Attach this rule to the same public host used by the separate first-party UI.
+# Keep non-/api/** paths on a private ingress or route them to another service.
+# Add vendor-specific rate limits, challenge, and request-size controls in a deployment-owned overlay.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: technical-interview-demo-public-api
+  namespace: technical-interview-demo
+  labels:
+    app.kubernetes.io/name: technical-interview-demo
+    app.kubernetes.io/component: edge
+spec:
+  ingressClassName: public
+  rules:
+    - host: demo.example.test
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: technical-interview-demo
+                port:
+                  name: http

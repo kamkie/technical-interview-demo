@@ -67,7 +67,7 @@ Before creating an annotated release tag on merged `main`:
    - the semantic tag image `ghcr.io/<owner>/<repo>:vMAJOR.MINOR.PATCH[-PRERELEASE]`
    - the immutable short-SHA image `ghcr.io/<owner>/<repo>:sha-<12-char-commit>`
    - a keyless signature and provenance attestation for the immutable published digest `ghcr.io/<owner>/<repo>@sha256:...`
-12. run the manual `Post-Deploy Smoke` workflow against the deployed environment before promotion, using the release-summary `expected_build_version`, `expected_short_commit_id`, `expected_active_profile=prod`, `expected_session_store_type=jdbc`, and `expected_session_timeout=15m` inputs so the deployed app proves `build.version` plus `git.shortCommitId`
+12. run the manual `Post-Deploy Smoke` workflow against the deployed environment before promotion, using the release-summary `expected_build_version`, `expected_short_commit_id`, `expected_active_profile=prod`, `expected_session_store_type=jdbc`, and `expected_session_timeout=15m` inputs so the deployed app proves `build.version` plus `git.shortCommitId`; when the JDBC secret set is configured that same run must also prove `GET /api/session`, readable `XSRF-TOKEN` bootstrap, authenticated `PUT /api/account/language`, and persisted authenticated account access, while environments without that JDBC access remain HTTP-only by design
 
 ## Choosing The Version
 

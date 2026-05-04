@@ -170,12 +170,16 @@ class ExternalTestingConventionsPlugin : Plugin<Project> {
                 systemProperty("external.baseUrl", baseUrl)
                 environment("EXTERNAL_BASE_URL", baseUrl)
                 if (allJdbcConfigured) {
-                    logger.lifecycle("[externalDeploymentCheck] JDBC-backed session and Flyway checks are enabled.")
+                    logger.lifecycle(
+                        "[externalDeploymentCheck] JDBC-backed session, GET /api/session, CSRF write, and Flyway checks are enabled."
+                    )
                     systemProperty("external.jdbc.url", jdbcUrl)
                     systemProperty("external.jdbc.user", jdbcUser)
                     systemProperty("external.jdbc.password", jdbcPassword)
                 } else {
-                    logger.lifecycle("[externalDeploymentCheck] JDBC-backed checks are disabled; running HTTP-only smoke assertions.")
+                    logger.lifecycle(
+                        "[externalDeploymentCheck] JDBC-backed checks are disabled; running HTTP-only smoke assertions."
+                    )
                 }
                 if (allIdentityConfigured) {
                     val resolvedBuildVersion = requireNotNull(buildVersion)
@@ -193,7 +197,7 @@ class ExternalTestingConventionsPlugin : Plugin<Project> {
                     val resolvedSessionStoreType = requireNotNull(sessionStoreType)
                     val resolvedSessionTimeout = requireNotNull(sessionTimeout)
                     logger.lifecycle(
-                        "[externalDeploymentCheck] Expecting prod posture profile=$resolvedActiveProfile, session store=$resolvedSessionStoreType, session timeout=$resolvedSessionTimeout, csrf disabled."
+                        "[externalDeploymentCheck] Expecting prod posture profile=$resolvedActiveProfile, session store=$resolvedSessionStoreType, session timeout=$resolvedSessionTimeout, csrf enabled with XSRF-TOKEN/X-XSRF-TOKEN and edge-owned abuse protection."
                     )
                     systemProperty("external.expected.activeProfile", resolvedActiveProfile)
                     systemProperty("external.expected.sessionStoreType", resolvedSessionStoreType)
