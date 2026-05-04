@@ -304,7 +304,8 @@ class ExternalTestingConventionsPlugin : Plugin<Project> {
             )
             baselineFile.convention(
                 layout.projectDirectory.file(
-                    providers.gradleProperty("benchmark.baselineFile").orElse("performance/baselines/phase-9-local.json")
+                    providers.gradleProperty("benchmark.baselineFile")
+                        .orElse("src/gatling/resources/gatling-benchmark-baseline.json")
                 )
             )
             latestResultFile.convention(layout.buildDirectory.file("performance/phase-9-latest.json"))
