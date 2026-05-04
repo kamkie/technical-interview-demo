@@ -23,16 +23,19 @@ Read only what the request needs:
 
 1. Run `pwsh ./scripts/classify-changed-files.ps1 -Uncommitted` unless the task clearly targets another diff boundary.
 2. If `skipHeavyValidation=true`, do manual consistency review only unless the user explicitly asks for more.
-3. Otherwise choose the smallest sufficient proof from `ai/TESTING.md`; default to `.\gradlew.bat build` when no narrower proof is justified.
-4. If public behavior or documented schema changed, inspect the contract artifacts routed by `AGENTS.md` and `ai/DOCUMENTATION.md`.
-5. If the change touches book search, localization lookup, or OAuth/session startup behavior, check whether `./gradlew gatlingBenchmark` is required.
-6. Report the exact commands run, what passed, what failed, what was skipped, and which artifacts likely need updates.
+3. Before env-dependent validation commands, check whether a local `.env` file exists and, in PowerShell, prefer dot-sourcing `./scripts/load-dotenv.ps1` so values such as `JAVA_HOME` load into the current shell.
+4. Use `.env.example` only as the template for expected variable names, not as proof of local values.
+5. Otherwise choose the smallest sufficient proof from `ai/TESTING.md`; default to `.\gradlew.bat build` when no narrower proof is justified.
+6. If public behavior or documented schema changed, inspect the contract artifacts routed by `AGENTS.md` and `ai/DOCUMENTATION.md`.
+7. If the change touches book search, localization lookup, or OAuth/session startup behavior, check whether `./gradlew gatlingBenchmark` is required.
+8. Report the exact commands run, what passed, what failed, what was skipped, and which artifacts likely need updates.
 
 ## Guardrails
 
 - do not refresh the approved OpenAPI baseline unless the contract intentionally changed and that review already happened
 - treat benchmark and compatibility gates as spec checks, not optional cleanup
 - if required validation cannot run, say exactly why and what remains unverified
+- if `.env` is missing or incomplete for an env-dependent command, say which fallback was used
 - do not claim a documentation-only shortcut when the classifier or changed files indicate code, contract, or workflow impact
 - when the user asked for a review, lead with findings before the summary
 
