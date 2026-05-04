@@ -180,7 +180,7 @@ Additional verification expectations:
 
 ## Versioning And Releases
 
-- use semantic version tags in the form `vMAJOR.MINOR.PATCH`
+- use semantic version tags in the form `vMAJOR.MINOR.PATCH` for stable releases or `vMAJOR.MINOR.PATCH-PRERELEASE` for prereleases such as `v2.0.0-M1`, `v2.0.0-ALFA1`, `v2.0.0-BETA2`, or `v2.0.0-RC1`
 - keep version numbers increasing in `git log --first-parent` order
 - create releases only from `main` after all intended changes are integrated there
 - create annotated tags for intentional releases

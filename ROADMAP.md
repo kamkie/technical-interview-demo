@@ -29,7 +29,7 @@ No unrefined tasks currently.
 
 ## Current Priorities
 
-1. Define the post-`1.x` security-hardening track as an explicit breaking follow-up that replaces the current reviewer-oriented browser write posture with production-grade same-site protections and explicit reverse-proxy/public-origin assumptions for the separate first-party UI.
+1. Continue the post-`1.x` security-hardening track with production-grade same-site CSRF protections and explicit edge-owned abuse-protection expectations for the separate first-party UI.
 
 ## Locked Framing Decisions
 
@@ -51,9 +51,6 @@ Goal: evolve the repository into a production-ready backend sample that supports
 
 #### Revisit The Security Posture
 - [ ] Replace the current reviewer-oriented CSRF-disabled browser write posture with production-grade same-site browser protections that work for a reverse-proxied first-party UI
-- [x] Define and enforce reverse-proxy, public-origin, cookie, redirect, and session assumptions for the backend-to-UI boundary
-- [x] Restrict technical endpoints such as Prometheus and non-public actuator surfaces through deployment-scoped private access expectations, while keeping authenticated operator visibility in the application-owned operator surface
-- [x] Add security headers and explicit HTTPS/proxy handling assumptions for real deployments
 - [ ] Define the required edge or deployment-owned abuse-protection expectations for login bootstrap and write-heavy paths instead of assuming repo-owned application rate limiting
 
 ---

@@ -125,7 +125,7 @@ CI and release workflow expectations:
 - `CI` uses JDK 25, Gradle dependency caching, explicit Docker availability checks, `./gradlew build`, uploads `build/reports/jacoco/test/jacocoTestReport.xml` to Codecov, publishes security/static-analysis/SBOM artifact bundles from `build/reports/`, and then runs `./gradlew externalSmokeTest`
 - the scheduled `Post-Deploy Smoke` workflow runs `./gradlew scheduledExternalCheck` every six hours and on manual dispatch, using `EXTERNAL_CHECK_BASE_URL` plus optional `EXTERNAL_CHECK_JDBC_URL`, `EXTERNAL_CHECK_JDBC_USER`, and `EXTERNAL_CHECK_JDBC_PASSWORD` secrets when JDBC-backed session and Flyway assertions should be enabled
 - manual `Post-Deploy Smoke` dispatch also accepts `expected_build_version`, `expected_short_commit_id`, `expected_active_profile`, `expected_session_store_type`, and `expected_session_timeout` so promotion-stage checks can bind to the deployed root overview metadata instead of only checking liveness
-- `Release` runs on `vMAJOR.MINOR.PATCH` tags, rebuilds/scans/SBOM-documents the tagged image through Gradle, publishes security/static-analysis/SBOM artifact bundles from `build/reports/`, validates it with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry, and then creates a cumulative GitHub Release from `CHANGELOG.md` using `scripts/release/render-release-notes.ps1` plus the previous published GitHub Release boundary
+- `Release` runs on stable tags in the form `vMAJOR.MINOR.PATCH` and prerelease tags in the form `vMAJOR.MINOR.PATCH-PRERELEASE`, rebuilds/scans/SBOM-documents the tagged image through Gradle, publishes security/static-analysis/SBOM artifact bundles from `build/reports/`, validates it with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry, and then creates a cumulative GitHub Release from `CHANGELOG.md` using `scripts/release/render-release-notes.ps1` plus the previous published GitHub Release boundary
 - the `Release` workflow step summary records the semantic tag, immutable short-SHA tag, pushed digest reference, and the exact manual post-deploy check inputs maintainers should reuse before promotion
 - recommended branch protection requires `CI`, at least one reviewer, and a squash-merge or equivalent linear-history policy
 
@@ -422,7 +422,7 @@ Upgrade flow:
 2. Update the Kubernetes manifest image tag or Helm values to the target release.
 3. Apply the rollout and watch `GET /actuator/health/readiness` or `kubectl rollout status` until the app reaches `UP`.
 4. Run the manual `Post-Deploy Smoke` workflow against the deployed base URL with:
-   - `expected_build_version=<semantic-tag>`
+  - `expected_build_version=<semantic-tag-or-prerelease-tag>`
    - `expected_short_commit_id=<12-char-commit>`
    - `expected_active_profile=prod`
    - `expected_session_store_type=jdbc`

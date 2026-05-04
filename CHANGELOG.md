@@ -2,10 +2,12 @@
 
 All notable released changes to this project are documented in this file.
 
-The format is based on Keep a Changelog and the project uses semantic version tags in the form `vMAJOR.MINOR.PATCH`.
+The format is based on Keep a Changelog and the project uses semantic version tags in the form `vMAJOR.MINOR.PATCH` for stable releases or `vMAJOR.MINOR.PATCH-PRERELEASE` for prereleases.
 The Gradle build version is derived from the nearest reachable annotated git tag, and release numbers must increase in `git log --first-parent` order.
 
 ## [Unreleased]
+
+## [v2.0.0-M1] - 2026-05-04
 
 ### Added
 - Added a reusable PowerShell dotenv loader at `scripts/load-dotenv.ps1` so local shells and repo scripts can source `.env` consistently.

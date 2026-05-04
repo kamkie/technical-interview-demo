@@ -19,7 +19,7 @@ A release in this repository means:
 - `CHANGELOG.md` has a new released version entry
 - `ROADMAP.md` no longer lists the released work as active
 - the executed `ai/PLAN_*.md` file is archived under `ai/archive/`
-- the release commit is tagged with an annotated semantic version tag
+- the release commit is tagged with an annotated semantic version tag or semantic prerelease tag
 
 Releases are intentional. Do not update `CHANGELOG.md` or create a tag before the implemented plan is complete and validated.
 Cut releases only from `main`.
@@ -64,20 +64,23 @@ Before creating an annotated release tag on merged `main`:
 9. archive the executed `ai/PLAN_*.md` file and update moved-path references in the same change
 10. create the annotated tag only after the release commit exists locally on `main`
 11. after push, verify the remote accepted both `main` and the tag, the `Release` workflow passed, the GitHub Release was created, GitHub code scanning still reflects the expected CodeQL posture, and GHCR published both:
-   - the semantic tag image `ghcr.io/<owner>/<repo>:vMAJOR.MINOR.PATCH`
+   - the semantic tag image `ghcr.io/<owner>/<repo>:vMAJOR.MINOR.PATCH[-PRERELEASE]`
    - the immutable short-SHA image `ghcr.io/<owner>/<repo>:sha-<12-char-commit>`
    - a keyless signature and provenance attestation for the immutable published digest `ghcr.io/<owner>/<repo>@sha256:...`
 12. run the manual `Post-Deploy Smoke` workflow against the deployed environment before promotion, using the release-summary `expected_build_version`, `expected_short_commit_id`, `expected_active_profile=prod`, `expected_session_store_type=jdbc`, and `expected_session_timeout=15m` inputs so the deployed app proves `build.version` plus `git.shortCommitId`
 
 ## Choosing The Version
 
-Use semantic version tags in the form `vMAJOR.MINOR.PATCH`.
+Use semantic version tags in the form `vMAJOR.MINOR.PATCH` for stable releases or `vMAJOR.MINOR.PATCH-PRERELEASE` for prereleases.
+
+Use prerelease suffixes only for intentional preview cuts of the next stable line. Supported examples include `v2.0.0-M1`, `v2.0.0-M2`, `v2.0.0-ALFA1`, `v2.0.0-BETA2`, and `v2.0.0-RC1`.
 
 Choose the next version deliberately:
 
 - increment `PATCH` for backward-compatible fixes, cleanup, or doc-aligned contract corrections
 - increment `MINOR` for backward-compatible feature additions or meaningful contract expansion
 - increment `MAJOR` only for intentional breaking changes
+- apply any prerelease suffix only after choosing the underlying `MAJOR.MINOR.PATCH` bump; the suffix does not change the base-version decision
 
 Before choosing the version:
 
@@ -103,7 +106,7 @@ Start from local `main` synced to the approved merged state.
 The release commit message should match the existing repository pattern:
 
 ```text
-Prepare vMAJOR.MINOR.PATCH release
+Prepare vMAJOR.MINOR.PATCH[-PRERELEASE] release
 ```
 
 Use a normal non-interactive commit. Do not amend an existing commit unless the user explicitly asks for it.
@@ -112,8 +115,8 @@ Use a normal non-interactive commit. Do not amend an existing commit unless the 
 
 After the release commit exists:
 
-1. create an annotated tag named `vMAJOR.MINOR.PATCH`
-2. use a concise annotation message such as `Release vMAJOR.MINOR.PATCH`
+1. create an annotated tag named `vMAJOR.MINOR.PATCH[-PRERELEASE]`
+2. use a concise annotation message such as `Release vMAJOR.MINOR.PATCH[-PRERELEASE]`
 3. verify the tag points at the release commit with `git show --stat <tag>`
 
 Releases in this repository are based on annotated tags. Lightweight tags are not sufficient.
@@ -169,7 +172,7 @@ The release workflow is also expected to sign and attest the immutable pushed GH
 5. Update `ROADMAP.md` to remove work completed by the release from the active roadmap.
 6. Move the executed `ai/PLAN_*.md` file to `ai/archive/` and update moved-path references in the same change.
 7. Update `CHANGELOG.md` for the chosen version.
-8. Commit with `Prepare vMAJOR.MINOR.PATCH release`.
-9. Create an annotated tag `vMAJOR.MINOR.PATCH`.
+8. Commit with `Prepare vMAJOR.MINOR.PATCH[-PRERELEASE] release`.
+9. Create an annotated tag `vMAJOR.MINOR.PATCH[-PRERELEASE]`.
 10. Push the release commit and annotated tag when requested, then verify remote publication.
 11. Verify clean status, tag placement, changelog alignment, roadmap cleanup, temporary changelog cleanup, and plan archival.

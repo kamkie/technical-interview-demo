@@ -184,7 +184,7 @@ Additional change-sensitive checks:
 ## Release Model
 
 - application version is derived from the nearest reachable annotated git tag
-- use semantic version tags in the form `vMAJOR.MINOR.PATCH`
+- use semantic version tags in the form `vMAJOR.MINOR.PATCH` for stable releases or `vMAJOR.MINOR.PATCH-PRERELEASE` for prereleases such as `v2.0.0-M1`, `v2.0.0-ALFA1`, `v2.0.0-BETA2`, or `v2.0.0-RC1`
 - keep release numbers increasing in `git log --first-parent` order
 - record human-facing release history in `CHANGELOG.md`
 - tag-driven releases publish cumulative GitHub Release notes from the new tag section back to the previous published GitHub Release tag section in `CHANGELOG.md`
@@ -218,7 +218,8 @@ Supported delivery path:
 - the `CI` workflow uploads `build/reports/jacoco/test/jacocoTestReport.xml` to Codecov after the Gradle build, so the repository must be onboarded for Codecov uploads before that signal is expected to pass consistently
 - Dependabot opens grouped weekly update PRs for Gradle, GitHub Actions, and Docker, and those PRs are expected to pass the same `CI` workflow before merge
 - the `CI` workflow uploads generated vulnerability scan artifacts from `build/reports/security/`, static-analysis artifacts from `build/reports/pmd/` plus `build/reports/security/static/`, and SBOM artifacts from `build/reports/sbom/` so blocked runs remain reviewable
-- semantic version tags trigger the `Release` workflow, which builds, scans, and generates SBOMs for the tagged image with Gradle, uploads security, static-analysis, and SBOM artifact bundles, validates the image with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry as `ghcr.io/<owner>/<repo>:<tag>` and `ghcr.io/<owner>/<repo>:sha-<12-char-commit>`, then signs the pushed immutable digest and publishes provenance attestation for that same digest before creating cumulative GitHub Release notes from the previous published GitHub Release tag boundary in `CHANGELOG.md`
+- stable and prerelease semantic version tags trigger the `Release` workflow, which builds, scans, and generates SBOMs for the tagged image with Gradle, uploads security, static-analysis, and SBOM artifact bundles, validates the image with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry as `ghcr.io/<owner>/<repo>:<tag>` and `ghcr.io/<owner>/<repo>:sha-<12-char-commit>`, then signs the pushed immutable digest and publishes provenance attestation for that same digest before creating cumulative GitHub Release notes from the previous published GitHub Release tag boundary in `CHANGELOG.md`
+- when the tag includes a `-PRERELEASE` suffix, the workflow publishes the GitHub release entry as a prerelease while still using the full tag for image, changelog, and post-deploy identity checks
 - the `Release` workflow step summary now records the semantic tag, short-SHA tag, digest reference, and the exact manual `Post-Deploy Smoke` inputs maintainers should use before promotion
 - deployment artifacts are provided as:
   - Docker image
