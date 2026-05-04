@@ -6,6 +6,7 @@ It does not own standing policy.
 Keep prompts lean:
 
 - repository rules live in `AGENTS.md`
+- code-shaping rules live in `ai/CODE_STYLE.md`
 - artifact routing lives in `ai/DOCUMENTATION.md`
 - planning rules live in `ai/PLAN.md`
 - single-agent and per-milestone execution rules live in `ai/EXECUTION.md`
@@ -71,14 +72,14 @@ If a prompt starts reading like policy, move that policy back to the owner guide
 
 Default read set by task:
 
-- discovery and roadmap work: `AGENTS.md`, `ROADMAP.md`, `ai/PLAN.md`; add `README.md` or `ai/DESIGN.md` only when relevant
-- planning: `AGENTS.md`, `ai/PLAN.md`, and the governing specs; add `README.md` or `ROADMAP.md` only when relevant
+- discovery and roadmap work: `AGENTS.md`, `ROADMAP.md`, `ai/PLAN.md`; add `README.md`, `ai/DESIGN.md`, `ai/ARCHITECTURE.md`, or `ai/BUSINESS_MODULES.md` only when relevant
+- planning: `AGENTS.md`, `ai/PLAN.md`, and the governing specs; add `ai/DOCUMENTATION.md`, `README.md`, `ROADMAP.md`, `ai/DESIGN.md`, `ai/ARCHITECTURE.md`, or `ai/BUSINESS_MODULES.md` only when relevant
 - plan verification: `AGENTS.md`, `ai/PLAN.md`, and the target plan file
-- implementation: `AGENTS.md`, `ai/EXECUTION.md`, and the target `ai/PLAN_*.md`
-- workflow execution: `AGENTS.md`, `ai/WORKFLOW.md`, `ai/EXECUTION.md`, and the relevant plan files
-- implementation integration: `AGENTS.md`, `ai/WORKFLOW.md`, `ai/EXECUTION.md`, and the relevant plan files or worker logs
-- implementation verification: `AGENTS.md`, `ai/TESTING.md`, `ai/REVIEWS.md`, plus any owner guide needed to judge artifact impact
-- preparing release: `AGENTS.md`, `ai/RELEASES.md`, the executed plan, and the changed contract docs
+- implementation: `AGENTS.md`, `ai/EXECUTION.md`, and the target `ai/PLAN_*.md`; add `ai/CODE_STYLE.md`, `ai/DOCUMENTATION.md`, `ai/TESTING.md`, and `ai/REVIEWS.md` as the change requires
+- workflow execution: `AGENTS.md`, `ai/WORKFLOW.md`, `ai/EXECUTION.md`, and the relevant plan files; add `ai/DOCUMENTATION.md`, `ai/TESTING.md`, and `ai/REVIEWS.md` when routing shared artifacts or final validation
+- implementation integration: `AGENTS.md`, `ai/WORKFLOW.md`, `ai/EXECUTION.md`, and the relevant plan files or worker logs; add `ai/DOCUMENTATION.md`, `ai/TESTING.md`, and `ai/REVIEWS.md` before finalizing integration
+- implementation verification: `AGENTS.md`, `ai/TESTING.md`, `ai/DOCUMENTATION.md`, `ai/REVIEWS.md`, plus any owner guide needed to judge artifact impact
+- preparing release: `AGENTS.md`, `ai/RELEASES.md`, `ai/DOCUMENTATION.md`, the executed plan, and the changed contract docs
 - releasing: `AGENTS.md`, `ai/RELEASES.md`, and the current release state
 
 Use the owner guide named by the prompt instead of restating its standing policy in the request.
@@ -144,7 +145,7 @@ Do not create the plan yet unless I ask.
 ```text
 Review the roadmap item `<task>` before planning implementation.
 
-Explain what behavior would change, which current specs govern it, what is still ambiguous, and whether the task should remain in `Discovery` or can move into `Planning` under `ai/PLAN.md`.
+Explain what behavior would change, which current specs govern it, what is still ambiguous, and whether the task should remain in `Discovery`, move into `Planning`, or be treated as `Needs Input` under `ai/PLAN.md`.
 ```
 
 ## Planning
@@ -220,11 +221,12 @@ Say explicitly if the plan is ready.
 ### Choose Execution Mode
 
 ```text
-Review `<plan_file>` and decide whether it should execute in `Single Branch` or `Shared Plan`.
+Review `<plan_file>` and decide which execution mode fits best.
 
-Use `ai/WORKFLOW.md`.
-Base the decision on the plan's `Execution Mode Fit`, milestone boundaries, and shared-file ownership.
-If the work really needs multiple plan files and `Parallel Plans`, say that explicitly instead of forcing a single-plan mode.
+Use `ai/PLAN.md` and `ai/WORKFLOW.md`.
+Base the decision on the plan's `Execution Mode Fit`, milestone boundaries, shared-file ownership, and whether the work should stay one plan or be split into multiple plan files.
+Say explicitly whether `Single Branch`, `Shared Plan`, or `Parallel Plans` is the right answer.
+If the work really needs multiple plan files, say that explicitly instead of forcing a single-plan mode.
 ```
 
 ## Implementation
@@ -254,12 +256,12 @@ Use these prompts when one request should actively execute planned work while al
 ### Run Plan With Inferred Mode
 
 ```text
-Execute `<plan_file>` using the workflow agent.
+Execute `<plan_file>` using the workflow rules.
 
 Use `ai/WORKFLOW.md` and `ai/EXECUTION.md`.
 Infer `Single Branch` or `Shared Plan` from the plan file, especially `Execution Mode Fit`, milestone boundaries, and shared-file ownership.
 If the plan file is not clear enough to choose safely, stop and explain the ambiguity instead of guessing.
-Do not switch to `Parallel Plans` unless I pass multiple plan files.
+If the work actually needs multiple plan files and `Parallel Plans`, stop and say that explicitly instead of guessing.
 ```
 
 ### Run Plan On Single Branch
@@ -278,8 +280,8 @@ Do not push, open a PR, or release unless I ask.
 Execute `<plan_file>` in `Shared Plan` mode.
 
 Use `ai/WORKFLOW.md` and `ai/EXECUTION.md`.
-Act as orchestrator, fan out worker branches or worktrees only for disjoint slices, keep shared files coordinator-owned, and require committed worker logs.
-Push only the finished coordinator branch unless I explicitly ask otherwise.
+Act as orchestrator, fan out worker branches or worktrees only for disjoint slices, keep shared files coordinator-owned, and require committed worker logs at `ai/tmp/workflow/<plan_stem_or_topic>__<worker_name>.md`.
+Push only the finished coordinator branch and open one final PR unless I explicitly ask otherwise.
 ```
 
 ### Run Plans In Parallel
@@ -292,6 +294,7 @@ Execute these plan files in `Parallel Plans` mode using git worktrees:
 
 Use `ai/WORKFLOW.md` and `ai/EXECUTION.md`.
 Track per-plan branch, validation, private `CHANGELOG_<topic>.md`, worker log, and PR status.
+Treat each worker branch as complete only when local validation is done and the branch has been pushed with a PR open or already merged, matching `ai/WORKFLOW.md` and `AGENTS.md`.
 If any listed plans are too coupled for safe parallel execution, stop and explain why instead of forcing a different mode.
 Do not release unless I ask.
 ```
@@ -310,6 +313,7 @@ If any ready plans are too coupled for safe parallel execution, stop and explain
 Then execute the selected plan files in `Parallel Plans` mode using git worktrees.
 Use `ai/WORKFLOW.md` and `ai/EXECUTION.md`.
 Track per-plan branch, validation, private `CHANGELOG_<topic>.md`, worker log, and PR status.
+Treat each worker branch as complete only when local validation is done and the branch has been pushed with a PR open or already merged, matching `ai/WORKFLOW.md` and `AGENTS.md`.
 Do not release unless I ask.
 ```
 
@@ -326,6 +330,7 @@ If any unfinished plans are too coupled for safe parallel execution, stop and ex
 Then execute the selected plan files in `Parallel Plans` mode using git worktrees.
 Use `ai/WORKFLOW.md` and `ai/EXECUTION.md`.
 Track per-plan branch, validation, private `CHANGELOG_<topic>.md`, worker log, and PR status.
+Treat each worker branch as complete only when local validation is done and the branch has been pushed with a PR open or already merged, matching `ai/WORKFLOW.md` and `AGENTS.md`.
 Do not release unless I ask.
 ```
 
@@ -334,7 +339,9 @@ Do not release unless I ask.
 ```text
 Check the status of worker `<worker name or agent id>` in the current workflow execution.
 
-Report mode, branch and worktree, current progress, changed files, validations run with results, commit SHA(s), blockers, ready-for-integration status, and the worker-log path when applicable.
+Report mode, owned plan or slice, branch and worktree, current progress, changed files, validations run with results, commit SHA(s), blockers, ready-for-integration status, PR status, and the worker-log path.
+For `Shared Plan`, also note which shared files were intentionally left to the coordinator.
+For `Parallel Plans`, also include the `CHANGELOG_<topic>.md` path.
 If the worker has stalled or completed, state that clearly.
 ```
 
@@ -344,7 +351,9 @@ If the worker has stalled or completed, state that clearly.
 Check the status of the active workers in the current workflow execution.
 
 Use `ai/WORKFLOW.md`.
-For each worker, report mode, branch and worktree, current task, changed files, validations, commit SHA(s), blockers, ready-for-integration status, and the worker-log path when applicable.
+For each worker, report mode, owned plan or slice, branch and worktree, current task, changed files, validations, commit SHA(s), blockers, ready-for-integration status, PR status, and the worker-log path.
+For `Shared Plan`, include any shared files intentionally left to the coordinator.
+For `Parallel Plans`, include the `CHANGELOG_<topic>.md` path.
 Keep the report concise and factual.
 ```
 
@@ -358,7 +367,7 @@ Use these prompts after worker implementation is already done and the next task 
 Integrate completed worker output for `<plan_file>`.
 
 Use `ai/WORKFLOW.md` as coordinator in `Shared Plan` mode.
-Merge or cherry-pick ready worker branches, fold accepted worker-log content into the canonical plan and `CHANGELOG.md`, run the required integration validation, and summarize what landed and what remains.
+Merge or cherry-pick ready worker branches, fold accepted worker-log content into the canonical plan and `CHANGELOG.md`, run the required integration validation, delete consumed worker logs before the final push or PR unless I explicitly want them retained, and summarize what landed and what remains.
 ```
 
 ## Implementation Verification
@@ -369,15 +378,18 @@ Merge or cherry-pick ready worker branches, fold accepted worker-log content int
 Run only the required validation for `<plan_file>` or `<change>`.
 Do not edit files.
 
-Use `ai/TESTING.md` and summarize what ran, what passed, what failed, and what artifacts would likely need updates.
+Use `ai/TESTING.md` and `ai/DOCUMENTATION.md`.
+Start with `pwsh ./scripts/classify-changed-files.ps1 -Uncommitted` unless another diff boundary is explicit.
+Summarize what ran, what passed, what failed, what was skipped, and what artifacts would likely need updates.
 ```
 
 ### Check Contract Impact
 
 ```text
-Review `<change>` for public contract impact.
+Review `<change>` for contract and artifact-routing impact.
 
-State whether it requires updates to tests, REST Docs, Asciidoc, approved OpenAPI, HTTP examples, `README.md`, or benchmarks.
+Use `AGENTS.md`, `ai/DOCUMENTATION.md`, and `ai/TESTING.md`.
+State whether it requires updates to governing tests, published contract docs, approved OpenAPI, HTTP examples, `README.md`, maintainer docs, roadmap or release artifacts, or benchmark and compatibility checks.
 If the change is internal-only, say that explicitly and explain why.
 ```
 
@@ -386,7 +398,7 @@ If the change is internal-only, say that explicitly and explain why.
 ```text
 Verify `<milestone_name>` from `<plan_file>` after implementation.
 
-Use `ai/TESTING.md` and `ai/REVIEWS.md`.
+Use `ai/TESTING.md`, `ai/DOCUMENTATION.md`, and `ai/REVIEWS.md`.
 Check validation coverage, artifact updates, milestone commit completeness, and any remaining blocker before the next milestone or integration step.
 List blockers first.
 ```
@@ -408,7 +420,7 @@ Keep the summary brief.
 ```text
 Review release readiness for `<plan_file>`.
 
-Use `ai/RELEASES.md`.
+Use `ai/RELEASES.md` and `ai/DOCUMENTATION.md`.
 List blockers first.
 Say explicitly if the repository is release-ready.
 ```
@@ -418,7 +430,7 @@ Say explicitly if the repository is release-ready.
 ```text
 Prepare a release for `<plan_file>`.
 
-Follow `ai/RELEASES.md`.
+Follow `ai/RELEASES.md` and `ai/DOCUMENTATION.md`.
 Only proceed if the approved implementation PR is already merged onto `main`.
 Do not push unless I ask.
 ```
@@ -471,7 +483,7 @@ Use `ai/RELEASES.md` only after the approved implementation PR has been merged o
 Summarize the current lifecycle state for `<plan_file>` or the current change.
 
 Use `ai/PLAN.md`, `ai/EXECUTION.md`, and `ai/WORKFLOW.md` as needed.
-Report phase, status, active milestone, pending validations, integration state, and the next recommended step.
+Report phase, status, active milestone, mode, pending validations, integration state, branch or PR state when relevant, and the next recommended step.
 ```
 
 ### Triage Validation Failure
@@ -490,7 +502,7 @@ Identify the first real failure, likely root cause, whether it looks like a spec
 ```text
 Compact the standing AI instruction files.
 
-Read `AGENTS.md` and the current AI instruction files under `ai/` first.
+Read `AGENTS.md` and the current AI instruction files under `ai/` first. Check `WORKING_WITH_AI.md` too when the overlapping workflow wording would drift for human readers.
 Keep each file role-distinct.
 Move duplicated standing guidance into the best owning AI document.
 Tighten wording, remove overlap, update cross-references, and summarize the compaction decisions.
