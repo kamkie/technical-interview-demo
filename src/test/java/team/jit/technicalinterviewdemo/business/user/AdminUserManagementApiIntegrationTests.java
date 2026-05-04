@@ -1,6 +1,7 @@
 package team.jit.technicalinterviewdemo.business.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.endsWith;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -86,13 +87,22 @@ class AdminUserManagementApiIntegrationTests extends AbstractMockMvcIntegrationT
                 .andExpect(jsonPath("$[0].roles[1]").value("USER"))
                 .andExpect(jsonPath("$[0].roleGrants[0].role").value("ADMIN"))
                 .andExpect(jsonPath("$[0].roleGrants[0].source").value("BOOTSTRAP"))
+                .andExpect(jsonPath("$[0].roleGrants[0].grantedAt").value(endsWith("Z")))
                 .andExpect(jsonPath("$[0].roleGrants[0].grantedByUserId").doesNotExist())
                 .andExpect(jsonPath("$[0].roleGrants[1].role").value("USER"))
                 .andExpect(jsonPath("$[0].roleGrants[1].source").value("AUTHENTICATED_LOGIN"))
+                .andExpect(jsonPath("$[0].roleGrants[1].grantedAt").value(endsWith("Z")))
+                .andExpect(jsonPath("$[0].lastLoginAt").value(endsWith("Z")))
+                .andExpect(jsonPath("$[0].createdAt").value(endsWith("Z")))
+                .andExpect(jsonPath("$[0].updatedAt").value(endsWith("Z")))
                 .andExpect(jsonPath("$[1].login").value("reader-user"))
                 .andExpect(jsonPath("$[1].roles[0]").value("USER"))
                 .andExpect(jsonPath("$[1].roleGrants[0].role").value("USER"))
-                .andExpect(jsonPath("$[1].roleGrants[0].source").value("AUTHENTICATED_LOGIN"));
+                .andExpect(jsonPath("$[1].roleGrants[0].source").value("AUTHENTICATED_LOGIN"))
+                .andExpect(jsonPath("$[1].roleGrants[0].grantedAt").value(endsWith("Z")))
+                .andExpect(jsonPath("$[1].lastLoginAt").value(endsWith("Z")))
+                .andExpect(jsonPath("$[1].createdAt").value(endsWith("Z")))
+                .andExpect(jsonPath("$[1].updatedAt").value(endsWith("Z")));
     }
 
     @Test
@@ -117,9 +127,13 @@ class AdminUserManagementApiIntegrationTests extends AbstractMockMvcIntegrationT
                 .andExpect(jsonPath("$.roles[0]").value("ADMIN"))
                 .andExpect(jsonPath("$.roles[1]").value("USER"))
                 .andExpect(jsonPath("$.roleGrants[0].source").value("ADMIN_MANAGED"))
+                .andExpect(jsonPath("$.roleGrants[0].grantedAt").value(endsWith("Z")))
                 .andExpect(jsonPath("$.roleGrants[0].grantedByUserId").value(adminUser.getId()))
                 .andExpect(jsonPath("$.roleGrants[0].grantedByLogin").value("admin-user"))
-                .andExpect(jsonPath("$.roleGrants[0].reason").value("Needs audit review access."));
+                .andExpect(jsonPath("$.roleGrants[0].reason").value("Needs audit review access."))
+                .andExpect(jsonPath("$.lastLoginAt").value(endsWith("Z")))
+                .andExpect(jsonPath("$.createdAt").value(endsWith("Z")))
+                .andExpect(jsonPath("$.updatedAt").value(endsWith("Z")));
 
         UserAccount updatedReader = userAccountRepository.findById(readerUser.getId()).orElseThrow();
         assertThat(updatedReader.getRoles()).containsExactlyInAnyOrder(UserRole.USER, UserRole.ADMIN);

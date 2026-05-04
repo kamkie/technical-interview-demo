@@ -1,5 +1,6 @@
 package team.jit.technicalinterviewdemo.business.audit;
 
+import static org.hamcrest.Matchers.endsWith;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -97,6 +98,7 @@ class AuditLogApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .andExpect(jsonPath("$.content[0].actorLogin").value("admin-user"))
                 .andExpect(jsonPath("$.content[0].details.messageKey").value("error.book.not_found"))
                 .andExpect(jsonPath("$.content[0].details.language").value("fr"))
+                .andExpect(jsonPath("$.content[0].createdAt").value(endsWith("Z")))
                 .andExpect(jsonPath("$.content[1].id").value(updateBookLog.getId()))
                 .andExpect(jsonPath("$.content[1].details.title").value("Clean Code"))
                 .andExpect(jsonPath("$.content[1].details.publicationYear").value(2008))
@@ -122,6 +124,7 @@ class AuditLogApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 ))
                 .andExpect(jsonPath("$.content[0].details.messageKey").value("error.book.not_found"))
                 .andExpect(jsonPath("$.content[0].details.language").value("fr"))
+                .andExpect(jsonPath("$.content[0].createdAt").value(endsWith("Z")))
                 .andExpect(jsonPath("$.totalElements").value(1))
                 .andExpect(jsonPath("$.totalPages").value(1));
     }

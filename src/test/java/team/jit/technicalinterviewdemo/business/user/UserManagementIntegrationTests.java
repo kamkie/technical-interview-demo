@@ -2,6 +2,7 @@ package team.jit.technicalinterviewdemo.business.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
+import static org.hamcrest.Matchers.endsWith;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -166,7 +167,10 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .andExpect(jsonPath("$.login").value("reader-user"))
                 .andExpect(jsonPath("$.displayName").value("reader-user display"))
                 .andExpect(jsonPath("$.email").value("reader-user@example.test"))
-                .andExpect(jsonPath("$.roles[0]").value("USER"));
+                .andExpect(jsonPath("$.roles[0]").value("USER"))
+                .andExpect(jsonPath("$.lastLoginAt").value(endsWith("Z")))
+                .andExpect(jsonPath("$.createdAt").value(endsWith("Z")))
+                .andExpect(jsonPath("$.updatedAt").value(endsWith("Z")));
     }
 
     @Test
@@ -182,7 +186,10 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
                                 }
                                 """))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.preferredLanguage").value("pl"));
+                .andExpect(jsonPath("$.preferredLanguage").value("pl"))
+                .andExpect(jsonPath("$.lastLoginAt").value(endsWith("Z")))
+                .andExpect(jsonPath("$.createdAt").value(endsWith("Z")))
+                .andExpect(jsonPath("$.updatedAt").value(endsWith("Z")));
 
         mockMvc.perform(post("/api/categories")
                         .with(readerSession.unsafeWrite())

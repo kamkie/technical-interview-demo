@@ -81,8 +81,8 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                                 fieldWithPath("content[].language").description("Two-letter ISO 639-1 language code."),
                                 fieldWithPath("content[].messageText").description("Localized message text."),
                                 fieldWithPath("content[].description").description("Optional description for maintainers."),
-                                fieldWithPath("content[].createdAt").description("Creation timestamp in UTC."),
-                                fieldWithPath("content[].updatedAt").description("Last update timestamp in UTC."),
+                                fieldWithPath("content[].createdAt").description("Creation timestamp as a UTC instant."),
+                                fieldWithPath("content[].updatedAt").description("Last update timestamp as a UTC instant."),
                                 subsectionWithPath("pageable").description("Pagination request metadata."),
                                 subsectionWithPath("sort").description("Applied sort metadata."),
                                 fieldWithPath("totalPages").description("Total number of pages."),
@@ -141,8 +141,8 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                                 fieldWithPath("content[].language").description("Two-letter ISO 639-1 language code."),
                                 fieldWithPath("content[].messageText").description("Localized message text."),
                                 fieldWithPath("content[].description").description("Optional description for maintainers."),
-                                fieldWithPath("content[].createdAt").description("Creation timestamp in UTC."),
-                                fieldWithPath("content[].updatedAt").description("Last update timestamp in UTC."),
+                                fieldWithPath("content[].createdAt").description("Creation timestamp as a UTC instant."),
+                                fieldWithPath("content[].updatedAt").description("Last update timestamp as a UTC instant."),
                                 subsectionWithPath("pageable").description("Pagination request metadata."),
                                 subsectionWithPath("sort").description("Applied sort metadata."),
                                 fieldWithPath("totalPages").description("Total number of pages."),
@@ -264,8 +264,8 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                                 fieldWithPath("content[].language").description("Two-letter ISO 639-1 language code."),
                                 fieldWithPath("content[].messageText").description("Localized message text."),
                                 fieldWithPath("content[].description").description("Optional description for maintainers."),
-                                fieldWithPath("content[].createdAt").description("Creation timestamp in UTC."),
-                                fieldWithPath("content[].updatedAt").description("Last update timestamp in UTC."),
+                                fieldWithPath("content[].createdAt").description("Creation timestamp as a UTC instant."),
+                                fieldWithPath("content[].updatedAt").description("Last update timestamp as a UTC instant."),
                                 subsectionWithPath("pageable").description("Pagination request metadata."),
                                 subsectionWithPath("sort").description("Applied sort metadata."),
                                 fieldWithPath("totalPages").description("Total number of pages."),
@@ -374,8 +374,8 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                 fieldWithPath("language").description("Supported two-letter ISO 639-1 language code. Current values: `en`, `es`, `de`, `fr`, `pl`, `uk`, `no`."),
                 fieldWithPath("messageText").description("Localized message text."),
                 fieldWithPath("description").description("Optional description for maintainers."),
-                fieldWithPath("createdAt").description("Creation timestamp in UTC."),
-                fieldWithPath("updatedAt").description("Last update timestamp in UTC.")
+                fieldWithPath("createdAt").description("Creation timestamp as a UTC instant."),
+                fieldWithPath("updatedAt").description("Last update timestamp as a UTC instant.")
         };
     }
 }

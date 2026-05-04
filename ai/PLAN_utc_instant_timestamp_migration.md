@@ -3,8 +3,8 @@
 ## Lifecycle
 | Field | Value |
 | --- | --- |
-| Phase | Implementation |
-| Status | In Progress |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Summary
 - Move app-owned persisted timestamps from Java `LocalDateTime` plus PostgreSQL `timestamp` to Java `Instant` plus PostgreSQL `timestamptz`.
@@ -240,6 +240,14 @@
   - result: failed before test execution because Gradle started on JVM 11; the repo `.env` had not been loaded yet
 - 2026-05-05: `. .\scripts\load-dotenv.ps1 -Quiet; ./gradlew.bat test --tests team.jit.technicalinterviewdemo.business.user.UserManagementIntegrationTests --tests team.jit.technicalinterviewdemo.business.user.UserAccountServiceTests --tests team.jit.technicalinterviewdemo.business.localization.LocalizationApiIntegrationTests --tests team.jit.technicalinterviewdemo.business.audit.AuditLogApiIntegrationTests --tests team.jit.technicalinterviewdemo.technical.operator.OperatorSurfaceServiceTests --tests team.jit.technicalinterviewdemo.technical.docs.OpenApiCompatibilityIntegrationTests`
   - result: passed; milestone-1 storage and domain conversion compiled cleanly, the explicit `timestamptz` migration validated against PostgreSQL-backed tests, and the temporary response-bridge layer preserved the current public timestamp shape
+- 2026-05-05: `. .\scripts\load-dotenv.ps1 -Quiet; ./gradlew.bat test --tests team.jit.technicalinterviewdemo.business.user.UserManagementIntegrationTests --tests team.jit.technicalinterviewdemo.business.user.UserAccountServiceTests --tests team.jit.technicalinterviewdemo.business.user.AdminUserManagementApiIntegrationTests --tests team.jit.technicalinterviewdemo.business.user.AdminUserManagementApiDocumentationTests --tests team.jit.technicalinterviewdemo.business.localization.LocalizationApiIntegrationTests --tests team.jit.technicalinterviewdemo.business.localization.LocalizationApiDocumentationTests --tests team.jit.technicalinterviewdemo.business.audit.AuditLogApiIntegrationTests --tests team.jit.technicalinterviewdemo.business.audit.AuditLogApiDocumentationTests --tests team.jit.technicalinterviewdemo.technical.operator.OperatorSurfaceApiIntegrationTests --tests team.jit.technicalinterviewdemo.technical.operator.OperatorSurfaceApiDocumentationTests --tests team.jit.technicalinterviewdemo.technical.operator.OperatorSurfaceServiceTests --tests team.jit.technicalinterviewdemo.technical.docs.OpenApiIntegrationTests --tests team.jit.technicalinterviewdemo.technical.docs.OpenApiCompatibilityIntegrationTests`
+  - result: passed; milestone-2 contract updates proved UTC instant serialization with trailing `Z` across the affected API responses, REST Docs-backed descriptions, and the stronger OpenAPI timestamp assertions
+- 2026-05-05: `. .\scripts\load-dotenv.ps1 -Quiet; ./gradlew.bat refreshOpenApiBaseline`
+  - result: passed; refreshed `src/test/resources/openapi/approved-openapi.json` after intentional contract review for the UTC instant timestamp change
+- 2026-05-05: reviewed `src/test/resources/http/user-account-controller.http`, `src/test/resources/http/admin-user-management-controller.http`, `src/test/resources/http/localization-controller.http`, `src/test/resources/http/audit-log-controller.http`, and `src/test/resources/http/operator-surface-controller.http`
+  - result: left unchanged; the files remain request-only reviewer examples and do not publish response timestamp examples or commentary that drifted from the new UTC instant contract
+- 2026-05-05: `. .\scripts\load-dotenv.ps1 -Quiet; ./gradlew.bat build`
+  - result: passed; full repository validation completed successfully, including REST Docs regeneration, OpenAPI compatibility, static analysis, vulnerability scanning, SBOM generation, and Docker image build
 
 ## User Validation
 - Start the app and check one sample response from each affected surface:

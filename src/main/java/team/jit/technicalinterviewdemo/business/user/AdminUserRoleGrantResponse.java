@@ -2,8 +2,6 @@ package team.jit.technicalinterviewdemo.business.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 @Schema(name = "AdminUserRoleGrantResponse", description = "Persisted provenance for one granted application role.")
 public record AdminUserRoleGrantResponse(
@@ -11,8 +9,8 @@ public record AdminUserRoleGrantResponse(
         String role,
         @Schema(description = "How the role grant entered application state.", example = "BOOTSTRAP")
         UserRoleGrantSource source,
-        @Schema(description = "UTC timestamp when this role grant was recorded.")
-        LocalDateTime grantedAt,
+        @Schema(description = "UTC instant when this role grant was recorded.")
+        Instant grantedAt,
         @Schema(description = "Granting application user id when the role was assigned manually.", example = "1")
         Long grantedByUserId,
         @Schema(description = "Granting application user login when the role was assigned manually.", example = "admin-user")
@@ -26,14 +24,10 @@ public record AdminUserRoleGrantResponse(
         return new AdminUserRoleGrantResponse(
                 roleGrant.getRole().name(),
                 roleGrant.getGrantSource(),
-                toUtcLocalDateTime(roleGrant.getGrantedAt()),
+                roleGrant.getGrantedAt(),
                 grantedByUser == null ? null : grantedByUser.getId(),
                 grantedByUser == null ? null : grantedByUser.getExternalLogin(),
                 roleGrant.getReason()
         );
-    }
-
-    private static LocalDateTime toUtcLocalDateTime(Instant timestamp) {
-        return timestamp == null ? null : LocalDateTime.ofInstant(timestamp, ZoneOffset.UTC);
     }
 }

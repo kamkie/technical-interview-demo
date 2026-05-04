@@ -80,13 +80,13 @@ class AdminUserManagementApiDocumentationTests extends AbstractDocumentationInte
                                 fieldWithPath("[].roles[]").description("Current roles assigned to the user."),
                                 fieldWithPath("[].roleGrants[].role").description("Granted role name."),
                                 fieldWithPath("[].roleGrants[].source").description("How the role was granted."),
-                                fieldWithPath("[].roleGrants[].grantedAt").description("UTC timestamp when the role grant was recorded."),
+                                fieldWithPath("[].roleGrants[].grantedAt").description("UTC instant when the role grant was recorded."),
                                 fieldWithPath("[].roleGrants[].grantedByUserId").optional().description("Granting application user id for manually managed grants."),
                                 fieldWithPath("[].roleGrants[].grantedByLogin").optional().description("Granting application user login for manually managed grants."),
                                 fieldWithPath("[].roleGrants[].reason").optional().description("Operator-supplied reason for manually managed grants."),
-                                fieldWithPath("[].lastLoginAt").description("Latest authenticated request timestamp."),
-                                fieldWithPath("[].createdAt").description("Creation timestamp."),
-                                fieldWithPath("[].updatedAt").description("Last update timestamp.")
+                                fieldWithPath("[].lastLoginAt").description("Latest authenticated request as a UTC instant."),
+                                fieldWithPath("[].createdAt").description("Creation timestamp as a UTC instant."),
+                                fieldWithPath("[].updatedAt").description("Last update timestamp as a UTC instant.")
                         )
                 ));
     }
@@ -124,7 +124,7 @@ class AdminUserManagementApiDocumentationTests extends AbstractDocumentationInte
                                 fieldWithPath("roles[]").description("Current roles after replacement."),
                                 fieldWithPath("roleGrants[].role").description("Granted role name."),
                                 fieldWithPath("roleGrants[].source").description("How the role was granted."),
-                                fieldWithPath("roleGrants[].grantedAt").description("UTC timestamp when the role grant was recorded."),
+                                fieldWithPath("roleGrants[].grantedAt").description("UTC instant when the role grant was recorded."),
                                 fieldWithPath("roleGrants[].grantedByUserId").optional().description("Granting application user id for manually managed grants."),
                                 fieldWithPath("roleGrants[].grantedByLogin").optional().description("Granting application user login for manually managed grants."),
                                 fieldWithPath("roleGrants[].reason").optional().description("Operator-supplied reason for manually managed grants.")

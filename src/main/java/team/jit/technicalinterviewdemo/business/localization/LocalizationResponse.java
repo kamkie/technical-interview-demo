@@ -2,8 +2,6 @@ package team.jit.technicalinterviewdemo.business.localization;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 @Schema(description = "Localization message returned by the API.")
 public record LocalizationResponse(
@@ -17,10 +15,10 @@ public record LocalizationResponse(
         String messageText,
         @Schema(description = "Optional reviewer-facing description.")
         String description,
-        @Schema(description = "Creation timestamp.")
-        LocalDateTime createdAt,
-        @Schema(description = "Last update timestamp.")
-        LocalDateTime updatedAt
+        @Schema(description = "Creation timestamp as a UTC instant.")
+        Instant createdAt,
+        @Schema(description = "Last update timestamp as a UTC instant.")
+        Instant updatedAt
 ) {
 
     public static LocalizationResponse from(Localization message) {
@@ -30,12 +28,8 @@ public record LocalizationResponse(
                 message.getLanguage(),
                 message.getMessageText(),
                 message.getDescription(),
-                toUtcLocalDateTime(message.getCreatedAt()),
-                toUtcLocalDateTime(message.getUpdatedAt())
+                message.getCreatedAt(),
+                message.getUpdatedAt()
         );
-    }
-
-    private static LocalDateTime toUtcLocalDateTime(Instant timestamp) {
-        return timestamp == null ? null : LocalDateTime.ofInstant(timestamp, ZoneOffset.UTC);
     }
 }

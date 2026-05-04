@@ -92,7 +92,7 @@ class AuditLogApiDocumentationTests extends AbstractDocumentationIntegrationTest
                                 fieldWithPath("content[].actorLogin").description("Login of the acting user, or `system` for non-user writes."),
                                 fieldWithPath("content[].summary").description("Human-readable audit summary."),
                                 subsectionWithPath("content[].details").description("Compact structured audit details for ADMIN review."),
-                                fieldWithPath("content[].createdAt").description("Creation timestamp in UTC."),
+                                fieldWithPath("content[].createdAt").description("Creation timestamp as a UTC instant."),
                                 subsectionWithPath("pageable").description("Pagination request metadata."),
                                 subsectionWithPath("sort").description("Applied sort metadata."),
                                 fieldWithPath("totalPages").description("Total number of pages."),

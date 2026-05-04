@@ -1,5 +1,6 @@
 package team.jit.technicalinterviewdemo.business.localization;
 
+import static org.hamcrest.Matchers.endsWith;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -53,6 +54,8 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .andExpect(jsonPath("$.content.length()").value(2))
                 .andExpect(jsonPath("$.content[0].messageKey").value("error.book.isbn_duplicate"))
                 .andExpect(jsonPath("$.content[0].language").value("de"))
+                .andExpect(jsonPath("$.content[0].createdAt").value(endsWith("Z")))
+                .andExpect(jsonPath("$.content[0].updatedAt").value(endsWith("Z")))
                 .andExpect(jsonPath("$.content[1].language").value("en"))
                 .andExpect(jsonPath("$.totalElements").value(totalSeededLocalizations()))
                 .andExpect(jsonPath("$.totalPages").value(totalPagesForPageSize(2)));
@@ -76,7 +79,9 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .andExpect(jsonPath("$.id").value(bookNotFoundEs.getId()))
                 .andExpect(jsonPath("$.messageKey").value("error.book.not_found"))
                 .andExpect(jsonPath("$.language").value("es"))
-                .andExpect(jsonPath("$.messageText").value("No se encontro el libro solicitado."));
+                .andExpect(jsonPath("$.messageText").value("No se encontro el libro solicitado."))
+                .andExpect(jsonPath("$.createdAt").value(endsWith("Z")))
+                .andExpect(jsonPath("$.updatedAt").value(endsWith("Z")));
     }
 
     @Test
@@ -126,8 +131,8 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .andExpect(jsonPath("$.language").value("fr"))
                 .andExpect(jsonPath("$.messageText").value("Le livre a ete cree."))
                 .andExpect(jsonPath("$.description").value("French success message for new books."))
-                .andExpect(jsonPath("$.createdAt").isString())
-                .andExpect(jsonPath("$.updatedAt").isString());
+                .andExpect(jsonPath("$.createdAt").value(endsWith("Z")))
+                .andExpect(jsonPath("$.updatedAt").value(endsWith("Z")));
     }
 
     @Test
@@ -236,7 +241,9 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .andExpect(jsonPath("$.messageKey").value("error.book.not_found_custom"))
                 .andExpect(jsonPath("$.language").value("fr"))
                 .andExpect(jsonPath("$.messageText").value("Le livre demande est introuvable."))
-                .andExpect(jsonPath("$.description").value("French message for missing book errors."));
+                .andExpect(jsonPath("$.description").value("French message for missing book errors."))
+                .andExpect(jsonPath("$.createdAt").value(endsWith("Z")))
+                .andExpect(jsonPath("$.updatedAt").value(endsWith("Z")));
     }
 
     @Test

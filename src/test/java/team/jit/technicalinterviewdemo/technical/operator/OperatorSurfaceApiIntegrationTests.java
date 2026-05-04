@@ -1,5 +1,6 @@
 package team.jit.technicalinterviewdemo.technical.operator;
 
+import static org.hamcrest.Matchers.endsWith;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -95,6 +96,7 @@ class OperatorSurfaceApiIntegrationTests extends AbstractMockMvcIntegrationTest 
                 .andExpect(jsonPath("$.audit.recentEntries[0].id").value(newestAuditLog.getId()))
                 .andExpect(jsonPath("$.audit.recentEntries[0].details.messageKey").value("error.book.not_found"))
                 .andExpect(jsonPath("$.audit.recentEntries[0].details.language").value("fr"))
+                .andExpect(jsonPath("$.audit.recentEntries[0].createdAt").value(endsWith("Z")))
                 .andExpect(jsonPath("$.runtime.technicalOverviewEndpoint").value("/"))
                 .andExpect(jsonPath("$.runtime.technicalOverview.runtime.applicationName").value("technical-interview-demo"))
                 .andExpect(jsonPath("$.runtime.technicalOverview.configuration.security.csrfEnabled").value(true))

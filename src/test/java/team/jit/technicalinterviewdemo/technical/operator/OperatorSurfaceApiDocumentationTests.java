@@ -77,7 +77,7 @@ class OperatorSurfaceApiDocumentationTests extends AbstractDocumentationIntegrat
                                 fieldWithPath("audit.recentEntries[].actorLogin").description("Login of the acting user."),
                                 fieldWithPath("audit.recentEntries[].summary").description("Human-readable audit summary."),
                                 subsectionWithPath("audit.recentEntries[].details").description("Compact structured audit details for each recent audit entry."),
-                                fieldWithPath("audit.recentEntries[].createdAt").description("Creation timestamp in UTC."),
+                                fieldWithPath("audit.recentEntries[].createdAt").description("Creation timestamp as a UTC instant."),
                                 fieldWithPath("runtime.technicalOverviewEndpoint").description("Endpoint path for the full technical overview payload."),
                                 subsectionWithPath("runtime.technicalOverview").description("Current technical overview payload from `GET /`."),
                                 fieldWithPath("operations.actuatorHealthEndpoint").description("Endpoint path for aggregate health."),

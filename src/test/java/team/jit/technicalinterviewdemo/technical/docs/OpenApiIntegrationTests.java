@@ -253,11 +253,68 @@ class OpenApiIntegrationTests extends AbstractRandomPortIntegrationTest {
         );
         assertFalse(openApi.at("/components/schemas/SessionCsrfContract/properties/cookieName").isMissingNode());
         assertFalse(openApi.at("/components/schemas/SessionCsrfContract/properties/headerName").isMissingNode());
+
+        assertTimestampProperty(
+                openApi,
+                "/components/schemas/UserAccountResponse/properties/lastLoginAt",
+                "UTC instant of the latest authenticated request."
+        );
+        assertTimestampProperty(
+                openApi,
+                "/components/schemas/UserAccountResponse/properties/createdAt",
+                "Creation timestamp as a UTC instant."
+        );
+        assertTimestampProperty(
+                openApi,
+                "/components/schemas/UserAccountResponse/properties/updatedAt",
+                "Last update timestamp as a UTC instant."
+        );
+        assertTimestampProperty(
+                openApi,
+                "/components/schemas/AdminUserAccountResponse/properties/lastLoginAt",
+                "UTC instant of the latest authenticated request."
+        );
+        assertTimestampProperty(
+                openApi,
+                "/components/schemas/AdminUserAccountResponse/properties/createdAt",
+                "Creation timestamp as a UTC instant."
+        );
+        assertTimestampProperty(
+                openApi,
+                "/components/schemas/AdminUserAccountResponse/properties/updatedAt",
+                "Last update timestamp as a UTC instant."
+        );
+        assertTimestampProperty(
+                openApi,
+                "/components/schemas/AdminUserRoleGrantResponse/properties/grantedAt",
+                "UTC instant when this role grant was recorded."
+        );
+        assertTimestampProperty(
+                openApi,
+                "/components/schemas/LocalizationResponse/properties/createdAt",
+                "Creation timestamp as a UTC instant."
+        );
+        assertTimestampProperty(
+                openApi,
+                "/components/schemas/LocalizationResponse/properties/updatedAt",
+                "Last update timestamp as a UTC instant."
+        );
+        assertTimestampProperty(
+                openApi,
+                "/components/schemas/AuditLogResponse/properties/createdAt",
+                "Creation timestamp as a UTC instant."
+        );
     }
 
     private JsonNode fetchOpenApiJson() throws IOException, InterruptedException {
         HttpResponse<String> response = get("/v3/api-docs");
         assertEquals(200, response.statusCode());
         return OBJECT_MAPPER.readTree(response.body());
+    }
+
+    private void assertTimestampProperty(JsonNode openApi, String propertyPointer, String description) {
+        assertEquals(description, openApi.at(propertyPointer + "/description").asText());
+        assertEquals("string", openApi.at(propertyPointer + "/type").asText());
+        assertEquals("date-time", openApi.at(propertyPointer + "/format").asText());
     }
 }

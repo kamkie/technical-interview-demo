@@ -3,8 +3,6 @@ package team.jit.technicalinterviewdemo.business.user;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.Comparator;
 import java.util.List;
 
@@ -27,12 +25,12 @@ public record UserAccountResponse(
                 arraySchema = @Schema(description = "Roles assigned to the persisted user.")
         )
         List<String> roles,
-        @Schema(description = "Timestamp of the latest authenticated request.")
-        LocalDateTime lastLoginAt,
-        @Schema(description = "Creation timestamp.")
-        LocalDateTime createdAt,
-        @Schema(description = "Last update timestamp.")
-        LocalDateTime updatedAt
+        @Schema(description = "UTC instant of the latest authenticated request.")
+        Instant lastLoginAt,
+        @Schema(description = "Creation timestamp as a UTC instant.")
+        Instant createdAt,
+        @Schema(description = "Last update timestamp as a UTC instant.")
+        Instant updatedAt
 ) {
 
     public static UserAccountResponse from(UserAccount userAccount) {
@@ -48,13 +46,9 @@ public record UserAccountResponse(
                 userAccount.getEmail(),
                 userAccount.getPreferredLanguage(),
                 roles,
-                toUtcLocalDateTime(userAccount.getLastLoginAt()),
-                toUtcLocalDateTime(userAccount.getCreatedAt()),
-                toUtcLocalDateTime(userAccount.getUpdatedAt())
+                userAccount.getLastLoginAt(),
+                userAccount.getCreatedAt(),
+                userAccount.getUpdatedAt()
         );
-    }
-
-    private static LocalDateTime toUtcLocalDateTime(Instant timestamp) {
-        return timestamp == null ? null : LocalDateTime.ofInstant(timestamp, ZoneOffset.UTC);
     }
 }

@@ -8,7 +8,7 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 ## [Unreleased]
 
 ### Changed
-- Began the pre-`2.0` UTC timestamp migration by converting app-owned persisted timestamp storage to PostgreSQL `timestamptz` and moving the corresponding domain entities to Java `Instant`, while temporarily preserving the current public JSON timestamp shape until the contract update lands.
+- Completed the pre-`2.0` UTC timestamp migration by converting app-owned persisted timestamp storage to PostgreSQL `timestamptz`, moving the corresponding domain and response models to Java `Instant`, and publishing the affected API timestamps as UTC instants with a trailing `Z`.
 
 ## [v2.0.0-M5] - 2026-05-04
 
