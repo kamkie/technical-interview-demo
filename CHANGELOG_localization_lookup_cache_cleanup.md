@@ -9,6 +9,7 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ### Changed
 - Locked localization-local lookup, fallback-miss, and write-driven cache-eviction coverage ahead of the localization cache-flow cleanup.
+- Simplified localization lookup and language-scoped cache access so normalized lookup requests and supported-language cache reads follow one internal flow without changing the public localization contract.
 
 ## [v2.0.0-M4] - 2026-05-04
 

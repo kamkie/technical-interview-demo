@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.clearAuthentication;
 import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.setAdminAuthenticatedUser;
 
+import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.AfterEach;
@@ -104,6 +105,26 @@ class LocalizationServiceTests {
 
         assertThat(messages).containsEntry("error.book.not_found", "Nie znaleziono zadanej ksiazki.");
         assertThat(messages).containsEntry("error.request.invalid", "Zadanie jest nieprawidlowe.");
+    }
+
+    @Test
+    void getAllMessagesCachesMessagesUsingNormalizedLanguageKey() {
+        Map<String, String> messages = localizationService.getAllMessages(" EN ");
+
+        @SuppressWarnings("unchecked")
+        Map<String, String> cachedMessages = (Map<String, String>) cache(CacheNames.LOCALIZATION_MESSAGE_MAPS).get("en").get();
+
+        assertThat(cachedMessages).isEqualTo(messages);
+    }
+
+    @Test
+    void findAllByLanguageCachesMessagesUsingNormalizedLanguageKey() {
+        List<Localization> messages = localizationService.findAllByLanguage(" EN ");
+
+        @SuppressWarnings("unchecked")
+        List<Localization> cachedMessages = (List<Localization>) cache(CacheNames.LOCALIZATION_LISTS).get("en").get();
+
+        assertThat(cachedMessages).isEqualTo(messages);
     }
 
     @Test
