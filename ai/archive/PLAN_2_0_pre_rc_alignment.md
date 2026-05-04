@@ -3,8 +3,8 @@
 ## Lifecycle
 | Field | Value |
 | --- | --- |
-| Phase | Integration |
-| Status | Implemented |
+| Phase | Closed |
+| Status | Released |
 
 ## Summary
 - Plan the next pre-RC `2.0` batch: formalize first-party UI integration requirements, publish the `1.x` to `2.0` upgrade guide, add checked-in edge reference assets, and extend local plus deployed smoke validation to prove the documented session and CSRF flow.
