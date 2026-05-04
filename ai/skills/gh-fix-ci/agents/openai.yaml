@@ -1,0 +1,4 @@
+interface:
+  display_name: "GitHub CI Fix"
+  short_description: "Inspect failing GitHub PR checks and plan the fix"
+  default_prompt: "Use $gh-fix-ci to inspect failing GitHub PR checks, summarize the actionable GitHub Actions failure context, and decide whether this repository needs a short approval plan or a formal ai/PLAN_*.md update before fixing it."

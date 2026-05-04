@@ -32,7 +32,7 @@ Before asking AI to do real work, make sure the session is grounded in these rep
 - `AGENTS.md` for repository-specific AI rules, spec priority, and required artifact updates
 - `SETUP.md` for local tooling, environment, and verification prerequisites
 - `ai/PROMPTS.md` for reusable prompt starters whose `###` titles can be used as reusable commands
-- `ai/skills/<skill>/SKILL.md` only when you want a narrower repo-local workflow wrapper for planning or validation
+- `ai/skills/<skill>/SKILL.md` only when you want a narrower repo-local workflow wrapper for planning, validation, or CI-failure triage
 
 Then add the phase-specific owner guide:
 
@@ -45,10 +45,11 @@ Then add the phase-specific owner guide:
 
 ## Repo-Local Skills
 
-Two small repo-local skills live under `ai/skills/`:
+Repo-local skills live under `ai/skills/`:
 
 - `repo-plan-author`: focused entry point for creating or revising `ai/PLAN_*.md`
 - `repo-validation-gate`: focused entry point for changed-file classification, validation selection, and contract-impact triage
+- `gh-fix-ci`: focused entry point for GitHub PR-check inspection, GitHub Actions log triage, and approval-first CI fix planning
 
 Use them when you want a narrower workflow wrapper than the general prompt library.
 Treat them as helpers that point back to the owner guides, not as higher-priority policy.

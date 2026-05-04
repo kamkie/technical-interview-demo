@@ -32,7 +32,7 @@ Use these files deliberately:
 - `ai/PLAN.md`: instructions for producing execution plans
 - `ai/PLAN_*.md`: task-specific execution plans and milestone breakdowns
 - `ai/PROMPTS.md`: lean reusable prompt starters whose `###` titles act as reusable commands and point to the standing guidance in the other AI documents
-- `ai/skills/`: repo-local reusable skills for repetitive planning and validation entry workflows that still defer to the owner guides
+- `ai/skills/`: repo-local reusable skills for repetitive planning, validation, and CI-triage entry workflows that still defer to the owner guides
 - `ai/REVIEWS.md`: AI-facing code-review and security-review guidance
 - `ai/archive/`: archived AI execution plans that have already been released or otherwise completed
 - `ai/RELEASES.md`: AI-facing release workflow for intentional post-implementation releases

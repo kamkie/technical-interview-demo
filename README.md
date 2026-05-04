@@ -51,7 +51,7 @@ Use these files when you want to work with AI in this repository or understand w
 - [ai/LEARNINGS.md](ai/LEARNINGS.md): durable engineering lessons worth carrying through refactors
 - [ai/PLAN.md](ai/PLAN.md): how to create or revise execution plans
 - [ai/PROMPTS.md](ai/PROMPTS.md): reusable prompt starters that match this repository's workflow
-- `ai/skills/`: repo-local skills for repetitive planning and validation entry workflows
+- `ai/skills/`: repo-local skills
 - [ai/REVIEWS.md](ai/REVIEWS.md): code-review and security-review guidance
 - [ai/RELEASES.md](ai/RELEASES.md): release-preparation and release workflow guidance
 - [ai/TESTING.md](ai/TESTING.md): validation rules and change-sensitive checks
