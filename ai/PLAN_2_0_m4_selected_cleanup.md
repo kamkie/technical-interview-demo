@@ -1,15 +1,15 @@
-# Plan: 2.0 RC1 Selected Maintainability Cleanup
+# Plan: 2.0 M4 Selected Maintainability Cleanup
 
 ## Lifecycle
 | Field | Value |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Implementation |
+| Status | In Progress |
 
 ## Summary
-- Execute the currently selected `ROADMAP.md` cleanup tasks for the next milestone release, which the current roadmap and release model imply is `v2.0.0-RC1`.
+- Execute the currently selected `ROADMAP.md` cleanup tasks as the next prerelease batch, to be delivered in `v2.0.0-M4` before the later `RC1` contract-freeze milestone.
 - Replace env-driven admin role assignment with persisted managed role grants, split admin or operational APIs under a clearer `/api/admin/**` surface, expand audit coverage and structure, add the missing PostgreSQL indexes for the current query shapes, and harden the shipped image plus Kubernetes defaults.
-- Success is measured by: no runtime dependence on `ADMIN_LOGINS`, one explicit persisted admin-role management path with provenance, reviewed contract updates for renamed admin endpoints, structured audit evidence for privileged mutations and auth events, migration metadata for all new SQL files, hardened deployment assets that still pass local validation, and the full required RC1 validation story.
+- Success is measured by: no runtime dependence on `ADMIN_LOGINS`, one explicit persisted admin-role management path with provenance, reviewed contract updates for renamed admin endpoints, structured audit evidence for privileged mutations and auth events, migration metadata for all new SQL files, hardened deployment assets that still pass local validation, and one decision-complete prerelease batch that can be followed by a narrower `RC1` freeze.
 
 ## Scope
 - In scope:
@@ -28,7 +28,7 @@
   - moving the application to bearer-token auth, cross-origin browser support, or a separate management port
   - automatic audit cleanup, background archival jobs, or Spring Batch work
   - adding a frontend admin UI
-  - cutting `v2.0.0-RC1`, releasing stable `v2.0.0`, or cleaning up released plan files
+  - cutting `v2.0.0-M4`, freezing the contract for `v2.0.0-RC1`, releasing stable `v2.0.0`, or cleaning up released plan files
 
 ## Current State
 - Admin role assignment is still recalculated from `app.security.admin-logins` during authenticated-user synchronization in `src/main/java/team/jit/technicalinterviewdemo/business/user/CurrentUserAccountService.java`, and production docs plus deployment examples still expose `ADMIN_LOGINS` as the standing admin mechanism in `README.md`, `SETUP.md`, `k8s/base/deployment.yaml`, and `helm/technical-interview-demo/templates/deployment.yaml`.
@@ -45,11 +45,11 @@
 ## Requirement Gaps And Open Questions
 - No blocking user-input gaps remain.
 - Resolved planning decisions:
-  - interpret "next milestone release" as `v2.0.0-RC1`, because `ROADMAP.md` currently prioritizes freezing the `2.0` contract and cutting `RC1`
+  - interpret "next milestone release" as `v2.0.0-M4`, because the selected cleanup batch is too broad for the final prerelease freeze and should land before the later `RC1` contract-candidate milestone
   - replace `ADMIN_LOGINS` with bootstrap-only `APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES`, using normalized `provider:externalLogin` values and applying them only while no persisted `ADMIN` grant exists
   - keep role management in `business.user` with a small admin API instead of adding an external IAM or internal RBAC framework
   - move only the admin or operational APIs to `/api/admin/**` in this milestone; keep `/`, `/hello`, `/docs`, OpenAPI publication, and actuator endpoints as internal or devops surfaces on the current listener
-  - remove the old `/api/audit-logs` and `/api/operator/surface` routes instead of keeping aliases, because this is the last intended prerelease cleanup window before RC contract freeze
+  - remove the old `/api/audit-logs` and `/api/operator/surface` routes instead of keeping aliases, because `M4` is the intended breaking-change cleanup batch before the later `RC1` freeze
   - keep audit retention or archival as a documented deployment responsibility rather than implementing an in-app purge or archive worker
   - keep all new SQL migrations additive and accompanied by sidecar metadata under `src/main/resources/db/migration/metadata/`
 
@@ -176,7 +176,7 @@
 
 ### Milestone 2: Split Admin Routes And Expand Audit Evidence
 - goal
-  - make the admin surface explicit and make audit evidence useful for production review before the RC1 contract freeze.
+  - make the admin surface explicit and make audit evidence useful for production review in the `M4` batch ahead of the later `RC1` contract freeze.
 - files to update
   - `AuditAction`, `AuditTargetType`, `AuditLog`, `AuditLogResponse`, `AuditLogService`, `AuditLogController`, `AuditLogQueryService`
   - `CategoryService`
@@ -199,7 +199,7 @@
 
 ### Milestone 3: Add Measured Indexes And Harden Runtime Assets
 - goal
-  - align PostgreSQL and deployment assets with the actual runtime workload before RC1.
+  - align PostgreSQL and deployment assets with the actual runtime workload in `M4`, so the later `RC1` work can focus on freeze validation rather than more operational churn.
 - files to update
   - new SQL migration plus metadata sidecar for indexes and `pg_trgm`
   - `Dockerfile`
