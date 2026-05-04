@@ -8,7 +8,7 @@
 - Worktree: `D:\Projects\Jit\technical-interview-demo__category_directory_cache_cleanup`
 - Owned scope: `src/main/java/team/jit/technicalinterviewdemo/business/category/**`, `src/test/java/team/jit/technicalinterviewdemo/business/category/**`, owned plan updates, private changelog, and this worker log
 - Shared files intentionally left untouched: `CHANGELOG.md`, `README.md`, `src/test/resources/openapi/approved-openapi.json`, `src/docs/asciidoc/category-controller.adoc`, `src/test/resources/http/category-controller.http`, `src/test/java/team/jit/technicalinterviewdemo/technical/CachingAndMetricsTests.java`
-- Current status: `Milestone 2 complete; milestone commit pending`
+- Current status: `Implemented; ready for push and PR handoff`
 
 ## Milestone Checkpoints
 
@@ -41,7 +41,7 @@
 - Proposed changelog text:
   - Simplified `CategoryService` directory-cache assembly and normalized assignment lookup flow while keeping cache names, category ordering, and the published category contract unchanged.
 - Commit:
-  - Pending milestone commit SHA.
+  - `63be91c` - `refactor: simplify category directory cache flow`
 - Ready for integration: Yes
 
 ## Blockers, Risks, And Decisions
