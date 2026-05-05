@@ -19,7 +19,6 @@ set -e
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ENV_FILE="$REPO_ROOT/.env"
-LOAD_DOTENV_SCRIPT="$REPO_ROOT/scripts/load-dotenv.ps1"
 
 # Step 1: Auto-load .env if it exists
 if [ -f "$ENV_FILE" ]; then
