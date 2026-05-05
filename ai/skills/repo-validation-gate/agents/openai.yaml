@@ -1,4 +1,0 @@
-interface:
-  display_name: "Repo Validation Gate"
-  short_description: "Classify changes and choose validation"
-  default_prompt: "Use $repo-validation-gate to decide and run the minimum required validation for the current repository changes."

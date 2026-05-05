@@ -70,8 +70,9 @@ jobs:
           password: ${{ github.token }}
 
       - name: Run full verification and build tagged image
+        shell: pwsh
         run: >-
-          ./gradlew build
+          ./build.ps1 -FullBuild build
           -PdockerImageName=${{ steps.image.outputs.repository }}:${{ steps.image.outputs.tag }}
           --no-daemon
 
@@ -105,8 +106,9 @@ jobs:
           retention-days: 14
 
       - name: Validate tagged image with external smoke test
+        shell: pwsh
         run: >-
-          ./gradlew externalSmokeTest
+          ./build.ps1 externalSmokeTest
           -PexternalSmokeImageName=${{ steps.image.outputs.repository }}:${{ steps.image.outputs.tag }}
           -PdockerImageName=${{ steps.image.outputs.repository }}:${{ steps.image.outputs.tag }}
           --no-daemon

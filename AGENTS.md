@@ -178,8 +178,8 @@ Repo-level rules:
 Use `SETUP.md` for setup walkthroughs and troubleshooting.
 Use `ai/ENVIRONMENT_QUICK_REF.md` for the AI-facing Gradle wrapper reference.
 
-Prefer `./build.ps1` in PowerShell or `./build.sh` in Bash for local Gradle commands.
-They auto-load a root `.env` file when present, so plans and prompts should not add upfront `JAVA_HOME` discovery or dotenv boilerplate.
+Prefer `./build.ps1` through PowerShell for local and CI Gradle commands.
+It auto-loads a root `.env` file when present, so plans and prompts should not add upfront `JAVA_HOME` discovery or dotenv boilerplate.
 
 ## Delegated Agents And Skill Wrappers
 
@@ -205,4 +205,4 @@ A change is complete when:
 - implementation and specs agree
 - public contract artifacts are updated when behavior changed
 - if the work was done in a git worktree or non-`main` branch, the finished branch has been pushed and a pull request is open or already merged onto `main`
-- the required validation from `ai/TESTING.md` passes, normally `./build.ps1 build` in PowerShell or `./build.sh build` in Bash; the PowerShell wrapper handles the lightweight-only uncommitted-change shortcut, and `./build.ps1 -FullBuild build` forces the full Gradle build when required
+- the required validation from `ai/TESTING.md` passes, normally `./build.ps1 build`; the wrapper handles the lightweight-only uncommitted-change shortcut, and `./build.ps1 -FullBuild build` forces the full Gradle build when required

@@ -99,7 +99,7 @@ When pushing:
 1. push `main`
 2. push the annotated tag
 3. verify the remote accepted both updates
-4. monitor the tag-driven `Release` workflow until `./gradlew externalSmokeTest` passes for the tagged image, the GitHub Release is created, and GitHub code scanning still reflects the expected CodeQL posture
+4. monitor the tag-driven `Release` workflow until `./build.ps1 externalSmokeTest` passes for the tagged image, the GitHub Release is created, and GitHub code scanning still reflects the expected CodeQL posture
 5. confirm GHCR published both `ghcr.io/<owner>/<repo>:vMAJOR.MINOR.PATCH[-PRERELEASE]` and `ghcr.io/<owner>/<repo>:sha-<12-char-commit>`
 6. confirm the immutable published digest is signed and has provenance attestation by running the commands in `Published Artifact Verification`
 7. confirm the GitHub Release body includes every `CHANGELOG.md` section from the new tag back to, but not including, the previous published GitHub Release tag section, plus the tag image reference, short-SHA image reference, and package link

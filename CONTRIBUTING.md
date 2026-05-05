@@ -169,29 +169,25 @@ Do not cut a release from unmerged worktree state.
 Default quality gate before asking for review:
 
 ```powershell
-.\gradlew.bat build
+./build.ps1 build
 ```
 
 Exception:
 
-- in PowerShell, `./build.ps1 build` performs the local uncommitted-change classifier check and exits successfully with manual-review guidance for lightweight-only changes; use `./build.ps1 -FullBuild build` to force the full Gradle build
+- `./build.ps1 build` performs the local uncommitted-change classifier check and exits successfully with manual-review guidance for lightweight-only changes; use `./build.ps1 -FullBuild build` to force the full Gradle build
 - the same classifier also drives the `CI` short-circuit for lightweight-only push and pull-request ranges
 
 Additional validation rules:
 
 - use `SETUP.md` for JDK 25, Docker, `.env`, and command prerequisites
-- if your shell is not already on Java 25, load the repo environment first in PowerShell with:
-
-```powershell
-. .\scripts\load-dotenv.ps1
-```
-
-- rerun `.\gradlew.bat gatlingBenchmark` when changing book list or search behavior, localization lookup behavior, or OAuth or session startup behavior
-- when both `build` and `gatlingBenchmark` are required, prefer one invocation such as `.\gradlew.bat build gatlingBenchmark --no-daemon` so Gradle reuses the same task graph instead of repeating work in separate runs
+- use `./build.ps1 compileJava` or a similarly focused task for fast checks while editing, then use `./build.ps1 build` for final verification
+- use `./build.ps1 -SkipTests build`, `./build.ps1 -SkipChecks build`, or both only for local loops, not final verification
+- rerun `./build.ps1 gatlingBenchmark` when changing book list or search behavior, localization lookup behavior, or OAuth or session startup behavior
+- when both `build` and `gatlingBenchmark` are required, prefer one invocation such as `./build.ps1 build gatlingBenchmark --no-daemon` so Gradle reuses the same task graph instead of repeating work in separate runs
 - refresh the approved OpenAPI baseline only after intentional contract review with:
 
 ```powershell
-.\gradlew.bat refreshOpenApiBaseline
+./build.ps1 refreshOpenApiBaseline
 ```
 
 - keep pull requests green on the `CI` workflow before asking for review
@@ -231,8 +227,8 @@ At a minimum, release preparation should include:
 - reviewing modified Flyway migrations together with their metadata sidecars under `src/main/resources/db/migration/metadata/`
 - classifying the release with `pwsh ./scripts/release/get-release-migration-impact.ps1 -PreviousReleaseTag <previous-tag> -CurrentRef HEAD`
 - capturing restore-drill evidence with `pwsh ./scripts/release/invoke-restore-drill.ps1 ...` for any `restore-sensitive` release
-- confirming the exact release candidate passed `.\gradlew.bat build`
-- deciding whether `.\gradlew.bat gatlingBenchmark` is required for the scoped changes
+- confirming the exact release candidate passed `./build.ps1 -FullBuild build`
+- deciding whether `./build.ps1 gatlingBenchmark` is required for the scoped changes
 - running the manual `Post-Deploy Smoke` workflow with the expected build version and short commit id before promotion
 - updating `CHANGELOG.md`, `ROADMAP.md`, and any executed `ai/PLAN_*.md` files before tagging
 - verifying the remote `Release` workflow published the semantic tag, immutable short-SHA tag, and GitHub Release notes

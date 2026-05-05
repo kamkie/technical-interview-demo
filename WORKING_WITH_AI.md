@@ -49,7 +49,6 @@ Then add the phase-specific owner guide:
 Repo-local skills live under `ai/skills/`:
 
 - `repo-plan-author`: focused entry point for creating or revising `ai/PLAN_*.md`
-- `repo-validation-gate`: focused entry point for changed-file classification, validation selection, and contract-impact triage
 - `gh-fix-ci`: focused entry point for GitHub PR-check inspection, GitHub Actions log triage, and approval-first CI fix planning
 - `gh-fix-security-quality`: focused entry point for GitHub Security tab inspection, code-scanning and Dependabot alert triage, and approval-first security fix planning
 
@@ -264,7 +263,7 @@ Useful prompt titles:
 
 Repository rule:
 
-- run the standard wrapper build from `ai/ENVIRONMENT_QUICK_REF.md` before finishing; in PowerShell, `./build.ps1 build` handles the lightweight-only uncommitted-change shortcut, and `./build.ps1 -FullBuild build` forces the full Gradle build when required
+- use `./build.ps1 compileJava` or a similarly focused wrapper task for quick implementation-loop checks, then run the standard wrapper build from `ai/ENVIRONMENT_QUICK_REF.md` before finishing; `./build.ps1 -FullBuild build` forces the full Gradle build when required
 
 ### 8. Preparing Release
 

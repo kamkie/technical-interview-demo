@@ -27,7 +27,6 @@ if ($List) {
     if ($Json) {
         [pscustomobject]@{
             schemaVersion = $index.schemaVersion
-            bodyFormat = $index.bodyFormat
             prompts = @(
                 $prompts |
                     Sort-Object category, title |
@@ -101,7 +100,6 @@ if ($Json) {
         slug = $selected.slug
         category = $selected.category
         path = $selected.path
-        bodyFormat = $index.bodyFormat
         placeholders = @($selected.placeholders)
         body = $body
     } | ConvertTo-Json -Depth 10

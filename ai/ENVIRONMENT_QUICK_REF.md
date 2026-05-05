@@ -6,31 +6,25 @@ Use `ai/TESTING.md` to decide which validation is required.
 
 ## Preferred Commands
 
-PowerShell:
+PowerShell (`pwsh`):
 
 ```powershell
+./build.ps1 compileJava
 ./build.ps1 build
 ./build.ps1 -FullBuild build
+./build.ps1 -SkipTests -SkipChecks build
 ./build.ps1 test
 ./build.ps1 bootRun
 ./build.ps1 gatlingBenchmark
 ```
 
-Bash:
-
-```bash
-./build.sh build
-./build.sh test
-./build.sh bootRun
-./build.sh gatlingBenchmark
-```
-
-## What The Wrappers Do
+## What The Wrapper Does
 
 - load root `.env` automatically when it exists
 - pass every Gradle argument through to the Gradle wrapper
-- in PowerShell, let `./build.ps1 build` skip Gradle when the uncommitted change set is lightweight-only
-- in PowerShell, let `./build.ps1 -FullBuild build` force the full Gradle build
+- let `./build.ps1 build` skip Gradle when the uncommitted change set is lightweight-only
+- let `./build.ps1 -FullBuild build` force the full Gradle build
+- let `./build.ps1 -SkipTests build` and `./build.ps1 -SkipChecks build` exclude test-dependent tasks or the Gradle `check` lifecycle for local loops
 - keep direct `gradlew` usage available when the shell is already configured
 - let Gradle's toolchain checks report Java misconfiguration clearly
 

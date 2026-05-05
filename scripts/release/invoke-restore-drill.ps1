@@ -191,7 +191,7 @@ try {
     Wait-ForReadiness -TargetBaseUrl $BaseUrl -TimeoutSeconds $TimeoutSeconds
     Write-Host "Runtime posture validation will confirm the published CSRF and edge abuse-protection metadata from GET /, then prove GET /api/session plus the CSRF-backed smoke write."
 
-    $gradleCommand = Join-Path $repoRoot "gradlew.bat"
+    $gradleCommand = Join-Path $repoRoot "build.ps1"
     $gradleArguments = @(
         "externalDeploymentCheck",
         "--no-daemon",

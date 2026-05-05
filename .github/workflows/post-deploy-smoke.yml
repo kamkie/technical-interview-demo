@@ -143,6 +143,7 @@ jobs:
 
       - name: Run deployed smoke check
         if: steps.config.outputs.configured == 'true'
+        shell: pwsh
         env:
           EXTERNAL_CHECK_BASE_URL: ${{ steps.config.outputs.base_url }}
           EXTERNAL_CHECK_JDBC_URL: ${{ secrets.EXTERNAL_CHECK_JDBC_URL }}
@@ -153,7 +154,7 @@ jobs:
           EXTERNAL_CHECK_EXPECTED_ACTIVE_PROFILE: ${{ steps.config.outputs.expected_active_profile }}
           EXTERNAL_CHECK_EXPECTED_SESSION_STORE_TYPE: ${{ steps.config.outputs.expected_session_store_type }}
           EXTERNAL_CHECK_EXPECTED_SESSION_TIMEOUT: ${{ steps.config.outputs.expected_session_timeout }}
-        run: ./gradlew scheduledExternalCheck --no-daemon
+        run: ./build.ps1 scheduledExternalCheck --no-daemon
 
       - name: Upload deployed smoke test reports
         if: always() && steps.config.outputs.configured == 'true'

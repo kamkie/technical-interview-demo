@@ -70,7 +70,8 @@ jobs:
           config-file: ./.github/codeql/codeql-config.yml
 
       - name: Compile project for CodeQL
-        run: ./gradlew classes testClasses --no-daemon
+        shell: pwsh
+        run: ./build.ps1 classes testClasses --no-daemon
 
       - name: Analyze Java
         uses: github/codeql-action/analyze@e46ed2cbd01164d986452f91f178727624ae40d7 # v4

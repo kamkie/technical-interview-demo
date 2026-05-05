@@ -58,7 +58,7 @@ Prereq: ensure `gh` is installed and authenticated for the target repo host, the
    - Apply the approved fix or approved plan.
    - Do not dismiss alerts through GitHub APIs unless the user explicitly asks for that action.
    - When fixing workflow action pinning alerts, pin actions to verified full commit SHAs rather than swapping one floating tag for another.
-   - Use `repo-validation-gate` or `ai/TESTING.md` to choose the minimum required validation.
+   - Use `ai/TESTING.md` to choose the minimum required validation.
    - Summarize the diff, validation, and any remaining risk.
 6. Recheck status.
    - After changes, rerun the bundled script or the relevant `gh api` calls to confirm the targeted alerts have cleared.

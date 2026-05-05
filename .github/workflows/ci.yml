@@ -92,7 +92,8 @@ jobs:
 
       - name: Run full build
         if: needs.change_detection.outputs.skip_heavy_ci != 'true'
-        run: ./gradlew build --no-daemon
+        shell: pwsh
+        run: ./build.ps1 -FullBuild build --no-daemon
 
       - name: Upload coverage to Codecov
         if: needs.change_detection.outputs.skip_heavy_ci != 'true'
@@ -145,8 +146,9 @@ jobs:
 
       - name: Run external smoke validation
         if: needs.change_detection.outputs.skip_heavy_ci != 'true'
+        shell: pwsh
         run: >-
-          ./gradlew externalSmokeTest
+          ./build.ps1 externalSmokeTest
           -PexternalSmokeImageName=technical-interview-demo
           -PdockerImageName=technical-interview-demo
           --no-daemon

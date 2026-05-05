@@ -62,7 +62,7 @@ Prereq: ensure `gh` is installed and authenticated for the target repo host, the
    - For a multi-step or higher-risk fix, use `repo-plan-author` to create or revise an `ai/PLAN_*.md` plan before implementation.
 7. Implement after approval.
    - Apply the approved fix or approved plan.
-   - Use `repo-validation-gate` or `ai/TESTING.md` to choose the minimum required validation.
+   - Use `ai/TESTING.md` to choose the minimum required validation.
    - Summarize the diff, validation, and any remaining risk.
 8. Recheck status.
    - After changes, suggest re-running the relevant tests and `gh pr checks` to confirm.

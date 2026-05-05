@@ -24,13 +24,20 @@ Treat validation as part of the product:
 
 Use `ai/ENVIRONMENT_QUICK_REF.md` for the local Gradle wrapper syntax.
 
+## Implementation Loop
+
+- use `./build.ps1 compileJava` or a similarly narrow Gradle task for quick checks while editing
+- use targeted tests when the touched behavior has focused executable coverage
+- `./build.ps1 -SkipTests build`, `./build.ps1 -SkipChecks build`, and `./build.ps1 -SkipTests -SkipChecks build` are local-loop shortcuts only, not final verification
+- use the `build` task for final verification before handoff unless the lightweight-only shortcut applies
+
 ## Change-Type Expectations
 
 ### Public behavior changes
 
 - validate the contract artifacts routed through `ai/DOCUMENTATION.md`
 - refresh approved OpenAPI only after intentional contract review
-- rerun `./build.ps1 gatlingBenchmark` in PowerShell or `./build.sh gatlingBenchmark` in Bash when changing book list/search behavior, localization lookup behavior, or OAuth/session startup behavior
+- rerun `./build.ps1 gatlingBenchmark` when changing book list/search behavior, localization lookup behavior, or OAuth/session startup behavior
 
 ### Internal refactors
 
@@ -39,7 +46,7 @@ Use `ai/ENVIRONMENT_QUICK_REF.md` for the local Gradle wrapper syntax.
 
 ### Documentation-only or lightweight support-file work
 
-- in PowerShell, `./build.ps1 build` runs the uncommitted changed-file classifier and exits successfully with manual-review guidance when only lightweight files changed
+- `./build.ps1 build` runs the uncommitted changed-file classifier and exits successfully with manual-review guidance when only lightweight files changed
 - repo-local skills under `ai/skills/` count as lightweight support-file work for classifier purposes unless they accompany a non-lightweight change
 - skip the standard build, benchmarks, external smoke, vulnerability scans, and other heavyweight validation unless the user explicitly asks for more
 - if lightweight edits accompany any non-lightweight change, validate based on the non-lightweight artifacts and repo rules
@@ -50,11 +57,10 @@ Use `ai/ENVIRONMENT_QUICK_REF.md` for the local Gradle wrapper syntax.
 ./build.ps1 build
 ```
 
-In Bash, use `./build.sh build`.
 Use `SETUP.md` for environment prerequisites such as Java, Docker, and formatter configuration.
 Use `ai/ENVIRONMENT_QUICK_REF.md` for wrapper behavior.
 
-PowerShell exception:
+Wrapper exception:
 
 - `./build.ps1 build` skips the Gradle build when its built-in classifier reports `skipHeavyValidation=true`
 - use `./build.ps1 -FullBuild build` when the user explicitly asks for full validation or when release/signoff rules require the full Gradle build
@@ -65,7 +71,7 @@ PowerShell exception:
 - when multiple Gradle targets are required, prefer one wrapper invocation such as `./build.ps1 build gatlingBenchmark --no-daemon` so shared prerequisites run once and validation does not repeat the full build unnecessarily
 - treat failing compatibility or benchmark checks as spec failures
 - if required validation cannot run, report that explicitly
-- the same classifier script also powers CI push or pull-request short-circuit decisions; run it directly only when validating a diff boundary other than the current PowerShell uncommitted change set
+- the same classifier script also powers CI push or pull-request short-circuit decisions; run it directly only when validating a diff boundary other than the current uncommitted change set
 
 ## Recording Validation
 

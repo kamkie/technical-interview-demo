@@ -1,9 +1,10 @@
-# Wrapper for gradlew.bat that auto-loads .env before execution
+# Wrapper for the Gradle wrapper that auto-loads .env before execution
 #
 # Usage:
 #   Run this script instead of gradlew.bat:
 #     ./build.ps1 build
 #     ./build.ps1 -FullBuild build
+#     ./build.ps1 -SkipTests -SkipChecks build
 #     ./build.ps1 bootRun
 #
 # Or add an alias in your PowerShell profile:
@@ -19,6 +20,10 @@
 param (
     [Alias("ForceFullBuild")]
     [switch]$FullBuild,
+
+    [switch]$SkipTests,
+
+    [switch]$SkipChecks,
 
     [Parameter(ValueFromRemainingArguments=$true)]
     [string[]]$GradleArgs = @()
@@ -135,6 +140,35 @@ function Test-ShouldSkipBuildForLightweightChanges {
     return $true
 }
 
+function Get-EffectiveGradleArgs {
+    param(
+        [string[]]$Arguments = @()
+    )
+
+    $effectiveArguments = @($Arguments)
+
+    if ($SkipTests) {
+        $effectiveArguments += @(
+            "-x",
+            "test",
+            "-x",
+            "jacocoTestReport",
+            "-x",
+            "jacocoCoverageSummary",
+            "-x",
+            "jacocoTestCoverageVerification",
+            "-x",
+            "asciidoctor"
+        )
+    }
+
+    if ($SkipChecks) {
+        $effectiveArguments += @("-x", "check")
+    }
+
+    return $effectiveArguments
+}
+
 # Step 1: Auto-load .env if it exists
 $envPath = Join-Path $repoRoot ".env"
 if (Test-Path -LiteralPath $envPath) {
@@ -150,20 +184,25 @@ if (Test-Path -LiteralPath $envPath) {
 }
 
 $gradleExitCode = 0
+$effectiveGradleArgs = @(Get-EffectiveGradleArgs -Arguments $GradleArgs)
 Push-Location $repoRoot
 try {
     # Step 2: Skip the default validation build when only lightweight files changed
-    if (Test-ShouldSkipBuildForLightweightChanges -Root $repoRoot -Arguments $GradleArgs) {
+    if (Test-ShouldSkipBuildForLightweightChanges -Root $repoRoot -Arguments $effectiveGradleArgs) {
         return
     }
 
-    # Step 3: Call gradlew.bat with all Gradle arguments
-    $gradlewPath = Join-Path $repoRoot "gradlew.bat"
+    # Step 3: Call the platform Gradle wrapper with all effective Gradle arguments
+    $runningOnWindows = [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform(
+        [System.Runtime.InteropServices.OSPlatform]::Windows
+    )
+    $gradlewFileName = if ($runningOnWindows) { "gradlew.bat" } else { "gradlew" }
+    $gradlewPath = Join-Path $repoRoot $gradlewFileName
     if (-not (Test-Path -LiteralPath $gradlewPath)) {
-        throw "gradlew.bat not found in repository root: $repoRoot"
+        throw "$gradlewFileName not found in repository root: $repoRoot"
     }
 
-    & $gradlewPath @GradleArgs
+    & $gradlewPath @effectiveGradleArgs
     $gradleExitCode = $LASTEXITCODE
 }
 finally {

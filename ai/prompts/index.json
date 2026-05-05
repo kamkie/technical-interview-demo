@@ -1,6 +1,5 @@
 {
   "schemaVersion": 1,
-  "bodyFormat": "raw-markdown",
   "prompts": [
     {
       "title": "Check Active Workers",

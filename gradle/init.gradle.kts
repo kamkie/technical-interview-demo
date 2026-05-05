@@ -36,8 +36,7 @@ gradle.buildFinished { result ->
             println("\nTo fix:")
             println("  1. Install Java 25 (or set JAVA_HOME to existing Java 25)")
             println("  2. Copy .env.example to .env and fill in JAVA_HOME")
-            println("  3. Run: . ./scripts/load-dotenv.ps1 -Quiet")
-            println("  4. Try again: .\\gradlew.bat build\n")
+            println("  3. Try again: ./build.ps1 build\n")
         }
     }
 }
