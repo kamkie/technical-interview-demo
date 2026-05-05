@@ -165,23 +165,7 @@ When making architecture-sensitive changes:
 
 ## Verification Rules
 
-Before finishing, run:
-
-```powershell
-.\gradlew.bat build
-```
-
-Exception:
-
-- when `pwsh ./scripts/classify-changed-files.ps1 -Uncommitted` reports `skipHeavyValidation=true`, manual consistency review is sufficient and `.\gradlew.bat build` or other heavyweight validation commands are not required unless the user explicitly asks for them
-
-Use `SETUP.md` for environment prerequisites such as Java, Docker, and formatter configuration.
-
-Additional verification expectations:
-
-- refresh the OpenAPI baseline only after an intentional contract review with `./gradlew refreshOpenApiBaseline`
-- rerun `./gradlew gatlingBenchmark` when changing book list/search behavior, localization lookup behavior, or OAuth/session startup behavior
-- treat failing compatibility or benchmark checks as spec failures, not optional cleanup
+Verification rules and validation commands are owned by `ai/TESTING.md`.
 
 ## Versioning And Releases
 

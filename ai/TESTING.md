@@ -48,9 +48,11 @@ Treat validation as part of the product:
 .\gradlew.bat build
 ```
 
+Use `SETUP.md` for environment prerequisites such as Java, Docker, and formatter configuration.
+
 Exception:
 
-- if `pwsh ./scripts/classify-changed-files.ps1 -Uncommitted` reports `skipHeavyValidation=true`, manual consistency review is sufficient unless the user explicitly asks for more validation
+- if `pwsh ./scripts/classify-changed-files.ps1 -Uncommitted` reports `skipHeavyValidation=true`, manual consistency review is sufficient and `.\gradlew.bat build` or other heavyweight validation commands are not required unless the user explicitly asks for more validation
 
 ## Additional Rules
 
