@@ -76,6 +76,10 @@ If the intended behavior is not clear enough to express as a spec, stop and clar
 - consider worktree-based execution complete only when the finished branch has been pushed and the pull request is open or already merged onto `main`
 - do not cut a release from a worktree-only branch tip or from changes that have not yet landed on `main`
 
+## Local Environment Discovery
+
+- when discovering `JAVA_HOME` or preparing to run Java or Gradle commands from PowerShell, dot-source `.\scripts\load-dotenv.ps1 -Quiet` first so `.env` can provide the repository-local toolchain path before falling back to machine-wide environment inspection
+
 ## Spec Priority
 
 When resolving truth, use this order:
