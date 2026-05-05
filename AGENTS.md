@@ -84,32 +84,6 @@ If the intended behavior is not clear enough to express as a spec, stop and clar
 
 ## Local Environment Discovery
 
-**Automatic setup (no manual steps):**
-
-The project auto-detects and loads environment configuration:
-- `build.ps1` (PowerShell) or `build.sh` (Bash) auto-loads `.env` and calls gradlew
-- `gradle/init.gradle.kts` validates Java toolchain on every Gradle invocation
-- `.env.example` contains the template; copy to `.env` and fill in `JAVA_HOME`
-
-**Quick start:**
-```powershell
-Copy-Item .env.example .env
-# Edit .env to set JAVA_HOME
-. ./build.ps1 build          # Auto-loads .env and runs Gradle
-```
-
-**Manual environment loading** (if needed):
-```powershell
-. ./scripts/load-dotenv.ps1 -Quiet
-.\gradlew.bat build
-```
-
-**Permanent auto-loading** (optional):
-Add to PowerShell profile (`$PROFILE`):
-```powershell
-. (Resolve-Path "path/to/repo/scripts/init-shell-env.ps1")
-```
-
 See `SETUP.md` for detailed setup walkthrough and troubleshooting.
 
 ## AI Execution Environment

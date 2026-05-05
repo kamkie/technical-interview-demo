@@ -85,6 +85,23 @@ Each worker log records:
 - blockers, risks, and coordinator decisions still needed
 - whether the current milestone or slice is ready for integration
 
+## Agent Capability Consistency
+
+When forking workers in `Shared Plan` or `Parallel Plans` modes, all agents (coordinator and workers) maintain identical model and reasoning capabilities:
+
+- **Same model**: Workers execute with the same AI model as the coordinator
+- **Same reasoning level**: Workers maintain identical reasoning depth and capability as the coordinator
+- **Consistent quality**: No degradation in code generation, analysis, or validation quality across workers
+- **Parity guarantee**: Worker agents are not "simpler" or "faster" versions of the coordinator
+
+This ensures that:
+- Worker implementation quality matches coordinator expectations
+- Validation rigor remains consistent across all agents
+- Code review standards are uniformly applied
+- Integration decisions can trust worker output quality
+
+If model or reasoning capability differences are needed for specific tasks, use `Single Branch` mode and handle the work sequentially rather than forking workers.
+
 ## Coordinator Ownership
 
 The coordinator or orchestrator always owns:
