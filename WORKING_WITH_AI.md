@@ -264,7 +264,7 @@ Useful prompt titles:
 
 Repository rule:
 
-- run the standard wrapper build from `ai/ENVIRONMENT_QUICK_REF.md` before finishing, unless `pwsh ./scripts/classify-changed-files.ps1 -Uncommitted` reports `skipHeavyValidation=true` for the current uncommitted changes and manual consistency review is sufficient
+- run the standard wrapper build from `ai/ENVIRONMENT_QUICK_REF.md` before finishing; in PowerShell, `./build.ps1 build` handles the lightweight-only uncommitted-change shortcut, and `./build.ps1 -FullBuild build` forces the full Gradle build when required
 
 ### 8. Preparing Release
 

@@ -38,12 +38,21 @@ function Invoke-Git {
         [string[]]$Arguments
     )
 
-    $output = & git @Arguments 2>&1
-    if ($LASTEXITCODE -ne 0) {
-        throw "git $($Arguments -join ' ') failed.`n$($output -join [Environment]::NewLine)"
-    }
+    $stderrPath = [System.IO.Path]::GetTempFileName()
+    try {
+        $output = & git @Arguments 2> $stderrPath
+        if ($LASTEXITCODE -ne 0) {
+            $errorOutput = Get-Content -LiteralPath $stderrPath -Raw
+            throw "git $($Arguments -join ' ') failed.`n$($errorOutput.Trim())"
+        }
 
-    return ,@($output)
+        return ,@($output)
+    }
+    finally {
+        if (Test-Path -LiteralPath $stderrPath) {
+            Remove-Item -LiteralPath $stderrPath -Force
+        }
+    }
 }
 
 function Test-GitRevision {

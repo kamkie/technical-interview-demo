@@ -52,6 +52,7 @@ The default `local` profile expects PostgreSQL on `localhost:5432`. The included
 
 `.env.example` contains the supported shell variables for local work.
 The repository wrapper scripts `build.ps1` and `build.sh` auto-load a root `.env` file before invoking Gradle.
+The PowerShell wrapper also classifies the current uncommitted change set for `./build.ps1 build` and skips Gradle when only lightweight files changed.
 Direct `gradlew` commands, IDE run configurations, and non-Gradle shell commands still need the variables exported in the usual way.
 
 1. Copy `.env.example` to `.env` if you want a private local reference file.
@@ -65,6 +66,8 @@ Run the wrapper from the repository root:
 ```powershell
 ./build.ps1 build
 ```
+
+Use `./build.ps1 -FullBuild build` when you want to force the full Gradle build even for lightweight-only changes.
 
 For direct `gradlew` commands or other env-dependent tools, load the environment once per session:
 
@@ -252,13 +255,15 @@ Useful endpoints once the app is running:
 
 ## Running Tests And Quality Checks
 
-Use the wrapper command from the repository root. Docker Desktop must also be running because the `test` task starts PostgreSQL through Testcontainers and `build` now also performs the Docker image build.
+Use the wrapper command from the repository root. Docker Desktop must also be running because the `test` task starts PostgreSQL through Testcontainers and a full `build` now also performs the Docker image build.
 
 ```powershell
 ./build.ps1 build
 ```
 
-`build` now covers Spotless, PMD, SpotBugs plus FindSecBugs via `staticSecurityScan`, dependency/image vulnerability scanning, CycloneDX SBOM generation, tests, Asciidoctor generation, boot jar creation, and the Docker image build.
+For PowerShell, `./build.ps1 build` first checks the current uncommitted files and exits successfully with manual-review guidance when the change set is lightweight-only. Use `./build.ps1 -FullBuild build` to force the full Gradle build.
+
+A full `build` covers Spotless, PMD, SpotBugs plus FindSecBugs via `staticSecurityScan`, dependency/image vulnerability scanning, CycloneDX SBOM generation, tests, Asciidoctor generation, boot jar creation, and the Docker image build.
 Use focused commands such as `test`, `asciidoctor`, or `dockerBuild` only when you intentionally want a narrower loop.
 
 Security scan shortcuts:
@@ -283,13 +288,7 @@ Benchmark workflow:
 
 - run `./build.ps1 gatlingBenchmark` when changing book list/search behavior, localization lookup behavior, or OAuth/session startup behavior
 - when both `build` and `gatlingBenchmark` are required, prefer one invocation such as `./build.ps1 build gatlingBenchmark --no-daemon` so Gradle reuses the same task graph instead of repeating the full build in separate runs
-- before you skip a local heavyweight validation run for a docs or support-file-only change, inspect the current uncommitted file set with:
-
-```powershell
-pwsh ./scripts/classify-changed-files.ps1 -Uncommitted
-```
-
-- if that script reports `skipHeavyValidation=true`, manual consistency review is sufficient for the current uncommitted changes
+- for a docs or support-file-only PowerShell workflow, the `./build.ps1 build` shortcut handles the local classifier check; run `pwsh ./scripts/classify-changed-files.ps1` directly only for a different diff boundary
 
 ## Reproducing CI Locally
 
@@ -305,7 +304,8 @@ helm template technical-interview-demo infra/helm/technical-interview-demo -f in
 
 Exception:
 
-- if `pwsh ./scripts/classify-changed-files.ps1 -Uncommitted` reports `skipHeavyValidation=true`, local manual consistency review is sufficient for the current uncommitted changes; in hosted CI, the same script runs against the push or pull-request range and short-circuits the heavy validation path when it reports `skipHeavyValidation=true`
+- in PowerShell, `./build.ps1 build` performs the local uncommitted-change classifier check and exits successfully with manual-review guidance for lightweight-only changes; the remaining heavyweight CI commands are not needed for that local shortcut
+- in hosted CI, the same classifier runs against the push or pull-request range and short-circuits the heavy validation path when it reports `skipHeavyValidation=true`
 
 The hosted `CI` workflow also uploads `build/reports/jacoco/test/jacocoTestReport.xml` to Codecov plus artifact bundles from `build/reports/security/`, `build/reports/pmd/`, `build/reports/security/static/`, and `build/reports/sbom/`. Local reproduction normally stops at generating those files; it does not publish them unless you intentionally run the same GitHub Action path in CI.
 

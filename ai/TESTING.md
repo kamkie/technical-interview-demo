@@ -39,7 +39,7 @@ Use `ai/ENVIRONMENT_QUICK_REF.md` for the local Gradle wrapper syntax.
 
 ### Documentation-only or lightweight support-file work
 
-- when `pwsh ./scripts/classify-changed-files.ps1 -Uncommitted` reports `skipHeavyValidation=true`, do manual consistency review only
+- in PowerShell, `./build.ps1 build` runs the uncommitted changed-file classifier and exits successfully with manual-review guidance when only lightweight files changed
 - repo-local skills under `ai/skills/` count as lightweight support-file work for classifier purposes unless they accompany a non-lightweight change
 - skip the standard build, benchmarks, external smoke, vulnerability scans, and other heavyweight validation unless the user explicitly asks for more
 - if lightweight edits accompany any non-lightweight change, validate based on the non-lightweight artifacts and repo rules
@@ -54,9 +54,10 @@ In Bash, use `./build.sh build`.
 Use `SETUP.md` for environment prerequisites such as Java, Docker, and formatter configuration.
 Use `ai/ENVIRONMENT_QUICK_REF.md` for wrapper behavior.
 
-Exception:
+PowerShell exception:
 
-- if `pwsh ./scripts/classify-changed-files.ps1 -Uncommitted` reports `skipHeavyValidation=true`, manual consistency review is sufficient and the standard build or other heavyweight validation commands are not required unless the user explicitly asks for more validation
+- `./build.ps1 build` skips the Gradle build when its built-in classifier reports `skipHeavyValidation=true`
+- use `./build.ps1 -FullBuild build` when the user explicitly asks for full validation or when release/signoff rules require the full Gradle build
 
 ## Additional Rules
 
@@ -64,7 +65,7 @@ Exception:
 - when multiple Gradle targets are required, prefer one wrapper invocation such as `./build.ps1 build gatlingBenchmark --no-daemon` so shared prerequisites run once and validation does not repeat the full build unnecessarily
 - treat failing compatibility or benchmark checks as spec failures
 - if required validation cannot run, report that explicitly
-- the same classifier script also powers CI push or pull-request short-circuit decisions, but local AI and local manual workflows should run it against uncommitted changes with `-Uncommitted`
+- the same classifier script also powers CI push or pull-request short-circuit decisions; run it directly only when validating a diff boundary other than the current PowerShell uncommitted change set
 
 ## Recording Validation
 

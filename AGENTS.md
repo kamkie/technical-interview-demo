@@ -205,4 +205,4 @@ A change is complete when:
 - implementation and specs agree
 - public contract artifacts are updated when behavior changed
 - if the work was done in a git worktree or non-`main` branch, the finished branch has been pushed and a pull request is open or already merged onto `main`
-- the required validation from `ai/TESTING.md` passes, normally `./build.ps1 build` in PowerShell or `./build.sh build` in Bash, unless `pwsh ./scripts/classify-changed-files.ps1 -Uncommitted` reports `skipHeavyValidation=true` for the current uncommitted changes and manual consistency review is sufficient for that lightweight-only change
+- the required validation from `ai/TESTING.md` passes, normally `./build.ps1 build` in PowerShell or `./build.sh build` in Bash; the PowerShell wrapper handles the lightweight-only uncommitted-change shortcut, and `./build.ps1 -FullBuild build` forces the full Gradle build when required

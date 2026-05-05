@@ -10,6 +10,7 @@ PowerShell:
 
 ```powershell
 ./build.ps1 build
+./build.ps1 -FullBuild build
 ./build.ps1 test
 ./build.ps1 bootRun
 ./build.ps1 gatlingBenchmark
@@ -27,7 +28,9 @@ Bash:
 ## What The Wrappers Do
 
 - load root `.env` automatically when it exists
-- pass every argument through to the Gradle wrapper
+- pass every Gradle argument through to the Gradle wrapper
+- in PowerShell, let `./build.ps1 build` skip Gradle when the uncommitted change set is lightweight-only
+- in PowerShell, let `./build.ps1 -FullBuild build` force the full Gradle build
 - keep direct `gradlew` usage available when the shell is already configured
 - let Gradle's toolchain checks report Java misconfiguration clearly
 

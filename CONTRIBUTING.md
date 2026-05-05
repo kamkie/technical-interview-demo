@@ -174,7 +174,8 @@ Default quality gate before asking for review:
 
 Exception:
 
-- if `pwsh ./scripts/classify-changed-files.ps1 -Uncommitted` reports `skipHeavyValidation=true`, manual consistency review is sufficient locally; the same classifier also drives the `CI` short-circuit for lightweight-only push and pull-request ranges
+- in PowerShell, `./build.ps1 build` performs the local uncommitted-change classifier check and exits successfully with manual-review guidance for lightweight-only changes; use `./build.ps1 -FullBuild build` to force the full Gradle build
+- the same classifier also drives the `CI` short-circuit for lightweight-only push and pull-request ranges
 
 Additional validation rules:
 

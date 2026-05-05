@@ -21,9 +21,9 @@ Read only what the request needs:
 
 ## Workflow
 
-1. Run `pwsh ./scripts/classify-changed-files.ps1 -Uncommitted` unless the task clearly targets another diff boundary.
-2. If `skipHeavyValidation=true`, do manual consistency review only unless the user explicitly asks for more.
-3. Otherwise choose the smallest sufficient proof from `ai/TESTING.md`; default to the standard wrapper build when no narrower proof is justified.
+1. For local PowerShell validation, run `./build.ps1 build`; it performs the uncommitted changed-file classification and exits with manual-review guidance for lightweight-only changes.
+2. Run `pwsh ./scripts/classify-changed-files.ps1` directly only when the task targets another diff boundary.
+3. Choose the smallest sufficient proof from `ai/TESTING.md`; default to the standard wrapper build when no narrower proof is justified.
 4. Use wrapper commands from `ai/ENVIRONMENT_QUICK_REF.md`; do not add manual `JAVA_HOME` or dotenv setup unless a wrapper command fails and troubleshooting is in scope.
 5. Use `.env.example` only as the template for expected variable names, not as proof of local values.
 6. If public behavior or documented schema changed, inspect the contract artifacts routed by `AGENTS.md` and `ai/DOCUMENTATION.md`.
