@@ -84,7 +84,9 @@ If the intended behavior is not clear enough to express as a spec, stop and clar
 
 ## Local Environment Discovery
 
-- when discovering `JAVA_HOME` or preparing to run Java or Gradle commands from PowerShell, dot-source `.\scripts\load-dotenv.ps1 -Quiet` first so `.env` can provide the repository-local toolchain path before falling back to machine-wide environment inspection
+- when discovering `JAVA_HOME` or preparing to run Java, Gradle, Docker, or other environment-dependent commands from PowerShell, dot-source `.\scripts\load-dotenv.ps1 -Quiet` first so `.env` can provide the repository-local toolchain path before falling back to machine-wide environment inspection
+- if `.env` does not exist, `load-dotenv.ps1` returns gracefully and commands fall back to system environment
+- use `.env.example` only as a template for expected variable names, not as proof that values are set locally
 
 ## Spec Priority
 
@@ -93,8 +95,9 @@ When resolving truth, use this order:
 1. explicit user request in the current task
 2. executable specs: integration tests, REST Docs tests, OpenAPI compatibility tests, benchmark checks
 3. published contract docs: `README.md`, `src/docs/asciidoc/`, HTTP example collections
-4. active planning in `ROADMAP.md`
-5. historical release notes in `CHANGELOG.md`
+4. `ROADMAP.md` `## Current Project State` for the active release phase, breaking-change policy, and next target version
+5. active planning in `ROADMAP.md` ordered plan sections
+6. historical release notes in `CHANGELOG.md`
 
 ## Authoritative Spec Artifacts
 
@@ -110,6 +113,29 @@ Use these artifacts deliberately:
 - `SETUP.md`: local environment and troubleshooting only
 
 The `ai/` documents are guidance and planning aids. They are not higher-priority truth than executable specs or published contract docs.
+
+## Delegated Agents And Skill Wrappers
+
+Use specialized agents or skills to accelerate specific repeatable tasks:
+
+### Specialized Agents
+
+When the nature of the task matches an agent's description, use `run_subagent` to delegate:
+
+- **Plan Agent**: when you need multi-step planning that researches the codebase and outlines detailed execution steps with milestones, blocking dependencies, and validation checkpoints; produces `ai/PLAN_*.md` files
+- **CVE Remediator Agent**: when you need to detect and fix security vulnerabilities (CVEs) in project dependencies while maintaining a working build; works across any package ecosystem
+
+### Repo-Local Skills
+
+When you need a narrower workflow wrapper than the Plan Agent but more structured guidance than a freeform request, use repo-local skills under `ai/skills/`:
+
+- use `repo-plan-author` when creating or revising execution plans and you want plan-focused entry guidance
+- use `repo-validation-gate` when checking changed files against validation requirements and you need verification routing without full implementation
+- use `gh-fix-ci` when GitHub PR checks are failing and you need GitHub Actions log triage and approval-first fix planning
+- use `gh-fix-security-quality` when GitHub Security tab shows open code-scanning or Dependabot alerts and you need alert routing and approval-first fix planning
+- use `security-best-practices` when you need curated backend or frontend hardening references for manual or AI-assisted security implementation
+
+Treat skills as workflow helpers that point back to the owner guides, not as higher-priority policy.
 
 ## Required Updates By Change Type
 
