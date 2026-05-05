@@ -7,6 +7,20 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+## [v2.0.0-RC2] - 2026-05-05
+
+### Added
+- Added dotenv-aware `build.ps1` and `build.sh` Gradle entry points plus repository-local shell initialization and Gradle Java toolchain validation.
+- Added `ai/ENVIRONMENT_QUICK_REF.md` as the AI-facing command wrapper reference for local Gradle execution.
+
+### Changed
+- Refreshed repository-owned toolchain pins across the container base image, Trivy, Fluent Bit, GitHub Actions, and Testcontainers PostgreSQL while preserving the published API contract.
+- Updated setup, release, validation, and AI workflow guidance to use the wrapper-based command flow and current artifact verification model.
+- Tightened and sorted the AI instruction set so branch/worktree rules, authoritative artifact ownership, execution workflow, reusable prompts, skills, and environment guidance each have clearer owners.
+
+### Removed
+- Removed the redundant root `AI_ENVIRONMENT_AUTOMATION.md` after integrating its durable guidance into the focused AI and setup documents.
+
 ## [v2.0.0-RC1] - 2026-05-05
 
 ### Added

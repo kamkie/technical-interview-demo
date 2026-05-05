@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Integration |
-| Status | Implemented |
+| Phase | Closed |
+| Status | Released |
 
 ## Summary
 - Run one conservative repository-wide sweep across the dependency, build, container, CI, release, and packaging toolchain surfaces that are owned in this repository.
@@ -77,7 +77,7 @@
   - one branch keeps version decisions and rollback reasoning visible in a single review
   - the initial evidence suggests only a small number of runtime dependency candidates, with most of the stack already current
 - Coordinator-owned or otherwise shared files if the work fans out:
-  - `ai/PLAN_repository_dependency_toolchain_sweep.md`
+  - `ai/archive/PLAN_repository_dependency_toolchain_sweep.md`
   - `build.gradle.kts`
   - `gradle/wrapper/gradle-wrapper.properties`
   - `gradle/wrapper/gradle-wrapper.jar`
@@ -123,7 +123,7 @@
 - goal:
   - create the exact target inventory immediately before editing version pins.
 - owned files or packages:
-  - `ai/PLAN_repository_dependency_toolchain_sweep.md`
+  - `ai/archive/PLAN_repository_dependency_toolchain_sweep.md`
   - generated local reports under `build/` for evidence only; do not commit generated reports unless the repo already tracks the specific file
 - shared files that a `Shared Plan` worker must leave to the coordinator:
   - all version-owning files
@@ -233,7 +233,7 @@
   - `SETUP.md`
   - `README.md` only if the high-level setup or support contract changed
   - owning AI guides only if durable repo guidance changed
-  - `ai/PLAN_repository_dependency_toolchain_sweep.md`
+  - `ai/archive/PLAN_repository_dependency_toolchain_sweep.md`
 - shared files:
   - `CHANGELOG.md` remains out of scope unless this milestone becomes an intentional release handoff
 - behavior to preserve:
@@ -316,6 +316,15 @@
   - `actionlint` was not installed locally; workflow syntax was reviewed manually and action tag/SHA verification was run locally
   - final formatting and whitespace checks passed with `.\gradlew.bat spotlessMiscCheck --no-daemon`, `git diff --check`, and `git diff --cached --check`
   - `.\gradlew.bat gatlingBenchmark --no-daemon` was skipped because no Spring Boot/Spring Framework, cache, OAuth/session, book search/list, localization lookup, Flyway, or application PostgreSQL JDBC runtime behavior was upgraded; external smoke covered the changed container base and PostgreSQL 16 test image alignment
+- Release preparation completed on 2026-05-05:
+  - `pwsh ./scripts/release/get-release-migration-impact.ps1 -PreviousReleaseTag v2.0.0-RC1 -CurrentRef HEAD` reported no migration SQL changes and release impact `none`
+  - `CHANGELOG.md` was updated for `v2.0.0-RC2`
+  - `ROADMAP.md` was updated so the stable `v2.0.0` target now follows acceptance of `v2.0.0-RC2`
+  - this executed plan was archived at `ai/archive/PLAN_repository_dependency_toolchain_sweep.md`
+  - `git diff --check` passed for the release-preparation edits
+  - `pwsh ./scripts/classify-changed-files.ps1 -Uncommitted` reported only lightweight files and `skipHeavyValidation=true`
+  - `pwsh ./scripts/release/render-release-notes.ps1 -ChangelogPath CHANGELOG.md -CurrentTag v2.0.0-RC2 -PreviousPublishedTag v2.0.0-RC1 ...` accepted the RC2-only changelog range
+  - `pwsh ./scripts/release/render-release-notes.ps1 -ChangelogPath CHANGELOG.md -CurrentTag v2.0.0-RC2 -PreviousPublishedTag v1.6.0 ...` accepted the cumulative range used by the tag-driven release workflow's latest non-prerelease GitHub Release lookup
 
 ## User Validation
 - Review the final PR or branch diff for version-only intent: dependency and toolchain pins should move, while public API contract files should remain unchanged unless explicitly approved.
