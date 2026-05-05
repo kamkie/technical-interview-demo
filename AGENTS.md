@@ -22,7 +22,7 @@ The `ai/` directory is the AI-facing working set for non-contract repository kno
 
 Use these files deliberately:
 
-- `ai/ARCHITECTURE.md`: descriptive codebase map, package responsibilities, and structural guidance
+- `ai/ARCHITECTURE.md`: descriptive repository snapshot, codebase map, package responsibilities, and structural guidance
 - `ai/BUSINESS_MODULES.md`: descriptive business-feature package map and ownership guide
 - `ai/CODE_STYLE.md`: AI-facing code-style and change-shaping guidance for repo edits
 - `ai/DESIGN.md`: intended design direction, product tradeoffs, and open design decisions
@@ -140,22 +140,9 @@ Update all affected artifacts in the same change:
 - remove completed items instead of archiving them elsewhere
 - do not recreate a second human history file; released history belongs in `CHANGELOG.md`
 
-## Project Snapshot
-
-Current implemented scope:
-
-- public overview, docs, and smoke-test endpoints
-- book, category, localization, and authenticated account APIs
-- OAuth 2.0 protected writes with JDBC-backed HTTP sessions
-- generated REST Docs plus approved OpenAPI compatibility gate
-- PostgreSQL runtime profiles and Testcontainers-backed integration tests
-- append-only audit logging, tracing, caches, metrics, and tracked Gatling baselines
-
-Primary goal: keep the codebase small, readable, and easy to reason about.
-
 ## Architecture Constraints
 
-`ai/ARCHITECTURE.md` owns the descriptive codebase map, business-module map, current API shape, and structural guidance for this repository.
+`ai/ARCHITECTURE.md` owns the descriptive repository snapshot, codebase map, business-module map, current API shape, and structural guidance for this repository.
 
 When making architecture-sensitive changes:
 

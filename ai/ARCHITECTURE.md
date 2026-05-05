@@ -12,11 +12,12 @@ Use `ai/BUSINESS_MODULES.md` for the detailed business-feature package map.
 This repository is a small Spring Boot demo application for interview exercises.
 It is intentionally narrow:
 
-- public read APIs for books, categories, localization data, technical overview, and generated docs
-- authenticated account APIs
-- OAuth-backed session security for state-changing actions
-- append-only audit logging for writes
-- metrics, tracing, caching, and OpenAPI/REST Docs support
+- public overview, docs, and smoke-test endpoints
+- book, category, localization, and authenticated account APIs
+- OAuth 2.0 protected writes with JDBC-backed HTTP sessions
+- generated REST Docs plus approved OpenAPI compatibility gate
+- PostgreSQL runtime profiles and Testcontainers-backed integration tests
+- append-only audit logging, tracing, caches, metrics, and tracked Gatling baselines
 
 Primary architecture goal:
 
