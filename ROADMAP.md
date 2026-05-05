@@ -41,7 +41,6 @@ Status: Planned
 
 Goal: finish the stable `2.0` line now that `v2.0.0-M1` through `v2.0.0-M6` established the browser-session contract, deployment boundary, upgrade guide, edge reference, smoke-alignment baseline, UTC instant timestamp contract cleanup, and the current prerelease workflow and internal-cleanup baseline.
 
-
 #### Selected For `v2.0.0-RC1`
 - [x] Pin the third-party GitHub Actions flagged by CodeQL to verified full commit SHAs in `.github/workflows/ci.yml`, `.github/workflows/release.yml`, `.github/workflows/codeql.yml`, and `.github/workflows/post-deploy-smoke.yml` (CodeQL alerts `#22`, `#19`, `#18`, `#17`, `#16`, `#7`, `#6`, `#5`, and `#2`).
 - [x] Sanitize user-controlled problem-detail logging in `src/main/java/team/jit/technicalinterviewdemo/technical/api/ApiProblemFactory.java` to clear CodeQL log-injection alerts `#11` and `#10`.
@@ -57,6 +56,12 @@ Goal: finish the stable `2.0` line now that `v2.0.0-M1` through `v2.0.0-M6` esta
 - [ ] Release stable `v2.0.0`, update `CHANGELOG.md`, and remove the completed `2.0` track from `ROADMAP.md`.
 
 ## Deferred
+
+### Post-`2.0` Frontend AI Contract
+
+Status: Deferred until stable `2.0` is released
+
+- [ ] Generate a frontend-contract AI instruction file in this repository, then copy it into the frontend repository as source input for the AI agent there to generate that repo's AI instructions.
 
 ### Post-`2.0` Maintainability Cleanup
 
