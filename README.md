@@ -50,14 +50,14 @@ Use these files when you want to work with AI in this repository or understand w
 - [ai/EXECUTION.md](ai/EXECUTION.md): how AI should implement an approved plan or milestone
 - [ai/LEARNINGS.md](ai/LEARNINGS.md): durable engineering lessons worth carrying through refactors
 - [ai/PLAN.md](ai/PLAN.md): compact guide for creating or revising execution plans
-- [ai/PROMPTS.md](ai/PROMPTS.md): reusable prompt-title index that points to on-demand full starters
+- [ai/PROMPTS.md](ai/PROMPTS.md): reusable prompt-title index backed by a machine-readable prompt index and loader
 - `ai/skills/`: repo-local skills
 - [ai/REVIEWS.md](ai/REVIEWS.md): code-review and security-review guidance
 - [ai/RELEASES.md](ai/RELEASES.md): release-preparation and release workflow guidance
 - [ai/TESTING.md](ai/TESTING.md): validation rules and change-sensitive checks
 - [ai/WORKFLOW.md](ai/WORKFLOW.md): single-branch, shared-plan, and parallel execution guidance
 - `ai/PLAN_*.md` when present: task-specific execution plans for active work
-- `ai/prompts/`, `ai/references/`, and `ai/templates/`: on-demand prompt bodies, detailed references, and templates
+- `ai/prompts/`, `ai/references/`, and `ai/templates/`: machine-readable prompt metadata, on-demand prompt bodies, detailed references, and templates
 - `ai/archive/`: archived plan files for completed or released work
 
 ## Notes

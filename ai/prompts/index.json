@@ -1,0 +1,379 @@
+{
+  "schemaVersion": 1,
+  "prompts": [
+    {
+      "title": "Check Active Workers",
+      "slug": "check-active-workers",
+      "category": "Workflow Execution",
+      "path": "ai/prompts/bodies/check-active-workers.md",
+      "placeholders": [
+        "topic"
+      ]
+    },
+    {
+      "title": "Check Contract Impact",
+      "slug": "check-contract-impact",
+      "category": "Implementation Verification",
+      "path": "ai/prompts/bodies/check-contract-impact.md",
+      "placeholders": [
+        "change"
+      ]
+    },
+    {
+      "title": "Check Published Release",
+      "slug": "check-published-release",
+      "category": "Releasing",
+      "path": "ai/prompts/bodies/check-published-release.md",
+      "placeholders": [
+        "plan_file"
+      ]
+    },
+    {
+      "title": "Check Release Readiness",
+      "slug": "check-release-readiness",
+      "category": "Preparing Release",
+      "path": "ai/prompts/bodies/check-release-readiness.md",
+      "placeholders": [
+        "plan_file"
+      ]
+    },
+    {
+      "title": "Check Worker Status",
+      "slug": "check-worker-status",
+      "category": "Workflow Execution",
+      "path": "ai/prompts/bodies/check-worker-status.md",
+      "placeholders": [
+        "topic",
+        "worker name or agent id"
+      ]
+    },
+    {
+      "title": "Choose Execution Mode",
+      "slug": "choose-execution-mode",
+      "category": "Plan Verification",
+      "path": "ai/prompts/bodies/choose-execution-mode.md",
+      "placeholders": [
+        "plan_file"
+      ]
+    },
+    {
+      "title": "Clarify Roadmap Decisions",
+      "slug": "clarify-roadmap-decisions",
+      "category": "Discovery And Roadmap",
+      "path": "ai/prompts/bodies/clarify-roadmap-decisions.md",
+      "placeholders": []
+    },
+    {
+      "title": "Clean Worktrees And Stale Local Branches",
+      "slug": "clean-worktrees-and-stale-local-branches",
+      "category": "Other Useful Lifecycle Prompts",
+      "path": "ai/prompts/bodies/clean-worktrees-and-stale-local-branches.md",
+      "placeholders": []
+    },
+    {
+      "title": "Compact AI Docs",
+      "slug": "compact-ai-docs",
+      "category": "Maintenance",
+      "path": "ai/prompts/bodies/compact-ai-docs.md",
+      "placeholders": []
+    },
+    {
+      "title": "Create Plan",
+      "slug": "create-plan",
+      "category": "Planning",
+      "path": "ai/prompts/bodies/create-plan.md",
+      "placeholders": [
+        "topic"
+      ]
+    },
+    {
+      "title": "Implement Milestone",
+      "slug": "implement-milestone",
+      "category": "Implementation",
+      "path": "ai/prompts/bodies/implement-milestone.md",
+      "placeholders": [
+        "milestone_name",
+        "plan_file"
+      ]
+    },
+    {
+      "title": "Implement Plan",
+      "slug": "implement-plan",
+      "category": "Implementation",
+      "path": "ai/prompts/bodies/implement-plan.md",
+      "placeholders": [
+        "plan_file"
+      ]
+    },
+    {
+      "title": "Implement Then Release",
+      "slug": "implement-then-release",
+      "category": "Other Useful Lifecycle Prompts",
+      "path": "ai/prompts/bodies/implement-then-release.md",
+      "placeholders": [
+        "plan_file"
+      ]
+    },
+    {
+      "title": "Integrate All Open PRs",
+      "slug": "integrate-all-open-prs",
+      "category": "Implementation Integration",
+      "path": "ai/prompts/bodies/integrate-all-open-prs.md",
+      "placeholders": [
+        "topic"
+      ]
+    },
+    {
+      "title": "Integrate Parallel Plan Output",
+      "slug": "integrate-parallel-plan-output",
+      "category": "Implementation Integration",
+      "path": "ai/prompts/bodies/integrate-parallel-plan-output.md",
+      "placeholders": [
+        "topic"
+      ]
+    },
+    {
+      "title": "Integrate Shared Plan Output",
+      "slug": "integrate-shared-plan-output",
+      "category": "Implementation Integration",
+      "path": "ai/prompts/bodies/integrate-shared-plan-output.md",
+      "placeholders": [
+        "plan_file"
+      ]
+    },
+    {
+      "title": "Pick Next Roadmap Workstream",
+      "slug": "pick-next-roadmap-workstream",
+      "category": "Discovery And Roadmap",
+      "path": "ai/prompts/bodies/pick-next-roadmap-workstream.md",
+      "placeholders": []
+    },
+    {
+      "title": "Plan Checked Roadmap Items",
+      "slug": "plan-checked-roadmap-items",
+      "category": "Planning",
+      "path": "ai/prompts/bodies/plan-checked-roadmap-items.md",
+      "placeholders": [
+        "topic"
+      ]
+    },
+    {
+      "title": "Plan Dependency And Build Tool Upgrade",
+      "slug": "plan-dependency-and-build-tool-upgrade",
+      "category": "Planning",
+      "path": "ai/prompts/bodies/plan-dependency-and-build-tool-upgrade.md",
+      "placeholders": [
+        "item 1",
+        "item 2",
+        "topic"
+      ]
+    },
+    {
+      "title": "Plan From Roadmap",
+      "slug": "plan-from-roadmap",
+      "category": "Planning",
+      "path": "ai/prompts/bodies/plan-from-roadmap.md",
+      "placeholders": [
+        "task 1",
+        "task 2",
+        "topic"
+      ]
+    },
+    {
+      "title": "Plan Repository-Wide Dependency And Toolchain Upgrade Sweep",
+      "slug": "plan-repository-wide-dependency-and-toolchain-upgrade-sweep",
+      "category": "Planning",
+      "path": "ai/prompts/bodies/plan-repository-wide-dependency-and-toolchain-upgrade-sweep.md",
+      "placeholders": [
+        "topic"
+      ]
+    },
+    {
+      "title": "Prepare Release",
+      "slug": "prepare-release",
+      "category": "Preparing Release",
+      "path": "ai/prompts/bodies/prepare-release.md",
+      "placeholders": []
+    },
+    {
+      "title": "Prioritize Open Security And Quality Issues In Roadmap",
+      "slug": "prioritize-open-security-and-quality-issues-in-roadmap",
+      "category": "Discovery And Roadmap",
+      "path": "ai/prompts/bodies/prioritize-open-security-and-quality-issues-in-roadmap.md",
+      "placeholders": []
+    },
+    {
+      "title": "Push Prepared Release",
+      "slug": "push-prepared-release",
+      "category": "Releasing",
+      "path": "ai/prompts/bodies/push-prepared-release.md",
+      "placeholders": []
+    },
+    {
+      "title": "Refine Roadmap Intake",
+      "slug": "refine-roadmap-intake",
+      "category": "Discovery And Roadmap",
+      "path": "ai/prompts/bodies/refine-roadmap-intake.md",
+      "placeholders": []
+    },
+    {
+      "title": "Release All Merged Work",
+      "slug": "release-all-merged-work",
+      "category": "Releasing",
+      "path": "ai/prompts/bodies/release-all-merged-work.md",
+      "placeholders": []
+    },
+    {
+      "title": "Review Diff Risks",
+      "slug": "review-diff-risks",
+      "category": "Implementation Verification",
+      "path": "ai/prompts/bodies/review-diff-risks.md",
+      "placeholders": []
+    },
+    {
+      "title": "Review Plan Readiness",
+      "slug": "review-plan-readiness",
+      "category": "Plan Verification",
+      "path": "ai/prompts/bodies/review-plan-readiness.md",
+      "placeholders": [
+        "plan_file"
+      ]
+    },
+    {
+      "title": "Review Roadmap Item",
+      "slug": "review-roadmap-item",
+      "category": "Discovery And Roadmap",
+      "path": "ai/prompts/bodies/review-roadmap-item.md",
+      "placeholders": [
+        "task"
+      ]
+    },
+    {
+      "title": "Revise Plan",
+      "slug": "revise-plan",
+      "category": "Planning",
+      "path": "ai/prompts/bodies/revise-plan.md",
+      "placeholders": [
+        "constraint",
+        "plan_file"
+      ]
+    },
+    {
+      "title": "Run All Ready Plans",
+      "slug": "run-all-ready-plans",
+      "category": "Workflow Execution",
+      "path": "ai/prompts/bodies/run-all-ready-plans.md",
+      "placeholders": [
+        "topic"
+      ]
+    },
+    {
+      "title": "Run All Unfinished Plans",
+      "slug": "run-all-unfinished-plans",
+      "category": "Workflow Execution",
+      "path": "ai/prompts/bodies/run-all-unfinished-plans.md",
+      "placeholders": [
+        "topic"
+      ]
+    },
+    {
+      "title": "Run Plan As Shared Plan",
+      "slug": "run-plan-as-shared-plan",
+      "category": "Workflow Execution",
+      "path": "ai/prompts/bodies/run-plan-as-shared-plan.md",
+      "placeholders": [
+        "plan_file",
+        "plan_stem_or_topic",
+        "worker_name"
+      ]
+    },
+    {
+      "title": "Run Plan On Single Branch",
+      "slug": "run-plan-on-single-branch",
+      "category": "Workflow Execution",
+      "path": "ai/prompts/bodies/run-plan-on-single-branch.md",
+      "placeholders": [
+        "plan_file"
+      ]
+    },
+    {
+      "title": "Run Plan With Inferred Mode",
+      "slug": "run-plan-with-inferred-mode",
+      "category": "Workflow Execution",
+      "path": "ai/prompts/bodies/run-plan-with-inferred-mode.md",
+      "placeholders": [
+        "plan_file"
+      ]
+    },
+    {
+      "title": "Run Plans In Parallel",
+      "slug": "run-plans-in-parallel",
+      "category": "Workflow Execution",
+      "path": "ai/prompts/bodies/run-plans-in-parallel.md",
+      "placeholders": [
+        "plan_file_1",
+        "plan_file_2",
+        "plan_file_3",
+        "topic"
+      ]
+    },
+    {
+      "title": "Run Required Validation",
+      "slug": "run-required-validation",
+      "category": "Implementation Verification",
+      "path": "ai/prompts/bodies/run-required-validation.md",
+      "placeholders": [
+        "change",
+        "plan_file"
+      ]
+    },
+    {
+      "title": "Split Checked Roadmap Items Into Plans",
+      "slug": "split-checked-roadmap-items-into-plans",
+      "category": "Planning",
+      "path": "ai/prompts/bodies/split-checked-roadmap-items-into-plans.md",
+      "placeholders": [
+        "topic"
+      ]
+    },
+    {
+      "title": "Summarize Lifecycle State",
+      "slug": "summarize-lifecycle-state",
+      "category": "Other Useful Lifecycle Prompts",
+      "path": "ai/prompts/bodies/summarize-lifecycle-state.md",
+      "placeholders": [
+        "plan_file"
+      ]
+    },
+    {
+      "title": "Triage Validation Failure",
+      "slug": "triage-validation-failure",
+      "category": "Other Useful Lifecycle Prompts",
+      "path": "ai/prompts/bodies/triage-validation-failure.md",
+      "placeholders": [
+        "change",
+        "plan_file"
+      ]
+    },
+    {
+      "title": "Upgrade Dependencies And Build Tools",
+      "slug": "upgrade-dependencies-and-build-tools",
+      "category": "Maintenance",
+      "path": "ai/prompts/bodies/upgrade-dependencies-and-build-tools.md",
+      "placeholders": [
+        "item 1",
+        "item 2"
+      ]
+    },
+    {
+      "title": "Verify Milestone",
+      "slug": "verify-milestone",
+      "category": "Implementation Verification",
+      "path": "ai/prompts/bodies/verify-milestone.md",
+      "placeholders": [
+        "milestone_name",
+        "plan_file"
+      ]
+    }
+  ]
+}

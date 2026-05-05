@@ -32,7 +32,7 @@ Before asking AI to do real work, make sure the session is grounded in these rep
 - `AGENTS.md` for repository-specific AI rules, spec priority, and required artifact updates
 - `SETUP.md` for local tooling, environment, and verification prerequisites
 - `ai/ENVIRONMENT_QUICK_REF.md` for AI-friendly local Gradle wrapper commands
-- `ai/PROMPTS.md` for reusable prompt titles; load full prompt bodies only after a title is invoked
+- `ai/PROMPTS.md` for reusable prompt titles; load one full prompt body with `scripts/ai/get-prompt.ps1` only after a title is invoked
 - `ai/skills/<skill>/SKILL.md` only when you want a narrower repo-local workflow wrapper
 
 Then add the phase-specific owner guide:
@@ -49,6 +49,7 @@ Then add the phase-specific owner guide:
 Repo-local skills live under `ai/skills/`:
 
 - `repo-plan-author`: focused entry point for creating or revising `ai/PLAN_*.md`
+- `repo-prompt-loader`: focused entry point for loading one reusable prompt body by title without reading every prompt starter
 - `repo-validation-gate`: focused entry point for changed-file classification, validation selection, and contract-impact triage
 - `gh-fix-ci`: focused entry point for GitHub PR-check inspection, GitHub Actions log triage, and approval-first CI fix planning
 - `gh-fix-security-quality`: focused entry point for GitHub Security tab inspection, code-scanning and Dependabot alert triage, and approval-first security fix planning

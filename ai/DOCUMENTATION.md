@@ -21,7 +21,7 @@ Update the artifact that owns the truth being changed:
 - single-agent execution flow: `ai/EXECUTION.md`
 - delegation and worktree deviations: `ai/WORKFLOW.md`
 - release sequencing and tagging: `ai/RELEASES.md`
-- prompt-title index: `ai/PROMPTS.md`; full prompt bodies: `ai/prompts/`
+- prompt-title index: `ai/PROMPTS.md`; prompt metadata and bodies: `ai/prompts/`; prompt loader script: `scripts/ai/get-prompt.ps1`
 - repo-local reusable workflow wrappers: `ai/skills/`
 - compact codebase map and structural guidance: `ai/ARCHITECTURE.md`; deeper references: `ai/references/`
 - business feature ownership: `ai/BUSINESS_MODULES.md`
@@ -37,7 +37,7 @@ If ownership is unclear, decide that before editing multiple docs.
 
 - update overlapping human-facing and AI-facing docs in the same change
 - keep prompts lean; move standing policy back to the owning guide
-- keep full examples, templates, and deep references in on-demand files under `ai/prompts/`, `ai/templates/`, or `ai/references/`
+- keep prompt bodies, full examples, templates, and deep references in on-demand files under `ai/prompts/`, `ai/templates/`, or `ai/references/`
 - keep repo-local skills narrow; route standing policy back to the owning guide instead of duplicating it
 - compact repeated standing guidance into the best owner instead of maintaining parallel copies
 - keep setup detail out of planning, workflow, and release guides

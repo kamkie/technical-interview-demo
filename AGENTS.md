@@ -37,7 +37,7 @@ Use these files deliberately:
 - `ai/RELEASES.md`: AI-facing release workflow for intentional post-implementation releases
 - `ai/TESTING.md`: AI-facing testing and validation guidance
 - `ai/WORKFLOW.md`: AI-facing execution workflow for single-branch, delegation, worktree usage, integration, and release handoff
-- `ai/prompts/`: on-demand full prompt bodies used only after a prompt title is invoked
+- `ai/prompts/`: machine-readable prompt index and on-demand prompt bodies used only after a prompt title is invoked
 - `ai/references/`: on-demand detailed references that should not be part of the default read set
 - `ai/templates/`: on-demand templates for creating new AI artifacts
 - `ai/skills/`: on-demand repo-local workflow skills; read a skill's `SKILL.md` only when that skill is invoked or clearly applies
@@ -50,7 +50,7 @@ Load AI guidance on demand:
 - read `AGENTS.md` first
 - read only the owning AI guide for the current task
 - read active `ai/PLAN_*.md` files only when planning, executing, verifying, or releasing that plan
-- read full prompt bodies, templates, detailed references, skill files, and archived plans only when the task specifically needs them
+- read prompt bodies, templates, detailed references, skill files, and archived plans only when the task specifically needs them
 - do not bulk-load `ai/archive/`, `ai/references/`, `ai/prompts/`, `ai/templates/`, or skill reference material as standing context
 
 Rules for maintaining the `ai/` documents:
@@ -58,10 +58,10 @@ Rules for maintaining the `ai/` documents:
 - keep the role of each file distinct; do not collapse architecture, code style, design, documentation ownership, execution, planning, release workflow, review guidance, testing guidance, workflow guidance, and learnings into one document
 - keep AI instruction markdown files under `ai/` by default; `AGENTS.md` is the only standing exception
 - update the relevant `ai/` file in the same change when architecture, code-style expectations, design intent, documentation ownership, durable engineering guidance, release workflow, review/security review guidance, testing/validation guidance, workflow guidance, or an execution plan materially changes
-- keep `ai/PROMPTS.md` lean; put full reusable prompt bodies under `ai/prompts/` and standing workflow rules in the best owning AI document
-- treat the listed prompt names in `ai/PROMPTS.md` as reusable commands for matching full starters in `ai/prompts/`, following `ai/PROMPTS.md` for exact-match, placeholder, and ambiguity rules
+- keep `ai/PROMPTS.md` lean; put reusable prompt metadata in `ai/prompts/index.json`, full prompt bodies under `ai/prompts/bodies/`, and standing workflow rules in the best owning AI document
+- treat the listed prompt names in `ai/PROMPTS.md` as reusable commands for matching full starters loaded from `ai/prompts/`, following `ai/PROMPTS.md` for exact-match, placeholder, loader, and ambiguity rules
 - keep detailed examples, templates, historical explanations, and deep references in `ai/templates/` or `ai/references/` instead of the standing top-level AI files
-- keep repo-local skills narrow and workflow-oriented; use them to accelerate repeated entry tasks, not to replace the owner guides
+- keep repo-local skills narrow and workflow-oriented; use them to accelerate repeated entry tasks, prompt loading, or focused triage, not to replace the owner guides
 - keep standing code-style, testing, review, and documentation guidance in their focused owning files instead of redistributing it across prompts or workflow docs
 - when a repo-local skill wraps a workflow owned by another guide, update the skill and the owning guide together if that workflow changes
 - when AI instruction files accumulate overlap, compact them by moving duplicated guidance into the single best owning file and updating cross-references in the same change
@@ -188,6 +188,7 @@ They auto-load a root `.env` file when present, so plans and prompts should not 
 Specialized agents and repo-local skills may accelerate repeatable tasks when available and when the task clearly matches their scope.
 Treat skills as workflow helpers that point back to the owner guides, not as higher-priority policy.
 Read `ai/skills/<skill>/SKILL.md` only when that skill is invoked or clearly applies.
+Use `repo-prompt-loader` when a reusable prompt title from `ai/PROMPTS.md` is invoked and only one full prompt body should be loaded.
 
 ## Verification Rules
 
