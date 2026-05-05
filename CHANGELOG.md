@@ -7,6 +7,13 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Added
+- Added reusable prompt starters for planning repository-wide dependency and toolchain upgrade sweeps and for prioritizing open GitHub security and quality issues into the roadmap.
+
+### Changed
+- Clarified the current `2.0` release-candidate state by making `ROADMAP.md` the owner of the release-phase status, adding a compact `Current Project State` block there, and aligning the RC1 roadmap wording around `v2.0.0-RC1` as the next target version.
+- Refined the AI guidance set so repository snapshot ownership now lives in `ai/ARCHITECTURE.md`, validation rules live in `ai/TESTING.md`, release rules live in `ai/RELEASES.md`, and lifecycle status tables across plan files use the same `Status | Current` header wording.
+
 ## [v2.0.0-M8] - 2026-05-05
 
 ### Changed

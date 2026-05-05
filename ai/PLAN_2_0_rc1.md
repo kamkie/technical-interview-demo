@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Integration |
+| Status | In Progress |
 
 ## Summary
 - Plan the `v2.0.0-RC1` milestone as a release-preparation and publication task on `main`, not as another feature batch.
@@ -26,10 +26,10 @@
 
 ## Current State
 - `ROADMAP.md` already selects the RC1 freeze item: freeze the `2.0` contract and cut `v2.0.0-RC1` from `main` only after the exact candidate passes the required validation.
-- Local `main` is one commit ahead of `origin/main` and the `v2.0.0-M8` tag. The only unreleased delta from `v2.0.0-M8` to `HEAD` is `README.md` and `ROADMAP.md`.
-- `README.md` is stale for the current phase: it still says the next planned prerelease is `v2.0.0-M8`, even though `v2.0.0-M8` is already tagged and the roadmap has moved to the RC1 freeze.
+- Local `main` is ten commits ahead of `origin/main` and the `v2.0.0-M8` tag. The unreleased delta from `v2.0.0-M8` to `HEAD` is documentation and AI-guidance only: `README.md`, `ROADMAP.md`, `AGENTS.md`, and the affected files under `ai/`.
+- `README.md` now delegates the current release phase to `ROADMAP.md`, and `ROADMAP.md` `## Current Project State` now carries the active prerelease state, breaking-change policy, and next target version for the RC1 candidate.
 - `CHANGELOG.md` currently has an empty `## [Unreleased]` section and the latest released section is `## [v2.0.0-M8] - 2026-05-05`.
-- There is no active RC1 plan file under `ai/` yet. The related pre-RC implementation plans are already archived under `ai/archive/`.
+- The active RC1 plan file is `ai/PLAN_2_0_rc1.md`. The related pre-RC implementation plans are already archived under `ai/archive/`.
 - The tag-driven `Release` workflow already rebuilds and validates the tagged image with `./gradlew build` and `./gradlew externalSmokeTest`, publishes the semantic and short-SHA GHCR tags, signs the immutable digest, attests provenance, and creates a GitHub Release from `CHANGELOG.md`.
 - The release-note workflow resolves the previous published GitHub Release from non-prerelease releases only, so RC1 release notes will be cumulative back to the last stable published release boundary rather than only back to `v2.0.0-M8`.
 - Planning-time release-impact review for `v2.0.0-M8..HEAD` already reports `none` from `pwsh ./scripts/release/get-release-migration-impact.ps1 -PreviousReleaseTag v2.0.0-M8 -CurrentRef HEAD`, so no migration-driven restore drill is currently expected unless the RC1 write set changes.
@@ -99,7 +99,7 @@
 ## Execution Milestones
 ### Milestone 1: Audit And Align The RC1 Candidate Narrative
 - goal
-  - freeze the current candidate story before validation by correcting only the remaining release-phase drift and by confirming whether any other contract artifact still describes the repo as waiting for `v2.0.0-M8`
+  - freeze the current candidate story before validation by correcting only the remaining release-phase drift and by confirming whether any other contract artifact still describes the repo as pre-RC in a way that conflicts with the selected `v2.0.0-RC1` milestone
 - owned files or packages
   - `README.md`
   - `ROADMAP.md` only if the selected RC1 wording needs a narrow cleanup beyond the already-landed selection change
@@ -114,9 +114,10 @@
   - no OpenAPI refresh, REST Docs rewrite, or HTTP example churn unless the audit proves a real published-doc mismatch
   - `README.md` stays a concise contract summary rather than absorbing setup or release-runbook detail from `SETUP.md`
 - exact deliverables
-  - replace the stale `README.md` release-phase text that still presents `v2.0.0-M8` as upcoming
-  - confirm whether any other human-facing or contract-facing artifact still carries pre-M8 or pre-RC drift
-  - if the unreleased local docs delta is intended to ship in RC1, record the release-relevant note in `CHANGELOG.md` input text before release preparation; if it is not intended to ship, stop and clarify instead of tagging around undocumented drift
+  - confirm that `README.md` and `ROADMAP.md` already present one coherent RC1 release-phase story, and apply only any remaining narrow wording cleanup if the audit finds drift
+  - confirm whether any other human-facing or contract-facing artifact still carries pre-RC drift outside archived plans and historical release notes
+  - revise this plan if the current RC1 candidate facts differ from the original planning snapshot in a way that would otherwise force ad hoc execution decisions
+  - if the unreleased local docs and AI-guidance delta is intended to ship in RC1, record the release-relevant note in `CHANGELOG.md` input text before release preparation; if it is not intended to ship, stop and clarify instead of tagging around undocumented drift
   - leave the repo with one coherent statement: RC1 is the current selected contract-freeze milestone
 - validation checkpoint
   - manual consistency review across `README.md`, `ROADMAP.md`, `src/docs/asciidoc/`, HTTP examples, and approved OpenAPI
@@ -254,7 +255,11 @@
 - Stable `v2.0.0` remains a separate release step after RC1 is accepted. Do not collapse the stable-release cleanup into this plan.
 
 ## Validation Results
-- To be filled in during execution.
+- 2026-05-05: Milestone 1 current-candidate audit completed.
+  - Confirmed that `README.md` now delegates release-phase status to `ROADMAP.md`, and `ROADMAP.md` `## Current Project State` now carries the RC1 prerelease state, breaking-change policy, and next target version.
+  - Confirmed no remaining active human-facing or contract-facing artifact still describes `v2.0.0-M8` as upcoming; the remaining pre-RC references are limited to archived plans and historical changelog sections.
+  - Revised this plan to match the actual RC1 candidate state after the post-`v2.0.0-M8` documentation and AI-guidance commits landed on `main`.
+  - Added `CHANGELOG.md` `## [Unreleased]` input covering the post-`v2.0.0-M8` docs and AI-guidance changes intended to ship in RC1.
 - Record the exact commands, whether `gatlingBenchmark` stayed skipped or became required, the migration-impact result, the release-note preview result, the local tag checks, and the remote publication or post-deploy smoke evidence.
 
 ## User Validation
