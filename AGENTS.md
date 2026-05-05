@@ -106,7 +106,7 @@ When resolving truth, use this order:
 5. active planning in `ROADMAP.md` ordered plan sections
 6. historical release notes in `CHANGELOG.md`
 
-## Authoritative Spec Artifacts
+## Authoritative Repository Artifacts
 
 Use these artifacts deliberately:
 
@@ -115,11 +115,11 @@ Use these artifacts deliberately:
 - `src/test/resources/openapi/approved-openapi.json`: approved machine-readable public API contract
 - `src/test/resources/http/`: reviewer-facing runnable request examples
 - `README.md`: supported human-facing contract summary
-- `ROADMAP.md`: active roadmap only, not historical archive
+- `ROADMAP.md`: active release phase, roadmap sequencing, and current project state
 - `CHANGELOG.md`: release history only
-- `SETUP.md`: local environment and troubleshooting only
+- `SETUP.md`: local environment, tooling, onboarding, and troubleshooting
 
-The `ai/` documents are guidance and planning aids. They are not higher-priority truth than executable specs or published contract docs.
+The `ai/` documents are guidance and planning aids. They are not higher-priority truth than executable specs, published contract docs, or the human-facing artifact that owns the topic.
 
 ## Delegated Agents And Skill Wrappers
 
