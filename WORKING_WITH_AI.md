@@ -89,6 +89,7 @@ Validation and release:
 Good requests in this repository are concrete.
 At minimum, give AI:
 
+- the reusable prompt title, when using one
 - the goal
 - the lifecycle phase
 - the target files or plan file
@@ -98,12 +99,62 @@ At minimum, give AI:
 This simple structure works well:
 
 ```text
+Prompt:
 Goal:
 Phase:
 Target artifacts:
 Constraints:
 Definition of done:
 ```
+
+## Triggering Reusable Prompts
+
+Use the exact prompt title from `ai/PROMPTS.md` as the first line of the request, then provide required placeholders as simple `name: value` lines.
+Exact titles are safest; close references should only be used when the intended title is unmistakable.
+
+Examples:
+
+```text
+Create Plan
+topic: add candidate search filtering
+```
+
+```text
+Implement Plan
+plan_file: ai/PLAN_CANDIDATE_SEARCH.md
+```
+
+```text
+Implement Milestone
+plan_file: ai/PLAN_CANDIDATE_SEARCH.md
+milestone_name: REST Docs and OpenAPI coverage
+```
+
+```text
+Run Required Validation
+plan_file: ai/PLAN_CANDIDATE_SEARCH.md
+change: candidate search filtering API
+```
+
+Prompts without placeholders can be invoked by title alone, for example:
+
+```text
+Pick Next Roadmap Workstream
+```
+
+To inspect the prompt catalog locally:
+
+```powershell
+pwsh ./scripts/ai/get-prompt.ps1 -List
+```
+
+To load one raw prompt body:
+
+```powershell
+pwsh ./scripts/ai/get-prompt.ps1 -Name "Create Plan"
+```
+
+If the title or placeholders are ambiguous, the AI should ask a targeted clarification question before loading or executing the prompt.
 
 ## Recommended Lifecycle
 
