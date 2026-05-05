@@ -135,6 +135,7 @@ Update all affected artifacts in the same change:
 ### Roadmap change
 
 - update `ROADMAP.md`
+- keep `ROADMAP.md` `## Current Project State` aligned with the active release phase, breaking-change policy, and next target version whenever roadmap sequencing or release targeting changes
 - treat `[x]` items in `ROADMAP.md` as selected for active planning or development, not as completed history
 - remove completed items instead of archiving them elsewhere
 - do not recreate a second human history file; released history belongs in `CHANGELOG.md`
@@ -189,7 +190,7 @@ Additional verification expectations:
 - create releases only from `main` after all intended changes are integrated there
 - create annotated tags for intentional releases
 - keep `CHANGELOG.md` aligned with releases
-- update `ROADMAP.md` after each release so completed items are removed and only active work remains
+- update `ROADMAP.md` after each release so completed items are removed, only active work remains, and `## Current Project State` reflects the new release phase, breaking-change policy, and next target version
 - do not introduce another human-facing completion archive file
 
 ## Definition Of Done

@@ -184,7 +184,9 @@ If the work changes onboarding, tools, Java, Docker, formatter setup, or local r
 
 ### Roadmap work
 
-If the task is only reprioritization or scope management, update `ROADMAP.md`. Do not write a fake execution plan when the work is not ready to implement.
+If the task is only reprioritization or scope management, update `ROADMAP.md`.
+Keep `ROADMAP.md` `## Current Project State` aligned when the active release phase, breaking-change policy, or next target version changes.
+Do not write a fake execution plan when the work is not ready to implement.
 
 ## Plan Output Format
 

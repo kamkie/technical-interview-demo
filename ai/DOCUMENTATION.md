@@ -49,7 +49,7 @@ If ownership is unclear, decide that before editing multiple docs.
 - workflow or AI-guidance change: update the owning AI guide first; touch `AGENTS.md` only when the AI-document set or maintenance rules changed
 - repo-local skill change: update the skill plus the owning AI guide when the skill wraps a workflow whose rules changed
 - setup or tooling change: update `SETUP.md`, not `README.md`, `AGENTS.md`, or workflow guides
-- roadmap reprioritization: update `ROADMAP.md`
+- roadmap reprioritization: update `ROADMAP.md`, and keep `## Current Project State` aligned when the active release phase, breaking-change policy, or next target version changes
 - released history: update `CHANGELOG.md`
 
 ## Cross-References
