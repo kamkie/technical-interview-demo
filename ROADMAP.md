@@ -15,9 +15,9 @@ Keep this file focused on work that is still planned or in progress.
 
 ## Current Priorities
 
-- Use the remaining `2.0` prerelease budget only for the contract-freeze and release-readiness work that still must land before `v2.0.0-RC1`.
-- Freeze the `2.0` published contract and cut `v2.0.0-RC1` from `main` only after the exact candidate passes the required validation.
-- Keep the remaining maintainability-only cleanup deferred until after stable `2.0`.
+- Use `v2.0.0-M8` for the selected internal maintainability cleanup batch that clears the remaining CodeQL maintainability and quality alerts without changing the published contract.
+- Freeze the `2.0` published contract and cut `v2.0.0-RC1` from `main` only after the `v2.0.0-M8` candidate passes the required validation.
+- Release stable `v2.0.0`, update `CHANGELOG.md`, and remove the completed `2.0` track from `ROADMAP.md` only after the `v2.0.0-RC1` line is accepted.
 
 ## Not Yet Refined
 
@@ -39,7 +39,12 @@ No unrefined tasks currently.
 
 Status: Planned
 
-Goal: finish the stable `2.0` line now that `v2.0.0-M1` through `v2.0.0-M7` established the browser-session contract, deployment boundary, upgrade guide, edge reference, smoke-alignment baseline, UTC instant timestamp contract cleanup, and the pre-`v2.0.0-RC1` security hardening baseline.
+Goal: finish the stable `2.0` line now that `v2.0.0-M1` through `v2.0.0-M7` established the browser-session contract, deployment boundary, upgrade guide, edge reference, smoke-alignment baseline, UTC instant timestamp contract cleanup, and the pre-`v2.0.0-RC1` security hardening baseline, while using `v2.0.0-M8` for the last internal maintainability-only cleanup before the later contract freeze.
+
+#### `v2.0.0-M8` Maintainability Cleanup
+- [x] Replace the deprecated `HeadersConfigurer.permissionsPolicy` call in `src/main/java/team/jit/technicalinterviewdemo/technical/security/SecurityConfiguration.java` to clear CodeQL maintainability alert `#20`.
+- [x] Replace the deprecated `ObjectMapper.setSerializationInclusion` call in `buildSrc/src/main/kotlin/team/jit/technicalinterviewdemo/build/GatlingBenchmarkTask.kt` to clear CodeQL maintainability alert `#14`.
+- [x] Remove or use the unused `service` parameter in `src/main/java/team/jit/technicalinterviewdemo/technical/logging/ServiceLoggingAspect.java` to clear CodeQL quality alert `#15`.
 
 #### Release Confidence
 - [ ] Freeze the `2.0` published contract and cut `v2.0.0-RC1` from `main` only after the exact candidate passes `.\gradlew.bat build`, required smoke checks, and `.\gradlew.bat gatlingBenchmark` when session-startup behavior changes.
@@ -52,14 +57,6 @@ Goal: finish the stable `2.0` line now that `v2.0.0-M1` through `v2.0.0-M7` esta
 Status: Deferred until stable `2.0` is released
 
 - [ ] Generate a frontend-contract AI instruction file in this repository using the `frontend-design` skill from Anthropic's `skills` repository as source guidance, then copy it into the frontend repository as source input for the AI agent there to generate that repo's AI instructions.
-
-### Post-`2.0` Maintainability Cleanup
-
-Status: Deferred until stable `2.0` is released
-
-- [ ] Replace the deprecated `HeadersConfigurer.permissionsPolicy` call in `src/main/java/team/jit/technicalinterviewdemo/technical/security/SecurityConfiguration.java` to clear CodeQL maintainability alert `#20`.
-- [ ] Replace the deprecated `ObjectMapper.setSerializationInclusion` call in `buildSrc/src/main/kotlin/team/jit/technicalinterviewdemo/build/GatlingBenchmarkTask.kt` to clear CodeQL maintainability alert `#14`.
-- [ ] Remove or use the unused `service` parameter in `src/main/java/team/jit/technicalinterviewdemo/technical/logging/ServiceLoggingAspect.java` to clear CodeQL quality alert `#15`.
 
 ### Optional Future Enhancements
 
