@@ -7,6 +7,9 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Changed
+- Pinned the third-party GitHub Actions used by the `CI`, `Release`, `CodeQL`, and `Post-Deploy Smoke` workflows to verified full commit SHAs.
+
 ## [v2.0.0-M6] - 2026-05-05
 
 ### Added

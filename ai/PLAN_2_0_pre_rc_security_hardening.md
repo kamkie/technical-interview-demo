@@ -3,8 +3,8 @@
 ## Lifecycle
 | Field | Value |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Implementation |
+| Status | In Progress |
 
 ## Summary
 - Execute the currently checked `ROADMAP.md` items as one pre-`v2.0.0-RC1` security and supply-chain hardening batch: pin flagged GitHub Actions to full SHAs, sanitize the remaining user-controlled log fields in API problem and tracing logs, and clear the selected Dependabot alerts for PMD, `commons-lang3`, `plexus-utils`, and `jruby`.
@@ -238,8 +238,23 @@
 - Treat the later RC1 cut as a separate plan or release step. This plan should make that step safer, not silently perform it.
 
 ## Validation Results
-- To be filled in during execution
-- Record the exact action-to-SHA mappings, dependency-resolution proof, focused tests, full build result, and any decision about whether `gatlingBenchmark` was required
+- 2026-05-05: Milestone 1 workflow pinning
+  - pinned all third-party `uses:` references in `.github/workflows/ci.yml`, `.github/workflows/release.yml`, `.github/workflows/codeql.yml`, and `.github/workflows/post-deploy-smoke.yml` to full commit SHAs while preserving the existing triggers, permissions, and job flow
+  - action-to-SHA mappings used:
+    - `actions/checkout@v6` -> `de0fac2e4500dabe0009e67214ff5f5447ce83dd`
+    - `actions/setup-java@v5` -> `be666c2fcd27ec809703dec50e508c2fdc7f6654`
+    - `gradle/actions/setup-gradle@v6` -> `39fdf500b386709a9a4a769f717dad447ac345b9`
+    - `actions/upload-artifact@v7` -> `043fb46d1a93c77aae656e7c1c64a875d1fc6a0a`
+    - `azure/setup-helm@v5` -> `f0accbfd55e3332a28f721b8202b1016cecf90d5`
+    - `codecov/codecov-action@v6` -> `57e3a136b779b570ffcdbf80b3bdc90e7fab3de2`
+    - `docker/login-action@v4` -> `4907a6ddec9925e35a0a9e82d7399ccc52663121`
+    - `sigstore/cosign-installer@v4.1.1` -> `cad07c2e89fa2edd6e2d7bab4c1aa38e53f76003`
+    - `actions/attest-build-provenance@v4` -> `b3e506e8c389afc651c5bacf2b8f2a1ea0557215`
+    - `github/codeql-action@v4` -> `ed410739ba306e4ebe5e123421a6bd694e494a2b`
+  - validation:
+    - `docker run --rm -v "${PWD}:/repo" -w /repo rhysd/actionlint:latest`: passed
+    - manual diff review confirmed no floating third-party `uses:` refs remain in the four scoped workflows
+- Record the remaining dependency-resolution proof, focused tests, full build result, and any decision about whether `gatlingBenchmark` was required as the later milestones complete
 
 ## User Validation
 - Review the finished workflows and confirm the selected GitHub Actions now use full commit SHAs instead of floating version tags.

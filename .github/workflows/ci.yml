@@ -24,7 +24,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
 
@@ -65,26 +65,26 @@ jobs:
 
       - name: Check out repository
         if: needs.change_detection.outputs.skip_heavy_ci != 'true'
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
 
       - name: Set up Java 25
         if: needs.change_detection.outputs.skip_heavy_ci != 'true'
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
         with:
           distribution: temurin
           java-version: "25"
 
       - name: Set up Gradle
         if: needs.change_detection.outputs.skip_heavy_ci != 'true'
-        uses: gradle/actions/setup-gradle@v6
+        uses: gradle/actions/setup-gradle@39fdf500b386709a9a4a769f717dad447ac345b9 # v6
         with:
           dependency-graph: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && 'generate-and-upload' || 'disabled' }}
 
       - name: Set up Helm
         if: needs.change_detection.outputs.skip_heavy_ci != 'true'
-        uses: azure/setup-helm@v5
+        uses: azure/setup-helm@f0accbfd55e3332a28f721b8202b1016cecf90d5 # v5
 
       - name: Verify Docker availability
         if: needs.change_detection.outputs.skip_heavy_ci != 'true'
@@ -96,7 +96,7 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: needs.change_detection.outputs.skip_heavy_ci != 'true'
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6
         with:
           use_oidc: true
           files: ./build/reports/jacoco/test/jacocoTestReport.xml
@@ -105,7 +105,7 @@ jobs:
 
       - name: Upload security scan artifacts
         if: always() && needs.change_detection.outputs.skip_heavy_ci != 'true'
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: security-reports-ci-${{ github.run_id }}
           path: build/reports/security/
@@ -114,7 +114,7 @@ jobs:
 
       - name: Upload static analysis artifacts
         if: always() && needs.change_detection.outputs.skip_heavy_ci != 'true'
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: static-analysis-reports-ci-${{ github.run_id }}
           path: |
@@ -125,7 +125,7 @@ jobs:
 
       - name: Upload SBOM artifacts
         if: always() && needs.change_detection.outputs.skip_heavy_ci != 'true'
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: sbom-reports-ci-${{ github.run_id }}
           path: build/reports/sbom/
@@ -162,7 +162,7 @@ jobs:
 
     steps:
       - name: Submit Gradle dependency graph
-        uses: gradle/actions/setup-gradle@v6
+        uses: gradle/actions/setup-gradle@39fdf500b386709a9a4a769f717dad447ac345b9 # v6
         with:
           dependency-graph: download-and-submit
           dependency-graph-continue-on-failure: false
