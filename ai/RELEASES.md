@@ -7,6 +7,16 @@ Stay in `ai/EXECUTION.md` or `ai/WORKFLOW.md` while work is still local, on a si
 
 When `ai/WORKFLOW.md` `Parallel Plans` mode was used, root-level `CHANGELOG_<topic>.md` files are release inputs. Merge accepted entries into `CHANGELOG.md` and delete the temporary files in the same release-preparation change.
 
+## Versioning And Release Rules
+
+- use semantic version tags in the form `vMAJOR.MINOR.PATCH` for stable releases or `vMAJOR.MINOR.PATCH-PRERELEASE` for prereleases such as `v2.0.0-M1`, `v2.0.0-ALFA1`, `v2.0.0-BETA2`, or `v2.0.0-RC1`
+- keep version numbers increasing in `git log --first-parent` order
+- create releases only from `main` after all intended changes are integrated there
+- create annotated tags for intentional releases
+- keep `CHANGELOG.md` aligned with releases
+- update `ROADMAP.md` after each release so completed items are removed, only active work remains, and `## Current Project State` reflects the new release phase, breaking-change policy, and next target version
+- do not introduce another human-facing completion archive file
+
 ## Release Preconditions
 
 Do not start release work until all of these are true:
