@@ -31,16 +31,18 @@ public class ApiProblemFactory {
         Map<String, Object> enrichedContext = new LinkedHashMap<>(context);
         enrichedContext.put("messageKey", localizedMessage.messageKey());
         enrichedContext.put("language", localizedMessage.language());
+        String requestMethod = SensitiveDataSanitizer.sanitizeForLog(request.getMethod());
+        String requestPath = SensitiveDataSanitizer.sanitizeForLog(request.getRequestURI());
         log.warn(
                 "Handled client error status={} method={} path={} params={} title='{}' detail='{}' localizedMessage='{}' context={}",
                 status.value(),
-                request.getMethod(),
-                request.getRequestURI(),
+                requestMethod,
+                requestPath,
                 SensitiveDataSanitizer.sanitizeParameters(request.getParameterMap()),
-                title,
-                detail,
-                localizedMessage.message(),
-                enrichedContext
+                SensitiveDataSanitizer.sanitizeForLog(title),
+                SensitiveDataSanitizer.sanitizeForLog(detail),
+                SensitiveDataSanitizer.sanitizeForLog(localizedMessage.message()),
+                SensitiveDataSanitizer.sanitizeContextForLog(enrichedContext)
         );
         return createProblemDetail(status, title, detail, localizedMessage);
     }
@@ -58,16 +60,18 @@ public class ApiProblemFactory {
         Map<String, Object> enrichedContext = new LinkedHashMap<>(context);
         enrichedContext.put("messageKey", localizedMessage.messageKey());
         enrichedContext.put("language", localizedMessage.language());
+        String requestMethod = SensitiveDataSanitizer.sanitizeForLog(request.getMethod());
+        String requestPath = SensitiveDataSanitizer.sanitizeForLog(request.getRequestURI());
         log.error(
                 "Handled server error status={} method={} path={} params={} title='{}' detail='{}' localizedMessage='{}' context={}",
                 status.value(),
-                request.getMethod(),
-                request.getRequestURI(),
+                requestMethod,
+                requestPath,
                 SensitiveDataSanitizer.sanitizeParameters(request.getParameterMap()),
-                title,
-                detail,
-                localizedMessage.message(),
-                enrichedContext,
+                SensitiveDataSanitizer.sanitizeForLog(title),
+                SensitiveDataSanitizer.sanitizeForLog(detail),
+                SensitiveDataSanitizer.sanitizeForLog(localizedMessage.message()),
+                SensitiveDataSanitizer.sanitizeContextForLog(enrichedContext),
                 exception
         );
         return createProblemDetail(status, title, detail, localizedMessage);

@@ -41,6 +41,8 @@ public class HttpTracingLoggingFilter extends OncePerRequestFilter {
         long startTimeNanos = System.nanoTime();
         boolean shouldLog = shouldLogRequest(request);
         String requestId = resolveRequestId(request);
+        String requestMethod = SensitiveDataSanitizer.sanitizeForLog(request.getMethod());
+        String requestPath = SensitiveDataSanitizer.sanitizeForLog(request.getRequestURI());
 
         MDC.put(REQUEST_ID_MDC_KEY, requestId);
         try {
@@ -49,10 +51,10 @@ public class HttpTracingLoggingFilter extends OncePerRequestFilter {
             if (shouldLog) {
                 log.info(
                         "HTTP request started method={} path={} params={} traceparent={}",
-                        request.getMethod(),
-                        request.getRequestURI(),
+                        requestMethod,
+                        requestPath,
                         SensitiveDataSanitizer.sanitizeParameters(request.getParameterMap()),
-                        response.getHeader(TRACEPARENT_HEADER)
+                        SensitiveDataSanitizer.sanitizeForLog(response.getHeader(TRACEPARENT_HEADER))
                 );
             }
             filterChain.doFilter(request, response);
@@ -62,11 +64,11 @@ public class HttpTracingLoggingFilter extends OncePerRequestFilter {
             if (shouldLog) {
                 log.info(
                         "HTTP response completed method={} path={} status={} durationMs={} traceparent={}",
-                        request.getMethod(),
-                        request.getRequestURI(),
+                        requestMethod,
+                        requestPath,
                         response.getStatus(),
                         toDurationMillis(startTimeNanos),
-                        response.getHeader(TRACEPARENT_HEADER)
+                        SensitiveDataSanitizer.sanitizeForLog(response.getHeader(TRACEPARENT_HEADER))
                 );
             }
             MDC.remove(REQUEST_ID_MDC_KEY);
@@ -75,7 +77,7 @@ public class HttpTracingLoggingFilter extends OncePerRequestFilter {
 
     private String resolveRequestId(HttpServletRequest request) {
         String requestId = request.getHeader(REQUEST_ID_HEADER);
-        if (requestId == null || requestId.isBlank()) {
+        if (requestId == null || requestId.isBlank() || SensitiveDataSanitizer.containsUnsafeLogCharacters(requestId)) {
             return UUID.randomUUID().toString();
         }
         return requestId;

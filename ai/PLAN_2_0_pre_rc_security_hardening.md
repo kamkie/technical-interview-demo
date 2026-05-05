@@ -254,6 +254,14 @@
   - validation:
     - `docker run --rm -v "${PWD}:/repo" -w /repo rhysd/actionlint:latest`: passed
     - manual diff review confirmed no floating third-party `uses:` refs remain in the four scoped workflows
+- 2026-05-05: Milestone 2 logging hardening
+  - extended `SensitiveDataSanitizer` with shared log-fragment escaping, unsafe-character detection, and nested context sanitization so free-form request, problem-detail, and tracing fields can be logged safely without changing API payloads
+  - sanitized the `ApiProblemFactory` warning and error log fields for method, path, title, detail, localized message, and context while preserving the emitted `ProblemDetail` response body
+  - sanitized `HttpTracingLoggingFilter` request and response log fields for method, path, and `traceparent`, and regenerate a UUID request id when the inbound `X-Request-Id` contains unsafe log characters
+  - added focused regression coverage in `ApiProblemFactoryLoggingTests`, `SensitiveDataSanitizerTests`, and `HttpTracingLoggingFilterTests`; retained the existing request and tracing integration coverage for the valid header contract
+  - validation:
+    - `. .\scripts\load-dotenv.ps1 -Quiet; .\gradlew.bat test --tests team.jit.technicalinterviewdemo.technical.logging.RequestLoggingIntegrationTests --tests team.jit.technicalinterviewdemo.technical.logging.HttpTracingIntegrationTests --tests team.jit.technicalinterviewdemo.technical.logging.HttpTracingLoggingFilterTests --tests team.jit.technicalinterviewdemo.technical.logging.SensitiveDataSanitizerTests --tests team.jit.technicalinterviewdemo.technical.api.ApiExceptionHandlerTests --tests team.jit.technicalinterviewdemo.technical.api.ApiProblemFactoryLoggingTests --tests team.jit.technicalinterviewdemo.technical.security.ApiSecurityErrorHandlerTests --no-daemon`: passed
+    - direct filter unit coverage was used for unsafe `X-Request-Id` handling because `MockMvc` rejects CRLF header values before the filter can observe them
 - Record the remaining dependency-resolution proof, focused tests, full build result, and any decision about whether `gatlingBenchmark` was required as the later milestones complete
 
 ## User Validation
