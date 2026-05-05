@@ -1,22 +1,6 @@
-# Split Checked Roadmap Items Into Plans
-
-Category: Planning
-Placeholders: topic
-
-## Category Guidance
-
-
-For planning prompts, use the lifecycle vocabulary from `ai/PLAN.md`.
-Do not force a plan into `Phase=Planning` if the work should still be `Discovery` or `Needs Input`.
-
-
-## Prompt Body
-
-```markdown
 Create one or more `ai/PLAN_<topic>.md` files from every checklist item marked `[x]` in `ROADMAP.md`.
 
 Split only genuinely disjoint workstreams that can later execute in parallel without overlapping source ownership, contract artifacts, rollout order, or validation.
 If the checked items form only one coherent plan, stop and say that the single-plan prompt should be used instead.
 Record requirement gaps, fallback assumptions, and any cross-plan dependency notes in each created plan.
 Set the lifecycle state for each plan from `ai/PLAN.md`.
-```

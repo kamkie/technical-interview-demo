@@ -57,7 +57,7 @@ Use these files when you want to work with AI in this repository or understand w
 - [ai/TESTING.md](ai/TESTING.md): validation rules and change-sensitive checks
 - [ai/WORKFLOW.md](ai/WORKFLOW.md): single-branch, shared-plan, and parallel execution guidance
 - `ai/PLAN_*.md` when present: task-specific execution plans for active work
-- `ai/prompts/`, `ai/references/`, and `ai/templates/`: machine-readable prompt metadata, on-demand prompt bodies, detailed references, and templates
+- `ai/prompts/`, `ai/references/`, and `ai/templates/`: machine-readable prompt metadata, on-demand raw prompt bodies, detailed references, and templates
 - `ai/archive/`: archived plan files for completed or released work
 
 ## Notes

@@ -1,9 +1,8 @@
 # Prompt Index For This Repository
 
 `ai/PROMPTS.md` is the lean command index for reusable prompt starters.
-The machine-readable prompt index lives in `ai/prompts/index.json`, and prompt bodies live under `ai/prompts/bodies/`.
+The machine-readable prompt index lives in `ai/prompts/index.json`, and raw prompt bodies live under `ai/prompts/bodies/`.
 Use `pwsh ./scripts/ai/get-prompt.ps1 -Name "<prompt title>"` to load one prompt body.
-Use the `repo-prompt-loader` skill when a prompt title is invoked and skill loading is available.
 
 This file does not own standing policy.
 Use the owner guides instead:
@@ -23,7 +22,7 @@ Use the owner guides instead:
 - use the exact title or an unmistakably close reference
 - include required placeholders such as `<topic>`, `<plan_file>`, `<milestone_name>`, `<task>`, or `<constraint>`
 - if the title or required context is ambiguous, ask a targeted clarification question
-- when a prompt name is invoked, load only the matching prompt body with `scripts/ai/get-prompt.ps1` or the `repo-prompt-loader` skill
+- when a prompt name is invoked, load only the matching raw prompt body with `scripts/ai/get-prompt.ps1`
 
 ## Default Read Sets
 

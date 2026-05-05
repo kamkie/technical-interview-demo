@@ -1,10 +1,3 @@
-# Clarify Roadmap Decisions
-
-Category: Discovery And Roadmap
-
-## Prompt Body
-
-```markdown
 Review `ROADMAP.md` for project-framing decisions that must be made before roadmap items can be planned or sequenced confidently.
 
 Read `AGENTS.md`, `README.md`, `ROADMAP.md`, `ai/PLAN.md`, and `ai/DESIGN.md` first.
@@ -15,4 +8,3 @@ Explain why each decision matters, which roadmap items it blocks or reshapes, an
 If the roadmap is already sufficiently framed, say so explicitly and do not manufacture questions.
 After the interactive decisions are answered, update `ROADMAP.md` to reflect the resolved direction and summarize the decisions that were locked.
 Do not create an execution plan unless I ask.
-```

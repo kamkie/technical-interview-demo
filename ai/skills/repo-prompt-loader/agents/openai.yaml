@@ -1,4 +1,0 @@
-interface:
-  display_name: "Repo Prompt Loader"
-  short_description: "Load one repo prompt starter by title"
-  default_prompt: "Use $repo-prompt-loader to load one repository prompt starter by title without reading the full prompt library."
