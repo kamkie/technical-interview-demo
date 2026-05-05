@@ -1,7 +1,7 @@
 # Plan: Artifact Publication And Release Notes
 
 ## Lifecycle
-| Field | Value |
+| Status | Current |
 | --- | --- |
 | Phase | Closed |
 | Status | Released |
@@ -172,7 +172,3 @@
 - Review one CI-style artifact bundle and confirm it contains the promised SBOM and static-analysis outputs.
 - Confirm the documented GitHub Release notes policy matches the workflow behavior.
 - If cumulative notes are chosen, verify one dry-run example spans the full previous-release-to-new-tag range.
-
-
-
-

@@ -1,7 +1,7 @@
 # Plan: Supply Chain Artifact Trust Hardening
 
 ## Lifecycle
-| Field | Value |
+| Status | Current |
 | --- | --- |
 | Phase | Closed |
 | Status | Released |

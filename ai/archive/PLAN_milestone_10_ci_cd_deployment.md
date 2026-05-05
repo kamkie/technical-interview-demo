@@ -1,7 +1,7 @@
 # Plan: Milestone 10 CI/CD And Deployment
 
 ## Lifecycle
-| Field | Value |
+| Status | Current |
 | --- | --- |
 | Phase | Closed |
 | Status | Released |

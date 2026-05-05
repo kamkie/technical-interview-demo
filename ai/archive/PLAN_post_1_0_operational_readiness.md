@@ -1,7 +1,7 @@
 # Plan: Post-1.0 Operational Readiness
 
 ## Lifecycle
-| Field | Value |
+| Status | Current |
 | --- | --- |
 | Phase | Closed |
 | Status | Released |

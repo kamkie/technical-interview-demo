@@ -1,7 +1,7 @@
 # Plan: AI Workflow And Instruction Hardening
 
 ## Lifecycle
-| Field | Value |
+| Status | Current |
 | --- | --- |
 | Phase | Closed |
 | Status | Released |

@@ -1,7 +1,7 @@
 # Plan: Release And Migration Safety Hardening
 
 ## Lifecycle
-| Field | Value |
+| Status | Current |
 | --- | --- |
 | Phase | Closed |
 | Status | Released |

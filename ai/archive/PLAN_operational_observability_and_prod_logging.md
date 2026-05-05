@@ -1,7 +1,7 @@
 # Plan: Operational Observability And Production Logging
 
 ## Lifecycle
-| Field | Value |
+| Status | Current |
 | --- | --- |
 | Phase | Closed |
 | Status | Released |

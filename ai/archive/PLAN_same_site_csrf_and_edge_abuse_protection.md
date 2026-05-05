@@ -1,7 +1,7 @@
 # Plan: Post-`1.x` Same-Site CSRF And Edge Abuse-Protection Posture
 
 ## Lifecycle
-| Field | Value |
+| Status | Current |
 | --- | --- |
 | Phase | Closed |
 | Status | Released |

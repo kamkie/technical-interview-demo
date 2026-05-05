@@ -1,7 +1,7 @@
 # Plan: 1.0 Contract And Production Posture
 
 ## Lifecycle
-| Field | Value |
+| Status | Current |
 | --- | --- |
 | Phase | Closed |
 | Status | Released |

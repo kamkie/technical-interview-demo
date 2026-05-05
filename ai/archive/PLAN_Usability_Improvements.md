@@ -1,7 +1,7 @@
 # Plan: Demo API Usability Improvements
 
 ## Lifecycle
-| Field | Value |
+| Status | Current |
 | --- | --- |
 | Phase | Closed |
 | Status | Released |
@@ -218,4 +218,3 @@
 - Run the category HTTP examples to create, rename, and delete a category, then verify existing category list and book-read payloads remain unchanged apart from the renamed category value.
 - Run the audit HTTP example and confirm recent book or localization writes appear with `targetType`, `action`, `actorLogin`, `summary`, and `createdAt`.
 - Open `/docs` and confirm the category page now includes update/delete operations and the new audit-log page is linked from the index.
-

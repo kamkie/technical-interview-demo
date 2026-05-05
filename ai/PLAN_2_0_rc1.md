@@ -1,7 +1,7 @@
 # Plan: 2.0 RC1 Contract Freeze And Release
 
 ## Lifecycle
-| Field | Value |
+| Status | Current |
 | --- | --- |
 | Phase | Planning |
 | Status | Ready |

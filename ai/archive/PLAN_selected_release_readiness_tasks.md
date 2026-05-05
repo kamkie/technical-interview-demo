@@ -1,7 +1,7 @@
 # Plan: Selected Release-Readiness Tasks
 
 ## Lifecycle
-| Field | Value |
+| Status | Current |
 | --- | --- |
 | Phase | Closed |
 | Status | Released |

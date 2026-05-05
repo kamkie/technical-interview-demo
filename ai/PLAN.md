@@ -15,7 +15,7 @@ Use a compact table so the current state is obvious at a glance:
 
 ```md
 ## Lifecycle
-| Field | Value |
+| Status | Current |
 | --- | --- |
 | Phase | Planning |
 | Status | Draft |
@@ -197,7 +197,7 @@ Use this structure:
 # Plan: <title>
 
 ## Lifecycle
-| Field | Value |
+| Status | Current |
 | --- | --- |
 | Phase | Planning |
 | Status | Draft |

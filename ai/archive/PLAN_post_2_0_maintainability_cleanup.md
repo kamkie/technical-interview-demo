@@ -1,7 +1,7 @@
 # Plan: Post-2.0 Maintainability Cleanup
 
 ## Lifecycle
-| Field | Value |
+| Status | Current |
 | --- | --- |
 | Phase | Closed |
 | Status | Released |

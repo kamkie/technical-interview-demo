@@ -1,7 +1,7 @@
 # Plan: Identity Provider Configuration
 
 ## Lifecycle
-| Field | Value |
+| Status | Current |
 | --- | --- |
 | Phase | Closed |
 | Status | Released |

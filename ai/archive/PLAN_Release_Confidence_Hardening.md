@@ -1,7 +1,7 @@
 # Plan: Release Confidence Hardening
 
 ## Lifecycle
-| Field | Value |
+| Status | Current |
 | --- | --- |
 | Phase | Closed |
 | Status | Released |

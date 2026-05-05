@@ -1,7 +1,7 @@
 # Plan: Production Log Shipping
 
 ## Lifecycle
-| Field | Value |
+| Status | Current |
 | --- | --- |
 | Phase | Closed |
 | Status | Released |

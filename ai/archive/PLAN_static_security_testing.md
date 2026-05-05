@@ -1,7 +1,7 @@
 # Plan: Static Security Testing
 
 ## Lifecycle
-| Field | Value |
+| Status | Current |
 | --- | --- |
 | Phase | Closed |
 | Status | Released |

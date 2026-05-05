@@ -1,7 +1,7 @@
 # Plan: External Smoke And Benchmark Tasks
 
 ## Lifecycle
-| Field | Value |
+| Status | Current |
 | --- | --- |
 | Phase | Closed |
 | Status | Released |

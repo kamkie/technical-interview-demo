@@ -1,7 +1,7 @@
 # Plan: UTC Instant Timestamp Migration
 
 ## Lifecycle
-| Field | Value |
+| Status | Current |
 | --- | --- |
 | Phase | Closed |
 | Status | Released |

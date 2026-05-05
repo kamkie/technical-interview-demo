@@ -1,7 +1,7 @@
 # Plan: Operator Surface And Bootstrap
 
 ## Lifecycle
-| Field | Value |
+| Status | Current |
 | --- | --- |
 | Phase | Closed |
 | Status | Released |

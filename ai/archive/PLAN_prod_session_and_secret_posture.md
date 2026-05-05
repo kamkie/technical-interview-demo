@@ -1,7 +1,7 @@
 # Plan: Production Session And Secret Posture
 
 ## Lifecycle
-| Field | Value |
+| Status | Current |
 | --- | --- |
 | Phase | Closed |
 | Status | Released |

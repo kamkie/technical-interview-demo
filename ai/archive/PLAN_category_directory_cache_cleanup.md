@@ -1,7 +1,7 @@
 # Plan: Category Directory Cache Cleanup
 
 ## Lifecycle
-| Field | Value |
+| Status | Current |
 | --- | --- |
 | Phase | Closed |
 | Status | Released |

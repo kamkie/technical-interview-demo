@@ -1,7 +1,7 @@
 # Plan: Same-Site UI Session Contract
 
 ## Lifecycle
-| Field | Value |
+| Status | Current |
 | --- | --- |
 | Phase | Closed |
 | Status | Released |

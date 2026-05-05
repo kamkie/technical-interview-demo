@@ -1,7 +1,7 @@
 # Plan: 2.0 Pre-RC Security Hardening
 
 ## Lifecycle
-| Field | Value |
+| Status | Current |
 | --- | --- |
 | Phase | Closed |
 | Status | Released |

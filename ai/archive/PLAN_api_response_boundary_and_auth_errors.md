@@ -1,7 +1,7 @@
 # Plan: Stabilize API Response Boundaries And Auth Error Payloads
 
 ## Lifecycle
-| Field | Value |
+| Status | Current |
 | --- | --- |
 | Phase | Closed |
 | Status | Released |
