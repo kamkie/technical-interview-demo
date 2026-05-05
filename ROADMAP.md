@@ -61,7 +61,7 @@ Goal: finish the stable `2.0` line now that `v2.0.0-M1` through `v2.0.0-M6` esta
 
 Status: Deferred until stable `2.0` is released
 
-- [ ] Generate a frontend-contract AI instruction file in this repository, then copy it into the frontend repository as source input for the AI agent there to generate that repo's AI instructions.
+- [ ] Generate a frontend-contract AI instruction file in this repository using the `frontend-design` skill from Anthropic's `skills` repository as source guidance, then copy it into the frontend repository as source input for the AI agent there to generate that repo's AI instructions.
 
 ### Post-`2.0` Maintainability Cleanup
 
