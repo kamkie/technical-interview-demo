@@ -3,8 +3,8 @@
 ## Lifecycle
 | Field | Value |
 | --- | --- |
-| Phase | Integration |
-| Status | Implemented |
+| Phase | Closed |
+| Status | Released |
 
 ## Summary
 - Execute the currently checked `ROADMAP.md` items as one pre-`v2.0.0-RC1` security and supply-chain hardening batch: pin flagged GitHub Actions to full SHAs, sanitize the remaining user-controlled log fields in API problem and tracing logs, and clear the selected Dependabot alerts for PMD, `commons-lang3`, `plexus-utils`, and `jruby`.
@@ -72,7 +72,7 @@
   - the likely change set overlaps on build verification, workflow review, and plan or changelog tracking even though the code touches different files
   - the repository default is `Single Branch`, and this batch is still small enough to execute sequentially without high coordination cost
 - Coordinator-owned or otherwise shared files if the work later fans out:
-  - `ai/PLAN_2_0_pre_rc_security_hardening.md`
+  - `ai/archive/PLAN_2_0_pre_rc_security_hardening.md`
   - `CHANGELOG.md`
   - `ROADMAP.md`
   - `README.md` only if execution uncovers a real need for maintainer-facing security-posture wording changes
@@ -129,7 +129,7 @@
   - `.github/workflows/post-deploy-smoke.yml`
   - `.github/dependabot.yml` only if needed so Dependabot keeps proposing SHA-pinned GitHub Actions updates cleanly
 - shared files that a `Shared Plan` worker must leave to the coordinator
-  - `ai/PLAN_2_0_pre_rc_security_hardening.md`
+  - `ai/archive/PLAN_2_0_pre_rc_security_hardening.md`
   - `CHANGELOG.md`
   - `ROADMAP.md`
 - behavior to preserve
@@ -154,7 +154,7 @@
   - `src/main/java/team/jit/technicalinterviewdemo/technical/logging/SensitiveDataSanitizer.java`
   - the focused logging and error-handling tests listed above, including any new narrow test class added for log output assertions
 - shared files that a `Shared Plan` worker must leave to the coordinator
-  - `ai/PLAN_2_0_pre_rc_security_hardening.md`
+  - `ai/archive/PLAN_2_0_pre_rc_security_hardening.md`
   - `CHANGELOG.md`
   - any README or roadmap file unless execution proves it genuinely must move
 - behavior to preserve
@@ -179,7 +179,7 @@
   - the narrowest build-support file only if the exact transitive owner cannot be corrected cleanly from the root build
   - any focused test or validation helper needed to prove the resolved versions
 - shared files that a `Shared Plan` worker must leave to the coordinator
-  - `ai/PLAN_2_0_pre_rc_security_hardening.md`
+  - `ai/archive/PLAN_2_0_pre_rc_security_hardening.md`
   - `CHANGELOG.md`
   - `ROADMAP.md`
 - behavior to preserve

@@ -15,9 +15,9 @@ Keep this file focused on work that is still planned or in progress.
 
 ## Current Priorities
 
-- Use the remaining `2.0` prerelease budget only for unresolved cleanup that still needs to land before the contract freeze.
-- Land the selected pre-`v2.0.0-RC1` GitHub security and supply-chain fixes, and defer the remaining maintainability-only cleanup until after stable `2.0`.
+- Use the remaining `2.0` prerelease budget only for the contract-freeze and release-readiness work that still must land before `v2.0.0-RC1`.
 - Freeze the `2.0` published contract and cut `v2.0.0-RC1` from `main` only after the exact candidate passes the required validation.
+- Keep the remaining maintainability-only cleanup deferred until after stable `2.0`.
 
 ## Not Yet Refined
 
@@ -39,19 +39,9 @@ No unrefined tasks currently.
 
 Status: Planned
 
-Goal: finish the stable `2.0` line now that `v2.0.0-M1` through `v2.0.0-M6` established the browser-session contract, deployment boundary, upgrade guide, edge reference, smoke-alignment baseline, UTC instant timestamp contract cleanup, and the current prerelease workflow and internal-cleanup baseline.
-
-#### Selected For `v2.0.0-RC1`
-- [x] Pin the third-party GitHub Actions flagged by CodeQL to verified full commit SHAs in `.github/workflows/ci.yml`, `.github/workflows/release.yml`, `.github/workflows/codeql.yml`, and `.github/workflows/post-deploy-smoke.yml` (CodeQL alerts `#22`, `#19`, `#18`, `#17`, `#16`, `#7`, `#6`, `#5`, and `#2`).
-- [x] Sanitize user-controlled problem-detail logging in `src/main/java/team/jit/technicalinterviewdemo/technical/api/ApiProblemFactory.java` to clear CodeQL log-injection alerts `#11` and `#10`.
-- [x] Sanitize user-controlled request tracing fields in `src/main/java/team/jit/technicalinterviewdemo/technical/logging/HttpTracingLoggingFilter.java` to clear CodeQL log-injection alerts `#13` and `#12`.
-- [x] Upgrade the transitive `org.codehaus.plexus:plexus-utils` dependency to `4.0.3` or newer to resolve Dependabot alert `#4` (`GHSA-6fmv-xxpf-w3cw`).
-- [x] Upgrade direct `net.sourceforge.pmd:pmd-core` to `7.22.0` or newer to resolve Dependabot alert `#3` (`GHSA-8rr6-2qw5-pc7r`).
-- [x] Upgrade the transitive `org.apache.commons:commons-lang3` dependency to `3.18.0` or newer to resolve Dependabot alert `#2` (`GHSA-j288-q9x7-2f5v`).
-- [x] Upgrade direct `org.jruby:jruby` to `9.4.12.1` or newer to resolve Dependabot alert `#1` (`GHSA-72qj-48g4-5xgx`).
+Goal: finish the stable `2.0` line now that `v2.0.0-M1` through `v2.0.0-M7` established the browser-session contract, deployment boundary, upgrade guide, edge reference, smoke-alignment baseline, UTC instant timestamp contract cleanup, and the pre-`v2.0.0-RC1` security hardening baseline.
 
 #### Release Confidence
-- [x] Keep the remaining pre-`v2.0.0-RC1` cleanup scope to GitHub security and supply-chain fixes, and defer the maintainability-only CodeQL notes until after stable `2.0`.
 - [ ] Freeze the `2.0` published contract and cut `v2.0.0-RC1` from `main` only after the exact candidate passes `.\gradlew.bat build`, required smoke checks, and `.\gradlew.bat gatlingBenchmark` when session-startup behavior changes.
 - [ ] Release stable `v2.0.0`, update `CHANGELOG.md`, and remove the completed `2.0` track from `ROADMAP.md`.
 
@@ -65,7 +55,7 @@ Status: Deferred until stable `2.0` is released
 
 ### Post-`2.0` Maintainability Cleanup
 
-Status: Deferred until the `v2.0.0-RC1` security and release-freeze backlog is complete
+Status: Deferred until stable `2.0` is released
 
 - [ ] Replace the deprecated `HeadersConfigurer.permissionsPolicy` call in `src/main/java/team/jit/technicalinterviewdemo/technical/security/SecurityConfiguration.java` to clear CodeQL maintainability alert `#20`.
 - [ ] Replace the deprecated `ObjectMapper.setSerializationInclusion` call in `buildSrc/src/main/kotlin/team/jit/technicalinterviewdemo/build/GatlingBenchmarkTask.kt` to clear CodeQL maintainability alert `#14`.
