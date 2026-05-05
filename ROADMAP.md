@@ -41,10 +41,6 @@ Status: Planned
 
 Goal: finish the stable `2.0` line now that `v2.0.0-M1` through `v2.0.0-M6` established the browser-session contract, deployment boundary, upgrade guide, edge reference, smoke-alignment baseline, UTC instant timestamp contract cleanup, and the current prerelease workflow and internal-cleanup baseline.
 
-#### Release Confidence
-- [x] Keep the remaining pre-`v2.0.0-RC1` cleanup scope to GitHub security and supply-chain fixes, and defer the maintainability-only CodeQL notes until after stable `2.0`.
-- [ ] Freeze the `2.0` published contract and cut `v2.0.0-RC1` from `main` only after the exact candidate passes `.\gradlew.bat build`, required smoke checks, and `.\gradlew.bat gatlingBenchmark` when session-startup behavior changes.
-- [ ] Release stable `v2.0.0`, update `CHANGELOG.md`, and remove the completed `2.0` track from `ROADMAP.md`.
 
 #### Selected For `v2.0.0-RC1`
 - [x] Pin the third-party GitHub Actions flagged by CodeQL to verified full commit SHAs in `.github/workflows/ci.yml`, `.github/workflows/release.yml`, `.github/workflows/codeql.yml`, and `.github/workflows/post-deploy-smoke.yml` (CodeQL alerts `#22`, `#19`, `#18`, `#17`, `#16`, `#7`, `#6`, `#5`, and `#2`).
@@ -54,6 +50,11 @@ Goal: finish the stable `2.0` line now that `v2.0.0-M1` through `v2.0.0-M6` esta
 - [x] Upgrade direct `net.sourceforge.pmd:pmd-core` to `7.22.0` or newer to resolve Dependabot alert `#3` (`GHSA-8rr6-2qw5-pc7r`).
 - [x] Upgrade the transitive `org.apache.commons:commons-lang3` dependency to `3.18.0` or newer to resolve Dependabot alert `#2` (`GHSA-j288-q9x7-2f5v`).
 - [x] Upgrade direct `org.jruby:jruby` to `9.4.12.1` or newer to resolve Dependabot alert `#1` (`GHSA-72qj-48g4-5xgx`).
+
+#### Release Confidence
+- [x] Keep the remaining pre-`v2.0.0-RC1` cleanup scope to GitHub security and supply-chain fixes, and defer the maintainability-only CodeQL notes until after stable `2.0`.
+- [ ] Freeze the `2.0` published contract and cut `v2.0.0-RC1` from `main` only after the exact candidate passes `.\gradlew.bat build`, required smoke checks, and `.\gradlew.bat gatlingBenchmark` when session-startup behavior changes.
+- [ ] Release stable `v2.0.0`, update `CHANGELOG.md`, and remove the completed `2.0` track from `ROADMAP.md`.
 
 ## Deferred
 
