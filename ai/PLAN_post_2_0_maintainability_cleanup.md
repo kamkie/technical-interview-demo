@@ -3,8 +3,8 @@
 ## Lifecycle
 | Field | Value |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Implementation |
+| Status | In Progress |
 
 ## Summary
 - Execute the previously deferred maintainability-only backlog as the `v2.0.0-M8` prerelease batch: replace one deprecated Spring Security headers DSL call, replace one deprecated Jackson `ObjectMapper` setter in `buildSrc`, and remove the unused advice binding in `ServiceLoggingAspect`.
@@ -188,8 +188,10 @@
 - Keep the later `v2.0.0-RC1` contract-freeze work separate. This plan should make that milestone smaller, not blur it together with unrelated cleanup.
 
 ## Validation Results
-- To be filled in during execution.
-- Planning-only change in this commit; no implementation validation has been run yet.
+- 2026-05-05 - Milestone 1 completed.
+- Replaced the deprecated Spring Security `permissionsPolicy(...)` DSL entry point with `permissionsPolicyHeader(...)` while keeping the `Permissions-Policy` value unchanged.
+- Passed: `.\gradlew.bat test --tests team.jit.technicalinterviewdemo.technical.security.SecurityHeadersIntegrationTests --no-daemon`
+- Validation used `. ./scripts/load-dotenv.ps1` so Gradle ran with the repo-local `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`.
 
 ## User Validation
 - After implementation, inspect `SecurityConfiguration.java`, `GatlingBenchmarkTask.kt`, and `ServiceLoggingAspect.java` and confirm the targeted deprecated or unused APIs are gone.

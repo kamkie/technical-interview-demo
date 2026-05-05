@@ -154,7 +154,7 @@ public class SecurityConfiguration {
         headers.referrerPolicy(referrerPolicy -> referrerPolicy
                 .policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER)
         );
-        headers.permissionsPolicy(permissionsPolicy -> permissionsPolicy
+        headers.permissionsPolicyHeader(permissionsPolicy -> permissionsPolicy
                 .policy("geolocation=(), microphone=(), camera=()")
         );
         if (prodProfileActive) {
