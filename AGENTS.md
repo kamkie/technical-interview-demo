@@ -77,11 +77,15 @@ If the intended behavior is not clear enough to express as a spec, stop and clar
 
 ## Branch And Worktree Expectations
 
+`ai/WORKFLOW.md` owns detailed branch, worktree, coordinator, worker, and integration mechanics.
+
+Repo-level rules:
+
 - treat `main` as the integration branch for completed work
-- if you implement a multi-step plan in a git worktree or another branch, keep the work there until the whole plan is finished, then push that branch and open a pull request instead of trying to integrate the changes directly onto `main` from the worktree
-- consider worktree-based execution complete only when the finished branch has been pushed and the pull request is open or already merged onto `main`
-- prefer merging accepted branches or pull requests when integrating their changes; use cherry-pick only when the user asks for it, when integrating less than the whole branch or pull request, or when a normal merge is not viable, and record the reason
-- do not cut a release from a worktree-only branch tip or from changes that have not yet landed on `main`
+- keep worktree or side-branch implementation isolated until the planned scope is complete and locally validated
+- consider worktree or side-branch execution complete only when the finished branch has been pushed and a pull request is open or already merged onto `main`
+- prefer merging accepted branches or pull requests; use cherry-pick only when the user asks for it, when accepting less than the full branch or pull request, or when a normal merge is not viable, and record the reason
+- do not cut a release from a worktree-only branch tip or from changes that have not landed on `main`
 
 ## Local Environment And Command Execution
 
