@@ -10,6 +10,15 @@ import team.jit.technicalinterviewdemo.build.TrivyFilesystemScanTask
 import team.jit.technicalinterviewdemo.build.TrivyImageScanTask
 import java.util.Properties
 
+buildscript {
+    configurations.classpath {
+        resolutionStrategy.force(
+            "org.apache.commons:commons-lang3:3.19.0",
+            "org.codehaus.plexus:plexus-utils:4.0.3"
+        )
+    }
+}
+
 plugins {
     java
     jacoco
@@ -43,10 +52,11 @@ description = "technical-interview-demo"
 
 val errorProneVersion = "2.49.0"
 val findSecBugsVersion = "1.14.0"
-val pmdVersion = "7.17.0"
+val pmdVersion = "7.22.0"
 val spotbugsVersion = "4.9.8"
 val gradleWrapperVersion = "9.5.0"
 val springdocVersion = "3.0.3"
+val asciidoctorJrubyVersion = "9.4.12.1"
 val dockerImageName = providers.gradleProperty("dockerImageName").orElse("technical-interview-demo")
 val snippetsDir = layout.buildDirectory.dir("generated-snippets")
 val buildInfoPropertiesFile = layout.buildDirectory.file("resources/main/META-INF/build-info.properties")
@@ -329,6 +339,10 @@ pmd {
     toolVersion = pmdVersion
     ruleSets = emptyList()
     ruleSetFiles = files("tooling/pmd/pmd-ruleset.xml")
+}
+
+asciidoctorj {
+    setJrubyVersion(asciidoctorJrubyVersion)
 }
 
 tasks.withType<Pmd>().configureEach {

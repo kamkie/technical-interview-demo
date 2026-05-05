@@ -4,35 +4,55 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import java.util.Map;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.system.CapturedOutput;
-import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.slf4j.LoggerFactory;
 import team.jit.technicalinterviewdemo.business.localization.Localization;
 import team.jit.technicalinterviewdemo.business.localization.LocalizationService;
 
-@ExtendWith({MockitoExtension.class, OutputCaptureExtension.class})
+@ExtendWith(MockitoExtension.class)
 class ApiProblemFactoryLoggingTests {
 
     @Mock
     private LocalizationService localizationService;
 
     private ApiProblemFactory apiProblemFactory;
+    private Logger apiProblemFactoryLogger;
+    private Level previousLoggerLevel;
+    private ListAppender<ILoggingEvent> logEvents;
 
     @BeforeEach
     void setUp() {
         apiProblemFactory = new ApiProblemFactory(localizationService);
+        apiProblemFactoryLogger = (Logger) LoggerFactory.getLogger(ApiProblemFactory.class);
+        previousLoggerLevel = apiProblemFactoryLogger.getLevel();
+        apiProblemFactoryLogger.setLevel(Level.WARN);
+        logEvents = new ListAppender<>();
+        logEvents.start();
+        apiProblemFactoryLogger.addAppender(logEvents);
+    }
+
+    @AfterEach
+    void tearDown() {
+        apiProblemFactoryLogger.detachAppender(logEvents);
+        apiProblemFactoryLogger.setLevel(previousLoggerLevel);
+        logEvents.stop();
     }
 
     @Test
-    void clientProblemEscapesControlCharactersInLogsWithoutChangingResponse(CapturedOutput output) {
+    void clientProblemEscapesControlCharactersInLogsWithoutChangingResponse() {
         when(localizationService.findByMessageKeyForCurrentLanguageWithFallback(eq("error.request.invalid_parameter")))
                 .thenReturn(new Localization("error.request.invalid_parameter", "en", "Localized\r\nmessage", null));
 
@@ -50,16 +70,18 @@ class ApiProblemFactoryLoggingTests {
                 Map.of("rejectedValue", "abc\r\nforged-value")
         );
 
-        String logLine = output.getOut().trim();
+        ILoggingEvent logEvent = logEvents.list.getFirst();
+        String logLine = logEvent.getFormattedMessage();
 
         assertThat(problemDetail.getTitle()).isEqualTo(rawTitle);
         assertThat(problemDetail.getDetail()).isEqualTo(rawDetail);
+        assertThat(logEvents.list).hasSize(1);
         assertThat(logLine).contains("forged-title");
         assertThat(logLine).contains("forged-value");
         assertThat(logLine).contains("line2");
         assertThat(logLine).doesNotContain("\r");
         assertThat(logLine).doesNotContain("\n");
-        assertThat(output).doesNotContain(rawTitle);
-        assertThat(output).doesNotContain(rawDetail);
+        assertThat(logLine).doesNotContain(rawTitle);
+        assertThat(logLine).doesNotContain(rawDetail);
     }
 }

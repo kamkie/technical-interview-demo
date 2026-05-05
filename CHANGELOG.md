@@ -10,6 +10,7 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 ### Changed
 - Pinned the third-party GitHub Actions used by the `CI`, `Release`, `CodeQL`, and `Post-Deploy Smoke` workflows to verified full commit SHAs.
 - Hardened API problem and HTTP tracing logging so attacker-controlled control characters are escaped in logs and unsafe request IDs are replaced before reuse.
+- Upgraded the build-time PMD, JRuby, `commons-lang3`, and `plexus-utils` dependency paths that were flagged by the selected pre-`v2.0.0-RC1` security alerts.
 
 ## [v2.0.0-M6] - 2026-05-05
 

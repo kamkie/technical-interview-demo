@@ -3,8 +3,8 @@
 ## Lifecycle
 | Field | Value |
 | --- | --- |
-| Phase | Implementation |
-| Status | In Progress |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Summary
 - Execute the currently checked `ROADMAP.md` items as one pre-`v2.0.0-RC1` security and supply-chain hardening batch: pin flagged GitHub Actions to full SHAs, sanitize the remaining user-controlled log fields in API problem and tracing logs, and clear the selected Dependabot alerts for PMD, `commons-lang3`, `plexus-utils`, and `jruby`.
@@ -262,7 +262,19 @@
   - validation:
     - `. .\scripts\load-dotenv.ps1 -Quiet; .\gradlew.bat test --tests team.jit.technicalinterviewdemo.technical.logging.RequestLoggingIntegrationTests --tests team.jit.technicalinterviewdemo.technical.logging.HttpTracingIntegrationTests --tests team.jit.technicalinterviewdemo.technical.logging.HttpTracingLoggingFilterTests --tests team.jit.technicalinterviewdemo.technical.logging.SensitiveDataSanitizerTests --tests team.jit.technicalinterviewdemo.technical.api.ApiExceptionHandlerTests --tests team.jit.technicalinterviewdemo.technical.api.ApiProblemFactoryLoggingTests --tests team.jit.technicalinterviewdemo.technical.security.ApiSecurityErrorHandlerTests --no-daemon`: passed
     - direct filter unit coverage was used for unsafe `X-Request-Id` handling because `MockMvc` rejects CRLF header values before the filter can observe them
-- Record the remaining dependency-resolution proof, focused tests, full build result, and any decision about whether `gatlingBenchmark` was required as the later milestones complete
+- 2026-05-05: Milestone 3 dependency hardening and final validation
+  - bumped `pmdVersion` in `build.gradle.kts` from `7.17.0` to `7.22.0`
+  - added targeted buildscript classpath resolution overrides so the Spring Boot and Gatling Gradle plugin classpaths now resolve `org.apache.commons:commons-lang3` to `3.19.0` and `org.codehaus.plexus:plexus-utils` to `4.0.3`
+  - configured the `asciidoctorj` extension to resolve `org.jruby:jruby-complete` at `9.4.12.1`, which upgrades the vulnerable JRuby path used by the Asciidoctor toolchain without broader plugin churn
+  - stabilized `ApiProblemFactoryLoggingTests` by capturing Logback events directly and pinning the logger level inside the test so the full-suite `build` validation remains deterministic
+  - dependency-resolution proof:
+    - `. .\scripts\load-dotenv.ps1 -Quiet; .\gradlew.bat buildEnvironment --no-daemon | Select-String -Pattern 'plexus-utils|commons-lang3' -Context 4,6`: passed; confirmed `org.codehaus.plexus:plexus-utils:4.0.2 -> 4.0.3` and `org.apache.commons:commons-lang3:3.16.0 -> 3.19.0` on the buildscript classpath
+    - `. .\scripts\load-dotenv.ps1 -Quiet; .\gradlew.bat dependencies --configuration pmd --no-daemon | Select-String -Pattern 'pmd-core|pmd-java|commons-lang3' -Context 0,3`: passed; confirmed `net.sourceforge.pmd:pmd-java:7.22.0` and `net.sourceforge.pmd:pmd-core:7.22.0`
+    - `. .\scripts\load-dotenv.ps1 -Quiet; .\gradlew.bat dependencies --configuration '__$$asciidoctorj$$___r' --no-daemon`: passed; confirmed `org.jruby:jruby:9.3.8.0 -> org.jruby:jruby-complete:9.4.12.1`
+  - final validation:
+    - `. .\scripts\load-dotenv.ps1 -Quiet; .\gradlew.bat test --tests team.jit.technicalinterviewdemo.technical.api.ApiProblemFactoryLoggingTests --no-daemon`: passed
+    - `. .\scripts\load-dotenv.ps1 -Quiet; .\gradlew.bat build --no-daemon`: passed
+  - `gatlingBenchmark` was not run because the final change set stayed on build-time dependency resolution and logging-test stability; it did not modify book list/search behavior, localization lookup behavior, OAuth/session startup behavior, or benchmark scenario code
 
 ## User Validation
 - Review the finished workflows and confirm the selected GitHub Actions now use full commit SHAs instead of floating version tags.
