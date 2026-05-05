@@ -75,26 +75,6 @@ Principle:
 
 If the intended behavior is not clear enough to express as a spec, stop and clarify it before implementing.
 
-## Branch And Worktree Expectations
-
-`ai/WORKFLOW.md` owns detailed branch, worktree, coordinator, worker, and integration mechanics.
-
-Repo-level rules:
-
-- treat `main` as the integration branch for completed work
-- keep worktree or side-branch implementation isolated until the planned scope is complete and locally validated
-- consider worktree or side-branch execution complete only when the finished branch has been pushed and a pull request is open or already merged onto `main`
-- prefer merging accepted branches or pull requests; use cherry-pick only when the user asks for it, when accepting less than the full branch or pull request, or when a normal merge is not viable, and record the reason
-- do not cut a release from a worktree-only branch tip or from changes that have not landed on `main`
-
-## Local Environment And Command Execution
-
-Use `SETUP.md` for setup walkthroughs and troubleshooting.
-Use `ai/ENVIRONMENT_QUICK_REF.md` for the AI-facing Gradle wrapper reference.
-
-Prefer `./build.ps1` in PowerShell or `./build.sh` in Bash for local Gradle commands.
-They auto-load a root `.env` file when present, so plans and prompts should not add upfront `JAVA_HOME` discovery or dotenv boilerplate.
-
 ## Spec Priority
 
 When resolving truth, use this order:
@@ -120,29 +100,6 @@ Use these artifacts deliberately:
 - `SETUP.md`: local environment, tooling, onboarding, and troubleshooting
 
 The `ai/` documents are guidance and planning aids. They are not higher-priority truth than executable specs, published contract docs, or the human-facing artifact that owns the topic.
-
-## Delegated Agents And Skill Wrappers
-
-Use specialized agents or skills to accelerate specific repeatable tasks:
-
-### Specialized Agents
-
-When the nature of the task matches an agent's description, use `run_subagent` to delegate:
-
-- **Plan Agent**: when you need multi-step planning that researches the codebase and outlines detailed execution steps with milestones, blocking dependencies, and validation checkpoints; produces `ai/PLAN_*.md` files
-- **CVE Remediator Agent**: when you need to detect and fix security vulnerabilities (CVEs) in project dependencies while maintaining a working build; works across any package ecosystem
-
-### Repo-Local Skills
-
-When you need a narrower workflow wrapper than the Plan Agent but more structured guidance than a freeform request, use repo-local skills under `ai/skills/`:
-
-- use `repo-plan-author` when creating or revising execution plans and you want plan-focused entry guidance
-- use `repo-validation-gate` when checking changed files against validation requirements and you need verification routing without full implementation
-- use `gh-fix-ci` when GitHub PR checks are failing and you need GitHub Actions log triage and approval-first fix planning
-- use `gh-fix-security-quality` when GitHub Security tab shows open code-scanning or Dependabot alerts and you need alert routing and approval-first fix planning
-- use `security-best-practices` when you need curated backend or frontend hardening references for manual or AI-assisted security implementation
-
-Treat skills as workflow helpers that point back to the owner guides, not as higher-priority policy.
 
 ## Required Updates By Change Type
 
@@ -193,6 +150,49 @@ When making architecture-sensitive changes:
 - follow `ai/ARCHITECTURE.md` and `ai/BUSINESS_MODULES.md`
 - preserve the demo nature of the project and prefer direct code over abstraction
 - keep `AGENTS.md` aligned only when repo-level architectural rules or AI-document ownership changed
+
+## Branch And Worktree Expectations
+
+`ai/WORKFLOW.md` owns detailed branch, worktree, coordinator, worker, and integration mechanics.
+
+Repo-level rules:
+
+- treat `main` as the integration branch for completed work
+- keep worktree or side-branch implementation isolated until the planned scope is complete and locally validated
+- consider worktree or side-branch execution complete only when the finished branch has been pushed and a pull request is open or already merged onto `main`
+- prefer merging accepted branches or pull requests; use cherry-pick only when the user asks for it, when accepting less than the full branch or pull request, or when a normal merge is not viable, and record the reason
+- do not cut a release from a worktree-only branch tip or from changes that have not landed on `main`
+
+## Local Environment And Command Execution
+
+Use `SETUP.md` for setup walkthroughs and troubleshooting.
+Use `ai/ENVIRONMENT_QUICK_REF.md` for the AI-facing Gradle wrapper reference.
+
+Prefer `./build.ps1` in PowerShell or `./build.sh` in Bash for local Gradle commands.
+They auto-load a root `.env` file when present, so plans and prompts should not add upfront `JAVA_HOME` discovery or dotenv boilerplate.
+
+## Delegated Agents And Skill Wrappers
+
+Use specialized agents or skills to accelerate specific repeatable tasks:
+
+### Specialized Agents
+
+When the nature of the task matches an agent's description, use `run_subagent` to delegate:
+
+- **Plan Agent**: when you need multi-step planning that researches the codebase and outlines detailed execution steps with milestones, blocking dependencies, and validation checkpoints; produces `ai/PLAN_*.md` files
+- **CVE Remediator Agent**: when you need to detect and fix security vulnerabilities (CVEs) in project dependencies while maintaining a working build; works across any package ecosystem
+
+### Repo-Local Skills
+
+When you need a narrower workflow wrapper than the Plan Agent but more structured guidance than a freeform request, use repo-local skills under `ai/skills/`:
+
+- use `repo-plan-author` when creating or revising execution plans and you want plan-focused entry guidance
+- use `repo-validation-gate` when checking changed files against validation requirements and you need verification routing without full implementation
+- use `gh-fix-ci` when GitHub PR checks are failing and you need GitHub Actions log triage and approval-first CI fix planning
+- use `gh-fix-security-quality` when GitHub Security tab shows open code-scanning or Dependabot alerts and you need alert routing and approval-first security fix planning
+- use `security-best-practices` when you need curated backend or frontend hardening references for manual or AI-assisted security implementation
+
+Treat skills as workflow helpers that point back to the owner guides, not as higher-priority policy.
 
 ## Verification Rules
 
