@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Integration |
-| Status | In Progress |
+| Phase | Closed |
+| Status | Released |
 
 ## Summary
 - Plan the `v2.0.0-RC1` milestone as a release-preparation and publication task on `main`, not as another feature batch.
@@ -25,11 +25,11 @@
   - hiding any discovered contract bug or undocumented behavior change inside release prep instead of treating it as a blocker
 
 ## Current State
-- `ROADMAP.md` already selects the RC1 freeze item: freeze the `2.0` contract and cut `v2.0.0-RC1` from `main` only after the exact candidate passes the required validation.
-- Local `main` is ten commits ahead of `origin/main` and the `v2.0.0-M8` tag. The unreleased delta from `v2.0.0-M8` to `HEAD` is documentation and AI-guidance only: `README.md`, `ROADMAP.md`, `AGENTS.md`, and the affected files under `ai/`.
+- At execution start, `ROADMAP.md` selected the RC1 freeze item: freeze the `2.0` contract and cut `v2.0.0-RC1` from `main` only after the exact candidate passes the required validation.
+- Before release preparation, local `main` was ahead of `origin/main` and the `v2.0.0-M8` tag by unreleased documentation and AI-guidance commits plus the milestone-1 alignment commit.
 - `README.md` now delegates the current release phase to `ROADMAP.md`, and `ROADMAP.md` `## Current Project State` now carries the active prerelease state, breaking-change policy, and next target version for the RC1 candidate.
-- `CHANGELOG.md` currently has an empty `## [Unreleased]` section and the latest released section is `## [v2.0.0-M8] - 2026-05-05`.
-- The active RC1 plan file is `ai/PLAN_2_0_rc1.md`. The related pre-RC implementation plans are already archived under `ai/archive/`.
+- Before the RC1 release-preparation move, `CHANGELOG.md` carried `## [Unreleased]` notes for the post-`v2.0.0-M8` docs and AI-guidance delta, and `## [v2.0.0-M8] - 2026-05-05` was the latest released section.
+- This executed RC1 plan is archived as `ai/archive/PLAN_2_0_rc1.md`. The related pre-RC implementation plans are already archived under `ai/archive/`.
 - The tag-driven `Release` workflow already rebuilds and validates the tagged image with `./gradlew build` and `./gradlew externalSmokeTest`, publishes the semantic and short-SHA GHCR tags, signs the immutable digest, attests provenance, and creates a GitHub Release from `CHANGELOG.md`.
 - The release-note workflow resolves the previous published GitHub Release from non-prerelease releases only, so RC1 release notes will be cumulative back to the last stable published release boundary rather than only back to `v2.0.0-M8`.
 - Planning-time release-impact review for `v2.0.0-M8..HEAD` already reports `none` from `pwsh ./scripts/release/get-release-migration-impact.ps1 -PreviousReleaseTag v2.0.0-M8 -CurrentRef HEAD`, so no migration-driven restore drill is currently expected unless the RC1 write set changes.
@@ -65,7 +65,6 @@
   - `README.md`
   - `CHANGELOG.md`
   - `ROADMAP.md`
-  - `ai/PLAN_2_0_rc1.md`
   - `ai/archive/PLAN_2_0_rc1.md`
 - Candidate worker boundaries or plan splits if later delegation becomes necessary:
   - slice 1: contract-phase audit and narrow README or changelog alignment
@@ -82,7 +81,6 @@
   - `src/test/resources/openapi/approved-openapi.json`
 - Release metadata and plan tracking:
   - `CHANGELOG.md`
-  - `ai/PLAN_2_0_rc1.md`
   - `ai/archive/PLAN_2_0_rc1.md`
 - Release workflow and verification context:
   - `.github/workflows/release.yml`
@@ -108,7 +106,7 @@
 - shared files that a `Shared Plan` worker must leave to the coordinator
   - `CHANGELOG.md`
   - `ROADMAP.md`
-  - `ai/PLAN_2_0_rc1.md`
+  - `ai/archive/PLAN_2_0_rc1.md`
 - behavior to preserve
   - no public API behavior changes
   - no OpenAPI refresh, REST Docs rewrite, or HTTP example churn unless the audit proves a real published-doc mismatch
@@ -130,11 +128,11 @@
   - prove the exact candidate commit is release-ready before any tag is created
 - owned files or packages
   - no source-file changes are expected
-  - update `ai/PLAN_2_0_rc1.md` `Validation Results` with the concrete evidence gathered during execution
+  - update `ai/archive/PLAN_2_0_rc1.md` `Validation Results` with the concrete evidence gathered during execution
 - shared files that a `Shared Plan` worker must leave to the coordinator
   - `CHANGELOG.md`
   - `ROADMAP.md`
-  - `ai/PLAN_2_0_rc1.md`
+  - `ai/archive/PLAN_2_0_rc1.md`
 - behavior to preserve
   - do not mutate the candidate between validation and tagging without rerunning stale checks
   - keep the RC1 scope contract-neutral; if validation reveals a real bug, stop and fix it explicitly in a separate follow-up before resuming release prep
@@ -160,7 +158,6 @@
 - owned files or packages
   - `CHANGELOG.md`
   - `ROADMAP.md`
-  - `ai/PLAN_2_0_rc1.md`
   - `ai/archive/PLAN_2_0_rc1.md`
 - shared files that a `Shared Plan` worker must leave to the coordinator
   - all files in this milestone stay coordinator-owned because they define the canonical release state
@@ -260,10 +257,25 @@
   - Confirmed no remaining active human-facing or contract-facing artifact still describes `v2.0.0-M8` as upcoming; the remaining pre-RC references are limited to archived plans and historical changelog sections.
   - Revised this plan to match the actual RC1 candidate state after the post-`v2.0.0-M8` documentation and AI-guidance commits landed on `main`.
   - Added `CHANGELOG.md` `## [Unreleased]` input covering the post-`v2.0.0-M8` docs and AI-guidance changes intended to ship in RC1.
-- Record the exact commands, whether `gatlingBenchmark` stayed skipped or became required, the migration-impact result, the release-note preview result, the local tag checks, and the remote publication or post-deploy smoke evidence.
+- 2026-05-05: Milestone 2 exact-candidate validation completed.
+  - Passed: `pwsh ./scripts/release/get-release-migration-impact.ps1 -PreviousReleaseTag v2.0.0-M8 -CurrentRef HEAD`
+  - Result: `none`
+  - Confirmed `gh auth status` succeeded for `kamkie` with `repo` scope before remote publication.
+  - Confirmed the latest default-branch CodeQL run on `main` succeeded for `Prepare v2.0.0-M8 release` at commit `0c3ddec67023aad11e13670743994831348adfcd`.
+  - Passed: `. .\scripts\load-dotenv.ps1 -Quiet; .\gradlew.bat build externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo --no-daemon`
+  - The local image reported build version `v2.0.0-M8-11-g85e2356` because no RC1 tag existed yet during exact-candidate validation.
+  - `.\gradlew.bat gatlingBenchmark --no-daemon` stayed skipped because the RC1 write set remained documentation and AI-guidance only and did not touch book search, localization lookup, or OAuth or session startup behavior.
+- 2026-05-05: Milestone 3 release preparation completed.
+  - Moved the RC1 notes from `## [Unreleased]` into `## [v2.0.0-RC1] - 2026-05-05` and reopened a fresh `## [Unreleased]` section.
+  - Updated `ROADMAP.md` so the completed RC1 item is gone, the stable `v2.0.0` release remains active, and `## Current Project State` now points to the post-RC1 prerelease state with breaking changes disallowed and `v2.0.0` as the next target version.
+  - Updated `ai/DESIGN.md` so the release-phase direction now describes the RC line as the active prerelease phase and stable `v2.0.0` as the next target.
+  - Passed: `pwsh ./scripts/release/render-release-notes.ps1 -ChangelogPath CHANGELOG.md -CurrentTag v2.0.0-RC1 -PreviousPublishedTag v1.6.0 -TagImageReference ghcr.io/kamkie/technical-interview-demo:v2.0.0-RC1 -ShaImageReference ghcr.io/kamkie/technical-interview-demo:sha-preview -PackagePageUrl https://github.com/kamkie/technical-interview-demo/pkgs/container/technical-interview-demo -OutputPath build/tmp/release-notes-preview.md`
+  - The release-note preview succeeded against the previous published stable-release boundary `v1.6.0`.
+  - Did not rerun `.\gradlew.bat build --no-daemon` after release-preparation edits because the final RC1 write set stayed limited to docs and AI-guidance files, so the earlier exact-candidate build and external smoke evidence remained current.
+- 2026-05-05: Archived this executed plan under `ai/archive/PLAN_2_0_rc1.md` as part of the RC1 release-preparation change.
 
 ## User Validation
-- Review the finished `README.md` and confirm it describes the repository as targeting or having cut `v2.0.0-RC1`, not as waiting for `v2.0.0-M8`.
+- Review `README.md` and confirm `## Current Release Phase` still delegates current release status to `ROADMAP.md`.
 - Review the final `CHANGELOG.md` and confirm `v2.0.0-RC1` has its own dated section while `## [Unreleased]` remains at the top.
-- Review `ROADMAP.md` and confirm the RC1 item is gone while the stable `v2.0.0` release remains the only active `2.0` completion item.
+- Review `ROADMAP.md` and confirm the RC1 item is gone while the stable `v2.0.0` release remains the only active `2.0` completion item and `## Current Project State` now targets stable `v2.0.0`.
 - After publication, verify that tag `v2.0.0-RC1`, the GitHub Release, the GHCR semantic and short-SHA image tags, and the manual post-deploy smoke record all refer to the same commit and release identity.

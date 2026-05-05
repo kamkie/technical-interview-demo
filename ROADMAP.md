@@ -8,8 +8,8 @@ Keep this file focused on work that is still planned or in progress.
 | Status | Current |
 | --- | --- |
 | Release Phase | Prerelease |
-| Breaking Change Policy | Allowed |
-| Next Target Version | `v2.0.0-RC1` |
+| Breaking Change Policy | Disallowed |
+| Next Target Version | `v2.0.0` |
 
 ## How To Use This File
 
@@ -23,7 +23,6 @@ Keep this file focused on work that is still planned or in progress.
 
 ## Current Priorities
 
-- Freeze the `2.0` published contract and cut `v2.0.0-RC1` from `main` only after the exact release-candidate commit passes the required validation.
 - Release stable `v2.0.0`, update `CHANGELOG.md`, and remove the completed `2.0` track from `ROADMAP.md` only after the `v2.0.0-RC1` line is accepted.
 
 ## Not Yet Refined
@@ -46,10 +45,9 @@ No unrefined tasks currently.
 
 Status: Planned
 
-Goal: finish the stable `2.0` line by freezing the published contract at `v2.0.0-RC1` and then releasing `v2.0.0`.
+Goal: finish the stable `2.0` line by validating the frozen `v2.0.0-RC1` contract and then releasing `v2.0.0`.
 
 #### Release Confidence
-- [x] Freeze the `2.0` published contract and cut `v2.0.0-RC1` from `main` only after the exact candidate passes `.\gradlew.bat build`, required smoke checks, and `.\gradlew.bat gatlingBenchmark` when session-startup behavior changes.
 - [ ] Release stable `v2.0.0`, update `CHANGELOG.md`, and remove the completed `2.0` track from `ROADMAP.md`.
 
 ## Deferred
