@@ -86,8 +86,14 @@ Each worker log records:
 ## Delegation Quality Bar
 
 Delegated workers must meet the same repository standards as the coordinator.
-Do not lower validation, review, documentation, or artifact-update expectations because work was delegated.
-If a slice needs unusually tight judgment, unclear product decisions, or heavy shared-file coordination, keep it in `Single Branch` or coordinator-owned work instead of handing it off.
+Do not lower validation, review, documentation, artifact-update, or security expectations because work was delegated.
+
+Workers inherit the coordinator capability by default.
+Use an explicit model or reasoning override only when the user requests it or the task has a clear documented reason.
+Do not delegate implementation, review, security, release, or ambiguous design work to a lower-capability worker.
+
+Skills provide task-specific workflow instructions.
+Using a skill does not reduce the required repository quality bar.
 
 ## Coordinator Ownership
 
