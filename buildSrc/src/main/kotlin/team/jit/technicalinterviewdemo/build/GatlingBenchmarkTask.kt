@@ -485,7 +485,7 @@ abstract class GatlingBenchmarkTask @Inject constructor(
 
         val OBJECT_MAPPER = jacksonObjectMapper()
             .enable(SerializationFeature.INDENT_OUTPUT)
-            .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+            .setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL)
     }
 }
 

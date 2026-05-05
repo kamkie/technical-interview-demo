@@ -192,6 +192,10 @@
 - Replaced the deprecated Spring Security `permissionsPolicy(...)` DSL entry point with `permissionsPolicyHeader(...)` while keeping the `Permissions-Policy` value unchanged.
 - Passed: `.\gradlew.bat test --tests team.jit.technicalinterviewdemo.technical.security.SecurityHeadersIntegrationTests --no-daemon`
 - Validation used `. ./scripts/load-dotenv.ps1` so Gradle ran with the repo-local `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`.
+- 2026-05-05 - Milestone 2 completed.
+- Replaced `setSerializationInclusion(JsonInclude.Include.NON_NULL)` with `setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL)` on the shared Gatling benchmark `OBJECT_MAPPER`.
+- Passed: `.\gradlew.bat help --task gatlingBenchmark --no-daemon`
+- Manual diff review confirmed the change only preserves the existing null-exclusion intent; task registration, baseline comparison flow, and benchmark payload structure stayed unchanged.
 
 ## User Validation
 - After implementation, inspect `SecurityConfiguration.java`, `GatlingBenchmarkTask.kt`, and `ServiceLoggingAspect.java` and confirm the targeted deprecated or unused APIs are gone.
