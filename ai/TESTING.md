@@ -23,6 +23,7 @@ Treat validation as part of the product:
 - manual consistency review only when the work is documentation-only
 
 Use `ai/ENVIRONMENT_QUICK_REF.md` for the local Gradle wrapper syntax.
+Use `ai/references/GRADLE_TASK_GRAPH.md` when command choice depends on Gradle task overlap or prerequisites.
 
 ## Implementation Loop
 

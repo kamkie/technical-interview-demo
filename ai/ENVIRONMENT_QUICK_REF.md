@@ -3,6 +3,7 @@
 `ai/ENVIRONMENT_QUICK_REF.md` owns the AI-facing shortcut for running local Gradle commands.
 Use `SETUP.md` for human setup, prerequisites, and troubleshooting detail.
 Use `ai/TESTING.md` to decide which validation is required.
+Use `ai/references/GRADLE_TASK_GRAPH.md` when choosing between overlapping Gradle tasks.
 
 ## Preferred Commands
 
