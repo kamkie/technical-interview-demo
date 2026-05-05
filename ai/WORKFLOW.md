@@ -1,4 +1,4 @@
-# Codex Workflow
+# Workflow Guide For AI Agents
 
 `ai/WORKFLOW.md` owns execution-mode selection, branch/worktree topology, and coordinator or worker integration rules.
 Anything not overridden here should follow `ai/EXECUTION.md`.
@@ -14,7 +14,7 @@ Use these defaults unless the user explicitly wants another workflow:
 - keep current work committed or at least stashed before branching or worktree fanout
 - use isolated branches or worktrees for background or delegated work
 - never rely on the same checked-out branch in more than one worktree at a time
-- review work at milestone checkpoints and commit after each completed milestone
+- use `ai/EXECUTION.md` for milestone checkpoints and commit discipline
 - prefer the smallest mode that preserves clear ownership and low coordination cost
 
 ## Supported Modes
@@ -51,16 +51,14 @@ Prefer `Single Branch` when:
 
 Use `Shared Plan` or `Parallel Plans` only when the split is defensible in file ownership, validation scope, and integration order.
 
-## Common Rules For All Modes
+## Common Mode Rules
 
-All three modes use the same milestone rhythm from `ai/EXECUTION.md`.
-The branch layout changes, but the milestone checkpoint rules do not.
+All modes use the milestone loop, commit rules, and completion criteria from `ai/EXECUTION.md`.
+This file only changes branch layout, artifact ownership, worker coordination, and remote handoff.
 
-- execute against an approved plan with explicit milestones
-- complete, validate, and commit each milestone before claiming it is done
-- keep the plan or worker log current as milestones land
-- keep the correct changelog artifact current as milestones land
-- finish local validation before any push or PR handoff
+- choose the mode before execution starts
+- keep mode-specific tracking artifacts current as milestones land
+- finish local validation before any push or PR handoff unless the user explicitly chose a remote-first diagnostic flow
 - in `Shared Plan` and `Parallel Plans`, keep the coordinator active until every worker reaches a terminal state; do not treat the overall run as complete while any worker is still implementing, validating, pushing, or opening a PR
 - prefer merging accepted branches or pull requests into the integration branch; use cherry-pick only when the user asks for it, when accepting less than the full branch or pull request, or when a normal merge is not viable, and record the reason
 - keep release work out of scope until the approved PR has been merged onto `main`
@@ -85,22 +83,11 @@ Each worker log records:
 - blockers, risks, and coordinator decisions still needed
 - whether the current milestone or slice is ready for integration
 
-## Agent Capability Consistency
+## Delegation Quality Bar
 
-When forking workers in `Shared Plan` or `Parallel Plans` modes, all agents (coordinator and workers) maintain identical model and reasoning capabilities:
-
-- **Same model**: Workers execute with the same AI model as the coordinator
-- **Same reasoning level**: Workers maintain identical reasoning depth and capability as the coordinator
-- **Consistent quality**: No degradation in code generation, analysis, or validation quality across workers
-- **Parity guarantee**: Worker agents are not "simpler" or "faster" versions of the coordinator
-
-This ensures that:
-- Worker implementation quality matches coordinator expectations
-- Validation rigor remains consistent across all agents
-- Code review standards are uniformly applied
-- Integration decisions can trust worker output quality
-
-If model or reasoning capability differences are needed for specific tasks, use `Single Branch` mode and handle the work sequentially rather than forking workers.
+Delegated workers must meet the same repository standards as the coordinator.
+Do not lower validation, review, documentation, or artifact-update expectations because work was delegated.
+If a slice needs unusually tight judgment, unclear product decisions, or heavy shared-file coordination, keep it in `Single Branch` or coordinator-owned work instead of handing it off.
 
 ## Coordinator Ownership
 
@@ -154,14 +141,6 @@ Ownership rules:
 - one agent owns the active branch
 - the canonical `ai/PLAN_*.md` is updated directly
 - `CHANGELOG.md` is updated directly under `## [Unreleased]`
-
-Milestone rules:
-
-- implement exactly the current milestone checkpoint
-- run the planned validation
-- update the canonical plan `Lifecycle` and `Validation Results`
-- update `CHANGELOG.md`
-- commit after the milestone is complete
 
 Remote handoff:
 

@@ -12,7 +12,7 @@ Execution in this repository means:
 
 - implement the smallest spec-driven change that satisfies the target plan
 - preserve the current public contract unless the plan intentionally changes it
-- keep plan state, changelog artifacts, worker logs, docs, and validation aligned as work lands
+- keep specs, docs, validation, and mode-specific tracking artifacts aligned as work lands
 - complete work as milestone checkpoints that can each be reviewed and committed
 - finish local implementation and validation before any push or PR handoff
 - stop before release unless the user explicitly asked for release work
@@ -49,11 +49,7 @@ A milestone is not done until the implementation, validation, tracking artifacts
 3. Implement the smallest coherent code or documentation change that satisfies that milestone.
 4. Keep artifact routing aligned through `ai/DOCUMENTATION.md`.
 5. Run the milestone validation named by the plan, then any broader validation required by `ai/TESTING.md`.
-6. Update the tracking artifacts for the active mode:
-   - `Single Branch`: update the canonical plan `Lifecycle`, `Validation Results`, and `CHANGELOG.md`
-   - `Shared Plan` worker: update only the worker log and any worker-owned files; leave shared files to the coordinator
-   - `Shared Plan` coordinator: integrate accepted worker output into the canonical plan and `CHANGELOG.md`
-   - `Parallel Plans` worker: update the owned plan file, the private `CHANGELOG_<topic>.md`, and the worker log
+6. Update the tracking artifacts required by the active mode in `ai/WORKFLOW.md`.
 7. Create a normal non-interactive commit for the completed milestone.
 8. Repeat for the next milestone or stop and report status if the requested scope is complete.
 
@@ -71,31 +67,15 @@ The expected milestone checkpoint contents are:
 
 - implementation or documentation changes for that milestone
 - updated validation evidence for that milestone
-- the correct changelog artifact for the active mode
-- the correct plan or worker-log update for the active mode
+- the plan, changelog, or worker-log updates required by the active workflow mode
 
-## Mode-Specific Tracking Summary
+## Tracking Artifact Ownership
 
-`ai/WORKFLOW.md` owns the full mode rules.
-Use this section as the quick execution summary.
+`ai/WORKFLOW.md` owns which files are editable in each mode.
+During execution, use that file to decide whether validation evidence and changelog text belong in the canonical plan, the canonical `CHANGELOG.md`, a worker log, or a private `CHANGELOG_<topic>.md`.
 
-### Single Branch
-
-- update the canonical `ai/PLAN_*.md`
-- update `CHANGELOG.md` under `## [Unreleased]`
-- commit after each completed milestone
-
-### Shared Plan
-
-- workers do not update shared files
-- workers update the temporary worker log after each completed milestone and commit it with the worker-owned changes
-- the coordinator integrates accepted worker output into the canonical plan and `CHANGELOG.md`, then commits the integration checkpoint
-
-### Parallel Plans
-
-- each worker owns its own `ai/PLAN_*.md` file or explicitly grouped plan set
-- each worker maintains a private `CHANGELOG_<topic>.md` copy instead of editing `CHANGELOG.md`
-- each worker updates the temporary worker log after each completed milestone and commits it with the milestone
+Do not duplicate those mode rules in plans or prompts.
+Name the active mode and then update the artifacts that mode owns.
 
 ## Milestone-Only Execution
 
@@ -114,11 +94,10 @@ When the user asks for only one milestone:
 
 - use `ai/DOCUMENTATION.md` to choose which contract or maintainer artifacts must move
 - use `ai/TESTING.md` to choose the required validation and any benchmark or compatibility extras
-- follow `ai/WORKFLOW.md` whenever the mode changes who can edit the plan file, `CHANGELOG.md`, or other shared artifacts
+- follow `ai/WORKFLOW.md` whenever the mode changes who can edit the plan file, changelog files, worker logs, or other shared artifacts
 - if required validation cannot run, record that explicitly in the plan or worker log and in the final status report
 - if the plan stops matching repo reality, revise it before continuing instead of improvising new scope
-- if the active mode is `Shared Plan`, do not edit coordinator-owned shared files from a worker branch
-- if the active mode is `Parallel Plans`, keep changelog edits private to the worker branch until the coordinator is ready to fold them back into `CHANGELOG.md`
+- do not edit files reserved to the coordinator or another worker by the active workflow mode
 
 ## Completion Criteria
 
