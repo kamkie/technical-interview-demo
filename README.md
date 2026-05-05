@@ -7,11 +7,7 @@ Technical Interview Demo is a small, spec-driven Spring Boot application for int
 
 ## Current Release Phase
 
-- Current status: pre-`2.0` prerelease on the `v2.0.0-M*` milestone line.
-- Intentional breaking changes are still allowed while finishing the `2.0` contract before `v2.0.0-RC1`.
-- The current pre-RC workstream includes the internal `v2.0.0-M8` maintainability cleanup batch and the already-landed app-owned persisted API timestamp standardization on UTC instants with a trailing `Z`.
-- The next planned prerelease is `v2.0.0-M8`; the phase after that is `v2.0.0-RC1`, which serves as the `2.0` contract-freeze milestone, matching [ROADMAP.md](ROADMAP.md).
-- After the stable `v2.0.0` release, the `2.x` line is treated as stable and breaking changes are no longer allowed as routine maintenance work.
+- [ROADMAP.md](ROADMAP.md) defines the current project release phase.
 
 ## Included Scope
 

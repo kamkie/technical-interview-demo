@@ -32,6 +32,7 @@ If a prompt starts reading like policy, move that policy back to the owner guide
   - [Plan From Roadmap](#plan-from-roadmap)
   - [Plan Checked Roadmap Items](#plan-checked-roadmap-items)
   - [Split Checked Roadmap Items Into Plans](#split-checked-roadmap-items-into-plans)
+  - [Plan Dependency And Build Tool Upgrade](#plan-dependency-and-build-tool-upgrade)
   - [Revise Plan](#revise-plan)
 - [Plan Verification](#plan-verification)
   - [Review Plan Readiness](#review-plan-readiness)
@@ -39,6 +40,7 @@ If a prompt starts reading like policy, move that policy back to the owner guide
 - [Implementation](#implementation)
   - [Implement Plan](#implement-plan)
   - [Implement Milestone](#implement-milestone)
+  - [Upgrade Dependencies And Build Tools](#upgrade-dependencies-and-build-tools)
 - [Workflow Execution](#workflow-execution)
   - [Run Plan With Inferred Mode](#run-plan-with-inferred-mode)
   - [Run Plan On Single Branch](#run-plan-on-single-branch)
@@ -200,6 +202,18 @@ Record requirement gaps, fallback assumptions, and any cross-plan dependency not
 Set the lifecycle state for each plan from `ai/PLAN.md`.
 ```
 
+### Plan Dependency And Build Tool Upgrade
+
+```markdown
+Create `ai/PLAN_<topic>.md` for this dependency or build-tool upgrade batch:
+- <item 1>
+- <item 2>
+
+Read `AGENTS.md`, `ai/PLAN.md`, `ai/DOCUMENTATION.md`, `ai/TESTING.md`, the relevant build files, and the exact alert, version target, or tool output that motivates the upgrade first.
+Identify where each version is actually owned before planning changes, including direct dependencies, transitive overrides, Gradle plugins, wrapper updates, `buildSrc`, workflow actions, or other build tooling.
+Keep the plan narrow, call out compatibility and validation risk explicitly, name the resolved-version proof expected during execution, and say whether the work should stay one reviewable batch or be split into smaller upgrade plans.
+```
+
 ### Revise Plan
 
 ```markdown
@@ -251,6 +265,19 @@ Implement only `<milestone_name>` from `<plan_file>`.
 
 Follow `ai/EXECUTION.md`.
 Do not start later milestones, push, open a PR, or release unless I ask.
+```
+
+### Upgrade Dependencies And Build Tools
+
+```markdown
+Upgrade these dependencies or build tools:
+- <item 1>
+- <item 2>
+
+Read `AGENTS.md`, `ai/EXECUTION.md`, `ai/DOCUMENTATION.md`, `ai/TESTING.md`, the governing plan if one exists, the relevant build files, and the exact alert, version target, or tool output first.
+Confirm where each version is actually owned before editing anything, including direct dependencies, transitive constraints, Gradle plugins, wrapper versions, `buildSrc`, workflow actions, or other build tooling.
+Prefer the smallest version or constraint change that satisfies the requested upgrade, keep unrelated version churn out of the diff, capture resolved-version evidence, and summarize the exact validation that proves the upgraded build still matches repo rules.
+Do not push, open a PR, or release unless I ask.
 ```
 
 ## Workflow Execution
