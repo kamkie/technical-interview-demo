@@ -26,6 +26,7 @@ If a prompt starts reading like policy, move that policy back to the owner guide
   - [Clarify Roadmap Decisions](#clarify-roadmap-decisions)
   - [Refine Roadmap Intake](#refine-roadmap-intake)
   - [Pick Next Roadmap Workstream](#pick-next-roadmap-workstream)
+  - [Prioritize Open Security And Quality Issues In Roadmap](#prioritize-open-security-and-quality-issues-in-roadmap)
   - [Review Roadmap Item](#review-roadmap-item)
 - [Planning](#planning)
   - [Create Plan](#create-plan)
@@ -33,6 +34,7 @@ If a prompt starts reading like policy, move that policy back to the owner guide
   - [Plan Checked Roadmap Items](#plan-checked-roadmap-items)
   - [Split Checked Roadmap Items Into Plans](#split-checked-roadmap-items-into-plans)
   - [Plan Dependency And Build Tool Upgrade](#plan-dependency-and-build-tool-upgrade)
+  - [Plan Repository-Wide Dependency And Toolchain Upgrade Sweep](#plan-repository-wide-dependency-and-toolchain-upgrade-sweep)
   - [Revise Plan](#revise-plan)
 - [Plan Verification](#plan-verification)
   - [Review Plan Readiness](#review-plan-readiness)
@@ -146,6 +148,19 @@ If work is ready to move forward, name the exact roadmap items that should feed 
 Do not create the plan yet unless I ask.
 ```
 
+### Prioritize Open Security And Quality Issues In Roadmap
+
+```markdown
+Use the repo-local skill `gh-fix-security-quality` to inspect all open GitHub Security and quality issues for this repository, then update `ROADMAP.md` to capture and prioritize them.
+
+Read `AGENTS.md`, `ROADMAP.md`, `ai/PLAN.md`, and `ai/skills/gh-fix-security-quality/SKILL.md` first.
+Use the skill to inspect every open code-scanning and Dependabot alert, summarize the actionable issue families, and turn them into concrete roadmap entries.
+Prioritize the roadmap by severity, exploitability, release risk, and batching efficiency.
+Group repeated alert families into one roadmap batch when that is the better execution unit than one item per alert.
+Say explicitly which alerts were grouped together, which stayed separate, and why.
+Do not create an execution plan or implement fixes unless I ask.
+```
+
 ### Review Roadmap Item
 
 ```markdown
@@ -212,6 +227,17 @@ Create `ai/PLAN_<topic>.md` for this dependency or build-tool upgrade batch:
 Read `AGENTS.md`, `ai/PLAN.md`, `ai/DOCUMENTATION.md`, `ai/TESTING.md`, the relevant build files, and the exact alert, version target, or tool output that motivates the upgrade first.
 Identify where each version is actually owned before planning changes, including direct dependencies, transitive overrides, Gradle plugins, wrapper updates, `buildSrc`, workflow actions, or other build tooling.
 Keep the plan narrow, call out compatibility and validation risk explicitly, name the resolved-version proof expected during execution, and say whether the work should stay one reviewable batch or be split into smaller upgrade plans.
+```
+
+### Plan Repository-Wide Dependency And Toolchain Upgrade Sweep
+
+```markdown
+Create `ai/PLAN_<topic>.md` for a repository-wide dependency and toolchain upgrade sweep.
+
+Read `AGENTS.md`, `ai/PLAN.md`, `ai/DOCUMENTATION.md`, `ai/TESTING.md`, the relevant build files, Dockerfiles, workflow files, and any current alert, scan, or dependency-report output first.
+Inventory all directly owned version surfaces before planning changes, including application dependencies, Gradle plugins, the Gradle wrapper, `buildSrc`, Docker base images, GitHub Actions, and other checked-in build or packaging tools.
+Propose the smallest reviewable execution shape that still upgrades the full owned surface, and say explicitly if the work is too broad for one plan and should be split into multiple `ai/PLAN_*.md` files.
+For each planned batch, call out compatibility risk, rollback or migration concerns, the exact resolved-version proof expected during execution, and the validation needed to keep the upgraded repo release-ready.
 ```
 
 ### Revise Plan
