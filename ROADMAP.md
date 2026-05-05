@@ -3,6 +3,14 @@
 This file tracks active and upcoming work for the technical-interview-demo Spring Boot application.
 Keep this file focused on work that is still planned or in progress.
 
+## Current Project State
+
+| Status | Current |
+| --- | --- |
+| Release Phase | Prerelease |
+| Breaking Change Policy | Allowed |
+| Next Target Version | `v2.0.0-RC1` |
+
 ## How To Use This File
 
 - Keep only active or planned work here.
