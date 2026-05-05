@@ -138,7 +138,7 @@ CI and release workflow expectations:
 - `CI` uses the repo-owned classifier script at `pwsh ./scripts/classify-changed-files.ps1` against the current push or pull-request range, and if it reports `skipHeavyValidation=true`, the workflow still starts but short-circuits the heavy build, Helm, smoke, artifact-upload, and dependency-graph path
 - the scheduled `Post-Deploy Smoke` workflow runs `./gradlew scheduledExternalCheck` every six hours and on manual dispatch, using `EXTERNAL_CHECK_BASE_URL` plus optional `EXTERNAL_CHECK_JDBC_URL`, `EXTERNAL_CHECK_JDBC_USER`, and `EXTERNAL_CHECK_JDBC_PASSWORD` secrets when JDBC-backed session/bootstrap/write and Flyway assertions should be enabled
 - manual `Post-Deploy Smoke` dispatch also accepts `expected_build_version`, `expected_short_commit_id`, `expected_active_profile`, `expected_session_store_type`, and `expected_session_timeout` so promotion-stage checks can bind to the deployed root overview metadata instead of only checking liveness
-- `Release` runs on stable tags in the form `vMAJOR.MINOR.PATCH` and prerelease tags in the form `vMAJOR.MINOR.PATCH-PRERELEASE`, rebuilds/scans/SBOM-documents the tagged image through Gradle, publishes security/static-analysis/SBOM artifact bundles from `build/reports/`, validates it with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry, and then creates a cumulative GitHub Release from `CHANGELOG.md` using `scripts/release/render-release-notes.ps1` plus the previous published GitHub Release boundary
+- `Release` runs on stable tags in the form `vMAJOR.MINOR.PATCH` and prerelease tags in the form `vMAJOR.MINOR.PATCH-PRERELEASE`, rebuilds/scans/SBOM-documents the tagged image through Gradle, publishes security/static-analysis/SBOM artifact bundles from `build/reports/`, validates it with `./gradlew externalSmokeTest`, publishes it to GitHub Container Registry, signs the immutable pushed digest, immediately verifies that signature with pinned `cosign v3.0.5`, publishes a GitHub provenance attestation for the same digest, and then creates a cumulative GitHub Release from `CHANGELOG.md` using `scripts/release/render-release-notes.ps1` plus the previous published GitHub Release boundary
 - the `Release` workflow step summary records the semantic tag, immutable short-SHA tag, pushed digest reference, and the exact manual post-deploy check inputs maintainers should reuse before promotion
 - recommended branch protection requires `CI`, at least one reviewer, and a squash-merge or equivalent linear-history policy
 
@@ -305,6 +305,30 @@ kubectl apply --dry-run=client -f infra/k8s/edge/public-api-ingress.yaml
 ```
 
 Release-note rendering is implemented by `scripts/release/render-release-notes.ps1` and invoked from `.github/workflows/release.yml`; keep script and workflow updates aligned when release-note policy changes.
+
+### Verifying Published Release Artifacts
+
+Use the immutable digest from the `Release` workflow summary, not a mutable tag, when you verify a published release locally.
+
+The current workflow pins `cosign v3.0.5` for signing and immediate post-sign verification. Use the same disposable Cosign image for manual checks unless `.github/workflows/release.yml` intentionally changes:
+
+```powershell
+docker run --rm ghcr.io/sigstore/cosign/cosign:v3.0.5 verify `
+  ghcr.io/<owner>/<repo>@sha256:<digest> `
+  --certificate-identity "https://github.com/<owner>/<repo>/.github/workflows/release.yml@refs/tags/vMAJOR.MINOR.PATCH[-PRERELEASE]" `
+  --certificate-oidc-issuer https://token.actions.githubusercontent.com
+```
+
+Verify provenance separately with the GitHub CLI:
+
+```powershell
+gh attestation verify oci://ghcr.io/<owner>/<repo>@sha256:<digest> `
+  --repo <owner>/<repo> `
+  --signer-workflow <owner>/<repo>/.github/workflows/release.yml `
+  --source-ref refs/tags/vMAJOR.MINOR.PATCH[-PRERELEASE]
+```
+
+If an older local Cosign build reports `no signatures found`, switch to the repo-pinned Cosign line before assuming the registry artifact is missing.
 
 ## Building Docker Images
 

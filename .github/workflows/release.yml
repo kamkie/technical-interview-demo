@@ -152,9 +152,19 @@ jobs:
 
       - name: Install cosign
         uses: sigstore/cosign-installer@cad07c2e89fa2edd6e2d7bab4c1aa38e53f76003 # v4.1.1
+        with:
+          cosign-release: v3.0.5
 
       - name: Sign pushed image digest
         run: cosign sign --yes "${{ steps.digest.outputs.reference }}"
+
+      - name: Verify pushed image signature
+        shell: bash
+        run: |
+          cosign verify \
+            --certificate-identity "https://github.com/${GITHUB_REPOSITORY}/.github/workflows/release.yml@refs/tags/${GITHUB_REF_NAME}" \
+            --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
+            "${{ steps.digest.outputs.reference }}"
 
       - name: Publish provenance attestation
         uses: actions/attest-build-provenance@b3e506e8c389afc651c5bacf2b8f2a1ea0557215 # v4
@@ -172,6 +182,8 @@ jobs:
             echo "- Semantic image: \`${{ steps.image.outputs.repository }}:${{ steps.image.outputs.tag }}\`"
             echo "- Immutable image: \`${{ steps.image.outputs.repository }}:${{ steps.image.outputs.sha_tag }}\`"
             echo "- Immutable digest: \`${{ steps.digest.outputs.reference }}\`"
+            echo "- Cosign verification line: \`v3.0.5\`"
+            echo "- Cosign certificate identity: \`https://github.com/${GITHUB_REPOSITORY}/.github/workflows/release.yml@refs/tags/${GITHUB_REF_NAME}\`"
             echo "- Promotion check inputs:"
             echo "  - \`expected_build_version=${{ github.ref_name }}\`"
             echo "  - \`expected_short_commit_id=${GITHUB_SHA::12}\`"

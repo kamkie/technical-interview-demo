@@ -64,6 +64,32 @@ Before choosing the version:
 - inspect first-parent history with `git log --first-parent --decorate --oneline`
 - keep version numbers increasing in first-parent history order
 
+## Published Artifact Verification
+
+Use the immutable digest from the `Release` workflow summary, not a mutable GHCR tag.
+
+The `Release` workflow currently pins `cosign v3.0.5` for signing and immediate post-sign verification. Use the same Cosign line for local manual checks unless `.github/workflows/release.yml` intentionally changes.
+
+Verify the keyless image signature:
+
+```powershell
+docker run --rm ghcr.io/sigstore/cosign/cosign:v3.0.5 verify `
+  ghcr.io/<owner>/<repo>@sha256:<digest> `
+  --certificate-identity "https://github.com/<owner>/<repo>/.github/workflows/release.yml@refs/tags/vMAJOR.MINOR.PATCH[-PRERELEASE]" `
+  --certificate-oidc-issuer https://token.actions.githubusercontent.com
+```
+
+Verify the GitHub provenance attestation:
+
+```powershell
+gh attestation verify oci://ghcr.io/<owner>/<repo>@sha256:<digest> `
+  --repo <owner>/<repo> `
+  --signer-workflow <owner>/<repo>/.github/workflows/release.yml `
+  --source-ref refs/tags/vMAJOR.MINOR.PATCH[-PRERELEASE]
+```
+
+If an older local Cosign build reports `no signatures found`, switch to the repo-pinned Cosign line before assuming GHCR is missing the signature artifact.
+
 ## Push And Remote Verification
 
 Push only when the user asked or the task explicitly includes remote publication.
@@ -75,7 +101,7 @@ When pushing:
 3. verify the remote accepted both updates
 4. monitor the tag-driven `Release` workflow until `./gradlew externalSmokeTest` passes for the tagged image, the GitHub Release is created, and GitHub code scanning still reflects the expected CodeQL posture
 5. confirm GHCR published both `ghcr.io/<owner>/<repo>:vMAJOR.MINOR.PATCH[-PRERELEASE]` and `ghcr.io/<owner>/<repo>:sha-<12-char-commit>`
-6. confirm the immutable published digest is signed and has provenance attestation
+6. confirm the immutable published digest is signed and has provenance attestation by running the commands in `Published Artifact Verification`
 7. confirm the GitHub Release body includes every `CHANGELOG.md` section from the new tag back to, but not including, the previous published GitHub Release tag section, plus the tag image reference, short-SHA image reference, and package link
 8. run the manual `Post-Deploy Smoke` workflow against the deployed environment with the release-summary inputs `expected_build_version`, `expected_short_commit_id`, `expected_active_profile=prod`, `expected_session_store_type=jdbc`, and `expected_session_timeout=15m`
 9. when the JDBC secret set exists, confirm the same smoke run also proves `GET /api/session`, readable `XSRF-TOKEN` bootstrap, authenticated `PUT /api/account/language`, and persisted authenticated account access; environments without that JDBC access remain HTTP-only by design
