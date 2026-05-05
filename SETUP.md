@@ -25,21 +25,19 @@ Install the tools that match your workflow:
 ### PowerShell
 
 ```powershell
-$env:JAVA_HOME='<path-to-jdk-25>'
-$env:Path="$env:JAVA_HOME\bin;$env:Path"
+# If Java 25 is not already on PATH, copy .env.example to .env and set JAVA_HOME once.
 
 docker-compose up -d
-.\gradlew.bat bootRun
+./build.ps1 bootRun
 ```
 
 ### Bash
 
 ```bash
-export JAVA_HOME='<path-to-jdk-25>'
-export PATH="$JAVA_HOME/bin:$PATH"
+# If Java 25 is not already on PATH, copy .env.example to .env and set JAVA_HOME once.
 
 docker-compose up -d
-./gradlew bootRun
+./build.sh bootRun
 ```
 
 The default `local` profile expects PostgreSQL on `localhost:5432`. The included `docker-compose.yml` starts that database for you. After startup, open:
@@ -52,21 +50,29 @@ The default `local` profile expects PostgreSQL on `localhost:5432`. The included
 
 ## Environment Variables
 
-`.env.example` contains the supported shell variables for local work. The project does **not** auto-load `.env`, so treat it as a template:
+`.env.example` contains the supported shell variables for local work.
+The repository wrapper scripts `build.ps1` and `build.sh` auto-load a root `.env` file before invoking Gradle.
+Direct `gradlew` commands, IDE run configurations, and non-Gradle shell commands still need the variables exported in the usual way.
 
 1. Copy `.env.example` to `.env` if you want a private local reference file.
 2. Fill in your actual paths (especially `JAVA_HOME` and `IDEA_HOME`).
-3. Export the values in your shell, IDE run configuration, or Docker Compose environment.
+3. Use `./build.ps1` or `./build.sh` for Gradle commands, or export the values in your shell, IDE run configuration, or Docker Compose environment when you bypass the wrappers.
 
-**Easiest approach for PowerShell:**
+**Easiest Gradle path for PowerShell:**
 
-Before running Gradle, load the environment once per session:
+Run the wrapper from the repository root:
+
+```powershell
+./build.ps1 build
+```
+
+For direct `gradlew` commands or other env-dependent tools, load the environment once per session:
 
 ```powershell
 . ./scripts/load-dotenv.ps1 -Quiet
 ```
 
-Or add permanent auto-loading to your PowerShell profile (`$PROFILE`):
+You can also add permanent auto-loading to your PowerShell profile (`$PROFILE`):
 
 ```powershell
 # Add this line to your PowerShell profile
@@ -201,10 +207,7 @@ docker-compose up -d
 Run the app with the default local profile:
 
 ```powershell
-$env:JAVA_HOME='<path-to-jdk-25>'
-$env:Path="$env:JAVA_HOME\bin;$env:Path"
-
-.\gradlew.bat bootRun
+./build.ps1 bootRun
 ```
 
 Default PostgreSQL settings:
@@ -227,8 +230,8 @@ Core commands:
 
 ```powershell
 docker-compose up -d
-.\gradlew.bat bootRun
-.\gradlew.bat build
+./build.ps1 bootRun
+./build.ps1 build
 ```
 
 Useful endpoints once the app is running:
@@ -249,10 +252,10 @@ Useful endpoints once the app is running:
 
 ## Running Tests And Quality Checks
 
-Set Java 25 in the same shell session first. Docker Desktop must also be running because the `test` task starts PostgreSQL through Testcontainers and `build` now also performs the Docker image build.
+Use the wrapper command from the repository root. Docker Desktop must also be running because the `test` task starts PostgreSQL through Testcontainers and `build` now also performs the Docker image build.
 
 ```powershell
-.\gradlew.bat build
+./build.ps1 build
 ```
 
 `build` now covers Spotless, PMD, SpotBugs plus FindSecBugs via `staticSecurityScan`, dependency/image vulnerability scanning, CycloneDX SBOM generation, tests, Asciidoctor generation, boot jar creation, and the Docker image build.
@@ -260,9 +263,9 @@ Use focused commands such as `test`, `asciidoctor`, or `dockerBuild` only when y
 
 Security scan shortcuts:
 
-- run `.\gradlew.bat staticSecurityScan` when you want the code-focused SpotBugs plus FindSecBugs gate directly
-- run `.\gradlew.bat vulnerabilityScan` when you want only the dependency and container image Trivy gates
-- run `.\gradlew.bat sbom` when you want only the CycloneDX SBOM outputs for the packaged app and image
+- run `./build.ps1 staticSecurityScan` when you want the code-focused SpotBugs plus FindSecBugs gate directly
+- run `./build.ps1 vulnerabilityScan` when you want only the dependency and container image Trivy gates
+- run `./build.ps1 sbom` when you want only the CycloneDX SBOM outputs for the packaged app and image
 - review suppressions in `tooling/security/trivy.ignore`, `tooling/security/spotbugs-security-include.xml`, and `tooling/security/spotbugs-security-exclude.xml`
 
 OpenAPI contract workflow:
@@ -273,13 +276,13 @@ OpenAPI contract workflow:
 - refresh the approved baseline intentionally with:
 
 ```powershell
-.\gradlew.bat refreshOpenApiBaseline
+./build.ps1 refreshOpenApiBaseline
 ```
 
 Benchmark workflow:
 
-- run `.\gradlew.bat gatlingBenchmark` when changing book list/search behavior, localization lookup behavior, or OAuth/session startup behavior
-- when both `build` and `gatlingBenchmark` are required, prefer one invocation such as `.\gradlew.bat build gatlingBenchmark --no-daemon` so Gradle reuses the same task graph instead of repeating the full build in separate runs
+- run `./build.ps1 gatlingBenchmark` when changing book list/search behavior, localization lookup behavior, or OAuth/session startup behavior
+- when both `build` and `gatlingBenchmark` are required, prefer one invocation such as `./build.ps1 build gatlingBenchmark --no-daemon` so Gradle reuses the same task graph instead of repeating the full build in separate runs
 - before you skip a local heavyweight validation run for a docs or support-file-only change, inspect the current uncommitted file set with:
 
 ```powershell
@@ -294,10 +297,10 @@ The `CI` workflow currently validates the repository with these commands and pre
 
 ```powershell
 docker version
-.\gradlew.bat build
+./build.ps1 build
 helm lint infra/helm/technical-interview-demo
 helm template technical-interview-demo infra/helm/technical-interview-demo -f infra/helm/technical-interview-demo/values-local.yaml
-.\gradlew.bat externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo
+./build.ps1 externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo
 ```
 
 Exception:
@@ -350,17 +353,17 @@ If an older local Cosign build reports `no signatures found`, switch to the repo
 Build with Gradle:
 
 ```powershell
-.\gradlew.bat build
-.\gradlew.bat dockerBuild
-.\gradlew.bat dockerBuild -PdockerImageName=my-app:dev
+./build.ps1 build
+./build.ps1 dockerBuild
+./build.ps1 dockerBuild -PdockerImageName=my-app:dev
 ```
 
-`.\gradlew.bat build` now includes the Docker image build. If you only want the Gradle artifacts and checks, run `.\gradlew.bat build -x dockerBuild`.
+`./build.ps1 build` now includes the Docker image build. If you only want the Gradle artifacts and checks, run `./build.ps1 build -x dockerBuild`.
 
 Build directly with Docker:
 
 ```powershell
-.\gradlew.bat bootJar
+./build.ps1 bootJar
 $jar = (Get-ChildItem build\libs\technical-interview-demo-*-boot.jar | Sort-Object LastWriteTimeUtc -Descending | Select-Object -First 1).Name
 docker build --build-arg JAR_FILE="build/libs/$jar" -t technical-interview-demo .
 docker run --rm -p 8080:8080 technical-interview-demo
@@ -375,8 +378,8 @@ The repository CI now performs a production-like container smoke test through th
 Local reproduction command sequence:
 
 ```powershell
-.\gradlew.bat build
-.\gradlew.bat externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo
+./build.ps1 build
+./build.ps1 externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo
 ```
 
 What the smoke validation proves:
@@ -473,13 +476,13 @@ Pre-release checks for a versioned upgrade:
 1. Review any new files under `src/main/resources/db/migration/` and confirm the schema change is intentional for the target version.
 2. For each changed migration SQL file, confirm the matching metadata sidecar under `src/main/resources/db/migration/metadata/` accurately records `summary`, `rolloutCategory`, `deploymentOrder`, `rollingCompatible`, and `rollbackPosture`.
 3. Run `pwsh ./scripts/release/get-release-migration-impact.ps1 -PreviousReleaseTag <previous-tag> -CurrentRef HEAD`.
-4. Run `.\gradlew.bat build`.
-5. Run `.\gradlew.bat externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo`.
-6. If the change touched book search/list behavior, localization lookup behavior, or OAuth/session startup behavior, also run `.\gradlew.bat gatlingBenchmark`.
+4. Run `./build.ps1 build`.
+5. Run `./build.ps1 externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo`.
+6. If the change touched book search/list behavior, localization lookup behavior, or OAuth/session startup behavior, also run `./build.ps1 gatlingBenchmark`.
 7. For `restore-sensitive` releases, capture restore-drill evidence before promotion.
 8. Confirm the target release notes and deployment values reference the intended semantic version tag.
 
-When both steps 4 and 6 apply, prefer one invocation such as `.\gradlew.bat build gatlingBenchmark --no-daemon` instead of separate Gradle runs.
+When both steps 4 and 6 apply, prefer one invocation such as `./build.ps1 build gatlingBenchmark --no-daemon` instead of separate Gradle runs.
 
 Backup and retention expectations for versioned upgrades:
 
@@ -562,7 +565,7 @@ kubectl kustomize infra/k8s/overlays/local
 
 Prepare the local overlay:
 
-1. Build the image with `.\gradlew.bat dockerBuild -PdockerImageName=technical-interview-demo:local`.
+1. Build the image with `./build.ps1 dockerBuild -PdockerImageName=technical-interview-demo:local`.
 2. Load that image into your local cluster runtime if needed, for example `kind load docker-image technical-interview-demo:local`.
 3. Make sure a PostgreSQL service named `postgres` exists in the `technical-interview-demo` namespace, or patch `DATABASE_HOST` in `infra/k8s/overlays/local/patch-configmap.yaml`.
 4. Create the deployment secret from `infra/k8s/base/secret-example.yaml` or with `kubectl create secret generic`.
@@ -688,7 +691,7 @@ $env:APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES='github:your-login'
 $env:SPRING_PROFILES_ACTIVE='local,oauth'
 
 docker-compose up -d
-.\gradlew.bat bootRun
+./build.ps1 bootRun
 ```
 
 Start the login flow at:
@@ -707,7 +710,7 @@ $env:APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES='oidc:your-login'
 $env:SPRING_PROFILES_ACTIVE='local,oauth'
 
 docker-compose up -d
-.\gradlew.bat bootRun
+./build.ps1 bootRun
 ```
 
 Start the login flow at:
@@ -737,8 +740,8 @@ Role behavior:
 
 Use these three PostgreSQL troubleshooting paths deliberately:
 
-- local profile startup: `docker-compose` plus `.\gradlew.bat bootRun`
-- production-like container smoke: `.\gradlew.bat externalSmokeTest`
+- local profile startup: `docker-compose` plus `./build.ps1 bootRun`
+- production-like container smoke: `./build.ps1 externalSmokeTest`
 - cluster deployment: Kubernetes manifests or Helm plus the target PostgreSQL service/secret wiring
 
 ### Gradle fails because Java 11 is active
@@ -765,7 +768,7 @@ Symptom:
 Fix:
 
 ```powershell
-.\gradlew.bat asciidoctor
+./build.ps1 asciidoctor
 ```
 
 ### OpenAPI baseline needs intentional refresh
@@ -777,8 +780,8 @@ Symptom:
 Fix:
 
 ```powershell
-.\gradlew.bat refreshOpenApiBaseline
-.\gradlew.bat test --tests team.jit.technicalinterviewdemo.technical.docs.OpenApiCompatibilityIntegrationTests
+./build.ps1 refreshOpenApiBaseline
+./build.ps1 test --tests team.jit.technicalinterviewdemo.technical.docs.OpenApiCompatibilityIntegrationTests
 ```
 
 ### PostgreSQL local profile will not start
@@ -792,20 +795,20 @@ Fix:
 1. Confirm Docker Desktop is running.
 2. Run `docker-compose up -d`.
 3. Verify the database is healthy with `docker ps`.
-4. Re-run the app with `.\gradlew.bat bootRun`.
+4. Re-run the app with `./build.ps1 bootRun`.
 
 ### Tests fail because Testcontainers cannot start PostgreSQL
 
 Symptom:
 
-- `.\gradlew.bat test` fails before the Spring context loads
+- `./build.ps1 test` fails before the Spring context loads
 - the output mentions Docker, Testcontainers, or PostgreSQL container startup
 
 Fix:
 
 1. Confirm Docker Desktop is running.
 2. Verify Docker is reachable with `docker ps`.
-3. Re-run `.\gradlew.bat --no-problems-report test`.
+3. Re-run `./build.ps1 --no-problems-report test`.
 4. If Docker is managed by corporate policy, make sure Linux containers are enabled and the current user can access Docker.
 
 ### OAuth login does not start
@@ -821,7 +824,7 @@ Fix:
 3. Confirm the provider callback URL matches `http://localhost:8080/api/session/login/oauth2/code/{registrationId}` for your registration id.
 4. Use `GET /api/session` to confirm the runtime exposes the expected `loginProviders[].authorizationPath`.
 5. Complete the browser login and then verify the app session with `GET /api/account` plus the `technical-interview-demo-session` cookie.
-6. Re-run the app with `.\gradlew.bat bootRun`.
+6. Re-run the app with `./build.ps1 bootRun`.
 
 ### Authenticated session does not persist after login
 
@@ -856,15 +859,15 @@ Fix:
 
 Symptom:
 
-- `.\gradlew.bat externalSmokeTest` fails before readiness succeeds
+- `./build.ps1 externalSmokeTest` fails before readiness succeeds
 - the logs mention PostgreSQL startup or authentication
 
 Fix:
 
 1. Confirm Docker Desktop is running and `docker version` succeeds.
 2. Confirm the `technical-interview-demo` image exists with `docker image ls technical-interview-demo`.
-3. Rebuild the image with `.\gradlew.bat dockerBuild`.
-4. Re-run `.\gradlew.bat externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo`.
+3. Rebuild the image with `./build.ps1 dockerBuild`.
+4. Re-run `./build.ps1 externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo`.
 
 ### Kubernetes deployment never becomes ready
 

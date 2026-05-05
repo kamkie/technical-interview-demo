@@ -12,6 +12,7 @@ Update the artifact that owns the truth being changed:
 - runtime behavior and public API contract: executable tests, `src/docs/asciidoc/`, `src/test/resources/http/`, `src/test/resources/openapi/approved-openapi.json`, and `README.md`
 - human-facing guide for developers using AI through the application lifecycle: `WORKING_WITH_AI.md`
 - AI repository rules and AI-document inventory: `AGENTS.md`
+- AI local command wrapper shortcut: `ai/ENVIRONMENT_QUICK_REF.md`
 - local setup, tools, troubleshooting, and onboarding: `SETUP.md`
 - contributor workflow and maintainer expectations: `CONTRIBUTING.md`
 - active planned work: `ROADMAP.md`
@@ -48,7 +49,8 @@ If ownership is unclear, decide that before editing multiple docs.
 - human-facing AI collaboration workflow change: update `WORKING_WITH_AI.md`, and update overlapping AI-facing guides in the same change when the underlying repository workflow also changed
 - workflow or AI-guidance change: update the owning AI guide first; touch `AGENTS.md` only when the AI-document set or maintenance rules changed
 - repo-local skill change: update the skill plus the owning AI guide when the skill wraps a workflow whose rules changed
-- setup or tooling change: update `SETUP.md`, not `README.md`, `AGENTS.md`, or workflow guides
+- local command-wrapper guidance for AI agents: update `ai/ENVIRONMENT_QUICK_REF.md`, and update `SETUP.md` only when human setup or troubleshooting behavior changed
+- setup or tooling change: update `SETUP.md`, not `README.md`, `AGENTS.md`, or workflow guides unless their inventories or high-level rules changed
 - roadmap reprioritization: update `ROADMAP.md`, and keep `## Current Project State` aligned when the active release phase, breaking-change policy, or next target version changes
 - released history: update `CHANGELOG.md`
 

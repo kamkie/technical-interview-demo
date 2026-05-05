@@ -22,13 +22,15 @@ Treat validation as part of the product:
 - technical integration tests when the change touches security, caching, metrics, tracing, or other cross-cutting behavior
 - manual consistency review only when the work is documentation-only
 
+Use `ai/ENVIRONMENT_QUICK_REF.md` for the local Gradle wrapper syntax.
+
 ## Change-Type Expectations
 
 ### Public behavior changes
 
 - validate the contract artifacts routed through `ai/DOCUMENTATION.md`
 - refresh approved OpenAPI only after intentional contract review
-- rerun `./gradlew gatlingBenchmark` when changing book list/search behavior, localization lookup behavior, or OAuth/session startup behavior
+- rerun `./build.ps1 gatlingBenchmark` in PowerShell or `./build.sh gatlingBenchmark` in Bash when changing book list/search behavior, localization lookup behavior, or OAuth/session startup behavior
 
 ### Internal refactors
 
@@ -39,25 +41,27 @@ Treat validation as part of the product:
 
 - when `pwsh ./scripts/classify-changed-files.ps1 -Uncommitted` reports `skipHeavyValidation=true`, do manual consistency review only
 - repo-local skills under `ai/skills/` count as lightweight support-file work for classifier purposes unless they accompany a non-lightweight change
-- skip `.\gradlew.bat build`, benchmarks, external smoke, vulnerability scans, and other heavyweight validation unless the user explicitly asks for more
+- skip the standard build, benchmarks, external smoke, vulnerability scans, and other heavyweight validation unless the user explicitly asks for more
 - if lightweight edits accompany any non-lightweight change, validate based on the non-lightweight artifacts and repo rules
 
 ## Standard Command
 
 ```powershell
-.\gradlew.bat build
+./build.ps1 build
 ```
 
+In Bash, use `./build.sh build`.
 Use `SETUP.md` for environment prerequisites such as Java, Docker, and formatter configuration.
+Use `ai/ENVIRONMENT_QUICK_REF.md` for wrapper behavior.
 
 Exception:
 
-- if `pwsh ./scripts/classify-changed-files.ps1 -Uncommitted` reports `skipHeavyValidation=true`, manual consistency review is sufficient and `.\gradlew.bat build` or other heavyweight validation commands are not required unless the user explicitly asks for more validation
+- if `pwsh ./scripts/classify-changed-files.ps1 -Uncommitted` reports `skipHeavyValidation=true`, manual consistency review is sufficient and the standard build or other heavyweight validation commands are not required unless the user explicitly asks for more validation
 
 ## Additional Rules
 
-- refresh the approved OpenAPI baseline only with `./gradlew refreshOpenApiBaseline` after intentional contract review
-- when multiple Gradle targets are required, prefer one invocation such as `./gradlew build gatlingBenchmark --no-daemon` so shared prerequisites run once and validation does not repeat the full build unnecessarily
+- refresh the approved OpenAPI baseline only with the wrapper command, for example `./build.ps1 refreshOpenApiBaseline`, after intentional contract review
+- when multiple Gradle targets are required, prefer one wrapper invocation such as `./build.ps1 build gatlingBenchmark --no-daemon` so shared prerequisites run once and validation does not repeat the full build unnecessarily
 - treat failing compatibility or benchmark checks as spec failures
 - if required validation cannot run, report that explicitly
 - the same classifier script also powers CI push or pull-request short-circuit decisions, but local AI and local manual workflows should run it against uncommitted changes with `-Uncommitted`

@@ -26,6 +26,7 @@ Read these before editing:
 - the target `ai/PLAN_*.md`
 - `ai/WORKFLOW.md` to confirm the execution mode
 - the focused guides the change needs, usually `ai/CODE_STYLE.md`, `ai/DOCUMENTATION.md`, `ai/TESTING.md`, and `ai/REVIEWS.md`
+- `ai/ENVIRONMENT_QUICK_REF.md` before writing local Gradle commands
 - the governing specs, docs, examples, and source files named by the plan
 
 Before writing code or docs:
@@ -35,13 +36,8 @@ Before writing code or docs:
 - confirm which mode you are in: `Single Branch`, `Shared Plan`, or `Parallel Plans`
 - if execution uncovered a real plan gap, revise the plan before coding instead of filling the gap ad hoc
 
-When commands depend on local environment variables:
-
-- check the local `.env` file first when it exists
-- in PowerShell, prefer dot-sourcing `./scripts/load-dotenv.ps1` before env-dependent commands
-- use `.env.example` only as the template for expected variable names, not as proof of local values
-- if `.env` is missing or incomplete, state the fallback you used
-- never commit local machine-specific `.env` values unless the user explicitly asks for that
+When local Gradle commands are needed, use the wrappers from `ai/ENVIRONMENT_QUICK_REF.md`.
+Do not add manual `JAVA_HOME` or dotenv setup steps to plans, prompts, or worker logs unless a wrapper command fails and troubleshooting is now in scope.
 
 ## Common Milestone Loop
 

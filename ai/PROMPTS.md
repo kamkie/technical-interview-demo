@@ -9,6 +9,7 @@ Keep prompts lean:
 - repository rules live in `AGENTS.md`
 - code-shaping rules live in `ai/CODE_STYLE.md`
 - artifact routing lives in `ai/DOCUMENTATION.md`
+- local command wrapper shortcuts live in `ai/ENVIRONMENT_QUICK_REF.md`
 - planning rules live in `ai/PLAN.md`
 - single-agent and per-milestone execution rules live in `ai/EXECUTION.md`
 - workflow-mode and delegation rules live in `ai/WORKFLOW.md`

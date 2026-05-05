@@ -46,6 +46,7 @@ Use these files when you want to work with AI in this repository or understand w
 - [ai/CODE_STYLE.md](ai/CODE_STYLE.md): repo-local code style and change-shaping guidance
 - [ai/DESIGN.md](ai/DESIGN.md): product intent, tradeoffs, and non-goals
 - [ai/DOCUMENTATION.md](ai/DOCUMENTATION.md): documentation ownership and when to update which docs
+- [ai/ENVIRONMENT_QUICK_REF.md](ai/ENVIRONMENT_QUICK_REF.md): AI shortcut for local Gradle wrapper commands
 - [ai/EXECUTION.md](ai/EXECUTION.md): how AI should implement an approved plan or milestone
 - [ai/LEARNINGS.md](ai/LEARNINGS.md): durable engineering lessons worth carrying through refactors
 - [ai/PLAN.md](ai/PLAN.md): how to create or revise execution plans

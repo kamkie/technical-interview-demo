@@ -27,6 +27,7 @@ Use these files deliberately:
 - `ai/CODE_STYLE.md`: AI-facing code-style and change-shaping guidance for repo edits
 - `ai/DESIGN.md`: intended design direction, product tradeoffs, and open design decisions
 - `ai/DOCUMENTATION.md`: AI-facing documentation ownership and update guidance
+- `ai/ENVIRONMENT_QUICK_REF.md`: AI-facing command wrapper reference for local Gradle execution
 - `ai/EXECUTION.md`: AI-facing implementation workflow for executing plan files, updating validation results, and handling unreleased work
 - `ai/LEARNINGS.md`: durable repo-wide engineering lessons that should survive refactors
 - `ai/PLAN.md`: instructions for producing execution plans
@@ -82,19 +83,13 @@ If the intended behavior is not clear enough to express as a spec, stop and clar
 - prefer merging accepted branches or pull requests when integrating their changes; use cherry-pick only when the user asks for it, when integrating less than the whole branch or pull request, or when a normal merge is not viable, and record the reason
 - do not cut a release from a worktree-only branch tip or from changes that have not yet landed on `main`
 
-## Local Environment Discovery
+## Local Environment And Command Execution
 
-See `SETUP.md` for detailed setup walkthrough and troubleshooting.
+Use `SETUP.md` for setup walkthroughs and troubleshooting.
+Use `ai/ENVIRONMENT_QUICK_REF.md` for the AI-facing Gradle wrapper reference.
 
-## AI Execution Environment
-
-When running commands for this repository:
-
-- **Preferred**: Use `./build.ps1` (PowerShell) or `./build.sh` (Bash) instead of `gradlew` directly. They auto-load `.env` without extra setup steps.
-- **Environment variables**: If `.env` exists in the repository root, it is loaded automatically. No need for AI instructions to manually discover or set `JAVA_HOME`.
-- **Gradle initialization**: `gradle/init.gradle.kts` runs on every Gradle invocation to validate the Java toolchain. Clear error messages appear if Java is misconfigured.
-- **Validation commands**: Commands like `./build.ps1 build` succeed immediately if environment is ready, without requiring upfront AI diagnostic steps.
-- **Shorter execution**: AI instructions can invoke commands directly without pre-checks for `JAVA_HOME`, PATH setup, or environment variable discovery.
+Prefer `./build.ps1` in PowerShell or `./build.sh` in Bash for local Gradle commands.
+They auto-load a root `.env` file when present, so plans and prompts should not add upfront `JAVA_HOME` discovery or dotenv boilerplate.
 
 ## Spec Priority
 
@@ -173,7 +168,8 @@ Update all affected artifacts in the same change:
 
 ### Setup or environment change
 
-- update `SETUP.md`
+- update `SETUP.md` for human setup, tool, and troubleshooting changes
+- update `ai/ENVIRONMENT_QUICK_REF.md` when AI-facing command-wrapper guidance changes
 - only touch `README.md` or `AGENTS.md` when the high-level contract or rules changed, not for walkthrough duplication
 
 ### Roadmap change
@@ -210,4 +206,4 @@ A change is complete when:
 - implementation and specs agree
 - public contract artifacts are updated when behavior changed
 - if the work was done in a git worktree or non-`main` branch, the finished branch has been pushed and a pull request is open or already merged onto `main`
-- `./gradlew build` passes, unless `pwsh ./scripts/classify-changed-files.ps1 -Uncommitted` reports `skipHeavyValidation=true` for the current uncommitted changes and manual consistency review is sufficient for that lightweight-only change
+- the required validation from `ai/TESTING.md` passes, normally `./build.ps1 build` in PowerShell or `./build.sh build` in Bash, unless `pwsh ./scripts/classify-changed-files.ps1 -Uncommitted` reports `skipHeavyValidation=true` for the current uncommitted changes and manual consistency review is sufficient for that lightweight-only change

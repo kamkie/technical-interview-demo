@@ -1,59 +1,40 @@
-# Quick Reference: AI Environment Setup
+# AI Environment Quick Reference
 
-## For AI Agents (Short Version)
+`ai/ENVIRONMENT_QUICK_REF.md` owns the AI-facing shortcut for running local Gradle commands.
+Use `SETUP.md` for human setup, prerequisites, and troubleshooting detail.
+Use `ai/TESTING.md` to decide which validation is required.
 
-### Run Gradle Commands
+## Preferred Commands
+
+PowerShell:
+
 ```powershell
-# Use the wrapper scripts - they auto-load .env
-. ./build.ps1 build
-. ./build.ps1 test
-. ./build.ps1 bootRun
-. ./build.ps1 gatlingBenchmark
+./build.ps1 build
+./build.ps1 test
+./build.ps1 bootRun
+./build.ps1 gatlingBenchmark
 ```
 
-### What Happens Automatically
-✅ `.env` is loaded (if it exists in repo root)
-✅ `JAVA_HOME` is discovered from environment or common paths
-✅ Java version is validated (Java 25 required)
-✅ Clear error messages appear if anything is wrong
+Bash:
 
-### No Need To
-❌ Manually discover or set `JAVA_HOME`
-❌ Run `load-dotenv.ps1` separately each time
-❌ Add environment setup steps to instructions
-❌ Include Java path diagnostics in plan files
-
-### If Environment Setup Still Fails
-The Gradle initialization hook (`gradle/init.gradle.kts`) will show:
-```
-❌ Java toolchain not found!
-
-To fix:
-  1. Install Java 25 (or set JAVA_HOME to existing Java 25)
-  2. Copy .env.example to .env and fill in JAVA_HOME
-  3. Run: . ./scripts/load-dotenv.ps1 -Quiet
-  4. Try again: .\gradlew.bat build
+```bash
+./build.sh build
+./build.sh test
+./build.sh bootRun
+./build.sh gatlingBenchmark
 ```
 
-### Instruction Writing Changes
+## What The Wrappers Do
 
-**Before (with environment setup):**
-```text
-Milestone: Build the application
-1. Discover JAVA_HOME location
-2. Set environment variables
-3. Load .env if available
-4. Run ./gradlew build
-5. Validate build succeeded
-```
+- load root `.env` automatically when it exists
+- pass every argument through to the Gradle wrapper
+- keep direct `gradlew` usage available when the shell is already configured
+- let Gradle's toolchain checks report Java misconfiguration clearly
 
-**After (automatic):**
-```text
-Milestone: Build the application
-1. Run . ./build.ps1 build
-2. Validate build succeeded
-```
+## Instruction-Writing Rule
 
----
+Plans, prompts, and worker logs should name the wrapper command directly.
+Do not add preliminary steps to discover `JAVA_HOME`, dot-source `scripts/load-dotenv.ps1`, or inspect local Java paths unless the wrapper command actually fails and the next task is troubleshooting.
 
-**TL;DR**: Use `./build.ps1` instead of `./gradlew.bat`. Everything else happens automatically.
+Use `.env.example` only as the template for expected local variable names.
+Never treat `.env.example` as evidence of the user's local values.

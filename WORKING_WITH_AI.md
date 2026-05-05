@@ -31,6 +31,7 @@ Before asking AI to do real work, make sure the session is grounded in these rep
 - `README.md` for the project overview, implemented scope, and AI document map
 - `AGENTS.md` for repository-specific AI rules, spec priority, and required artifact updates
 - `SETUP.md` for local tooling, environment, and verification prerequisites
+- `ai/ENVIRONMENT_QUICK_REF.md` for AI-friendly local Gradle wrapper commands
 - `ai/PROMPTS.md` for reusable prompt starters whose `###` titles can be used as reusable commands
 - `ai/skills/<skill>/SKILL.md` only when you want a narrower repo-local workflow wrapper
 
@@ -74,6 +75,7 @@ Planning and execution:
 - [Plan Output Format](ai/PLAN.md#plan-output-format)
 - [Common Milestone Loop](ai/EXECUTION.md#common-milestone-loop)
 - [Supported Modes](ai/WORKFLOW.md#supported-modes)
+- [Preferred Commands](ai/ENVIRONMENT_QUICK_REF.md#preferred-commands)
 
 Validation and release:
 
@@ -261,7 +263,7 @@ Useful prompt titles:
 
 Repository rule:
 
-- run `.\gradlew.bat build` before finishing, unless `pwsh ./scripts/classify-changed-files.ps1 -Uncommitted` reports `skipHeavyValidation=true` for the current uncommitted changes and manual consistency review is sufficient
+- run the standard wrapper build from `ai/ENVIRONMENT_QUICK_REF.md` before finishing, unless `pwsh ./scripts/classify-changed-files.ps1 -Uncommitted` reports `skipHeavyValidation=true` for the current uncommitted changes and manual consistency review is sufficient
 
 ### 8. Preparing Release
 
