@@ -3,8 +3,8 @@
 ## Lifecycle
 | Field | Value |
 | --- | --- |
-| Phase | Integration |
-| Status | Implemented |
+| Phase | Closed |
+| Status | Released |
 
 ## Summary
 - Execute the previously deferred maintainability-only backlog as the `v2.0.0-M8` prerelease batch: replace one deprecated Spring Security headers DSL call, replace one deprecated Jackson `ObjectMapper` setter in `buildSrc`, and remove the unused advice binding in `ServiceLoggingAspect`.
@@ -23,7 +23,7 @@
   - unrelated CodeQL, Dependabot, CI, or documentation backlog items
 
 ## Current State
-- `ROADMAP.md` previously deferred this cleanup until after stable `2.0`, but the current request pulls it forward into the `v2.0.0-M8` prerelease batch before the later `v2.0.0-RC1` freeze.
+- `ROADMAP.md` previously deferred this cleanup until after stable `2.0`, but the executed release pulled it forward into the `v2.0.0-M8` prerelease batch before the later `v2.0.0-RC1` freeze.
 - `src/main/java/team/jit/technicalinterviewdemo/technical/security/SecurityConfiguration.java` still configures the `Permissions-Policy` response header through `headers.permissionsPolicy(...)`. The local Spring Security `7.0.5` sources resolved by this build mark that DSL entry point deprecated in favor of `permissionsPolicyHeader(...)`.
 - The current `Permissions-Policy` header behavior is already part of repo truth:
   - `src/test/java/team/jit/technicalinterviewdemo/technical/security/SecurityHeadersIntegrationTests.java` asserts the header and exact value on overview, docs, health, session, and problem-response surfaces
@@ -54,7 +54,7 @@
   - the repository default is `Single Branch`, and the coordination cost of splitting this work would exceed the benefit
   - final proof depends on one repo-wide `build` pass rather than independent public-contract slices
 - Coordinator-owned or otherwise shared files if the work fans out:
-  - `ai/PLAN_post_2_0_maintainability_cleanup.md`
+  - `ai/archive/PLAN_post_2_0_maintainability_cleanup.md`
   - `ROADMAP.md`
   - `CHANGELOG.md`
 - Candidate worker boundaries or plan splits if later delegation becomes necessary:
@@ -95,7 +95,7 @@
   - `src/main/java/team/jit/technicalinterviewdemo/technical/security/SecurityConfiguration.java`
   - `src/test/java/team/jit/technicalinterviewdemo/technical/security/SecurityHeadersIntegrationTests.java` only if a focused assertion needs adjustment to match the replacement API without changing behavior
 - shared files that a `Shared Plan` worker must leave to the coordinator
-  - `ai/PLAN_post_2_0_maintainability_cleanup.md`
+  - `ai/archive/PLAN_post_2_0_maintainability_cleanup.md`
   - `ROADMAP.md`
   - `CHANGELOG.md`
 - behavior to preserve
@@ -116,7 +116,7 @@
 - owned files or packages
   - `buildSrc/src/main/kotlin/team/jit/technicalinterviewdemo/build/GatlingBenchmarkTask.kt`
 - shared files that a `Shared Plan` worker must leave to the coordinator
-  - `ai/PLAN_post_2_0_maintainability_cleanup.md`
+  - `ai/archive/PLAN_post_2_0_maintainability_cleanup.md`
   - `ROADMAP.md`
   - `CHANGELOG.md`
 - behavior to preserve
@@ -139,7 +139,7 @@
   - `src/main/java/team/jit/technicalinterviewdemo/technical/logging/ServiceLoggingAspect.java`
   - new focused coverage under `src/test/java/team/jit/technicalinterviewdemo/technical/logging/ServiceLoggingAspectTests.java`
 - shared files that a `Shared Plan` worker must leave to the coordinator
-  - `ai/PLAN_post_2_0_maintainability_cleanup.md`
+  - `ai/archive/PLAN_post_2_0_maintainability_cleanup.md`
   - `ROADMAP.md`
   - `CHANGELOG.md`
 - behavior to preserve
@@ -205,6 +205,7 @@
 - Passed: `.\gradlew.bat build --no-daemon`
 - The full build passed, including REST Docs generation, OpenAPI compatibility checks, PMD, SpotBugs, Trivy vulnerability scans, SBOM generation, Docker image build, and the rest of the standard `build` gates.
 - Manual diff review confirmed the implementation stayed limited to the five scoped plan files and produced no REST Docs, approved OpenAPI, HTTP example, README, or `CHANGELOG.md` churn.
+- 2026-05-05 - Released as `v2.0.0-M8` and archived under `ai/archive/`.
 
 ## User Validation
 - After implementation, inspect `SecurityConfiguration.java`, `GatlingBenchmarkTask.kt`, and `ServiceLoggingAspect.java` and confirm the targeted deprecated or unused APIs are gone.

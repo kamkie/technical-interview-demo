@@ -7,6 +7,12 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+## [v2.0.0-M8] - 2026-05-05
+
+### Changed
+- Cleared the remaining selected CodeQL maintainability and quality alerts without changing the published contract by replacing the deprecated Spring Security `Permissions-Policy` DSL call and the deprecated Gatling benchmark `ObjectMapper` null-exclusion setter.
+- Removed the unused `@Service` advice binding from `ServiceLoggingAspect` and added focused regression coverage that keeps service-only interception pinned.
+
 ## [v2.0.0-M7] - 2026-05-05
 
 ### Added
