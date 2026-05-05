@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Summary
 - Run one conservative repository-wide sweep across the dependency, build, container, CI, release, and packaging toolchain surfaces that are owned in this repository.
@@ -29,7 +29,7 @@
 
 ## Current State
 - `README.md` and `SETUP.md` present Java 25, Docker, Gradle, CI, security scans, SBOM generation, external smoke validation, and release signing as supported user-facing workflows.
-- The local shell currently exposes `JAVA_HOME=C:\Program Files\Microsoft\jdk-11.0.31.11-hotspot\`, which cannot run Gradle 9.5.0. A JBR 25 runtime is available at `C:\Users\kamki\AppData\Local\Programs\IntelliJ IDEA Ultimate\jbr` and was used for planning-time Gradle resolution.
+- Planning-time Gradle resolution needed a Java 25 shell override because the interactive shell initially exposed Java 11. Execution used repository-local environment loading with `.\scripts\load-dotenv.ps1 -Quiet`; `.env` provided `JAVA_HOME=C:\Users\kamki\.jdks\azul-25.0.3`.
 - Planning-time command:
   - `$env:JAVA_HOME='C:\Users\kamki\AppData\Local\Programs\IntelliJ IDEA Ultimate\jbr'; $env:Path="$env:JAVA_HOME\bin;$env:Path"; .\gradlew.bat dependencyUpdates --no-daemon --warning-mode all`
   - result: build successful on 2026-05-05
@@ -299,7 +299,23 @@
   - `dependencyUpdates --warning-mode all` reported later milestone candidates for Caffeine, Flyway database PostgreSQL support, and PostgreSQL JDBC, plus Gradle 10 deprecation warnings that still need ownership classification
   - existing Trivy dependency scan summary reported zero findings
   - existing Trivy image scan summary reported 40 medium/low findings and no high/critical blocking findings
-- Implementation validation is not started.
+- Implementation completed on 2026-05-05:
+  - execution loaded `.env` through `.\scripts\load-dotenv.ps1 -Quiet` and ran Gradle with Zulu Java 25.0.3 from `C:\Users\kamki\.jdks\azul-25.0.3`
+  - `.\gradlew.bat dependencyUpdates --no-daemon --warning-mode all` passed; all directly owned Gradle plugins and build tools remained current
+  - Spring Boot BOM-managed candidates were intentionally deferred rather than overridden: Caffeine `3.2.3 -> 3.2.4`, Flyway PostgreSQL support `11.14.1 -> 12.5.0`, and PostgreSQL JDBC `42.7.10 -> 42.7.11`
+  - `.\gradlew.bat buildEnvironment --no-daemon`, targeted `dependencyInsight` checks, and `.\gradlew.bat dependencyManagement --no-daemon` passed and confirmed BOM or plugin ownership for those candidates
+  - Gradle 10 deprecation warnings remain non-blocking and appear tied to current third-party plugin/task behavior rather than a locally owned upgrade blocker
+  - updated container and scanner surfaces: Dockerfile frontend `docker/dockerfile:1.23.0`, application base `eclipse-temurin:25-jre-noble@sha256:b27ca47660a8fa837e47a8533b9b1a3a430295cf29ca28d91af4fd121572dc29`, Trivy `aquasec/trivy:0.70.0@sha256:be1190afcb28352bfddc4ddeb71470835d16462af68d310f9f4bca710961a41e`, Fluent Bit `3.2.10@sha256:d6dec000c4929a439562525728c708f6e99800d7ddc82efd6aa4f45f3a20b562`, and Testcontainers PostgreSQL `postgres:16-alpine`
+  - updated workflow pins for `gradle/actions/setup-gradle@v6`, `azure/setup-helm@v5`, `github/codeql-action/*@v4`, and `actions/attest-build-provenance@v4`; a follow-up pin verification script reported no tag/SHA mismatches
+  - `docker compose config`, `helm lint infra/helm/technical-interview-demo`, `helm template technical-interview-demo infra/helm/technical-interview-demo -f infra/helm/technical-interview-demo/values-local.yaml`, `kubectl kustomize infra/k8s/base`, and `kubectl kustomize infra/k8s/log-forwarding/fluent-bit` passed
+  - `.\gradlew.bat classes testClasses --no-daemon`, `.\gradlew.bat dockerBuild --no-daemon`, and final `.\gradlew.bat build --no-daemon` passed; the final build executed 264 tests and produced 93.5% JaCoCo line coverage
+  - `.\gradlew.bat vulnerabilityScan sbom --no-daemon` hit a transient Trivy Java DB download connection reset during `imageSbom`; rerunning `.\gradlew.bat imageSbom --no-daemon` succeeded, and the final `build` also completed security scans and SBOM generation
+  - final security summaries reported zero dependency findings and 25 image findings, with zero high or critical findings; generated SBOM files exist under `build/reports/sbom/application/` and `build/reports/sbom/image/`
+  - `.\gradlew.bat externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo --no-daemon` passed against the rebuilt image with 13 external smoke tests executed, 11 passed, and 2 configuration-gated checks skipped
+  - `pwsh .\scripts\classify-changed-files.ps1 -Uncommitted` reported `skipHeavyValidation=false`
+  - `actionlint` was not installed locally; workflow syntax was reviewed manually and action tag/SHA verification was run locally
+  - final formatting and whitespace checks passed with `.\gradlew.bat spotlessMiscCheck --no-daemon`, `git diff --check`, and `git diff --cached --check`
+  - `.\gradlew.bat gatlingBenchmark --no-daemon` was skipped because no Spring Boot/Spring Framework, cache, OAuth/session, book search/list, localization lookup, Flyway, or application PostgreSQL JDBC runtime behavior was upgraded; external smoke covered the changed container base and PostgreSQL 16 test image alignment
 
 ## User Validation
 - Review the final PR or branch diff for version-only intent: dependency and toolchain pins should move, while public API contract files should remain unchanged unless explicitly approved.

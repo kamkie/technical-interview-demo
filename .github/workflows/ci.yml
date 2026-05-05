@@ -78,13 +78,13 @@ jobs:
 
       - name: Set up Gradle
         if: needs.change_detection.outputs.skip_heavy_ci != 'true'
-        uses: gradle/actions/setup-gradle@39fdf500b386709a9a4a769f717dad447ac345b9 # v6
+        uses: gradle/actions/setup-gradle@50e97c2cd7a37755bbfafc9c5b7cafaece252f6e # v6
         with:
           dependency-graph: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && 'generate-and-upload' || 'disabled' }}
 
       - name: Set up Helm
         if: needs.change_detection.outputs.skip_heavy_ci != 'true'
-        uses: azure/setup-helm@f0accbfd55e3332a28f721b8202b1016cecf90d5 # v5
+        uses: azure/setup-helm@dda3372f752e03dde6b3237bc9431cdc2f7a02a2 # v5
 
       - name: Verify Docker availability
         if: needs.change_detection.outputs.skip_heavy_ci != 'true'
@@ -162,7 +162,7 @@ jobs:
 
     steps:
       - name: Submit Gradle dependency graph
-        uses: gradle/actions/setup-gradle@39fdf500b386709a9a4a769f717dad447ac345b9 # v6
+        uses: gradle/actions/setup-gradle@50e97c2cd7a37755bbfafc9c5b7cafaece252f6e # v6
         with:
           dependency-graph: download-and-submit
           dependency-graph-continue-on-failure: false

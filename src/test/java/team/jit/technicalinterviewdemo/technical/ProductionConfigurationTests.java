@@ -26,7 +26,7 @@ import team.jit.technicalinterviewdemo.technical.security.SecuritySettingsProper
 
 class ProductionConfigurationTests {
 
-    private static final DockerImageName POSTGRES_IMAGE = DockerImageName.parse("postgres:15-alpine");
+    private static final DockerImageName POSTGRES_IMAGE = DockerImageName.parse("postgres:16-alpine");
 
     private static final PostgreSQLContainer<?> POSTGRESQL_CONTAINER = new PostgreSQLContainer<>(POSTGRES_IMAGE)
             .withDatabaseName("technical_interview_demo")

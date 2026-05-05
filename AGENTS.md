@@ -84,9 +84,43 @@ If the intended behavior is not clear enough to express as a spec, stop and clar
 
 ## Local Environment Discovery
 
-- when discovering `JAVA_HOME` or preparing to run Java, Gradle, Docker, or other environment-dependent commands from PowerShell, dot-source `.\scripts\load-dotenv.ps1 -Quiet` first so `.env` can provide the repository-local toolchain path before falling back to machine-wide environment inspection
-- if `.env` does not exist, `load-dotenv.ps1` returns gracefully and commands fall back to system environment
-- use `.env.example` only as a template for expected variable names, not as proof that values are set locally
+**Automatic setup (no manual steps):**
+
+The project auto-detects and loads environment configuration:
+- `build.ps1` (PowerShell) or `build.sh` (Bash) auto-loads `.env` and calls gradlew
+- `gradle/init.gradle.kts` validates Java toolchain on every Gradle invocation
+- `.env.example` contains the template; copy to `.env` and fill in `JAVA_HOME`
+
+**Quick start:**
+```powershell
+Copy-Item .env.example .env
+# Edit .env to set JAVA_HOME
+. ./build.ps1 build          # Auto-loads .env and runs Gradle
+```
+
+**Manual environment loading** (if needed):
+```powershell
+. ./scripts/load-dotenv.ps1 -Quiet
+.\gradlew.bat build
+```
+
+**Permanent auto-loading** (optional):
+Add to PowerShell profile (`$PROFILE`):
+```powershell
+. (Resolve-Path "path/to/repo/scripts/init-shell-env.ps1")
+```
+
+See `SETUP.md` for detailed setup walkthrough and troubleshooting.
+
+## AI Execution Environment
+
+When running commands for this repository:
+
+- **Preferred**: Use `./build.ps1` (PowerShell) or `./build.sh` (Bash) instead of `gradlew` directly. They auto-load `.env` without extra setup steps.
+- **Environment variables**: If `.env` exists in the repository root, it is loaded automatically. No need for AI instructions to manually discover or set `JAVA_HOME`.
+- **Gradle initialization**: `gradle/init.gradle.kts` runs on every Gradle invocation to validate the Java toolchain. Clear error messages appear if Java is misconfigured.
+- **Validation commands**: Commands like `./build.ps1 build` succeed immediately if environment is ready, without requiring upfront AI diagnostic steps.
+- **Shorter execution**: AI instructions can invoke commands directly without pre-checks for `JAVA_HOME`, PATH setup, or environment variable discovery.
 
 ## Spec Priority
 

@@ -65,7 +65,9 @@ val asciidoctorTask = tasks.named<org.asciidoctor.gradle.jvm.AsciidoctorTask>("a
 val spotbugsSecurityIncludeFile = layout.projectDirectory.file("tooling/security/spotbugs-security-include.xml")
 val spotbugsSecurityExcludeFile = layout.projectDirectory.file("tooling/security/spotbugs-security-exclude.xml")
 val trivyIgnoreFile = layout.projectDirectory.file("tooling/security/trivy.ignore")
-val trivyContainerImage = providers.gradleProperty("trivyImage").orElse("aquasec/trivy:0.63.0")
+val trivyContainerImage =
+    providers.gradleProperty("trivyImage")
+        .orElse("aquasec/trivy:0.70.0@sha256:be1190afcb28352bfddc4ddeb71470835d16462af68d310f9f4bca710961a41e")
 val trivyFailOnSeverities = listOf("HIGH", "CRITICAL")
 val applicationSbomReportDir = layout.buildDirectory.dir("reports/sbom/application")
 val imageSbomReportDir = layout.buildDirectory.dir("reports/sbom/image")
