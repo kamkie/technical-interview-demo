@@ -37,7 +37,8 @@ Keep rough candidate tasks here for manual editing before they are promoted into
 
 Add new rough tasks below.
 
-No unrefined tasks currently.
+- migrate spotless to eclipse().configFile('config/eclipse-style.xml') exported from IntelliJ 
+- migrate spotless to .editorconfig formater exported from IntelliJ 
 
 ## Ordered Plan
 

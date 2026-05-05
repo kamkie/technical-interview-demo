@@ -2,12 +2,6 @@
 
 Prepare a report measuring how much context the repository AI instructions consume over time.
 
-Use the previous simple before/after report as a style and measurement reference if it exists:
-
-`C:\Users\kamki\AppData\Local\Temp\technical-interview-demo-ai-context-before-after-20260505-233853.md`
-
-Do not overwrite that previous report.
-
 Use a temporary git worktree. Analyze commits from `baa23259` through current `HEAD`, in chronological first-parent order.
 
 Measure context size in:
