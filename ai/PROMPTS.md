@@ -42,7 +42,6 @@ If a prompt starts reading like policy, move that policy back to the owner guide
 - [Implementation](#implementation)
   - [Implement Plan](#implement-plan)
   - [Implement Milestone](#implement-milestone)
-  - [Upgrade Dependencies And Build Tools](#upgrade-dependencies-and-build-tools)
 - [Workflow Execution](#workflow-execution)
   - [Run Plan With Inferred Mode](#run-plan-with-inferred-mode)
   - [Run Plan On Single Branch](#run-plan-on-single-branch)
@@ -74,6 +73,7 @@ If a prompt starts reading like policy, move that policy back to the owner guide
   - [Summarize Lifecycle State](#summarize-lifecycle-state)
   - [Triage Validation Failure](#triage-validation-failure)
 - [Maintenance](#maintenance)
+  - [Upgrade Dependencies And Build Tools](#upgrade-dependencies-and-build-tools)
   - [Compact AI Docs](#compact-ai-docs)
 
 ## Prompt Usage Baseline
@@ -291,19 +291,6 @@ Implement only `<milestone_name>` from `<plan_file>`.
 
 Follow `ai/EXECUTION.md`.
 Do not start later milestones, push, open a PR, or release unless I ask.
-```
-
-### Upgrade Dependencies And Build Tools
-
-```markdown
-Upgrade these dependencies or build tools:
-- <item 1>
-- <item 2>
-
-Read `AGENTS.md`, `ai/EXECUTION.md`, `ai/DOCUMENTATION.md`, `ai/TESTING.md`, the governing plan if one exists, the relevant build files, and the exact alert, version target, or tool output first.
-Confirm where each version is actually owned before editing anything, including direct dependencies, transitive constraints, Gradle plugins, wrapper versions, `buildSrc`, workflow actions, or other build tooling.
-Prefer the smallest version or constraint change that satisfies the requested upgrade, keep unrelated version churn out of the diff, capture resolved-version evidence, and summarize the exact validation that proves the upgraded build still matches repo rules.
-Do not push, open a PR, or release unless I ask.
 ```
 
 ## Workflow Execution
@@ -593,6 +580,19 @@ Identify the first real failure, likely root cause, whether it looks like a spec
 ```
 
 ## Maintenance
+
+### Upgrade Dependencies And Build Tools
+
+```markdown
+Upgrade these dependencies or build tools:
+- <item 1>
+- <item 2>
+
+Read `AGENTS.md`, `ai/EXECUTION.md`, `ai/DOCUMENTATION.md`, `ai/TESTING.md`, the governing plan if one exists, the relevant build files, and the exact alert, version target, or tool output first.
+Confirm where each version is actually owned before editing anything, including direct dependencies, transitive constraints, Gradle plugins, wrapper versions, `buildSrc`, workflow actions, or other build tooling.
+Prefer the smallest version or constraint change that satisfies the requested upgrade, keep unrelated version churn out of the diff, capture resolved-version evidence, and summarize the exact validation that proves the upgraded build still matches repo rules.
+Do not push, open a PR, or release unless I ask.
+```
 
 ### Compact AI Docs
 
