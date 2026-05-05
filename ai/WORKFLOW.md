@@ -62,6 +62,7 @@ The branch layout changes, but the milestone checkpoint rules do not.
 - keep the correct changelog artifact current as milestones land
 - finish local validation before any push or PR handoff
 - in `Shared Plan` and `Parallel Plans`, keep the coordinator active until every worker reaches a terminal state; do not treat the overall run as complete while any worker is still implementing, validating, pushing, or opening a PR
+- prefer merging accepted branches or pull requests into the integration branch; use cherry-pick only when the user asks for it, when accepting less than the full branch or pull request, or when a normal merge is not viable, and record the reason
 - keep release work out of scope until the approved PR has been merged onto `main`
 
 For any forked worker, create and maintain a committed temporary worker log at:
@@ -176,7 +177,8 @@ Worker rules:
 Coordinator rules:
 
 - keep the current shared plan authoritative
-- merge or cherry-pick completed worker branches onto the coordinator branch
+- merge completed worker branches onto the coordinator branch by default
+- cherry-pick only when accepting less than the full worker branch, when the user asks for it, or when a normal merge is not viable; record the reason in the canonical plan or worker-log integration notes
 - integrate accepted worker-log content into the canonical plan file and `CHANGELOG.md`
 - commit each integration checkpoint after the accepted milestone lands on the coordinator branch
 - clean consumed local worker branches or worktrees under `Integration Cleanup`
