@@ -13,7 +13,7 @@ import java.util.Properties
 buildscript {
     configurations.classpath {
         resolutionStrategy.force(
-            "org.apache.commons:commons-lang3:3.19.0",
+            "org.apache.commons:commons-lang3:3.20.0",
             "org.codehaus.plexus:plexus-utils:4.0.3"
         )
     }
