@@ -196,6 +196,9 @@
 - Replaced `setSerializationInclusion(JsonInclude.Include.NON_NULL)` with `setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL)` on the shared Gatling benchmark `OBJECT_MAPPER`.
 - Passed: `.\gradlew.bat help --task gatlingBenchmark --no-daemon`
 - Manual diff review confirmed the change only preserves the existing null-exclusion intent; task registration, baseline comparison flow, and benchmark payload structure stayed unchanged.
+- 2026-05-05 - Milestone 3 completed.
+- Replaced the bound `@within(service)` pointcut with `@within(org.springframework.stereotype.Service)`, dropped the unused advice parameter, and added focused proxy-based regression coverage for service-only interception.
+- Passed: `.\gradlew.bat test --tests team.jit.technicalinterviewdemo.technical.logging.ServiceLoggingAspectTests --no-daemon`
 
 ## User Validation
 - After implementation, inspect `SecurityConfiguration.java`, `GatlingBenchmarkTask.kt`, and `ServiceLoggingAspect.java` and confirm the targeted deprecated or unused APIs are gone.

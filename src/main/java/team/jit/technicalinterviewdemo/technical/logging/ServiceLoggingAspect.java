@@ -28,7 +28,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,8 +40,8 @@ public class ServiceLoggingAspect {
     private static final int MAX_DEPTH = 2;
     private static final int MAX_COLLECTION_ITEMS = 10;
 
-    @Around("@within(service)")
-    public Object logServiceCall(ProceedingJoinPoint joinPoint, Service service) throws Throwable {
+    @Around("@within(org.springframework.stereotype.Service)")
+    public Object logServiceCall(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         String serviceName = signature.getDeclaringType().getSimpleName();
         String methodName = signature.getName();
