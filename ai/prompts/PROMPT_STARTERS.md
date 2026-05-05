@@ -1,7 +1,7 @@
 # Prompt Starters For This Repository
 
 This is the on-demand library of full reusable prompt starters.
-`ai/PROMPTS.md` is the lean standing index whose `###` titles act as reusable commands.
+`ai/PROMPTS.md` is the lean standing index whose listed prompt names act as reusable commands.
 When a title is invoked, read only the matching starter here.
 This file does not own standing policy.
 
@@ -97,7 +97,7 @@ Prefer filling in placeholders such as `<topic>`, `<plan_file>`, `<milestone_nam
 
 ## Title Shorthand
 
-You may invoke a prompt in this file by using its `###` title as a reusable command and shorthand for the full starter under that heading.
+You may invoke a prompt by using its title as a reusable command and shorthand for the full starter under the matching heading.
 
 Rules:
 

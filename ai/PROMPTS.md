@@ -17,11 +17,11 @@ Use the owner guides instead:
 
 ## Title Shorthand Rules
 
-- the `###` titles below are reusable commands
+- the prompt names listed below are reusable commands
 - use the exact title or an unmistakably close reference
 - include required placeholders such as `<topic>`, `<plan_file>`, `<milestone_name>`, `<task>`, or `<constraint>`
 - if the title or required context is ambiguous, ask a targeted clarification question
-- when a title is invoked, load only that prompt body from `ai/prompts/PROMPT_STARTERS.md`
+- when a prompt name is invoked, load only the matching prompt body from `ai/prompts/PROMPT_STARTERS.md`
 
 ## Default Read Sets
 
@@ -32,88 +32,15 @@ Use the owner guides instead:
 - verification: `AGENTS.md`, `ai/TESTING.md`, `ai/DOCUMENTATION.md`, `ai/REVIEWS.md`
 - release: `AGENTS.md`, `ai/RELEASES.md`, executed plans, and changed release artifacts
 
-## Prompt Titles
+## Prompt List
 
-### Clarify Roadmap Decisions
-
-### Refine Roadmap Intake
-
-### Pick Next Roadmap Workstream
-
-### Prioritize Open Security And Quality Issues In Roadmap
-
-### Review Roadmap Item
-
-### Create Plan
-
-### Plan From Roadmap
-
-### Plan Checked Roadmap Items
-
-### Split Checked Roadmap Items Into Plans
-
-### Plan Dependency And Build Tool Upgrade
-
-### Plan Repository-Wide Dependency And Toolchain Upgrade Sweep
-
-### Revise Plan
-
-### Review Plan Readiness
-
-### Choose Execution Mode
-
-### Implement Plan
-
-### Implement Milestone
-
-### Run Plan With Inferred Mode
-
-### Run Plan On Single Branch
-
-### Run Plan As Shared Plan
-
-### Run Plans In Parallel
-
-### Run All Ready Plans
-
-### Run All Unfinished Plans
-
-### Check Worker Status
-
-### Check Active Workers
-
-### Integrate Shared Plan Output
-
-### Integrate Parallel Plan Output
-
-### Integrate All Open PRs
-
-### Run Required Validation
-
-### Check Contract Impact
-
-### Verify Milestone
-
-### Review Diff Risks
-
-### Check Release Readiness
-
-### Prepare Release
-
-### Push Prepared Release
-
-### Release All Merged Work
-
-### Check Published Release
-
-### Implement Then Release
-
-### Clean Worktrees And Stale Local Branches
-
-### Summarize Lifecycle State
-
-### Triage Validation Failure
-
-### Upgrade Dependencies And Build Tools
-
-### Compact AI Docs
+- Discovery and roadmap: `Clarify Roadmap Decisions`, `Refine Roadmap Intake`, `Pick Next Roadmap Workstream`, `Prioritize Open Security And Quality Issues In Roadmap`, `Review Roadmap Item`
+- Planning: `Create Plan`, `Plan From Roadmap`, `Plan Checked Roadmap Items`, `Split Checked Roadmap Items Into Plans`, `Plan Dependency And Build Tool Upgrade`, `Plan Repository-Wide Dependency And Toolchain Upgrade Sweep`, `Revise Plan`
+- Plan verification: `Review Plan Readiness`, `Choose Execution Mode`
+- Implementation: `Implement Plan`, `Implement Milestone`
+- Workflow execution: `Run Plan With Inferred Mode`, `Run Plan On Single Branch`, `Run Plan As Shared Plan`, `Run Plans In Parallel`, `Run All Ready Plans`, `Run All Unfinished Plans`, `Check Worker Status`, `Check Active Workers`
+- Implementation integration: `Integrate Shared Plan Output`, `Integrate Parallel Plan Output`, `Integrate All Open PRs`
+- Implementation verification: `Run Required Validation`, `Check Contract Impact`, `Verify Milestone`, `Review Diff Risks`
+- Preparing release: `Check Release Readiness`, `Prepare Release`
+- Releasing: `Push Prepared Release`, `Release All Merged Work`, `Check Published Release`
+- Lifecycle and maintenance: `Implement Then Release`, `Clean Worktrees And Stale Local Branches`, `Summarize Lifecycle State`, `Triage Validation Failure`, `Upgrade Dependencies And Build Tools`, `Compact AI Docs`

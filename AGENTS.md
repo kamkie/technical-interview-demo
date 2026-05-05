@@ -32,7 +32,7 @@ Use these files deliberately:
 - `ai/LEARNINGS.md`: durable repo-wide engineering lessons that should survive refactors
 - `ai/PLAN.md`: compact instructions for producing execution plans
 - `ai/PLAN_*.md`: task-specific execution plans and milestone breakdowns
-- `ai/PROMPTS.md`: lean reusable prompt-title index whose `###` titles act as reusable commands
+- `ai/PROMPTS.md`: lean reusable prompt-title index whose listed prompt names act as reusable commands
 - `ai/REVIEWS.md`: AI-facing code-review and security-review guidance
 - `ai/RELEASES.md`: AI-facing release workflow for intentional post-implementation releases
 - `ai/TESTING.md`: AI-facing testing and validation guidance
@@ -59,7 +59,7 @@ Rules for maintaining the `ai/` documents:
 - keep AI instruction markdown files under `ai/` by default; `AGENTS.md` is the only standing exception
 - update the relevant `ai/` file in the same change when architecture, code-style expectations, design intent, documentation ownership, durable engineering guidance, release workflow, review/security review guidance, testing/validation guidance, workflow guidance, or an execution plan materially changes
 - keep `ai/PROMPTS.md` lean; put full reusable prompt bodies under `ai/prompts/` and standing workflow rules in the best owning AI document
-- treat the `###` prompt titles in `ai/PROMPTS.md` as reusable commands for matching full starters in `ai/prompts/`, following `ai/PROMPTS.md` for exact-match, placeholder, and ambiguity rules
+- treat the listed prompt names in `ai/PROMPTS.md` as reusable commands for matching full starters in `ai/prompts/`, following `ai/PROMPTS.md` for exact-match, placeholder, and ambiguity rules
 - keep detailed examples, templates, historical explanations, and deep references in `ai/templates/` or `ai/references/` instead of the standing top-level AI files
 - keep repo-local skills narrow and workflow-oriented; use them to accelerate repeated entry tasks, not to replace the owner guides
 - keep standing code-style, testing, review, and documentation guidance in their focused owning files instead of redistributing it across prompts or workflow docs
