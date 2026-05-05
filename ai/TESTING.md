@@ -29,6 +29,7 @@ Use `ai/ENVIRONMENT_QUICK_REF.md` for the local Gradle wrapper syntax.
 - use `./build.ps1 compileJava` or a similarly narrow Gradle task for quick checks while editing
 - use targeted tests when the touched behavior has focused executable coverage
 - `./build.ps1 -SkipTests build`, `./build.ps1 -SkipChecks build`, and `./build.ps1 -SkipTests -SkipChecks build` are local-loop shortcuts only, not final verification
+- `-SkipChecks` skips formatting, PMD, SpotBugs, Error Prone, coverage verification, vulnerability scans, and SBOM checks
 - use the `build` task for final verification before handoff unless the lightweight-only shortcut applies
 
 ## Change-Type Expectations
@@ -69,6 +70,7 @@ Wrapper exception:
 
 - refresh the approved OpenAPI baseline only with the wrapper command, for example `./build.ps1 refreshOpenApiBaseline`, after intentional contract review
 - when multiple Gradle targets are required, prefer one wrapper invocation such as `./build.ps1 build gatlingBenchmark --no-daemon` so shared prerequisites run once and validation does not repeat the full build unnecessarily
+- do not run overlapping Gradle validations in parallel when one task depends on the other or both write shared `build/` outputs; this includes `build` with `gatlingBenchmark`, `externalSmokeTest`, `externalDeploymentCheck`, `scheduledExternalCheck`, or similar Docker/test/report tasks
 - treat failing compatibility or benchmark checks as spec failures
 - if required validation cannot run, report that explicitly
 - the same classifier script also powers CI push or pull-request short-circuit decisions; run it directly only when validating a diff boundary other than the current uncommitted change set

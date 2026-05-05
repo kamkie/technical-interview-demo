@@ -59,6 +59,7 @@ This file only changes branch layout, artifact ownership, worker coordination, a
 - choose the mode before execution starts
 - keep mode-specific tracking artifacts current as milestones land
 - finish local validation before any push or PR handoff unless the user explicitly chose a remote-first diagnostic flow
+- do not parallelize overlapping Gradle validation commands that share `build/` outputs or task dependencies; run `build`, `gatlingBenchmark`, `externalSmokeTest`, `externalDeploymentCheck`, `scheduledExternalCheck`, and similar validation tasks sequentially or in one Gradle invocation when appropriate
 - in `Shared Plan` and `Parallel Plans`, keep the coordinator active until every worker reaches a terminal state; do not treat the overall run as complete while any worker is still implementing, validating, pushing, or opening a PR
 - prefer merging accepted branches or pull requests into the integration branch; use cherry-pick only when the user asks for it, when accepting less than the full branch or pull request, or when a normal merge is not viable, and record the reason
 - keep release work out of scope until the approved PR has been merged onto `main`

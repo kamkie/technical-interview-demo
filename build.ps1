@@ -14,6 +14,7 @@
 #   - Automatically loads .env if it exists
 #   - Skips the Gradle build for lightweight-only uncommitted changes
 #   - Allows forcing the full Gradle build with -FullBuild
+#   - Supports local-loop shortcuts with -SkipTests and -SkipChecks
 #   - No manual environment setup needed per session
 #   - Faster AI instruction execution (no env discovery steps)
 
@@ -163,7 +164,32 @@ function Get-EffectiveGradleArgs {
     }
 
     if ($SkipChecks) {
-        $effectiveArguments += @("-x", "check")
+        $checkTasks = @(
+            "jacocoTestCoverageVerification",
+            "pmdMain",
+            "pmdTest",
+            "pmdExternalTest",
+            "pmdGatling",
+            "spotbugsMain",
+            "spotbugsTest",
+            "spotbugsExternalTest",
+            "spotbugsGatling",
+            "spotlessCheck",
+            "spotlessKotlinGradleCheck",
+            "spotlessMiscCheck",
+            "staticSecurityScan",
+            "dependencyVulnerabilityScan",
+            "imageVulnerabilityScan",
+            "vulnerabilityScan",
+            "applicationSbom",
+            "imageSbom",
+            "sbom"
+        )
+
+        $effectiveArguments += "-PskipChecks=true"
+        foreach ($task in $checkTasks) {
+            $effectiveArguments += @("-x", $task)
+        }
     }
 
     return $effectiveArguments

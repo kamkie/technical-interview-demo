@@ -71,6 +71,7 @@ val trivyContainerImage =
 val trivyFailOnSeverities = listOf("HIGH", "CRITICAL")
 val applicationSbomReportDir = layout.buildDirectory.dir("reports/sbom/application")
 val imageSbomReportDir = layout.buildDirectory.dir("reports/sbom/image")
+val skipChecks = providers.gradleProperty("skipChecks").map(String::toBoolean).orElse(false)
 
 java {
     toolchain {
@@ -303,6 +304,7 @@ tasks.withType<Test> {
 }
 
 tasks.withType<JavaCompile>().configureEach {
+    options.errorprone.enabled.set(skipChecks.map { !it })
     options.errorprone.disableWarningsInGeneratedCode.set(true)
     options.errorprone.excludedPaths.set(".*/build/generated/.*")
     options.forkOptions.jvmArgs?.add("--sun-misc-unsafe-memory-access=allow")

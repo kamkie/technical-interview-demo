@@ -182,8 +182,10 @@ Additional validation rules:
 - use `SETUP.md` for JDK 25, Docker, `.env`, and command prerequisites
 - use `./build.ps1 compileJava` or a similarly focused task for fast checks while editing, then use `./build.ps1 build` for final verification
 - use `./build.ps1 -SkipTests build`, `./build.ps1 -SkipChecks build`, or both only for local loops, not final verification
+- `-SkipChecks` skips formatting, PMD, SpotBugs, Error Prone, coverage verification, vulnerability scans, and SBOM checks
 - rerun `./build.ps1 gatlingBenchmark` when changing book list or search behavior, localization lookup behavior, or OAuth or session startup behavior
 - when both `build` and `gatlingBenchmark` are required, prefer one invocation such as `./build.ps1 build gatlingBenchmark --no-daemon` so Gradle reuses the same task graph instead of repeating work in separate runs
+- do not run overlapping Gradle validation tasks in parallel, including `build` with `gatlingBenchmark`, `externalSmokeTest`, `externalDeploymentCheck`, or `scheduledExternalCheck`
 - refresh the approved OpenAPI baseline only after intentional contract review with:
 
 ```powershell

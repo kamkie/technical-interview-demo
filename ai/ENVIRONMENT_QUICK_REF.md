@@ -24,7 +24,8 @@ PowerShell (`pwsh`):
 - pass every Gradle argument through to the Gradle wrapper
 - let `./build.ps1 build` skip Gradle when the uncommitted change set is lightweight-only
 - let `./build.ps1 -FullBuild build` force the full Gradle build
-- let `./build.ps1 -SkipTests build` and `./build.ps1 -SkipChecks build` exclude test-dependent tasks or the Gradle `check` lifecycle for local loops
+- let `./build.ps1 -SkipTests build` exclude test-dependent tasks for local loops
+- let `./build.ps1 -SkipChecks build` exclude formatting, PMD, SpotBugs, Error Prone, coverage verification, vulnerability scans, and SBOM checks for local loops
 - keep direct `gradlew` usage available when the shell is already configured
 - let Gradle's toolchain checks report Java misconfiguration clearly
 

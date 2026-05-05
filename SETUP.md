@@ -247,6 +247,7 @@ Use the full build task for final verification:
 ```
 
 `./build.ps1 build` first checks the current uncommitted files and exits successfully with manual-review guidance when the change set is lightweight-only. Use `./build.ps1 -FullBuild build` to force the full Gradle build. Use `-SkipTests` and `-SkipChecks` only for local loops, not signoff.
+`-SkipChecks` skips formatting, PMD, SpotBugs, Error Prone, coverage verification, vulnerability scans, and SBOM checks.
 
 A full `build` covers Spotless, PMD, SpotBugs plus FindSecBugs via `staticSecurityScan`, dependency/image vulnerability scanning, CycloneDX SBOM generation, tests, Asciidoctor generation, boot jar creation, and the Docker image build.
 Use focused commands such as `test`, `asciidoctor`, or `dockerBuild` only when you intentionally want a narrower loop.
@@ -273,6 +274,7 @@ Benchmark workflow:
 
 - run `./build.ps1 gatlingBenchmark` when changing book list/search behavior, localization lookup behavior, or OAuth/session startup behavior
 - when both `build` and `gatlingBenchmark` are required, prefer one invocation such as `./build.ps1 build gatlingBenchmark --no-daemon` so Gradle reuses the same task graph instead of repeating the full build in separate runs
+- do not run `build`, `gatlingBenchmark`, `externalSmokeTest`, `externalDeploymentCheck`, `scheduledExternalCheck`, or other overlapping Gradle validation tasks in parallel because they share build outputs and some already depend on packaging or image-build tasks
 - for a docs or support-file-only workflow, the `./build.ps1 build` shortcut handles the local classifier check; run `pwsh ./scripts/classify-changed-files.ps1` directly only for a different diff boundary
 
 ## Reproducing CI Locally

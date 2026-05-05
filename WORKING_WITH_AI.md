@@ -264,6 +264,7 @@ Useful prompt titles:
 Repository rule:
 
 - use `./build.ps1 compileJava` or a similarly focused wrapper task for quick implementation-loop checks, then run the standard wrapper build from `ai/ENVIRONMENT_QUICK_REF.md` before finishing; `./build.ps1 -FullBuild build` forces the full Gradle build when required
+- do not run overlapping Gradle validation tasks in parallel, including `build` with `gatlingBenchmark`, `externalSmokeTest`, `externalDeploymentCheck`, or `scheduledExternalCheck`
 
 ### 8. Preparing Release
 
