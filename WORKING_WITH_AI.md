@@ -32,7 +32,7 @@ Before asking AI to do real work, make sure the session is grounded in these rep
 - `AGENTS.md` for repository-specific AI rules, spec priority, and required artifact updates
 - `SETUP.md` for local tooling, environment, and verification prerequisites
 - `ai/ENVIRONMENT_QUICK_REF.md` for AI-friendly local Gradle wrapper commands
-- `ai/PROMPTS.md` for reusable prompt starters whose `###` titles can be used as reusable commands
+- `ai/PROMPTS.md` for reusable prompt titles; load full prompt bodies only after a title is invoked
 - `ai/skills/<skill>/SKILL.md` only when you want a narrower repo-local workflow wrapper
 
 Then add the phase-specific owner guide:
@@ -60,6 +60,7 @@ Treat them as helpers that point back to the owner guides, not as higher-priorit
 
 Some AI-facing docs are also readable by human maintainers when you want a short codebase map or workflow summary.
 Use these as focused entry points instead of reading every AI guide end to end.
+Detailed prompt bodies, templates, deep references, skill references, and archived plans are on-demand material.
 
 Architecture and product direction:
 

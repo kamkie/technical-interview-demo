@@ -22,7 +22,7 @@ The `ai/` directory is the AI-facing working set for non-contract repository kno
 
 Use these files deliberately:
 
-- `ai/ARCHITECTURE.md`: descriptive repository snapshot, codebase map, package responsibilities, and structural guidance
+- `ai/ARCHITECTURE.md`: compact descriptive repository snapshot, codebase map, package responsibilities, and structural guidance
 - `ai/BUSINESS_MODULES.md`: descriptive business-feature package map and ownership guide
 - `ai/CODE_STYLE.md`: AI-facing code-style and change-shaping guidance for repo edits
 - `ai/DESIGN.md`: intended design direction, product tradeoffs, and open design decisions
@@ -30,28 +30,37 @@ Use these files deliberately:
 - `ai/ENVIRONMENT_QUICK_REF.md`: AI-facing command wrapper reference for local Gradle execution
 - `ai/EXECUTION.md`: AI-facing implementation workflow for executing plan files, updating validation results, and handling unreleased work
 - `ai/LEARNINGS.md`: durable repo-wide engineering lessons that should survive refactors
-- `ai/PLAN.md`: instructions for producing execution plans
+- `ai/PLAN.md`: compact instructions for producing execution plans
 - `ai/PLAN_*.md`: task-specific execution plans and milestone breakdowns
-- `ai/PROMPTS.md`: lean reusable prompt starters whose `###` titles act as reusable commands and point to the standing guidance in the other AI documents
-- `ai/skills/`: repo-local reusable skills for repetitive planning, validation, CI-triage, and GitHub security-triage entry workflows that still defer to the owner guides:
-  - `repo-plan-author`: focused entry point for creating or revising `ai/PLAN_*.md`
-  - `repo-validation-gate`: focused entry point for changed-file classification, validation selection, and contract-impact triage
-  - `gh-fix-ci`: focused entry point for GitHub PR-check inspection, GitHub Actions log triage, and approval-first CI fix planning
-  - `gh-fix-security-quality`: focused entry point for GitHub Security tab inspection, code-scanning and Dependabot alert triage, and approval-first security fix planning
-  - `security-best-practices`: curated backend and frontend hardening references for AI-assisted security implementation work
+- `ai/PROMPTS.md`: lean reusable prompt-title index whose `###` titles act as reusable commands
 - `ai/REVIEWS.md`: AI-facing code-review and security-review guidance
-- `ai/archive/`: archived AI execution plans that have already been released or otherwise completed
 - `ai/RELEASES.md`: AI-facing release workflow for intentional post-implementation releases
 - `ai/TESTING.md`: AI-facing testing and validation guidance
 - `ai/WORKFLOW.md`: AI-facing execution workflow for single-branch, delegation, worktree usage, integration, and release handoff
+- `ai/prompts/`: on-demand full prompt bodies used only after a prompt title is invoked
+- `ai/references/`: on-demand detailed references that should not be part of the default read set
+- `ai/templates/`: on-demand templates for creating new AI artifacts
+- `ai/skills/`: on-demand repo-local workflow skills; read a skill's `SKILL.md` only when that skill is invoked or clearly applies
+- `ai/archive/`: archived AI execution plans that have already been released or otherwise completed; read only for historical investigation
+
+## AI Instruction Load Policy
+
+Load AI guidance on demand:
+
+- read `AGENTS.md` first
+- read only the owning AI guide for the current task
+- read active `ai/PLAN_*.md` files only when planning, executing, verifying, or releasing that plan
+- read full prompt bodies, templates, detailed references, skill files, and archived plans only when the task specifically needs them
+- do not bulk-load `ai/archive/`, `ai/references/`, `ai/prompts/`, `ai/templates/`, or skill reference material as standing context
 
 Rules for maintaining the `ai/` documents:
 
 - keep the role of each file distinct; do not collapse architecture, code style, design, documentation ownership, execution, planning, release workflow, review guidance, testing guidance, workflow guidance, and learnings into one document
 - keep AI instruction markdown files under `ai/` by default; `AGENTS.md` is the only standing exception
 - update the relevant `ai/` file in the same change when architecture, code-style expectations, design intent, documentation ownership, durable engineering guidance, release workflow, review/security review guidance, testing/validation guidance, workflow guidance, or an execution plan materially changes
-- keep `ai/PROMPTS.md` lean; put standing workflow rules in the best owning AI document instead of restating them inside prompts
-- treat the `###` prompt titles in `ai/PROMPTS.md` as reusable commands for the full starters under those headings, following `ai/PROMPTS.md` for exact-match, placeholder, and ambiguity rules
+- keep `ai/PROMPTS.md` lean; put full reusable prompt bodies under `ai/prompts/` and standing workflow rules in the best owning AI document
+- treat the `###` prompt titles in `ai/PROMPTS.md` as reusable commands for matching full starters in `ai/prompts/`, following `ai/PROMPTS.md` for exact-match, placeholder, and ambiguity rules
+- keep detailed examples, templates, historical explanations, and deep references in `ai/templates/` or `ai/references/` instead of the standing top-level AI files
 - keep repo-local skills narrow and workflow-oriented; use them to accelerate repeated entry tasks, not to replace the owner guides
 - keep standing code-style, testing, review, and documentation guidance in their focused owning files instead of redistributing it across prompts or workflow docs
 - when a repo-local skill wraps a workflow owned by another guide, update the skill and the owning guide together if that workflow changes
@@ -143,7 +152,8 @@ Update all affected artifacts in the same change:
 
 ## Architecture Constraints
 
-`ai/ARCHITECTURE.md` owns the descriptive repository snapshot, codebase map, business-module map, current API shape, and structural guidance for this repository.
+`ai/ARCHITECTURE.md` owns the compact descriptive repository snapshot, codebase map, current API shape, and structural guidance for this repository.
+Use `ai/references/ARCHITECTURE_DETAILED_MAP.md` only when the compact map is not enough.
 
 When making architecture-sensitive changes:
 
@@ -173,26 +183,11 @@ They auto-load a root `.env` file when present, so plans and prompts should not 
 
 ## Delegated Agents And Skill Wrappers
 
-Use specialized agents or skills to accelerate specific repeatable tasks:
+`ai/WORKFLOW.md` owns delegation mechanics, worker capability expectations, and integration rules.
 
-### Specialized Agents
-
-When the nature of the task matches an agent's description, use `run_subagent` to delegate:
-
-- **Plan Agent**: when you need multi-step planning that researches the codebase and outlines detailed execution steps with milestones, blocking dependencies, and validation checkpoints; produces `ai/PLAN_*.md` files
-- **CVE Remediator Agent**: when you need to detect and fix security vulnerabilities (CVEs) in project dependencies while maintaining a working build; works across any package ecosystem
-
-### Repo-Local Skills
-
-When you need a narrower workflow wrapper than the Plan Agent but more structured guidance than a freeform request, use repo-local skills under `ai/skills/`:
-
-- use `repo-plan-author` when creating or revising execution plans and you want plan-focused entry guidance
-- use `repo-validation-gate` when checking changed files against validation requirements and you need verification routing without full implementation
-- use `gh-fix-ci` when GitHub PR checks are failing and you need GitHub Actions log triage and approval-first CI fix planning
-- use `gh-fix-security-quality` when GitHub Security tab shows open code-scanning or Dependabot alerts and you need alert routing and approval-first security fix planning
-- use `security-best-practices` when you need curated backend or frontend hardening references for manual or AI-assisted security implementation
-
+Specialized agents and repo-local skills may accelerate repeatable tasks when available and when the task clearly matches their scope.
 Treat skills as workflow helpers that point back to the owner guides, not as higher-priority policy.
+Read `ai/skills/<skill>/SKILL.md` only when that skill is invoked or clearly applies.
 
 ## Verification Rules
 
