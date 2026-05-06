@@ -9,6 +9,8 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ### Changed
 - Switched Java formatting authority from the archived Eclipse-profile Spotless setup to Palantir Java Format while retaining Spotless for Kotlin, Gradle Kotlin DSL, and support-file whitespace normalization.
+- Excluded REST Docs AsciiDoc sources from IntelliJ reformatting so nested list structure remains stable.
+- Left `.properties` files out of the generic Spotless misc formatter so intentional blank-line separators are preserved.
 
 ## [v2.0.0-RC4] - 2026-05-06
 

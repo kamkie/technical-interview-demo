@@ -241,4 +241,4 @@ At a minimum, release preparation should include:
 
 Java formatting is Gradle-owned through Palantir Java Format. IntelliJ alignment comes from the Palantir Java Format plugin plus the committed project code-style settings for imports and non-Java options.
 
-Use `./build.ps1 checkFormat` to verify formatting and `./build.ps1 format` to normalize formatting before review. Retained Spotless tasks still handle Kotlin, Gradle Kotlin DSL, and lightweight support-file whitespace normalization.
+Use `./build.ps1 checkFormat` to verify formatting and `./build.ps1 format` to normalize formatting before review. Retained Spotless tasks still handle Kotlin, Gradle Kotlin DSL, and selected support-file whitespace normalization. `.properties` files stay outside the generic Spotless misc formatter so intentional blank-line separators survive.

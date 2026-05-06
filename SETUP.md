@@ -151,6 +151,7 @@ Recommended baseline:
 2. Set the project SDK to Java 25
 3. Set Gradle JVM to Java 25
 4. Use `./build.ps1 format` when you want to normalize repository formatting from the same formatter configuration CI uses.
+5. Keep IntelliJ project code-style settings enabled; REST Docs AsciiDoc sources are excluded from IntelliJ reformatting because the IDE formatter can flatten nested lists.
 
 ### VS Code
 

@@ -272,6 +272,12 @@
   - `rg -n "^import .*\\.\\*;|^import static .*\\.\\*;" src buildSrc/src -g "*.java"` found no wildcard imports.
   - `./build.ps1 checkFormat --no-daemon` passed.
   - `./build.ps1 build --no-daemon` passed: 264 tests, JaCoCo line coverage 93.3%, Asciidoctor generation, Docker image build, dependency and image Trivy scans, CycloneDX SBOM generation, Palantir/Spotless formatting, PMD, SpotBugs, and coverage verification all completed successfully.
+- 2026-05-06 IntelliJ AsciiDoc follow-up:
+  - observed IntelliJ reformat flattening the nested list under `src/docs/asciidoc/index.adoc` despite AsciiDoc no-wrap settings.
+  - restored the nested list and re-added IntelliJ `DO_NOT_FORMAT` exclusions for `src/docs/asciidoc/**/*.adoc` and `src/docs/asciidoc/**/*.asciidoc`.
+  - removed `.properties` files from the generic Spotless misc target after `checkFormat` collapsed intentional blank-line separators in `src/test/resources/application-test.properties`; `.properties` files remain governed by `.editorconfig` and IntelliJ's `KEEP_BLANK_LINES=true` setting.
+  - recorded the exclusion in `SETUP.md` and `ai/CODE_STYLE.md`.
+  - XML parsing for `.idea/codeStyles/Project.xml`, `git diff --check`, and `./build.ps1 checkFormat --no-daemon` passed.
 
 ## User Validation
 - Review the implementation as two commits:

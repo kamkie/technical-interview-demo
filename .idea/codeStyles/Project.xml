@@ -38,6 +38,8 @@
         <fileSet type="globPattern" pattern="buildSrc/build/**" />
         <fileSet type="globPattern" pattern="gradle/wrapper/gradle-wrapper.jar" />
         <fileSet type="globPattern" pattern="out/**" />
+        <fileSet type="globPattern" pattern="src/docs/asciidoc/**/*.adoc" />
+        <fileSet type="globPattern" pattern="src/docs/asciidoc/**/*.asciidoc" />
         <fileSet type="globPattern" pattern="src/gatling/resources/gatling-benchmark-baseline.json" />
         <fileSet type="globPattern" pattern="src/test/resources/http/http-client.private.env.json" />
         <fileSet type="globPattern" pattern="src/test/resources/openapi/approved-openapi.json" />
