@@ -16,6 +16,7 @@ Look for any of the following, not only verbatim duplicates:
 - stale references (renamed/moved files, archived plans, retired prompts)
 - verbose phrasing, redundant lists, or examples that belong in `ai/references/` or `ai/templates/`
 - orphaned cross-references and broken anchors
+- accumulated history inside standing guideline files: changelog-style notes, "previously…/now…" wording, migration narratives, dated decisions, deprecation traces, or rationale that documents past states rather than current rules; released history belongs in `CHANGELOG.md`, durable lessons in `ai/LEARNINGS.md`, and completed plans in `ai/archive/`
 
 Use targeted `search_project` queries (1–3 distinctive keywords per policy) before opening large files.
 
@@ -25,6 +26,7 @@ Use targeted `search_project` queries (1–3 distinctive keywords per policy) be
 - Move guidance to its single best owning file and replace the other locations with a short cross-reference.
 - Preserve normative wording (MUST/SHOULD-style rules); compact only structure, examples, and restatements.
 - Do not delete guidance whose owner is unclear — flag it in the summary instead.
+- When removing accumulated history, keep only the current rule; relocate any still-useful lesson to `ai/LEARNINGS.md` and any released-history wording to `CHANGELOG.md` instead of dropping it silently.
 - Propose new files only if the current owners cannot stay role-distinct without them.
 - Do not touch `ai/archive/` content.
 
