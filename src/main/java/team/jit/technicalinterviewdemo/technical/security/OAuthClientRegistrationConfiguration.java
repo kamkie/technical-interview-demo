@@ -24,7 +24,7 @@ public class OAuthClientRegistrationConfiguration {
 
         if (configuredProviders.isEmpty()) {
             throw new IllegalStateException(
-                    "OAuth profile requires at least one configured identity provider with client credentials."
+                "OAuth profile requires at least one configured identity provider with client credentials."
             );
         }
 
@@ -38,18 +38,18 @@ public class OAuthClientRegistrationConfiguration {
     }
 
     private ClientRegistration clientRegistration(
-                                                  String registrationId, SecuritySettingsProperties.OAuth.Provider provider
+        String registrationId, SecuritySettingsProperties.OAuth.Provider provider
     ) {
         if (!provider.hasClientCredentials()) {
             throw new IllegalStateException(
-                    "OAuth provider '%s' requires both client-id and client-secret.".formatted(registrationId)
+                "OAuth provider '%s' requires both client-id and client-secret.".formatted(registrationId)
             );
         }
 
         SecuritySettingsProperties.OAuth.ProviderType providerType = provider.getType();
         if (providerType == null) {
             throw new IllegalStateException(
-                    "OAuth provider '%s' requires a provider type (GITHUB or OIDC).".formatted(registrationId)
+                "OAuth provider '%s' requires a provider type (GITHUB or OIDC).".formatted(registrationId)
             );
         }
 
@@ -60,7 +60,7 @@ public class OAuthClientRegistrationConfiguration {
     }
 
     private ClientRegistration githubRegistration(
-                                                  String registrationId, SecuritySettingsProperties.OAuth.Provider provider
+        String registrationId, SecuritySettingsProperties.OAuth.Provider provider
     ) {
         ClientRegistration.Builder builder = CommonOAuth2Provider.GITHUB.getBuilder(registrationId).clientId(provider.normalizedClientId()).clientSecret(provider.normalizedClientSecret()).redirectUri(SecuritySettingsProperties.OAuth.REDIRECT_URI_TEMPLATE);
 
@@ -78,12 +78,12 @@ public class OAuthClientRegistrationConfiguration {
     }
 
     private ClientRegistration oidcRegistration(
-                                                String registrationId, SecuritySettingsProperties.OAuth.Provider provider
+        String registrationId, SecuritySettingsProperties.OAuth.Provider provider
     ) {
         String issuerUri = provider.normalizedIssuerUri();
         if (issuerUri.isBlank()) {
             throw new IllegalStateException(
-                    "OIDC provider '%s' requires issuer-uri.".formatted(registrationId)
+                "OIDC provider '%s' requires issuer-uri.".formatted(registrationId)
             );
         }
 

@@ -12,7 +12,7 @@ public class LocalizationNotFoundException extends RuntimeException {
 
     public LocalizationNotFoundException(String messageKey, String language, String fallbackLanguage) {
         super(
-                "Localization with key '%s' was not found for language '%s' or fallback language '%s'.".formatted(messageKey, language, fallbackLanguage)
+            "Localization with key '%s' was not found for language '%s' or fallback language '%s'.".formatted(messageKey, language, fallbackLanguage)
         );
     }
 }

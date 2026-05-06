@@ -28,10 +28,10 @@ public class ApiAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(
-                         HttpServletRequest request, HttpServletResponse response, AuthenticationException authenticationException
+        HttpServletRequest request, HttpServletResponse response, AuthenticationException authenticationException
     ) throws IOException, ServletException {
         var problemDetail = apiProblemFactory.clientProblem(
-                HttpStatus.UNAUTHORIZED, "Unauthorized", "Authentication is required to access this resource.", "error.request.unauthorized", request, Map.of("exception", authenticationException.getClass().getSimpleName())
+            HttpStatus.UNAUTHORIZED, "Unauthorized", "Authentication is required to access this resource.", "error.request.unauthorized", request, Map.of("exception", authenticationException.getClass().getSimpleName())
         );
         writeProblem(response, problemDetail, HttpStatus.UNAUTHORIZED);
     }

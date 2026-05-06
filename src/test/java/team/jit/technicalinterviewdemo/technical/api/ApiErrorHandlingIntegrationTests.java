@@ -26,13 +26,13 @@ class ApiErrorHandlingIntegrationTests extends AbstractBookCatalogMockMvcIntegra
         BrowserSession browserSession = readerSession();
 
         mockMvc.perform(post("/api/books").with(browserSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "title": "",
-                  "author": " ",
-                  "isbn": "",
-                  "publicationYear": null
-                }
-                """)).andExpect(status().isBadRequest()).andExpect(jsonPath("$.title").value("Validation Failed")).andExpect(jsonPath("$.fieldErrors.title").value("title is required")).andExpect(jsonPath("$.fieldErrors.author").value("author is required")).andExpect(jsonPath("$.fieldErrors.isbn").value("isbn is required")).andExpect(jsonPath("$.fieldErrors.publicationYear").value("publicationYear is required")).andExpect(jsonPath("$.fieldErrors['create.arg0.title']").doesNotExist()).andExpect(jsonPath("$.exception").doesNotExist()).andExpect(jsonPath("$.trace").doesNotExist());
+            {
+              "title": "",
+              "author": " ",
+              "isbn": "",
+              "publicationYear": null
+            }
+            """)).andExpect(status().isBadRequest()).andExpect(jsonPath("$.title").value("Validation Failed")).andExpect(jsonPath("$.fieldErrors.title").value("title is required")).andExpect(jsonPath("$.fieldErrors.author").value("author is required")).andExpect(jsonPath("$.fieldErrors.isbn").value("isbn is required")).andExpect(jsonPath("$.fieldErrors.publicationYear").value("publicationYear is required")).andExpect(jsonPath("$.fieldErrors['create.arg0.title']").doesNotExist()).andExpect(jsonPath("$.exception").doesNotExist()).andExpect(jsonPath("$.trace").doesNotExist());
     }
 
     @Test
@@ -40,10 +40,10 @@ class ApiErrorHandlingIntegrationTests extends AbstractBookCatalogMockMvcIntegra
         BrowserSession browserSession = readerSession();
 
         mockMvc.perform(post("/api/books").with(browserSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "title": "Broken JSON",
-                  "author": "Craig Walls",
-                """)).andExpect(status().isBadRequest()).andExpect(jsonPath("$.title").value("Malformed Request Body")).andExpect(jsonPath("$.detail").value("Request body is missing or malformed."));
+            {
+              "title": "Broken JSON",
+              "author": "Craig Walls",
+            """)).andExpect(status().isBadRequest()).andExpect(jsonPath("$.title").value("Malformed Request Body")).andExpect(jsonPath("$.detail").value("Request body is missing or malformed."));
     }
 
     @Test

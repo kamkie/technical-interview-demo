@@ -32,25 +32,25 @@ public class SecurityConfiguration {
 
     @Bean
     AuthenticatedUserSynchronizationFilter authenticatedUserSynchronizationFilter(
-                                                                                  CurrentUserAccountService currentUserAccountService
+        CurrentUserAccountService currentUserAccountService
     ) {
         return new AuthenticatedUserSynchronizationFilter(currentUserAccountService);
     }
 
     @Bean
     SecurityFilterChain securityFilterChain(
-                                            HttpSecurity http, ObjectProvider<ClientRegistrationRepository> clientRegistrationRepository, AuthenticatedUserSynchronizationFilter authenticatedUserSynchronizationFilter, ApiAuthenticationEntryPoint apiAuthenticationEntryPoint, ApiAccessDeniedHandler apiAccessDeniedHandler, SessionRegistry sessionRegistry, SecuritySettingsProperties securitySettingsProperties, Environment environment, CurrentApplicationSessionResolver currentApplicationSessionResolver, CsrfTokenRepository csrfTokenRepository, CsrfTokenRequestHandler csrfTokenRequestHandler, AuthenticationSuccessHandler oauthAuthenticationSuccessHandler, AuthenticationFailureHandler oauthAuthenticationFailureHandler
+        HttpSecurity http, ObjectProvider<ClientRegistrationRepository> clientRegistrationRepository, AuthenticatedUserSynchronizationFilter authenticatedUserSynchronizationFilter, ApiAuthenticationEntryPoint apiAuthenticationEntryPoint, ApiAccessDeniedHandler apiAccessDeniedHandler, SessionRegistry sessionRegistry, SecuritySettingsProperties securitySettingsProperties, Environment environment, CurrentApplicationSessionResolver currentApplicationSessionResolver, CsrfTokenRepository csrfTokenRepository, CsrfTokenRequestHandler csrfTokenRequestHandler, AuthenticationSuccessHandler oauthAuthenticationSuccessHandler, AuthenticationFailureHandler oauthAuthenticationFailureHandler
     ) throws Exception {
         boolean prodProfileActive = environment.acceptsProfiles(Profiles.of("prod"));
 
         http.formLogin(AbstractHttpConfigurer::disable).httpBasic(AbstractHttpConfigurer::disable).csrf(csrf -> csrf.csrfTokenRepository(csrfTokenRepository).csrfTokenRequestHandler(csrfTokenRequestHandler).requireCsrfProtectionMatcher(new CurrentSessionCsrfProtectionMatcher(currentApplicationSessionResolver))
         ).headers(headers -> configureSecurityHeaders(headers, prodProfileActive)).authorizeHttpRequests(authorize -> authorize.requestMatchers("/error", "/", "/docs", "/docs/**", "/hello").permitAll().requestMatchers("/v3/api-docs", "/v3/api-docs/**", "/v3/api-docs.yaml").permitAll().requestMatchers(SecuritySettingsProperties.OAuth.AUTHORIZATION_BASE_URI + "/**").permitAll().requestMatchers(SecuritySettingsProperties.OAuth.CALLBACK_BASE_URI + "/**").permitAll().requestMatchers(HttpMethod.GET, "/api/session").permitAll().requestMatchers(HttpMethod.POST, "/api/session/logout").permitAll().requestMatchers("/api/admin/**").authenticated().requestMatchers("/api/account", "/api/account/**").authenticated().requestMatchers(HttpMethod.GET, "/api/**").permitAll().requestMatchers(HttpMethod.GET, "/actuator/health", "/actuator/health/**").permitAll()
-                // Prometheus stays reachable for trusted deployment scraping; deployment boundaries keep it off the internet.
-                .requestMatchers(HttpMethod.GET, "/actuator/info", "/actuator/prometheus").permitAll().requestMatchers(HttpMethod.POST, "/api/books", "/api/categories", "/api/localizations").authenticated().requestMatchers(HttpMethod.PUT, "/api/books/*", "/api/categories/*", "/api/localizations/*").authenticated().requestMatchers(HttpMethod.DELETE, "/api/books/*", "/api/categories/*", "/api/localizations/*").authenticated().anyRequest().permitAll()
+            // Prometheus stays reachable for trusted deployment scraping; deployment boundaries keep it off the internet.
+            .requestMatchers(HttpMethod.GET, "/actuator/info", "/actuator/prometheus").permitAll().requestMatchers(HttpMethod.POST, "/api/books", "/api/categories", "/api/localizations").authenticated().requestMatchers(HttpMethod.PUT, "/api/books/*", "/api/categories/*", "/api/localizations/*").authenticated().requestMatchers(HttpMethod.DELETE, "/api/books/*", "/api/categories/*", "/api/localizations/*").authenticated().anyRequest().permitAll()
         ).exceptionHandling(exceptions -> exceptions.defaultAuthenticationEntryPointFor(
-                apiAuthenticationEntryPoint, request -> request.getRequestURI().startsWith("/api/")
+            apiAuthenticationEntryPoint, request -> request.getRequestURI().startsWith("/api/")
         ).defaultAccessDeniedHandlerFor(
-                apiAccessDeniedHandler, request -> request.getRequestURI().startsWith("/api/")
+            apiAccessDeniedHandler, request -> request.getRequestURI().startsWith("/api/")
         )
         ).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).sessionFixation(sessionFixation -> sessionFixation.migrateSession())
         ).addFilterAfter(authenticatedUserSynchronizationFilter, AuthorizationFilter.class);
@@ -115,7 +115,7 @@ public class SecurityConfiguration {
 
     @Bean
     AuthenticationSuccessHandler oauthAuthenticationSuccessHandler(
-                                                                   CurrentUserAccountService currentUserAccountService, AuditLogService auditLogService
+        CurrentUserAccountService currentUserAccountService, AuditLogService auditLogService
     ) {
         return new AuditingAuthenticationSuccessHandler(currentUserAccountService, auditLogService);
     }

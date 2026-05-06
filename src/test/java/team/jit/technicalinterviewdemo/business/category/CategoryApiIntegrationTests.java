@@ -52,10 +52,10 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
         BrowserSession adminSession = adminSession();
 
         mockMvc.perform(post("/api/categories").with(adminSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "name": "Architecture"
-                }
-                """)).andExpect(status().isCreated()).andExpect(jsonPath("$.id").isNumber()).andExpect(jsonPath("$.name").value("Architecture"));
+            {
+              "name": "Architecture"
+            }
+            """)).andExpect(status().isCreated()).andExpect(jsonPath("$.id").isNumber()).andExpect(jsonPath("$.name").value("Architecture"));
     }
 
     @Test
@@ -63,28 +63,28 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
         BrowserSession userSession = userSession();
 
         mockMvc.perform(post("/api/categories").with(userSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "name": "Architecture"
-                }
-                """)).andExpect(status().isForbidden()).andExpect(jsonPath("$.title").value("Forbidden")).andExpect(jsonPath("$.status").value(403)).andExpect(jsonPath("$.detail").value("Category management requires the ADMIN role.")).andExpect(jsonPath("$.messageKey").value("error.request.forbidden")).andExpect(jsonPath("$.message").value("You do not have permission to perform this operation.")).andExpect(jsonPath("$.language").value("en"));
+            {
+              "name": "Architecture"
+            }
+            """)).andExpect(status().isForbidden()).andExpect(jsonPath("$.title").value("Forbidden")).andExpect(jsonPath("$.status").value(403)).andExpect(jsonPath("$.detail").value("Category management requires the ADMIN role.")).andExpect(jsonPath("$.messageKey").value("error.request.forbidden")).andExpect(jsonPath("$.message").value("You do not have permission to perform this operation.")).andExpect(jsonPath("$.language").value("en"));
     }
 
     @Test
     void createCategoryWithoutAuthenticationReturnsUnauthorized() throws Exception {
         mockMvc.perform(post("/api/categories").contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "name": "Architecture"
-                }
-                """)).andExpect(status().isUnauthorized()).andExpect(jsonPath("$.title").value("Unauthorized")).andExpect(jsonPath("$.status").value(401)).andExpect(jsonPath("$.detail").value("Authentication is required to access this resource.")).andExpect(jsonPath("$.messageKey").value("error.request.unauthorized")).andExpect(jsonPath("$.message").value("You must authenticate before performing this operation.")).andExpect(jsonPath("$.language").value("en"));
+            {
+              "name": "Architecture"
+            }
+            """)).andExpect(status().isUnauthorized()).andExpect(jsonPath("$.title").value("Unauthorized")).andExpect(jsonPath("$.status").value(401)).andExpect(jsonPath("$.detail").value("Authentication is required to access this resource.")).andExpect(jsonPath("$.messageKey").value("error.request.unauthorized")).andExpect(jsonPath("$.message").value("You must authenticate before performing this operation.")).andExpect(jsonPath("$.language").value("en"));
     }
 
     @Test
     void createCategoryWithoutAuthenticationUsesRequestLanguageForUnauthorizedProblem() throws Exception {
         mockMvc.perform(post("/api/categories").queryParam("lang", "pl").contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "name": "Architecture"
-                }
-                """)).andExpect(status().isUnauthorized()).andExpect(jsonPath("$.messageKey").value("error.request.unauthorized")).andExpect(jsonPath("$.message").value("Musisz sie uwierzytelnic przed wykonaniem tej operacji.")).andExpect(jsonPath("$.language").value("pl"));
+            {
+              "name": "Architecture"
+            }
+            """)).andExpect(status().isUnauthorized()).andExpect(jsonPath("$.messageKey").value("error.request.unauthorized")).andExpect(jsonPath("$.message").value("Musisz sie uwierzytelnic przed wykonaniem tej operacji.")).andExpect(jsonPath("$.language").value("pl"));
     }
 
     @Test
@@ -92,10 +92,10 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
         BrowserSession adminSession = adminSession();
 
         mockMvc.perform(post("/api/categories").with(adminSession.authenticatedSession()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "name": "Architecture"
-                }
-                """)).andExpect(status().isForbidden()).andExpect(jsonPath("$.title").value("Invalid CSRF Token")).andExpect(jsonPath("$.detail").value("A valid CSRF token is required to perform this operation.")).andExpect(jsonPath("$.messageKey").value("error.request.csrf_invalid"));
+            {
+              "name": "Architecture"
+            }
+            """)).andExpect(status().isForbidden()).andExpect(jsonPath("$.title").value("Invalid CSRF Token")).andExpect(jsonPath("$.detail").value("A valid CSRF token is required to perform this operation.")).andExpect(jsonPath("$.messageKey").value("error.request.csrf_invalid"));
     }
 
     @Test
@@ -103,10 +103,10 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
         BrowserSession adminSession = adminSession();
 
         mockMvc.perform(post("/api/categories").with(adminSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "name": "java"
-                }
-                """)).andExpect(status().isBadRequest()).andExpect(jsonPath("$.title").value("Invalid Request")).andExpect(jsonPath("$.detail").value("Category 'java' already exists.")).andExpect(jsonPath("$.messageKey").value("error.request.invalid")).andExpect(jsonPath("$.language").value("en"));
+            {
+              "name": "java"
+            }
+            """)).andExpect(status().isBadRequest()).andExpect(jsonPath("$.title").value("Invalid Request")).andExpect(jsonPath("$.detail").value("Category 'java' already exists.")).andExpect(jsonPath("$.messageKey").value("error.request.invalid")).andExpect(jsonPath("$.language").value("en"));
     }
 
     @Test
@@ -115,10 +115,10 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
         BrowserSession adminSession = adminSession();
 
         mockMvc.perform(put("/api/categories/{id}", javaCategory.getId()).with(adminSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "name": "JVM"
-                }
-                """)).andExpect(status().isOk()).andExpect(jsonPath("$.id").value(javaCategory.getId())).andExpect(jsonPath("$.name").value("JVM"));
+            {
+              "name": "JVM"
+            }
+            """)).andExpect(status().isOk()).andExpect(jsonPath("$.id").value(javaCategory.getId())).andExpect(jsonPath("$.name").value("JVM"));
     }
 
     @Test
@@ -127,10 +127,10 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
         BrowserSession adminSession = adminSession();
 
         mockMvc.perform(put("/api/categories/{id}", javaCategory.getId()).with(adminSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "name": "Best Practices"
-                }
-                """)).andExpect(status().isBadRequest()).andExpect(jsonPath("$.title").value("Invalid Request")).andExpect(jsonPath("$.detail").value("Category 'Best Practices' already exists.")).andExpect(jsonPath("$.messageKey").value("error.request.invalid"));
+            {
+              "name": "Best Practices"
+            }
+            """)).andExpect(status().isBadRequest()).andExpect(jsonPath("$.title").value("Invalid Request")).andExpect(jsonPath("$.detail").value("Category 'Best Practices' already exists.")).andExpect(jsonPath("$.messageKey").value("error.request.invalid"));
     }
 
     @Test
@@ -138,10 +138,10 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
         BrowserSession adminSession = adminSession();
 
         mockMvc.perform(put("/api/categories/{id}", 9999).with(adminSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "name": "Architecture"
-                }
-                """)).andExpect(status().isNotFound()).andExpect(jsonPath("$.title").value("Category Not Found")).andExpect(jsonPath("$.detail").value("Category with id 9999 was not found.")).andExpect(jsonPath("$.messageKey").value("error.category.not_found")).andExpect(jsonPath("$.language").value("en"));
+            {
+              "name": "Architecture"
+            }
+            """)).andExpect(status().isNotFound()).andExpect(jsonPath("$.title").value("Category Not Found")).andExpect(jsonPath("$.detail").value("Category with id 9999 was not found.")).andExpect(jsonPath("$.messageKey").value("error.category.not_found")).andExpect(jsonPath("$.language").value("en"));
     }
 
     @Test
@@ -150,10 +150,10 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
         BrowserSession userSession = userSession();
 
         mockMvc.perform(put("/api/categories/{id}", javaCategory.getId()).with(userSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "name": "JVM"
-                }
-                """)).andExpect(status().isForbidden()).andExpect(jsonPath("$.detail").value("Category management requires the ADMIN role.")).andExpect(jsonPath("$.messageKey").value("error.request.forbidden"));
+            {
+              "name": "JVM"
+            }
+            """)).andExpect(status().isForbidden()).andExpect(jsonPath("$.detail").value("Category management requires the ADMIN role.")).andExpect(jsonPath("$.messageKey").value("error.request.forbidden"));
     }
 
     @Test
@@ -172,7 +172,7 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
         BrowserSession adminSession = adminSession();
 
         mockMvc.perform(delete("/api/categories/{id}", javaCategory.getId()).with(adminSession.unsafeWrite())).andExpect(status().isConflict()).andExpect(jsonPath("$.title").value("Category In Use")).andExpect(jsonPath("$.detail").value(
-                "Category 'Java' with id %d cannot be deleted because it is still assigned to one or more books.".formatted(javaCategory.getId())
+            "Category 'Java' with id %d cannot be deleted because it is still assigned to one or more books.".formatted(javaCategory.getId())
         )).andExpect(jsonPath("$.messageKey").value("error.category.in_use")).andExpect(jsonPath("$.language").value("en"));
     }
 

@@ -33,7 +33,7 @@ public class HttpTracingLoggingFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
-                                    HttpServletRequest request, HttpServletResponse response, FilterChain filterChain
+        HttpServletRequest request, HttpServletResponse response, FilterChain filterChain
     ) throws ServletException, IOException {
         long startTimeNanos = System.nanoTime();
         boolean shouldLog = shouldLogRequest(request);
@@ -47,7 +47,7 @@ public class HttpTracingLoggingFilter extends OncePerRequestFilter {
             setTraceparentHeaderIfTraceActive(response);
             if (shouldLog) {
                 log.info(
-                        "HTTP request started method={} path={} params={} traceparent={}", requestMethod, requestPath, SensitiveDataSanitizer.sanitizeParameters(request.getParameterMap()), SensitiveDataSanitizer.sanitizeForLog(response.getHeader(TRACEPARENT_HEADER))
+                    "HTTP request started method={} path={} params={} traceparent={}", requestMethod, requestPath, SensitiveDataSanitizer.sanitizeParameters(request.getParameterMap()), SensitiveDataSanitizer.sanitizeForLog(response.getHeader(TRACEPARENT_HEADER))
                 );
             }
             filterChain.doFilter(request, response);
@@ -56,7 +56,7 @@ public class HttpTracingLoggingFilter extends OncePerRequestFilter {
 
             if (shouldLog) {
                 log.info(
-                        "HTTP response completed method={} path={} status={} durationMs={} traceparent={}", requestMethod, requestPath, response.getStatus(), toDurationMillis(startTimeNanos), SensitiveDataSanitizer.sanitizeForLog(response.getHeader(TRACEPARENT_HEADER))
+                    "HTTP response completed method={} path={} status={} durationMs={} traceparent={}", requestMethod, requestPath, response.getStatus(), toDurationMillis(startTimeNanos), SensitiveDataSanitizer.sanitizeForLog(response.getHeader(TRACEPARENT_HEADER))
                 );
             }
             MDC.remove(REQUEST_ID_MDC_KEY);

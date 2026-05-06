@@ -16,7 +16,7 @@ public class CategoryDataInitializer {
     @Bean
     @Order(10)
     CommandLineRunner seedCategories(
-                                     CategoryRepository categoryRepository, BootstrapSettingsProperties bootstrapSettingsProperties
+        CategoryRepository categoryRepository, BootstrapSettingsProperties bootstrapSettingsProperties
     ) {
         return args -> {
             if (!bootstrapSettingsProperties.getSeed().isDemoData()) {

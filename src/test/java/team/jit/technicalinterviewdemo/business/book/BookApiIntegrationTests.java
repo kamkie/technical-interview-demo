@@ -68,14 +68,14 @@ class BookApiIntegrationTests extends AbstractBookCatalogMockMvcIntegrationTest 
     @Test
     void listBooksWithConflictingYearFiltersReturnsBadRequest() throws Exception {
         mockMvc.perform(get("/api/books").queryParam("year", "2018").queryParam("yearFrom", "2000")).andExpect(status().isBadRequest()).andExpect(jsonPath("$.title").value("Invalid Request")).andExpect(jsonPath("$.detail").value(
-                "Use either 'year' or the 'yearFrom'/'yearTo' range parameters, not both."
+            "Use either 'year' or the 'yearFrom'/'yearTo' range parameters, not both."
         ));
     }
 
     @Test
     void listBooksWithUnsupportedSortReturnsBadRequest() throws Exception {
         mockMvc.perform(get("/api/books").queryParam("sort", "dropTable,asc")).andExpect(status().isBadRequest()).andExpect(jsonPath("$.title").value("Invalid Request")).andExpect(jsonPath("$.detail").value(
-                "Sort field 'dropTable' is not supported. Use one of: id, title, author, isbn, year."
+            "Sort field 'dropTable' is not supported. Use one of: id, title, author, isbn, year."
         ));
     }
 
@@ -89,26 +89,26 @@ class BookApiIntegrationTests extends AbstractBookCatalogMockMvcIntegrationTest 
         BrowserSession browserSession = readerSession();
 
         mockMvc.perform(post("/api/books").with(browserSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "title": "Spring in Action",
-                  "author": "Craig Walls",
-                  "isbn": "9781617297571",
-                  "publicationYear": 2022,
-                  "categories": ["Java", "Best Practices"]
-                }
-                """)).andExpect(status().isCreated()).andExpect(jsonPath("$.id").isNumber()).andExpect(jsonPath("$.version").isNumber()).andExpect(jsonPath("$.title").value("Spring in Action")).andExpect(jsonPath("$.author").value("Craig Walls")).andExpect(jsonPath("$.isbn").value("9781617297571")).andExpect(jsonPath("$.publicationYear").value(2022)).andExpect(jsonPath("$.categories.length()").value(2)).andExpect(jsonPath("$.categories[0].name").value("Best Practices")).andExpect(jsonPath("$.categories[1].name").value("Java"));
+            {
+              "title": "Spring in Action",
+              "author": "Craig Walls",
+              "isbn": "9781617297571",
+              "publicationYear": 2022,
+              "categories": ["Java", "Best Practices"]
+            }
+            """)).andExpect(status().isCreated()).andExpect(jsonPath("$.id").isNumber()).andExpect(jsonPath("$.version").isNumber()).andExpect(jsonPath("$.title").value("Spring in Action")).andExpect(jsonPath("$.author").value("Craig Walls")).andExpect(jsonPath("$.isbn").value("9781617297571")).andExpect(jsonPath("$.publicationYear").value(2022)).andExpect(jsonPath("$.categories.length()").value(2)).andExpect(jsonPath("$.categories[0].name").value("Best Practices")).andExpect(jsonPath("$.categories[1].name").value("Java"));
     }
 
     @Test
     void createBookWithoutAuthenticationReturnsUnauthorized() throws Exception {
         mockMvc.perform(post("/api/books").contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "title": "Spring in Action",
-                  "author": "Craig Walls",
-                  "isbn": "9781617297571",
-                  "publicationYear": 2022
-                }
-                """)).andExpect(status().isUnauthorized());
+            {
+              "title": "Spring in Action",
+              "author": "Craig Walls",
+              "isbn": "9781617297571",
+              "publicationYear": 2022
+            }
+            """)).andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -116,13 +116,13 @@ class BookApiIntegrationTests extends AbstractBookCatalogMockMvcIntegrationTest 
         BrowserSession browserSession = readerSession();
 
         mockMvc.perform(post("/api/books").with(browserSession.authenticatedSession()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "title": "Spring in Action",
-                  "author": "Craig Walls",
-                  "isbn": "9781617297571",
-                  "publicationYear": 2022
-                }
-                """)).andExpect(status().isForbidden()).andExpect(jsonPath("$.title").value("Invalid CSRF Token")).andExpect(jsonPath("$.detail").value("A valid CSRF token is required to perform this operation.")).andExpect(jsonPath("$.messageKey").value("error.request.csrf_invalid")).andExpect(jsonPath("$.message").value("A valid CSRF token is required to perform this operation.")).andExpect(jsonPath("$.language").value("en"));
+            {
+              "title": "Spring in Action",
+              "author": "Craig Walls",
+              "isbn": "9781617297571",
+              "publicationYear": 2022
+            }
+            """)).andExpect(status().isForbidden()).andExpect(jsonPath("$.title").value("Invalid CSRF Token")).andExpect(jsonPath("$.detail").value("A valid CSRF token is required to perform this operation.")).andExpect(jsonPath("$.messageKey").value("error.request.csrf_invalid")).andExpect(jsonPath("$.message").value("A valid CSRF token is required to perform this operation.")).andExpect(jsonPath("$.language").value("en"));
     }
 
     @Test
@@ -130,13 +130,13 @@ class BookApiIntegrationTests extends AbstractBookCatalogMockMvcIntegrationTest 
         BrowserSession browserSession = readerSession();
 
         mockMvc.perform(post("/api/books").with(browserSession.unsafeWriteWithInvalidCsrf()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "title": "Spring in Action",
-                  "author": "Craig Walls",
-                  "isbn": "9781617297571",
-                  "publicationYear": 2022
-                }
-                """)).andExpect(status().isForbidden()).andExpect(jsonPath("$.title").value("Invalid CSRF Token")).andExpect(jsonPath("$.messageKey").value("error.request.csrf_invalid"));
+            {
+              "title": "Spring in Action",
+              "author": "Craig Walls",
+              "isbn": "9781617297571",
+              "publicationYear": 2022
+            }
+            """)).andExpect(status().isForbidden()).andExpect(jsonPath("$.title").value("Invalid CSRF Token")).andExpect(jsonPath("$.messageKey").value("error.request.csrf_invalid"));
     }
 
     @Test
@@ -144,13 +144,13 @@ class BookApiIntegrationTests extends AbstractBookCatalogMockMvcIntegrationTest 
         BrowserSession browserSession = readerSession();
 
         mockMvc.perform(post("/api/books").with(browserSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "title": "Another Clean Code",
-                  "author": "Robert C. Martin",
-                  "isbn": "9780132350884",
-                  "publicationYear": 2009
-                }
-                """)).andExpect(status().isConflict()).andExpect(jsonPath("$.title").value("Duplicate ISBN")).andExpect(jsonPath("$.detail").value("Book with ISBN 9780132350884 already exists.")).andExpect(jsonPath("$.messageKey").value("error.book.isbn_duplicate")).andExpect(jsonPath("$.message").value("A book with the same ISBN already exists.")).andExpect(jsonPath("$.language").value("en")).andExpect(jsonPath("$.exception").doesNotExist()).andExpect(jsonPath("$.trace").doesNotExist());
+            {
+              "title": "Another Clean Code",
+              "author": "Robert C. Martin",
+              "isbn": "9780132350884",
+              "publicationYear": 2009
+            }
+            """)).andExpect(status().isConflict()).andExpect(jsonPath("$.title").value("Duplicate ISBN")).andExpect(jsonPath("$.detail").value("Book with ISBN 9780132350884 already exists.")).andExpect(jsonPath("$.messageKey").value("error.book.isbn_duplicate")).andExpect(jsonPath("$.message").value("A book with the same ISBN already exists.")).andExpect(jsonPath("$.language").value("en")).andExpect(jsonPath("$.exception").doesNotExist()).andExpect(jsonPath("$.trace").doesNotExist());
     }
 
     @Test
@@ -158,14 +158,14 @@ class BookApiIntegrationTests extends AbstractBookCatalogMockMvcIntegrationTest 
         BrowserSession browserSession = readerSession();
 
         mockMvc.perform(post("/api/books").with(browserSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "title": "Spring in Action",
-                  "author": "Craig Walls",
-                  "isbn": "9781617297571",
-                  "publicationYear": 2022,
-                  "categories": ["Missing Category"]
-                }
-                """)).andExpect(status().isBadRequest()).andExpect(jsonPath("$.title").value("Invalid Request")).andExpect(jsonPath("$.detail").value("Unknown categories: Missing Category.")).andExpect(jsonPath("$.messageKey").value("error.request.invalid")).andExpect(jsonPath("$.language").value("en"));
+            {
+              "title": "Spring in Action",
+              "author": "Craig Walls",
+              "isbn": "9781617297571",
+              "publicationYear": 2022,
+              "categories": ["Missing Category"]
+            }
+            """)).andExpect(status().isBadRequest()).andExpect(jsonPath("$.title").value("Invalid Request")).andExpect(jsonPath("$.detail").value("Unknown categories: Missing Category.")).andExpect(jsonPath("$.messageKey").value("error.request.invalid")).andExpect(jsonPath("$.language").value("en"));
     }
 
     @Test
@@ -173,14 +173,14 @@ class BookApiIntegrationTests extends AbstractBookCatalogMockMvcIntegrationTest 
         BrowserSession browserSession = readerSession();
 
         mockMvc.perform(put("/api/books/{id}", cleanCode.getId()).with(browserSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "title": "Clean Code Second Edition",
-                  "author": "Robert C. Martin",
-                  "version": %d,
-                  "publicationYear": 2026,
-                  "categories": ["Java"]
-                }
-                """.formatted(cleanCode.getVersion()))).andExpect(status().isOk()).andExpect(jsonPath("$.id").value(cleanCode.getId())).andExpect(jsonPath("$.version").value(cleanCode.getVersion() + 1)).andExpect(jsonPath("$.title").value("Clean Code Second Edition")).andExpect(jsonPath("$.isbn").value("9780132350884")).andExpect(jsonPath("$.publicationYear").value(2026)).andExpect(jsonPath("$.categories.length()").value(1)).andExpect(jsonPath("$.categories[0].name").value("Java"));
+            {
+              "title": "Clean Code Second Edition",
+              "author": "Robert C. Martin",
+              "version": %d,
+              "publicationYear": 2026,
+              "categories": ["Java"]
+            }
+            """.formatted(cleanCode.getVersion()))).andExpect(status().isOk()).andExpect(jsonPath("$.id").value(cleanCode.getId())).andExpect(jsonPath("$.version").value(cleanCode.getVersion() + 1)).andExpect(jsonPath("$.title").value("Clean Code Second Edition")).andExpect(jsonPath("$.isbn").value("9780132350884")).andExpect(jsonPath("$.publicationYear").value(2026)).andExpect(jsonPath("$.categories.length()").value(1)).andExpect(jsonPath("$.categories[0].name").value("Java"));
     }
 
     @Test
@@ -188,14 +188,14 @@ class BookApiIntegrationTests extends AbstractBookCatalogMockMvcIntegrationTest 
         BrowserSession browserSession = readerSession();
 
         mockMvc.perform(put("/api/books/{id}", cleanCode.getId()).with(browserSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "title": "Clean Code Second Edition",
-                  "author": "Robert C. Martin",
-                  "isbn": "9780134685991",
-                  "version": %d,
-                  "publicationYear": 2026
-                }
-                """.formatted(cleanCode.getVersion()))).andExpect(status().isOk()).andExpect(jsonPath("$.isbn").value("9780132350884"));
+            {
+              "title": "Clean Code Second Edition",
+              "author": "Robert C. Martin",
+              "isbn": "9780134685991",
+              "version": %d,
+              "publicationYear": 2026
+            }
+            """.formatted(cleanCode.getVersion()))).andExpect(status().isOk()).andExpect(jsonPath("$.isbn").value("9780132350884"));
 
         mockMvc.perform(get("/api/books/{id}", cleanCode.getId())).andExpect(status().isOk()).andExpect(jsonPath("$.isbn").value("9780132350884"));
     }
@@ -203,13 +203,13 @@ class BookApiIntegrationTests extends AbstractBookCatalogMockMvcIntegrationTest 
     @Test
     void updateBookWithoutAuthenticationReturnsUnauthorized() throws Exception {
         mockMvc.perform(put("/api/books/{id}", cleanCode.getId()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "title": "Clean Code Second Edition",
-                  "author": "Robert C. Martin",
-                  "version": %d,
-                  "publicationYear": 2026
-                }
-                """.formatted(cleanCode.getVersion()))).andExpect(status().isUnauthorized());
+            {
+              "title": "Clean Code Second Edition",
+              "author": "Robert C. Martin",
+              "version": %d,
+              "publicationYear": 2026
+            }
+            """.formatted(cleanCode.getVersion()))).andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -218,23 +218,23 @@ class BookApiIntegrationTests extends AbstractBookCatalogMockMvcIntegrationTest 
         BrowserSession browserSession = readerSession();
 
         mockMvc.perform(put("/api/books/{id}", cleanCode.getId()).with(browserSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "title": "Clean Code Second Edition",
-                  "author": "Robert C. Martin",
-                  "version": %d,
-                  "publicationYear": 2026
-                }
-                """.formatted(staleVersion))).andExpect(status().isOk());
+            {
+              "title": "Clean Code Second Edition",
+              "author": "Robert C. Martin",
+              "version": %d,
+              "publicationYear": 2026
+            }
+            """.formatted(staleVersion))).andExpect(status().isOk());
 
         mockMvc.perform(put("/api/books/{id}", cleanCode.getId()).with(browserSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "title": "Clean Code Third Edition",
-                  "author": "Robert C. Martin",
-                  "version": %d,
-                  "publicationYear": 2027
-                }
-                """.formatted(staleVersion))).andExpect(status().isConflict()).andExpect(jsonPath("$.title").value("Concurrent Modification")).andExpect(jsonPath("$.detail").value(
-                "Book with id %d is at version %d. Retry the update with the latest version instead of %d.".formatted(cleanCode.getId(), staleVersion + 1, staleVersion)
+            {
+              "title": "Clean Code Third Edition",
+              "author": "Robert C. Martin",
+              "version": %d,
+              "publicationYear": 2027
+            }
+            """.formatted(staleVersion))).andExpect(status().isConflict()).andExpect(jsonPath("$.title").value("Concurrent Modification")).andExpect(jsonPath("$.detail").value(
+            "Book with id %d is at version %d. Retry the update with the latest version instead of %d.".formatted(cleanCode.getId(), staleVersion + 1, staleVersion)
         ));
     }
 

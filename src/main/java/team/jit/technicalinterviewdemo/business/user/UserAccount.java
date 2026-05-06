@@ -31,9 +31,9 @@ import java.util.Set;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(
-        name = "users", uniqueConstraints = @UniqueConstraint(
-                name = "uk_users_provider_external_login", columnNames = {"provider", "external_login"}
-        )
+    name = "users", uniqueConstraints = @UniqueConstraint(
+        name = "uk_users_provider_external_login", columnNames = {"provider", "external_login"}
+    )
 )
 public class UserAccount {
 
@@ -73,7 +73,7 @@ public class UserAccount {
     private List<UserRoleGrant> roleGrants = new ArrayList<>();
 
     public UserAccount(
-                       String provider, String externalLogin, String displayName, String email, String preferredLanguage, Instant lastLoginAt, Set<UserRole> roles
+        String provider, String externalLogin, String displayName, String email, String preferredLanguage, Instant lastLoginAt, Set<UserRole> roles
     ) {
         setProvider(provider);
         setExternalLogin(externalLogin);
@@ -126,7 +126,7 @@ public class UserAccount {
     }
 
     public void ensureRoleGrant(
-                                UserRole role, UserRoleGrantSource grantSource, UserAccount grantedByUser, String reason
+        UserRole role, UserRoleGrantSource grantSource, UserAccount grantedByUser, String reason
     ) {
         if (findRoleGrant(role).isPresent()) {
             return;
@@ -142,7 +142,7 @@ public class UserAccount {
         roleGrants.removeIf(grant -> grant.getGrantSource() != UserRoleGrantSource.BOOTSTRAP);
         for (UserRole role : normalizedRoles) {
             roleGrants.add(new UserRoleGrant(
-                    this, role, UserRoleGrantSource.ADMIN_MANAGED, normalizedGrantor, normalizedReason
+                this, role, UserRoleGrantSource.ADMIN_MANAGED, normalizedGrantor, normalizedReason
             ));
         }
     }

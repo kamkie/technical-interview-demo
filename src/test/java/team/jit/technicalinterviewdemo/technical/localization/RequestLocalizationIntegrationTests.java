@@ -20,7 +20,7 @@ class RequestLocalizationIntegrationTests extends AbstractBookCatalogMockMvcInte
     @Test
     void langQueryParameterOverridesAcceptLanguageHeader() throws Exception {
         mockMvc.perform(get("/api/books").queryParam("year", "2018").queryParam("yearFrom", "2000").queryParam("lang", "uk-UA").header("Accept-Language", "es-ES,es;q=0.9")).andExpect(status().isBadRequest()).andExpect(jsonPath("$.title").value("Invalid Request")).andExpect(jsonPath("$.detail").value(
-                "Use either 'year' or the 'yearFrom'/'yearTo' range parameters, not both."
+            "Use either 'year' or the 'yearFrom'/'yearTo' range parameters, not both."
         )).andExpect(jsonPath("$.messageKey").value("error.request.invalid")).andExpect(jsonPath("$.message").value("Zapyt ye nevalidnym.")).andExpect(jsonPath("$.language").value("uk"));
     }
 
@@ -37,7 +37,7 @@ class RequestLocalizationIntegrationTests extends AbstractBookCatalogMockMvcInte
     @Test
     void unsupportedAcceptLanguageFallsBackToLanguageCookie() throws Exception {
         mockMvc.perform(get("/api/books").queryParam("year", "2018").queryParam("yearFrom", "2000").header("Accept-Language", "it-IT,it;q=0.9").cookie(new Cookie("language", "no"))).andExpect(status().isBadRequest()).andExpect(jsonPath("$.title").value("Invalid Request")).andExpect(jsonPath("$.detail").value(
-                "Use either 'year' or the 'yearFrom'/'yearTo' range parameters, not both."
+            "Use either 'year' or the 'yearFrom'/'yearTo' range parameters, not both."
         )).andExpect(jsonPath("$.messageKey").value("error.request.invalid")).andExpect(jsonPath("$.message").value("Foresporselen er ugyldig.")).andExpect(jsonPath("$.language").value("no"));
     }
 }

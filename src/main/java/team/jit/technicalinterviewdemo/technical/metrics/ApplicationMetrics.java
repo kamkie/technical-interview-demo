@@ -28,7 +28,7 @@ public class ApplicationMetrics {
     private final MeterRegistry meterRegistry;
 
     public ApplicationMetrics(
-                              MeterRegistry meterRegistry, BookRepository bookRepository, CategoryRepository categoryRepository, LocalizationRepository localizationRepository, UserAccountRepository userAccountRepository
+        MeterRegistry meterRegistry, BookRepository bookRepository, CategoryRepository categoryRepository, LocalizationRepository localizationRepository, UserAccountRepository userAccountRepository
     ) {
         this.meterRegistry = meterRegistry;
         Gauge.builder(BOOK_TOTAL, bookRepository, BookRepository::count).description("Current number of books.").register(meterRegistry);

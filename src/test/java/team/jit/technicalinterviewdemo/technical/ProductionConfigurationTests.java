@@ -41,13 +41,13 @@ class ProductionConfigurationTests {
     }
 
     private static final Map<String, String> EXPECTED_FAILURES = Map.of(
-            "DATABASE_HOST", "${DATABASE_HOST}", "DATABASE_PORT", "${DATABASE_PORT}", "DATABASE_NAME", "${DATABASE_NAME}", "DATABASE_USER", "${DATABASE_USER}", "DATABASE_PASSWORD", "password authentication failed"
+        "DATABASE_HOST", "${DATABASE_HOST}", "DATABASE_PORT", "${DATABASE_PORT}", "DATABASE_NAME", "${DATABASE_NAME}", "DATABASE_USER", "${DATABASE_USER}", "DATABASE_PASSWORD", "password authentication failed"
     );
 
     @TestFactory
     Stream<DynamicTest> prodProfileFailsFastWhenRequiredDatabaseVariablesAreMissing() {
         return EXPECTED_FAILURES.keySet().stream().sorted().map(variableName -> DynamicTest.dynamicTest(
-                variableName, () -> assertThatThrownBy(() -> runProdApplicationWithout(variableName)).hasStackTraceContaining(EXPECTED_FAILURES.get(variableName))
+            variableName, () -> assertThatThrownBy(() -> runProdApplicationWithout(variableName)).hasStackTraceContaining(EXPECTED_FAILURES.get(variableName))
         ));
     }
 
@@ -79,7 +79,7 @@ class ProductionConfigurationTests {
     @Test
     void prodProfileFailsFastWhenInitialAdminIdentitiesContainInvalidValue() {
         assertThatThrownBy(() -> runProdApplication("--APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES=invalid login")).hasStackTraceContaining(
-                "APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES must contain comma-separated provider:externalLogin values"
+            "APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES must contain comma-separated provider:externalLogin values"
         );
     }
 
@@ -91,28 +91,28 @@ class ProductionConfigurationTests {
     @Test
     void prodProfileWithOauthFailsFastWhenProviderClientIdIsMissing() {
         assertThatThrownBy(() -> runProdApplication(
-                "--spring.profiles.active=prod,oauth", "--GITHUB_CLIENT_ID=", "--GITHUB_CLIENT_SECRET=demo-secret"
+            "--spring.profiles.active=prod,oauth", "--GITHUB_CLIENT_ID=", "--GITHUB_CLIENT_SECRET=demo-secret"
         )).hasStackTraceContaining("OAuth provider 'github' requires both client-id and client-secret.");
     }
 
     @Test
     void prodProfileWithOauthFailsFastWhenProviderClientSecretIsMissing() {
         assertThatThrownBy(() -> runProdApplication(
-                "--spring.profiles.active=prod,oauth", "--GITHUB_CLIENT_ID=demo-client", "--GITHUB_CLIENT_SECRET="
+            "--spring.profiles.active=prod,oauth", "--GITHUB_CLIENT_ID=demo-client", "--GITHUB_CLIENT_SECRET="
         )).hasStackTraceContaining("OAuth provider 'github' requires both client-id and client-secret.");
     }
 
     @Test
     void prodProfileWithOauthFailsFastWhenOidcProviderIssuerIsMissing() {
         assertThatThrownBy(() -> runProdApplication(
-                "--spring.profiles.active=prod,oauth", "--GITHUB_CLIENT_ID=", "--GITHUB_CLIENT_SECRET=", "--OIDC_CLIENT_ID=oidc-client", "--OIDC_CLIENT_SECRET=oidc-secret", "--OIDC_ISSUER_URI="
+            "--spring.profiles.active=prod,oauth", "--GITHUB_CLIENT_ID=", "--GITHUB_CLIENT_SECRET=", "--OIDC_CLIENT_ID=oidc-client", "--OIDC_CLIENT_SECRET=oidc-secret", "--OIDC_ISSUER_URI="
         )).hasStackTraceContaining("OIDC provider 'oidc' requires issuer-uri.");
     }
 
     @Test
     void prodProfileWithOauthAllowsMultipleProvidersWithoutDefaultProvider() {
         try (ConfigurableApplicationContext context = runProdApplication(
-                "--spring.profiles.active=prod,oauth", "--GITHUB_CLIENT_ID=github-client", "--GITHUB_CLIENT_SECRET=github-secret", "--app.security.oauth.providers.internal.type=GITHUB", "--app.security.oauth.providers.internal.client-id=internal-client", "--app.security.oauth.providers.internal.client-secret=internal-secret"
+            "--spring.profiles.active=prod,oauth", "--GITHUB_CLIENT_ID=github-client", "--GITHUB_CLIENT_SECRET=github-secret", "--app.security.oauth.providers.internal.type=GITHUB", "--app.security.oauth.providers.internal.client-id=internal-client", "--app.security.oauth.providers.internal.client-secret=internal-secret"
         )) {
             ClientRegistrationRepository clientRegistrationRepository = context.getBean(ClientRegistrationRepository.class);
             assertThat(clientRegistrationRepository.findByRegistrationId("github")).isNotNull();
@@ -123,7 +123,7 @@ class ProductionConfigurationTests {
     @Test
     void prodProfileWithOauthFailsFastWhenDeprecatedDefaultProviderSettingIsPresent() {
         assertThatThrownBy(() -> runProdApplication(
-                "--spring.profiles.active=prod,oauth", "--OAUTH_DEFAULT_PROVIDER=github", "--GITHUB_CLIENT_ID=demo-client", "--GITHUB_CLIENT_SECRET=demo-secret"
+            "--spring.profiles.active=prod,oauth", "--OAUTH_DEFAULT_PROVIDER=github", "--GITHUB_CLIENT_ID=demo-client", "--GITHUB_CLIENT_SECRET=demo-secret"
         )).hasStackTraceContaining("OAUTH_DEFAULT_PROVIDER has been removed");
     }
 
@@ -140,7 +140,7 @@ class ProductionConfigurationTests {
     private static String[] argumentsWithout(String missingVariableName) {
         Map<String, String> requiredDatabaseProperties = requiredDatabaseProperties();
         List<String> arguments = new ArrayList<>(List.of(
-                "--spring.profiles.active=prod", "--spring.main.banner-mode=off", "--logging.level.root=OFF"
+            "--spring.profiles.active=prod", "--spring.main.banner-mode=off", "--logging.level.root=OFF"
         ));
         for (Map.Entry<String, String> entry : requiredDatabaseProperties.entrySet()) {
             if (!entry.getKey().equals(missingVariableName)) {
@@ -162,7 +162,7 @@ class ProductionConfigurationTests {
             String withoutPrefix = override.substring(2);
             int separatorIndex = withoutPrefix.indexOf('=');
             argumentsByKey.put(
-                    withoutPrefix.substring(0, separatorIndex), withoutPrefix.substring(separatorIndex + 1)
+                withoutPrefix.substring(0, separatorIndex), withoutPrefix.substring(separatorIndex + 1)
             );
         }
         return argumentsByKey.entrySet().stream().map(entry -> "--" + entry.getKey() + "=" + entry.getValue()).toArray(String[]::new);
@@ -170,7 +170,7 @@ class ProductionConfigurationTests {
 
     private static Map<String, String> requiredDatabaseProperties() {
         return Map.of(
-                "DATABASE_HOST", POSTGRESQL_CONTAINER.getHost(), "DATABASE_PORT", String.valueOf(POSTGRESQL_CONTAINER.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT)), "DATABASE_NAME", POSTGRESQL_CONTAINER.getDatabaseName(), "DATABASE_USER", POSTGRESQL_CONTAINER.getUsername(), "DATABASE_PASSWORD", POSTGRESQL_CONTAINER.getPassword()
+            "DATABASE_HOST", POSTGRESQL_CONTAINER.getHost(), "DATABASE_PORT", String.valueOf(POSTGRESQL_CONTAINER.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT)), "DATABASE_NAME", POSTGRESQL_CONTAINER.getDatabaseName(), "DATABASE_USER", POSTGRESQL_CONTAINER.getUsername(), "DATABASE_PASSWORD", POSTGRESQL_CONTAINER.getPassword()
         );
     }
 

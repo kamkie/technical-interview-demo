@@ -8,13 +8,13 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 record BookSearchCriteria(
-                          String title,
-                          String author,
-                          String isbn,
-                          Integer year,
-                          Integer yearFrom,
-                          Integer yearTo,
-                          List<String> categories
+    String title,
+    String author,
+    String isbn,
+    Integer year,
+    Integer yearFrom,
+    Integer yearTo,
+    List<String> categories
 ) {
 
     private static final int MAX_TEXT_FILTER_LENGTH = 100;
@@ -45,7 +45,7 @@ record BookSearchCriteria(
         }
 
         return new BookSearchCriteria(
-                normalizedTitle, normalizedAuthor, normalizedIsbn, request.getYear(), request.getYearFrom(), request.getYearTo(), normalizedCategories
+            normalizedTitle, normalizedAuthor, normalizedIsbn, request.getYear(), request.getYearFrom(), request.getYearTo(), normalizedCategories
         );
     }
 
@@ -57,7 +57,7 @@ record BookSearchCriteria(
         String normalizedValue = value.trim();
         if (normalizedValue.length() > maxLength) {
             throw new InvalidRequestException(
-                    "Filter '%s' must be at most %d characters.".formatted(fieldName, maxLength)
+                "Filter '%s' must be at most %d characters.".formatted(fieldName, maxLength)
             );
         }
         return normalizedValue.toLowerCase(Locale.ROOT);
@@ -71,7 +71,7 @@ record BookSearchCriteria(
         String normalizedIsbn = isbn.trim();
         if (normalizedIsbn.length() > MAX_ISBN_FILTER_LENGTH) {
             throw new InvalidRequestException(
-                    "Filter 'isbn' must be at most %d characters.".formatted(MAX_ISBN_FILTER_LENGTH)
+                "Filter 'isbn' must be at most %d characters.".formatted(MAX_ISBN_FILTER_LENGTH)
             );
         }
         if (!ISBN_FILTER_PATTERN.matcher(normalizedIsbn).matches()) {
@@ -86,7 +86,7 @@ record BookSearchCriteria(
         }
         if (value < MIN_YEAR || value > MAX_YEAR) {
             throw new InvalidRequestException(
-                    "Filter '%s' must be between %d and %d.".formatted(fieldName, MIN_YEAR, MAX_YEAR)
+                "Filter '%s' must be between %d and %d.".formatted(fieldName, MIN_YEAR, MAX_YEAR)
             );
         }
     }
@@ -97,7 +97,7 @@ record BookSearchCriteria(
         }
         if (categories.size() > MAX_CATEGORY_FILTER_COUNT) {
             throw new InvalidRequestException(
-                    "At most %d category filters are supported.".formatted(MAX_CATEGORY_FILTER_COUNT)
+                "At most %d category filters are supported.".formatted(MAX_CATEGORY_FILTER_COUNT)
             );
         }
 

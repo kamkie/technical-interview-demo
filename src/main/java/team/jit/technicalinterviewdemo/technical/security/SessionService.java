@@ -48,11 +48,11 @@ public class SessionService {
         SecuritySettingsProperties.Session session = securitySettingsProperties.getSession();
         csrfTokenRepository.loadDeferredToken(request, response).get();
         return new SessionResponse(
-                currentApplicationSessionResolver.hasAuthenticatedSession(request), ACCOUNT_PATH, loginProviders(), LOGOUT_PATH, new SessionResponse.SessionCookie(
-                        sessionCookieName(), session.isCookieHttpOnly(), session.getCookieSameSite(), session.isCookieSecure()
-                ), new SessionResponse.Csrf(
-                        true, SameSiteCsrfContract.COOKIE_NAME, SameSiteCsrfContract.HEADER_NAME
-                )
+            currentApplicationSessionResolver.hasAuthenticatedSession(request), ACCOUNT_PATH, loginProviders(), LOGOUT_PATH, new SessionResponse.SessionCookie(
+                sessionCookieName(), session.isCookieHttpOnly(), session.getCookieSameSite(), session.isCookieSecure()
+            ), new SessionResponse.Csrf(
+                true, SameSiteCsrfContract.COOKIE_NAME, SameSiteCsrfContract.HEADER_NAME
+            )
         );
     }
 
@@ -65,9 +65,9 @@ public class SessionService {
         }
         sessionId.ifPresent(sessionRepository::deleteById);
         currentUser.ifPresent(userAccount -> auditLogService.recordWithActor(
-                AuditTargetType.AUTHENTICATION, userAccount.getId(), AuditAction.LOGOUT, userAccount, userAccount.getExternalLogin(), "Logged out current session for '%s'.".formatted(userAccount.getExternalLogin()), Map.of(
-                        "provider", userAccount.getProvider(), "login", userAccount.getExternalLogin()
-                )
+            AuditTargetType.AUTHENTICATION, userAccount.getId(), AuditAction.LOGOUT, userAccount, userAccount.getExternalLogin(), "Logged out current session for '%s'.".formatted(userAccount.getExternalLogin()), Map.of(
+                "provider", userAccount.getProvider(), "login", userAccount.getExternalLogin()
+            )
         ));
         SecurityContextHolder.clearContext();
         response.addHeader(HttpHeaders.SET_COOKIE, expiredSessionCookie().toString());
@@ -88,7 +88,7 @@ public class SessionService {
         for (Object registration : iterableRegistrationRepository) {
             if (registration instanceof ClientRegistration clientRegistration) {
                 loginProviders.add(new SessionResponse.LoginProvider(
-                        clientRegistration.getRegistrationId(), clientRegistration.getClientName(), SecuritySettingsProperties.OAuth.authorizationPath(clientRegistration.getRegistrationId())
+                    clientRegistration.getRegistrationId(), clientRegistration.getClientName(), SecuritySettingsProperties.OAuth.authorizationPath(clientRegistration.getRegistrationId())
                 ));
             }
         }

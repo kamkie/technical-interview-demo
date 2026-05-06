@@ -33,7 +33,7 @@ public final class SensitiveDataSanitizer {
     public static Map<String, Object> sanitizeParameters(Map<String, String[]> parameterMap) {
         Map<String, Object> sanitized = new LinkedHashMap<>();
         parameterMap.forEach((name, values) -> sanitized.put(
-                sanitizeForLog(name), isSensitiveName(name) ? REDACTED : sanitizeValues(values)
+            sanitizeForLog(name), isSensitiveName(name) ? REDACTED : sanitizeValues(values)
         ));
         return sanitized;
     }
@@ -86,7 +86,7 @@ public final class SensitiveDataSanitizer {
         if (value instanceof Map<?, ?> mapValue) {
             Map<String, Object> sanitized = new LinkedHashMap<>();
             mapValue.forEach((key, nestedValue) -> sanitized.put(
-                    sanitizeForLog(String.valueOf(key)), sanitizeLogValue(nestedValue)
+                sanitizeForLog(String.valueOf(key)), sanitizeLogValue(nestedValue)
             ));
             return sanitized;
         }

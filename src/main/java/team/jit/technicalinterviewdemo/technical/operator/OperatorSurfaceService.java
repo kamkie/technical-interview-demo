@@ -37,7 +37,7 @@ public class OperatorSurfaceService {
     public OperatorSurfaceResponse getOperatorSurface() {
         requireAdminRole();
         return new OperatorSurfaceResponse(
-                buildAuditSection(), buildRuntimeDiagnostics(), buildOperationalStatus()
+            buildAuditSection(), buildRuntimeDiagnostics(), buildOperationalStatus()
         );
     }
 
@@ -47,7 +47,7 @@ public class OperatorSurfaceService {
 
     private OperatorSurfaceResponse.AuditSection buildAuditSection() {
         return new OperatorSurfaceResponse.AuditSection(
-                OPERATOR_AUDIT_ENDPOINT, auditLogRepository.count(), loadRecentAuditEntries()
+            OPERATOR_AUDIT_ENDPOINT, auditLogRepository.count(), loadRecentAuditEntries()
         );
     }
 
@@ -58,14 +58,14 @@ public class OperatorSurfaceService {
     private OperatorSurfaceResponse.RuntimeDiagnostics buildRuntimeDiagnostics() {
         TechnicalOverviewResponse technicalOverview = technicalOverviewService.getOverview();
         return new OperatorSurfaceResponse.RuntimeDiagnostics(
-                OPERATOR_TECHNICAL_OVERVIEW_ENDPOINT, technicalOverview
+            OPERATOR_TECHNICAL_OVERVIEW_ENDPOINT, technicalOverview
         );
     }
 
     private OperatorSurfaceResponse.OperationalStatus buildOperationalStatus() {
         String healthStatus = healthEndpoint.health().getStatus().getCode();
         return new OperatorSurfaceResponse.OperationalStatus(
-                OPERATOR_ACTUATOR_HEALTH_ENDPOINT, OPERATOR_ACTUATOR_INFO_ENDPOINT, OPERATOR_ACTUATOR_PROMETHEUS_ENDPOINT, healthStatus, applicationAvailability.getLivenessState().name(), applicationAvailability.getReadinessState().name()
+            OPERATOR_ACTUATOR_HEALTH_ENDPOINT, OPERATOR_ACTUATOR_INFO_ENDPOINT, OPERATOR_ACTUATOR_PROMETHEUS_ENDPOINT, healthStatus, applicationAvailability.getLivenessState().name(), applicationAvailability.getReadinessState().name()
         );
     }
 }

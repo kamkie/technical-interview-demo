@@ -27,7 +27,7 @@ public class UserAccountController {
 
     @GetMapping
     @Operation(
-            summary = "Get the current account", description = "Requires an authenticated session and returns the persisted application account.", security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
+        summary = "Get the current account", description = "Requires an authenticated session and returns the persisted application account.", security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
     )
     public ResponseEntity<UserAccountResponse> currentUser() {
         UserAccountResponse payload = userAccountService.getCurrentUserAccount();
@@ -36,13 +36,13 @@ public class UserAccountController {
 
     @PutMapping("/language")
     @Operation(
-            summary = "Update the account language", description = "Requires an authenticated session and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie. Blank or null clears the preference.", security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
+        summary = "Update the account language", description = "Requires an authenticated session and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie. Blank or null clears the preference.", security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
     )
     @Parameter(
-            name = SameSiteCsrfContract.HEADER_NAME, in = ParameterIn.HEADER, required = true, description = "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie."
+        name = SameSiteCsrfContract.HEADER_NAME, in = ParameterIn.HEADER, required = true, description = "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie."
     )
     public ResponseEntity<UserAccountResponse> updatePreferredLanguage(
-                                                                       @RequestBody UserAccountLanguageRequest request
+        @RequestBody UserAccountLanguageRequest request
     ) {
         UserAccountResponse payload = userAccountService.updatePreferredLanguage(request.preferredLanguage());
         return ResponseEntity.ok(payload);

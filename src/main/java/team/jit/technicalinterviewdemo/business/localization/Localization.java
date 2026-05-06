@@ -21,9 +21,9 @@ import java.util.Locale;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(
-        name = "localization_messages", uniqueConstraints = @UniqueConstraint(
-                name = "uk_localization_messages_message_key_language", columnNames = {"message_key", "language"}
-        )
+    name = "localization_messages", uniqueConstraints = @UniqueConstraint(
+        name = "uk_localization_messages_message_key_language", columnNames = {"message_key", "language"}
+    )
 )
 public class Localization {
 

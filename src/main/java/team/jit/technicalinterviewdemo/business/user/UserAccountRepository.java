@@ -21,10 +21,10 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
     List<UserAccount> findAllByOrderByIdAsc();
 
     @Query("""
-            select count(distinct userAccount)
-            from UserAccount userAccount
-            join userAccount.roleGrants grant
-            where grant.role = :role
-            """)
+        select count(distinct userAccount)
+        from UserAccount userAccount
+        join userAccount.roleGrants grant
+        where grant.role = :role
+        """)
     long countByRole(@Param("role") UserRole role);
 }

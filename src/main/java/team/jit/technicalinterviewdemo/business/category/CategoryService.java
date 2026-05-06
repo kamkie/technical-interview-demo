@@ -67,7 +67,7 @@ public class CategoryService {
         evictCategoryCaches();
         applicationMetrics.recordCategoryOperation("create");
         auditLogService.record(
-                AuditTargetType.CATEGORY, savedCategory.getId(), AuditAction.CREATE, "Created category '%s'.".formatted(savedCategory.getName()), auditDetails(savedCategory.getName())
+            AuditTargetType.CATEGORY, savedCategory.getId(), AuditAction.CREATE, "Created category '%s'.".formatted(savedCategory.getName()), auditDetails(savedCategory.getName())
         );
         log.info("Created category id={} name={}", savedCategory.getId(), savedCategory.getName());
         return savedCategory;
@@ -86,9 +86,9 @@ public class CategoryService {
         evictCategoryCaches();
         applicationMetrics.recordCategoryOperation("update");
         auditLogService.record(
-                AuditTargetType.CATEGORY, updatedCategory.getId(), AuditAction.UPDATE, "Updated category '%s'.".formatted(updatedCategory.getName()), Map.of(
-                        "previousName", previousName, "name", updatedCategory.getName()
-                )
+            AuditTargetType.CATEGORY, updatedCategory.getId(), AuditAction.UPDATE, "Updated category '%s'.".formatted(updatedCategory.getName()), Map.of(
+                "previousName", previousName, "name", updatedCategory.getName()
+            )
         );
         log.info("Updated category id={} name={}", updatedCategory.getId(), updatedCategory.getName());
         return updatedCategory;
@@ -106,7 +106,7 @@ public class CategoryService {
         evictCategoryCaches();
         applicationMetrics.recordCategoryOperation("delete");
         auditLogService.record(
-                AuditTargetType.CATEGORY, id, AuditAction.DELETE, "Deleted category '%s'.".formatted(category.getName()), auditDetails(category.getName())
+            AuditTargetType.CATEGORY, id, AuditAction.DELETE, "Deleted category '%s'.".formatted(category.getName()), auditDetails(category.getName())
         );
         log.info("Deleted category id={} name={}", id, category.getName());
     }
@@ -187,7 +187,7 @@ public class CategoryService {
         String normalizedName = name.trim();
         if (normalizedName.length() > MAX_CATEGORY_NAME_LENGTH) {
             throw new InvalidRequestException(
-                    "category name must be at most %d characters.".formatted(MAX_CATEGORY_NAME_LENGTH)
+                "category name must be at most %d characters.".formatted(MAX_CATEGORY_NAME_LENGTH)
             );
         }
         return normalizedName;

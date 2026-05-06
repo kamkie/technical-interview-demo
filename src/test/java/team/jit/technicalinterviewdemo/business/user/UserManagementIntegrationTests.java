@@ -73,13 +73,13 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
         BrowserSession readerSession = readerSession();
 
         mockMvc.perform(post("/api/books").with(readerSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "title": "Spring in Action",
-                  "author": "Craig Walls",
-                  "isbn": "9781617297571",
-                  "publicationYear": 2022
-                }
-                """)).andExpect(status().isCreated());
+            {
+              "title": "Spring in Action",
+              "author": "Craig Walls",
+              "isbn": "9781617297571",
+              "publicationYear": 2022
+            }
+            """)).andExpect(status().isCreated());
 
         UserAccount userAccount = userAccountRepository.findByProviderAndExternalLogin("github", "reader-user").orElseThrow();
 
@@ -94,16 +94,16 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
         BrowserSession adminSession = adminSession();
 
         mockMvc.perform(post("/api/categories").with(adminSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "name": "Architecture"
-                }
-                """)).andExpect(status().isCreated());
+            {
+              "name": "Architecture"
+            }
+            """)).andExpect(status().isCreated());
 
         UserAccount userAccount = userAccountRepository.findByProviderAndExternalLogin("github", "admin-user").orElseThrow();
 
         assertThat(userAccount.getRoles()).containsExactlyInAnyOrder(UserRole.USER, UserRole.ADMIN);
         assertThat(userAccount.getRoleGrants()).extracting(UserRoleGrant::getRole, UserRoleGrant::getGrantSource).containsExactlyInAnyOrder(
-                tuple(UserRole.ADMIN, UserRoleGrantSource.BOOTSTRAP), tuple(UserRole.USER, UserRoleGrantSource.AUTHENTICATED_LOGIN)
+            tuple(UserRole.ADMIN, UserRoleGrantSource.BOOTSTRAP), tuple(UserRole.USER, UserRoleGrantSource.AUTHENTICATED_LOGIN)
         );
     }
 
@@ -113,16 +113,16 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
         BrowserSession secondAdminSession = authenticatedBrowserSession(sessionRepository, "second-admin");
 
         mockMvc.perform(post("/api/categories").with(adminSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "name": "Architecture"
-                }
-                """)).andExpect(status().isCreated());
+            {
+              "name": "Architecture"
+            }
+            """)).andExpect(status().isCreated());
 
         mockMvc.perform(post("/api/categories").with(secondAdminSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "name": "Operations"
-                }
-                """)).andExpect(status().isForbidden()).andExpect(jsonPath("$.detail").value("Category management requires the ADMIN role."));
+            {
+              "name": "Operations"
+            }
+            """)).andExpect(status().isForbidden()).andExpect(jsonPath("$.detail").value("Category management requires the ADMIN role."));
 
         UserAccount secondAdmin = userAccountRepository.findByProviderAndExternalLogin("github", "second-admin").orElseThrow();
 
@@ -142,16 +142,16 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
         BrowserSession readerSession = readerSession();
 
         mockMvc.perform(put("/api/account/language").with(readerSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "preferredLanguage": "pl"
-                }
-                """)).andExpect(status().isOk()).andExpect(jsonPath("$.preferredLanguage").value("pl")).andExpect(jsonPath("$.lastLoginAt").value(endsWith("Z"))).andExpect(jsonPath("$.createdAt").value(endsWith("Z"))).andExpect(jsonPath("$.updatedAt").value(endsWith("Z")));
+            {
+              "preferredLanguage": "pl"
+            }
+            """)).andExpect(status().isOk()).andExpect(jsonPath("$.preferredLanguage").value("pl")).andExpect(jsonPath("$.lastLoginAt").value(endsWith("Z"))).andExpect(jsonPath("$.createdAt").value(endsWith("Z"))).andExpect(jsonPath("$.updatedAt").value(endsWith("Z")));
 
         mockMvc.perform(post("/api/categories").with(readerSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "name": "Architecture"
-                }
-                """)).andExpect(status().isForbidden()).andExpect(jsonPath("$.title").value("Forbidden")).andExpect(jsonPath("$.status").value(403)).andExpect(jsonPath("$.detail").value("Category management requires the ADMIN role.")).andExpect(jsonPath("$.messageKey").value("error.request.forbidden")).andExpect(jsonPath("$.message").value("Nie masz uprawnien do wykonania tej operacji.")).andExpect(jsonPath("$.language").value("pl"));
+            {
+              "name": "Architecture"
+            }
+            """)).andExpect(status().isForbidden()).andExpect(jsonPath("$.title").value("Forbidden")).andExpect(jsonPath("$.status").value(403)).andExpect(jsonPath("$.detail").value("Category management requires the ADMIN role.")).andExpect(jsonPath("$.messageKey").value("error.request.forbidden")).andExpect(jsonPath("$.message").value("Nie masz uprawnien do wykonania tej operacji.")).andExpect(jsonPath("$.language").value("pl"));
     }
 
     @Test
@@ -159,10 +159,10 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
         BrowserSession readerSession = readerSession();
 
         mockMvc.perform(put("/api/account/language").with(readerSession.unsafeWriteWithInvalidCsrf()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "preferredLanguage": "pl"
-                }
-                """)).andExpect(status().isForbidden()).andExpect(jsonPath("$.title").value("Invalid CSRF Token")).andExpect(jsonPath("$.messageKey").value("error.request.csrf_invalid"));
+            {
+              "preferredLanguage": "pl"
+            }
+            """)).andExpect(status().isForbidden()).andExpect(jsonPath("$.title").value("Invalid CSRF Token")).andExpect(jsonPath("$.messageKey").value("error.request.csrf_invalid"));
     }
 
     @Test
@@ -190,15 +190,15 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
 
         mockMvc.perform(get("/api/account").with(readerSession.authenticatedSession())).andExpect(status().isOk());
         mockMvc.perform(put("/api/account/language").with(readerSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "preferredLanguage": "fr"
-                }
-                """)).andExpect(status().isOk());
+            {
+              "preferredLanguage": "fr"
+            }
+            """)).andExpect(status().isOk());
         mockMvc.perform(post("/api/categories").with(adminSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "name": "Architecture"
-                }
-                """)).andExpect(status().isCreated());
+            {
+              "name": "Architecture"
+            }
+            """)).andExpect(status().isCreated());
 
         assertThat(counterValue(USER_OPERATIONS, "operation", "create") - createBefore).isEqualTo(2.0d);
         assertThat(counterValue(USER_OPERATIONS, "operation", "updatePreferredLanguage") - updatePreferenceBefore).isEqualTo(1.0d);

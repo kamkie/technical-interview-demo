@@ -50,7 +50,7 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
     @Test
     void listLocalizationsWithUnsupportedSortReturnsBadRequest() throws Exception {
         mockMvc.perform(get("/api/localizations").queryParam("sort", "dropTable,asc")).andExpect(status().isBadRequest()).andExpect(jsonPath("$.title").value("Invalid Request")).andExpect(jsonPath("$.detail").value(
-                "Sort field 'dropTable' is not supported. Use one of: id, messageKey, language, createdAt, updatedAt."
+            "Sort field 'dropTable' is not supported. Use one of: id, messageKey, language, createdAt, updatedAt."
         ));
     }
 
@@ -74,25 +74,25 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
         BrowserSession adminSession = adminSession();
 
         mockMvc.perform(post("/api/localizations").with(adminSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "messageKey": "info.book.created",
-                  "language": "fr",
-                  "messageText": "Le livre a ete cree.",
-                  "description": "French success message for new books."
-                }
-                """)).andExpect(status().isCreated()).andExpect(jsonPath("$.id").isNumber()).andExpect(jsonPath("$.messageKey").value("info.book.created")).andExpect(jsonPath("$.language").value("fr")).andExpect(jsonPath("$.messageText").value("Le livre a ete cree.")).andExpect(jsonPath("$.description").value("French success message for new books.")).andExpect(jsonPath("$.createdAt").value(endsWith("Z"))).andExpect(jsonPath("$.updatedAt").value(endsWith("Z")));
+            {
+              "messageKey": "info.book.created",
+              "language": "fr",
+              "messageText": "Le livre a ete cree.",
+              "description": "French success message for new books."
+            }
+            """)).andExpect(status().isCreated()).andExpect(jsonPath("$.id").isNumber()).andExpect(jsonPath("$.messageKey").value("info.book.created")).andExpect(jsonPath("$.language").value("fr")).andExpect(jsonPath("$.messageText").value("Le livre a ete cree.")).andExpect(jsonPath("$.description").value("French success message for new books.")).andExpect(jsonPath("$.createdAt").value(endsWith("Z"))).andExpect(jsonPath("$.updatedAt").value(endsWith("Z")));
     }
 
     @Test
     void createLocalizationWithoutAuthenticationReturnsUnauthorized() throws Exception {
         mockMvc.perform(post("/api/localizations").contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "messageKey": "info.book.created",
-                  "language": "fr",
-                  "messageText": "Le livre a ete cree.",
-                  "description": "French success message for new books."
-                }
-                """)).andExpect(status().isUnauthorized());
+            {
+              "messageKey": "info.book.created",
+              "language": "fr",
+              "messageText": "Le livre a ete cree.",
+              "description": "French success message for new books."
+            }
+            """)).andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -100,13 +100,13 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
         BrowserSession adminSession = adminSession();
 
         mockMvc.perform(post("/api/localizations").with(adminSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "messageKey": "error.book.not_found",
-                  "language": "es",
-                  "messageText": "Duplicated message.",
-                  "description": "Should fail."
-                }
-                """)).andExpect(status().isConflict()).andExpect(jsonPath("$.title").value("Duplicate Localization")).andExpect(jsonPath("$.detail").value("Localization with key 'error.book.not_found' and language 'es' already exists.")).andExpect(jsonPath("$.messageKey").value("error.localization.duplicate")).andExpect(jsonPath("$.message").value("A localization message with the same key and language already exists.")).andExpect(jsonPath("$.language").value("en"));
+            {
+              "messageKey": "error.book.not_found",
+              "language": "es",
+              "messageText": "Duplicated message.",
+              "description": "Should fail."
+            }
+            """)).andExpect(status().isConflict()).andExpect(jsonPath("$.title").value("Duplicate Localization")).andExpect(jsonPath("$.detail").value("Localization with key 'error.book.not_found' and language 'es' already exists.")).andExpect(jsonPath("$.messageKey").value("error.localization.duplicate")).andExpect(jsonPath("$.message").value("A localization message with the same key and language already exists.")).andExpect(jsonPath("$.language").value("en"));
     }
 
     @Test
@@ -114,13 +114,13 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
         BrowserSession adminSession = adminSession();
 
         mockMvc.perform(post("/api/localizations").with(adminSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "messageKey": "Invalid Key",
-                  "language": "english",
-                  "messageText": " ",
-                  "description": "x"
-                }
-                """)).andExpect(status().isBadRequest()).andExpect(jsonPath("$.title").value("Validation Failed")).andExpect(jsonPath("$.messageKey").value("error.request.validation_failed")).andExpect(jsonPath("$.message").value("Request body validation failed.")).andExpect(jsonPath("$.language").value("en")).andExpect(jsonPath("$.fieldErrors.messageKey").value("messageKey must match ^[a-z0-9._-]+$")).andExpect(jsonPath("$.fieldErrors.language").value("language must be a two-letter ISO 639-1 code")).andExpect(jsonPath("$.fieldErrors.messageText").value("messageText is required"));
+            {
+              "messageKey": "Invalid Key",
+              "language": "english",
+              "messageText": " ",
+              "description": "x"
+            }
+            """)).andExpect(status().isBadRequest()).andExpect(jsonPath("$.title").value("Validation Failed")).andExpect(jsonPath("$.messageKey").value("error.request.validation_failed")).andExpect(jsonPath("$.message").value("Request body validation failed.")).andExpect(jsonPath("$.language").value("en")).andExpect(jsonPath("$.fieldErrors.messageKey").value("messageKey must match ^[a-z0-9._-]+$")).andExpect(jsonPath("$.fieldErrors.language").value("language must be a two-letter ISO 639-1 code")).andExpect(jsonPath("$.fieldErrors.messageText").value("messageText is required"));
     }
 
     @Test
@@ -128,13 +128,13 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
         BrowserSession adminSession = adminSession();
 
         mockMvc.perform(post("/api/localizations").with(adminSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "messageKey": "info.book.created",
-                  "language": "it",
-                  "messageText": "Libro creato.",
-                  "description": "Unsupported language."
-                }
-                """)).andExpect(status().isBadRequest()).andExpect(jsonPath("$.title").value("Invalid Request")).andExpect(jsonPath("$.detail").value("language must be one of: en, es, de, fr, pl, uk, no.")).andExpect(jsonPath("$.messageKey").value("error.request.invalid")).andExpect(jsonPath("$.message").value("The request is invalid.")).andExpect(jsonPath("$.language").value("en"));
+            {
+              "messageKey": "info.book.created",
+              "language": "it",
+              "messageText": "Libro creato.",
+              "description": "Unsupported language."
+            }
+            """)).andExpect(status().isBadRequest()).andExpect(jsonPath("$.title").value("Invalid Request")).andExpect(jsonPath("$.detail").value("language must be one of: en, es, de, fr, pl, uk, no.")).andExpect(jsonPath("$.messageKey").value("error.request.invalid")).andExpect(jsonPath("$.message").value("The request is invalid.")).andExpect(jsonPath("$.language").value("en"));
     }
 
     @Test
@@ -142,13 +142,13 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
         BrowserSession adminSession = adminSession();
 
         mockMvc.perform(put("/api/localizations/{id}", bookNotFoundEn.getId()).with(adminSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "messageKey": "error.book.not_found_custom",
-                  "language": "fr",
-                  "messageText": "Le livre demande est introuvable.",
-                  "description": "French message for missing book errors."
-                }
-                """)).andExpect(status().isOk()).andExpect(jsonPath("$.id").value(bookNotFoundEn.getId())).andExpect(jsonPath("$.messageKey").value("error.book.not_found_custom")).andExpect(jsonPath("$.language").value("fr")).andExpect(jsonPath("$.messageText").value("Le livre demande est introuvable.")).andExpect(jsonPath("$.description").value("French message for missing book errors.")).andExpect(jsonPath("$.createdAt").value(endsWith("Z"))).andExpect(jsonPath("$.updatedAt").value(endsWith("Z")));
+            {
+              "messageKey": "error.book.not_found_custom",
+              "language": "fr",
+              "messageText": "Le livre demande est introuvable.",
+              "description": "French message for missing book errors."
+            }
+            """)).andExpect(status().isOk()).andExpect(jsonPath("$.id").value(bookNotFoundEn.getId())).andExpect(jsonPath("$.messageKey").value("error.book.not_found_custom")).andExpect(jsonPath("$.language").value("fr")).andExpect(jsonPath("$.messageText").value("Le livre demande est introuvable.")).andExpect(jsonPath("$.description").value("French message for missing book errors.")).andExpect(jsonPath("$.createdAt").value(endsWith("Z"))).andExpect(jsonPath("$.updatedAt").value(endsWith("Z")));
     }
 
     @Test
@@ -170,13 +170,13 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
         BrowserSession userSession = userSession();
 
         mockMvc.perform(post("/api/localizations").with(userSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "messageKey": "info.book.created",
-                  "language": "fr",
-                  "messageText": "Le livre a ete cree.",
-                  "description": "French success message for new books."
-                }
-                """)).andExpect(status().isForbidden()).andExpect(jsonPath("$.title").value("Forbidden")).andExpect(jsonPath("$.detail").value("Localization management requires the ADMIN role.")).andExpect(jsonPath("$.messageKey").value("error.request.forbidden")).andExpect(jsonPath("$.language").value("en"));
+            {
+              "messageKey": "info.book.created",
+              "language": "fr",
+              "messageText": "Le livre a ete cree.",
+              "description": "French success message for new books."
+            }
+            """)).andExpect(status().isForbidden()).andExpect(jsonPath("$.title").value("Forbidden")).andExpect(jsonPath("$.detail").value("Localization management requires the ADMIN role.")).andExpect(jsonPath("$.messageKey").value("error.request.forbidden")).andExpect(jsonPath("$.language").value("en"));
     }
 
     @Test
@@ -184,13 +184,13 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
         BrowserSession adminSession = adminSession();
 
         mockMvc.perform(post("/api/localizations").with(adminSession.authenticatedSession()).contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                  "messageKey": "info.book.created",
-                  "language": "fr",
-                  "messageText": "Le livre a ete cree.",
-                  "description": "French success message for new books."
-                }
-                """)).andExpect(status().isForbidden()).andExpect(jsonPath("$.title").value("Invalid CSRF Token")).andExpect(jsonPath("$.messageKey").value("error.request.csrf_invalid"));
+            {
+              "messageKey": "info.book.created",
+              "language": "fr",
+              "messageText": "Le livre a ete cree.",
+              "description": "French success message for new books."
+            }
+            """)).andExpect(status().isForbidden()).andExpect(jsonPath("$.title").value("Invalid CSRF Token")).andExpect(jsonPath("$.messageKey").value("error.request.csrf_invalid"));
     }
 
     @Test

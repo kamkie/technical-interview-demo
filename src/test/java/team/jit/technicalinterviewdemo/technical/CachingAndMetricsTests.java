@@ -87,10 +87,10 @@ class CachingAndMetricsTests {
         localizationMessageRepository.findByMessageKeyAndLanguage(CACHE_TEST_KEY, "es").ifPresent(localizationMessageRepository::delete);
         localizationMessageRepository.flush();
         localizationMessageService.create(new LocalizationRequest(
-                CACHE_TEST_KEY, "en", "Cache EN", "English cache test message."
+            CACHE_TEST_KEY, "en", "Cache EN", "English cache test message."
         ));
         localizationMessageService.create(new LocalizationRequest(
-                CACHE_TEST_KEY, "es", "Cache ES", "Spanish cache test message."
+            CACHE_TEST_KEY, "es", "Cache ES", "Spanish cache test message."
         ));
 
         clearCaches();
@@ -125,7 +125,7 @@ class CachingAndMetricsTests {
 
         Localization message = localizationMessageService.findByMessageKeyAndLanguage(CACHE_TEST_KEY, "es");
         localizationMessageService.update(message.getId(), new LocalizationRequest(
-                CACHE_TEST_KEY, "es", "Cache ES Updated", "Updated Spanish cache test message."
+            CACHE_TEST_KEY, "es", "Cache ES Updated", "Updated Spanish cache test message."
         ));
 
         assertThat(cache(CacheNames.LOCALIZATION_LOOKUPS).get("%s::es::en".formatted(CACHE_TEST_KEY))).isNull();
@@ -167,7 +167,7 @@ class CachingAndMetricsTests {
         bookService.findAll(request, PageRequest.of(0, 20));
         bookService.findById(bookRepository.findAll().getFirst().getId());
         bookService.create(new BookCreateRequest(
-                "Spring in Action", "Craig Walls", "9781617297571", 2022, List.of("Java", "Best Practices")
+            "Spring in Action", "Craig Walls", "9781617297571", 2022, List.of("Java", "Best Practices")
         ));
         categoryService.findAll();
         localizationMessageService.getAllMessages("en");
@@ -185,7 +185,7 @@ class CachingAndMetricsTests {
 
     private void clearCaches() {
         CacheTestSupport.clearCaches(cacheManager, List.of(
-                CacheNames.CATEGORIES, CacheNames.CATEGORY_DIRECTORY, CacheNames.LOCALIZATION_LOOKUPS, CacheNames.LOCALIZATION_LISTS, CacheNames.LOCALIZATION_MESSAGE_MAPS
+            CacheNames.CATEGORIES, CacheNames.CATEGORY_DIRECTORY, CacheNames.LOCALIZATION_LOOKUPS, CacheNames.LOCALIZATION_LISTS, CacheNames.LOCALIZATION_MESSAGE_MAPS
         ));
     }
 

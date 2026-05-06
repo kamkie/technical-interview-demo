@@ -50,7 +50,7 @@ class BookServiceTests {
         assertThatThrownBy(() -> bookService.findAll(request, PageRequest.of(0, 20))).isInstanceOf(InvalidRequestException.class).hasMessage("Filter 'isbn' may contain only digits, hyphens, and X.");
 
         verify(bookRepository, never()).findAll(
-                org.mockito.ArgumentMatchers.<Specification<Book>>any(), org.mockito.ArgumentMatchers.any(Pageable.class)
+            org.mockito.ArgumentMatchers.<Specification<Book>>any(), org.mockito.ArgumentMatchers.any(Pageable.class)
         );
     }
 
@@ -63,7 +63,7 @@ class BookServiceTests {
         assertThatThrownBy(() -> bookService.findAll(request, PageRequest.of(0, 20))).isInstanceOf(InvalidRequestException.class).hasMessage("'yearFrom' must be less than or equal to 'yearTo'.");
 
         verify(bookRepository, never()).findAll(
-                org.mockito.ArgumentMatchers.<Specification<Book>>any(), org.mockito.ArgumentMatchers.any(Pageable.class)
+            org.mockito.ArgumentMatchers.<Specification<Book>>any(), org.mockito.ArgumentMatchers.any(Pageable.class)
         );
     }
 
@@ -75,7 +75,7 @@ class BookServiceTests {
         assertThatThrownBy(() -> bookService.findAll(request, PageRequest.of(0, 20))).isInstanceOf(InvalidRequestException.class).hasMessage("At most 10 category filters are supported.");
 
         verify(bookRepository, never()).findAll(
-                org.mockito.ArgumentMatchers.<Specification<Book>>any(), org.mockito.ArgumentMatchers.any(Pageable.class)
+            org.mockito.ArgumentMatchers.<Specification<Book>>any(), org.mockito.ArgumentMatchers.any(Pageable.class)
         );
     }
 
@@ -84,11 +84,11 @@ class BookServiceTests {
         BookSearchRequest request = new BookSearchRequest();
 
         assertThatThrownBy(() -> bookService.findAll(
-                request, PageRequest.of(0, 20, org.springframework.data.domain.Sort.by("unknown"))
+            request, PageRequest.of(0, 20, org.springframework.data.domain.Sort.by("unknown"))
         )).isInstanceOf(InvalidRequestException.class).hasMessage("Sort field 'unknown' is not supported. Use one of: id, title, author, isbn, year.");
 
         verify(bookRepository, never()).findAll(
-                org.mockito.ArgumentMatchers.<Specification<Book>>any(), org.mockito.ArgumentMatchers.any(Pageable.class)
+            org.mockito.ArgumentMatchers.<Specification<Book>>any(), org.mockito.ArgumentMatchers.any(Pageable.class)
         );
     }
 
@@ -100,13 +100,13 @@ class BookServiceTests {
         request.setIsbn("  ");
         request.setCategory(List.of(" ", "   "));
         when(bookRepository.findAll(
-                org.mockito.ArgumentMatchers.<Specification<Book>>any(), org.mockito.ArgumentMatchers.any(Pageable.class)
+            org.mockito.ArgumentMatchers.<Specification<Book>>any(), org.mockito.ArgumentMatchers.any(Pageable.class)
         )).thenReturn(new PageImpl<>(List.of()));
 
         assertThatCode(() -> bookService.findAll(request, PageRequest.of(0, 20))).doesNotThrowAnyException();
 
         verify(bookRepository).findAll(
-                org.mockito.ArgumentMatchers.<Specification<Book>>any(), org.mockito.ArgumentMatchers.any(Pageable.class)
+            org.mockito.ArgumentMatchers.<Specification<Book>>any(), org.mockito.ArgumentMatchers.any(Pageable.class)
         );
     }
 }

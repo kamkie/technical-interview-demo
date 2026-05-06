@@ -22,7 +22,7 @@ public class RequestLanguageContextFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
-                                    HttpServletRequest request, HttpServletResponse response, FilterChain filterChain
+        HttpServletRequest request, HttpServletResponse response, FilterChain filterChain
     ) throws ServletException, IOException {
         String resolvedLanguage = requestLanguageResolver.resolvePreferredLanguage(request);
         if (resolvedLanguage != null) {

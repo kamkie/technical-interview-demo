@@ -33,7 +33,7 @@ public class UserAccountService {
         UserAccount updatedUser = userAccountRepository.saveAndFlush(currentUser);
         applicationMetrics.recordUserOperation("updatePreferredLanguage");
         log.info(
-                "Updated user preferred language id={} login={} preferredLanguage={}", updatedUser.getId(), updatedUser.getExternalLogin(), updatedUser.getPreferredLanguage()
+            "Updated user preferred language id={} login={} preferredLanguage={}", updatedUser.getId(), updatedUser.getExternalLogin(), updatedUser.getPreferredLanguage()
         );
         return UserAccountResponse.from(updatedUser);
     }
@@ -49,7 +49,7 @@ public class UserAccountService {
         }
         if (!SupportedLanguages.isSupported(normalizedPreferredLanguage)) {
             throw new InvalidRequestException(
-                    "preferredLanguage must be one of: %s.".formatted(SupportedLanguages.description())
+                "preferredLanguage must be one of: %s.".formatted(SupportedLanguages.description())
             );
         }
         return normalizedPreferredLanguage;

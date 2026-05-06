@@ -18,7 +18,7 @@ public class TechnicalOverviewController {
 
     @GetMapping("/")
     @Operation(
-            summary = "Return technical application overview", description = "Internal endpoint that combines build, git, dependency, runtime, and important configuration details."
+        summary = "Return technical application overview", description = "Internal endpoint that combines build, git, dependency, runtime, and important configuration details."
     )
     public ResponseEntity<TechnicalOverviewResponse> overview() {
         TechnicalOverviewResponse payload = technicalOverviewService.getOverview();

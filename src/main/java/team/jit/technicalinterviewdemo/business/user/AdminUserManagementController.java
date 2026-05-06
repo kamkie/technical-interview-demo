@@ -38,20 +38,20 @@ public class AdminUserManagementController {
 
     @GetMapping
     @Operation(
-            summary = "List persisted users", description = "Requires an authenticated session with the ADMIN role and returns persisted users together with current roles and role-grant provenance.", security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
+        summary = "List persisted users", description = "Requires an authenticated session with the ADMIN role and returns persisted users together with current roles and role-grant provenance.", security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
     )
     @ApiResponses({@ApiResponse(
-            responseCode = "200", description = "OK", content = @Content(
-                    mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = AdminUserAccountResponse.class))
-            )
+        responseCode = "200", description = "OK", content = @Content(
+            mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = AdminUserAccountResponse.class))
+        )
     ), @ApiResponse(
-            responseCode = "401", description = "Missing or invalid authenticated session.", content = @Content(
-                    mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
-            )
+        responseCode = "401", description = "Missing or invalid authenticated session.", content = @Content(
+            mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
+        )
     ), @ApiResponse(
-            responseCode = "403", description = "Authenticated user does not have the ADMIN role.", content = @Content(
-                    mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
-            )
+        responseCode = "403", description = "Authenticated user does not have the ADMIN role.", content = @Content(
+            mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
+        )
     )
     })
     public ResponseEntity<List<AdminUserAccountResponse>> listUsers() {
@@ -61,35 +61,35 @@ public class AdminUserManagementController {
 
     @PutMapping("/{id}/roles")
     @Operation(
-            summary = "Replace managed user roles", description = "Requires an authenticated session with the ADMIN role, a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie, and replaces the non-bootstrap role set for one persisted user.", security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
+        summary = "Replace managed user roles", description = "Requires an authenticated session with the ADMIN role, a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie, and replaces the non-bootstrap role set for one persisted user.", security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
     )
     @Parameter(
-            name = SameSiteCsrfContract.HEADER_NAME, in = ParameterIn.HEADER, required = true, description = "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie."
+        name = SameSiteCsrfContract.HEADER_NAME, in = ParameterIn.HEADER, required = true, description = "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie."
     )
     @ApiResponses({@ApiResponse(
-            responseCode = "200", description = "OK", content = @Content(
-                    mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AdminUserAccountResponse.class)
-            )
+        responseCode = "200", description = "OK", content = @Content(
+            mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AdminUserAccountResponse.class)
+        )
     ), @ApiResponse(
-            responseCode = "400", description = "Invalid request payload.", content = @Content(
-                    mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
-            )
+        responseCode = "400", description = "Invalid request payload.", content = @Content(
+            mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
+        )
     ), @ApiResponse(
-            responseCode = "401", description = "Missing or invalid authenticated session.", content = @Content(
-                    mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
-            )
+        responseCode = "401", description = "Missing or invalid authenticated session.", content = @Content(
+            mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
+        )
     ), @ApiResponse(
-            responseCode = "403", description = "Authenticated user does not have the ADMIN role.", content = @Content(
-                    mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
-            )
+        responseCode = "403", description = "Authenticated user does not have the ADMIN role.", content = @Content(
+            mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
+        )
     ), @ApiResponse(
-            responseCode = "404", description = "Persisted user was not found.", content = @Content(
-                    mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
-            )
+        responseCode = "404", description = "Persisted user was not found.", content = @Content(
+            mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
+        )
     )
     })
     public ResponseEntity<AdminUserAccountResponse> replaceRoles(
-                                                                 @PathVariable Long id, @Valid @RequestBody AdminUserRoleUpdateRequest request
+        @PathVariable Long id, @Valid @RequestBody AdminUserRoleUpdateRequest request
     ) {
         AdminUserAccountResponse payload = adminUserManagementService.replaceRoles(id, request);
         return ResponseEntity.ok(payload);

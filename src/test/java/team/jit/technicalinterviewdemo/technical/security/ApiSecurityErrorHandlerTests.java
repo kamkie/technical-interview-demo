@@ -47,7 +47,7 @@ class ApiSecurityErrorHandlerTests {
         MockHttpServletResponse response = new MockHttpServletResponse();
 
         apiAuthenticationEntryPoint.commence(
-                request, response, new InsufficientAuthenticationException("Authentication required")
+            request, response, new InsufficientAuthenticationException("Authentication required")
         );
 
         JsonNode body = JSON_MAPPER.readTree(response.getContentAsString());
@@ -69,7 +69,7 @@ class ApiSecurityErrorHandlerTests {
         MockHttpServletResponse response = new MockHttpServletResponse();
 
         apiAccessDeniedHandler.handle(
-                request, response, new AccessDeniedException("Category management requires the ADMIN role.")
+            request, response, new AccessDeniedException("Category management requires the ADMIN role.")
         );
 
         JsonNode body = JSON_MAPPER.readTree(response.getContentAsString());

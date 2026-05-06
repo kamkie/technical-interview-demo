@@ -30,18 +30,18 @@ public class AuditingAuthenticationFailureHandler implements AuthenticationFailu
 
     @Override
     public void onAuthenticationFailure(
-                                        HttpServletRequest request, HttpServletResponse response, AuthenticationException exception
+        HttpServletRequest request, HttpServletResponse response, AuthenticationException exception
     ) throws IOException, ServletException {
         AuditAction action = exception instanceof SessionAuthenticationException ? AuditAction.SESSION_REJECTION : AuditAction.LOGIN_FAILURE;
         String summary = action == AuditAction.SESSION_REJECTION ? "Rejected OAuth login because the concurrent session limit was reached." : "OAuth login failed.";
         auditLogService.recordWithActor(
-                AuditTargetType.AUTHENTICATION, null, action, null, null, summary, failureDetails(request, exception, action)
+            AuditTargetType.AUTHENTICATION, null, action, null, null, summary, failureDetails(request, exception, action)
         );
         redirectStrategy.sendRedirect(request, response, LOGIN_FAILED_TARGET_URL);
     }
 
     private Map<String, Object> failureDetails(
-                                               HttpServletRequest request, AuthenticationException exception, AuditAction action
+        HttpServletRequest request, AuthenticationException exception, AuditAction action
     ) {
         Map<String, Object> details = new LinkedHashMap<>();
         String provider = resolveProvider(request);
@@ -49,7 +49,7 @@ public class AuditingAuthenticationFailureHandler implements AuthenticationFailu
             details.put("provider", provider);
         }
         details.put(
-                "failureType", action == AuditAction.SESSION_REJECTION ? "maximum_sessions_exceeded" : "oauth_authentication_failure"
+            "failureType", action == AuditAction.SESSION_REJECTION ? "maximum_sessions_exceeded" : "oauth_authentication_failure"
         );
         if (exception instanceof OAuth2AuthenticationException oauth2AuthenticationException) {
             details.put("errorCode", oauth2AuthenticationException.getError().getErrorCode());

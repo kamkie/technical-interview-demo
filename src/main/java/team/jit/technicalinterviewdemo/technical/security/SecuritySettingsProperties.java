@@ -109,7 +109,7 @@ public class SecuritySettingsProperties {
 
         public Map<String, Provider> configuredProviders() {
             return providers.entrySet().stream().map(entry -> Map.entry(normalizeRegistrationId(entry.getKey()), entry.getValue())).filter(entry -> !entry.getKey().isBlank()).filter(entry -> entry.getValue() != null && entry.getValue().hasCredentialMaterial()).collect(Collectors.toMap(
-                    Map.Entry::getKey, Map.Entry::getValue, (first, ignored) -> first, LinkedHashMap::new
+                Map.Entry::getKey, Map.Entry::getValue, (first, ignored) -> first, LinkedHashMap::new
             ));
         }
 

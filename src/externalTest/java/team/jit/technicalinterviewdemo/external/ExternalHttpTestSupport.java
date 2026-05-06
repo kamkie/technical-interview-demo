@@ -46,7 +46,7 @@ abstract class ExternalHttpTestSupport {
     }
 
     protected HttpResponse<String> putJsonWithCookies(
-                                                      String path, String accept, Map<String, String> headers, Map<String, String> cookies, String jsonBody
+        String path, String accept, Map<String, String> headers, Map<String, String> cookies, String jsonBody
     ) throws IOException, InterruptedException {
         return send("PUT", path, accept, headers, cookies, jsonBody);
     }
@@ -80,7 +80,7 @@ abstract class ExternalHttpTestSupport {
     }
 
     private HttpResponse<String> send(
-                                      String method, String path, String accept, Map<String, String> headers, Map<String, String> cookies, String body
+        String method, String path, String accept, Map<String, String> headers, Map<String, String> cookies, String body
     ) throws IOException, InterruptedException {
         HttpRequest.Builder builder = HttpRequest.newBuilder(uriFor(path)).timeout(HTTP_TIMEOUT).header("Accept", accept);
         headers.forEach(builder::header);
@@ -110,11 +110,11 @@ abstract class ExternalHttpTestSupport {
 
     private String baseUrl() {
         String configured = firstNonBlank(
-                System.getProperty("external.baseUrl"), System.getProperty("externalBaseUrl"), System.getProperty("baseUrl"), System.getenv("EXTERNAL_BASE_URL"), System.getenv("BASE_URL")
+            System.getProperty("external.baseUrl"), System.getProperty("externalBaseUrl"), System.getProperty("baseUrl"), System.getenv("EXTERNAL_BASE_URL"), System.getenv("BASE_URL")
         );
         if (configured == null) {
             throw new IllegalStateException(
-                    "External base URL is not configured. Set one of: " + "-Dexternal.baseUrl, -DexternalBaseUrl, -DbaseUrl, EXTERNAL_BASE_URL, BASE_URL"
+                "External base URL is not configured. Set one of: " + "-Dexternal.baseUrl, -DexternalBaseUrl, -DbaseUrl, EXTERNAL_BASE_URL, BASE_URL"
             );
         }
         String trimmed = configured.trim();

@@ -21,20 +21,20 @@ public class PublicApiSimulation extends Simulation {
     private final HttpProtocolBuilder httpProtocol = http.baseUrl(PerformanceEnvironment.baseUrl()).acceptHeader("application/json").userAgentHeader("gatling-phase-9-public-api");
 
     private final ScenarioBuilder scenarioBuilder = scenario("public-api-read-flow").exec(
-            http("list-books").get("/api/books?page=0&size=20").check(status().is(200)).check(headerRegex("Content-Type", "application/json.*"))
+        http("list-books").get("/api/books?page=0&size=20").check(status().is(200)).check(headerRegex("Content-Type", "application/json.*"))
     ).pause(Duration.ofMillis(200)).exec(
-            http("search-books").get("/api/books?title=clean&category=java&yearFrom=2000&yearTo=2020").check(status().is(200)).check(headerRegex("Content-Type", "application/json.*"))
+        http("search-books").get("/api/books?title=clean&category=java&yearFrom=2000&yearTo=2020").check(status().is(200)).check(headerRegex("Content-Type", "application/json.*"))
     ).pause(Duration.ofMillis(200)).exec(
-            http("lookup-localization-message").get("/api/localizations?messageKey=error.request.invalid&language=pl").check(status().is(200)).check(headerRegex("Content-Type", "application/json.*"))
+        http("lookup-localization-message").get("/api/localizations?messageKey=error.request.invalid&language=pl").check(status().is(200)).check(headerRegex("Content-Type", "application/json.*"))
     );
 
     {
         setUp(
-                scenarioBuilder.injectOpen(
-                        atOnceUsers(5), rampUsersPerSec(1).to(6).during(Duration.ofSeconds(20)), constantUsersPerSec(6).during(Duration.ofSeconds(20))
-                )
+            scenarioBuilder.injectOpen(
+                atOnceUsers(5), rampUsersPerSec(1).to(6).during(Duration.ofSeconds(20)), constantUsersPerSec(6).during(Duration.ofSeconds(20))
+            )
         ).protocols(httpProtocol).assertions(
-                global().successfulRequests().percent().gte(99.0), details("list-books").responseTime().percentile3().lt(800), details("search-books").responseTime().percentile3().lt(900), details("lookup-localization-message").responseTime().percentile3().lt(500)
+            global().successfulRequests().percent().gte(99.0), details("list-books").responseTime().percentile3().lt(800), details("search-books").responseTime().percentile3().lt(900), details("lookup-localization-message").responseTime().percentile3().lt(500)
         );
     }
 }

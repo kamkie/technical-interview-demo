@@ -53,13 +53,13 @@ class SessionApiDocumentationTests extends AbstractDocumentationIntegrationTest 
     @Test
     void documentGetSessionEndpointForAnonymousBrowserState() throws Exception {
         mockMvc.perform(get("/api/session")).andExpect(status().isOk()).andExpect(jsonPath("$.authenticated").value(false)).andExpect(jsonPath("$.loginProviders.length()").value(1)).andDo(documentEndpoint(
-                "session/get-session", responseHeaders(commonResponseHeaders(
-                        headerWithName("Set-Cookie").description(
-                                "Bootstraps or refreshes the readable CSRF cookie used by the same-site browser UI."
-                        )
-                )), responseFields(
-                        fieldWithPath("authenticated").description("Whether the current browser request is backed by an authenticated application session."), fieldWithPath("accountPath").description("Endpoint path for the authenticated persisted-account resource."), fieldWithPath("loginProviders[].registrationId").description("Configured OAuth client registration id."), fieldWithPath("loginProviders[].clientName").description("Display name exposed by the configured OAuth client registration."), fieldWithPath("loginProviders[].authorizationPath").description("Relative same-site authorization bootstrap path for the configured provider."), fieldWithPath("logoutPath").description("Same-site logout endpoint path."), fieldWithPath("sessionCookie.name").description("Session cookie name expected by protected operations."), fieldWithPath("sessionCookie.httpOnly").description("Whether the session cookie is HTTP-only."), fieldWithPath("sessionCookie.sameSite").description("Session cookie SameSite mode."), fieldWithPath("sessionCookie.secure").description("Whether the session cookie requires HTTPS."), fieldWithPath("csrf.enabled").description("Whether CSRF protection is currently enabled for browser writes."), fieldWithPath("csrf.cookieName").description("Readable CSRF cookie name mirrored by the browser UI."), fieldWithPath("csrf.headerName").description("Request header name required on unsafe browser writes.")
+            "session/get-session", responseHeaders(commonResponseHeaders(
+                headerWithName("Set-Cookie").description(
+                    "Bootstraps or refreshes the readable CSRF cookie used by the same-site browser UI."
                 )
+            )), responseFields(
+                fieldWithPath("authenticated").description("Whether the current browser request is backed by an authenticated application session."), fieldWithPath("accountPath").description("Endpoint path for the authenticated persisted-account resource."), fieldWithPath("loginProviders[].registrationId").description("Configured OAuth client registration id."), fieldWithPath("loginProviders[].clientName").description("Display name exposed by the configured OAuth client registration."), fieldWithPath("loginProviders[].authorizationPath").description("Relative same-site authorization bootstrap path for the configured provider."), fieldWithPath("logoutPath").description("Same-site logout endpoint path."), fieldWithPath("sessionCookie.name").description("Session cookie name expected by protected operations."), fieldWithPath("sessionCookie.httpOnly").description("Whether the session cookie is HTTP-only."), fieldWithPath("sessionCookie.sameSite").description("Session cookie SameSite mode."), fieldWithPath("sessionCookie.secure").description("Whether the session cookie requires HTTPS."), fieldWithPath("csrf.enabled").description("Whether CSRF protection is currently enabled for browser writes."), fieldWithPath("csrf.cookieName").description("Readable CSRF cookie name mirrored by the browser UI."), fieldWithPath("csrf.headerName").description("Request header name required on unsafe browser writes.")
+            )
         ));
     }
 
@@ -68,13 +68,13 @@ class SessionApiDocumentationTests extends AbstractDocumentationIntegrationTest 
         String sessionId = createAuthenticatedSession(httpSessionRepository(), "reader-user");
 
         mockMvc.perform(get("/api/session").cookie(sessionCookie(sessionId))).andExpect(status().isOk()).andExpect(jsonPath("$.authenticated").value(true)).andExpect(jsonPath("$.loginProviders.length()").value(1)).andDo(documentEndpoint(
-                "session/get-session-authenticated", responseHeaders(commonResponseHeaders(
-                        headerWithName("Set-Cookie").description(
-                                "Bootstraps or refreshes the readable CSRF cookie for the current authenticated browser session."
-                        )
-                )), responseFields(
-                        fieldWithPath("authenticated").description("Whether the current browser request is backed by an authenticated application session."), fieldWithPath("accountPath").description("Endpoint path for the authenticated persisted-account resource."), fieldWithPath("loginProviders[].registrationId").description("Configured OAuth client registration id."), fieldWithPath("loginProviders[].clientName").description("Display name exposed by the configured OAuth client registration."), fieldWithPath("loginProviders[].authorizationPath").description("Relative same-site authorization bootstrap path for the configured provider."), fieldWithPath("logoutPath").description("Same-site logout endpoint path."), fieldWithPath("sessionCookie.name").description("Session cookie name expected by protected operations."), fieldWithPath("sessionCookie.httpOnly").description("Whether the session cookie is HTTP-only."), fieldWithPath("sessionCookie.sameSite").description("Session cookie SameSite mode."), fieldWithPath("sessionCookie.secure").description("Whether the session cookie requires HTTPS."), fieldWithPath("csrf.enabled").description("Whether CSRF protection is currently enabled for browser writes."), fieldWithPath("csrf.cookieName").description("Readable CSRF cookie name mirrored by the browser UI."), fieldWithPath("csrf.headerName").description("Request header name required on unsafe browser writes.")
+            "session/get-session-authenticated", responseHeaders(commonResponseHeaders(
+                headerWithName("Set-Cookie").description(
+                    "Bootstraps or refreshes the readable CSRF cookie for the current authenticated browser session."
                 )
+            )), responseFields(
+                fieldWithPath("authenticated").description("Whether the current browser request is backed by an authenticated application session."), fieldWithPath("accountPath").description("Endpoint path for the authenticated persisted-account resource."), fieldWithPath("loginProviders[].registrationId").description("Configured OAuth client registration id."), fieldWithPath("loginProviders[].clientName").description("Display name exposed by the configured OAuth client registration."), fieldWithPath("loginProviders[].authorizationPath").description("Relative same-site authorization bootstrap path for the configured provider."), fieldWithPath("logoutPath").description("Same-site logout endpoint path."), fieldWithPath("sessionCookie.name").description("Session cookie name expected by protected operations."), fieldWithPath("sessionCookie.httpOnly").description("Whether the session cookie is HTTP-only."), fieldWithPath("sessionCookie.sameSite").description("Session cookie SameSite mode."), fieldWithPath("sessionCookie.secure").description("Whether the session cookie requires HTTPS."), fieldWithPath("csrf.enabled").description("Whether CSRF protection is currently enabled for browser writes."), fieldWithPath("csrf.cookieName").description("Readable CSRF cookie name mirrored by the browser UI."), fieldWithPath("csrf.headerName").description("Request header name required on unsafe browser writes.")
+            )
         ));
     }
 
@@ -84,11 +84,11 @@ class SessionApiDocumentationTests extends AbstractDocumentationIntegrationTest 
         BrowserSession browserSession = browserSession(sessionId, "reader-user");
 
         mockMvc.perform(post("/api/session/logout").with(browserSession.unsafeWrite())).andExpect(status().isNoContent()).andExpect(header().string("Set-Cookie", containsString("Max-Age=0"))).andDo(documentEndpoint(
-                "session/post-session-logout", responseHeaders(commonResponseHeaders(
-                        headerWithName("Set-Cookie").description(
-                                "Clears both the session cookie and the readable CSRF cookie at the application root path."
-                        )
-                ))
+            "session/post-session-logout", responseHeaders(commonResponseHeaders(
+                headerWithName("Set-Cookie").description(
+                    "Clears both the session cookie and the readable CSRF cookie at the application root path."
+                )
+            ))
         ));
     }
 }

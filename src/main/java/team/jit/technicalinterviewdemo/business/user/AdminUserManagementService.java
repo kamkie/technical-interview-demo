@@ -47,12 +47,12 @@ public class AdminUserManagementService {
         List<String> updatedRoles = updatedUser.getRoles().stream().map(Enum::name).sorted().toList();
         applicationMetrics.recordUserOperation("replaceManagedRoles");
         auditLogService.record(
-                AuditTargetType.USER_ACCOUNT, updatedUser.getId(), AuditAction.UPDATE, "Replaced managed roles for user '%s'.".formatted(updatedUser.getExternalLogin()), Map.of(
-                        "targetProvider", updatedUser.getProvider(), "targetLogin", updatedUser.getExternalLogin(), "previousRoles", previousRoles, "roles", updatedRoles, "reason", request.reason()
-                )
+            AuditTargetType.USER_ACCOUNT, updatedUser.getId(), AuditAction.UPDATE, "Replaced managed roles for user '%s'.".formatted(updatedUser.getExternalLogin()), Map.of(
+                "targetProvider", updatedUser.getProvider(), "targetLogin", updatedUser.getExternalLogin(), "previousRoles", previousRoles, "roles", updatedRoles, "reason", request.reason()
+            )
         );
         log.info(
-                "Replaced managed role grants userId={} roles={} grantedByUserId={}", updatedUser.getId(), updatedUser.getRoles(), currentAdmin.getId()
+            "Replaced managed role grants userId={} roles={} grantedByUserId={}", updatedUser.getId(), updatedUser.getRoles(), currentAdmin.getId()
         );
         return AdminUserAccountResponse.from(updatedUser);
     }

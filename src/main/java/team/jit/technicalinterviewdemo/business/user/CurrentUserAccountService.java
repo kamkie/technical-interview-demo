@@ -32,9 +32,9 @@ public class CurrentUserAccountService {
         boolean shouldBootstrapAdmin = shouldBootstrapAdmin(authenticatedUser);
 
         UserAccount userAccount = userAccountRepository.findByProviderAndExternalLogin(
-                authenticatedUser.provider(), authenticatedUser.login()
+            authenticatedUser.provider(), authenticatedUser.login()
         ).orElseGet(() -> new UserAccount(
-                authenticatedUser.provider(), authenticatedUser.login(), authenticatedUser.displayName(), authenticatedUser.email(), null, Instant.now(), java.util.Set.of(UserRole.USER)
+            authenticatedUser.provider(), authenticatedUser.login(), authenticatedUser.displayName(), authenticatedUser.email(), null, Instant.now(), java.util.Set.of(UserRole.USER)
         ));
 
         boolean created = userAccount.getId() == null;
@@ -49,14 +49,14 @@ public class CurrentUserAccountService {
         UserAccount savedUser = userAccountRepository.saveAndFlush(userAccount);
         applicationMetrics.recordUserOperation(created ? "create" : "loginSync");
         log.info(
-                "Synchronized authenticated user id={} provider={} login={} roles={}", savedUser.getId(), savedUser.getProvider(), savedUser.getExternalLogin(), savedUser.getRoles()
+            "Synchronized authenticated user id={} provider={} login={} roles={}", savedUser.getId(), savedUser.getProvider(), savedUser.getExternalLogin(), savedUser.getRoles()
         );
         return savedUser;
     }
 
     public Optional<UserAccount> findCurrentUser() {
         return currentAuthenticatedUser().flatMap(authenticatedUser -> userAccountRepository.findByProviderAndExternalLogin(
-                authenticatedUser.provider(), authenticatedUser.login()
+            authenticatedUser.provider(), authenticatedUser.login()
         ));
     }
 
@@ -92,12 +92,12 @@ public class CurrentUserAccountService {
 
         OAuth2User principal = oauth2AuthenticationToken.getPrincipal();
         String login = normalizeRequiredPrincipalValue(
-                findAttribute(principal, "login").or(() -> findAttribute(principal, "preferred_username")).or(() -> findAttribute(principal, "email")).orElse(principal.getName()), "login"
+            findAttribute(principal, "login").or(() -> findAttribute(principal, "preferred_username")).or(() -> findAttribute(principal, "email")).orElse(principal.getName()), "login"
         );
         String displayName = findAttribute(principal, "name").orElse(login);
         String email = findAttribute(principal, "email").orElse(null);
         return Optional.of(new AuthenticatedUserDetails(
-                oauth2AuthenticationToken.getAuthorizedClientRegistrationId().toLowerCase(Locale.ROOT), login, displayName, email
+            oauth2AuthenticationToken.getAuthorizedClientRegistrationId().toLowerCase(Locale.ROOT), login, displayName, email
         ));
     }
 
@@ -121,10 +121,10 @@ public class CurrentUserAccountService {
     }
 
     private record AuthenticatedUserDetails(
-                                            String provider,
-                                            String login,
-                                            String displayName,
-                                            String email
+        String provider,
+        String login,
+        String displayName,
+        String email
     ) {
         private String identityKey() {
             return "%s:%s".formatted(provider, login);

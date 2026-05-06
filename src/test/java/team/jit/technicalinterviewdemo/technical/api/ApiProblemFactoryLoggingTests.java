@@ -62,7 +62,7 @@ class ApiProblemFactoryLoggingTests {
         request.addParameter("query", "line1\r\nline2");
 
         ProblemDetail problemDetail = apiProblemFactory.clientProblem(
-                HttpStatus.BAD_REQUEST, rawTitle, rawDetail, "error.request.invalid_parameter", request, Map.of("rejectedValue", "abc\r\nforged-value")
+            HttpStatus.BAD_REQUEST, rawTitle, rawDetail, "error.request.invalid_parameter", request, Map.of("rejectedValue", "abc\r\nforged-value")
         );
 
         ILoggingEvent logEvent = logEvents.list.getFirst();

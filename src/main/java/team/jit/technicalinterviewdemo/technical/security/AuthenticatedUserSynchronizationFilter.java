@@ -20,7 +20,7 @@ public class AuthenticatedUserSynchronizationFilter extends OncePerRequestFilter
 
     @Override
     protected void doFilterInternal(
-                                    HttpServletRequest request, HttpServletResponse response, FilterChain filterChain
+        HttpServletRequest request, HttpServletResponse response, FilterChain filterChain
     ) throws ServletException, IOException {
         currentUserAccountService.currentAuthenticatedUserKey().ifPresent(authenticatedUserKey -> synchronizeUser(request, authenticatedUserKey));
         filterChain.doFilter(request, response);

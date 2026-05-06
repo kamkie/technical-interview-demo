@@ -64,7 +64,7 @@ class OperatorSurfaceServiceTests {
     @BeforeEach
     void setUp() {
         operatorSurfaceService = new OperatorSurfaceService(
-                currentUserAccountService, auditLogRepository, technicalOverviewService, healthEndpoint, applicationAvailability
+            currentUserAccountService, auditLogRepository, technicalOverviewService, healthEndpoint, applicationAvailability
         );
     }
 
@@ -124,9 +124,9 @@ class OperatorSurfaceServiceTests {
 
     private AuditLog auditLogWithId(long id, String messageKey, String language) {
         AuditLog auditLog = new AuditLog(
-                AuditTargetType.LOCALIZATION_MESSAGE, id, AuditAction.DELETE, null, "admin-user", "Deleted localization message '%s' in language %s.".formatted(messageKey, language), Map.of(
-                        "messageKey", messageKey, "language", language
-                )
+            AuditTargetType.LOCALIZATION_MESSAGE, id, AuditAction.DELETE, null, "admin-user", "Deleted localization message '%s' in language %s.".formatted(messageKey, language), Map.of(
+                "messageKey", messageKey, "language", language
+            )
         );
         ReflectionTestUtils.setField(auditLog, "id", id);
         ReflectionTestUtils.setField(auditLog, "createdAt", Instant.parse("2026-05-04T08:30:00Z"));
@@ -135,27 +135,27 @@ class OperatorSurfaceServiceTests {
 
     private TechnicalOverviewResponse technicalOverview() {
         return new TechnicalOverviewResponse(
-                new TechnicalOverviewResponse.BuildDetails(
-                        "technical-interview-demo", "team.jit", "technical-interview-demo", "2.0.0-M4", Instant.parse("2026-05-04T08:00:00Z")
-                ), new TechnicalOverviewResponse.GitDetails(
-                        "main", "f".repeat(40), "fffffff", Instant.parse("2026-05-04T08:00:00Z")
-                ), new TechnicalOverviewResponse.RuntimeDetails(
-                        "technical-interview-demo", "25", "Azul", List.of("test")
-                ), Map.of("spring-boot", "3.5.0"), new TechnicalOverviewResponse.ConfigurationDetails(
-                        new TechnicalOverviewResponse.PaginationDetails(20, 100), new TechnicalOverviewResponse.SessionDetails(
-                                "jdbc", "15m", "SESSION", true, "Lax"
-                        ), new TechnicalOverviewResponse.ObservabilityDetails(
-                                List.of("health", "info", "prometheus"), true, 1.0
-                        ), new TechnicalOverviewResponse.DocumentationDetails(
-                                "/docs", "/v3/api-docs", "/v3/api-docs.yaml", "3.1.0"
-                        ), new TechnicalOverviewResponse.SecurityDetails(
-                                true, "XSRF-TOKEN", "X-XSRF-TOKEN", true, "/api/**", "/oauth2/authorization", "/login/oauth2/code/{registrationId}", "framework", new TechnicalOverviewResponse.AbuseProtectionDetails(
-                                        "edge-or-gateway", "/oauth2/authorization/{registrationId}", List.of("csrf", "rate-limit"), "/api/**", List.of("PUT /api/account/language"), List.of("csrf", "authentication")
-                                )
-                        ), new TechnicalOverviewResponse.ShutdownDetails(
-                                "graceful", "30s"
-                        )
+            new TechnicalOverviewResponse.BuildDetails(
+                "technical-interview-demo", "team.jit", "technical-interview-demo", "2.0.0-M4", Instant.parse("2026-05-04T08:00:00Z")
+            ), new TechnicalOverviewResponse.GitDetails(
+                "main", "f".repeat(40), "fffffff", Instant.parse("2026-05-04T08:00:00Z")
+            ), new TechnicalOverviewResponse.RuntimeDetails(
+                "technical-interview-demo", "25", "Azul", List.of("test")
+            ), Map.of("spring-boot", "3.5.0"), new TechnicalOverviewResponse.ConfigurationDetails(
+                new TechnicalOverviewResponse.PaginationDetails(20, 100), new TechnicalOverviewResponse.SessionDetails(
+                    "jdbc", "15m", "SESSION", true, "Lax"
+                ), new TechnicalOverviewResponse.ObservabilityDetails(
+                    List.of("health", "info", "prometheus"), true, 1.0
+                ), new TechnicalOverviewResponse.DocumentationDetails(
+                    "/docs", "/v3/api-docs", "/v3/api-docs.yaml", "3.1.0"
+                ), new TechnicalOverviewResponse.SecurityDetails(
+                    true, "XSRF-TOKEN", "X-XSRF-TOKEN", true, "/api/**", "/oauth2/authorization", "/login/oauth2/code/{registrationId}", "framework", new TechnicalOverviewResponse.AbuseProtectionDetails(
+                        "edge-or-gateway", "/oauth2/authorization/{registrationId}", List.of("csrf", "rate-limit"), "/api/**", List.of("PUT /api/account/language"), List.of("csrf", "authentication")
+                    )
+                ), new TechnicalOverviewResponse.ShutdownDetails(
+                    "graceful", "30s"
                 )
+            )
         );
     }
 

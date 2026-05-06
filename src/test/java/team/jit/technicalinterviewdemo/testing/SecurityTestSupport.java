@@ -35,7 +35,7 @@ public final class SecurityTestSupport {
     }
 
     public static <S extends Session> BrowserSession authenticatedBrowserSession(
-                                                                                 SessionRepository<S> sessionRepository, String login
+        SessionRepository<S> sessionRepository, String login
     ) {
         return browserSession(createAuthenticatedSession(sessionRepository, login), login);
     }
@@ -67,7 +67,7 @@ public final class SecurityTestSupport {
     public static <S extends Session> String createAuthenticatedSession(SessionRepository<S> sessionRepository, String login) {
         S session = sessionRepository.createSession();
         session.setAttribute(
-                HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, new SecurityContextImpl(oauthAuthentication(login))
+            HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, new SecurityContextImpl(oauthAuthentication(login))
         );
         sessionRepository.save(session);
         return session.getId();
@@ -75,7 +75,7 @@ public final class SecurityTestSupport {
 
     public static Cookie sessionCookie(String sessionId) {
         String encodedSessionId = java.util.Base64.getEncoder().encodeToString(
-                sessionId.getBytes(java.nio.charset.StandardCharsets.UTF_8)
+            sessionId.getBytes(java.nio.charset.StandardCharsets.UTF_8)
         );
         return new Cookie("technical-interview-demo-session", encodedSessionId);
     }
@@ -86,9 +86,9 @@ public final class SecurityTestSupport {
 
     private static OAuth2AuthenticationToken oauthAuthentication(String login) {
         DefaultOAuth2User oauth2User = new DefaultOAuth2User(
-                AuthorityUtils.createAuthorityList("ROLE_USER"), Map.of(
-                        "login", login, "name", login + " display", "email", login + "@example.test"
-                ), "login"
+            AuthorityUtils.createAuthorityList("ROLE_USER"), Map.of(
+                "login", login, "name", login + " display", "email", login + "@example.test"
+            ), "login"
         );
         return new OAuth2AuthenticationToken(oauth2User, oauth2User.getAuthorities(), "github");
     }

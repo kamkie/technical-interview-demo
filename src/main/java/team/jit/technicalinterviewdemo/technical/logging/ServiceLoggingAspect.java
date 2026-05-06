@@ -50,12 +50,12 @@ public class ServiceLoggingAspect {
         try {
             Object result = joinPoint.proceed();
             log.info(
-                    "Service call {}.{} parameters={} durationMs={}", serviceName, methodName, parameters, toDurationMillis(startTimeNanos)
+                "Service call {}.{} parameters={} durationMs={}", serviceName, methodName, parameters, toDurationMillis(startTimeNanos)
             );
             return result;
         } catch (Throwable exception) {
             log.info(
-                    "Service call {}.{} parameters={} durationMs={} completedWithException=true", serviceName, methodName, parameters, toDurationMillis(startTimeNanos)
+                "Service call {}.{} parameters={} durationMs={} completedWithException=true", serviceName, methodName, parameters, toDurationMillis(startTimeNanos)
             );
             throw exception;
         }
@@ -102,7 +102,7 @@ public class ServiceLoggingAspect {
                 case Collection<?> collection -> sanitizeCollection(collection, depth, visited);
                 case Map<?, ?> map -> sanitizeMap(map, depth, visited);
                 case MultipartFile file -> Map.of(
-                        "name", file.getName(), "originalFilename", file.getOriginalFilename(), "contentType", file.getContentType(), "size", file.getSize()
+                    "name", file.getName(), "originalFilename", file.getOriginalFilename(), "contentType", file.getContentType(), "size", file.getSize()
                 );
                 default -> sanitizeObjectFields(value, depth, visited);
             };

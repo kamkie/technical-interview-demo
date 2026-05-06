@@ -57,7 +57,7 @@ class CategoryServiceTests {
     void setUp() {
         cacheManager = new ConcurrentMapCacheManager(CacheNames.CATEGORIES, CacheNames.CATEGORY_DIRECTORY);
         categoryService = new CategoryService(
-                categoryRepository, bookRepository, cacheManager, applicationMetrics, currentUserAccountService, auditLogService
+            categoryRepository, bookRepository, cacheManager, applicationMetrics, currentUserAccountService, auditLogService
         );
     }
 

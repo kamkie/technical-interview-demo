@@ -23,7 +23,7 @@ final class OpenApiContractCompatibilityChecker {
     }
 
     private static void comparePaths(
-                                     JsonNode approvedPaths, JsonNode currentPaths, JsonNode approvedComponents, JsonNode currentComponents, List<String> issues
+        JsonNode approvedPaths, JsonNode currentPaths, JsonNode approvedComponents, JsonNode currentComponents, List<String> issues
     ) {
         Iterator<String> pathNames = approvedPaths.fieldNames();
         while (pathNames.hasNext()) {
@@ -45,25 +45,25 @@ final class OpenApiContractCompatibilityChecker {
                     continue;
                 }
                 compareOperation(
-                        pathName, method, approvedOperation, currentOperation, approvedComponents, currentComponents, issues
+                    pathName, method, approvedOperation, currentOperation, approvedComponents, currentComponents, issues
                 );
             }
         }
     }
 
     private static void compareOperation(
-                                         String pathName, String method, JsonNode approvedOperation, JsonNode currentOperation, JsonNode approvedComponents, JsonNode currentComponents, List<String> issues
+        String pathName, String method, JsonNode approvedOperation, JsonNode currentOperation, JsonNode approvedComponents, JsonNode currentComponents, List<String> issues
     ) {
         String operationLabel = method.toUpperCase(Locale.ROOT) + " " + pathName;
         compareSecurity(operationLabel, approvedOperation.path("security"), currentOperation.path("security"), issues);
         compareParameters(
-                operationLabel, approvedOperation.path("parameters"), currentOperation.path("parameters"), approvedComponents, currentComponents, issues
+            operationLabel, approvedOperation.path("parameters"), currentOperation.path("parameters"), approvedComponents, currentComponents, issues
         );
         compareRequestBody(
-                operationLabel, approvedOperation.path("requestBody"), currentOperation.path("requestBody"), approvedComponents, currentComponents, issues
+            operationLabel, approvedOperation.path("requestBody"), currentOperation.path("requestBody"), approvedComponents, currentComponents, issues
         );
         compareResponses(
-                operationLabel, approvedOperation.path("responses"), currentOperation.path("responses"), approvedComponents, currentComponents, issues
+            operationLabel, approvedOperation.path("responses"), currentOperation.path("responses"), approvedComponents, currentComponents, issues
         );
     }
 
@@ -95,7 +95,7 @@ final class OpenApiContractCompatibilityChecker {
     }
 
     private static void compareParameters(
-                                          String operationLabel, JsonNode approvedParameters, JsonNode currentParameters, JsonNode approvedComponents, JsonNode currentComponents, List<String> issues
+        String operationLabel, JsonNode approvedParameters, JsonNode currentParameters, JsonNode approvedComponents, JsonNode currentComponents, List<String> issues
     ) {
         Map<String, JsonNode> approvedParameterMap = indexParameters(approvedParameters);
         Map<String, JsonNode> currentParameterMap = indexParameters(currentParameters);
@@ -114,7 +114,7 @@ final class OpenApiContractCompatibilityChecker {
             }
 
             compareSchema(
-                    operationLabel + " parameter " + entry.getKey(), entry.getValue().path("schema"), currentParameter.path("schema"), approvedComponents, currentComponents, issues, true
+                operationLabel + " parameter " + entry.getKey(), entry.getValue().path("schema"), currentParameter.path("schema"), approvedComponents, currentComponents, issues, true
             );
         }
 
@@ -138,7 +138,7 @@ final class OpenApiContractCompatibilityChecker {
     }
 
     private static void compareRequestBody(
-                                           String operationLabel, JsonNode approvedRequestBody, JsonNode currentRequestBody, JsonNode approvedComponents, JsonNode currentComponents, List<String> issues
+        String operationLabel, JsonNode approvedRequestBody, JsonNode currentRequestBody, JsonNode approvedComponents, JsonNode currentComponents, List<String> issues
     ) {
         if (approvedRequestBody.isMissingNode()) {
             if (currentRequestBody.path("required").asBoolean(false)) {
@@ -158,12 +158,12 @@ final class OpenApiContractCompatibilityChecker {
         }
 
         compareContentSchemas(
-                operationLabel + " request body", approvedRequestBody.path("content"), currentRequestBody.path("content"), approvedComponents, currentComponents, issues, true
+            operationLabel + " request body", approvedRequestBody.path("content"), currentRequestBody.path("content"), approvedComponents, currentComponents, issues, true
         );
     }
 
     private static void compareResponses(
-                                         String operationLabel, JsonNode approvedResponses, JsonNode currentResponses, JsonNode approvedComponents, JsonNode currentComponents, List<String> issues
+        String operationLabel, JsonNode approvedResponses, JsonNode currentResponses, JsonNode approvedComponents, JsonNode currentComponents, List<String> issues
     ) {
         Iterator<String> statusCodes = approvedResponses.fieldNames();
         while (statusCodes.hasNext()) {
@@ -176,13 +176,13 @@ final class OpenApiContractCompatibilityChecker {
             }
 
             compareContentSchemas(
-                    operationLabel + " response " + statusCode, approvedResponse.path("content"), currentResponse.path("content"), approvedComponents, currentComponents, issues, false
+                operationLabel + " response " + statusCode, approvedResponse.path("content"), currentResponse.path("content"), approvedComponents, currentComponents, issues, false
             );
         }
     }
 
     private static void compareContentSchemas(
-                                              String label, JsonNode approvedContent, JsonNode currentContent, JsonNode approvedComponents, JsonNode currentComponents, List<String> issues, boolean requestContext
+        String label, JsonNode approvedContent, JsonNode currentContent, JsonNode approvedComponents, JsonNode currentComponents, List<String> issues, boolean requestContext
     ) {
         if (approvedContent.isMissingNode() || approvedContent.isEmpty()) {
             return;
@@ -202,7 +202,7 @@ final class OpenApiContractCompatibilityChecker {
     }
 
     private static void compareSchema(
-                                      String label, JsonNode approvedSchema, JsonNode currentSchema, JsonNode approvedComponents, JsonNode currentComponents, List<String> issues, boolean requestContext
+        String label, JsonNode approvedSchema, JsonNode currentSchema, JsonNode approvedComponents, JsonNode currentComponents, List<String> issues, boolean requestContext
     ) {
         JsonNode resolvedApproved = resolveSchema(approvedSchema, approvedComponents);
         JsonNode resolvedCurrent = resolveSchema(currentSchema, currentComponents);
@@ -231,7 +231,7 @@ final class OpenApiContractCompatibilityChecker {
 
         if ("array".equals(approvedType)) {
             compareSchema(
-                    label + "[]", resolvedApproved.path("items"), resolvedCurrent.path("items"), approvedComponents, currentComponents, issues, requestContext
+                label + "[]", resolvedApproved.path("items"), resolvedCurrent.path("items"), approvedComponents, currentComponents, issues, requestContext
             );
         }
     }
@@ -259,7 +259,7 @@ final class OpenApiContractCompatibilityChecker {
     }
 
     private static void compareObjectSchema(
-                                            String label, JsonNode approvedSchema, JsonNode currentSchema, JsonNode approvedComponents, JsonNode currentComponents, List<String> issues, boolean requestContext
+        String label, JsonNode approvedSchema, JsonNode currentSchema, JsonNode approvedComponents, JsonNode currentComponents, List<String> issues, boolean requestContext
     ) {
         JsonNode approvedProperties = approvedSchema.path("properties");
         JsonNode currentProperties = currentSchema.path("properties");
@@ -273,7 +273,7 @@ final class OpenApiContractCompatibilityChecker {
                 continue;
             }
             compareSchema(
-                    label + "." + propertyName, approvedProperties.path(propertyName), currentProperty, approvedComponents, currentComponents, issues, requestContext
+                label + "." + propertyName, approvedProperties.path(propertyName), currentProperty, approvedComponents, currentComponents, issues, requestContext
             );
         }
 

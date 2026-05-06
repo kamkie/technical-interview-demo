@@ -34,7 +34,7 @@ class UserAccountServiceTests {
     @BeforeEach
     void setUp() {
         userAccountService = new UserAccountService(
-                currentUserAccountService, userAccountRepository, applicationMetrics
+            currentUserAccountService, userAccountRepository, applicationMetrics
         );
     }
 
@@ -72,7 +72,7 @@ class UserAccountServiceTests {
     @Test
     void getCurrentUserAccountSortsRolesAlphabetically() {
         UserAccount currentUser = new UserAccount(
-                "github", "kamkie", "Kamil Kiewisz", "kamil@example.com", null, Instant.parse("2026-04-30T20:00:00Z"), Set.of(UserRole.USER, UserRole.ADMIN)
+            "github", "kamkie", "Kamil Kiewisz", "kamil@example.com", null, Instant.parse("2026-04-30T20:00:00Z"), Set.of(UserRole.USER, UserRole.ADMIN)
         );
         when(currentUserAccountService.getCurrentUserOrSynchronize()).thenReturn(currentUser);
 
@@ -83,7 +83,7 @@ class UserAccountServiceTests {
 
     private UserAccount testUserAccount() {
         return new UserAccount(
-                "github", "kamkie", "Kamil Kiewisz", "kamil@example.com", null, Instant.parse("2026-04-30T20:00:00Z"), Set.of(UserRole.USER)
+            "github", "kamkie", "Kamil Kiewisz", "kamil@example.com", null, Instant.parse("2026-04-30T20:00:00Z"), Set.of(UserRole.USER)
         );
     }
 }

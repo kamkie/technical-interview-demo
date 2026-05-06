@@ -157,7 +157,7 @@ class LocalizationServiceTests {
         setAdminAuthenticatedUser();
 
         Localization createdMessage = localizationService.create(new LocalizationRequest(
-                "info.book.created", "fr", "Le livre a ete cree.", "French success message for new books."
+            "info.book.created", "fr", "Le livre a ete cree.", "French success message for new books."
         ));
 
         assertLocalizationCachesCleared();
@@ -172,7 +172,7 @@ class LocalizationServiceTests {
         Localization message = localizationService.findByMessageKeyAndLanguage("error.book.not_found", "es");
 
         localizationService.update(message.getId(), new LocalizationRequest(
-                "error.book.not_found", "es", "No se encontro el libro solicitado. Actualizado.", "Updated Spanish missing-book message."
+            "error.book.not_found", "es", "No se encontro el libro solicitado. Actualizado.", "Updated Spanish missing-book message."
         ));
 
         assertLocalizationCachesCleared();
@@ -209,7 +209,7 @@ class LocalizationServiceTests {
 
     private void clearLocalizationCaches() {
         CacheTestSupport.clearCaches(
-                cacheManager, CacheNames.LOCALIZATION_LOOKUPS, CacheNames.LOCALIZATION_LISTS, CacheNames.LOCALIZATION_MESSAGE_MAPS
+            cacheManager, CacheNames.LOCALIZATION_LOOKUPS, CacheNames.LOCALIZATION_LISTS, CacheNames.LOCALIZATION_MESSAGE_MAPS
         );
     }
 

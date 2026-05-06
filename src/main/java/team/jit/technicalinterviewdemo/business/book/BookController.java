@@ -33,10 +33,10 @@ public class BookController {
 
     @GetMapping
     @Operation(
-            summary = "List books", description = "Public endpoint with pagination, sorting, text filters, category filters, and publication-year filters."
+        summary = "List books", description = "Public endpoint with pagination, sorting, text filters, category filters, and publication-year filters."
     )
     public ResponseEntity<Page<BookResponse>> findAll(
-                                                      @ParameterObject BookSearchRequest request, @ParameterObject @PageableDefault(size = 20, sort = "id") Pageable pageable
+        @ParameterObject BookSearchRequest request, @ParameterObject @PageableDefault(size = 20, sort = "id") Pageable pageable
     ) {
         Page<BookResponse> payload = bookService.findAll(request, pageable).map(BookResponse::from);
         return ResponseEntity.ok(payload);
@@ -51,10 +51,10 @@ public class BookController {
 
     @PostMapping
     @Operation(
-            summary = "Create a book", description = "Requires an authenticated session established through the configured OAuth provider login flow and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.", security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
+        summary = "Create a book", description = "Requires an authenticated session established through the configured OAuth provider login flow and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.", security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
     )
     @Parameter(
-            name = SameSiteCsrfContract.HEADER_NAME, in = ParameterIn.HEADER, required = true, description = "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie."
+        name = SameSiteCsrfContract.HEADER_NAME, in = ParameterIn.HEADER, required = true, description = "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie."
     )
     public ResponseEntity<BookResponse> create(@Valid @RequestBody BookCreateRequest request) {
         BookResponse payload = BookResponse.from(bookService.create(request));
@@ -63,10 +63,10 @@ public class BookController {
 
     @PutMapping("/{id}")
     @Operation(
-            summary = "Update a book", description = "Requires an authenticated session, a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie, and the current optimistic-lock version.", security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
+        summary = "Update a book", description = "Requires an authenticated session, a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie, and the current optimistic-lock version.", security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
     )
     @Parameter(
-            name = SameSiteCsrfContract.HEADER_NAME, in = ParameterIn.HEADER, required = true, description = "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie."
+        name = SameSiteCsrfContract.HEADER_NAME, in = ParameterIn.HEADER, required = true, description = "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie."
     )
     public ResponseEntity<BookResponse> update(@PathVariable Long id, @Valid @RequestBody BookUpdateRequest request) {
         BookResponse payload = BookResponse.from(bookService.update(id, request));
@@ -75,10 +75,10 @@ public class BookController {
 
     @DeleteMapping("/{id}")
     @Operation(
-            summary = "Delete a book", description = "Requires an authenticated session and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.", security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
+        summary = "Delete a book", description = "Requires an authenticated session and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.", security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
     )
     @Parameter(
-            name = SameSiteCsrfContract.HEADER_NAME, in = ParameterIn.HEADER, required = true, description = "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie."
+        name = SameSiteCsrfContract.HEADER_NAME, in = ParameterIn.HEADER, required = true, description = "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie."
     )
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         bookService.delete(id);

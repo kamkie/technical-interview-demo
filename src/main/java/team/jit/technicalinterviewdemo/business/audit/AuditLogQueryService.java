@@ -60,7 +60,7 @@ public class AuditLogQueryService {
         for (Sort.Order order : sort) {
             if (!ALLOWED_SORT_FIELDS.contains(order.getProperty())) {
                 throw new InvalidRequestException(
-                        "Sort field '%s' is not supported. Use one of: id, targetType, targetId, action, actorLogin, createdAt.".formatted(order.getProperty())
+                    "Sort field '%s' is not supported. Use one of: id, targetType, targetId, action, actorLogin, createdAt.".formatted(order.getProperty())
                 );
             }
         }
