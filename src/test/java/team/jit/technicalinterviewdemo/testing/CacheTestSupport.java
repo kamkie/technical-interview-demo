@@ -9,8 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public final class CacheTestSupport {
 
-    private CacheTestSupport() {
-    }
+    private CacheTestSupport() {}
 
     public static void clearCaches(CacheManager cacheManager, String... cacheNames) {
         clearCaches(cacheManager, List.of(cacheNames));

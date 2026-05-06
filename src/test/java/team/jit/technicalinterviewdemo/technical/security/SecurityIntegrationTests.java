@@ -81,17 +81,16 @@ class SecurityIntegrationTests {
         httpSessionRepository().save(session);
 
         Integer sessions = jdbcTemplate.queryForObject(
-            "SELECT COUNT(*) FROM SPRING_SESSION WHERE SESSION_ID = ?", Integer.class, session.getId()
-        );
-        Integer attributes = jdbcTemplate.queryForObject(
-            "SELECT COUNT(*) FROM SPRING_SESSION_ATTRIBUTES", Integer.class
-        );
+                "SELECT COUNT(*) FROM SPRING_SESSION WHERE SESSION_ID = ?", Integer.class, session.getId());
+        Integer attributes =
+                jdbcTemplate.queryForObject("SELECT COUNT(*) FROM SPRING_SESSION_ATTRIBUTES", Integer.class);
         Session storedSession = httpSessionRepository().findById(session.getId());
 
         assertThat(sessions).isEqualTo(1);
         assertThat(attributes).isGreaterThan(0);
         assertThat(storedSession).isNotNull();
-        Object storedSecurityContext = storedSession.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+        Object storedSecurityContext =
+                storedSession.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
         assertThat(storedSecurityContext).isNotNull();
     }
 
@@ -100,21 +99,24 @@ class SecurityIntegrationTests {
         OAuth2AuthenticationToken authentication = authentication("demo-user");
         Session existingSession = httpSessionRepository().createSession();
         existingSession.setAttribute(
-            HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, new SecurityContextImpl(authentication)
-        );
+                HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+                new SecurityContextImpl(authentication));
         httpSessionRepository().save(existingSession);
 
-        ConcurrentSessionControlAuthenticationStrategy strategy = new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry);
+        ConcurrentSessionControlAuthenticationStrategy strategy =
+                new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry);
         strategy.setMaximumSessions(1);
         strategy.setExceptionIfMaximumExceeded(true);
 
         MockHttpServletRequest secondLoginRequest = new MockHttpServletRequest();
         secondLoginRequest.setSession(new MockHttpSession(null, "second-session"));
 
-        assertThat(sessionRegistry.getAllSessions(authentication.getPrincipal(), false)).hasSize(1);
-        assertThatThrownBy(() -> strategy.onAuthentication(
-            authentication, secondLoginRequest, new MockHttpServletResponse()
-        )).isInstanceOf(SessionAuthenticationException.class).hasMessageContaining("Maximum sessions of 1");
+        assertThat(sessionRegistry.getAllSessions(authentication.getPrincipal(), false))
+                .hasSize(1);
+        assertThatThrownBy(() ->
+                        strategy.onAuthentication(authentication, secondLoginRequest, new MockHttpServletResponse()))
+                .isInstanceOf(SessionAuthenticationException.class)
+                .hasMessageContaining("Maximum sessions of 1");
     }
 
     @Test
@@ -124,12 +126,12 @@ class SecurityIntegrationTests {
         request.getSession().setAttribute("SPRING_SECURITY_SAVED_REQUEST", "/api/account");
         MockHttpServletResponse response = new MockHttpServletResponse();
 
-        oauthAuthenticationSuccessHandler.onAuthenticationSuccess(
-            request, response, authentication("demo-user")
-        );
+        oauthAuthenticationSuccessHandler.onAuthenticationSuccess(request, response, authentication("demo-user"));
 
         assertThat(response.getRedirectedUrl()).isEqualTo("/");
-        UserAccount userAccount = userAccountRepository.findByProviderAndExternalLogin("github", "demo-user").orElseThrow();
+        UserAccount userAccount = userAccountRepository
+                .findByProviderAndExternalLogin("github", "demo-user")
+                .orElseThrow();
         assertThat(auditLogRepository.findAll()).hasSize(1);
         AuditLog auditLog = auditLogRepository.findAll().getFirst();
         assertThat(auditLog.getTargetType()).isEqualTo(AuditTargetType.AUTHENTICATION);
@@ -146,8 +148,7 @@ class SecurityIntegrationTests {
         MockHttpServletResponse response = new MockHttpServletResponse();
 
         oauthAuthenticationFailureHandler.onAuthenticationFailure(
-            request, response, new OAuth2AuthenticationException(new OAuth2Error("invalid_token"))
-        );
+                request, response, new OAuth2AuthenticationException(new OAuth2Error("invalid_token")));
 
         assertThat(response.getRedirectedUrl()).isEqualTo("/?login=failed");
         assertThat(auditLogRepository.findAll()).hasSize(1);
@@ -157,7 +158,10 @@ class SecurityIntegrationTests {
         assertThat(auditLog.getAction()).isEqualTo(AuditAction.LOGIN_FAILURE);
         assertThat(auditLog.getActorLogin()).isNull();
         assertThat(auditLog.getSummary()).isEqualTo("OAuth login failed.");
-        assertThat(auditLog.getDetails()).containsEntry("provider", "github").containsEntry("failureType", "oauth_authentication_failure").containsEntry("errorCode", "invalid_token");
+        assertThat(auditLog.getDetails())
+                .containsEntry("provider", "github")
+                .containsEntry("failureType", "oauth_authentication_failure")
+                .containsEntry("errorCode", "invalid_token");
     }
 
     @Test
@@ -166,8 +170,7 @@ class SecurityIntegrationTests {
         MockHttpServletResponse response = new MockHttpServletResponse();
 
         oauthAuthenticationFailureHandler.onAuthenticationFailure(
-            request, response, new SessionAuthenticationException("Maximum sessions of 1 exceeded")
-        );
+                request, response, new SessionAuthenticationException("Maximum sessions of 1 exceeded"));
 
         assertThat(response.getRedirectedUrl()).isEqualTo("/?login=failed");
         assertThat(auditLogRepository.findAll()).hasSize(1);
@@ -176,17 +179,17 @@ class SecurityIntegrationTests {
         assertThat(auditLog.getTargetId()).isNull();
         assertThat(auditLog.getAction()).isEqualTo(AuditAction.SESSION_REJECTION);
         assertThat(auditLog.getActorLogin()).isNull();
-        assertThat(auditLog.getSummary()).isEqualTo(
-            "Rejected OAuth login because the concurrent session limit was reached."
-        );
-        assertThat(auditLog.getDetails()).containsEntry("provider", "github").containsEntry("failureType", "maximum_sessions_exceeded");
+        assertThat(auditLog.getSummary())
+                .isEqualTo("Rejected OAuth login because the concurrent session limit was reached.");
+        assertThat(auditLog.getDetails())
+                .containsEntry("provider", "github")
+                .containsEntry("failureType", "maximum_sessions_exceeded");
         assertThat(auditLog.getDetails()).doesNotContainKey("errorCode");
     }
 
     private OAuth2AuthenticationToken authentication(String login) {
-        DefaultOAuth2User oauth2User = new DefaultOAuth2User(
-            AuthorityUtils.createAuthorityList("ROLE_USER"), Map.of("login", login), "login"
-        );
+        DefaultOAuth2User oauth2User =
+                new DefaultOAuth2User(AuthorityUtils.createAuthorityList("ROLE_USER"), Map.of("login", login), "login");
         return new OAuth2AuthenticationToken(oauth2User, oauth2User.getAuthorities(), "github");
     }
 }

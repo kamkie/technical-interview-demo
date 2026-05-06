@@ -10,11 +10,25 @@ public final class SensitiveDataSanitizer {
 
     public static final String REDACTED = "<redacted>";
 
-    private static final String[] SENSITIVE_TOKENS = {"password", "passwd", "pwd", "secret", "token", "authorization", "credential", "cookie", "session", "apikey", "accesskey", "privatekey", "clientsecret", "bearer", "refreshtoken"
+    private static final String[] SENSITIVE_TOKENS = {
+        "password",
+        "passwd",
+        "pwd",
+        "secret",
+        "token",
+        "authorization",
+        "credential",
+        "cookie",
+        "session",
+        "apikey",
+        "accesskey",
+        "privatekey",
+        "clientsecret",
+        "bearer",
+        "refreshtoken"
     };
 
-    private SensitiveDataSanitizer() {
-    }
+    private SensitiveDataSanitizer() {}
 
     public static boolean isSensitiveName(String name) {
         if (name == null || name.isBlank()) {
@@ -32,9 +46,8 @@ public final class SensitiveDataSanitizer {
 
     public static Map<String, Object> sanitizeParameters(Map<String, String[]> parameterMap) {
         Map<String, Object> sanitized = new LinkedHashMap<>();
-        parameterMap.forEach((name, values) -> sanitized.put(
-            sanitizeForLog(name), isSensitiveName(name) ? REDACTED : sanitizeValues(values)
-        ));
+        parameterMap.forEach((name, values) ->
+                sanitized.put(sanitizeForLog(name), isSensitiveName(name) ? REDACTED : sanitizeValues(values)));
         return sanitized;
     }
 
@@ -85,9 +98,8 @@ public final class SensitiveDataSanitizer {
         }
         if (value instanceof Map<?, ?> mapValue) {
             Map<String, Object> sanitized = new LinkedHashMap<>();
-            mapValue.forEach((key, nestedValue) -> sanitized.put(
-                sanitizeForLog(String.valueOf(key)), sanitizeLogValue(nestedValue)
-            ));
+            mapValue.forEach((key, nestedValue) ->
+                    sanitized.put(sanitizeForLog(String.valueOf(key)), sanitizeLogValue(nestedValue)));
             return sanitized;
         }
         if (value instanceof Iterable<?> iterableValue) {

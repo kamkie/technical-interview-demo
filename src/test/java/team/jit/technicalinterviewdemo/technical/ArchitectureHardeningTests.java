@@ -54,7 +54,8 @@ class ArchitectureHardeningTests {
 
     @BeforeEach
     void setUp() {
-        effectiveJava = BookCatalogTestData.seedDefaultCatalog(bookRepository, categoryRepository, cacheManager).effectiveJava();
+        effectiveJava = BookCatalogTestData.seedDefaultCatalog(bookRepository, categoryRepository, cacheManager)
+                .effectiveJava();
     }
 
     @Test
@@ -68,36 +69,34 @@ class ArchitectureHardeningTests {
 
     @Test
     void applicationEntryPointDoesNotContainEnableCachingAnnotation() {
-        assertThat(TechnicalInterviewDemoApplication.class.isAnnotationPresent(EnableCaching.class)).isFalse();
-        assertThat(CachingConfiguration.class.isAnnotationPresent(EnableCaching.class)).isTrue();
+        assertThat(TechnicalInterviewDemoApplication.class.isAnnotationPresent(EnableCaching.class))
+                .isFalse();
+        assertThat(CachingConfiguration.class.isAnnotationPresent(EnableCaching.class))
+                .isTrue();
     }
 
     @Test
     void publicControllersDoNotExposeJpaEntitiesInResponseTypes() throws NoSuchMethodException {
-        ResolvableType listBooksReturnType = ResolvableType.forMethodReturnType(
-            BookController.class.getMethod("findAll", BookSearchRequest.class, org.springframework.data.domain.Pageable.class)
-        );
-        ResolvableType getBookReturnType = ResolvableType.forMethodReturnType(BookController.class.getMethod("findById", Long.class));
-        ResolvableType createBookReturnType = ResolvableType.forMethodReturnType(
-            BookController.class.getMethod("create", team.jit.technicalinterviewdemo.business.book.BookCreateRequest.class)
-        );
-        ResolvableType updateBookReturnType = ResolvableType.forMethodReturnType(
-            BookController.class.getMethod("update", Long.class, team.jit.technicalinterviewdemo.business.book.BookUpdateRequest.class)
-        );
-        ResolvableType listAuditLogsReturnType = ResolvableType.forMethodReturnType(
-            AuditLogController.class.getMethod(
-                "findAll", team.jit.technicalinterviewdemo.business.audit.AuditTargetType.class, team.jit.technicalinterviewdemo.business.audit.AuditAction.class, String.class, org.springframework.data.domain.Pageable.class
-            )
-        );
-        ResolvableType listCategoriesReturnType = ResolvableType.forMethodReturnType(CategoryController.class.getMethod("findAll"));
-        ResolvableType createCategoryReturnType = ResolvableType.forMethodReturnType(
-            CategoryController.class.getMethod("create", team.jit.technicalinterviewdemo.business.category.CategoryCreateRequest.class)
-        );
-        ResolvableType updateCategoryReturnType = ResolvableType.forMethodReturnType(
-            CategoryController.class.getMethod(
-                "update", Long.class, team.jit.technicalinterviewdemo.business.category.CategoryUpdateRequest.class
-            )
-        );
+        ResolvableType listBooksReturnType = ResolvableType.forMethodReturnType(BookController.class.getMethod(
+                "findAll", BookSearchRequest.class, org.springframework.data.domain.Pageable.class));
+        ResolvableType getBookReturnType =
+                ResolvableType.forMethodReturnType(BookController.class.getMethod("findById", Long.class));
+        ResolvableType createBookReturnType = ResolvableType.forMethodReturnType(BookController.class.getMethod(
+                "create", team.jit.technicalinterviewdemo.business.book.BookCreateRequest.class));
+        ResolvableType updateBookReturnType = ResolvableType.forMethodReturnType(BookController.class.getMethod(
+                "update", Long.class, team.jit.technicalinterviewdemo.business.book.BookUpdateRequest.class));
+        ResolvableType listAuditLogsReturnType = ResolvableType.forMethodReturnType(AuditLogController.class.getMethod(
+                "findAll",
+                team.jit.technicalinterviewdemo.business.audit.AuditTargetType.class,
+                team.jit.technicalinterviewdemo.business.audit.AuditAction.class,
+                String.class,
+                org.springframework.data.domain.Pageable.class));
+        ResolvableType listCategoriesReturnType =
+                ResolvableType.forMethodReturnType(CategoryController.class.getMethod("findAll"));
+        ResolvableType createCategoryReturnType = ResolvableType.forMethodReturnType(CategoryController.class.getMethod(
+                "create", team.jit.technicalinterviewdemo.business.category.CategoryCreateRequest.class));
+        ResolvableType updateCategoryReturnType = ResolvableType.forMethodReturnType(CategoryController.class.getMethod(
+                "update", Long.class, team.jit.technicalinterviewdemo.business.category.CategoryUpdateRequest.class));
 
         assertThat(listBooksReturnType.getGeneric(0, 0).resolve()).isEqualTo(BookResponse.class);
         assertThat(getBookReturnType.getGeneric(0).resolve()).isEqualTo(BookResponse.class);
@@ -134,8 +133,8 @@ class ArchitectureHardeningTests {
         request.setCategory(List.of("java"));
 
         Page<Book> books = bookRepository.findAll(
-            team.jit.technicalinterviewdemo.business.book.BookSearchSpecifications.fromSearchRequest(request), PageRequest.of(0, 20)
-        );
+                team.jit.technicalinterviewdemo.business.book.BookSearchSpecifications.fromSearchRequest(request),
+                PageRequest.of(0, 20));
 
         assertThat(books.getContent()).hasSize(1);
         Book book = books.getContent().getFirst();

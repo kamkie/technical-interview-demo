@@ -24,7 +24,8 @@ public abstract class AbstractBookCatalogMockMvcIntegrationTest extends Abstract
 
     @BeforeEach
     void seedBookCatalog() {
-        BookCatalogTestData.BookCatalog catalog = BookCatalogTestData.seedDefaultCatalog(bookRepository, categoryRepository, cacheManager);
+        BookCatalogTestData.BookCatalog catalog =
+                BookCatalogTestData.seedDefaultCatalog(bookRepository, categoryRepository, cacheManager);
         cleanCode = catalog.cleanCode();
         effectiveJava = catalog.effectiveJava();
     }

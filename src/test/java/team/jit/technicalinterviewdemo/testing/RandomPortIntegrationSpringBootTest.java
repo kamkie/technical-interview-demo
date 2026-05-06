@@ -15,5 +15,4 @@ import java.lang.annotation.Target;
 @Inherited
 @TestcontainersTest
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public @interface RandomPortIntegrationSpringBootTest {
-}
+public @interface RandomPortIntegrationSpringBootTest {}

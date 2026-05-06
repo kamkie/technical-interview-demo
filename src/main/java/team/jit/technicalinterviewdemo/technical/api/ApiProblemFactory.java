@@ -21,8 +21,12 @@ public class ApiProblemFactory {
     private final LocalizationService localizationService;
 
     public ProblemDetail clientProblem(
-        HttpStatus status, String title, String detail, String messageKey, HttpServletRequest request, Map<String, ?> context
-    ) {
+            HttpStatus status,
+            String title,
+            String detail,
+            String messageKey,
+            HttpServletRequest request,
+            Map<String, ?> context) {
         LocalizedProblemMessage localizedMessage = resolveLocalizedProblemMessage(messageKey);
         Map<String, Object> enrichedContext = new LinkedHashMap<>(context);
         enrichedContext.put("messageKey", localizedMessage.messageKey());
@@ -30,14 +34,27 @@ public class ApiProblemFactory {
         String requestMethod = SensitiveDataSanitizer.sanitizeForLog(request.getMethod());
         String requestPath = SensitiveDataSanitizer.sanitizeForLog(request.getRequestURI());
         log.warn(
-            "Handled client error status={} method={} path={} params={} title='{}' detail='{}' localizedMessage='{}' context={}", status.value(), requestMethod, requestPath, SensitiveDataSanitizer.sanitizeParameters(request.getParameterMap()), SensitiveDataSanitizer.sanitizeForLog(title), SensitiveDataSanitizer.sanitizeForLog(detail), SensitiveDataSanitizer.sanitizeForLog(localizedMessage.message()), SensitiveDataSanitizer.sanitizeContextForLog(enrichedContext)
-        );
+                "Handled client error status={} method={} path={} params={} title='{}' detail='{}'"
+                        + " localizedMessage='{}' context={}",
+                status.value(),
+                requestMethod,
+                requestPath,
+                SensitiveDataSanitizer.sanitizeParameters(request.getParameterMap()),
+                SensitiveDataSanitizer.sanitizeForLog(title),
+                SensitiveDataSanitizer.sanitizeForLog(detail),
+                SensitiveDataSanitizer.sanitizeForLog(localizedMessage.message()),
+                SensitiveDataSanitizer.sanitizeContextForLog(enrichedContext));
         return createProblemDetail(status, title, detail, localizedMessage);
     }
 
     public ProblemDetail serverProblem(
-        HttpStatus status, String title, String detail, String messageKey, HttpServletRequest request, Map<String, ?> context, Exception exception
-    ) {
+            HttpStatus status,
+            String title,
+            String detail,
+            String messageKey,
+            HttpServletRequest request,
+            Map<String, ?> context,
+            Exception exception) {
         LocalizedProblemMessage localizedMessage = resolveLocalizedProblemMessage(messageKey);
         Map<String, Object> enrichedContext = new LinkedHashMap<>(context);
         enrichedContext.put("messageKey", localizedMessage.messageKey());
@@ -45,14 +62,22 @@ public class ApiProblemFactory {
         String requestMethod = SensitiveDataSanitizer.sanitizeForLog(request.getMethod());
         String requestPath = SensitiveDataSanitizer.sanitizeForLog(request.getRequestURI());
         log.error(
-            "Handled server error status={} method={} path={} params={} title='{}' detail='{}' localizedMessage='{}' context={}", status.value(), requestMethod, requestPath, SensitiveDataSanitizer.sanitizeParameters(request.getParameterMap()), SensitiveDataSanitizer.sanitizeForLog(title), SensitiveDataSanitizer.sanitizeForLog(detail), SensitiveDataSanitizer.sanitizeForLog(localizedMessage.message()), SensitiveDataSanitizer.sanitizeContextForLog(enrichedContext), exception
-        );
+                "Handled server error status={} method={} path={} params={} title='{}' detail='{}'"
+                        + " localizedMessage='{}' context={}",
+                status.value(),
+                requestMethod,
+                requestPath,
+                SensitiveDataSanitizer.sanitizeParameters(request.getParameterMap()),
+                SensitiveDataSanitizer.sanitizeForLog(title),
+                SensitiveDataSanitizer.sanitizeForLog(detail),
+                SensitiveDataSanitizer.sanitizeForLog(localizedMessage.message()),
+                SensitiveDataSanitizer.sanitizeContextForLog(enrichedContext),
+                exception);
         return createProblemDetail(status, title, detail, localizedMessage);
     }
 
     private ProblemDetail createProblemDetail(
-        HttpStatus status, String title, String detail, LocalizedProblemMessage localizedMessage
-    ) {
+            HttpStatus status, String title, String detail, LocalizedProblemMessage localizedMessage) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
         problemDetail.setTitle(title);
         problemDetail.setProperty("messageKey", localizedMessage.messageKey());
@@ -66,6 +91,5 @@ public class ApiProblemFactory {
         return new LocalizedProblemMessage(messageKey, resolvedMessage.getMessageText(), resolvedMessage.getLanguage());
     }
 
-    private record LocalizedProblemMessage(String messageKey, String message, String language) {
-    }
+    private record LocalizedProblemMessage(String messageKey, String message, String language) {}
 }

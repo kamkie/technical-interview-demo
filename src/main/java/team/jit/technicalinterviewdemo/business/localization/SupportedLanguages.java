@@ -10,8 +10,7 @@ public final class SupportedLanguages {
     private static final List<String> VALUES = LocalizationSeedData.supportedLanguages();
     private static final Set<String> VALUE_SET = Set.copyOf(VALUES);
 
-    private SupportedLanguages() {
-    }
+    private SupportedLanguages() {}
 
     public static boolean isSupported(String language) {
         return VALUE_SET.contains(language);

@@ -18,26 +18,29 @@ public final class OpenApiBaselineGenerator {
 
     private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
 
-    private OpenApiBaselineGenerator() {
-    }
+    private OpenApiBaselineGenerator() {}
 
     public static void main(String[] args) throws Exception {
         Path outputPath = resolveOutputPath(args);
         try (ConfigurableApplicationContext context = new SpringApplicationBuilder(
-            TechnicalInterviewDemoApplication.class, PostgresTestcontainersConfiguration.class
-        ).profiles("test").run("--server.port=0")) {
+                        TechnicalInterviewDemoApplication.class, PostgresTestcontainersConfiguration.class)
+                .profiles("test")
+                .run("--server.port=0")) {
             int port = ((WebServerApplicationContext) context).getWebServer().getPort();
             HttpResponse<String> response = HTTP_CLIENT.send(
-                HttpRequest.newBuilder(URI.create("http://localhost:" + port + "/v3/api-docs")).GET().build(), HttpResponse.BodyHandlers.ofString()
-            );
+                    HttpRequest.newBuilder(URI.create("http://localhost:" + port + "/v3/api-docs"))
+                            .GET()
+                            .build(),
+                    HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() != 200) {
                 throw new IllegalStateException("Expected 200 from /v3/api-docs but got " + response.statusCode());
             }
 
             Files.createDirectories(outputPath.getParent());
             Files.writeString(
-                outputPath, OpenApiContractSupport.normalizeToPrettyJson(response.body()) + System.lineSeparator(), StandardCharsets.UTF_8
-            );
+                    outputPath,
+                    OpenApiContractSupport.normalizeToPrettyJson(response.body()) + System.lineSeparator(),
+                    StandardCharsets.UTF_8);
         }
     }
 

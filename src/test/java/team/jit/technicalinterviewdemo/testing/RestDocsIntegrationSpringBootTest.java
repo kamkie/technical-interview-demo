@@ -15,5 +15,4 @@ import java.lang.annotation.Target;
 @Inherited
 @MockMvcIntegrationSpringBootTest
 @AutoConfigureRestDocs(outputDir = "build/generated-snippets")
-public @interface RestDocsIntegrationSpringBootTest {
-}
+public @interface RestDocsIntegrationSpringBootTest {}

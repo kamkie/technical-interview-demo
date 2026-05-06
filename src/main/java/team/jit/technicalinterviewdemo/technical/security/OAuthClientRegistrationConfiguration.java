@@ -20,16 +20,17 @@ public class OAuthClientRegistrationConfiguration {
 
     @Bean
     ClientRegistrationRepository clientRegistrationRepository(SecuritySettingsProperties securitySettingsProperties) {
-        Map<String, SecuritySettingsProperties.OAuth.Provider> configuredProviders = securitySettingsProperties.getOAuth().configuredProviders();
+        Map<String, SecuritySettingsProperties.OAuth.Provider> configuredProviders =
+                securitySettingsProperties.getOAuth().configuredProviders();
 
         if (configuredProviders.isEmpty()) {
             throw new IllegalStateException(
-                "OAuth profile requires at least one configured identity provider with client credentials."
-            );
+                    "OAuth profile requires at least one configured identity provider with client credentials.");
         }
 
         List<ClientRegistration> registrations = new ArrayList<>();
-        for (Map.Entry<String, SecuritySettingsProperties.OAuth.Provider> configuredProvider : configuredProviders.entrySet()) {
+        for (Map.Entry<String, SecuritySettingsProperties.OAuth.Provider> configuredProvider :
+                configuredProviders.entrySet()) {
             String registrationId = configuredProvider.getKey();
             SecuritySettingsProperties.OAuth.Provider provider = configuredProvider.getValue();
             registrations.add(clientRegistration(registrationId, provider));
@@ -38,19 +39,16 @@ public class OAuthClientRegistrationConfiguration {
     }
 
     private ClientRegistration clientRegistration(
-        String registrationId, SecuritySettingsProperties.OAuth.Provider provider
-    ) {
+            String registrationId, SecuritySettingsProperties.OAuth.Provider provider) {
         if (!provider.hasClientCredentials()) {
             throw new IllegalStateException(
-                "OAuth provider '%s' requires both client-id and client-secret.".formatted(registrationId)
-            );
+                    "OAuth provider '%s' requires both client-id and client-secret.".formatted(registrationId));
         }
 
         SecuritySettingsProperties.OAuth.ProviderType providerType = provider.getType();
         if (providerType == null) {
             throw new IllegalStateException(
-                "OAuth provider '%s' requires a provider type (GITHUB or OIDC).".formatted(registrationId)
-            );
+                    "OAuth provider '%s' requires a provider type (GITHUB or OIDC).".formatted(registrationId));
         }
 
         return switch (providerType) {
@@ -60,9 +58,12 @@ public class OAuthClientRegistrationConfiguration {
     }
 
     private ClientRegistration githubRegistration(
-        String registrationId, SecuritySettingsProperties.OAuth.Provider provider
-    ) {
-        ClientRegistration.Builder builder = CommonOAuth2Provider.GITHUB.getBuilder(registrationId).clientId(provider.normalizedClientId()).clientSecret(provider.normalizedClientSecret()).redirectUri(SecuritySettingsProperties.OAuth.REDIRECT_URI_TEMPLATE);
+            String registrationId, SecuritySettingsProperties.OAuth.Provider provider) {
+        ClientRegistration.Builder builder = CommonOAuth2Provider.GITHUB
+                .getBuilder(registrationId)
+                .clientId(provider.normalizedClientId())
+                .clientSecret(provider.normalizedClientSecret())
+                .redirectUri(SecuritySettingsProperties.OAuth.REDIRECT_URI_TEMPLATE);
 
         Set<String> scope = provider.normalizedScope();
         if (!scope.isEmpty()) {
@@ -78,16 +79,17 @@ public class OAuthClientRegistrationConfiguration {
     }
 
     private ClientRegistration oidcRegistration(
-        String registrationId, SecuritySettingsProperties.OAuth.Provider provider
-    ) {
+            String registrationId, SecuritySettingsProperties.OAuth.Provider provider) {
         String issuerUri = provider.normalizedIssuerUri();
         if (issuerUri.isBlank()) {
-            throw new IllegalStateException(
-                "OIDC provider '%s' requires issuer-uri.".formatted(registrationId)
-            );
+            throw new IllegalStateException("OIDC provider '%s' requires issuer-uri.".formatted(registrationId));
         }
 
-        ClientRegistration.Builder builder = ClientRegistrations.fromIssuerLocation(issuerUri).registrationId(registrationId).clientId(provider.normalizedClientId()).clientSecret(provider.normalizedClientSecret()).redirectUri(SecuritySettingsProperties.OAuth.REDIRECT_URI_TEMPLATE);
+        ClientRegistration.Builder builder = ClientRegistrations.fromIssuerLocation(issuerUri)
+                .registrationId(registrationId)
+                .clientId(provider.normalizedClientId())
+                .clientSecret(provider.normalizedClientSecret())
+                .redirectUri(SecuritySettingsProperties.OAuth.REDIRECT_URI_TEMPLATE);
 
         Set<String> scope = provider.normalizedScope();
         if (!scope.isEmpty()) {

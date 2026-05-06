@@ -57,8 +57,12 @@ class CategoryServiceTests {
     void setUp() {
         cacheManager = new ConcurrentMapCacheManager(CacheNames.CATEGORIES, CacheNames.CATEGORY_DIRECTORY);
         categoryService = new CategoryService(
-            categoryRepository, bookRepository, cacheManager, applicationMetrics, currentUserAccountService, auditLogService
-        );
+                categoryRepository,
+                bookRepository,
+                cacheManager,
+                applicationMetrics,
+                currentUserAccountService,
+                auditLogService);
     }
 
     @Test
@@ -66,13 +70,16 @@ class CategoryServiceTests {
         Category bestPractices = category(1L, "Best Practices");
         Category java = category(2L, "Java");
         when(categoryRepository.findAllByOrderByNameAsc()).thenReturn(List.of(bestPractices, java));
-        when(categoryRepository.findAllByNormalizedNames(Set.of("java", "best practices"))).thenReturn(List.of(bestPractices, java));
+        when(categoryRepository.findAllByNormalizedNames(Set.of("java", "best practices")))
+                .thenReturn(List.of(bestPractices, java));
         when(categoryRepository.findAllByNormalizedNames(Set.of("java"))).thenReturn(List.of(java));
 
         Set<Category> resolvedCategories = categoryService.resolveForAssignment(List.of("  java  ", "BEST PRACTICES"));
 
         assertThat(resolvedCategories).extracting(Category::getName).containsExactly("Best Practices", "Java");
-        assertThat(cachedCategoryDirectory()).containsEntry("best practices", 1L).containsEntry("java", 2L);
+        assertThat(cachedCategoryDirectory())
+                .containsEntry("best practices", 1L)
+                .containsEntry("java", 2L);
 
         Set<Category> secondResolution = categoryService.resolveForAssignment(List.of("JAVA"));
 
@@ -90,7 +97,9 @@ class CategoryServiceTests {
     void resolveForAssignmentRejectsUnknownCategoriesAfterTrimmingInput() {
         when(categoryRepository.findAllByOrderByNameAsc()).thenReturn(List.of(category(1L, "Java")));
 
-        assertThatThrownBy(() -> categoryService.resolveForAssignment(List.of("  Missing Category  "))).isInstanceOf(InvalidRequestException.class).hasMessage("Unknown categories: Missing Category.");
+        assertThatThrownBy(() -> categoryService.resolveForAssignment(List.of("  Missing Category  ")))
+                .isInstanceOf(InvalidRequestException.class)
+                .hasMessage("Unknown categories: Missing Category.");
 
         verify(categoryRepository, never()).findAllById(any());
     }
@@ -99,7 +108,9 @@ class CategoryServiceTests {
     void createRejectsDuplicateNameIgnoringCaseAfterTrimming() {
         when(categoryRepository.existsByNameIgnoreCase("java")).thenReturn(true);
 
-        assertThatThrownBy(() -> categoryService.create(new CategoryCreateRequest("  java  "))).isInstanceOf(InvalidRequestException.class).hasMessage("Category 'java' already exists.");
+        assertThatThrownBy(() -> categoryService.create(new CategoryCreateRequest("  java  ")))
+                .isInstanceOf(InvalidRequestException.class)
+                .hasMessage("Category 'java' already exists.");
 
         verify(currentUserAccountService).requireRole(UserRole.ADMIN, "Category management requires the ADMIN role.");
         verify(categoryRepository).existsByNameIgnoreCase("java");
@@ -109,7 +120,8 @@ class CategoryServiceTests {
 
     @SuppressWarnings("unchecked")
     private Map<String, Long> cachedCategoryDirectory() {
-        return CacheTestSupport.cache(cacheManager, CacheNames.CATEGORY_DIRECTORY).get(CATEGORY_DIRECTORY_CACHE_KEY, Map.class);
+        return CacheTestSupport.cache(cacheManager, CacheNames.CATEGORY_DIRECTORY)
+                .get(CATEGORY_DIRECTORY_CACHE_KEY, Map.class);
     }
 
     private static Category category(Long id, String name) {

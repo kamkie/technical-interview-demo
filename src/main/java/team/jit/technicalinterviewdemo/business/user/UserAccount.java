@@ -31,10 +31,11 @@ import java.util.Set;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(
-    name = "users", uniqueConstraints = @UniqueConstraint(
-    name = "uk_users_provider_external_login", columnNames = {"provider", "external_login"}
-)
-)
+        name = "users",
+        uniqueConstraints =
+                @UniqueConstraint(
+                        name = "uk_users_provider_external_login",
+                        columnNames = {"provider", "external_login"}))
 public class UserAccount {
 
     @Id
@@ -73,8 +74,13 @@ public class UserAccount {
     private List<UserRoleGrant> roleGrants = new ArrayList<>();
 
     public UserAccount(
-        String provider, String externalLogin, String displayName, String email, String preferredLanguage, Instant lastLoginAt, Set<UserRole> roles
-    ) {
+            String provider,
+            String externalLogin,
+            String displayName,
+            String email,
+            String preferredLanguage,
+            Instant lastLoginAt,
+            Set<UserRole> roles) {
         setProvider(provider);
         setExternalLogin(externalLogin);
         setDisplayName(displayName);
@@ -103,7 +109,8 @@ public class UserAccount {
 
     public void setPreferredLanguage(String preferredLanguage) {
         String normalizedPreferredLanguage = normalizeOptional(preferredLanguage);
-        this.preferredLanguage = normalizedPreferredLanguage == null ? null : normalizedPreferredLanguage.toLowerCase(Locale.ROOT);
+        this.preferredLanguage =
+                normalizedPreferredLanguage == null ? null : normalizedPreferredLanguage.toLowerCase(Locale.ROOT);
     }
 
     public void setLastLoginAt(Instant lastLoginAt) {
@@ -114,11 +121,15 @@ public class UserAccount {
     }
 
     public Set<UserRole> getRoles() {
-        return roleGrants.stream().map(UserRoleGrant::getRole).collect(java.util.stream.Collectors.toCollection(LinkedHashSet::new));
+        return roleGrants.stream()
+                .map(UserRoleGrant::getRole)
+                .collect(java.util.stream.Collectors.toCollection(LinkedHashSet::new));
     }
 
     public List<UserRoleGrant> getRoleGrants() {
-        return roleGrants.stream().sorted(Comparator.comparing(grant -> grant.getRole().name())).toList();
+        return roleGrants.stream()
+                .sorted(Comparator.comparing(grant -> grant.getRole().name()))
+                .toList();
     }
 
     public boolean hasRole(UserRole role) {
@@ -126,8 +137,7 @@ public class UserAccount {
     }
 
     public void ensureRoleGrant(
-        UserRole role, UserRoleGrantSource grantSource, UserAccount grantedByUser, String reason
-    ) {
+            UserRole role, UserRoleGrantSource grantSource, UserAccount grantedByUser, String reason) {
         if (findRoleGrant(role).isPresent()) {
             return;
         }
@@ -142,8 +152,7 @@ public class UserAccount {
         roleGrants.removeIf(grant -> grant.getGrantSource() != UserRoleGrantSource.BOOTSTRAP);
         for (UserRole role : normalizedRoles) {
             roleGrants.add(new UserRoleGrant(
-                this, role, UserRoleGrantSource.ADMIN_MANAGED, normalizedGrantor, normalizedReason
-            ));
+                    this, role, UserRoleGrantSource.ADMIN_MANAGED, normalizedGrantor, normalizedReason));
         }
     }
 

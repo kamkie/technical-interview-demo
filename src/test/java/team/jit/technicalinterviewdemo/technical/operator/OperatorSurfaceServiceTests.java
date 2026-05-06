@@ -42,7 +42,8 @@ import static org.mockito.Mockito.when;
 class OperatorSurfaceServiceTests {
 
     private static final String ADMIN_ROLE_MESSAGE = "Operator surface requires the ADMIN role.";
-    private static final PageRequest RECENT_AUDIT_PAGE_REQUEST = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"));
+    private static final PageRequest RECENT_AUDIT_PAGE_REQUEST =
+            PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"));
 
     @Mock
     private CurrentUserAccountService currentUserAccountService;
@@ -64,15 +65,22 @@ class OperatorSurfaceServiceTests {
     @BeforeEach
     void setUp() {
         operatorSurfaceService = new OperatorSurfaceService(
-            currentUserAccountService, auditLogRepository, technicalOverviewService, healthEndpoint, applicationAvailability
-        );
+                currentUserAccountService,
+                auditLogRepository,
+                technicalOverviewService,
+                healthEndpoint,
+                applicationAvailability);
     }
 
     @Test
     void getOperatorSurfaceRequiresAdminRoleBeforeLoadingDiagnostics() {
-        doThrow(new ForbiddenOperationException(ADMIN_ROLE_MESSAGE)).when(currentUserAccountService).requireRole(UserRole.ADMIN, ADMIN_ROLE_MESSAGE);
+        doThrow(new ForbiddenOperationException(ADMIN_ROLE_MESSAGE))
+                .when(currentUserAccountService)
+                .requireRole(UserRole.ADMIN, ADMIN_ROLE_MESSAGE);
 
-        assertThatThrownBy(() -> operatorSurfaceService.getOperatorSurface()).isInstanceOf(ForbiddenOperationException.class).hasMessage(ADMIN_ROLE_MESSAGE);
+        assertThatThrownBy(() -> operatorSurfaceService.getOperatorSurface())
+                .isInstanceOf(ForbiddenOperationException.class)
+                .hasMessage(ADMIN_ROLE_MESSAGE);
 
         verify(currentUserAccountService).requireRole(UserRole.ADMIN, ADMIN_ROLE_MESSAGE);
         verifyNoInteractions(auditLogRepository, technicalOverviewService, healthEndpoint, applicationAvailability);
@@ -83,7 +91,8 @@ class OperatorSurfaceServiceTests {
         AuditLog newestEntry = auditLogWithId(15L, "error.book.not_found", "fr");
         AuditLog olderEntry = auditLogWithId(14L, "book.updated", "en");
         TechnicalOverviewResponse technicalOverview = technicalOverview();
-        when(auditLogRepository.findAll(RECENT_AUDIT_PAGE_REQUEST)).thenReturn(new PageImpl<>(List.of(newestEntry, olderEntry), RECENT_AUDIT_PAGE_REQUEST, 2));
+        when(auditLogRepository.findAll(RECENT_AUDIT_PAGE_REQUEST))
+                .thenReturn(new PageImpl<>(List.of(newestEntry, olderEntry), RECENT_AUDIT_PAGE_REQUEST, 2));
         when(auditLogRepository.count()).thenReturn(42L);
         when(technicalOverviewService.getOverview()).thenReturn(technicalOverview);
         when(healthEndpoint.health()).thenReturn(healthDescriptor("UP"));
@@ -95,8 +104,12 @@ class OperatorSurfaceServiceTests {
         verify(currentUserAccountService).requireRole(UserRole.ADMIN, ADMIN_ROLE_MESSAGE);
         assertThat(response.audit().auditLogEndpoint()).isEqualTo("/api/admin/audit-logs");
         assertThat(response.audit().totalEntries()).isEqualTo(42L);
-        assertThat(response.audit().recentEntries()).extracting(entry -> entry.id()).containsExactly(15L, 14L);
-        assertThat(response.audit().recentEntries().getFirst().details()).containsEntry("messageKey", "error.book.not_found").containsEntry("language", "fr");
+        assertThat(response.audit().recentEntries())
+                .extracting(entry -> entry.id())
+                .containsExactly(15L, 14L);
+        assertThat(response.audit().recentEntries().getFirst().details())
+                .containsEntry("messageKey", "error.book.not_found")
+                .containsEntry("language", "fr");
         assertThat(response.runtime().technicalOverviewEndpoint()).isEqualTo("/");
         assertThat(response.runtime().technicalOverview()).isEqualTo(technicalOverview);
         assertThat(response.operations().actuatorHealthEndpoint()).isEqualTo("/actuator/health");
@@ -109,7 +122,8 @@ class OperatorSurfaceServiceTests {
 
     @Test
     void getOperatorSurfaceRequestsNewestTenAuditEntries() {
-        when(auditLogRepository.findAll(RECENT_AUDIT_PAGE_REQUEST)).thenReturn(new PageImpl<>(List.of(), RECENT_AUDIT_PAGE_REQUEST, 0));
+        when(auditLogRepository.findAll(RECENT_AUDIT_PAGE_REQUEST))
+                .thenReturn(new PageImpl<>(List.of(), RECENT_AUDIT_PAGE_REQUEST, 0));
         when(auditLogRepository.count()).thenReturn(0L);
         when(technicalOverviewService.getOverview()).thenReturn(technicalOverview());
         when(healthEndpoint.health()).thenReturn(healthDescriptor("UP"));
@@ -124,10 +138,13 @@ class OperatorSurfaceServiceTests {
 
     private AuditLog auditLogWithId(long id, String messageKey, String language) {
         AuditLog auditLog = new AuditLog(
-            AuditTargetType.LOCALIZATION_MESSAGE, id, AuditAction.DELETE, null, "admin-user", "Deleted localization message '%s' in language %s.".formatted(messageKey, language), Map.of(
-            "messageKey", messageKey, "language", language
-        )
-        );
+                AuditTargetType.LOCALIZATION_MESSAGE,
+                id,
+                AuditAction.DELETE,
+                null,
+                "admin-user",
+                "Deleted localization message '%s' in language %s.".formatted(messageKey, language),
+                Map.of("messageKey", messageKey, "language", language));
         ReflectionTestUtils.setField(auditLog, "id", id);
         ReflectionTestUtils.setField(auditLog, "createdAt", Instant.parse("2026-05-04T08:30:00Z"));
         return auditLog;
@@ -135,28 +152,40 @@ class OperatorSurfaceServiceTests {
 
     private TechnicalOverviewResponse technicalOverview() {
         return new TechnicalOverviewResponse(
-            new TechnicalOverviewResponse.BuildDetails(
-                "technical-interview-demo", "team.jit", "technical-interview-demo", "2.0.0-M4", Instant.parse("2026-05-04T08:00:00Z")
-            ), new TechnicalOverviewResponse.GitDetails(
-            "main", "f".repeat(40), "fffffff", Instant.parse("2026-05-04T08:00:00Z")
-        ), new TechnicalOverviewResponse.RuntimeDetails(
-            "technical-interview-demo", "25", "Azul", List.of("test")
-        ), Map.of("spring-boot", "3.5.0"), new TechnicalOverviewResponse.ConfigurationDetails(
-            new TechnicalOverviewResponse.PaginationDetails(20, 100), new TechnicalOverviewResponse.SessionDetails(
-            "jdbc", "15m", "SESSION", true, "Lax"
-        ), new TechnicalOverviewResponse.ObservabilityDetails(
-            List.of("health", "info", "prometheus"), true, 1.0
-        ), new TechnicalOverviewResponse.DocumentationDetails(
-            "/docs", "/v3/api-docs", "/v3/api-docs.yaml", "3.1.0"
-        ), new TechnicalOverviewResponse.SecurityDetails(
-            true, "XSRF-TOKEN", "X-XSRF-TOKEN", true, "/api/**", "/oauth2/authorization", "/login/oauth2/code/{registrationId}", "framework", new TechnicalOverviewResponse.AbuseProtectionDetails(
-            "edge-or-gateway", "/oauth2/authorization/{registrationId}", List.of("csrf", "rate-limit"), "/api/**", List.of("PUT /api/account/language"), List.of("csrf", "authentication")
-        )
-        ), new TechnicalOverviewResponse.ShutdownDetails(
-            "graceful", "30s"
-        )
-        )
-        );
+                new TechnicalOverviewResponse.BuildDetails(
+                        "technical-interview-demo",
+                        "team.jit",
+                        "technical-interview-demo",
+                        "2.0.0-M4",
+                        Instant.parse("2026-05-04T08:00:00Z")),
+                new TechnicalOverviewResponse.GitDetails(
+                        "main", "f".repeat(40), "fffffff", Instant.parse("2026-05-04T08:00:00Z")),
+                new TechnicalOverviewResponse.RuntimeDetails("technical-interview-demo", "25", "Azul", List.of("test")),
+                Map.of("spring-boot", "3.5.0"),
+                new TechnicalOverviewResponse.ConfigurationDetails(
+                        new TechnicalOverviewResponse.PaginationDetails(20, 100),
+                        new TechnicalOverviewResponse.SessionDetails("jdbc", "15m", "SESSION", true, "Lax"),
+                        new TechnicalOverviewResponse.ObservabilityDetails(
+                                List.of("health", "info", "prometheus"), true, 1.0),
+                        new TechnicalOverviewResponse.DocumentationDetails(
+                                "/docs", "/v3/api-docs", "/v3/api-docs.yaml", "3.1.0"),
+                        new TechnicalOverviewResponse.SecurityDetails(
+                                true,
+                                "XSRF-TOKEN",
+                                "X-XSRF-TOKEN",
+                                true,
+                                "/api/**",
+                                "/oauth2/authorization",
+                                "/login/oauth2/code/{registrationId}",
+                                "framework",
+                                new TechnicalOverviewResponse.AbuseProtectionDetails(
+                                        "edge-or-gateway",
+                                        "/oauth2/authorization/{registrationId}",
+                                        List.of("csrf", "rate-limit"),
+                                        "/api/**",
+                                        List.of("PUT /api/account/language"),
+                                        List.of("csrf", "authentication"))),
+                        new TechnicalOverviewResponse.ShutdownDetails("graceful", "30s")));
     }
 
     private HealthDescriptor healthDescriptor(String status) {
@@ -164,8 +193,10 @@ class OperatorSurfaceServiceTests {
             var constructor = IndicatedHealthDescriptor.class.getDeclaredConstructor(Health.class);
             constructor.setAccessible(true);
             return constructor.newInstance(Health.status(status).build());
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                 NoSuchMethodException exception) {
+        } catch (InstantiationException
+                | IllegalAccessException
+                | InvocationTargetException
+                | NoSuchMethodException exception) {
             throw new LinkageError("Failed to create HealthDescriptor test fixture.", exception);
         }
     }

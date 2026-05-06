@@ -34,26 +34,41 @@ public class AuditLogController {
 
     @GetMapping
     @Operation(
-        summary = "List audit logs", description = "Requires an authenticated session with the ADMIN role and returns pageable audit entries.", security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME)
-    )
-    @ApiResponses({@ApiResponse(
-        responseCode = "200", description = "OK", content = @Content(
-        mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AuditLogPageResponse.class)
-    )
-    ), @ApiResponse(
-        responseCode = "401", description = "Missing or invalid authenticated session.", content = @Content(
-        mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
-    )
-    ), @ApiResponse(
-        responseCode = "403", description = "Authenticated user does not have the ADMIN role.", content = @Content(
-        mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
-    )
-    )
+            summary = "List audit logs",
+            description = "Requires an authenticated session with the ADMIN role and returns pageable audit entries.",
+            security = @SecurityRequirement(name = OpenApiConfiguration.SESSION_COOKIE_SCHEME))
+    @ApiResponses({
+        @ApiResponse(
+                responseCode = "200",
+                description = "OK",
+                content =
+                        @Content(
+                                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                schema = @Schema(implementation = AuditLogPageResponse.class))),
+        @ApiResponse(
+                responseCode = "401",
+                description = "Missing or invalid authenticated session.",
+                content =
+                        @Content(
+                                mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
+                                schema = @Schema(implementation = ApiProblemResponse.class))),
+        @ApiResponse(
+                responseCode = "403",
+                description = "Authenticated user does not have the ADMIN role.",
+                content =
+                        @Content(
+                                mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
+                                schema = @Schema(implementation = ApiProblemResponse.class)))
     })
     public ResponseEntity<Page<AuditLogResponse>> findAll(
-        @RequestParam(required = false) AuditTargetType targetType, @RequestParam(required = false) AuditAction action, @RequestParam(required = false) String actorLogin, @ParameterObject @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
-    ) {
-        Page<AuditLogResponse> payload = auditLogQueryService.findAll(pageable, targetType, action, actorLogin).map(AuditLogResponse::from);
+            @RequestParam(required = false) AuditTargetType targetType,
+            @RequestParam(required = false) AuditAction action,
+            @RequestParam(required = false) String actorLogin,
+            @ParameterObject @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC)
+                    Pageable pageable) {
+        Page<AuditLogResponse> payload = auditLogQueryService
+                .findAll(pageable, targetType, action, actorLogin)
+                .map(AuditLogResponse::from);
         return ResponseEntity.ok(payload);
     }
 }

@@ -14,15 +14,17 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class AuthenticatedUserSynchronizationFilter extends OncePerRequestFilter {
 
-    private static final String SESSION_ATTRIBUTE = AuthenticatedUserSynchronizationFilter.class.getName() + ".syncedUser";
+    private static final String SESSION_ATTRIBUTE =
+            AuthenticatedUserSynchronizationFilter.class.getName() + ".syncedUser";
 
     private final CurrentUserAccountService currentUserAccountService;
 
     @Override
-    protected void doFilterInternal(
-        HttpServletRequest request, HttpServletResponse response, FilterChain filterChain
-    ) throws ServletException, IOException {
-        currentUserAccountService.currentAuthenticatedUserKey().ifPresent(authenticatedUserKey -> synchronizeUser(request, authenticatedUserKey));
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        currentUserAccountService
+                .currentAuthenticatedUserKey()
+                .ifPresent(authenticatedUserKey -> synchronizeUser(request, authenticatedUserKey));
         filterChain.doFilter(request, response);
     }
 

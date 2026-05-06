@@ -62,42 +62,107 @@ class AdminUserManagementApiDocumentationTests extends AbstractDocumentationInte
 
     @Test
     void documentListAdminUsersEndpoint() throws Exception {
-        mockMvc.perform(get("/api/admin/users").with(adminSession.authenticatedSession())).andExpect(status().isOk()).andExpect(header().exists("X-Request-Id")).andExpect(header().exists("traceparent")).andDo(documentEndpoint(
-            "admin-users/list-admin-users", responseHeaders(commonResponseHeaders()), relaxedResponseFields(
-                fieldWithPath("[].id").description("Persisted user identifier."), fieldWithPath("[].provider").description("OAuth provider name."), fieldWithPath("[].login").description("External login from the OAuth provider."), fieldWithPath("[].displayName").description("Current display name from the provider."), fieldWithPath("[].email").description("Current email when available from the provider."), fieldWithPath("[].preferredLanguage").description("Preferred two-letter language code, or `null` when unset."), fieldWithPath("[].roles[]").description("Current roles assigned to the user."), fieldWithPath("[].roleGrants[].role").description("Granted role name."), fieldWithPath("[].roleGrants[].source").description("How the role was granted."), fieldWithPath("[].roleGrants[].grantedAt").description("UTC instant when the role grant was recorded."), fieldWithPath("[].roleGrants[].grantedByUserId").optional().description("Granting application user id for manually managed grants."), fieldWithPath("[].roleGrants[].grantedByLogin").optional().description("Granting application user login for manually managed grants."), fieldWithPath("[].roleGrants[].reason").optional().description("Operator-supplied reason for manually managed grants."), fieldWithPath("[].lastLoginAt").description("Latest authenticated request as a UTC instant."), fieldWithPath("[].createdAt").description("Creation timestamp as a UTC instant."), fieldWithPath("[].updatedAt").description("Last update timestamp as a UTC instant.")
-            )
-        ));
+        mockMvc.perform(get("/api/admin/users").with(adminSession.authenticatedSession()))
+                .andExpect(status().isOk())
+                .andExpect(header().exists("X-Request-Id"))
+                .andExpect(header().exists("traceparent"))
+                .andDo(documentEndpoint(
+                        "admin-users/list-admin-users",
+                        responseHeaders(commonResponseHeaders()),
+                        relaxedResponseFields(
+                                fieldWithPath("[].id").description("Persisted user identifier."),
+                                fieldWithPath("[].provider").description("OAuth provider name."),
+                                fieldWithPath("[].login").description("External login from the OAuth provider."),
+                                fieldWithPath("[].displayName").description("Current display name from the provider."),
+                                fieldWithPath("[].email")
+                                        .description("Current email when available from the provider."),
+                                fieldWithPath("[].preferredLanguage")
+                                        .description("Preferred two-letter language code, or `null` when unset."),
+                                fieldWithPath("[].roles[]").description("Current roles assigned to the user."),
+                                fieldWithPath("[].roleGrants[].role").description("Granted role name."),
+                                fieldWithPath("[].roleGrants[].source").description("How the role was granted."),
+                                fieldWithPath("[].roleGrants[].grantedAt")
+                                        .description("UTC instant when the role grant was recorded."),
+                                fieldWithPath("[].roleGrants[].grantedByUserId")
+                                        .optional()
+                                        .description("Granting application user id for manually managed grants."),
+                                fieldWithPath("[].roleGrants[].grantedByLogin")
+                                        .optional()
+                                        .description("Granting application user login for manually managed grants."),
+                                fieldWithPath("[].roleGrants[].reason")
+                                        .optional()
+                                        .description("Operator-supplied reason for manually managed grants."),
+                                fieldWithPath("[].lastLoginAt")
+                                        .description("Latest authenticated request as a UTC instant."),
+                                fieldWithPath("[].createdAt").description("Creation timestamp as a UTC instant."),
+                                fieldWithPath("[].updatedAt").description("Last update timestamp as a UTC instant."))));
     }
 
     @Test
     void documentReplaceManagedUserRolesEndpoint() throws Exception {
-        mockMvc.perform(put("/api/admin/users/{id}/roles", readerUser.getId()).with(adminSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
-            {
-              "roles": ["USER", "ADMIN"],
-              "reason": "Needs audit review access."
-            }
-            """)).andExpect(status().isOk()).andExpect(header().exists("X-Request-Id")).andExpect(header().exists("traceparent")).andDo(documentEndpoint(
-            "admin-users/replace-managed-user-roles", pathParameters(
-                parameterWithName("id").description("Persisted user identifier.")
-            ), requestBody(), requestFields(
-                fieldWithPath("roles").description("Replacement managed role set. `USER` must always be present."), fieldWithPath("roles[]").description("Role name."), fieldWithPath("reason").description("Short operator-supplied explanation for the role change.")
-            ), responseHeaders(commonResponseHeaders()), relaxedResponseFields(
-                fieldWithPath("id").description("Persisted user identifier."), fieldWithPath("provider").description("OAuth provider name."), fieldWithPath("login").description("External login from the OAuth provider."), fieldWithPath("roles[]").description("Current roles after replacement."), fieldWithPath("roleGrants[].role").description("Granted role name."), fieldWithPath("roleGrants[].source").description("How the role was granted."), fieldWithPath("roleGrants[].grantedAt").description("UTC instant when the role grant was recorded."), fieldWithPath("roleGrants[].grantedByUserId").optional().description("Granting application user id for manually managed grants."), fieldWithPath("roleGrants[].grantedByLogin").optional().description("Granting application user login for manually managed grants."), fieldWithPath("roleGrants[].reason").optional().description("Operator-supplied reason for manually managed grants.")
-            )
-        ));
+        mockMvc.perform(put("/api/admin/users/{id}/roles", readerUser.getId())
+                        .with(adminSession.unsafeWrite())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {
+                              "roles": ["USER", "ADMIN"],
+                              "reason": "Needs audit review access."
+                            }
+                            """))
+                .andExpect(status().isOk())
+                .andExpect(header().exists("X-Request-Id"))
+                .andExpect(header().exists("traceparent"))
+                .andDo(documentEndpoint(
+                        "admin-users/replace-managed-user-roles",
+                        pathParameters(parameterWithName("id").description("Persisted user identifier.")),
+                        requestBody(),
+                        requestFields(
+                                fieldWithPath("roles")
+                                        .description("Replacement managed role set. `USER` must always be present."),
+                                fieldWithPath("roles[]").description("Role name."),
+                                fieldWithPath("reason")
+                                        .description("Short operator-supplied explanation for the role change.")),
+                        responseHeaders(commonResponseHeaders()),
+                        relaxedResponseFields(
+                                fieldWithPath("id").description("Persisted user identifier."),
+                                fieldWithPath("provider").description("OAuth provider name."),
+                                fieldWithPath("login").description("External login from the OAuth provider."),
+                                fieldWithPath("roles[]").description("Current roles after replacement."),
+                                fieldWithPath("roleGrants[].role").description("Granted role name."),
+                                fieldWithPath("roleGrants[].source").description("How the role was granted."),
+                                fieldWithPath("roleGrants[].grantedAt")
+                                        .description("UTC instant when the role grant was recorded."),
+                                fieldWithPath("roleGrants[].grantedByUserId")
+                                        .optional()
+                                        .description("Granting application user id for manually managed grants."),
+                                fieldWithPath("roleGrants[].grantedByLogin")
+                                        .optional()
+                                        .description("Granting application user login for manually managed grants."),
+                                fieldWithPath("roleGrants[].reason")
+                                        .optional()
+                                        .description("Operator-supplied reason for manually managed grants."))));
     }
 
     @Test
     void documentListAdminUsersForbiddenError() throws Exception {
         BrowserSession readerSession = authenticatedBrowserSession(sessionRepository, "reader-user");
 
-        mockMvc.perform(get("/api/admin/users").with(readerSession.authenticatedSession())).andExpect(status().isForbidden()).andExpect(header().exists("X-Request-Id")).andExpect(header().exists("traceparent")).andExpect(jsonPath("$.title").value("Forbidden")).andDo(documentEndpoint(
-            "errors/list-admin-users-forbidden", responseHeaders(commonResponseHeaders()), relaxedResponseFields(problemResponseFields())
-        ));
+        mockMvc.perform(get("/api/admin/users").with(readerSession.authenticatedSession()))
+                .andExpect(status().isForbidden())
+                .andExpect(header().exists("X-Request-Id"))
+                .andExpect(header().exists("traceparent"))
+                .andExpect(jsonPath("$.title").value("Forbidden"))
+                .andDo(documentEndpoint(
+                        "errors/list-admin-users-forbidden",
+                        responseHeaders(commonResponseHeaders()),
+                        relaxedResponseFields(problemResponseFields())));
     }
 
     private UserAccount synchronizeAccount(BrowserSession session, String login) throws Exception {
-        mockMvc.perform(get("/api/account").with(session.authenticatedSession())).andExpect(status().isOk());
-        return userAccountRepository.findByProviderAndExternalLogin("github", login).orElseThrow();
+        mockMvc.perform(get("/api/account").with(session.authenticatedSession()))
+                .andExpect(status().isOk());
+        return userAccountRepository
+                .findByProviderAndExternalLogin("github", login)
+                .orElseThrow();
     }
 }

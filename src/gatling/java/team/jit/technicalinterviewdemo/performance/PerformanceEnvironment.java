@@ -4,8 +4,7 @@ final class PerformanceEnvironment {
 
     private static final String DEFAULT_BASE_URL = "http://localhost:8080";
 
-    private PerformanceEnvironment() {
-    }
+    private PerformanceEnvironment() {}
 
     static String baseUrl() {
         return System.getProperty("app.baseUrl", DEFAULT_BASE_URL);

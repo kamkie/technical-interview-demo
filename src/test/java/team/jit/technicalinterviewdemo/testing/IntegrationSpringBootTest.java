@@ -15,5 +15,4 @@ import java.lang.annotation.Target;
 @Inherited
 @TestcontainersTest
 @SpringBootTest
-public @interface IntegrationSpringBootTest {
-}
+public @interface IntegrationSpringBootTest {}

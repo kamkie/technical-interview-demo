@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Implementation |
-| Status | In Progress |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Summary
 - Supersede the partially implemented Eclipse-profile Spotless formatter plan with a Palantir-first formatter setup for `v2.0.0-RC5`.
@@ -265,6 +265,13 @@
   - XML parsing for `.idea/codeStyles/Project.xml` passed.
   - static IntelliJ style smoke check passed for Markdown no-wrap, AsciiDoc one-sentence-per-line disabled, docs `max_line_length = off`, and `.properties` `KEEP_BLANK_LINES=true`.
   - `./build.ps1 checkFormat --no-daemon --continue` failed only at `spotlessJavaCheck` with expected Palantir Java formatting drift across 155 Java files; `spotlessKotlinCheck`, `spotlessKotlinGradleCheck`, and `spotlessMiscCheck` passed.
+- 2026-05-06 Milestone 2 reformat:
+  - `./build.ps1 format --no-daemon` passed and applied Palantir Java Format output.
+  - `git diff --check` passed.
+  - spot-checked representative Java output in `ApiExceptionHandler.java`; changes were formatter-only wrapping and indentation.
+  - `rg -n "^import .*\\.\\*;|^import static .*\\.\\*;" src buildSrc/src -g "*.java"` found no wildcard imports.
+  - `./build.ps1 checkFormat --no-daemon` passed.
+  - `./build.ps1 build --no-daemon` passed: 264 tests, JaCoCo line coverage 93.3%, Asciidoctor generation, Docker image build, dependency and image Trivy scans, CycloneDX SBOM generation, Palantir/Spotless formatting, PMD, SpotBugs, and coverage verification all completed successfully.
 
 ## User Validation
 - Review the implementation as two commits:

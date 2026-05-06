@@ -54,7 +54,8 @@ class ApiProblemFactoryLoggingTests {
 
     @Test
     void clientProblemEscapesControlCharactersInLogsWithoutChangingResponse() {
-        when(localizationService.findByMessageKeyForCurrentLanguageWithFallback(eq("error.request.invalid_parameter"))).thenReturn(new Localization("error.request.invalid_parameter", "en", "Localized\r\nmessage", null));
+        when(localizationService.findByMessageKeyForCurrentLanguageWithFallback(eq("error.request.invalid_parameter")))
+                .thenReturn(new Localization("error.request.invalid_parameter", "en", "Localized\r\nmessage", null));
 
         String rawTitle = "Invalid Parameter\r\nforged-title";
         String rawDetail = "Parameter 'id' value 'abc\r\nforged-value' is invalid.";
@@ -62,8 +63,12 @@ class ApiProblemFactoryLoggingTests {
         request.addParameter("query", "line1\r\nline2");
 
         ProblemDetail problemDetail = apiProblemFactory.clientProblem(
-            HttpStatus.BAD_REQUEST, rawTitle, rawDetail, "error.request.invalid_parameter", request, Map.of("rejectedValue", "abc\r\nforged-value")
-        );
+                HttpStatus.BAD_REQUEST,
+                rawTitle,
+                rawDetail,
+                "error.request.invalid_parameter",
+                request,
+                Map.of("rejectedValue", "abc\r\nforged-value"));
 
         ILoggingEvent logEvent = logEvents.list.getFirst();
         String logLine = logEvent.getFormattedMessage();

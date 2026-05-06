@@ -108,9 +108,13 @@ public class SecuritySettingsProperties {
         }
 
         public Map<String, Provider> configuredProviders() {
-            return providers.entrySet().stream().map(entry -> Map.entry(normalizeRegistrationId(entry.getKey()), entry.getValue())).filter(entry -> !entry.getKey().isBlank()).filter(entry -> entry.getValue() != null && entry.getValue().hasCredentialMaterial()).collect(Collectors.toMap(
-                Map.Entry::getKey, Map.Entry::getValue, (first, ignored) -> first, LinkedHashMap::new
-            ));
+            return providers.entrySet().stream()
+                    .map(entry -> Map.entry(normalizeRegistrationId(entry.getKey()), entry.getValue()))
+                    .filter(entry -> !entry.getKey().isBlank())
+                    .filter(entry ->
+                            entry.getValue() != null && entry.getValue().hasCredentialMaterial())
+                    .collect(Collectors.toMap(
+                            Map.Entry::getKey, Map.Entry::getValue, (first, ignored) -> first, LinkedHashMap::new));
         }
 
         public static String authorizationPath(String providerId) {
@@ -182,11 +186,14 @@ public class SecuritySettingsProperties {
             }
 
             public boolean hasCredentialMaterial() {
-                return !normalizedClientId().isBlank() || !normalizedClientSecret().isBlank() || !normalizedIssuerUri().isBlank();
+                return !normalizedClientId().isBlank()
+                        || !normalizedClientSecret().isBlank()
+                        || !normalizedIssuerUri().isBlank();
             }
 
             public boolean hasClientCredentials() {
-                return !normalizedClientId().isBlank() && !normalizedClientSecret().isBlank();
+                return !normalizedClientId().isBlank()
+                        && !normalizedClientSecret().isBlank();
             }
 
             public String normalizedClientId() {
@@ -206,7 +213,10 @@ public class SecuritySettingsProperties {
             }
 
             public Set<String> normalizedScope() {
-                return scope.stream().map(Provider::normalizeString).filter(value -> !value.isBlank()).collect(Collectors.toCollection(LinkedHashSet::new));
+                return scope.stream()
+                        .map(Provider::normalizeString)
+                        .filter(value -> !value.isBlank())
+                        .collect(Collectors.toCollection(LinkedHashSet::new));
             }
 
             private static String normalizeString(String value) {
@@ -218,7 +228,8 @@ public class SecuritySettingsProperties {
         }
 
         public enum ProviderType {
-            GITHUB, OIDC
+            GITHUB,
+            OIDC
         }
     }
 }

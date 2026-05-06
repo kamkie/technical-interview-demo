@@ -35,55 +35,72 @@ class ApiExceptionHandlerTests {
 
     @Test
     void handleMissingRequestHeaderIncludesHeaderNameAndLocalizedMetadata() {
-        when(localizationMessageService.findByMessageKeyForCurrentLanguageWithFallback(eq("error.request.missing_header"))).thenReturn(localizedMessage("error.request.missing_header", "Missing header"));
+        when(localizationMessageService.findByMessageKeyForCurrentLanguageWithFallback(
+                        eq("error.request.missing_header")))
+                .thenReturn(localizedMessage("error.request.missing_header", "Missing header"));
 
         ProblemDetail problemDetail = apiExceptionHandler.handleMissingRequestHeader(
-            new MissingRequestHeaderException("X-Request-Id", null), request("/api/test")
-        );
+                new MissingRequestHeaderException("X-Request-Id", null), request("/api/test"));
 
         assertThat(problemDetail.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(problemDetail.getDetail()).isEqualTo("Required request header 'X-Request-Id' is missing.");
-        assertThat(problemDetail.getProperties()).containsEntry("messageKey", "error.request.missing_header").containsEntry("message", "Missing header").containsEntry("language", "pl");
+        assertThat(problemDetail.getProperties())
+                .containsEntry("messageKey", "error.request.missing_header")
+                .containsEntry("message", "Missing header")
+                .containsEntry("language", "pl");
     }
 
     @Test
     void handleConcurrentModificationUsesRetryMessageForOptimisticLockFailures() {
-        when(localizationMessageService.findByMessageKeyForCurrentLanguageWithFallback(eq("error.book.stale_version"))).thenReturn(localizedMessage("error.book.stale_version", "Stale version"));
+        when(localizationMessageService.findByMessageKeyForCurrentLanguageWithFallback(eq("error.book.stale_version")))
+                .thenReturn(localizedMessage("error.book.stale_version", "Stale version"));
 
         ProblemDetail problemDetail = apiExceptionHandler.handleConcurrentModification(
-            new ObjectOptimisticLockingFailureException(Book.class, 7L), request("/api/books/7")
-        );
+                new ObjectOptimisticLockingFailureException(Book.class, 7L), request("/api/books/7"));
 
         assertThat(problemDetail.getStatus()).isEqualTo(HttpStatus.CONFLICT.value());
-        assertThat(problemDetail.getDetail()).isEqualTo("Book state changed concurrently. Retry the request with the latest version.");
-        assertThat(problemDetail.getProperties()).containsEntry("messageKey", "error.book.stale_version").containsEntry("message", "Stale version").containsEntry("language", "pl");
+        assertThat(problemDetail.getDetail())
+                .isEqualTo("Book state changed concurrently. Retry the request with the latest version.");
+        assertThat(problemDetail.getProperties())
+                .containsEntry("messageKey", "error.book.stale_version")
+                .containsEntry("message", "Stale version")
+                .containsEntry("language", "pl");
     }
 
     @Test
     void handleDataIntegrityViolationIncludesRootCauseMessage() {
-        when(localizationMessageService.findByMessageKeyForCurrentLanguageWithFallback(eq("error.data.integrity_violation"))).thenReturn(localizedMessage("error.data.integrity_violation", "Integrity violation"));
+        when(localizationMessageService.findByMessageKeyForCurrentLanguageWithFallback(
+                        eq("error.data.integrity_violation")))
+                .thenReturn(localizedMessage("error.data.integrity_violation", "Integrity violation"));
 
         ProblemDetail problemDetail = apiExceptionHandler.handleDataIntegrityViolation(
-            new DataIntegrityViolationException("outer", new IllegalStateException("duplicate key value violates constraint")), request("/api/books")
-        );
+                new DataIntegrityViolationException(
+                        "outer", new IllegalStateException("duplicate key value violates constraint")),
+                request("/api/books"));
 
         assertThat(problemDetail.getStatus()).isEqualTo(HttpStatus.CONFLICT.value());
         assertThat(problemDetail.getDetail()).isEqualTo("Book data violates a database constraint.");
-        assertThat(problemDetail.getProperties()).containsEntry("messageKey", "error.data.integrity_violation").containsEntry("message", "Integrity violation").containsEntry("language", "pl");
+        assertThat(problemDetail.getProperties())
+                .containsEntry("messageKey", "error.data.integrity_violation")
+                .containsEntry("message", "Integrity violation")
+                .containsEntry("language", "pl");
     }
 
     @Test
     void handleUnexpectedExceptionReturnsGenericServerProblem() {
-        when(localizationMessageService.findByMessageKeyForCurrentLanguageWithFallback(eq("error.server.internal"))).thenReturn(localizedMessage("error.server.internal", "Server error"));
+        when(localizationMessageService.findByMessageKeyForCurrentLanguageWithFallback(eq("error.server.internal")))
+                .thenReturn(localizedMessage("error.server.internal", "Server error"));
 
-        ProblemDetail problemDetail = apiExceptionHandler.handleUnexpectedException(
-            new IllegalStateException("boom"), request("/api/test")
-        );
+        ProblemDetail problemDetail =
+                apiExceptionHandler.handleUnexpectedException(new IllegalStateException("boom"), request("/api/test"));
 
         assertThat(problemDetail.getStatus()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
         assertThat(problemDetail.getTitle()).isEqualTo("Internal Server Error");
         assertThat(problemDetail.getDetail()).isEqualTo("An unexpected error occurred.");
-        assertThat(problemDetail.getProperties()).containsEntry("messageKey", "error.server.internal").containsEntry("message", "Server error").containsEntry("language", "pl");
+        assertThat(problemDetail.getProperties())
+                .containsEntry("messageKey", "error.server.internal")
+                .containsEntry("message", "Server error")
+                .containsEntry("language", "pl");
     }
 
     private HttpServletRequest request(String path) {

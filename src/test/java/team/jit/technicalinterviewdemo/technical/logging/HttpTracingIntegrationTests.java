@@ -17,7 +17,8 @@ class HttpTracingIntegrationTests extends AbstractRandomPortIntegrationTest {
 
     @Test
     void helloResponseIncludesGeneratedTraceparent() throws IOException, InterruptedException {
-        HttpResponse<String> response = send(HttpRequest.newBuilder().uri(uri("/hello")).GET().build());
+        HttpResponse<String> response =
+                send(HttpRequest.newBuilder().uri(uri("/hello")).GET().build());
 
         assertEquals(200, response.statusCode());
         assertEquals("Hello World!", response.body());
@@ -29,10 +30,15 @@ class HttpTracingIntegrationTests extends AbstractRandomPortIntegrationTest {
     void incomingTraceparentPreservesTraceIdInResponse() throws IOException, InterruptedException {
         String incomingTraceparent = "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01";
 
-        HttpResponse<String> response = send(HttpRequest.newBuilder().uri(uri("/hello")).header("traceparent", incomingTraceparent).GET().build());
+        HttpResponse<String> response = send(HttpRequest.newBuilder()
+                .uri(uri("/hello"))
+                .header("traceparent", incomingTraceparent)
+                .GET()
+                .build());
 
         assertEquals(200, response.statusCode());
-        String responseTraceparent = response.headers().firstValue("traceparent").orElse(null);
+        String responseTraceparent =
+                response.headers().firstValue("traceparent").orElse(null);
         assertNotNull(responseTraceparent);
         assertTrue(responseTraceparent.matches("00-4bf92f3577b34da6a3ce929d0e0e4736-[0-9a-f]{16}-01"));
     }
@@ -41,15 +47,21 @@ class HttpTracingIntegrationTests extends AbstractRandomPortIntegrationTest {
     void incomingRequestIdIsReturnedInResponse() throws IOException, InterruptedException {
         String incomingRequestId = "request-12345";
 
-        HttpResponse<String> response = send(HttpRequest.newBuilder().uri(uri("/hello")).header("X-Request-Id", incomingRequestId).GET().build());
+        HttpResponse<String> response = send(HttpRequest.newBuilder()
+                .uri(uri("/hello"))
+                .header("X-Request-Id", incomingRequestId)
+                .GET()
+                .build());
 
         assertEquals(200, response.statusCode());
-        assertEquals(incomingRequestId, response.headers().firstValue("X-Request-Id").orElse(null));
+        assertEquals(
+                incomingRequestId, response.headers().firstValue("X-Request-Id").orElse(null));
     }
 
     @Test
     void errorResponseIncludesTraceparent() throws IOException, InterruptedException {
-        HttpResponse<String> response = send(HttpRequest.newBuilder().uri(uri("/api/missing")).GET().build());
+        HttpResponse<String> response =
+                send(HttpRequest.newBuilder().uri(uri("/api/missing")).GET().build());
 
         assertEquals(404, response.statusCode());
         assertMatchesRequestId(response.headers().firstValue("X-Request-Id").orElse(null));

@@ -12,6 +12,8 @@ public class CurrentSessionCsrfProtectionMatcher implements RequestMatcher {
 
     @Override
     public boolean matches(HttpServletRequest request) {
-        return request.getRequestURI().startsWith("/api/") && CsrfFilter.DEFAULT_CSRF_MATCHER.matches(request) && currentApplicationSessionResolver.hasAuthenticatedSession(request);
+        return request.getRequestURI().startsWith("/api/")
+                && CsrfFilter.DEFAULT_CSRF_MATCHER.matches(request)
+                && currentApplicationSessionResolver.hasAuthenticatedSession(request);
     }
 }

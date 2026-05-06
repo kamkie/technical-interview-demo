@@ -15,5 +15,4 @@ import java.lang.annotation.Target;
 @Inherited
 @IntegrationSpringBootTest
 @AutoConfigureMockMvc
-public @interface MockMvcIntegrationSpringBootTest {
-}
+public @interface MockMvcIntegrationSpringBootTest {}

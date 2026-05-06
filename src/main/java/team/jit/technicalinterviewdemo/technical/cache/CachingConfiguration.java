@@ -18,20 +18,35 @@ public class CachingConfiguration {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
         cacheManager.setAllowNullValues(false);
         cacheManager.registerCustomCache(
-            CacheNames.CATEGORIES, Caffeine.newBuilder().maximumSize(50).expireAfterWrite(Duration.ofMinutes(30)).build()
-        );
+                CacheNames.CATEGORIES,
+                Caffeine.newBuilder()
+                        .maximumSize(50)
+                        .expireAfterWrite(Duration.ofMinutes(30))
+                        .build());
         cacheManager.registerCustomCache(
-            CacheNames.CATEGORY_DIRECTORY, Caffeine.newBuilder().maximumSize(10).expireAfterWrite(Duration.ofMinutes(30)).build()
-        );
+                CacheNames.CATEGORY_DIRECTORY,
+                Caffeine.newBuilder()
+                        .maximumSize(10)
+                        .expireAfterWrite(Duration.ofMinutes(30))
+                        .build());
         cacheManager.registerCustomCache(
-            CacheNames.LOCALIZATION_LOOKUPS, Caffeine.newBuilder().maximumSize(1_000).expireAfterWrite(Duration.ofMinutes(15)).build()
-        );
+                CacheNames.LOCALIZATION_LOOKUPS,
+                Caffeine.newBuilder()
+                        .maximumSize(1_000)
+                        .expireAfterWrite(Duration.ofMinutes(15))
+                        .build());
         cacheManager.registerCustomCache(
-            CacheNames.LOCALIZATION_LISTS, Caffeine.newBuilder().maximumSize(100).expireAfterWrite(Duration.ofMinutes(15)).build()
-        );
+                CacheNames.LOCALIZATION_LISTS,
+                Caffeine.newBuilder()
+                        .maximumSize(100)
+                        .expireAfterWrite(Duration.ofMinutes(15))
+                        .build());
         cacheManager.registerCustomCache(
-            CacheNames.LOCALIZATION_MESSAGE_MAPS, Caffeine.newBuilder().maximumSize(100).expireAfterWrite(Duration.ofMinutes(15)).build()
-        );
+                CacheNames.LOCALIZATION_MESSAGE_MAPS,
+                Caffeine.newBuilder()
+                        .maximumSize(100)
+                        .expireAfterWrite(Duration.ofMinutes(15))
+                        .build());
         return cacheManager;
     }
 }

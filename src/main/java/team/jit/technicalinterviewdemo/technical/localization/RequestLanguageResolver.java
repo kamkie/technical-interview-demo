@@ -22,7 +22,9 @@ public class RequestLanguageResolver {
     public String resolvePreferredLanguage(HttpServletRequest request) {
         String languageOverride = request.getParameter(LANGUAGE_OVERRIDE_PARAMETER);
         if (languageOverride != null) {
-            return normalizeRequestedLanguage(languageOverride).filter(SupportedLanguages::isSupported).orElse(DEFAULT_LANGUAGE);
+            return normalizeRequestedLanguage(languageOverride)
+                    .filter(SupportedLanguages::isSupported)
+                    .orElse(DEFAULT_LANGUAGE);
         }
 
         String acceptLanguageHeader = request.getHeader("Accept-Language");
@@ -38,7 +40,9 @@ public class RequestLanguageResolver {
 
         for (Cookie cookie : request.getCookies() == null ? new Cookie[0] : request.getCookies()) {
             if (LANGUAGE_COOKIE_NAME.equals(cookie.getName())) {
-                return normalizeRequestedLanguage(cookie.getValue()).filter(SupportedLanguages::isSupported).orElse(DEFAULT_LANGUAGE);
+                return normalizeRequestedLanguage(cookie.getValue())
+                        .filter(SupportedLanguages::isSupported)
+                        .orElse(DEFAULT_LANGUAGE);
             }
         }
 

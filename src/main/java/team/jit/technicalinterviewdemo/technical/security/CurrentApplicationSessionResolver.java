@@ -24,7 +24,9 @@ public class CurrentApplicationSessionResolver {
     private final SessionRepository<? extends Session> sessionRepository;
 
     public boolean hasAuthenticatedSession(HttpServletRequest request) {
-        return currentSession(request).filter(this::hasAuthenticatedSecurityContext).isPresent();
+        return currentSession(request)
+                .filter(this::hasAuthenticatedSecurityContext)
+                .isPresent();
     }
 
     public Optional<String> currentSessionId(HttpServletRequest request) {
@@ -33,7 +35,12 @@ public class CurrentApplicationSessionResolver {
             return Optional.empty();
         }
 
-        return Arrays.stream(cookies).filter(cookie -> sessionCookieName().equals(cookie.getName())).map(Cookie::getValue).map(this::decodeSessionId).flatMap(Optional::stream).findFirst();
+        return Arrays.stream(cookies)
+                .filter(cookie -> sessionCookieName().equals(cookie.getName()))
+                .map(Cookie::getValue)
+                .map(this::decodeSessionId)
+                .flatMap(Optional::stream)
+                .findFirst();
     }
 
     private Optional<Session> currentSession(HttpServletRequest request) {
@@ -41,7 +48,8 @@ public class CurrentApplicationSessionResolver {
     }
 
     private boolean hasAuthenticatedSecurityContext(Session session) {
-        Object storedSecurityContext = session.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+        Object storedSecurityContext =
+                session.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
         if (!(storedSecurityContext instanceof SecurityContext securityContext)) {
             return false;
         }

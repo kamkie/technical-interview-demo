@@ -7,8 +7,7 @@ import java.util.List;
 
 public final class BookSearchSpecifications {
 
-    private BookSearchSpecifications() {
-    }
+    private BookSearchSpecifications() {}
 
     public static Specification<Book> fromSearchRequest(BookSearchRequest request) {
         return fromCriteria(BookSearchCriteria.fromRequest(request));
@@ -20,7 +19,8 @@ public final class BookSearchSpecifications {
         specification = and(specification, containsIgnoreCase("author", criteria.author()));
         specification = and(specification, containsIgnoreCase("isbn", criteria.isbn()));
         specification = and(specification, hasCategoryName(criteria.categories()));
-        specification = and(specification, publicationYearMatches(criteria.year(), criteria.yearFrom(), criteria.yearTo()));
+        specification =
+                and(specification, publicationYearMatches(criteria.year(), criteria.yearFrom(), criteria.yearTo()));
         return specification == null ? (root, query, criteriaBuilder) -> criteriaBuilder.conjunction() : specification;
     }
 
@@ -29,7 +29,8 @@ public final class BookSearchSpecifications {
             return null;
         }
 
-        return (root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get(property)), "%" + normalizedValue + "%");
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.like(criteriaBuilder.lower(root.get(property)), "%" + normalizedValue + "%");
     }
 
     private static Specification<Book> publicationYearMatches(Integer year, Integer yearFrom, Integer yearTo) {
@@ -58,7 +59,9 @@ public final class BookSearchSpecifications {
 
         return (root, query, criteriaBuilder) -> {
             query.distinct(true);
-            return criteriaBuilder.lower(root.join("categories", JoinType.LEFT).get("name")).in(categories);
+            return criteriaBuilder
+                    .lower(root.join("categories", JoinType.LEFT).get("name"))
+                    .in(categories);
         };
     }
 

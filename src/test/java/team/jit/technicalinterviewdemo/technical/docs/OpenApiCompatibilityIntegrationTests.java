@@ -25,7 +25,8 @@ class OpenApiCompatibilityIntegrationTests extends AbstractRandomPortIntegration
     }
 
     private JsonNode readApprovedBaseline() throws Exception {
-        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("openapi/approved-openapi.json")) {
+        try (InputStream inputStream =
+                getClass().getClassLoader().getResourceAsStream("openapi/approved-openapi.json")) {
             if (inputStream == null) {
                 throw new IllegalStateException("Approved OpenAPI baseline was not found on the test classpath.");
             }

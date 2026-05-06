@@ -1,4 +1,3 @@
 package team.jit.technicalinterviewdemo.testing;
 
-public abstract class AbstractIntegrationTest {
-}
+public abstract class AbstractIntegrationTest {}

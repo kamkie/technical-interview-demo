@@ -14,6 +14,9 @@ public class PostgresTestcontainersConfiguration {
     @Bean
     @ServiceConnection
     PostgreSQLContainer postgresContainer() {
-        return new PostgreSQLContainer(POSTGRES_IMAGE).withDatabaseName("technical_interview_demo").withUsername("postgres").withPassword("changeme");
+        return new PostgreSQLContainer(POSTGRES_IMAGE)
+                .withDatabaseName("technical_interview_demo")
+                .withUsername("postgres")
+                .withPassword("changeme");
     }
 }

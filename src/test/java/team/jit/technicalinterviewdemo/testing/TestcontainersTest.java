@@ -16,5 +16,4 @@ import java.lang.annotation.Target;
 @Inherited
 @ActiveProfiles("test")
 @Import(PostgresTestcontainersConfiguration.class)
-public @interface TestcontainersTest {
-}
+public @interface TestcontainersTest {}

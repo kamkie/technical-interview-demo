@@ -47,11 +47,14 @@ class BookServiceTests {
         BookSearchRequest request = new BookSearchRequest();
         request.setIsbn("isbn-abc");
 
-        assertThatThrownBy(() -> bookService.findAll(request, PageRequest.of(0, 20))).isInstanceOf(InvalidRequestException.class).hasMessage("Filter 'isbn' may contain only digits, hyphens, and X.");
+        assertThatThrownBy(() -> bookService.findAll(request, PageRequest.of(0, 20)))
+                .isInstanceOf(InvalidRequestException.class)
+                .hasMessage("Filter 'isbn' may contain only digits, hyphens, and X.");
 
-        verify(bookRepository, never()).findAll(
-            org.mockito.ArgumentMatchers.<Specification<Book>>any(), org.mockito.ArgumentMatchers.any(Pageable.class)
-        );
+        verify(bookRepository, never())
+                .findAll(
+                        org.mockito.ArgumentMatchers.<Specification<Book>>any(),
+                        org.mockito.ArgumentMatchers.any(Pageable.class));
     }
 
     @Test
@@ -60,11 +63,14 @@ class BookServiceTests {
         request.setYearFrom(2025);
         request.setYearTo(2024);
 
-        assertThatThrownBy(() -> bookService.findAll(request, PageRequest.of(0, 20))).isInstanceOf(InvalidRequestException.class).hasMessage("'yearFrom' must be less than or equal to 'yearTo'.");
+        assertThatThrownBy(() -> bookService.findAll(request, PageRequest.of(0, 20)))
+                .isInstanceOf(InvalidRequestException.class)
+                .hasMessage("'yearFrom' must be less than or equal to 'yearTo'.");
 
-        verify(bookRepository, never()).findAll(
-            org.mockito.ArgumentMatchers.<Specification<Book>>any(), org.mockito.ArgumentMatchers.any(Pageable.class)
-        );
+        verify(bookRepository, never())
+                .findAll(
+                        org.mockito.ArgumentMatchers.<Specification<Book>>any(),
+                        org.mockito.ArgumentMatchers.any(Pageable.class));
     }
 
     @Test
@@ -72,11 +78,14 @@ class BookServiceTests {
         BookSearchRequest request = new BookSearchRequest();
         request.setCategory(List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"));
 
-        assertThatThrownBy(() -> bookService.findAll(request, PageRequest.of(0, 20))).isInstanceOf(InvalidRequestException.class).hasMessage("At most 10 category filters are supported.");
+        assertThatThrownBy(() -> bookService.findAll(request, PageRequest.of(0, 20)))
+                .isInstanceOf(InvalidRequestException.class)
+                .hasMessage("At most 10 category filters are supported.");
 
-        verify(bookRepository, never()).findAll(
-            org.mockito.ArgumentMatchers.<Specification<Book>>any(), org.mockito.ArgumentMatchers.any(Pageable.class)
-        );
+        verify(bookRepository, never())
+                .findAll(
+                        org.mockito.ArgumentMatchers.<Specification<Book>>any(),
+                        org.mockito.ArgumentMatchers.any(Pageable.class));
     }
 
     @Test
@@ -84,12 +93,14 @@ class BookServiceTests {
         BookSearchRequest request = new BookSearchRequest();
 
         assertThatThrownBy(() -> bookService.findAll(
-            request, PageRequest.of(0, 20, org.springframework.data.domain.Sort.by("unknown"))
-        )).isInstanceOf(InvalidRequestException.class).hasMessage("Sort field 'unknown' is not supported. Use one of: id, title, author, isbn, year.");
+                        request, PageRequest.of(0, 20, org.springframework.data.domain.Sort.by("unknown"))))
+                .isInstanceOf(InvalidRequestException.class)
+                .hasMessage("Sort field 'unknown' is not supported. Use one of: id, title, author, isbn, year.");
 
-        verify(bookRepository, never()).findAll(
-            org.mockito.ArgumentMatchers.<Specification<Book>>any(), org.mockito.ArgumentMatchers.any(Pageable.class)
-        );
+        verify(bookRepository, never())
+                .findAll(
+                        org.mockito.ArgumentMatchers.<Specification<Book>>any(),
+                        org.mockito.ArgumentMatchers.any(Pageable.class));
     }
 
     @Test
@@ -100,13 +111,16 @@ class BookServiceTests {
         request.setIsbn("  ");
         request.setCategory(List.of(" ", "   "));
         when(bookRepository.findAll(
-            org.mockito.ArgumentMatchers.<Specification<Book>>any(), org.mockito.ArgumentMatchers.any(Pageable.class)
-        )).thenReturn(new PageImpl<>(List.of()));
+                        org.mockito.ArgumentMatchers.<Specification<Book>>any(),
+                        org.mockito.ArgumentMatchers.any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of()));
 
-        assertThatCode(() -> bookService.findAll(request, PageRequest.of(0, 20))).doesNotThrowAnyException();
+        assertThatCode(() -> bookService.findAll(request, PageRequest.of(0, 20)))
+                .doesNotThrowAnyException();
 
-        verify(bookRepository).findAll(
-            org.mockito.ArgumentMatchers.<Specification<Book>>any(), org.mockito.ArgumentMatchers.any(Pageable.class)
-        );
+        verify(bookRepository)
+                .findAll(
+                        org.mockito.ArgumentMatchers.<Specification<Book>>any(),
+                        org.mockito.ArgumentMatchers.any(Pageable.class));
     }
 }
