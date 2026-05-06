@@ -49,6 +49,12 @@
     <JavaCodeStyleSettings>
       <option name="CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND" value="999" />
       <option name="NAMES_COUNT_TO_USE_IMPORT_ON_DEMAND" value="999" />
+      <option name="DO_NOT_WRAP_AFTER_SINGLE_ANNOTATION" value="false" />
+      <option name="DO_NOT_WRAP_AFTER_SINGLE_ANNOTATION_IN_PARAMETER" value="false" />
+      <option name="ANNOTATION_PARAMETER_WRAP" value="0" />
+      <option name="ALIGN_MULTILINE_ANNOTATION_PARAMETERS" value="false" />
+      <option name="NEW_LINE_AFTER_LPAREN_IN_ANNOTATION" value="false" />
+      <option name="RPAREN_ON_NEW_LINE_IN_ANNOTATION" value="false" />
       <option name="PACKAGES_TO_USE_IMPORT_ON_DEMAND">
         <value />
       </option>
@@ -62,6 +68,41 @@
     </JetCodeStyleSettings>
     <codeStyleSettings language="JAVA">
       <option name="RIGHT_MARGIN" value="120" />
+      <option name="ALIGN_MULTILINE_CHAINED_METHODS" value="false" />
+      <option name="ALIGN_MULTILINE_PARAMETERS" value="false" />
+      <option name="ALIGN_MULTILINE_PARAMETERS_IN_CALLS" value="false" />
+      <option name="ALIGN_MULTILINE_RESOURCES" value="false" />
+      <option name="ALIGN_MULTILINE_FOR" value="false" />
+      <option name="ALIGN_MULTILINE_BINARY_OPERATION" value="false" />
+      <option name="ALIGN_MULTILINE_ASSIGNMENT" value="false" />
+      <option name="ALIGN_MULTILINE_TERNARY_OPERATION" value="false" />
+      <option name="ALIGN_MULTILINE_THROWS_LIST" value="false" />
+      <option name="ALIGN_THROWS_KEYWORD" value="false" />
+      <option name="ALIGN_MULTILINE_EXTENDS_LIST" value="false" />
+      <option name="ALIGN_MULTILINE_METHOD_BRACKETS" value="false" />
+      <option name="ALIGN_MULTILINE_PARENTHESIZED_EXPRESSION" value="false" />
+      <option name="ALIGN_MULTILINE_ARRAY_INITIALIZER_EXPRESSION" value="false" />
+      <option name="CALL_PARAMETERS_WRAP" value="0" />
+      <option name="CALL_PARAMETERS_LPAREN_ON_NEXT_LINE" value="false" />
+      <option name="CALL_PARAMETERS_RPAREN_ON_NEXT_LINE" value="false" />
+      <option name="METHOD_PARAMETERS_WRAP" value="0" />
+      <option name="METHOD_PARAMETERS_LPAREN_ON_NEXT_LINE" value="false" />
+      <option name="METHOD_PARAMETERS_RPAREN_ON_NEXT_LINE" value="false" />
+      <option name="RESOURCE_LIST_WRAP" value="0" />
+      <option name="RESOURCE_LIST_LPAREN_ON_NEXT_LINE" value="false" />
+      <option name="RESOURCE_LIST_RPAREN_ON_NEXT_LINE" value="false" />
+      <option name="METHOD_CALL_CHAIN_WRAP" value="0" />
+      <option name="ARRAY_INITIALIZER_WRAP" value="0" />
+      <option name="ASSIGNMENT_WRAP" value="0" />
+      <option name="WRAP_LONG_LINES" value="false" />
+      <indentOptions>
+        <option name="INDENT_SIZE" value="4" />
+        <option name="CONTINUATION_INDENT_SIZE" value="4" />
+        <option name="TAB_SIZE" value="4" />
+        <option name="USE_TAB_CHARACTER" value="false" />
+        <option name="SMART_TABS" value="false" />
+        <option name="KEEP_INDENTS_ON_EMPTY_LINES" value="false" />
+      </indentOptions>
     </codeStyleSettings>
     <codeStyleSettings language="kotlin">
       <option name="CODE_STYLE_DEFAULTS" value="KOTLIN_OFFICIAL" />
