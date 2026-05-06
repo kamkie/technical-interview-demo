@@ -189,12 +189,14 @@ Use AI to create or revise a real execution plan under `ai/PLAN_*.md`.
 
 The plan should be decision-complete enough that implementation does not need to improvise product behavior.
 Milestones should be small enough to implement, validate, and commit one checkpoint at a time.
+Creating or materially revising a plan should update `ROADMAP.md` in the same change so active work points to the plan path and current status.
 
 Good outcomes:
 
 - one coherent `ai/PLAN_<topic>.md`
 - multiple plan files only when the work is genuinely disjoint
 - explicit scope, non-goals, validation, and execution-mode fit
+- a matching `ROADMAP.md` entry that tracks the plan without duplicating its details
 
 Useful prompt titles:
 

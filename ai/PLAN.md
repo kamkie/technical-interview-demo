@@ -47,7 +47,7 @@ Before writing the plan:
 
 - read `AGENTS.md`
 - inspect the governing specs, tests, docs, OpenAPI baseline, HTTP examples, and source files relevant to the requested behavior
-- read `ROADMAP.md` when roadmap sequencing is involved
+- read `ROADMAP.md` so new or revised plans stay tied to active work and release sequencing
 - read the owning AI guide when durable architecture, design, code-style, testing, review, release, documentation, workflow, or learning guidance changes
 - read referenced tickets, PRs, examples, documents, or web pages before planning from them
 
@@ -55,11 +55,25 @@ Plan from repo truth first.
 Ask the user only when ambiguity affects product intent, scope, compatibility, rollout, acceptance criteria, validation, or another material tradeoff.
 Record requirement gaps, fallback assumptions, and locked decisions explicitly.
 
+## Roadmap Synchronization
+
+Creating or materially revising a concrete `ai/PLAN_*.md` file must update `ROADMAP.md` in the same change.
+
+Use `ROADMAP.md` for active-work tracking only:
+
+- if the plan came from an existing roadmap item, add or refresh the plan path and concise lifecycle/status note there
+- if the plan came from an ad hoc request that is now real planned work, add a concise roadmap entry in the appropriate active section with the plan path
+- keep detailed milestones, validation, and implementation notes in the plan file, not the roadmap
+- do not add a roadmap entry for discarded ideas, roadmap-only cleanup, or work that is not ready to become an execution plan
+
+When a plan is later released or no longer active, follow the execution and release guides to update or remove the roadmap entry instead of leaving stale active work behind.
+
 ## Required Plan Content
 
 Every concrete plan must answer:
 
 - what behavior is changing and why
+- which `ROADMAP.md` entry tracks this plan, or which new roadmap entry this plan added
 - what is out of scope
 - which specs or contract artifacts define the behavior
 - which source files or packages are likely to change
@@ -125,6 +139,7 @@ Before presenting a plan, verify that it:
 
 - is self-contained
 - identifies the governing specs
+- confirms `ROADMAP.md` reflects the plan path and current active-work status
 - separates scope from non-goals
 - records unresolved gaps and fallback assumptions explicitly
 - names likely files to change

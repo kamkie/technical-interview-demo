@@ -37,6 +37,7 @@ jobs:
           CURRENT_SHA: ${{ github.sha }}
           PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
           PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
         run: |
           $params = @{}
           if ($env:EVENT_NAME -eq 'pull_request') {
@@ -49,8 +50,15 @@ jobs:
           }
 
           $result = & ./scripts/classify-changed-files.ps1 @params
-          "skip_heavy_ci=$($result.skipHeavyValidation.ToString().ToLowerInvariant())" |
+          $isRerun = [int]$env:RUN_ATTEMPT -gt 1
+          $skipHeavyCi = $result.skipHeavyValidation -and -not $isRerun
+          "skip_heavy_ci=$($skipHeavyCi.ToString().ToLowerInvariant())" |
             Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+
+          if ($isRerun -and $result.skipHeavyValidation) {
+            'GitHub Actions rerun detected, so lightweight-only `skip_heavy_ci` was ignored.' |
+              Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append
+          }
 
   build:
     needs: change_detection

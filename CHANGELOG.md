@@ -9,6 +9,8 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ### Changed
 - Constrained the PostgreSQL JDBC, Gatling Netty, and AsciidoctorJ JRuby Gradle dependency paths to patched versions for the current Dependabot alert batch without changing the public API contract.
+- Clarified AI planning workflow so creating or materially revising `ai/PLAN_*.md` files also updates `ROADMAP.md` with the active plan path and status.
+- Forced GitHub Actions reruns to ignore the lightweight-only `skip_heavy_ci` shortcut and execute heavy CI validation.
 
 ## [v2.0.0-RC2] - 2026-05-05
 

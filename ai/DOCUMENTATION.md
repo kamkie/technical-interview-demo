@@ -52,6 +52,7 @@ If ownership is unclear, decide that before editing multiple docs.
 - repo-local skill change: update the skill plus the owning AI guide when the skill wraps a workflow whose rules changed
 - local command-wrapper guidance for AI agents: update `ai/ENVIRONMENT_QUICK_REF.md`, and update `SETUP.md` only when human setup or troubleshooting behavior changed
 - setup or tooling change: update `SETUP.md`, not `README.md`, `AGENTS.md`, or workflow guides unless their inventories or high-level rules changed
+- plan creation or material plan revision: update the concrete `ai/PLAN_*.md` file and `ROADMAP.md` together so active work points to the plan path and current status
 - roadmap reprioritization: update `ROADMAP.md`, and keep `## Current Project State` aligned when the active release phase, breaking-change policy, or next target version changes
 - released history: update `CHANGELOG.md`
 
