@@ -21,6 +21,23 @@ PowerShell (`pwsh`):
 ./build.ps1 gatlingBenchmark
 ```
 
+Bash/Sh (`sh`):
+
+```bash
+# Ensure build.ps1 is executable or use pwsh directly if available
+# The wrapper is a PowerShell script, so pwsh is the primary way to run it.
+# On Linux/macOS, use 'pwsh' to execute the .ps1 script.
+pwsh ./build.ps1 compileJava
+pwsh ./build.ps1 checkFormat
+pwsh ./build.ps1 format
+pwsh ./build.ps1 build
+pwsh ./build.ps1 -FullBuild build
+pwsh ./build.ps1 -SkipTests -SkipChecks build
+pwsh ./build.ps1 test
+pwsh ./build.ps1 bootRun
+pwsh ./build.ps1 gatlingBenchmark
+```
+
 ## What The Wrapper Does
 
 - load root `.env` automatically when it exists

@@ -9,10 +9,11 @@ Use this file before finalizing a change, when the user asks for a review, or wh
 Default review order:
 
 1. bugs or behavioral regressions
-2. contract drift or missing spec-artifact updates
-3. missing validation or weak validation scope
-4. security regressions
-5. maintainability issues that materially affect the change
+2. **Spec-Driven Development Verification**: Confirm that spec/contract artifacts (OpenAPI, tests, docs) were updated *before* or *alongside* the implementation, and that they define the intended behavior accurately.
+3. contract drift or missing spec-artifact updates
+4. missing validation or weak validation scope
+5. security regressions
+6. maintainability issues that materially affect the change
 
 Do not lead with style-only comments when there are correctness, contract, or security risks still open.
 

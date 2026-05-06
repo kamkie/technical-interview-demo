@@ -16,6 +16,17 @@ Use this file for:
 
 Do not use this file for detailed local setup, IDE walkthroughs, Docker onboarding, or troubleshooting steps that already belong in `SETUP.md`.
 
+## Agent Onboarding Quick Start
+
+If you are a new agent entering this repository, follow these steps to ground yourself:
+
+1. **Read `AGENTS.md` first** to understand the engineering rules and spec-driven development philosophy.
+2. **Review `README.md`** for the high-level project overview and the map of AI guidance.
+3. **Check `SETUP.md`** to ensure your environment is ready (Java, Gradle, Docker).
+4. **Identify the current task's lifecycle phase** (Discovery, Planning, Implementation, etc.).
+5. **Load the relevant owner guide** from the `ai/` directory (e.g., `ai/PLAN.md` for planning).
+6. **Locate or create the task's plan** (`ai/PLAN_*.md`) before making any code changes.
+
 ## AI Document Set
 
 The `ai/` directory is the AI-facing working set for non-contract repository knowledge.
@@ -52,6 +63,15 @@ Load AI guidance on demand:
 - read active `ai/PLAN_*.md` files only when planning, executing, verifying, or releasing that plan
 - read prompt bodies, templates, detailed references, skill files, and archived plans only when the task specifically needs them
 - do not bulk-load `ai/archive/`, `ai/references/`, `ai/prompts/`, `ai/templates/`, or skill reference material as standing context
+
+### Context Hygiene
+
+Maintain a clean working context to optimize performance and prevent hallucinations:
+
+- **Drop stale context**: Once a milestone or sub-task is complete, stop referencing files that are no longer relevant to the next step.
+- **Avoid deep-file bulk loading**: Prefer targeted searches (`search_project`) or structure checks (`get_file_structure`) over opening every file in a package.
+- **Summarize complex state**: If a long investigation concludes, summarize the findings and use that summary as the new grounding instead of re-reading the raw logs.
+- **Close completed plans**: When a task is done, the plan moves to `ai/archive/` and should be removed from the active read set.
 
 Rules for maintaining the `ai/` documents:
 

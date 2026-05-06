@@ -42,10 +42,11 @@ From local `main`:
 8. Update `ROADMAP.md` to remove work completed by the release.
 9. Move the executed `ai/PLAN_*.md` file to `ai/archive/` and update moved-path references in the same change.
 10. Update the target plan `Lifecycle` section to `Phase=Closed` and `Status=Released`.
-11. Re-run `./build.ps1 build` only if the release-metadata edits made the earlier validation stale.
-12. Commit with `Prepare vMAJOR.MINOR.PATCH[-PRERELEASE] release`.
-13. Create an annotated tag `vMAJOR.MINOR.PATCH[-PRERELEASE]` with a concise annotation such as `Release vMAJOR.MINOR.PATCH[-PRERELEASE]`.
-14. Verify locally that the tag points at the release commit and that `git branch --show-current`, `git status --short`, `git log --first-parent --decorate --oneline -n 5`, `CHANGELOG.md`, `ROADMAP.md`, and the archived plan all reflect the release correctly.
+11. **Post-Release Learnings**: Update `ai/LEARNINGS.md` if any durable engineering lessons were learned during the execution or release of this plan.
+12. Re-run `./build.ps1 build` only if the release-metadata edits made the earlier validation stale.
+13. Commit with `Prepare vMAJOR.MINOR.PATCH[-PRERELEASE] release`.
+14. Create an annotated tag `vMAJOR.MINOR.PATCH[-PRERELEASE]` with a concise annotation such as `Release vMAJOR.MINOR.PATCH[-PRERELEASE]`.
+15. Verify locally that the tag points at the release commit and that `git branch --show-current`, `git status --short`, `git log --first-parent --decorate --oneline -n 5`, `CHANGELOG.md`, `ROADMAP.md`, and the archived plan all reflect the release correctly.
 
 ## Choosing The Version
 

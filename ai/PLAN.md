@@ -83,6 +83,7 @@ Every concrete plan must answer:
 - which execution mode fits: `Single Branch`, `Shared Plan`, or `Parallel Plans`
 - which files stay coordinator-owned if worker fanout is realistic
 - which tests, docs, OpenAPI, HTTP examples, README, or AI guides must move
+- what testing strategy (unit, integration, contract, smoke) applies
 - what validation proves completion
 - how the user can verify the delivered behavior
 
@@ -129,6 +130,7 @@ Required top-level sections:
 - `Execution Milestones`
 - `Edge Cases And Failure Modes`
 - `Validation Plan`
+- `Testing Strategy`
 - `Better Engineering Notes`
 - `Validation Results`
 - `User Validation`

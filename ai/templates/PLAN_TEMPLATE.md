@@ -66,6 +66,13 @@
 - docs or contract checks
 - manual verification steps
 
+## Testing Strategy
+- unit tests (logic, edge cases)
+- integration tests (database, external services)
+- contract tests (OpenAPI, REST Docs)
+- smoke/benchmark tests
+- verification of negative scenarios and error handling
+
 ## Better Engineering Notes
 - prerequisite cleanup included in the plan
 - deferred follow-up work that should not be hidden
