@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Implementation |
+| Status | In Progress |
 
 ## Summary
 - Replace the current IntelliJ-binary-dependent Spotless Java formatter with a CI-owned formatter configuration that works when IntelliJ IDEA is not installed.
@@ -280,6 +280,12 @@
   - retargeted this plan from deferred post-`2.0` work to `v2.0.0-RC5`.
   - `git diff --check` passed.
   - `./build.ps1 build` passed through the lightweight-file shortcut, reporting that only `ai/PLAN_ci_owned_spotless_reformat.md` and `ROADMAP.md` changed and that the Gradle build was skipped.
+- 2026-05-06 Milestone 1 execution:
+  - moved the exported Eclipse formatter profile to `tooling/formatting/intellij-exported-eclipse-java-formatter.xml`.
+  - replaced IntelliJ-binary-dependent Java Spotless configuration with unconditional CI-owned `eclipse().configFile(...)` formatting.
+  - slimmed `.editorconfig` to portable editor defaults and updated formatter guidance in setup, contributor, and AI code-style docs.
+  - `./build.ps1 tasks --all --no-daemon` passed.
+  - optional `./build.ps1 spotlessCheck --no-daemon --continue` failed as expected on formatting drift only: `spotlessJavaCheck`, `spotlessKotlinCheck`, `spotlessKotlinGradleCheck`, and `spotlessMiscCheck` reported files for Milestone 2 `spotlessApply`.
 
 ## User Validation
 - Review the three commits separately:

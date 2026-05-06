@@ -48,7 +48,7 @@ The wrapper also classifies the current uncommitted change set for `./build.ps1 
 Direct `gradlew` commands, IDE run configurations, and non-Gradle shell commands still need the variables exported in the usual way.
 
 1. Copy `.env.example` to `.env` if you want a private local reference file.
-2. Fill in your actual paths (especially `JAVA_HOME` and `IDEA_HOME`).
+2. Fill in your actual paths, especially `JAVA_HOME`.
 3. Use `./build.ps1` for Gradle commands, or export the values in your shell, IDE run configuration, or Docker Compose environment when you bypass the wrapper.
 
 **Easiest Gradle path for PowerShell:**
@@ -70,7 +70,6 @@ Use `./build.ps1 -FullBuild build` when you want to force the full Gradle build 
 Variables you are most likely to need:
 
 - `JAVA_HOME` for Gradle and the toolchain
-- `IDEA_HOME` or `IDEA_FORMATTER_BINARY` for Spotless Java formatting
 - `SPRING_PROFILES_ACTIVE` if you want to override the default `local` profile
 - `DATABASE_*` variables when overriding the default PostgreSQL connection
 - `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` for the built-in GitHub provider when enabling the optional `oauth` profile
@@ -151,15 +150,7 @@ Recommended baseline:
 1. Import the project as a Gradle project
 2. Set the project SDK to Java 25
 3. Set Gradle JVM to Java 25
-4. If you want Spotless to delegate Java formatting to IntelliJ, export one of:
-
-```powershell
-$env:IDEA_FORMATTER_BINARY='<path-to-intellij>\bin\idea64.exe'
-```
-
-```powershell
-$env:IDEA_HOME='<path-to-intellij>'
-```
+4. Use `./build.ps1 spotlessApply` when you want to normalize repository formatting from the same formatter configuration CI uses.
 
 ### VS Code
 
@@ -885,18 +876,17 @@ Fix:
 4. Port-forward the app service and verify `GET /actuator/prometheus` manually.
 5. Confirm the monitoring stack is allowed to watch `technical-interview-demo` and `monitoring` namespaces.
 
-### Spotless skips Java formatting
+### Spotless Java formatting differs from IDE formatting
 
 Symptom:
 
-- format checks pass, but Java files are not reformatted
+- IntelliJ reformats Java files differently from `spotlessApply`
 
 Fix:
 
-Set one of these variables before running `spotlessApply`:
-
-- `IDEA_FORMATTER_BINARY`
-- `IDEA_HOME`
+1. Run `./build.ps1 spotlessApply` from the repository root.
+2. Keep the Spotless result as the authoritative CI-owned format.
+3. Check that IntelliJ is using the project code-style settings when project code styles are committed.
 
 ### Port 8080 or 5432 is already in use
 

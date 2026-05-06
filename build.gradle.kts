@@ -73,6 +73,35 @@ val trivyFailOnSeverities = listOf("HIGH", "CRITICAL")
 val applicationSbomReportDir = layout.buildDirectory.dir("reports/sbom/application")
 val imageSbomReportDir = layout.buildDirectory.dir("reports/sbom/image")
 val skipChecks = providers.gradleProperty("skipChecks").map(String::toBoolean).orElse(false)
+val spotlessTargetExcludes = arrayOf(
+    ".git/**",
+    ".gradle/**",
+    ".kotlin/**",
+    ".idea/**",
+    ".run/**",
+    "build/**",
+    "buildSrc/build/**",
+    "buildSrc/.gradle/**",
+    "out/**",
+    "temp/**",
+    "gradle/wrapper/gradle-wrapper.jar",
+    "**/*.jar",
+    "**/*.zip",
+    "**/*.png",
+    "**/*.jpg",
+    "**/*.jpeg",
+    "**/*.gif",
+    "**/*.ico",
+    "**/*.pdf",
+    "**/*.jks",
+    "**/*.p12",
+    "**/*.keystore",
+    ".env",
+    "src/test/resources/http/http-client.private.env.json",
+    "src/test/resources/openapi/approved-openapi.json",
+    "src/gatling/resources/gatling-benchmark-baseline.json",
+    "tooling/formatting/intellij-exported-eclipse-java-formatter.xml"
+)
 
 java {
     toolchain {
@@ -412,41 +441,29 @@ asciidoctorTask {
     }
 }
 
-val ideaFormatterBinaryCandidate: String? =
-    providers.gradleProperty("ideaFormatterBinary")
-        .orElse(providers.environmentVariable("IDEA_FORMATTER_BINARY"))
-        .orElse(
-            providers.environmentVariable("IDEA_HOME").map { ideaHome ->
-                val executable = if (System.getProperty("os.name").startsWith("Windows")) "idea64.exe" else "idea"
-                file("$ideaHome/bin/$executable").absolutePath
-            }
-        )
-        .orNull
-
-val ideaFormatterBinary = ideaFormatterBinaryCandidate?.takeIf { file(it).isFile }
-
-if (ideaFormatterBinaryCandidate != null && ideaFormatterBinary == null) {
-    logger.warn(
-        "Spotless Java formatting is disabled because the IntelliJ formatter binary was not found at '{}'.",
-        ideaFormatterBinaryCandidate
-    )
-}
-
 spotless {
-    if (ideaFormatterBinary != null) {
-        java {
-            target("src/main/java/**/*.java", "src/test/java/**/*.java")
-            importOrder()
-            removeUnusedImports()
-            idea().apply {
-                withDefaults(true)
-                binaryPath(ideaFormatterBinary)
-            }
-        }
+    java {
+        target("src/**/*.java")
+        targetExclude(*spotlessTargetExcludes)
+        importOrder()
+        removeUnusedImports()
+        eclipse().configFile("tooling/formatting/intellij-exported-eclipse-java-formatter.xml")
+    }
+
+    kotlin {
+        target("buildSrc/src/**/*.kt")
+        targetExclude(*spotlessTargetExcludes)
+        ktlint().editorConfigOverride(
+            mapOf(
+                "ktlint_code_style" to "intellij_idea"
+            )
+        )
+        endWithNewline()
     }
 
     kotlinGradle {
-        target("*.gradle.kts", "gradle/**/*.gradle.kts")
+        target("*.gradle.kts", "gradle/**/*.gradle.kts", "buildSrc/**/*.gradle.kts")
+        targetExclude(*spotlessTargetExcludes)
         ktlint().editorConfigOverride(
             mapOf(
                 "ktlint_code_style" to "intellij_idea"
@@ -456,8 +473,22 @@ spotless {
     }
 
     format("misc") {
-        target("*.md", ".gitignore", ".gitattributes", ".editorconfig", "src/**/*.properties")
-        targetExclude("HELP.md")
+        target(
+            "**/*.md",
+            ".gitignore",
+            ".gitattributes",
+            ".editorconfig",
+            "Dockerfile",
+            "docker-compose*.yml",
+            "**/*.properties",
+            "**/*.sql",
+            "**/*.yml",
+            "**/*.yaml",
+            "**/*.xml",
+            "**/*.json",
+            "**/*.http"
+        )
+        targetExclude("HELP.md", *spotlessTargetExcludes)
         trimTrailingWhitespace()
         endWithNewline()
     }
