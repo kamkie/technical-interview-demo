@@ -54,7 +54,7 @@ Goal: finish the stable `2.0` line after the `v2.0.0-RC4` candidate is accepted.
 
 Status: Deferred until stable `2.0` is released
 
-- [ ] Execute `ai/PLAN_ci_owned_spotless_reformat.md` for the post-`2.0` Spotless formatter ownership migration.
+- [ ] Execute `ai/PLAN_ci_owned_spotless_reformat.md` for the post-`2.0` Spotless formatter ownership migration, including the final manual IDE code-style artifact milestone.
   Plan lifecycle: `Planning` / `Ready`; execution remains deferred until stable `v2.0.0` unless explicitly selected earlier.
 
 ### Post-`2.0` Frontend AI Contract
