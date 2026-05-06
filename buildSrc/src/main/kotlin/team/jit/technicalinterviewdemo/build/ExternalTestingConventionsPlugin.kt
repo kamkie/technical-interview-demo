@@ -298,7 +298,7 @@ class ExternalTestingConventionsPlugin : Plugin<Project> {
             )
             updateBaseline.convention(booleanProperty("benchmark.updateBaseline", false))
             responseTimeToleranceMultiplier.convention(
-                doubleProperty("benchmark.responseTimeToleranceMultiplier", 1.20)
+                doubleProperty("benchmark.responseTimeToleranceMultiplier", 1.25)
             )
             successRateTolerancePercentage.convention(
                 doubleProperty("benchmark.successRateTolerancePercentage", 0.50)

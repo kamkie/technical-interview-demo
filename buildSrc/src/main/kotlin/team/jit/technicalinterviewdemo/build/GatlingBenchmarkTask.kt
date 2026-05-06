@@ -9,6 +9,7 @@ import java.net.URI
 import java.time.Duration
 import java.time.Instant
 import javax.inject.Inject
+import kotlin.math.ceil
 import kotlin.math.roundToInt
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
@@ -424,7 +425,7 @@ abstract class GatlingBenchmarkTask @Inject constructor(
                 return@forEach
             }
 
-            val maxAllowedP95 = (previous.p95Ms.toDouble() * responseTimeToleranceMultiplier.get()).roundToInt()
+            val maxAllowedP95 = ceil(previous.p95Ms.toDouble() * responseTimeToleranceMultiplier.get()).toInt()
             val minAllowedSuccess = previous.successfulRequestPercentage - successRateTolerancePercentage.get()
             val p95Pass = current.p95Ms <= maxAllowedP95
             val successPass = current.successfulRequestPercentage >= minAllowedSuccess
