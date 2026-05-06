@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Implementation |
-| Status | In Progress |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Summary
 - Replace the current IntelliJ-binary-dependent Spotless Java formatter with a CI-owned formatter configuration that works when IntelliJ IDEA is not installed.
@@ -294,6 +294,13 @@
   - `./build.ps1 spotlessCheck --no-daemon` passed.
   - first `./build.ps1 build --no-daemon` attempt failed in `imageSbom` because Trivy's Java DB download from `mirror.gcr.io` was reset by peer after tests, checks, Docker image build, and application SBOM work had run.
   - retried `./build.ps1 build --no-daemon`; it passed, including 264 tests, JaCoCo line coverage 92.6%, Docker image build, vulnerability scans, SBOM tasks, Spotless, PMD, and SpotBugs.
+- 2026-05-06 Milestone 3 execution:
+  - updated `.gitignore` so only `.idea/codeStyles/codeStyleConfig.xml` and `.idea/codeStyles/Project.xml` are trackable under `.idea/`; local `.idea/codeStyles/Default.xml` and broader workspace metadata remain ignored.
+  - added `.idea/codeStyles/codeStyleConfig.xml` with per-project code style enabled.
+  - added `.idea/codeStyles/Project.xml` with LF line endings, 120-column margin, formatter tags, 4-space indentation, high Java/Kotlin wildcard-import thresholds, and empty on-demand import package lists.
+  - manually reviewed the IDE code-style artifact for indentation, wrapping, line length, formatter tags, and import behavior alignment with the Spotless formatter contract.
+  - XML parsing of `.idea/codeStyles/codeStyleConfig.xml` and `.idea/codeStyles/Project.xml` passed.
+  - interactive IntelliJ `Reformat Code` / `Optimize Imports` verification was not run from this terminal session; keep the user-validation step as the final IDE check before release handoff.
 
 ## User Validation
 - Review the three commits separately:
