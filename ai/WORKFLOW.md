@@ -59,12 +59,12 @@ This file only changes branch layout, artifact ownership, worker coordination, a
 - choose the mode before execution starts
 - keep mode-specific tracking artifacts current as milestones land
 - finish local validation before any push or PR handoff unless the user explicitly chose a remote-first diagnostic flow
-- do not parallelize overlapping Gradle validation commands that share `build/` outputs or task dependencies; run `build`, `gatlingBenchmark`, `externalSmokeTest`, `externalDeploymentCheck`, `scheduledExternalCheck`, and similar validation tasks sequentially or in one Gradle invocation when appropriate
+- follow `ai/TESTING.md` for Gradle validation batching; do not run shared-output validation tasks concurrently
 - in `Shared Plan` and `Parallel Plans`, keep the coordinator active until every worker reaches a terminal state; do not treat the overall run as complete while any worker is still implementing, validating, pushing, or opening a PR
 - prefer merging accepted branches or pull requests into the integration branch; use cherry-pick only when the user asks for it, when accepting less than the full branch or pull request, or when a normal merge is not viable, and record the reason
 - keep release work out of scope until the approved PR has been merged onto `main`
 
-For any forked worker, create and maintain a committed temporary worker log at:
+For any forked worker, create and maintain a committed temporary worker log, updating it after each completed milestone, at:
 
 `ai/tmp/workflow/<plan_stem_or_topic>__<worker_name>.md`
 
@@ -108,7 +108,6 @@ The coordinator or orchestrator always owns:
 - final validation from `ai/TESTING.md`
 - final review and documentation alignment using `ai/REVIEWS.md` and `ai/DOCUMENTATION.md`
 - waiting for every worker to reach a terminal state before declaring the coordinated run complete
-- keeping release work out of scope until the approved PR has been merged onto `main`
 
 ## Coordinator Completion Gate
 
@@ -172,7 +171,6 @@ Shared-file rules:
 Worker rules:
 
 - implement only the assigned slice or milestone ownership
-- update the worker log after each completed milestone
 - record proposed shared-file edits in the worker log instead of editing the shared files directly
 - commit the worker-owned changes and worker log after each completed milestone
 - hand off the completed branch, worktree, and worker log to the coordinator
@@ -184,7 +182,6 @@ Coordinator rules:
 - cherry-pick only when accepting less than the full worker branch, when the user asks for it, or when a normal merge is not viable; record the reason in the canonical plan or worker-log integration notes
 - integrate accepted worker-log content into the canonical plan file and `CHANGELOG.md`
 - commit each integration checkpoint after the accepted milestone lands on the coordinator branch
-- clean consumed local worker branches or worktrees under `Integration Cleanup`
 - delete consumed worker logs before the final push or PR unless the user explicitly wants them retained for audit
 
 Normal outcome:
@@ -215,7 +212,6 @@ Worker rules:
 - own one plan file, or one explicitly grouped set of disjoint plan files
 - update the owned plan `Lifecycle` and `Validation Results`
 - update the private `CHANGELOG_<topic>.md` after each completed milestone
-- update the worker log after each completed milestone
 - commit the milestone, plan update, private changelog update, and worker log together
 
 Coordinator rules:
@@ -225,7 +221,6 @@ Coordinator rules:
 - resolve cross-plan conflicts only after worker-local execution is complete
 - decide merge order or PR order based on plan dependencies
 - integrate accepted changelog text into canonical `CHANGELOG.md` when preparing the combined integration or release branch
-- clean consumed local worker branches or worktrees under `Integration Cleanup`
 
 Normal outcome:
 

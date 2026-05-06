@@ -16,7 +16,8 @@ Look for any of the following, not only verbatim duplicates:
 - stale references (renamed/moved files, archived plans, retired prompts)
 - verbose phrasing, redundant lists, or examples that belong in `ai/references/` or `ai/templates/`
 - orphaned cross-references and broken anchors
-- accumulated history inside standing guideline files: changelog-style notes, "previously…/now…" wording, migration narratives, dated decisions, deprecation traces, user-request history, prior directive wording, or rationale that documents past states rather than current rules; released history belongs in `CHANGELOG.md`, durable lessons in `ai/LEARNINGS.md`, completed plans in `ai/archive/`, and still-useful guideline history in an on-demand reference
+- accumulated history inside standing guideline files: changelog notes, "previously…/now…" wording, migration narratives, dated decisions, deprecation traces, user-request history, prior directive wording, or rationale about past states rather than current rules
+- misplaced historical context: released history belongs in `CHANGELOG.md`, durable lessons in `ai/LEARNINGS.md`, completed plans in `ai/archive/`, and still-useful guideline history in an on-demand reference
 
 Use targeted project searches, preferably `rg`, with 1–3 distinctive keywords per policy before opening large files.
 

@@ -81,7 +81,7 @@ Rules for maintaining the `ai/` documents:
 - keep `ai/PROMPTS.md` lean; put reusable prompt metadata in `ai/prompts/index.json`, raw prompt bodies under `ai/prompts/bodies/`, and standing workflow rules in the best owning AI document
 - treat the listed prompt names in `ai/PROMPTS.md` as reusable commands for matching full starters loaded from `ai/prompts/`, following `ai/PROMPTS.md` for exact-match, placeholder, loader, and ambiguity rules
 - keep detailed examples, templates, historical explanations, and deep references in `ai/templates/` or `ai/references/` instead of the standing top-level AI files
-- when adding user-supplied directives to AI guidance, write the resulting current rule; do not preserve request history, prior wording, or migration narrative in standing guideline files
+- write AI-guidance changes as current-state rules; route any still-useful historical context using `ai/DOCUMENTATION.md`
 - keep repo-local skills narrow and workflow-oriented; use them to accelerate repeated entry tasks or focused triage, not to replace the owner guides
 - keep standing code-style, testing, review, and documentation guidance in their focused owning files instead of redistributing it across prompts or workflow docs
 - when a repo-local skill wraps a workflow owned by another guide, update the skill and the owning guide together if that workflow changes
