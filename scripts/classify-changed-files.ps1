@@ -33,30 +33,36 @@ $lightweightPatterns = @(
     ".idea/codeStyles/*.xml"
 )
 
-function Invoke-Git {
+function Invoke-Git
+{
     param(
         [Parameter(Mandatory = $true)]
         [string[]]$Arguments
     )
 
     $stderrPath = [System.IO.Path]::GetTempFileName()
-    try {
+    try
+    {
         $output = & git @Arguments 2> $stderrPath
-        if ($LASTEXITCODE -ne 0) {
+        if ($LASTEXITCODE -ne 0)
+        {
             $errorOutput = Get-Content -LiteralPath $stderrPath -Raw
-            throw "git $($Arguments -join ' ') failed.`n$($errorOutput.Trim())"
+            throw "git $( $Arguments -join ' ' ) failed.`n$($errorOutput.Trim() )"
         }
 
         return ,@($output)
     }
-    finally {
-        if (Test-Path -LiteralPath $stderrPath) {
+    finally
+    {
+        if (Test-Path -LiteralPath $stderrPath)
+        {
             Remove-Item -LiteralPath $stderrPath -Force
         }
     }
 }
 
-function Test-GitRevision {
+function Test-GitRevision
+{
     param(
         [Parameter(Mandatory = $true)]
         [string]$Revision
@@ -66,39 +72,45 @@ function Test-GitRevision {
     return $LASTEXITCODE -eq 0
 }
 
-function Get-NormalizedPaths {
+function Get-NormalizedPaths
+{
     param(
         [string[]]$Paths = @()
     )
 
-    if ($null -eq $Paths -or $Paths.Count -eq 0) {
+    if ($null -eq $Paths -or $Paths.Count -eq 0)
+    {
         return @()
     }
 
     return @(
-        $Paths |
-            Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
-            ForEach-Object { $_.Trim().Replace('\', '/') } |
-            Sort-Object -Unique
+    $Paths |
+        Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+        ForEach-Object { $_.Trim().Replace('\', '/') } |
+        Sort-Object -Unique
     )
 }
 
-function Test-IsLightweightChange {
+function Test-IsLightweightChange
+{
     param(
         [Parameter(Mandatory = $true)]
         [string]$Path
     )
 
     $normalizedPath = $Path.Replace('\', '/')
-    foreach ($pattern in $lightweightPatterns) {
-        if ($normalizedPath -like $pattern) {
+    foreach ($pattern in $lightweightPatterns)
+    {
+        if ($normalizedPath -like $pattern)
+        {
             return $true
         }
     }
     return $false
 }
 
-function Get-ComparisonChangeSet {
+function Get-ComparisonChangeSet
+{
     param(
         [AllowEmptyString()]
         [string]$BaseRef,
@@ -109,7 +121,8 @@ function Get-ComparisonChangeSet {
         [bool]$UseMergeBase
     )
 
-    if ([string]::IsNullOrWhiteSpace($HeadRef)) {
+    if ( [string]::IsNullOrWhiteSpace($HeadRef))
+    {
         throw "HeadRef must not be blank."
     }
 
@@ -117,22 +130,32 @@ function Get-ComparisonChangeSet {
     $resolvedBaseRef = $null
     $changedFiles = @()
 
-    if ($UseMergeBase -and [string]::IsNullOrWhiteSpace($BaseRef)) {
+    if ($UseMergeBase -and [string]::IsNullOrWhiteSpace($BaseRef))
+    {
         throw "BaseRef is required when UseMergeBase is set."
     }
 
-    if ([string]::IsNullOrWhiteSpace($BaseRef) -or $BaseRef -eq $zeroSha) {
-        if (Test-GitRevision -Revision "$resolvedHeadRef^") {
+    if ([string]::IsNullOrWhiteSpace($BaseRef) -or $BaseRef -eq $zeroSha)
+    {
+        if (Test-GitRevision -Revision "$resolvedHeadRef^")
+        {
             $resolvedBaseRef = (Invoke-Git -Arguments @("rev-parse", "$resolvedHeadRef^"))[0].Trim()
             $changedFiles = Invoke-Git -Arguments @("diff", "--name-only", $resolvedBaseRef, $resolvedHeadRef)
-        } else {
+        }
+        else
+        {
             $changedFiles = Invoke-Git -Arguments @("show", "--pretty=", "--name-only", $resolvedHeadRef)
         }
-    } else {
+    }
+    else
+    {
         $resolvedBaseRef = $BaseRef.Trim()
-        if ($UseMergeBase) {
+        if ($UseMergeBase)
+        {
             $changedFiles = Invoke-Git -Arguments @("diff", "--name-only", "$resolvedBaseRef...$resolvedHeadRef")
-        } else {
+        }
+        else
+        {
             $changedFiles = Invoke-Git -Arguments @("diff", "--name-only", $resolvedBaseRef, $resolvedHeadRef)
         }
     }
@@ -145,7 +168,8 @@ function Get-ComparisonChangeSet {
     }
 }
 
-function Get-UncommittedChangeSet {
+function Get-UncommittedChangeSet
+{
     $unstagedFiles = Invoke-Git -Arguments @("diff", "--name-only")
     $stagedFiles = Invoke-Git -Arguments @("diff", "--cached", "--name-only")
     $untrackedFiles = Invoke-Git -Arguments @("ls-files", "--others", "--exclude-standard")
@@ -155,9 +179,12 @@ function Get-UncommittedChangeSet {
     }
 }
 
-$changeSet = if ($Uncommitted) {
+$changeSet = if ($Uncommitted)
+{
     Get-UncommittedChangeSet
-} else {
+}
+else
+{
     Get-ComparisonChangeSet -BaseRef $BaseRef -HeadRef $HeadRef -UseMergeBase:$UseMergeBase
 }
 
@@ -166,10 +193,38 @@ $nonLightweightFiles = @($changeSet.changedFiles | Where-Object { -not (Test-IsL
 $skipHeavyValidation = $changeSet.changedFiles.Count -gt 0 -and $nonLightweightFiles.Count -eq 0
 
 [pscustomobject]@{
-    mode = if ($Uncommitted) { "uncommitted" } else { "comparison" }
-    baseRef = if ($Uncommitted) { $null } else { $changeSet.baseRef }
-    headRef = if ($Uncommitted) { $null } else { $changeSet.headRef }
-    useMergeBase = if ($Uncommitted) { $false } else { [bool]$changeSet.useMergeBase }
+    mode = if ($Uncommitted)
+    {
+        "uncommitted"
+    }
+    else
+    {
+        "comparison"
+    }
+    baseRef = if ($Uncommitted)
+    {
+        $null
+    }
+    else
+    {
+        $changeSet.baseRef
+    }
+    headRef = if ($Uncommitted)
+    {
+        $null
+    }
+    else
+    {
+        $changeSet.headRef
+    }
+    useMergeBase = if ($Uncommitted)
+    {
+        $false
+    }
+    else
+    {
+        [bool]$changeSet.useMergeBase
+    }
     changedFiles = @($changeSet.changedFiles)
     lightweightFiles = @($lightweightFiles)
     nonLightweightFiles = @($nonLightweightFiles)

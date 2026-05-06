@@ -16,20 +16,23 @@ $allowedRolloutCategories = @("expand", "contract", "backfill", "breaking")
 $allowedDeploymentOrders = @("db-first", "app-first", "out-of-band")
 $allowedRollbackPostures = @("image-only", "forward-fix-or-restore")
 
-function Invoke-Git {
+function Invoke-Git
+{
     param(
         [Parameter(Mandatory = $true)]
         [string[]]$Arguments
     )
 
     $output = & git @Arguments 2>&1
-    if ($LASTEXITCODE -ne 0) {
-        throw "git $($Arguments -join ' ') failed.`n$($output -join [Environment]::NewLine)"
+    if ($LASTEXITCODE -ne 0)
+    {
+        throw "git $( $Arguments -join ' ' ) failed.`n$( $output -join [Environment]::NewLine )"
     }
     return @($output)
 }
 
-function Get-RequiredMetadataValue {
+function Get-RequiredMetadataValue
+{
     param(
         [Parameter(Mandatory = $true)]
         [hashtable]$Metadata,
@@ -41,20 +44,24 @@ function Get-RequiredMetadataValue {
         [string]$MigrationPath
     )
 
-    if (-not $Metadata.ContainsKey($Key)) {
+    if (-not $Metadata.ContainsKey($Key))
+    {
         throw "Missing required metadata key '$Key' for migration '$MigrationPath'."
     }
     $value = $Metadata[$Key]
-    if ($value -is [string]) {
+    if ($value -is [string])
+    {
         $value = $value.Trim()
     }
-    if ($null -eq $value -or ($value -is [string] -and [string]::IsNullOrWhiteSpace($value))) {
+    if ($null -eq $value -or ($value -is [string] -and [string]::IsNullOrWhiteSpace($value)))
+    {
         throw "Metadata key '$Key' for migration '$MigrationPath' must not be blank."
     }
     return $value
 }
 
-function Assert-AllowedValue {
+function Assert-AllowedValue
+{
     param(
         [Parameter(Mandatory = $true)]
         [string]$Key,
@@ -69,8 +76,9 @@ function Assert-AllowedValue {
         [string]$MigrationPath
     )
 
-    if ($Value -notin $AllowedValues) {
-        throw "Metadata key '$Key' for migration '$MigrationPath' must be one of: $($AllowedValues -join ', ')."
+    if ($Value -notin $AllowedValues)
+    {
+        throw "Metadata key '$Key' for migration '$MigrationPath' must be one of: $( $AllowedValues -join ', ' )."
     }
 }
 
@@ -78,26 +86,29 @@ $null = Invoke-Git -Arguments @("rev-parse", "--verify", "$PreviousReleaseTag^{c
 $null = Invoke-Git -Arguments @("rev-parse", "--verify", "$CurrentRef^{commit}")
 
 $changedMigrationPaths = @(
-    Invoke-Git -Arguments @(
-        "diff",
-        "--name-only",
-        "--diff-filter=AM",
-        "$PreviousReleaseTag..$CurrentRef",
-        "--",
-        "$migrationDirectory/*.sql"
-    ) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object -Unique
+Invoke-Git -Arguments @(
+    "diff",
+    "--name-only",
+    "--diff-filter=AM",
+    "$PreviousReleaseTag..$CurrentRef",
+    "--",
+    "$migrationDirectory/*.sql"
+) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object -Unique
 )
 
-if ($changedMigrationPaths.Count -eq 0) {
+if ($changedMigrationPaths.Count -eq 0)
+{
     $noneResult = [ordered]@{
         previousReleaseTag = $PreviousReleaseTag
         currentRef = $CurrentRef
         impact = "none"
         migrations = @()
     }
-    if (-not [string]::IsNullOrWhiteSpace($OutputJsonPath)) {
+    if (-not [string]::IsNullOrWhiteSpace($OutputJsonPath))
+    {
         $outputDirectory = Split-Path -Path $OutputJsonPath -Parent
-        if (-not [string]::IsNullOrWhiteSpace($outputDirectory)) {
+        if (-not [string]::IsNullOrWhiteSpace($outputDirectory))
+        {
             New-Item -ItemType Directory -Path $outputDirectory -Force | Out-Null
         }
         $noneResult | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $OutputJsonPath
@@ -107,18 +118,23 @@ if ($changedMigrationPaths.Count -eq 0) {
     return
 }
 
-$migrationSummaries = foreach ($migrationPath in $changedMigrationPaths) {
+$migrationSummaries = foreach ($migrationPath in $changedMigrationPaths)
+{
     $migrationFileName = [System.IO.Path]::GetFileNameWithoutExtension($migrationPath)
     $metadataPath = "$metadataDirectory/$migrationFileName.json"
     $metadataJson = Invoke-Git -Arguments @("show", "${CurrentRef}:$metadataPath") | Out-String
 
-    if ([string]::IsNullOrWhiteSpace($metadataJson)) {
+    if ( [string]::IsNullOrWhiteSpace($metadataJson))
+    {
         throw "Missing metadata sidecar '$metadataPath' for changed migration '$migrationPath'."
     }
 
-    try {
+    try
+    {
         $metadata = $metadataJson | ConvertFrom-Json -AsHashtable
-    } catch {
+    }
+    catch
+    {
         throw "Failed to parse JSON metadata from '$metadataPath' for migration '$migrationPath'. $_"
     }
 
@@ -132,7 +148,8 @@ $migrationSummaries = foreach ($migrationPath in $changedMigrationPaths) {
     Assert-AllowedValue -Key "deploymentOrder" -Value $deploymentOrder -AllowedValues $allowedDeploymentOrders -MigrationPath $migrationPath
     Assert-AllowedValue -Key "rollbackPosture" -Value $rollbackPosture -AllowedValues $allowedRollbackPostures -MigrationPath $migrationPath
 
-    if ($rollingCompatible -isnot [bool]) {
+    if ($rollingCompatible -isnot [bool])
+    {
         throw "Metadata key 'rollingCompatible' for migration '$migrationPath' must be true or false."
     }
 
@@ -148,10 +165,13 @@ $migrationSummaries = foreach ($migrationPath in $changedMigrationPaths) {
 }
 
 $impact = if ($migrationSummaries | Where-Object {
-        -not $_.rollingCompatible -or $_.rollbackPosture -ne "image-only"
-    }) {
+    -not $_.rollingCompatible -or $_.rollbackPosture -ne "image-only"
+})
+{
     "restore-sensitive"
-} else {
+}
+else
+{
     "rolling-compatible"
 }
 
@@ -162,22 +182,25 @@ $result = [ordered]@{
     migrations = @($migrationSummaries)
 }
 
-if (-not [string]::IsNullOrWhiteSpace($OutputJsonPath)) {
+if (-not [string]::IsNullOrWhiteSpace($OutputJsonPath))
+{
     $outputDirectory = Split-Path -Path $OutputJsonPath -Parent
-    if (-not [string]::IsNullOrWhiteSpace($outputDirectory)) {
+    if (-not [string]::IsNullOrWhiteSpace($outputDirectory))
+    {
         New-Item -ItemType Directory -Path $outputDirectory -Force | Out-Null
     }
     $result | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $OutputJsonPath
 }
 
 Write-Host "Migration impact between '$PreviousReleaseTag' and '$CurrentRef': $impact"
-foreach ($migration in $migrationSummaries) {
-    Write-Host "- $($migration.migrationPath)"
-    Write-Host "  summary: $($migration.summary)"
-    Write-Host "  rolloutCategory: $($migration.rolloutCategory)"
-    Write-Host "  deploymentOrder: $($migration.deploymentOrder)"
-    Write-Host "  rollingCompatible: $($migration.rollingCompatible)"
-    Write-Host "  rollbackPosture: $($migration.rollbackPosture)"
+foreach ($migration in $migrationSummaries)
+{
+    Write-Host "- $( $migration.migrationPath )"
+    Write-Host "  summary: $( $migration.summary )"
+    Write-Host "  rolloutCategory: $( $migration.rolloutCategory )"
+    Write-Host "  deploymentOrder: $( $migration.deploymentOrder )"
+    Write-Host "  rollingCompatible: $( $migration.rollingCompatible )"
+    Write-Host "  rollbackPosture: $( $migration.rollbackPosture )"
 }
 
 Write-Output $impact

@@ -34,7 +34,8 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
-function Invoke-Docker {
+function Invoke-Docker
+{
     param(
         [Parameter(Mandatory = $true)]
         [string[]]$Arguments,
@@ -44,8 +45,9 @@ function Invoke-Docker {
 
     $output = & docker @Arguments 2>&1
     $exitCode = $LASTEXITCODE
-    if (-not $AllowFailure -and $exitCode -ne 0) {
-        throw "docker $($Arguments -join ' ') failed.`n$($output -join [Environment]::NewLine)"
+    if (-not $AllowFailure -and $exitCode -ne 0)
+    {
+        throw "docker $( $Arguments -join ' ' ) failed.`n$( $output -join [Environment]::NewLine )"
     }
     return [pscustomobject]@{
         ExitCode = $exitCode
@@ -53,24 +55,34 @@ function Invoke-Docker {
     }
 }
 
-function Parse-JdbcUrl {
+function Parse-JdbcUrl
+{
     param(
         [Parameter(Mandatory = $true)]
         [string]$Value
     )
 
-    if ($Value -notmatch '^jdbc:postgresql://(?<host>[^/:?]+)(:(?<port>\d+))?/(?<database>[^?]+)(\?.*)?$') {
+    if ($Value -notmatch '^jdbc:postgresql://(?<host>[^/:?]+)(:(?<port>\d+))?/(?<database>[^?]+)(\?.*)?$')
+    {
         throw "Only jdbc:postgresql://host[:port]/database URLs are supported. Received '$Value'."
     }
 
     return [pscustomobject]@{
         Host = $Matches.host
-        Port = if ([string]::IsNullOrWhiteSpace($Matches.port)) { 5432 } else { [int]$Matches.port }
+        Port = if ( [string]::IsNullOrWhiteSpace($Matches.port))
+        {
+            5432
+        }
+        else
+        {
+            [int]$Matches.port
+        }
         Database = $Matches.database
     }
 }
 
-function Resolve-ContainerDatabaseHost {
+function Resolve-ContainerDatabaseHost
+{
     param(
         [Parameter(Mandatory = $true)]
         [string]$ConfiguredHost,
@@ -78,19 +90,30 @@ function Resolve-ContainerDatabaseHost {
         [string]$Override
     )
 
-    if (-not [string]::IsNullOrWhiteSpace($Override)) {
+    if (-not [string]::IsNullOrWhiteSpace($Override))
+    {
         return $Override.Trim()
     }
 
-    switch ($ConfiguredHost.ToLowerInvariant()) {
-        "localhost" { return "host.docker.internal" }
-        "127.0.0.1" { return "host.docker.internal" }
-        "::1" { return "host.docker.internal" }
-        default { return $ConfiguredHost }
+    switch ( $ConfiguredHost.ToLowerInvariant())
+    {
+        "localhost" {
+            return "host.docker.internal"
+        }
+        "127.0.0.1" {
+            return "host.docker.internal"
+        }
+        "::1" {
+            return "host.docker.internal"
+        }
+        default {
+            return $ConfiguredHost
+        }
     }
 }
 
-function Get-ImageTag {
+function Get-ImageTag
+{
     param(
         [Parameter(Mandatory = $true)]
         [string]$Reference
@@ -99,13 +122,15 @@ function Get-ImageTag {
     $withoutDigest = $Reference.Split("@")[0]
     $lastSlash = $withoutDigest.LastIndexOf("/")
     $lastColon = $withoutDigest.LastIndexOf(":")
-    if ($lastColon -le $lastSlash) {
+    if ($lastColon -le $lastSlash)
+    {
         return $null
     }
     return $withoutDigest.Substring($lastColon + 1)
 }
 
-function Wait-ForReadiness {
+function Wait-ForReadiness
+{
     param(
         [Parameter(Mandatory = $true)]
         [string]$TargetBaseUrl,
@@ -115,15 +140,20 @@ function Wait-ForReadiness {
     )
 
     $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
-    $readinessUrl = "$($TargetBaseUrl.TrimEnd('/'))/actuator/health/readiness"
+    $readinessUrl = "$($TargetBaseUrl.TrimEnd('/') )/actuator/health/readiness"
 
-    while ((Get-Date) -lt $deadline) {
-        try {
+    while ((Get-Date) -lt $deadline)
+    {
+        try
+        {
             $response = Invoke-RestMethod -Uri $readinessUrl -TimeoutSec 5
-            if ($response.status -eq "UP") {
+            if ($response.status -eq "UP")
+            {
                 return
             }
-        } catch {
+        }
+        catch
+        {
         }
         Start-Sleep -Seconds 2
     }
@@ -131,16 +161,19 @@ function Wait-ForReadiness {
     throw "Timed out waiting for readiness at '$readinessUrl'."
 }
 
-$repoRoot = (& git rev-parse --show-toplevel 2>$null).Trim()
-if ([string]::IsNullOrWhiteSpace($repoRoot)) {
+$repoRoot = (& git rev-parse --show-toplevel 2> $null).Trim()
+if ( [string]::IsNullOrWhiteSpace($repoRoot))
+{
     throw "Could not determine the repository root."
 }
 
 $baseUri = [Uri]$BaseUrl
-if (-not $baseUri.IsAbsoluteUri) {
+if (-not $baseUri.IsAbsoluteUri)
+{
     throw "BaseUrl must be an absolute URL."
 }
-if ($baseUri.Port -lt 1) {
+if ($baseUri.Port -lt 1)
+{
     throw "BaseUrl must include an explicit port so Docker can bind the restore-drill app container."
 }
 
@@ -148,18 +181,22 @@ $jdbc = Parse-JdbcUrl -Value $JdbcUrl
 $containerDatabaseHost = Resolve-ContainerDatabaseHost -ConfiguredHost $jdbc.Host -Override $DatabaseHostForContainer
 $imageTag = Get-ImageTag -Reference $ImageReference
 
-if ([string]::IsNullOrWhiteSpace($ExpectedBuildVersion) -and -not [string]::IsNullOrWhiteSpace($imageTag) -and $imageTag -notmatch '^sha-[0-9a-f]{12}$') {
+if ([string]::IsNullOrWhiteSpace($ExpectedBuildVersion) -and -not [string]::IsNullOrWhiteSpace($imageTag) -and $imageTag -notmatch '^sha-[0-9a-f]{12}$')
+{
     $ExpectedBuildVersion = $imageTag
 }
-if ([string]::IsNullOrWhiteSpace($ExpectedShortCommitId) -and -not [string]::IsNullOrWhiteSpace($imageTag) -and $imageTag -match '^sha-(?<commit>[0-9a-f]{12})$') {
+if ([string]::IsNullOrWhiteSpace($ExpectedShortCommitId) -and -not [string]::IsNullOrWhiteSpace($imageTag) -and $imageTag -match '^sha-(?<commit>[0-9a-f]{12})$')
+{
     $ExpectedShortCommitId = $Matches.commit
 }
-if (([string]::IsNullOrWhiteSpace($ExpectedBuildVersion)) -ne ([string]::IsNullOrWhiteSpace($ExpectedShortCommitId))) {
+if (([string]::IsNullOrWhiteSpace($ExpectedBuildVersion)) -ne ([string]::IsNullOrWhiteSpace($ExpectedShortCommitId)))
+{
     throw "ExpectedBuildVersion and ExpectedShortCommitId must be provided together when release identity assertions are enabled."
 }
 
 Push-Location $repoRoot
-try {
+try
+{
     . (Join-Path $repoRoot "scripts/load-dotenv.ps1") -Path (Join-Path $repoRoot ".env") -Quiet
 
     Invoke-Docker -Arguments @("rm", "-f", $ContainerName) -AllowFailure | Out-Null
@@ -171,15 +208,15 @@ try {
         "--name",
         $ContainerName,
         "--publish",
-        "$($baseUri.Port):8080",
+        "$( $baseUri.Port ):8080",
         "--env",
         "SPRING_PROFILES_ACTIVE=prod",
         "--env",
         "DATABASE_HOST=$containerDatabaseHost",
         "--env",
-        "DATABASE_PORT=$($jdbc.Port)",
+        "DATABASE_PORT=$( $jdbc.Port )",
         "--env",
-        "DATABASE_NAME=$($jdbc.Database)",
+        "DATABASE_NAME=$( $jdbc.Database )",
         "--env",
         "DATABASE_USER=$JdbcUser",
         "--env",
@@ -203,28 +240,35 @@ try {
         "-PexternalCheck.expectedSessionStoreType=$ExpectedSessionStoreType",
         "-PexternalCheck.expectedSessionTimeout=$ExpectedSessionTimeout"
     )
-    if (-not [string]::IsNullOrWhiteSpace($ExpectedBuildVersion)) {
+    if (-not [string]::IsNullOrWhiteSpace($ExpectedBuildVersion))
+    {
         $gradleArguments += "-PexternalCheck.expectedBuildVersion=$ExpectedBuildVersion"
         $gradleArguments += "-PexternalCheck.expectedShortCommitId=$ExpectedShortCommitId"
     }
 
     Write-Host "Running externalDeploymentCheck against the restored database target."
     & $gradleCommand @gradleArguments
-    if ($LASTEXITCODE -ne 0) {
+    if ($LASTEXITCODE -ne 0)
+    {
         throw "externalDeploymentCheck failed during the restore drill."
     }
 
     Write-Host "Restore drill completed successfully with the documented session bootstrap and CSRF-backed write flow."
-} catch {
+}
+catch
+{
     Write-Warning $_
     Write-Host "Container logs for '$ContainerName':"
     Invoke-Docker -Arguments @("logs", $ContainerName) -AllowFailure | ForEach-Object {
-        if ($_.Output) {
+        if ($_.Output)
+        {
             $_.Output | ForEach-Object { Write-Host $_ }
         }
     }
     throw
-} finally {
+}
+finally
+{
     Invoke-Docker -Arguments @("rm", "-f", $ContainerName) -AllowFailure | Out-Null
     Pop-Location
 }
