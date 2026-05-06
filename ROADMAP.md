@@ -9,7 +9,7 @@ Keep this file focused on work that is still planned or in progress.
 | --- | --- |
 | Release Phase | Prerelease |
 | Breaking Change Policy | Disallowed |
-| Next Target Version | `v2.0.0` |
+| Next Target Version | `v2.0.0-RC5` |
 
 ## How To Use This File
 
@@ -23,7 +23,7 @@ Keep this file focused on work that is still planned or in progress.
 
 ## Current Priorities
 
-- Release stable `v2.0.0` after the `v2.0.0-RC4` line is accepted, update `CHANGELOG.md`, and remove the completed `2.0` track from `ROADMAP.md` once the stable release is cut.
+- Prepare `v2.0.0-RC5` with the CI-owned Spotless formatter migration, then use that release candidate as the final confidence gate before stable `v2.0.0`.
 
 ## Not Yet Refined
 
@@ -43,19 +43,13 @@ Add new rough tasks below.
 
 Status: Planned
 
-Goal: finish the stable `2.0` line after the `v2.0.0-RC4` candidate is accepted.
+Goal: prepare `v2.0.0-RC5` with final formatter ownership cleanup, then finish the stable `2.0` line after that release candidate is accepted.
 
 #### Release Confidence
+- [x] Execute `ai/PLAN_ci_owned_spotless_reformat.md` for `v2.0.0-RC5`, including the final manual IDE code-style artifact milestone. Plan lifecycle: `Planning` / `Ready`.
 - [ ] Release stable `v2.0.0`, update `CHANGELOG.md`, and remove the completed `2.0` track from `ROADMAP.md`.
 
 ## Deferred
-
-### Post-`2.0` Formatter Configuration Ownership
-
-Status: Deferred until stable `2.0` is released
-
-- [ ] Execute `ai/PLAN_ci_owned_spotless_reformat.md` for the post-`2.0` Spotless formatter ownership migration, including the final manual IDE code-style artifact milestone.
-  Plan lifecycle: `Planning` / `Ready`; execution remains deferred until stable `v2.0.0` unless explicitly selected earlier.
 
 ### Post-`2.0` Frontend AI Contract
 

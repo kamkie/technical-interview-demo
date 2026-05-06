@@ -13,7 +13,8 @@
 - Add project-local IntelliJ code style files under `.idea/codeStyles/` as a final deliverable artifact so IDE formatting is forced to converge with the same style contract used by the Gradle Spotless formatter.
 - Adjust the committed IntelliJ project style so optimize imports does not create wildcard imports.
 - Keep review history readable with three commits: one CI formatter settings/documentation commit, one repository-wide formatting and import-organization commit, then one IDE code-style artifact commit with manual verification only.
-- Roadmap tracking: `ROADMAP.md` tracks this under `Deferred` / `Post-2.0 Formatter Configuration Ownership`; execution remains deferred until stable `v2.0.0` is released unless the user explicitly selects it earlier.
+- Release target: `v2.0.0-RC5`.
+- Roadmap tracking: `ROADMAP.md` tracks this under `Ordered Plan` / `Moving to 2.0` as selected `v2.0.0-RC5` release-candidate work.
 - Success means the Gradle formatter/reformat milestones pass `spotlessCheck` and the full wrapper build without requiring `IDEA_HOME` or `IDEA_FORMATTER_BINARY`, and the final `.idea/codeStyles/` milestone passes manual IntelliJ verification.
 
 ## Scope
@@ -38,10 +39,10 @@
   - introducing a new formatter that requires an IDE or developer-local binary in CI
   - formatting ignored/generated directories such as `.gradle/`, `build/`, `.idea/` outside `.idea/codeStyles/`, `out/`, and `temp/`
   - IDE workspace metadata beyond project code-style files
-  - cutting or preparing the stable `v2.0.0` release
+  - cutting or preparing the stable `v2.0.0` release after `v2.0.0-RC5`
 
 ## Current State
-- `ROADMAP.md` now tracks this plan as deferred post-`2.0` work, not as selected current implementation work.
+- `ROADMAP.md` now tracks this plan as selected `v2.0.0-RC5` release-candidate work in the active `Moving to 2.0` track.
 - `build.gradle.kts` currently discovers `ideaFormatterBinary` from `ideaFormatterBinary`, `IDEA_FORMATTER_BINARY`, or `IDEA_HOME`, and only configures `spotless { java { ... idea() ... } }` when the binary exists.
 - If IntelliJ is absent, Java formatting is not configured, so CI can pass formatting checks without actually checking Java source formatting.
 - Current Java Spotless targets only `src/main/java/**/*.java` and `src/test/java/**/*.java`; it misses `src/externalTest/java/**/*.java` and `src/gatling/java/**/*.java`.
@@ -58,12 +59,12 @@
 
 ## Requirement Gaps And Open Questions
 - No blocking product question remains.
-- Roadmap sequencing is not a requirement gap: this plan is ready as a decision-complete execution plan, but it remains deferred until the stable `v2.0.0` release unless the user explicitly selects it earlier.
+- Roadmap sequencing is locked for `v2.0.0-RC5`: execute this plan before preparing that release candidate.
 - Exact IntelliJ `Optimize Imports` behavior is not fully reproducible in CI unless CI installs and configures IntelliJ, which is the failure mode this work is removing. Fallback: keep Spotless `importOrder` and `removeUnusedImports` as the durable CI-enforced import state, then verify IntelliJ convergence manually in the final milestone without committing source changes there.
 - If IntelliJ and Spotless disagree during the formatting commit, Spotless wins because CI must be able to reproduce the final state without an IDE.
 
 ## Locked Decisions And Assumptions
-- Execute after stable `v2.0.0` is released, or earlier only with an explicit user override.
+- Execute for release target `v2.0.0-RC5`.
 - Rename and move `Default.xml` to `tooling/formatting/intellij-exported-eclipse-java-formatter.xml`.
 - Use `tooling/formatting/intellij-exported-eclipse-java-formatter.xml` through Spotless `eclipse().configFile(...)` for Java formatting.
 - Keep `.editorconfig` as a portable editor baseline only; remove exported IntelliJ language-formatting keys that duplicate `.idea/codeStyles/` and the Eclipse formatter profile.
@@ -103,7 +104,7 @@
 
 ## Affected Artifacts
 - Planning/roadmap:
-  - `ROADMAP.md` tracks this plan under deferred post-`2.0` work and must stay aligned if execution status or sequencing changes
+  - `ROADMAP.md` tracks this plan as selected `v2.0.0-RC5` release-candidate work and must stay aligned if execution status or sequencing changes
   - this `ai/PLAN_ci_owned_spotless_reformat.md`
 - Build/settings:
   - `build.gradle.kts`
@@ -273,6 +274,10 @@
   - `./build.ps1 build` passed through the lightweight-file shortcut, reporting that only `ai/PLAN_ci_owned_spotless_reformat.md` and `ROADMAP.md` changed and that the Gradle build was skipped.
 - 2026-05-06 IDE artifact milestone revision:
   - revised the plan so `.idea/codeStyles/` is a final deliverable artifact milestone with manual IntelliJ verification only.
+  - `git diff --check` passed.
+  - `./build.ps1 build` passed through the lightweight-file shortcut, reporting that only `ai/PLAN_ci_owned_spotless_reformat.md` and `ROADMAP.md` changed and that the Gradle build was skipped.
+- 2026-05-06 release-target revision:
+  - retargeted this plan from deferred post-`2.0` work to `v2.0.0-RC5`.
   - `git diff --check` passed.
   - `./build.ps1 build` passed through the lightweight-file shortcut, reporting that only `ai/PLAN_ci_owned_spotless_reformat.md` and `ROADMAP.md` changed and that the Gradle build was skipped.
 
