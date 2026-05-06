@@ -3,14 +3,12 @@ package team.jit.technicalinterviewdemo.testing;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 
 public final class CacheTestSupport {
 
-    private CacheTestSupport() {
-    }
+    private CacheTestSupport() {}
 
     public static void clearCaches(CacheManager cacheManager, String... cacheNames) {
         clearCaches(cacheManager, List.of(cacheNames));

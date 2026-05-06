@@ -1,7 +1,6 @@
 package team.jit.technicalinterviewdemo.business.user;
 
 import java.util.Locale;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,8 +35,7 @@ public class UserAccountService {
                 "Updated user preferred language id={} login={} preferredLanguage={}",
                 updatedUser.getId(),
                 updatedUser.getExternalLogin(),
-                updatedUser.getPreferredLanguage()
-        );
+                updatedUser.getPreferredLanguage());
         return UserAccountResponse.from(updatedUser);
     }
 
@@ -52,10 +50,8 @@ public class UserAccountService {
         }
         if (!SupportedLanguages.isSupported(normalizedPreferredLanguage)) {
             throw new InvalidRequestException(
-                    "preferredLanguage must be one of: %s.".formatted(SupportedLanguages.description())
-            );
+                    "preferredLanguage must be one of: %s.".formatted(SupportedLanguages.description()));
         }
         return normalizedPreferredLanguage;
     }
 }
-

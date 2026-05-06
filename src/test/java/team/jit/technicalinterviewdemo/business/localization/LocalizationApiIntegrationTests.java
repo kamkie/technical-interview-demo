@@ -16,8 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
 import team.jit.technicalinterviewdemo.business.localization.seed.LocalizationSeedData;
-import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
 import team.jit.technicalinterviewdemo.testdata.LocalizationTestData;
+import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
 import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
 import team.jit.technicalinterviewdemo.testing.SecurityTestSupport.BrowserSession;
 
@@ -63,13 +63,12 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
     void listLocalizationsWithUnsupportedSortReturnsBadRequest() throws Exception {
-        mockMvc.perform(get("/api/localizations")
-                        .queryParam("sort", "dropTable,asc"))
+        mockMvc.perform(get("/api/localizations").queryParam("sort", "dropTable,asc"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.title").value("Invalid Request"))
-                .andExpect(jsonPath("$.detail").value(
-                        "Sort field 'dropTable' is not supported. Use one of: id, messageKey, language, createdAt, updatedAt."
-                ));
+                .andExpect(jsonPath("$.detail")
+                        .value("Sort field 'dropTable' is not supported. Use one of: id, messageKey,"
+                                + " language, createdAt, updatedAt."));
     }
 
     @Test
@@ -118,13 +117,13 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                         .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "messageKey": "info.book.created",
-                                  "language": "fr",
-                                  "messageText": "Le livre a ete cree.",
-                                  "description": "French success message for new books."
-                                }
-                                """))
+                            {
+                              "messageKey": "info.book.created",
+                              "language": "fr",
+                              "messageText": "Le livre a ete cree.",
+                              "description": "French success message for new books."
+                            }
+                            """))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.messageKey").value("info.book.created"))
@@ -140,13 +139,13 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
         mockMvc.perform(post("/api/localizations")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "messageKey": "info.book.created",
-                                  "language": "fr",
-                                  "messageText": "Le livre a ete cree.",
-                                  "description": "French success message for new books."
-                                }
-                                """))
+                            {
+                              "messageKey": "info.book.created",
+                              "language": "fr",
+                              "messageText": "Le livre a ete cree.",
+                              "description": "French success message for new books."
+                            }
+                            """))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -158,18 +157,20 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                         .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "messageKey": "error.book.not_found",
-                                  "language": "es",
-                                  "messageText": "Duplicated message.",
-                                  "description": "Should fail."
-                                }
-                                """))
+                            {
+                              "messageKey": "error.book.not_found",
+                              "language": "es",
+                              "messageText": "Duplicated message.",
+                              "description": "Should fail."
+                            }
+                            """))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.title").value("Duplicate Localization"))
-                .andExpect(jsonPath("$.detail").value("Localization with key 'error.book.not_found' and language 'es' already exists."))
+                .andExpect(jsonPath("$.detail")
+                        .value("Localization with key 'error.book.not_found' and language 'es' already exists."))
                 .andExpect(jsonPath("$.messageKey").value("error.localization.duplicate"))
-                .andExpect(jsonPath("$.message").value("A localization message with the same key and language already exists."))
+                .andExpect(jsonPath("$.message")
+                        .value("A localization message with the same key and language already exists."))
                 .andExpect(jsonPath("$.language").value("en"));
     }
 
@@ -181,13 +182,13 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                         .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "messageKey": "Invalid Key",
-                                  "language": "english",
-                                  "messageText": " ",
-                                  "description": "x"
-                                }
-                                """))
+                            {
+                              "messageKey": "Invalid Key",
+                              "language": "english",
+                              "messageText": " ",
+                              "description": "x"
+                            }
+                            """))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.title").value("Validation Failed"))
                 .andExpect(jsonPath("$.messageKey").value("error.request.validation_failed"))
@@ -206,13 +207,13 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                         .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "messageKey": "info.book.created",
-                                  "language": "it",
-                                  "messageText": "Libro creato.",
-                                  "description": "Unsupported language."
-                                }
-                                """))
+                            {
+                              "messageKey": "info.book.created",
+                              "language": "it",
+                              "messageText": "Libro creato.",
+                              "description": "Unsupported language."
+                            }
+                            """))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.title").value("Invalid Request"))
                 .andExpect(jsonPath("$.detail").value("language must be one of: en, es, de, fr, pl, uk, no."))
@@ -229,13 +230,13 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                         .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "messageKey": "error.book.not_found_custom",
-                                  "language": "fr",
-                                  "messageText": "Le livre demande est introuvable.",
-                                  "description": "French message for missing book errors."
-                                }
-                                """))
+                            {
+                              "messageKey": "error.book.not_found_custom",
+                              "language": "fr",
+                              "messageText": "Le livre demande est introuvable.",
+                              "description": "French message for missing book errors."
+                            }
+                            """))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(bookNotFoundEn.getId()))
                 .andExpect(jsonPath("$.messageKey").value("error.book.not_found_custom"))
@@ -273,13 +274,13 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                         .with(userSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "messageKey": "info.book.created",
-                                  "language": "fr",
-                                  "messageText": "Le livre a ete cree.",
-                                  "description": "French success message for new books."
-                                }
-                                """))
+                            {
+                              "messageKey": "info.book.created",
+                              "language": "fr",
+                              "messageText": "Le livre a ete cree.",
+                              "description": "French success message for new books."
+                            }
+                            """))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.title").value("Forbidden"))
                 .andExpect(jsonPath("$.detail").value("Localization management requires the ADMIN role."))
@@ -295,13 +296,13 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                         .with(adminSession.authenticatedSession())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "messageKey": "info.book.created",
-                                  "language": "fr",
-                                  "messageText": "Le livre a ete cree.",
-                                  "description": "French success message for new books."
-                                }
-                                """))
+                            {
+                              "messageKey": "info.book.created",
+                              "language": "fr",
+                              "messageText": "Le livre a ete cree.",
+                              "description": "French success message for new books."
+                            }
+                            """))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.title").value("Invalid CSRF Token"))
                 .andExpect(jsonPath("$.messageKey").value("error.request.csrf_invalid"));
@@ -328,14 +329,12 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
     }
 
     private String lastDocumentedKeySortedByMessageKey() {
-        return LocalizationSeedData.documentedKeys().stream()
-                .sorted()
-                .toList()
-                .get(documentedKeyCount() - 1);
+        return LocalizationSeedData.documentedKeys().stream().sorted().toList().get(documentedKeyCount() - 1);
     }
 
     private int totalSeededLocalizations() {
-        return LocalizationSeedData.documentedKeys().size() * LocalizationSeedData.supportedLanguages().size();
+        return LocalizationSeedData.documentedKeys().size()
+                * LocalizationSeedData.supportedLanguages().size();
     }
 
     private int totalPagesForPageSize(int pageSize) {

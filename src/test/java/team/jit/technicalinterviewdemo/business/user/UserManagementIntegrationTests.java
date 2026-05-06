@@ -12,11 +12,9 @@ import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminB
 import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.authenticatedBrowserSession;
 
 import io.micrometer.core.instrument.MeterRegistry;
-
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +23,8 @@ import org.springframework.http.MediaType;
 import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
 import team.jit.technicalinterviewdemo.business.audit.AuditLogRepository;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
-import team.jit.technicalinterviewdemo.technical.cache.CacheNames;
 import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
+import team.jit.technicalinterviewdemo.technical.cache.CacheNames;
 import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
 import team.jit.technicalinterviewdemo.testing.CacheTestSupport;
 import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
@@ -77,16 +75,17 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
                         .with(readerSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "title": "Spring in Action",
-                                  "author": "Craig Walls",
-                                  "isbn": "9781617297571",
-                                  "publicationYear": 2022
-                                }
-                                """))
+                            {
+                              "title": "Spring in Action",
+                              "author": "Craig Walls",
+                              "isbn": "9781617297571",
+                              "publicationYear": 2022
+                            }
+                            """))
                 .andExpect(status().isCreated());
 
-        UserAccount userAccount = userAccountRepository.findByProviderAndExternalLogin("github", "reader-user")
+        UserAccount userAccount = userAccountRepository
+                .findByProviderAndExternalLogin("github", "reader-user")
                 .orElseThrow();
 
         assertThat(userAccount.getRoles()).containsExactly(UserRole.USER);
@@ -103,13 +102,14 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
                         .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "name": "Architecture"
-                                }
-                                """))
+                            {
+                              "name": "Architecture"
+                            }
+                            """))
                 .andExpect(status().isCreated());
 
-        UserAccount userAccount = userAccountRepository.findByProviderAndExternalLogin("github", "admin-user")
+        UserAccount userAccount = userAccountRepository
+                .findByProviderAndExternalLogin("github", "admin-user")
                 .orElseThrow();
 
         assertThat(userAccount.getRoles()).containsExactlyInAnyOrder(UserRole.USER, UserRole.ADMIN);
@@ -117,8 +117,7 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .extracting(UserRoleGrant::getRole, UserRoleGrant::getGrantSource)
                 .containsExactlyInAnyOrder(
                         tuple(UserRole.ADMIN, UserRoleGrantSource.BOOTSTRAP),
-                        tuple(UserRole.USER, UserRoleGrantSource.AUTHENTICATED_LOGIN)
-                );
+                        tuple(UserRole.USER, UserRoleGrantSource.AUTHENTICATED_LOGIN));
     }
 
     @Test
@@ -130,24 +129,25 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
                         .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "name": "Architecture"
-                                }
-                                """))
+                            {
+                              "name": "Architecture"
+                            }
+                            """))
                 .andExpect(status().isCreated());
 
         mockMvc.perform(post("/api/categories")
                         .with(secondAdminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "name": "Operations"
-                                }
-                                """))
+                            {
+                              "name": "Operations"
+                            }
+                            """))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.detail").value("Category management requires the ADMIN role."));
 
-        UserAccount secondAdmin = userAccountRepository.findByProviderAndExternalLogin("github", "second-admin")
+        UserAccount secondAdmin = userAccountRepository
+                .findByProviderAndExternalLogin("github", "second-admin")
                 .orElseThrow();
 
         assertThat(secondAdmin.getRoles()).containsExactly(UserRole.USER);
@@ -160,8 +160,7 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
     void currentUserEndpointReturnsPersistedProfile() throws Exception {
         BrowserSession readerSession = readerSession();
 
-        mockMvc.perform(get("/api/account")
-                        .with(readerSession.authenticatedSession()))
+        mockMvc.perform(get("/api/account").with(readerSession.authenticatedSession()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.provider").value("github"))
                 .andExpect(jsonPath("$.login").value("reader-user"))
@@ -181,10 +180,10 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
                         .with(readerSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "preferredLanguage": "pl"
-                                }
-                                """))
+                            {
+                              "preferredLanguage": "pl"
+                            }
+                            """))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.preferredLanguage").value("pl"))
                 .andExpect(jsonPath("$.lastLoginAt").value(endsWith("Z")))
@@ -195,10 +194,10 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
                         .with(readerSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "name": "Architecture"
-                                }
-                                """))
+                            {
+                              "name": "Architecture"
+                            }
+                            """))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.title").value("Forbidden"))
                 .andExpect(jsonPath("$.status").value(403))
@@ -216,10 +215,10 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
                         .with(readerSession.unsafeWriteWithInvalidCsrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "preferredLanguage": "pl"
-                                }
-                                """))
+                            {
+                              "preferredLanguage": "pl"
+                            }
+                            """))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.title").value("Invalid CSRF Token"))
                 .andExpect(jsonPath("$.messageKey").value("error.request.csrf_invalid"));
@@ -229,20 +228,20 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
     void repeatedAuthenticatedRequestsRefreshLastLoginTimestamp() throws Exception {
         BrowserSession readerSession = readerSession();
 
-        mockMvc.perform(get("/api/account")
-                        .with(readerSession.authenticatedSession()))
+        mockMvc.perform(get("/api/account").with(readerSession.authenticatedSession()))
                 .andExpect(status().isOk());
 
-        UserAccount storedUser = userAccountRepository.findByProviderAndExternalLogin("github", "reader-user")
+        UserAccount storedUser = userAccountRepository
+                .findByProviderAndExternalLogin("github", "reader-user")
                 .orElseThrow();
         storedUser.setLastLoginAt(Instant.now().minus(2, ChronoUnit.DAYS));
         userAccountRepository.saveAndFlush(storedUser);
 
-        mockMvc.perform(get("/api/account")
-                        .with(readerSession.authenticatedSession()))
+        mockMvc.perform(get("/api/account").with(readerSession.authenticatedSession()))
                 .andExpect(status().isOk());
 
-        UserAccount refreshedUser = userAccountRepository.findByProviderAndExternalLogin("github", "reader-user")
+        UserAccount refreshedUser = userAccountRepository
+                .findByProviderAndExternalLogin("github", "reader-user")
                 .orElseThrow();
         assertThat(refreshedUser.getLastLoginAt()).isAfter(Instant.now().minus(1, ChronoUnit.HOURS));
     }
@@ -254,30 +253,31 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
         BrowserSession readerSession = readerSession();
         BrowserSession adminSession = adminSession();
 
-        mockMvc.perform(get("/api/account")
-                        .with(readerSession.authenticatedSession()))
+        mockMvc.perform(get("/api/account").with(readerSession.authenticatedSession()))
                 .andExpect(status().isOk());
         mockMvc.perform(put("/api/account/language")
                         .with(readerSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "preferredLanguage": "fr"
-                                }
-                                """))
+                            {
+                              "preferredLanguage": "fr"
+                            }
+                            """))
                 .andExpect(status().isOk());
         mockMvc.perform(post("/api/categories")
                         .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "name": "Architecture"
-                                }
-                                """))
+                            {
+                              "name": "Architecture"
+                            }
+                            """))
                 .andExpect(status().isCreated());
 
-        assertThat(counterValue(USER_OPERATIONS, "operation", "create") - createBefore).isEqualTo(2.0d);
-        assertThat(counterValue(USER_OPERATIONS, "operation", "updatePreferredLanguage") - updatePreferenceBefore).isEqualTo(1.0d);
+        assertThat(counterValue(USER_OPERATIONS, "operation", "create") - createBefore)
+                .isEqualTo(2.0d);
+        assertThat(counterValue(USER_OPERATIONS, "operation", "updatePreferredLanguage") - updatePreferenceBefore)
+                .isEqualTo(1.0d);
         assertThat(gaugeValue(USER_TOTAL)).isEqualTo((double) userAccountRepository.count());
         assertThat(gaugeValue(ADMIN_TOTAL)).isEqualTo(1.0d);
     }
@@ -287,12 +287,14 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
     }
 
     private double counterValue(String meterName, String... tags) {
-        io.micrometer.core.instrument.Counter counter = meterRegistry.find(meterName).tags(tags).counter();
+        io.micrometer.core.instrument.Counter counter =
+                meterRegistry.find(meterName).tags(tags).counter();
         return counter == null ? 0.0d : counter.count();
     }
 
     private double gaugeValue(String meterName) {
-        io.micrometer.core.instrument.Gauge gauge = meterRegistry.find(meterName).gauge();
+        io.micrometer.core.instrument.Gauge gauge =
+                meterRegistry.find(meterName).gauge();
         assertThat(gauge).isNotNull();
         return gauge.value();
     }

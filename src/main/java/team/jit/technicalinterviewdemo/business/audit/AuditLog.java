@@ -15,7 +15,6 @@ import jakarta.persistence.Table;
 import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -70,8 +69,7 @@ public class AuditLog {
             AuditAction action,
             UserAccount actorUser,
             String actorLogin,
-            String summary
-    ) {
+            String summary) {
         this(targetType, targetId, action, actorUser, actorLogin, summary, Map.of());
     }
 
@@ -82,8 +80,7 @@ public class AuditLog {
             UserAccount actorUser,
             String actorLogin,
             String summary,
-            Map<String, Object> details
-    ) {
+            Map<String, Object> details) {
         this.targetType = targetType;
         this.targetId = targetId;
         this.action = action;

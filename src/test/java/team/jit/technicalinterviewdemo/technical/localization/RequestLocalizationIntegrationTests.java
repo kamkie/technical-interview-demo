@@ -5,7 +5,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import jakarta.servlet.http.Cookie;
-
 import org.junit.jupiter.api.Test;
 import team.jit.technicalinterviewdemo.testing.AbstractBookCatalogMockMvcIntegrationTest;
 import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
@@ -15,8 +14,7 @@ class RequestLocalizationIntegrationTests extends AbstractBookCatalogMockMvcInte
 
     @Test
     void acceptLanguageHeaderReturnsLocalizedErrorMessage() throws Exception {
-        mockMvc.perform(get("/api/books/{id}", 9999)
-                        .header("Accept-Language", "es-ES,es;q=0.9,en;q=0.8"))
+        mockMvc.perform(get("/api/books/{id}", 9999).header("Accept-Language", "es-ES,es;q=0.9,en;q=0.8"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.title").value("Book Not Found"))
                 .andExpect(jsonPath("$.detail").value("Book with id 9999 was not found."))
@@ -34,9 +32,8 @@ class RequestLocalizationIntegrationTests extends AbstractBookCatalogMockMvcInte
                         .header("Accept-Language", "es-ES,es;q=0.9"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.title").value("Invalid Request"))
-                .andExpect(jsonPath("$.detail").value(
-                        "Use either 'year' or the 'yearFrom'/'yearTo' range parameters, not both."
-                ))
+                .andExpect(jsonPath("$.detail")
+                        .value("Use either 'year' or the 'yearFrom'/'yearTo' range parameters, not both."))
                 .andExpect(jsonPath("$.messageKey").value("error.request.invalid"))
                 .andExpect(jsonPath("$.message").value("Zapyt ye nevalidnym."))
                 .andExpect(jsonPath("$.language").value("uk"));
@@ -77,9 +74,8 @@ class RequestLocalizationIntegrationTests extends AbstractBookCatalogMockMvcInte
                         .cookie(new Cookie("language", "no")))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.title").value("Invalid Request"))
-                .andExpect(jsonPath("$.detail").value(
-                        "Use either 'year' or the 'yearFrom'/'yearTo' range parameters, not both."
-                ))
+                .andExpect(jsonPath("$.detail")
+                        .value("Use either 'year' or the 'yearFrom'/'yearTo' range parameters, not both."))
                 .andExpect(jsonPath("$.messageKey").value("error.request.invalid"))
                 .andExpect(jsonPath("$.message").value("Foresporselen er ugyldig."))
                 .andExpect(jsonPath("$.language").value("no"));

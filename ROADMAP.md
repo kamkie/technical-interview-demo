@@ -62,12 +62,6 @@ Goal: finish the stable `2.0` line after the security alert batch is resolved by
 
 ## Deferred
 
-### Post-`2.0` Formatter Configuration Ownership
-
-Status: Deferred until stable `2.0` is released
-
-- [ ] Migrate Java formatting to Palantir Java Format through Spotless using `ai/PLAN_palantir_spotless_formatter_migration.md`; include Palantir IntelliJ plugin guidance, remove old IntelliJ/Eclipse formatter traces, keep preparation changes and the mechanical project reformat in separate commits.
-
 ### Post-`2.0` Frontend AI Contract
 
 Status: Deferred until stable `2.0` is released

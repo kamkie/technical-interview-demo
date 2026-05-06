@@ -43,8 +43,7 @@ public class CurrentApplicationSessionResolver {
     }
 
     private Optional<Session> currentSession(HttpServletRequest request) {
-        return currentSessionId(request)
-                .map(sessionRepository::findById);
+        return currentSessionId(request).map(sessionRepository::findById);
     }
 
     private boolean hasAuthenticatedSecurityContext(Session session) {

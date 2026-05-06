@@ -6,4 +6,3 @@ public class DuplicateIsbnException extends RuntimeException {
         super("Book with ISBN %s already exists.".formatted(isbn));
     }
 }
-

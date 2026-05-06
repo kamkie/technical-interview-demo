@@ -13,8 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.web.csrf.CsrfException;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.csrf.CsrfException;
 import org.springframework.stereotype.Component;
 import team.jit.technicalinterviewdemo.technical.api.ApiProblemFactory;
 
@@ -22,16 +22,15 @@ import team.jit.technicalinterviewdemo.technical.api.ApiProblemFactory;
 @RequiredArgsConstructor
 public class ApiAccessDeniedHandler implements AccessDeniedHandler {
 
-    private static final ObjectMapper OBJECT_MAPPER = JsonMapper.builder().findAndAddModules().build();
+    private static final ObjectMapper OBJECT_MAPPER =
+            JsonMapper.builder().findAndAddModules().build();
 
     private final ApiProblemFactory apiProblemFactory;
 
     @Override
     public void handle(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            AccessDeniedException accessDeniedException
-    ) throws IOException, ServletException {
+            HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException)
+            throws IOException, ServletException {
         ProblemDetail problemDetail = accessDeniedException instanceof CsrfException
                 ? apiProblemFactory.clientProblem(
                         HttpStatus.FORBIDDEN,
@@ -39,22 +38,22 @@ public class ApiAccessDeniedHandler implements AccessDeniedHandler {
                         "A valid CSRF token is required to perform this operation.",
                         "error.request.csrf_invalid",
                         request,
-                        Map.of("exception", accessDeniedException.getClass().getSimpleName())
-                )
+                        Map.of("exception", accessDeniedException.getClass().getSimpleName()))
                 : apiProblemFactory.clientProblem(
                         HttpStatus.FORBIDDEN,
                         "Forbidden",
-                        accessDeniedException.getMessage() == null || accessDeniedException.getMessage().isBlank()
+                        accessDeniedException.getMessage() == null
+                                        || accessDeniedException.getMessage().isBlank()
                                 ? "Access is denied."
                                 : accessDeniedException.getMessage(),
                         "error.request.forbidden",
                         request,
-                        Map.of("exception", accessDeniedException.getClass().getSimpleName())
-                );
+                        Map.of("exception", accessDeniedException.getClass().getSimpleName()));
         writeProblem(response, problemDetail, HttpStatus.FORBIDDEN);
     }
 
-    private void writeProblem(HttpServletResponse response, ProblemDetail problemDetail, HttpStatus status) throws IOException {
+    private void writeProblem(HttpServletResponse response, ProblemDetail problemDetail, HttpStatus status)
+            throws IOException {
         response.setStatus(status.value());
         response.setCharacterEncoding(java.nio.charset.StandardCharsets.UTF_8.name());
         response.setContentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE);

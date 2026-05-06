@@ -7,7 +7,6 @@ import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.setAdm
 
 import java.util.List;
 import java.util.Map;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,11 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import team.jit.technicalinterviewdemo.business.localization.seed.LocalizationSeedData;
-import team.jit.technicalinterviewdemo.technical.localization.LocalizationContext;
 import team.jit.technicalinterviewdemo.technical.cache.CacheNames;
+import team.jit.technicalinterviewdemo.technical.localization.LocalizationContext;
+import team.jit.technicalinterviewdemo.testdata.LocalizationTestData;
 import team.jit.technicalinterviewdemo.testing.CacheTestSupport;
 import team.jit.technicalinterviewdemo.testing.IntegrationSpringBootTest;
-import team.jit.technicalinterviewdemo.testdata.LocalizationTestData;
 
 @IntegrationSpringBootTest
 class LocalizationServiceTests {
@@ -53,7 +52,8 @@ class LocalizationServiceTests {
     @Test
     void getMessageReturnsSeededMessageForRequestedLanguage() {
         String message = localizationService.getMessage("error.book.not_found", "EN");
-        Localization storedMessage = localizationRepository.findByMessageKeyAndLanguage("error.book.not_found", "en")
+        Localization storedMessage = localizationRepository
+                .findByMessageKeyAndLanguage("error.book.not_found", "en")
                 .orElseThrow();
 
         assertThat(message).isEqualTo("The requested book was not found.");
@@ -70,7 +70,8 @@ class LocalizationServiceTests {
 
     @Test
     void findMessageWithFallbackReturnsResolvedLanguage() {
-        Localization message = localizationService.findByMessageKeyAndLanguageWithFallback("error.request.invalid", "it", "en");
+        Localization message =
+                localizationService.findByMessageKeyAndLanguageWithFallback("error.request.invalid", "it", "en");
 
         assertThat(message.getLanguage()).isEqualTo("en");
         assertThat(message.getMessageText()).isEqualTo("The request is invalid.");
@@ -78,9 +79,11 @@ class LocalizationServiceTests {
 
     @Test
     void findMessageWithFallbackCachesRequestedLanguageHitUsingNormalizedLookupKey() {
-        Localization message = localizationService.findByMessageKeyAndLanguageWithFallback("error.book.not_found", "ES", "en");
+        Localization message =
+                localizationService.findByMessageKeyAndLanguageWithFallback("error.book.not_found", "ES", "en");
 
-        Localization cachedMessage = lookupCache().get(lookupCacheKey("error.book.not_found", "es", "en"), Localization.class);
+        Localization cachedMessage =
+                lookupCache().get(lookupCacheKey("error.book.not_found", "es", "en"), Localization.class);
 
         assertThat(message.getLanguage()).isEqualTo("es");
         assertThat(message.getMessageText()).isEqualTo("No se encontro el libro solicitado.");
@@ -93,7 +96,8 @@ class LocalizationServiceTests {
     void findMessageForCurrentLanguageUsesLocalizationContext() {
         localizationContext.setCurrentLanguage("uk");
 
-        Localization message = localizationService.findByMessageKeyForCurrentLanguageWithFallback("error.request.invalid");
+        Localization message =
+                localizationService.findByMessageKeyForCurrentLanguageWithFallback("error.request.invalid");
 
         assertThat(message.getLanguage()).isEqualTo("uk");
         assertThat(message.getMessageText()).isEqualTo("Zapyt ye nevalidnym.");
@@ -112,7 +116,8 @@ class LocalizationServiceTests {
         Map<String, String> messages = localizationService.getAllMessages(" EN ");
 
         @SuppressWarnings("unchecked")
-        Map<String, String> cachedMessages = (Map<String, String>) cache(CacheNames.LOCALIZATION_MESSAGE_MAPS).get("en").get();
+        Map<String, String> cachedMessages = (Map<String, String>)
+                cache(CacheNames.LOCALIZATION_MESSAGE_MAPS).get("en").get();
 
         assertThat(cachedMessages).isEqualTo(messages);
     }
@@ -122,7 +127,8 @@ class LocalizationServiceTests {
         List<Localization> messages = localizationService.findAllByLanguage(" EN ");
 
         @SuppressWarnings("unchecked")
-        List<Localization> cachedMessages = (List<Localization>) cache(CacheNames.LOCALIZATION_LISTS).get("en").get();
+        List<Localization> cachedMessages = (List<Localization>)
+                cache(CacheNames.LOCALIZATION_LISTS).get("en").get();
 
         assertThat(cachedMessages).isEqualTo(messages);
     }
@@ -141,16 +147,20 @@ class LocalizationServiceTests {
     void getMessageWithFallbackThrowsWhenMessageIsMissingInAllLanguages() {
         assertThatThrownBy(() -> localizationService.getMessageWithFallback("error.unknown", "fr", "en"))
                 .isInstanceOf(LocalizationNotFoundException.class)
-                .hasMessage("Localization with key 'error.unknown' was not found for language 'fr' or fallback language 'en'.");
+                .hasMessage("Localization with key 'error.unknown' was not found for language 'fr' or fallback language"
+                        + " 'en'.");
     }
 
     @Test
     void findMessageWithFallbackDoesNotCacheMissingLookup() {
-        assertThatThrownBy(() -> localizationService.findByMessageKeyAndLanguageWithFallback("error.unknown", "fr", "en"))
+        assertThatThrownBy(
+                        () -> localizationService.findByMessageKeyAndLanguageWithFallback("error.unknown", "fr", "en"))
                 .isInstanceOf(LocalizationNotFoundException.class)
-                .hasMessage("Localization with key 'error.unknown' was not found for language 'fr' or fallback language 'en'.");
+                .hasMessage("Localization with key 'error.unknown' was not found for language 'fr' or fallback language"
+                        + " 'en'.");
 
-        assertThat(lookupCache().get(lookupCacheKey("error.unknown", "fr", "en"))).isNull();
+        assertThat(lookupCache().get(lookupCacheKey("error.unknown", "fr", "en")))
+                .isNull();
     }
 
     @Test
@@ -166,11 +176,7 @@ class LocalizationServiceTests {
         setAdminAuthenticatedUser();
 
         Localization createdMessage = localizationService.create(new LocalizationRequest(
-                "info.book.created",
-                "fr",
-                "Le livre a ete cree.",
-                "French success message for new books."
-        ));
+                "info.book.created", "fr", "Le livre a ete cree.", "French success message for new books."));
 
         assertLocalizationCachesCleared();
         assertThat(createdMessage.getMessageKey()).isEqualTo("info.book.created");
@@ -183,12 +189,13 @@ class LocalizationServiceTests {
         setAdminAuthenticatedUser();
         Localization message = localizationService.findByMessageKeyAndLanguage("error.book.not_found", "es");
 
-        localizationService.update(message.getId(), new LocalizationRequest(
-                "error.book.not_found",
-                "es",
-                "No se encontro el libro solicitado. Actualizado.",
-                "Updated Spanish missing-book message."
-        ));
+        localizationService.update(
+                message.getId(),
+                new LocalizationRequest(
+                        "error.book.not_found",
+                        "es",
+                        "No se encontro el libro solicitado. Actualizado.",
+                        "Updated Spanish missing-book message."));
 
         assertLocalizationCachesCleared();
         assertThat(localizationService.getMessageWithFallback("error.book.not_found", "es", "en"))
@@ -215,13 +222,15 @@ class LocalizationServiceTests {
         assertThat(localizationService.getAllMessages("EN"))
                 .containsEntry("error.request.invalid", "The request is invalid.");
 
-        assertThat(lookupCache().get(lookupCacheKey("error.book.not_found", "es", "en"))).isNotNull();
+        assertThat(lookupCache().get(lookupCacheKey("error.book.not_found", "es", "en")))
+                .isNotNull();
         assertThat(cache(CacheNames.LOCALIZATION_LISTS).get("en")).isNotNull();
         assertThat(cache(CacheNames.LOCALIZATION_MESSAGE_MAPS).get("en")).isNotNull();
     }
 
     private void assertLocalizationCachesCleared() {
-        assertThat(lookupCache().get(lookupCacheKey("error.book.not_found", "es", "en"))).isNull();
+        assertThat(lookupCache().get(lookupCacheKey("error.book.not_found", "es", "en")))
+                .isNull();
         assertThat(cache(CacheNames.LOCALIZATION_LISTS).get("en")).isNull();
         assertThat(cache(CacheNames.LOCALIZATION_MESSAGE_MAPS).get("en")).isNull();
     }
@@ -231,8 +240,7 @@ class LocalizationServiceTests {
                 cacheManager,
                 CacheNames.LOCALIZATION_LOOKUPS,
                 CacheNames.LOCALIZATION_LISTS,
-                CacheNames.LOCALIZATION_MESSAGE_MAPS
-        );
+                CacheNames.LOCALIZATION_MESSAGE_MAPS);
     }
 
     private Cache lookupCache() {

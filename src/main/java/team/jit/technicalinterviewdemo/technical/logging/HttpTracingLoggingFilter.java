@@ -7,10 +7,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.util.UUID;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -33,11 +31,8 @@ public class HttpTracingLoggingFilter extends OncePerRequestFilter {
     private final Tracer tracer;
 
     @Override
-    protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
-    ) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         long startTimeNanos = System.nanoTime();
         boolean shouldLog = shouldLogRequest(request);
         String requestId = resolveRequestId(request);
@@ -54,8 +49,7 @@ public class HttpTracingLoggingFilter extends OncePerRequestFilter {
                         requestMethod,
                         requestPath,
                         SensitiveDataSanitizer.sanitizeParameters(request.getParameterMap()),
-                        SensitiveDataSanitizer.sanitizeForLog(response.getHeader(TRACEPARENT_HEADER))
-                );
+                        SensitiveDataSanitizer.sanitizeForLog(response.getHeader(TRACEPARENT_HEADER)));
             }
             filterChain.doFilter(request, response);
         } finally {
@@ -68,8 +62,7 @@ public class HttpTracingLoggingFilter extends OncePerRequestFilter {
                         requestPath,
                         response.getStatus(),
                         toDurationMillis(startTimeNanos),
-                        SensitiveDataSanitizer.sanitizeForLog(response.getHeader(TRACEPARENT_HEADER))
-                );
+                        SensitiveDataSanitizer.sanitizeForLog(response.getHeader(TRACEPARENT_HEADER)));
             }
             MDC.remove(REQUEST_ID_MDC_KEY);
         }
@@ -105,9 +98,8 @@ public class HttpTracingLoggingFilter extends OncePerRequestFilter {
     private boolean shouldLogRequest(HttpServletRequest request) {
         String contextPath = request.getContextPath() == null ? "" : request.getContextPath();
         String requestUri = request.getRequestURI();
-        String pathWithinApplication = requestUri.startsWith(contextPath)
-                ? requestUri.substring(contextPath.length())
-                : requestUri;
+        String pathWithinApplication =
+                requestUri.startsWith(contextPath) ? requestUri.substring(contextPath.length()) : requestUri;
 
         return !pathWithinApplication.startsWith(ACTUATOR_HEALTH_PATH);
     }

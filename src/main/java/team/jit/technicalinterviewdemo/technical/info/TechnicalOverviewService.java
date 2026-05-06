@@ -18,8 +18,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.core.SpringSecurityCoreVersion;
 import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
 import org.springframework.stereotype.Service;
-import team.jit.technicalinterviewdemo.technical.security.SecuritySettingsProperties;
 import team.jit.technicalinterviewdemo.technical.security.SameSiteCsrfContract;
+import team.jit.technicalinterviewdemo.technical.security.SecuritySettingsProperties;
 
 @Service
 @RequiredArgsConstructor
@@ -42,44 +42,37 @@ public class TechnicalOverviewService {
                         buildProperties.getGroup(),
                         buildProperties.getArtifact(),
                         buildProperties.getVersion(),
-                        buildProperties.getTime()
-                ),
+                        buildProperties.getTime()),
                 new TechnicalOverviewResponse.GitDetails(
                         gitProperties.getBranch(),
                         gitProperties.getCommitId(),
                         gitProperties.getShortCommitId(),
-                        gitProperties.getCommitTime()
-                ),
+                        gitProperties.getCommitTime()),
                 new TechnicalOverviewResponse.RuntimeDetails(
                         environment.getProperty("spring.application.name", "technical-interview-demo"),
                         System.getProperty("java.version", "unknown"),
                         System.getProperty("java.vendor", "unknown"),
-                        activeProfiles
-                ),
+                        activeProfiles),
                 dependencyVersions(),
                 new TechnicalOverviewResponse.ConfigurationDetails(
                         new TechnicalOverviewResponse.PaginationDetails(
                                 intProperty("spring.data.web.pageable.default-page-size", 20),
-                                intProperty("spring.data.web.pageable.max-page-size", 100)
-                        ),
+                                intProperty("spring.data.web.pageable.max-page-size", 100)),
                         new TechnicalOverviewResponse.SessionDetails(
                                 property("spring.session.store-type", "unknown"),
                                 property("server.servlet.session.timeout", "unknown"),
                                 property("server.servlet.session.cookie.name", "unknown"),
                                 booleanProperty("server.servlet.session.cookie.http-only", true),
-                                property("server.servlet.session.cookie.same-site", "unknown")
-                        ),
+                                property("server.servlet.session.cookie.same-site", "unknown")),
                         new TechnicalOverviewResponse.ObservabilityDetails(
                                 listProperty("management.endpoints.web.exposure.include"),
                                 booleanProperty("management.endpoint.health.probes.enabled", false),
-                                doubleProperty("management.tracing.sampling.probability", 0.0d)
-                        ),
+                                doubleProperty("management.tracing.sampling.probability", 0.0d)),
                         new TechnicalOverviewResponse.DocumentationDetails(
                                 DOCS_PATH,
                                 OPEN_API_JSON_PATH,
                                 OPEN_API_YAML_PATH,
-                                property("springdoc.api-docs.version", "unknown")
-                        ),
+                                property("springdoc.api-docs.version", "unknown")),
                         new TechnicalOverviewResponse.SecurityDetails(
                                 true,
                                 SameSiteCsrfContract.COOKIE_NAME,
@@ -99,17 +92,14 @@ public class TechnicalOverviewService {
                                                 "/api/books",
                                                 "/api/categories",
                                                 "/api/localizations",
-                                                "/api/account/language"
-                                        ),
-                                        List.of("per-client-throttling", "request-size-enforcement", "rejection-visibility")
-                                )
-                        ),
+                                                "/api/account/language"),
+                                        List.of(
+                                                "per-client-throttling",
+                                                "request-size-enforcement",
+                                                "rejection-visibility"))),
                         new TechnicalOverviewResponse.ShutdownDetails(
                                 property("server.shutdown", "unknown"),
-                                property("spring.lifecycle.timeout-per-shutdown-phase", "unknown")
-                        )
-                )
-        );
+                                property("spring.lifecycle.timeout-per-shutdown-phase", "unknown"))));
         return response;
     }
 

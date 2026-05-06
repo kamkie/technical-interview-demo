@@ -1,9 +1,7 @@
 package team.jit.technicalinterviewdemo.technical.cache;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
-
 import java.time.Duration;
-
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
@@ -23,36 +21,31 @@ public class CachingConfiguration {
                 Caffeine.newBuilder()
                         .maximumSize(50)
                         .expireAfterWrite(Duration.ofMinutes(30))
-                        .build()
-        );
+                        .build());
         cacheManager.registerCustomCache(
                 CacheNames.CATEGORY_DIRECTORY,
                 Caffeine.newBuilder()
                         .maximumSize(10)
                         .expireAfterWrite(Duration.ofMinutes(30))
-                        .build()
-        );
+                        .build());
         cacheManager.registerCustomCache(
                 CacheNames.LOCALIZATION_LOOKUPS,
                 Caffeine.newBuilder()
                         .maximumSize(1_000)
                         .expireAfterWrite(Duration.ofMinutes(15))
-                        .build()
-        );
+                        .build());
         cacheManager.registerCustomCache(
                 CacheNames.LOCALIZATION_LISTS,
                 Caffeine.newBuilder()
                         .maximumSize(100)
                         .expireAfterWrite(Duration.ofMinutes(15))
-                        .build()
-        );
+                        .build());
         cacheManager.registerCustomCache(
                 CacheNames.LOCALIZATION_MESSAGE_MAPS,
                 Caffeine.newBuilder()
                         .maximumSize(100)
                         .expireAfterWrite(Duration.ofMinutes(15))
-                        .build()
-        );
+                        .build());
         return cacheManager;
     }
 }

@@ -38,9 +38,7 @@ class AuditLogApiDocumentationTests extends AbstractDocumentationIntegrationTest
                 "Created book 'Spring in Action' with ISBN 9781617297571.",
                 Map.of(
                         "title", "Spring in Action",
-                        "isbn", "9781617297571"
-                )
-        ));
+                        "isbn", "9781617297571")));
         auditLogRepository.saveAndFlush(new AuditLog(
                 AuditTargetType.LOCALIZATION_MESSAGE,
                 103L,
@@ -50,9 +48,7 @@ class AuditLogApiDocumentationTests extends AbstractDocumentationIntegrationTest
                 "Deleted localization message 'error.book.not_found' in language fr.",
                 Map.of(
                         "messageKey", "error.book.not_found",
-                        "language", "fr"
-                )
-        ));
+                        "language", "fr")));
     }
 
     @Test
@@ -70,41 +66,50 @@ class AuditLogApiDocumentationTests extends AbstractDocumentationIntegrationTest
                 .andDo(documentEndpoint(
                         "audit/list-audit-logs",
                         queryParameters(
-                                parameterWithName("targetType").optional().description(
-                                        "Exact audit target type filter. Supported values: `BOOK`, `CATEGORY`, `LOCALIZATION_MESSAGE`, `USER_ACCOUNT`, `AUTHENTICATION`."
-                                ),
-                                parameterWithName("action").optional().description(
-                                        "Exact audit action filter. Supported values: `CREATE`, `UPDATE`, `DELETE`, `LOGIN_SUCCESS`, `LOGIN_FAILURE`, `LOGOUT`, `SESSION_REJECTION`."
-                                ),
+                                parameterWithName("targetType")
+                                        .optional()
+                                        .description(
+                                                "Exact audit target type filter. Supported values: `BOOK`, `CATEGORY`,"
+                                                        + " `LOCALIZATION_MESSAGE`, `USER_ACCOUNT`, `AUTHENTICATION`."),
+                                parameterWithName("action")
+                                        .optional()
+                                        .description("Exact audit action filter. Supported values: `CREATE`, `UPDATE`,"
+                                                + " `DELETE`, `LOGIN_SUCCESS`, `LOGIN_FAILURE`, `LOGOUT`,"
+                                                + " `SESSION_REJECTION`."),
                                 parameterWithName("actorLogin").optional().description("Exact actor login filter."),
                                 parameterWithName("page").optional().description("Zero-based page index."),
                                 parameterWithName("size").optional().description("Page size capped by the server."),
-                                parameterWithName("sort").optional().description(
-                                        "Sort expression in the form `property,direction`. Repeat the parameter for multiple sort fields. Supported properties: `id`, `targetType`, `targetId`, `action`, `actorLogin`, `createdAt`. Default sort is newest-first by `id,desc`."
-                                )
-                        ),
+                                parameterWithName("sort")
+                                        .optional()
+                                        .description("Sort expression in the form `property,direction`. Repeat the"
+                                                + " parameter for multiple sort fields. Supported properties:"
+                                                + " `id`, `targetType`, `targetId`, `action`, `actorLogin`,"
+                                                + " `createdAt`. Default sort is newest-first by `id,desc`.")),
                         responseHeaders(commonResponseHeaders()),
                         relaxedResponseFields(
                                 fieldWithPath("content[].id").description("Audit log identifier."),
                                 fieldWithPath("content[].targetType").description("Type of audited target."),
                                 fieldWithPath("content[].targetId").description("Identifier of the audited target."),
                                 fieldWithPath("content[].action").description("Recorded action."),
-                                fieldWithPath("content[].actorLogin").description("Login of the acting user, or `system` for non-user writes."),
+                                fieldWithPath("content[].actorLogin")
+                                        .description("Login of the acting user, or `system` for non-user writes."),
                                 fieldWithPath("content[].summary").description("Human-readable audit summary."),
-                                subsectionWithPath("content[].details").description("Compact structured audit details for ADMIN review."),
-                                fieldWithPath("content[].createdAt").description("Creation timestamp as a UTC instant."),
+                                subsectionWithPath("content[].details")
+                                        .description("Compact structured audit details for ADMIN review."),
+                                fieldWithPath("content[].createdAt")
+                                        .description("Creation timestamp as a UTC instant."),
                                 subsectionWithPath("pageable").description("Pagination request metadata."),
                                 subsectionWithPath("sort").description("Applied sort metadata."),
                                 fieldWithPath("totalPages").description("Total number of pages."),
-                                fieldWithPath("totalElements").description("Total number of matching audit log entries."),
+                                fieldWithPath("totalElements")
+                                        .description("Total number of matching audit log entries."),
                                 fieldWithPath("last").description("Whether this page is the last page."),
                                 fieldWithPath("size").description("Requested page size."),
                                 fieldWithPath("number").description("Current zero-based page index."),
-                                fieldWithPath("numberOfElements").description("Number of audit entries returned in the current page."),
+                                fieldWithPath("numberOfElements")
+                                        .description("Number of audit entries returned in the current page."),
                                 fieldWithPath("first").description("Whether this page is the first page."),
-                                fieldWithPath("empty").description("Whether the page content is empty.")
-                        )
-                ));
+                                fieldWithPath("empty").description("Whether the page content is empty."))));
     }
 
     @Test
@@ -113,15 +118,12 @@ class AuditLogApiDocumentationTests extends AbstractDocumentationIntegrationTest
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.title").value("Unauthorized"))
                 .andDo(documentEndpoint(
-                        "errors/list-audit-logs-unauthorized",
-                        relaxedResponseFields(problemResponseFields())
-                ));
+                        "errors/list-audit-logs-unauthorized", relaxedResponseFields(problemResponseFields())));
     }
 
     @Test
     void documentListAuditLogsForbiddenError() throws Exception {
-        mockMvc.perform(get("/api/admin/audit-logs")
-                        .with(oauthUser("reader-user")))
+        mockMvc.perform(get("/api/admin/audit-logs").with(oauthUser("reader-user")))
                 .andExpect(status().isForbidden())
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
@@ -129,7 +131,6 @@ class AuditLogApiDocumentationTests extends AbstractDocumentationIntegrationTest
                 .andDo(documentEndpoint(
                         "errors/list-audit-logs-forbidden",
                         responseHeaders(commonResponseHeaders()),
-                        relaxedResponseFields(problemResponseFields())
-                ));
+                        relaxedResponseFields(problemResponseFields())));
     }
 }

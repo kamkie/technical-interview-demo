@@ -19,9 +19,8 @@ abstract class ExternalHttpTestSupport {
     protected static final String SESSION_COOKIE_NAME = "technical-interview-demo-session";
     protected static final String CSRF_COOKIE_NAME = "XSRF-TOKEN";
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
-            .connectTimeout(HTTP_TIMEOUT)
-            .build();
+    private static final HttpClient HTTP_CLIENT =
+            HttpClient.newBuilder().connectTimeout(HTTP_TIMEOUT).build();
 
     protected HttpResponse<String> get(String path, String accept) throws IOException, InterruptedException {
         return get(path, accept, Map.of());
@@ -50,17 +49,14 @@ abstract class ExternalHttpTestSupport {
     }
 
     protected HttpResponse<String> putJsonWithCookies(
-            String path,
-            String accept,
-            Map<String, String> headers,
-            Map<String, String> cookies,
-            String jsonBody
-    ) throws IOException, InterruptedException {
+            String path, String accept, Map<String, String> headers, Map<String, String> cookies, String jsonBody)
+            throws IOException, InterruptedException {
         return send("PUT", path, accept, headers, cookies, jsonBody);
     }
 
     protected String requiredHeader(HttpResponse<String> response, String headerName) {
-        return response.headers().firstValue(headerName)
+        return response.headers()
+                .firstValue(headerName)
                 .orElseThrow(() -> new AssertionError("Expected header '" + headerName + "' to be present."));
     }
 
@@ -99,24 +95,24 @@ abstract class ExternalHttpTestSupport {
             String accept,
             Map<String, String> headers,
             Map<String, String> cookies,
-            String body
-    ) throws IOException, InterruptedException {
-        HttpRequest.Builder builder = HttpRequest.newBuilder(uriFor(path))
-                .timeout(HTTP_TIMEOUT)
-                .header("Accept", accept);
+            String body)
+            throws IOException, InterruptedException {
+        HttpRequest.Builder builder =
+                HttpRequest.newBuilder(uriFor(path)).timeout(HTTP_TIMEOUT).header("Accept", accept);
         headers.forEach(builder::header);
         if (!cookies.isEmpty()) {
             builder.header("Cookie", cookieHeader(cookies));
         }
 
-        HttpRequest request = switch (method) {
-            case "GET" -> builder.GET().build();
-            case "PUT" -> builder
-                    .header("Content-Type", "application/json")
-                    .PUT(HttpRequest.BodyPublishers.ofString(body == null ? "" : body))
-                    .build();
-            default -> throw new IllegalArgumentException("Unsupported HTTP method: " + method);
-        };
+        HttpRequest request =
+                switch (method) {
+                    case "GET" -> builder.GET().build();
+                    case "PUT" ->
+                        builder.header("Content-Type", "application/json")
+                                .PUT(HttpRequest.BodyPublishers.ofString(body == null ? "" : body))
+                                .build();
+                    default -> throw new IllegalArgumentException("Unsupported HTTP method: " + method);
+                };
         return HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
@@ -137,13 +133,10 @@ abstract class ExternalHttpTestSupport {
                 System.getProperty("externalBaseUrl"),
                 System.getProperty("baseUrl"),
                 System.getenv("EXTERNAL_BASE_URL"),
-                System.getenv("BASE_URL")
-        );
+                System.getenv("BASE_URL"));
         if (configured == null) {
-            throw new IllegalStateException(
-                    "External base URL is not configured. Set one of: "
-                            + "-Dexternal.baseUrl, -DexternalBaseUrl, -DbaseUrl, EXTERNAL_BASE_URL, BASE_URL"
-            );
+            throw new IllegalStateException("External base URL is not configured. Set one of: "
+                    + "-Dexternal.baseUrl, -DexternalBaseUrl, -DbaseUrl, EXTERNAL_BASE_URL, BASE_URL");
         }
         String trimmed = configured.trim();
         if (trimmed.endsWith("/")) {
@@ -154,7 +147,10 @@ abstract class ExternalHttpTestSupport {
 
     protected static String firstNonBlank(String... values) {
         for (String value : values) {
-            if (Optional.ofNullable(value).map(String::trim).filter(v -> !v.isEmpty()).isPresent()) {
+            if (Optional.ofNullable(value)
+                    .map(String::trim)
+                    .filter(v -> !v.isEmpty())
+                    .isPresent()) {
                 return value;
             }
         }

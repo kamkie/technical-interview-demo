@@ -12,7 +12,6 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -62,8 +61,7 @@ class CategoryServiceTests {
                 cacheManager,
                 applicationMetrics,
                 currentUserAccountService,
-                auditLogService
-        );
+                auditLogService);
     }
 
     @Test
@@ -73,23 +71,18 @@ class CategoryServiceTests {
         when(categoryRepository.findAllByOrderByNameAsc()).thenReturn(List.of(bestPractices, java));
         when(categoryRepository.findAllByNormalizedNames(Set.of("java", "best practices")))
                 .thenReturn(List.of(bestPractices, java));
-        when(categoryRepository.findAllByNormalizedNames(Set.of("java")))
-                .thenReturn(List.of(java));
+        when(categoryRepository.findAllByNormalizedNames(Set.of("java"))).thenReturn(List.of(java));
 
         Set<Category> resolvedCategories = categoryService.resolveForAssignment(List.of("  java  ", "BEST PRACTICES"));
 
-        assertThat(resolvedCategories)
-                .extracting(Category::getName)
-                .containsExactly("Best Practices", "Java");
+        assertThat(resolvedCategories).extracting(Category::getName).containsExactly("Best Practices", "Java");
         assertThat(cachedCategoryDirectory())
                 .containsEntry("best practices", 1L)
                 .containsEntry("java", 2L);
 
         Set<Category> secondResolution = categoryService.resolveForAssignment(List.of("JAVA"));
 
-        assertThat(secondResolution)
-                .extracting(Category::getName)
-                .containsExactly("Java");
+        assertThat(secondResolution).extracting(Category::getName).containsExactly("Java");
         verify(categoryRepository, times(1)).findAllByOrderByNameAsc();
         verify(categoryRepository).findAllByNormalizedNames(Set.of("java", "best practices"));
         verify(categoryRepository).findAllByNormalizedNames(Set.of("java"));
@@ -118,8 +111,7 @@ class CategoryServiceTests {
                 .isInstanceOf(InvalidRequestException.class)
                 .hasMessage("Category 'java' already exists.");
 
-        verify(currentUserAccountService)
-                .requireRole(UserRole.ADMIN, "Category management requires the ADMIN role.");
+        verify(currentUserAccountService).requireRole(UserRole.ADMIN, "Category management requires the ADMIN role.");
         verify(categoryRepository).existsByNameIgnoreCase("java");
         verify(categoryRepository, never()).saveAndFlush(any());
         verifyNoInteractions(auditLogService);

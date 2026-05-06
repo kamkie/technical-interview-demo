@@ -7,6 +7,5 @@ import team.jit.technicalinterviewdemo.testing.IntegrationSpringBootTest;
 class TechnicalInterviewDemoApplicationTests {
 
     @Test
-    void contextLoads() {
-    }
+    void contextLoads() {}
 }

@@ -2,7 +2,6 @@ package team.jit.technicalinterviewdemo.testdata;
 
 import java.util.LinkedHashSet;
 import java.util.List;
-
 import org.springframework.cache.CacheManager;
 import team.jit.technicalinterviewdemo.business.book.Book;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
@@ -13,14 +12,10 @@ import team.jit.technicalinterviewdemo.testing.CacheTestSupport;
 
 public final class BookCatalogTestData {
 
-    private BookCatalogTestData() {
-    }
+    private BookCatalogTestData() {}
 
     public static BookCatalog seedDefaultCatalog(
-            BookRepository bookRepository,
-            CategoryRepository categoryRepository,
-            CacheManager cacheManager
-    ) {
+            BookRepository bookRepository, CategoryRepository categoryRepository, CacheManager cacheManager) {
         bookRepository.deleteAll();
         categoryRepository.deleteAll();
 
@@ -34,31 +29,25 @@ public final class BookCatalogTestData {
                 "Robert C. Martin",
                 "9780132350884",
                 2008,
-                new LinkedHashSet<>(List.of(bestPractices, softwareEngineering))
-        ));
+                new LinkedHashSet<>(List.of(bestPractices, softwareEngineering))));
         Book effectiveJava = bookRepository.saveAndFlush(new Book(
                 "Effective Java",
                 "Joshua Bloch",
                 "9780134685991",
                 2018,
-                new LinkedHashSet<>(List.of(bestPractices, javaCategory))
-        ));
+                new LinkedHashSet<>(List.of(bestPractices, javaCategory))));
 
         return new BookCatalog(cleanCode, effectiveJava, bestPractices, javaCategory, softwareEngineering);
     }
 
     public static List<Category> seedDefaultCategories(
-            CategoryRepository categoryRepository,
-            BookRepository bookRepository,
-            CacheManager cacheManager
-    ) {
+            CategoryRepository categoryRepository, BookRepository bookRepository, CacheManager cacheManager) {
         bookRepository.deleteAll();
         categoryRepository.deleteAll();
 
         List<Category> categories = List.of(
                 categoryRepository.saveAndFlush(new Category("Best Practices")),
-                categoryRepository.saveAndFlush(new Category("Java"))
-        );
+                categoryRepository.saveAndFlush(new Category("Java")));
         CacheTestSupport.clearCaches(cacheManager, CacheNames.CATEGORIES, CacheNames.CATEGORY_DIRECTORY);
         return categories;
     }
@@ -68,7 +57,5 @@ public final class BookCatalogTestData {
             Book effectiveJava,
             Category bestPractices,
             Category javaCategory,
-            Category softwareEngineering
-    ) {
-    }
+            Category softwareEngineering) {}
 }

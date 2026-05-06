@@ -19,7 +19,9 @@ import team.jit.technicalinterviewdemo.testing.AbstractBookCatalogMockMvcIntegra
 import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
 
 @MockMvcIntegrationSpringBootTest
-@ActiveProfiles(value = {"prod", "test"}, inheritProfiles = false)
+@ActiveProfiles(
+        value = {"prod", "test"},
+        inheritProfiles = false)
 @TestPropertySource(properties = "server.servlet.session.cookie.secure=true")
 @ExtendWith(OutputCaptureExtension.class)
 class RequestLoggingIntegrationTests extends AbstractBookCatalogMockMvcIntegrationTest {
@@ -30,9 +32,7 @@ class RequestLoggingIntegrationTests extends AbstractBookCatalogMockMvcIntegrati
     void requestLoggingRedactsSensitiveQueryParameters(CapturedOutput output) throws Exception {
         String secret = "secret-log-token-123";
 
-        mockMvc.perform(get("/hello")
-                        .queryParam("token", secret)
-                        .queryParam("page", "1"))
+        mockMvc.perform(get("/hello").queryParam("token", secret).queryParam("page", "1"))
                 .andExpect(status().isOk());
 
         JsonNode requestLog = parseJsonLog(findLogLine(output, "HTTP request started method=GET path=/hello"));
@@ -51,8 +51,7 @@ class RequestLoggingIntegrationTests extends AbstractBookCatalogMockMvcIntegrati
     void errorLoggingRedactsSensitiveQueryParameters(CapturedOutput output) throws Exception {
         String secret = "Bearer raw-secret-value";
 
-        mockMvc.perform(get("/api/books/{id}", "abc")
-                        .queryParam("authorization", secret))
+        mockMvc.perform(get("/api/books/{id}", "abc").queryParam("authorization", secret))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.title").value("Invalid Parameter"));
 

@@ -11,7 +11,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -69,8 +68,7 @@ class OperatorSurfaceServiceTests {
                 auditLogRepository,
                 technicalOverviewService,
                 healthEndpoint,
-                applicationAvailability
-        );
+                applicationAvailability);
     }
 
     @Test
@@ -147,9 +145,7 @@ class OperatorSurfaceServiceTests {
                 "Deleted localization message '%s' in language %s.".formatted(messageKey, language),
                 Map.of(
                         "messageKey", messageKey,
-                        "language", language
-                )
-        );
+                        "language", language));
         ReflectionTestUtils.setField(auditLog, "id", id);
         ReflectionTestUtils.setField(auditLog, "createdAt", Instant.parse("2026-05-04T08:30:00Z"));
         return auditLog;
@@ -162,41 +158,18 @@ class OperatorSurfaceServiceTests {
                         "team.jit",
                         "technical-interview-demo",
                         "2.0.0-M4",
-                        Instant.parse("2026-05-04T08:00:00Z")
-                ),
+                        Instant.parse("2026-05-04T08:00:00Z")),
                 new TechnicalOverviewResponse.GitDetails(
-                        "main",
-                        "f".repeat(40),
-                        "fffffff",
-                        Instant.parse("2026-05-04T08:00:00Z")
-                ),
-                new TechnicalOverviewResponse.RuntimeDetails(
-                        "technical-interview-demo",
-                        "25",
-                        "Azul",
-                        List.of("test")
-                ),
+                        "main", "f".repeat(40), "fffffff", Instant.parse("2026-05-04T08:00:00Z")),
+                new TechnicalOverviewResponse.RuntimeDetails("technical-interview-demo", "25", "Azul", List.of("test")),
                 Map.of("spring-boot", "3.5.0"),
                 new TechnicalOverviewResponse.ConfigurationDetails(
                         new TechnicalOverviewResponse.PaginationDetails(20, 100),
-                        new TechnicalOverviewResponse.SessionDetails(
-                                "jdbc",
-                                "15m",
-                                "SESSION",
-                                true,
-                                "Lax"
-                        ),
+                        new TechnicalOverviewResponse.SessionDetails("jdbc", "15m", "SESSION", true, "Lax"),
                         new TechnicalOverviewResponse.ObservabilityDetails(
-                                List.of("health", "info", "prometheus"),
-                                true,
-                                1.0
-                        ),
+                                List.of("health", "info", "prometheus"), true, 1.0),
                         new TechnicalOverviewResponse.DocumentationDetails(
-                                "/docs",
-                                "/v3/api-docs",
-                                "/v3/api-docs.yaml",
-                                "3.1.0"
-                        ),
+                                "/docs", "/v3/api-docs", "/v3/api-docs.yaml", "3.1.0"),
                         new TechnicalOverviewResponse.SecurityDetails(
                                 true,
                                 "XSRF-TOKEN",
@@ -212,15 +185,8 @@ class OperatorSurfaceServiceTests {
                                         List.of("csrf", "rate-limit"),
                                         "/api/**",
                                         List.of("PUT /api/account/language"),
-                                        List.of("csrf", "authentication")
-                                )
-                        ),
-                        new TechnicalOverviewResponse.ShutdownDetails(
-                                "graceful",
-                                "30s"
-                        )
-                )
-        );
+                                        List.of("csrf", "authentication"))),
+                        new TechnicalOverviewResponse.ShutdownDetails("graceful", "30s")));
     }
 
     private HealthDescriptor healthDescriptor(String status) {
@@ -228,8 +194,9 @@ class OperatorSurfaceServiceTests {
             var constructor = IndicatedHealthDescriptor.class.getDeclaredConstructor(Health.class);
             constructor.setAccessible(true);
             return constructor.newInstance(Health.status(status).build());
-        }
-        catch (InstantiationException | IllegalAccessException | InvocationTargetException
+        } catch (InstantiationException
+                | IllegalAccessException
+                | InvocationTargetException
                 | NoSuchMethodException exception) {
             throw new LinkageError("Failed to create HealthDescriptor test fixture.", exception);
         }

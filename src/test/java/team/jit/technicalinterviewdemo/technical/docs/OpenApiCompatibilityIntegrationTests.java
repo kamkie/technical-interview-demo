@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-
 import org.junit.jupiter.api.Test;
 import team.jit.technicalinterviewdemo.testing.AbstractRandomPortIntegrationTest;
 import team.jit.technicalinterviewdemo.testing.RandomPortIntegrationSpringBootTest;
@@ -25,7 +24,8 @@ class OpenApiCompatibilityIntegrationTests extends AbstractRandomPortIntegration
     }
 
     private JsonNode readApprovedBaseline() throws Exception {
-        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("openapi/approved-openapi.json")) {
+        try (InputStream inputStream =
+                getClass().getClassLoader().getResourceAsStream("openapi/approved-openapi.json")) {
             if (inputStream == null) {
                 throw new IllegalStateException("Approved OpenAPI baseline was not found on the test classpath.");
             }

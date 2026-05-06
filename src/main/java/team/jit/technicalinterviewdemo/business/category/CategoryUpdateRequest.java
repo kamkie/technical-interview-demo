@@ -7,6 +7,4 @@ import jakarta.validation.constraints.NotBlank;
 public record CategoryUpdateRequest(
         @Schema(description = "Unique category name.", example = "Software Architecture")
         @NotBlank(message = "name is required")
-        String name
-) {
-}
+        String name) {}

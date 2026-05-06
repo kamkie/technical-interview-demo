@@ -16,10 +16,7 @@ public final class SpaCsrfTokenRequestHandler implements CsrfTokenRequestHandler
 
     @Override
     public void handle(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            Supplier<CsrfToken> deferredCsrfToken
-    ) {
+            HttpServletRequest request, HttpServletResponse response, Supplier<CsrfToken> deferredCsrfToken) {
         xorRequestHandler.handle(request, response, deferredCsrfToken);
     }
 

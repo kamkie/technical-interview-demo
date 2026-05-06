@@ -392,8 +392,6 @@ asciidoctorTask {
 }
 
 spotless {
-    ratchetFrom("HEAD")
-
     java {
         target("src/**/*.java")
         importOrder()

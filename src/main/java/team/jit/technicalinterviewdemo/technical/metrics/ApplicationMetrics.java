@@ -32,8 +32,7 @@ public class ApplicationMetrics {
             BookRepository bookRepository,
             CategoryRepository categoryRepository,
             LocalizationRepository localizationRepository,
-            UserAccountRepository userAccountRepository
-    ) {
+            UserAccountRepository userAccountRepository) {
         this.meterRegistry = meterRegistry;
         Gauge.builder(BOOK_TOTAL, bookRepository, BookRepository::count)
                 .description("Current number of books.")

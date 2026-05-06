@@ -29,13 +29,11 @@ public final class LocalizationSeedData {
             "error.request.unsupported_media_type",
             "error.request.validation_failed",
             "error.user.not_found",
-            "error.server.internal"
-    );
+            "error.server.internal");
 
     private static final List<String> SUPPORTED_LANGUAGES = List.of("en", "es", "de", "fr", "pl", "uk", "no");
 
-    private LocalizationSeedData() {
-    }
+    private LocalizationSeedData() {}
 
     public static List<String> documentedKeys() {
         return DOCUMENTED_KEYS;
@@ -56,8 +54,7 @@ public final class LocalizationSeedData {
                 "La categorie ne peut pas etre supprimee car elle est encore attribuee a un ou plusieurs livres.",
                 "Nie mozna usunac kategorii, poniewaz jest nadal przypisana do co najmniej jednej ksiazki.",
                 "Katehoriiu nemozhlyvo vydalyty, oskilky vona vse shche pryznachena odnii chy kilkom knyham.",
-                "Kategorien kan ikke slettes fordi den fortsatt er tilordnet en eller flere boker."
-        );
+                "Kategorien kan ikke slettes fordi den fortsatt er tilordnet en eller flere boker.");
         addTranslations(
                 messages,
                 "error.category.not_found",
@@ -67,8 +64,7 @@ public final class LocalizationSeedData {
                 "La categorie demandee est introuvable.",
                 "Nie znaleziono zadanej kategorii.",
                 "Zapytanu katehoriiu ne znaideno.",
-                "Den forespurte kategorien ble ikke funnet."
-        );
+                "Den forespurte kategorien ble ikke funnet.");
         addTranslations(
                 messages,
                 "error.book.isbn_duplicate",
@@ -78,8 +74,7 @@ public final class LocalizationSeedData {
                 "Un livre avec le meme ISBN existe deja.",
                 "Ksiazka z tym samym numerem ISBN juz istnieje.",
                 "Knyha z takym samym ISBN vzhe isnuie.",
-                "En bok med samme ISBN finnes allerede."
-        );
+                "En bok med samme ISBN finnes allerede.");
         addTranslations(
                 messages,
                 "error.book.not_found",
@@ -89,19 +84,18 @@ public final class LocalizationSeedData {
                 "Le livre demande est introuvable.",
                 "Nie znaleziono zadanej ksiazki.",
                 "Zapytanu knyhu ne znaideno.",
-                "Den forespurte boken ble ikke funnet."
-        );
+                "Den forespurte boken ble ikke funnet.");
         addTranslations(
                 messages,
                 "error.book.stale_version",
                 "The book was modified by another request. Retry with the latest version.",
                 "El libro fue modificado por otra solicitud. Reintente con la version mas reciente.",
-                "Das Buch wurde von einer anderen Anfrage geaendert. Wiederholen Sie den Vorgang mit der neuesten Version.",
+                "Das Buch wurde von einer anderen Anfrage geaendert. Wiederholen Sie den Vorgang mit der neuesten"
+                        + " Version.",
                 "Le livre a ete modifie par une autre requete. Reessayez avec la version la plus recente.",
                 "Ksiazka zostala zmodyfikowana przez inne zadanie. Sprobuj ponownie z najnowsza wersja.",
                 "Knyhu zmineno inshym zapytom. Povtorit sprobu z ostannoiu versiieiu.",
-                "Boken ble endret av en annen foresporsel. Prov igjen med den nyeste versjonen."
-        );
+                "Boken ble endret av en annen foresporsel. Prov igjen med den nyeste versjonen.");
         addTranslations(
                 messages,
                 "error.data.integrity_violation",
@@ -111,8 +105,7 @@ public final class LocalizationSeedData {
                 "Les donnees de la requete violent une contrainte de base de donnees.",
                 "Dane zadania naruszaja ograniczenie bazy danych.",
                 "Dani zapytu porushuiut obmezhennia bazy danykh.",
-                "Foresporselsdataene bryter en databasebegrensning."
-        );
+                "Foresporselsdataene bryter en databasebegrensning.");
         addTranslations(
                 messages,
                 "error.localization.duplicate",
@@ -122,8 +115,7 @@ public final class LocalizationSeedData {
                 "Un message de localisation avec la meme cle et la meme langue existe deja.",
                 "Komunikat lokalizacyjny z tym samym kluczem i jezykiem juz istnieje.",
                 "Povidomlennia lokalizatsii z takym samym kliuchem i movoiu vzhe isnuie.",
-                "En lokaliseringsmelding med samme nokkel og sprak finnes allerede."
-        );
+                "En lokaliseringsmelding med samme nokkel og sprak finnes allerede.");
         addTranslations(
                 messages,
                 "error.localization.not_found",
@@ -133,8 +125,7 @@ public final class LocalizationSeedData {
                 "Le message de localisation demande est introuvable.",
                 "Nie znaleziono zadanego komunikatu lokalizacyjnego.",
                 "Zapytane povidomlennia lokalizatsii ne znaideno.",
-                "Den forespurte lokaliseringsmeldingen ble ikke funnet."
-        );
+                "Den forespurte lokaliseringsmeldingen ble ikke funnet.");
         addTranslations(
                 messages,
                 "error.request.constraint_violation",
@@ -144,8 +135,7 @@ public final class LocalizationSeedData {
                 "Des contraintes de validation de la requete ont ete violees.",
                 "Naruszono ograniczenia walidacji zadania.",
                 "Porusheno obmezhennia validatsii zapytu.",
-                "Valideringsregler for foresporselen ble brutt."
-        );
+                "Valideringsregler for foresporselen ble brutt.");
         addTranslations(
                 messages,
                 "error.request.csrf_invalid",
@@ -155,8 +145,7 @@ public final class LocalizationSeedData {
                 "Un jeton CSRF valide est requis pour effectuer cette operation.",
                 "Do wykonania tej operacji wymagany jest prawidlowy token CSRF.",
                 "Dlia vykonannia tsiiei operatsii potriben diisnyi token CSRF.",
-                "Et gyldig CSRF-token kreves for aa utfore denne operasjonen."
-        );
+                "Et gyldig CSRF-token kreves for aa utfore denne operasjonen.");
         addTranslations(
                 messages,
                 "error.request.forbidden",
@@ -166,8 +155,7 @@ public final class LocalizationSeedData {
                 "Vous n'avez pas la permission d'effectuer cette operation.",
                 "Nie masz uprawnien do wykonania tej operacji.",
                 "Vy ne maiete dozvolu vykonuvaty tsiu operatsiiu.",
-                "Du har ikke tillatelse til aa utfore denne operasjonen."
-        );
+                "Du har ikke tillatelse til aa utfore denne operasjonen.");
         addTranslations(
                 messages,
                 "error.request.invalid",
@@ -177,8 +165,7 @@ public final class LocalizationSeedData {
                 "La requete est invalide.",
                 "Zadanie jest nieprawidlowe.",
                 "Zapyt ye nevalidnym.",
-                "Foresporselen er ugyldig."
-        );
+                "Foresporselen er ugyldig.");
         addTranslations(
                 messages,
                 "error.request.invalid_parameter",
@@ -188,8 +175,7 @@ public final class LocalizationSeedData {
                 "Un parametre de requete a une valeur invalide.",
                 "Parametr zadania ma nieprawidlowa wartosc.",
                 "Parametr zapytu maie nepravylne znachennia.",
-                "En foresporselsparameter har en ugyldig verdi."
-        );
+                "En foresporselsparameter har en ugyldig verdi.");
         addTranslations(
                 messages,
                 "error.request.malformed_body",
@@ -199,8 +185,7 @@ public final class LocalizationSeedData {
                 "Le corps de la requete est absent ou mal forme.",
                 "Brakuje tresci zadania albo ma ona nieprawidlowy format.",
                 "Tilo zapytu vidsutnie abo maie nekorektnyi format.",
-                "Foresporselskroppen mangler eller har ugyldig format."
-        );
+                "Foresporselskroppen mangler eller har ugyldig format.");
         addTranslations(
                 messages,
                 "error.request.method_not_allowed",
@@ -210,8 +195,7 @@ public final class LocalizationSeedData {
                 "La methode HTTP n'est pas autorisee pour ce point de terminaison.",
                 "Metoda HTTP nie jest dozwolona dla tego endpointu.",
                 "Metod HTTP ne dozvoleno dlia tsoho endpointu.",
-                "HTTP-metoden er ikke tillatt for dette endepunktet."
-        );
+                "HTTP-metoden er ikke tillatt for dette endepunktet.");
         addTranslations(
                 messages,
                 "error.request.missing_header",
@@ -221,8 +205,7 @@ public final class LocalizationSeedData {
                 "Un en-tete requis de la requete est manquant.",
                 "Brakuje wymaganego naglowka zadania.",
                 "Vidsutnii oboviazkovyi zaholovok zapytu.",
-                "En obligatorisk foresporselsheader mangler."
-        );
+                "En obligatorisk foresporselsheader mangler.");
         addTranslations(
                 messages,
                 "error.request.missing_parameter",
@@ -232,8 +215,7 @@ public final class LocalizationSeedData {
                 "Un parametre requis de la requete est manquant.",
                 "Brakuje wymaganego parametru zadania.",
                 "Vidsutnii oboviazkovyi parametr zapytu.",
-                "En obligatorisk foresporselsparameter mangler."
-        );
+                "En obligatorisk foresporselsparameter mangler.");
         addTranslations(
                 messages,
                 "error.request.resource_not_found",
@@ -243,8 +225,7 @@ public final class LocalizationSeedData {
                 "La ressource demandee est introuvable.",
                 "Nie znaleziono zadanego zasobu.",
                 "Zapytanyi resurs ne znaideno.",
-                "Den forespurte ressursen ble ikke funnet."
-        );
+                "Den forespurte ressursen ble ikke funnet.");
         addTranslations(
                 messages,
                 "error.request.unauthorized",
@@ -254,8 +235,7 @@ public final class LocalizationSeedData {
                 "Vous devez vous authentifier avant d'effectuer cette operation.",
                 "Musisz sie uwierzytelnic przed wykonaniem tej operacji.",
                 "Vy maiete avtoryzuvatysia pered vykonanniam tsiiei operatsii.",
-                "Du ma autentisere deg for du utforer denne operasjonen."
-        );
+                "Du ma autentisere deg for du utforer denne operasjonen.");
         addTranslations(
                 messages,
                 "error.request.unsupported_media_type",
@@ -265,8 +245,7 @@ public final class LocalizationSeedData {
                 "Le type de contenu fourni n'est pas pris en charge.",
                 "Podany typ zawartosci nie jest obslugiwany.",
                 "Nadanyi typ vmistu ne pidtrymuietsia.",
-                "Den oppgitte innholdstypen stottes ikke."
-        );
+                "Den oppgitte innholdstypen stottes ikke.");
         addTranslations(
                 messages,
                 "error.request.validation_failed",
@@ -276,8 +255,7 @@ public final class LocalizationSeedData {
                 "La validation du corps de la requete a echoue.",
                 "Walidacja tresci zadania nie powiodla sie.",
                 "Validatsiia tila zapytu ne vdalsia.",
-                "Validering av foresporselskroppen mislyktes."
-        );
+                "Validering av foresporselskroppen mislyktes.");
         addTranslations(
                 messages,
                 "error.user.not_found",
@@ -287,8 +265,7 @@ public final class LocalizationSeedData {
                 "Le compte utilisateur demande est introuvable.",
                 "Nie znaleziono zadanego konta uzytkownika.",
                 "Zapytanyi oblikovyi zapys korystuvacha ne znaideno.",
-                "Den forespurte brukerkontoen ble ikke funnet."
-        );
+                "Den forespurte brukerkontoen ble ikke funnet.");
         addTranslations(
                 messages,
                 "error.server.internal",
@@ -298,8 +275,7 @@ public final class LocalizationSeedData {
                 "Une erreur inattendue s'est produite.",
                 "Wystapil nieoczekiwany blad.",
                 "Stalasia neochikuvana pomylka.",
-                "Det oppstod en uventet feil."
-        );
+                "Det oppstod en uventet feil.");
         return List.copyOf(messages);
     }
 
@@ -312,8 +288,7 @@ public final class LocalizationSeedData {
             String french,
             String polish,
             String ukrainian,
-            String norwegian
-    ) {
+            String norwegian) {
         messages.add(new Localization(messageKey, "en", english, description(messageKey, "en")));
         messages.add(new Localization(messageKey, "es", spanish, description(messageKey, "es")));
         messages.add(new Localization(messageKey, "de", german, description(messageKey, "de")));

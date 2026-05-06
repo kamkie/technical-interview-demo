@@ -35,9 +35,7 @@ class AuditLogApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 "Created book 'Spring in Action' with ISBN 9781617297571.",
                 Map.of(
                         "title", "Spring in Action",
-                        "isbn", "9781617297571"
-                )
-        ));
+                        "isbn", "9781617297571")));
         updateBookLog = auditLogRepository.saveAndFlush(new AuditLog(
                 AuditTargetType.BOOK,
                 102L,
@@ -48,9 +46,7 @@ class AuditLogApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 Map.of(
                         "title", "Clean Code",
                         "isbn", "9780132350884",
-                        "publicationYear", 2008
-                )
-        ));
+                        "publicationYear", 2008)));
         deleteLocalizationLog = auditLogRepository.saveAndFlush(new AuditLog(
                 AuditTargetType.LOCALIZATION_MESSAGE,
                 103L,
@@ -60,9 +56,7 @@ class AuditLogApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 "Deleted localization message 'error.book.not_found' in language fr.",
                 Map.of(
                         "messageKey", "error.book.not_found",
-                        "language", "fr"
-                )
-        ));
+                        "language", "fr")));
     }
 
     @Test
@@ -75,8 +69,7 @@ class AuditLogApiIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
     void listAuditLogsAsRegularUserReturnsForbidden() throws Exception {
-        mockMvc.perform(get("/api/admin/audit-logs")
-                        .with(oauthUser("reader-user")))
+        mockMvc.perform(get("/api/admin/audit-logs").with(oauthUser("reader-user")))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.title").value("Forbidden"))
                 .andExpect(jsonPath("$.detail").value("Audit log review requires the ADMIN role."))
@@ -119,9 +112,8 @@ class AuditLogApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .andExpect(jsonPath("$.content.length()").value(1))
                 .andExpect(jsonPath("$.content[0].id").value(deleteLocalizationLog.getId()))
                 .andExpect(jsonPath("$.content[0].targetId").value(103))
-                .andExpect(jsonPath("$.content[0].summary").value(
-                        "Deleted localization message 'error.book.not_found' in language fr."
-                ))
+                .andExpect(jsonPath("$.content[0].summary")
+                        .value("Deleted localization message 'error.book.not_found' in language fr."))
                 .andExpect(jsonPath("$.content[0].details.messageKey").value("error.book.not_found"))
                 .andExpect(jsonPath("$.content[0].details.language").value("fr"))
                 .andExpect(jsonPath("$.content[0].createdAt").value(endsWith("Z")))
@@ -131,13 +123,11 @@ class AuditLogApiIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
     void listAuditLogsWithUnsupportedSortReturnsBadRequest() throws Exception {
-        mockMvc.perform(get("/api/admin/audit-logs")
-                        .with(adminOauthUser())
-                        .queryParam("sort", "dropTable,asc"))
+        mockMvc.perform(get("/api/admin/audit-logs").with(adminOauthUser()).queryParam("sort", "dropTable,asc"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.title").value("Invalid Request"))
-                .andExpect(jsonPath("$.detail").value(
-                        "Sort field 'dropTable' is not supported. Use one of: id, targetType, targetId, action, actorLogin, createdAt."
-                ));
+                .andExpect(jsonPath("$.detail")
+                        .value("Sort field 'dropTable' is not supported. Use one of: id, targetType,"
+                                + " targetId, action, actorLogin, createdAt."));
     }
 }

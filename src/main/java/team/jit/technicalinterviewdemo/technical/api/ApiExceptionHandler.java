@@ -3,10 +3,8 @@ package team.jit.technicalinterviewdemo.technical.api;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -47,8 +45,7 @@ public class ApiExceptionHandler {
                 exception.getMessage(),
                 "error.book.not_found",
                 request,
-                Map.of("exception", exception.getClass().getSimpleName())
-        );
+                Map.of("exception", exception.getClass().getSimpleName()));
     }
 
     @ExceptionHandler(LocalizationNotFoundException.class)
@@ -59,8 +56,7 @@ public class ApiExceptionHandler {
                 exception.getMessage(),
                 "error.localization.not_found",
                 request,
-                Map.of("exception", exception.getClass().getSimpleName())
-        );
+                Map.of("exception", exception.getClass().getSimpleName()));
     }
 
     @ExceptionHandler(CategoryNotFoundException.class)
@@ -71,8 +67,7 @@ public class ApiExceptionHandler {
                 exception.getMessage(),
                 "error.category.not_found",
                 request,
-                Map.of("exception", exception.getClass().getSimpleName())
-        );
+                Map.of("exception", exception.getClass().getSimpleName()));
     }
 
     @ExceptionHandler(UserAccountNotFoundException.class)
@@ -83,8 +78,7 @@ public class ApiExceptionHandler {
                 exception.getMessage(),
                 "error.user.not_found",
                 request,
-                Map.of("exception", exception.getClass().getSimpleName())
-        );
+                Map.of("exception", exception.getClass().getSimpleName()));
     }
 
     @ExceptionHandler(CategoryInUseException.class)
@@ -95,8 +89,7 @@ public class ApiExceptionHandler {
                 exception.getMessage(),
                 "error.category.in_use",
                 request,
-                Map.of("exception", exception.getClass().getSimpleName())
-        );
+                Map.of("exception", exception.getClass().getSimpleName()));
     }
 
     @ExceptionHandler(DuplicateIsbnException.class)
@@ -107,23 +100,18 @@ public class ApiExceptionHandler {
                 exception.getMessage(),
                 "error.book.isbn_duplicate",
                 request,
-                Map.of("exception", exception.getClass().getSimpleName())
-        );
+                Map.of("exception", exception.getClass().getSimpleName()));
     }
 
     @ExceptionHandler(DuplicateLocalizationException.class)
-    ProblemDetail handleDuplicateLocalization(
-            DuplicateLocalizationException exception,
-            HttpServletRequest request
-    ) {
+    ProblemDetail handleDuplicateLocalization(DuplicateLocalizationException exception, HttpServletRequest request) {
         return apiProblemFactory.clientProblem(
                 HttpStatus.CONFLICT,
                 "Duplicate Localization",
                 exception.getMessage(),
                 "error.localization.duplicate",
                 request,
-                Map.of("exception", exception.getClass().getSimpleName())
-        );
+                Map.of("exception", exception.getClass().getSimpleName()));
     }
 
     @ExceptionHandler(InvalidRequestException.class)
@@ -134,8 +122,7 @@ public class ApiExceptionHandler {
                 exception.getMessage(),
                 "error.request.invalid",
                 request,
-                Map.of("exception", exception.getClass().getSimpleName())
-        );
+                Map.of("exception", exception.getClass().getSimpleName()));
     }
 
     @ExceptionHandler({StaleBookVersionException.class, ObjectOptimisticLockingFailureException.class})
@@ -149,8 +136,7 @@ public class ApiExceptionHandler {
                 detail,
                 "error.book.stale_version",
                 request,
-                Map.of("exception", exception.getClass().getSimpleName())
-        );
+                Map.of("exception", exception.getClass().getSimpleName()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -161,8 +147,7 @@ public class ApiExceptionHandler {
                 "Request validation failed.",
                 "error.request.validation_failed",
                 request,
-                extractFieldErrors(exception)
-        );
+                extractFieldErrors(exception));
         problemDetail.setProperty("fieldErrors", extractFieldErrors(exception));
         return problemDetail;
     }
@@ -176,14 +161,14 @@ public class ApiExceptionHandler {
                 "Request validation failed.",
                 "error.request.constraint_violation",
                 request,
-                violations
-        );
+                violations);
         problemDetail.setProperty("violations", violations);
         return problemDetail;
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    ProblemDetail handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException exception, HttpServletRequest request) {
+    ProblemDetail handleMethodArgumentTypeMismatch(
+            MethodArgumentTypeMismatchException exception, HttpServletRequest request) {
         String parameterName = exception.getName();
         String rejectedValue = String.valueOf(exception.getValue());
         return apiProblemFactory.clientProblem(
@@ -195,9 +180,10 @@ public class ApiExceptionHandler {
                 Map.of(
                         "parameter", parameterName,
                         "rejectedValue", rejectedValue,
-                        "expectedType", exception.getRequiredType() == null ? "unknown" : exception.getRequiredType().getSimpleName()
-                )
-        );
+                        "expectedType",
+                                exception.getRequiredType() == null
+                                        ? "unknown"
+                                        : exception.getRequiredType().getSimpleName()));
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -210,21 +196,19 @@ public class ApiExceptionHandler {
                 request,
                 Map.of(
                         "exception", exception.getClass().getSimpleName(),
-                        "cause", rootCauseMessage(exception)
-                )
-        );
+                        "cause", rootCauseMessage(exception)));
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    ProblemDetail handleMissingServletRequestParameter(MissingServletRequestParameterException exception, HttpServletRequest request) {
+    ProblemDetail handleMissingServletRequestParameter(
+            MissingServletRequestParameterException exception, HttpServletRequest request) {
         return apiProblemFactory.clientProblem(
                 HttpStatus.BAD_REQUEST,
                 "Missing Request Parameter",
                 "Required request parameter '%s' is missing.".formatted(exception.getParameterName()),
                 "error.request.missing_parameter",
                 request,
-                Map.of("parameter", exception.getParameterName())
-        );
+                Map.of("parameter", exception.getParameterName()));
     }
 
     @ExceptionHandler(MissingRequestHeaderException.class)
@@ -235,33 +219,34 @@ public class ApiExceptionHandler {
                 "Required request header '%s' is missing.".formatted(exception.getHeaderName()),
                 "error.request.missing_header",
                 request,
-                Map.of("header", exception.getHeaderName())
-        );
+                Map.of("header", exception.getHeaderName()));
     }
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
-    ProblemDetail handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException exception, HttpServletRequest request) {
-        String contentType = exception.getContentType() == null ? "unknown" : exception.getContentType().toString();
+    ProblemDetail handleHttpMediaTypeNotSupported(
+            HttpMediaTypeNotSupportedException exception, HttpServletRequest request) {
+        String contentType = exception.getContentType() == null
+                ? "unknown"
+                : exception.getContentType().toString();
         return apiProblemFactory.clientProblem(
                 HttpStatus.UNSUPPORTED_MEDIA_TYPE,
                 "Unsupported Media Type",
                 "Content type '%s' is not supported.".formatted(contentType),
                 "error.request.unsupported_media_type",
                 request,
-                Map.of("contentType", contentType)
-        );
+                Map.of("contentType", contentType));
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    ProblemDetail handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException exception, HttpServletRequest request) {
+    ProblemDetail handleHttpRequestMethodNotSupported(
+            HttpRequestMethodNotSupportedException exception, HttpServletRequest request) {
         return apiProblemFactory.clientProblem(
                 HttpStatus.METHOD_NOT_ALLOWED,
                 "Method Not Allowed",
                 "HTTP method '%s' is not supported for this endpoint.".formatted(exception.getMethod()),
                 "error.request.method_not_allowed",
                 request,
-                Map.of("method", exception.getMethod())
-        );
+                Map.of("method", exception.getMethod()));
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
@@ -272,8 +257,7 @@ public class ApiExceptionHandler {
                 "Resource '%s' was not found.".formatted(exception.getResourcePath()),
                 "error.request.resource_not_found",
                 request,
-                Map.of("resourcePath", exception.getResourcePath())
-        );
+                Map.of("resourcePath", exception.getResourcePath()));
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
@@ -286,9 +270,7 @@ public class ApiExceptionHandler {
                 request,
                 Map.of(
                         "exception", exception.getClass().getSimpleName(),
-                        "cause", rootCauseMessage(exception)
-                )
-        );
+                        "cause", rootCauseMessage(exception)));
     }
 
     @ExceptionHandler(AccessDeniedException.class)
@@ -299,8 +281,7 @@ public class ApiExceptionHandler {
                 exception.getMessage(),
                 "error.request.forbidden",
                 request,
-                Map.of("exception", exception.getClass().getSimpleName())
-        );
+                Map.of("exception", exception.getClass().getSimpleName()));
     }
 
     @ExceptionHandler(Exception.class)
@@ -312,8 +293,7 @@ public class ApiExceptionHandler {
                 "error.server.internal",
                 request,
                 Map.of("exception", exception.getClass().getName()),
-                exception
-        );
+                exception);
     }
 
     private Map<String, String> extractFieldErrors(MethodArgumentNotValidException exception) {
@@ -327,7 +307,8 @@ public class ApiExceptionHandler {
     private Map<String, String> extractViolations(ConstraintViolationException exception) {
         Map<String, String> violations = new LinkedHashMap<>();
         for (ConstraintViolation<?> violation : exception.getConstraintViolations()) {
-            violations.putIfAbsent(sanitizePropertyPath(violation.getPropertyPath().toString()), violation.getMessage());
+            violations.putIfAbsent(
+                    sanitizePropertyPath(violation.getPropertyPath().toString()), violation.getMessage());
         }
         return violations;
     }

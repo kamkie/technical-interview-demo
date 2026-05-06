@@ -15,10 +15,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.slf4j.LoggerFactory;
 import team.jit.technicalinterviewdemo.business.localization.Localization;
 import team.jit.technicalinterviewdemo.business.localization.LocalizationService;
 
@@ -67,8 +67,7 @@ class ApiProblemFactoryLoggingTests {
                 rawDetail,
                 "error.request.invalid_parameter",
                 request,
-                Map.of("rejectedValue", "abc\r\nforged-value")
-        );
+                Map.of("rejectedValue", "abc\r\nforged-value"));
 
         ILoggingEvent logEvent = logEvents.list.getFirst();
         String logLine = logEvent.getFormattedMessage();

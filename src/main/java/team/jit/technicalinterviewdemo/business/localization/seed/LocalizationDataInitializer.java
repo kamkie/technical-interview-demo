@@ -1,7 +1,5 @@
 package team.jit.technicalinterviewdemo.business.localization.seed;
 
-import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -17,15 +15,15 @@ public class LocalizationDataInitializer {
     @Bean
     CommandLineRunner seedLocalizations(
             LocalizationRepository localizationMessageRepository,
-            BootstrapSettingsProperties bootstrapSettingsProperties
-    ) {
+            BootstrapSettingsProperties bootstrapSettingsProperties) {
         return args -> {
             if (!bootstrapSettingsProperties.getSeed().isDemoData()) {
                 log.info("Skipping demo localization bootstrap because app.bootstrap.seed.demo-data is disabled.");
                 return;
             }
             for (Localization seedMessage : LocalizationSeedData.defaultMessages()) {
-                if (localizationMessageRepository.existsByMessageKeyAndLanguage(seedMessage.getMessageKey(), seedMessage.getLanguage())) {
+                if (localizationMessageRepository.existsByMessageKeyAndLanguage(
+                        seedMessage.getMessageKey(), seedMessage.getLanguage())) {
                     continue;
                 }
 
@@ -34,8 +32,7 @@ public class LocalizationDataInitializer {
                         "Seeded localization message id={} key={} language={}",
                         savedMessage.getId(),
                         savedMessage.getMessageKey(),
-                        savedMessage.getLanguage()
-                );
+                        savedMessage.getLanguage());
             }
         };
     }

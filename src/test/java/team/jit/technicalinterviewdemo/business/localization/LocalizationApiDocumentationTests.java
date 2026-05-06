@@ -15,7 +15,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminBrowserSession;
 
@@ -24,8 +23,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
-import team.jit.technicalinterviewdemo.testing.AbstractDocumentationIntegrationTest;
 import team.jit.technicalinterviewdemo.testdata.LocalizationTestData;
+import team.jit.technicalinterviewdemo.testing.AbstractDocumentationIntegrationTest;
 import team.jit.technicalinterviewdemo.testing.RestDocsIntegrationSpringBootTest;
 import team.jit.technicalinterviewdemo.testing.SecurityTestSupport.BrowserSession;
 
@@ -64,25 +63,33 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                 .andDo(documentEndpoint(
                         "localization/list-localizations",
                         queryParameters(
-                                parameterWithName("messageKey").optional().description("Exact localization key filter."),
-                                parameterWithName("language").optional().description(
-                                        "Supported two-letter ISO 639-1 language code filter. Current values: `en`, `es`, `de`, `fr`, `pl`, `uk`, `no`."
-                                ),
+                                parameterWithName("messageKey")
+                                        .optional()
+                                        .description("Exact localization key filter."),
+                                parameterWithName("language")
+                                        .optional()
+                                        .description(
+                                                "Supported two-letter ISO 639-1 language code filter. Current values:"
+                                                        + " `en`, `es`, `de`, `fr`, `pl`, `uk`, `no`."),
                                 parameterWithName("page").optional().description("Zero-based page index."),
                                 parameterWithName("size").optional().description("Page size capped by the server."),
-                                parameterWithName("sort").optional().description(
-                                        "Sort expression in the form `property,direction`. Repeat the parameter for multiple sort fields. Supported properties: `id`, `messageKey`, `language`, `createdAt`, `updatedAt`."
-                                )
-                        ),
+                                parameterWithName("sort")
+                                        .optional()
+                                        .description("Sort expression in the form `property,direction`. Repeat the"
+                                                + " parameter for multiple sort fields. Supported properties:"
+                                                + " `id`, `messageKey`, `language`, `createdAt`, `updatedAt`.")),
                         responseHeaders(commonResponseHeaders()),
                         relaxedResponseFields(
                                 fieldWithPath("content[].id").description("Localization identifier."),
                                 fieldWithPath("content[].messageKey").description("Stable localization key."),
                                 fieldWithPath("content[].language").description("Two-letter ISO 639-1 language code."),
                                 fieldWithPath("content[].messageText").description("Localized message text."),
-                                fieldWithPath("content[].description").description("Optional description for maintainers."),
-                                fieldWithPath("content[].createdAt").description("Creation timestamp as a UTC instant."),
-                                fieldWithPath("content[].updatedAt").description("Last update timestamp as a UTC instant."),
+                                fieldWithPath("content[].description")
+                                        .description("Optional description for maintainers."),
+                                fieldWithPath("content[].createdAt")
+                                        .description("Creation timestamp as a UTC instant."),
+                                fieldWithPath("content[].updatedAt")
+                                        .description("Last update timestamp as a UTC instant."),
                                 subsectionWithPath("pageable").description("Pagination request metadata."),
                                 subsectionWithPath("sort").description("Applied sort metadata."),
                                 fieldWithPath("totalPages").description("Total number of pages."),
@@ -90,11 +97,10 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                                 fieldWithPath("last").description("Whether this page is the last page."),
                                 fieldWithPath("size").description("Requested page size."),
                                 fieldWithPath("number").description("Current zero-based page index."),
-                                fieldWithPath("numberOfElements").description("Number of messages returned in the current page."),
+                                fieldWithPath("numberOfElements")
+                                        .description("Number of messages returned in the current page."),
                                 fieldWithPath("first").description("Whether this page is the first page."),
-                                fieldWithPath("empty").description("Whether the page content is empty.")
-                        )
-                ));
+                                fieldWithPath("empty").description("Whether the page content is empty."))));
     }
 
     @Test
@@ -105,12 +111,9 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                 .andExpect(header().exists("traceparent"))
                 .andDo(documentEndpoint(
                         "localization/get-localization",
-                        pathParameters(
-                                parameterWithName("id").description("Localization identifier.")
-                        ),
+                        pathParameters(parameterWithName("id").description("Localization identifier.")),
                         responseHeaders(commonResponseHeaders()),
-                        responseFields(responseFieldDescriptors())
-                ));
+                        responseFields(responseFieldDescriptors())));
     }
 
     @Test
@@ -125,24 +128,29 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                         "localization/list-localizations-filtered",
                         queryParameters(
                                 parameterWithName("messageKey").description("Exact localization key filter."),
-                                parameterWithName("language").description(
-                                        "Supported two-letter ISO 639-1 language code filter. Current values: `en`, `es`, `de`, `fr`, `pl`, `uk`, `no`."
-                                ),
+                                parameterWithName("language")
+                                        .description(
+                                                "Supported two-letter ISO 639-1 language code filter. Current values:"
+                                                        + " `en`, `es`, `de`, `fr`, `pl`, `uk`, `no`."),
                                 parameterWithName("page").optional().description("Zero-based page index."),
                                 parameterWithName("size").optional().description("Page size capped by the server."),
-                                parameterWithName("sort").optional().description(
-                                        "Sort expression in the form `property,direction`. Repeat the parameter for multiple sort fields. Supported properties: `id`, `messageKey`, `language`, `createdAt`, `updatedAt`."
-                                )
-                        ),
+                                parameterWithName("sort")
+                                        .optional()
+                                        .description("Sort expression in the form `property,direction`. Repeat the"
+                                                + " parameter for multiple sort fields. Supported properties:"
+                                                + " `id`, `messageKey`, `language`, `createdAt`, `updatedAt`.")),
                         responseHeaders(commonResponseHeaders()),
                         relaxedResponseFields(
                                 fieldWithPath("content[].id").description("Localization identifier."),
                                 fieldWithPath("content[].messageKey").description("Stable localization key."),
                                 fieldWithPath("content[].language").description("Two-letter ISO 639-1 language code."),
                                 fieldWithPath("content[].messageText").description("Localized message text."),
-                                fieldWithPath("content[].description").description("Optional description for maintainers."),
-                                fieldWithPath("content[].createdAt").description("Creation timestamp as a UTC instant."),
-                                fieldWithPath("content[].updatedAt").description("Last update timestamp as a UTC instant."),
+                                fieldWithPath("content[].description")
+                                        .description("Optional description for maintainers."),
+                                fieldWithPath("content[].createdAt")
+                                        .description("Creation timestamp as a UTC instant."),
+                                fieldWithPath("content[].updatedAt")
+                                        .description("Last update timestamp as a UTC instant."),
                                 subsectionWithPath("pageable").description("Pagination request metadata."),
                                 subsectionWithPath("sort").description("Applied sort metadata."),
                                 fieldWithPath("totalPages").description("Total number of pages."),
@@ -150,11 +158,10 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                                 fieldWithPath("last").description("Whether this page is the last page."),
                                 fieldWithPath("size").description("Requested page size."),
                                 fieldWithPath("number").description("Current zero-based page index."),
-                                fieldWithPath("numberOfElements").description("Number of localizations returned in the current page."),
+                                fieldWithPath("numberOfElements")
+                                        .description("Number of localizations returned in the current page."),
                                 fieldWithPath("first").description("Whether this page is the first page."),
-                                fieldWithPath("empty").description("Whether the page content is empty.")
-                        )
-                ));
+                                fieldWithPath("empty").description("Whether the page content is empty."))));
     }
 
     @Test
@@ -163,13 +170,13 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                         .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "messageKey": "info.book.created",
-                                  "language": "fr",
-                                  "messageText": "Le livre a ete cree.",
-                                  "description": "French success message for new books."
-                                }
-                                """))
+                            {
+                              "messageKey": "info.book.created",
+                              "language": "fr",
+                              "messageText": "Le livre a ete cree.",
+                              "description": "French success message for new books."
+                            }
+                            """))
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
@@ -178,13 +185,14 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                         requestBody(),
                         requestFields(
                                 fieldWithPath("messageKey").description("Stable localization key."),
-                                fieldWithPath("language").description("Supported two-letter ISO 639-1 language code. Current values: `en`, `es`, `de`, `fr`, `pl`, `uk`, `no`."),
+                                fieldWithPath("language")
+                                        .description(
+                                                "Supported two-letter ISO 639-1 language code. Current values: `en`,"
+                                                        + " `es`, `de`, `fr`, `pl`, `uk`, `no`."),
                                 fieldWithPath("messageText").description("Localized message text."),
-                                fieldWithPath("description").description("Optional maintainer-facing description.")
-                        ),
+                                fieldWithPath("description").description("Optional maintainer-facing description.")),
                         responseHeaders(commonResponseHeaders()),
-                        responseFields(responseFieldDescriptors())
-                ));
+                        responseFields(responseFieldDescriptors())));
     }
 
     @Test
@@ -193,31 +201,31 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                         .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "messageKey": "error.book.not_found_custom",
-                                  "language": "fr",
-                                  "messageText": "Le livre demande est introuvable.",
-                                  "description": "French message for missing book errors."
-                                }
-                                """))
+                            {
+                              "messageKey": "error.book.not_found_custom",
+                              "language": "fr",
+                              "messageText": "Le livre demande est introuvable.",
+                              "description": "French message for missing book errors."
+                            }
+                            """))
                 .andExpect(status().isOk())
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
                 .andDo(documentEndpoint(
                         "localization/update-localization",
-                        pathParameters(
-                                parameterWithName("id").description("Localization identifier.")
-                        ),
+                        pathParameters(parameterWithName("id").description("Localization identifier.")),
                         requestBody(),
                         requestFields(
                                 fieldWithPath("messageKey").description("Stable localization key."),
-                                fieldWithPath("language").description("Supported two-letter ISO 639-1 language code. Current values: `en`, `es`, `de`, `fr`, `pl`, `uk`, `no`."),
+                                fieldWithPath("language")
+                                        .description(
+                                                "Supported two-letter ISO 639-1 language code. Current values: `en`,"
+                                                        + " `es`, `de`, `fr`, `pl`, `uk`, `no`."),
                                 fieldWithPath("messageText").description("Updated localized message text."),
-                                fieldWithPath("description").description("Optional updated maintainer-facing description.")
-                        ),
+                                fieldWithPath("description")
+                                        .description("Optional updated maintainer-facing description.")),
                         responseHeaders(commonResponseHeaders()),
-                        responseFields(responseFieldDescriptors())
-                ));
+                        responseFields(responseFieldDescriptors())));
     }
 
     @Test
@@ -229,43 +237,45 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                 .andExpect(header().exists("traceparent"))
                 .andDo(documentEndpoint(
                         "localization/delete-localization",
-                        pathParameters(
-                                parameterWithName("id").description("Localization identifier.")
-                        ),
-                        responseHeaders(commonResponseHeaders())
-                ));
+                        pathParameters(parameterWithName("id").description("Localization identifier.")),
+                        responseHeaders(commonResponseHeaders())));
     }
 
     @Test
     void documentListLocalizationsByLanguageEndpoint() throws Exception {
-        mockMvc.perform(get("/api/localizations")
-                        .queryParam("language", "es")
-                        .queryParam("sort", "messageKey,asc"))
+        mockMvc.perform(get("/api/localizations").queryParam("language", "es").queryParam("sort", "messageKey,asc"))
                 .andExpect(status().isOk())
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
                 .andDo(documentEndpoint(
                         "localization/list-localizations-by-language",
                         queryParameters(
-                                parameterWithName("messageKey").optional().description("Exact localization key filter."),
-                                parameterWithName("language").description(
-                                        "Supported two-letter ISO 639-1 language code filter. Current values: `en`, `es`, `de`, `fr`, `pl`, `uk`, `no`."
-                                ),
+                                parameterWithName("messageKey")
+                                        .optional()
+                                        .description("Exact localization key filter."),
+                                parameterWithName("language")
+                                        .description(
+                                                "Supported two-letter ISO 639-1 language code filter. Current values:"
+                                                        + " `en`, `es`, `de`, `fr`, `pl`, `uk`, `no`."),
                                 parameterWithName("page").optional().description("Zero-based page index."),
                                 parameterWithName("size").optional().description("Page size capped by the server."),
-                                parameterWithName("sort").optional().description(
-                                        "Sort expression in the form `property,direction`. Repeat the parameter for multiple sort fields. Supported properties: `id`, `messageKey`, `language`, `createdAt`, `updatedAt`."
-                                )
-                        ),
+                                parameterWithName("sort")
+                                        .optional()
+                                        .description("Sort expression in the form `property,direction`. Repeat the"
+                                                + " parameter for multiple sort fields. Supported properties:"
+                                                + " `id`, `messageKey`, `language`, `createdAt`, `updatedAt`.")),
                         responseHeaders(commonResponseHeaders()),
                         relaxedResponseFields(
                                 fieldWithPath("content[].id").description("Localization identifier."),
                                 fieldWithPath("content[].messageKey").description("Stable localization key."),
                                 fieldWithPath("content[].language").description("Two-letter ISO 639-1 language code."),
                                 fieldWithPath("content[].messageText").description("Localized message text."),
-                                fieldWithPath("content[].description").description("Optional description for maintainers."),
-                                fieldWithPath("content[].createdAt").description("Creation timestamp as a UTC instant."),
-                                fieldWithPath("content[].updatedAt").description("Last update timestamp as a UTC instant."),
+                                fieldWithPath("content[].description")
+                                        .description("Optional description for maintainers."),
+                                fieldWithPath("content[].createdAt")
+                                        .description("Creation timestamp as a UTC instant."),
+                                fieldWithPath("content[].updatedAt")
+                                        .description("Last update timestamp as a UTC instant."),
                                 subsectionWithPath("pageable").description("Pagination request metadata."),
                                 subsectionWithPath("sort").description("Applied sort metadata."),
                                 fieldWithPath("totalPages").description("Total number of pages."),
@@ -273,11 +283,10 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                                 fieldWithPath("last").description("Whether this page is the last page."),
                                 fieldWithPath("size").description("Requested page size."),
                                 fieldWithPath("number").description("Current zero-based page index."),
-                                fieldWithPath("numberOfElements").description("Number of localizations returned in the current page."),
+                                fieldWithPath("numberOfElements")
+                                        .description("Number of localizations returned in the current page."),
                                 fieldWithPath("first").description("Whether this page is the first page."),
-                                fieldWithPath("empty").description("Whether the page content is empty.")
-                        )
-                ));
+                                fieldWithPath("empty").description("Whether the page content is empty."))));
     }
 
     @Test
@@ -286,13 +295,13 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                         .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "messageKey": "Invalid Key",
-                                  "language": "english",
-                                  "messageText": " ",
-                                  "description": "x"
-                                }
-                                """))
+                            {
+                              "messageKey": "Invalid Key",
+                              "language": "english",
+                              "messageText": " ",
+                              "description": "x"
+                            }
+                            """))
                 .andExpect(status().isBadRequest())
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
@@ -300,8 +309,7 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                         "errors/create-localization-validation-failed",
                         requestBody(),
                         responseHeaders(commonResponseHeaders()),
-                        relaxedResponseFields(problemResponseFieldsWithFieldErrors())
-                ));
+                        relaxedResponseFields(problemResponseFieldsWithFieldErrors())));
     }
 
     @Test
@@ -310,13 +318,13 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                         .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "messageKey": "info.book.created",
-                                  "language": "it",
-                                  "messageText": "Libro creato.",
-                                  "description": "Unsupported language."
-                                }
-                                """))
+                            {
+                              "messageKey": "info.book.created",
+                              "language": "it",
+                              "messageText": "Libro creato.",
+                              "description": "Unsupported language."
+                            }
+                            """))
                 .andExpect(status().isBadRequest())
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
@@ -324,8 +332,7 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                         "errors/create-localization-unsupported-language",
                         requestBody(),
                         responseHeaders(commonResponseHeaders()),
-                        relaxedResponseFields(problemResponseFields())
-                ));
+                        relaxedResponseFields(problemResponseFields())));
     }
 
     @Test
@@ -334,13 +341,13 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                         .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "messageKey": "error.book.not_found",
-                                  "language": "es",
-                                  "messageText": "Duplicated message.",
-                                  "description": "Should fail."
-                                }
-                                """))
+                            {
+                              "messageKey": "error.book.not_found",
+                              "language": "es",
+                              "messageText": "Duplicated message.",
+                              "description": "Should fail."
+                            }
+                            """))
                 .andExpect(status().isConflict())
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
@@ -348,8 +355,7 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                         "errors/create-localization-duplicate",
                         requestBody(),
                         responseHeaders(commonResponseHeaders()),
-                        relaxedResponseFields(problemResponseFields())
-                ));
+                        relaxedResponseFields(problemResponseFields())));
     }
 
     @Test
@@ -361,21 +367,22 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                 .andDo(documentEndpoint(
                         "errors/get-localization-not-found",
                         pathParameters(
-                                parameterWithName("id").description("Localization identifier that does not exist.")
-                        ),
+                                parameterWithName("id").description("Localization identifier that does not exist.")),
                         responseHeaders(commonResponseHeaders()),
-                        relaxedResponseFields(problemResponseFields())
-                ));
+                        relaxedResponseFields(problemResponseFields())));
     }
+
     private org.springframework.restdocs.payload.FieldDescriptor[] responseFieldDescriptors() {
-        return new org.springframework.restdocs.payload.FieldDescriptor[]{
-                fieldWithPath("id").description("Localization identifier."),
-                fieldWithPath("messageKey").description("Stable localization key."),
-                fieldWithPath("language").description("Supported two-letter ISO 639-1 language code. Current values: `en`, `es`, `de`, `fr`, `pl`, `uk`, `no`."),
-                fieldWithPath("messageText").description("Localized message text."),
-                fieldWithPath("description").description("Optional description for maintainers."),
-                fieldWithPath("createdAt").description("Creation timestamp as a UTC instant."),
-                fieldWithPath("updatedAt").description("Last update timestamp as a UTC instant.")
+        return new org.springframework.restdocs.payload.FieldDescriptor[] {
+            fieldWithPath("id").description("Localization identifier."),
+            fieldWithPath("messageKey").description("Stable localization key."),
+            fieldWithPath("language")
+                    .description("Supported two-letter ISO 639-1 language code. Current values: `en`, `es`, `de`, `fr`,"
+                            + " `pl`, `uk`, `no`."),
+            fieldWithPath("messageText").description("Localized message text."),
+            fieldWithPath("description").description("Optional description for maintainers."),
+            fieldWithPath("createdAt").description("Creation timestamp as a UTC instant."),
+            fieldWithPath("updatedAt").description("Last update timestamp as a UTC instant.")
         };
     }
 }

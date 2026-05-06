@@ -1,15 +1,12 @@
 package team.jit.technicalinterviewdemo.business.book;
 
 import jakarta.persistence.criteria.JoinType;
-
 import java.util.List;
-
 import org.springframework.data.jpa.domain.Specification;
 
 public final class BookSearchSpecifications {
 
-    private BookSearchSpecifications() {
-    }
+    private BookSearchSpecifications() {}
 
     public static Specification<Book> fromSearchRequest(BookSearchRequest request) {
         return fromCriteria(BookSearchCriteria.fromRequest(request));
@@ -21,7 +18,8 @@ public final class BookSearchSpecifications {
         specification = and(specification, containsIgnoreCase("author", criteria.author()));
         specification = and(specification, containsIgnoreCase("isbn", criteria.isbn()));
         specification = and(specification, hasCategoryName(criteria.categories()));
-        specification = and(specification, publicationYearMatches(criteria.year(), criteria.yearFrom(), criteria.yearTo()));
+        specification =
+                and(specification, publicationYearMatches(criteria.year(), criteria.yearFrom(), criteria.yearTo()));
         return specification == null ? (root, query, criteriaBuilder) -> criteriaBuilder.conjunction() : specification;
     }
 
@@ -60,7 +58,9 @@ public final class BookSearchSpecifications {
 
         return (root, query, criteriaBuilder) -> {
             query.distinct(true);
-            return criteriaBuilder.lower(root.join("categories", JoinType.LEFT).get("name")).in(categories);
+            return criteriaBuilder
+                    .lower(root.join("categories", JoinType.LEFT).get("name"))
+                    .in(categories);
         };
     }
 

@@ -14,12 +14,15 @@ import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
 import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
 
 @MockMvcIntegrationSpringBootTest
-@ActiveProfiles(value = {"test", "prod", "oauth"}, inheritProfiles = false)
-@TestPropertySource(properties = {
-        "server.servlet.session.cookie.secure=true",
-        "app.security.oauth.providers.github.client-id=test-client-id",
-        "app.security.oauth.providers.github.client-secret=test-client-secret"
-})
+@ActiveProfiles(
+        value = {"test", "prod", "oauth"},
+        inheritProfiles = false)
+@TestPropertySource(
+        properties = {
+            "server.servlet.session.cookie.secure=true",
+            "app.security.oauth.providers.github.client-id=test-client-id",
+            "app.security.oauth.providers.github.client-secret=test-client-secret"
+        })
 class ReverseProxyBoundaryIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Test
@@ -32,7 +35,10 @@ class ReverseProxyBoundaryIntegrationTests extends AbstractMockMvcIntegrationTes
 
         String location = result.getResponse().getHeader("Location");
         assertThat(location).startsWith("https://github.com/login/oauth/authorize?");
-        assertThat(UriComponentsBuilder.fromUriString(location).build(true).getQueryParams().getFirst("redirect_uri"))
+        assertThat(UriComponentsBuilder.fromUriString(location)
+                        .build(true)
+                        .getQueryParams()
+                        .getFirst("redirect_uri"))
                 .isEqualTo("https://demo.example.test/api/session/login/oauth2/code/github");
     }
 

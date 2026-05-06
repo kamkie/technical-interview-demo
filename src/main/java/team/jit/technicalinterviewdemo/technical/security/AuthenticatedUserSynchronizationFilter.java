@@ -5,27 +5,24 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
 import java.io.IOException;
-
 import lombok.RequiredArgsConstructor;
-import team.jit.technicalinterviewdemo.business.user.CurrentUserAccountService;
 import org.springframework.web.filter.OncePerRequestFilter;
+import team.jit.technicalinterviewdemo.business.user.CurrentUserAccountService;
 
 @RequiredArgsConstructor
 public class AuthenticatedUserSynchronizationFilter extends OncePerRequestFilter {
 
-    private static final String SESSION_ATTRIBUTE = AuthenticatedUserSynchronizationFilter.class.getName() + ".syncedUser";
+    private static final String SESSION_ATTRIBUTE =
+            AuthenticatedUserSynchronizationFilter.class.getName() + ".syncedUser";
 
     private final CurrentUserAccountService currentUserAccountService;
 
     @Override
-    protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
-    ) throws ServletException, IOException {
-        currentUserAccountService.currentAuthenticatedUserKey()
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        currentUserAccountService
+                .currentAuthenticatedUserKey()
                 .ifPresent(authenticatedUserKey -> synchronizeUser(request, authenticatedUserKey));
         filterChain.doFilter(request, response);
     }

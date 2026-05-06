@@ -28,8 +28,7 @@ public class AuditLogService {
             Long targetId,
             AuditAction action,
             String summary,
-            Map<String, Object> details
-    ) {
+            Map<String, Object> details) {
         UserAccount actorUser = currentUserAccountService.findCurrentUser().orElse(null);
         String actorLogin = actorUser == null ? "system" : actorUser.getExternalLogin();
         return recordWithActor(targetType, targetId, action, actorUser, actorLogin, summary, details);
@@ -43,17 +42,9 @@ public class AuditLogService {
             UserAccount actorUser,
             String actorLogin,
             String summary,
-            Map<String, Object> details
-    ) {
-        AuditLog auditLog = new AuditLog(
-                targetType,
-                targetId,
-                action,
-                actorUser,
-                actorLogin,
-                summary,
-                normalizeDetails(details)
-        );
+            Map<String, Object> details) {
+        AuditLog auditLog =
+                new AuditLog(targetType, targetId, action, actorUser, actorLogin, summary, normalizeDetails(details));
         AuditLog savedAuditLog = auditLogRepository.save(auditLog);
         log.info(
                 "Recorded audit log id={} targetType={} targetId={} action={} actorLogin={}",
@@ -61,8 +52,7 @@ public class AuditLogService {
                 savedAuditLog.getTargetType(),
                 savedAuditLog.getTargetId(),
                 savedAuditLog.getAction(),
-                savedAuditLog.getActorLogin()
-        );
+                savedAuditLog.getActorLogin());
         return savedAuditLog;
     }
 
@@ -73,4 +63,3 @@ public class AuditLogService {
         return new LinkedHashMap<>(details);
     }
 }
-

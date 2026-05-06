@@ -33,7 +33,8 @@ class CategoryDataInitializerTests {
     @Test
     void seedCategoriesWritesDefaultNamesWhenDemoBootstrapIsEnabled() throws Exception {
         CategoryDataInitializer initializer = new CategoryDataInitializer();
-        when(categoryRepository.existsByNameIgnoreCase(org.mockito.ArgumentMatchers.anyString())).thenReturn(false);
+        when(categoryRepository.existsByNameIgnoreCase(org.mockito.ArgumentMatchers.anyString()))
+                .thenReturn(false);
         when(categoryRepository.save(org.mockito.ArgumentMatchers.any(Category.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0, Category.class));
 

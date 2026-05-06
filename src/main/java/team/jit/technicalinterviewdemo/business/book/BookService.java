@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -35,8 +34,7 @@ public class BookService {
             "author", "author",
             "isbn", "isbn",
             "year", "publicationYear",
-            "publicationYear", "publicationYear"
-    );
+            "publicationYear", "publicationYear");
 
     private final BookRepository bookRepository;
     private final CategoryService categoryService;
@@ -68,8 +66,7 @@ public class BookService {
                 savedBook.getId(),
                 AuditAction.CREATE,
                 "Created book '%s' with ISBN %s.".formatted(savedBook.getTitle(), savedBook.getIsbn()),
-                auditDetails(savedBook)
-        );
+                auditDetails(savedBook));
         log.info("Created book id={} isbn={} title={}", savedBook.getId(), savedBook.getIsbn(), savedBook.getTitle());
         return savedBook;
     }
@@ -98,9 +95,12 @@ public class BookService {
                 updatedBook.getId(),
                 AuditAction.UPDATE,
                 "Updated book '%s' with ISBN %s.".formatted(updatedBook.getTitle(), updatedBook.getIsbn()),
-                auditDetails(updatedBook)
-        );
-        log.info("Updated book id={} isbn={} title={}", updatedBook.getId(), updatedBook.getIsbn(), updatedBook.getTitle());
+                auditDetails(updatedBook));
+        log.info(
+                "Updated book id={} isbn={} title={}",
+                updatedBook.getId(),
+                updatedBook.getIsbn(),
+                updatedBook.getTitle());
         return updatedBook;
     }
 
@@ -114,8 +114,7 @@ public class BookService {
                 id,
                 AuditAction.DELETE,
                 "Deleted book '%s' with ISBN %s.".formatted(book.getTitle(), book.getIsbn()),
-                auditDetails(book)
-        );
+                auditDetails(book));
         log.info("Deleted book id={}", id);
     }
 
@@ -126,12 +125,12 @@ public class BookService {
     }
 
     private Book requireBook(Long id) {
-        return bookRepository.findById(id)
-                .orElseThrow(() -> new BookNotFoundException(id));
+        return bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
     }
 
     private Pageable createEffectivePageable(Pageable pageable) {
-        Sort effectiveSort = pageable.getSort().isSorted() ? normalizeSort(pageable.getSort()) : Sort.by(Sort.Order.asc("id"));
+        Sort effectiveSort =
+                pageable.getSort().isSorted() ? normalizeSort(pageable.getSort()) : Sort.by(Sort.Order.asc("id"));
         return PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), effectiveSort);
     }
 
@@ -142,8 +141,7 @@ public class BookService {
             if (property == null) {
                 throw new InvalidRequestException(
                         "Sort field '%s' is not supported. Use one of: id, title, author, isbn, year."
-                                .formatted(order.getProperty())
-                );
+                                .formatted(order.getProperty()));
             }
             orders.add(new Sort.Order(order.getDirection(), property));
         }
@@ -156,10 +154,10 @@ public class BookService {
                 "author", book.getAuthor(),
                 "isbn", book.getIsbn(),
                 "publicationYear", book.getPublicationYear(),
-                "categories", book.getCategories().stream()
-                        .map(Category::getName)
-                        .sorted()
-                        .toList()
-        );
+                "categories",
+                        book.getCategories().stream()
+                                .map(Category::getName)
+                                .sorted()
+                                .toList());
     }
 }

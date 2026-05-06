@@ -35,11 +35,7 @@ public class OperatorSurfaceService {
 
     public OperatorSurfaceResponse getOperatorSurface() {
         requireAdminRole();
-        return new OperatorSurfaceResponse(
-                buildAuditSection(),
-                buildRuntimeDiagnostics(),
-                buildOperationalStatus()
-        );
+        return new OperatorSurfaceResponse(buildAuditSection(), buildRuntimeDiagnostics(), buildOperationalStatus());
     }
 
     private void requireAdminRole() {
@@ -48,24 +44,19 @@ public class OperatorSurfaceService {
 
     private OperatorSurfaceResponse.AuditSection buildAuditSection() {
         return new OperatorSurfaceResponse.AuditSection(
-                OPERATOR_AUDIT_ENDPOINT,
-                auditLogRepository.count(),
-                loadRecentAuditEntries()
-        );
+                OPERATOR_AUDIT_ENDPOINT, auditLogRepository.count(), loadRecentAuditEntries());
     }
 
     private List<AuditLogResponse> loadRecentAuditEntries() {
-        return auditLogRepository.findAll(PageRequest.of(0, RECENT_AUDIT_LIMIT, Sort.by(Sort.Direction.DESC, "id")))
+        return auditLogRepository
+                .findAll(PageRequest.of(0, RECENT_AUDIT_LIMIT, Sort.by(Sort.Direction.DESC, "id")))
                 .map(AuditLogResponse::from)
                 .getContent();
     }
 
     private OperatorSurfaceResponse.RuntimeDiagnostics buildRuntimeDiagnostics() {
         TechnicalOverviewResponse technicalOverview = technicalOverviewService.getOverview();
-        return new OperatorSurfaceResponse.RuntimeDiagnostics(
-                OPERATOR_TECHNICAL_OVERVIEW_ENDPOINT,
-                technicalOverview
-        );
+        return new OperatorSurfaceResponse.RuntimeDiagnostics(OPERATOR_TECHNICAL_OVERVIEW_ENDPOINT, technicalOverview);
     }
 
     private OperatorSurfaceResponse.OperationalStatus buildOperationalStatus() {
@@ -76,7 +67,6 @@ public class OperatorSurfaceService {
                 OPERATOR_ACTUATOR_PROMETHEUS_ENDPOINT,
                 healthStatus,
                 applicationAvailability.getLivenessState().name(),
-                applicationAvailability.getReadinessState().name()
-        );
+                applicationAvailability.getReadinessState().name());
     }
 }

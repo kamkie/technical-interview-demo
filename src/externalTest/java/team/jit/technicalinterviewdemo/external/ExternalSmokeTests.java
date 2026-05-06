@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.net.http.HttpResponse;
 import java.util.Map;
 import java.util.stream.StreamSupport;
-
 import org.junit.jupiter.api.Test;
 
 class ExternalSmokeTests extends ExternalHttpTestSupport {
@@ -29,33 +28,30 @@ class ExternalSmokeTests extends ExternalHttpTestSupport {
         assertTrue(response.body().contains("\"build\""));
         assertTrue(response.body().contains("\"configuration\""));
         assertTrue(
-                overview.path("configuration").path("security").path("csrfEnabled").asBoolean(false),
-                "Expected the published overview to report CSRF enabled."
-        );
+                overview.path("configuration")
+                        .path("security")
+                        .path("csrfEnabled")
+                        .asBoolean(false),
+                "Expected the published overview to report CSRF enabled.");
         assertEquals("XSRF-TOKEN", textAt(overview, "configuration", "security", "csrfCookieName"));
         assertEquals("X-XSRF-TOKEN", textAt(overview, "configuration", "security", "csrfHeaderName"));
         assertEquals("edge-or-gateway", textAt(overview, "configuration", "security", "abuseProtection", "owner"));
         assertEquals(
                 "/api/session/oauth2/authorization/{registrationId}",
-                textAt(overview, "configuration", "security", "abuseProtection", "loginBootstrapPathTemplate")
-        );
-        assertEquals("/api/**", textAt(overview, "configuration", "security", "abuseProtection", "unsafeWritePathPattern"));
+                textAt(overview, "configuration", "security", "abuseProtection", "loginBootstrapPathTemplate"));
+        assertEquals(
+                "/api/**", textAt(overview, "configuration", "security", "abuseProtection", "unsafeWritePathPattern"));
     }
 
     @Test
     void rootEndpointMatchesExpectedReleaseIdentityWhenConfigured() throws IOException, InterruptedException {
-        String expectedBuildVersion = expectedValue(
-                "external.expected.buildVersion",
-                "EXTERNAL_CHECK_EXPECTED_BUILD_VERSION"
-        );
-        String expectedShortCommitId = expectedValue(
-                "external.expected.shortCommitId",
-                "EXTERNAL_CHECK_EXPECTED_SHORT_COMMIT_ID"
-        );
+        String expectedBuildVersion =
+                expectedValue("external.expected.buildVersion", "EXTERNAL_CHECK_EXPECTED_BUILD_VERSION");
+        String expectedShortCommitId =
+                expectedValue("external.expected.shortCommitId", "EXTERNAL_CHECK_EXPECTED_SHORT_COMMIT_ID");
         assumeTrue(
                 expectedBuildVersion != null && expectedShortCommitId != null,
-                "Skipping release identity assertions because expected build identity is not configured."
-        );
+                "Skipping release identity assertions because expected build identity is not configured.");
 
         HttpResponse<String> response = get("/", "application/json");
         JsonNode overview = jsonBody(response);
@@ -67,41 +63,34 @@ class ExternalSmokeTests extends ExternalHttpTestSupport {
 
     @Test
     void rootEndpointMatchesExpectedRuntimePostureWhenConfigured() throws IOException, InterruptedException {
-        String expectedActiveProfile = expectedValue(
-                "external.expected.activeProfile",
-                "EXTERNAL_CHECK_EXPECTED_ACTIVE_PROFILE"
-        );
-        String expectedSessionStoreType = expectedValue(
-                "external.expected.sessionStoreType",
-                "EXTERNAL_CHECK_EXPECTED_SESSION_STORE_TYPE"
-        );
-        String expectedSessionTimeout = expectedValue(
-                "external.expected.sessionTimeout",
-                "EXTERNAL_CHECK_EXPECTED_SESSION_TIMEOUT"
-        );
+        String expectedActiveProfile =
+                expectedValue("external.expected.activeProfile", "EXTERNAL_CHECK_EXPECTED_ACTIVE_PROFILE");
+        String expectedSessionStoreType =
+                expectedValue("external.expected.sessionStoreType", "EXTERNAL_CHECK_EXPECTED_SESSION_STORE_TYPE");
+        String expectedSessionTimeout =
+                expectedValue("external.expected.sessionTimeout", "EXTERNAL_CHECK_EXPECTED_SESSION_TIMEOUT");
         assumeTrue(
-                expectedActiveProfile != null
-                        && expectedSessionStoreType != null
-                        && expectedSessionTimeout != null,
-                "Skipping runtime posture assertions because expected deployment posture is not configured."
-        );
+                expectedActiveProfile != null && expectedSessionStoreType != null && expectedSessionTimeout != null,
+                "Skipping runtime posture assertions because expected deployment posture is not configured.");
 
         HttpResponse<String> response = get("/", "application/json");
         JsonNode overview = jsonBody(response);
 
         assertEquals(200, response.statusCode());
         assertTrue(
-                StreamSupport.stream(overview.path("runtime").path("activeProfiles").spliterator(), false)
+                StreamSupport.stream(
+                                overview.path("runtime").path("activeProfiles").spliterator(), false)
                         .map(JsonNode::asText)
                         .anyMatch(expectedActiveProfile::equals),
-                "Expected active profile '%s' to be present.".formatted(expectedActiveProfile)
-        );
+                "Expected active profile '%s' to be present.".formatted(expectedActiveProfile));
         assertEquals(expectedSessionStoreType, textAt(overview, "configuration", "session", "storeType"));
         assertEquals(expectedSessionTimeout, textAt(overview, "configuration", "session", "timeout"));
         assertTrue(
-                overview.path("configuration").path("security").path("csrfEnabled").asBoolean(false),
-                "Expected CSRF to remain enabled for the documented prod posture."
-        );
+                overview.path("configuration")
+                        .path("security")
+                        .path("csrfEnabled")
+                        .asBoolean(false),
+                "Expected CSRF to remain enabled for the documented prod posture.");
         assertEquals("XSRF-TOKEN", textAt(overview, "configuration", "security", "csrfCookieName"));
         assertEquals("X-XSRF-TOKEN", textAt(overview, "configuration", "security", "csrfHeaderName"));
         assertEquals("edge-or-gateway", textAt(overview, "configuration", "security", "abuseProtection", "owner"));
@@ -173,11 +162,11 @@ class ExternalSmokeTests extends ExternalHttpTestSupport {
     }
 
     @Test
-    void sessionEndpointBootstrapsCsrfCookieForJdbcBackedAuthenticatedSession() throws IOException, InterruptedException {
+    void sessionEndpointBootstrapsCsrfCookieForJdbcBackedAuthenticatedSession()
+            throws IOException, InterruptedException {
         assumeTrue(
                 ExternalSessionSupport.isJdbcConfigured(),
-                "Skipping JDBC-backed session smoke assertions because external JDBC configuration is not available."
-        );
+                "Skipping JDBC-backed session smoke assertions because external JDBC configuration is not available.");
         try (ExternalSessionSupport sessionSupport = ExternalSessionSupport.create()) {
             String sessionId = sessionSupport.createAuthenticatedSession(SMOKE_LOGIN);
 
@@ -202,8 +191,7 @@ class ExternalSmokeTests extends ExternalHttpTestSupport {
             throws IOException, InterruptedException {
         assumeTrue(
                 ExternalSessionSupport.isJdbcConfigured(),
-                "Skipping JDBC-backed session smoke assertions because external JDBC configuration is not available."
-        );
+                "Skipping JDBC-backed session smoke assertions because external JDBC configuration is not available.");
         try (ExternalSessionSupport sessionSupport = ExternalSessionSupport.create()) {
             String sessionId = sessionSupport.createAuthenticatedSession(SMOKE_LOGIN);
 
@@ -218,16 +206,12 @@ class ExternalSmokeTests extends ExternalHttpTestSupport {
                     "/api/account/language",
                     "application/json",
                     Map.of("X-XSRF-TOKEN", csrfToken),
-                    Map.of(
-                            SESSION_COOKIE_NAME, encodedSessionCookieValue(sessionId),
-                            CSRF_COOKIE_NAME, csrfToken
-                    ),
+                    Map.of(SESSION_COOKIE_NAME, encodedSessionCookieValue(sessionId), CSRF_COOKIE_NAME, csrfToken),
                     """
                     {
                       "preferredLanguage": "pl"
                     }
-                    """
-            );
+                    """);
             JsonNode account = jsonBody(response);
 
             assertEquals(200, response.statusCode());
@@ -250,8 +234,7 @@ class ExternalSmokeTests extends ExternalHttpTestSupport {
     void flywayStateIsInspectableWhenJdbcAccessIsConfigured() {
         assumeTrue(
                 ExternalSessionSupport.isJdbcConfigured(),
-                "Skipping Flyway verification because external JDBC configuration is not available."
-        );
+                "Skipping Flyway verification because external JDBC configuration is not available.");
         try (ExternalSessionSupport sessionSupport = ExternalSessionSupport.create()) {
             assertTrue(sessionSupport.hasFlywaySchemaHistoryTable());
             assertTrue(sessionSupport.successfulFlywayMigrationCount() > 0);

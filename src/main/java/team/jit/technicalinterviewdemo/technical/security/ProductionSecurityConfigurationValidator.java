@@ -16,8 +16,7 @@ public class ProductionSecurityConfigurationValidator implements InitializingBea
 
     private static final Pattern EXTERNAL_LOGIN_PATTERN =
             Pattern.compile("^[A-Za-z\\d](?:[A-Za-z\\d._@-]{0,126}[A-Za-z\\d])?$");
-    private static final Pattern PROVIDER_ID_PATTERN =
-            Pattern.compile("^[a-z\\d](?:[a-z\\d-]{0,48}[a-z\\d])?$");
+    private static final Pattern PROVIDER_ID_PATTERN = Pattern.compile("^[a-z\\d](?:[a-z\\d-]{0,48}[a-z\\d])?$");
 
     private final BootstrapSettingsProperties bootstrapSettingsProperties;
     private final SecuritySettingsProperties securitySettingsProperties;
@@ -39,54 +38,44 @@ public class ProductionSecurityConfigurationValidator implements InitializingBea
         SecuritySettingsProperties.Session session = securitySettingsProperties.getSession();
         if (!session.isCookieSecure()) {
             throw new IllegalStateException(
-                    "Prod profile requires SESSION_COOKIE_SECURE=true so authenticated browser sessions stay secure."
-            );
+                    "Prod profile requires SESSION_COOKIE_SECURE=true so authenticated browser sessions stay secure.");
         }
         if (session.getTimeout().compareTo(Duration.ofMinutes(5)) < 0) {
             throw new IllegalStateException(
-                    "Prod profile requires server.servlet.session.timeout to be at least 5 minutes."
-            );
+                    "Prod profile requires server.servlet.session.timeout to be at least 5 minutes.");
         }
         if (!session.isCookieHttpOnly()) {
-            throw new IllegalStateException(
-                    "Prod profile requires server.servlet.session.cookie.http-only=true."
-            );
+            throw new IllegalStateException("Prod profile requires server.servlet.session.cookie.http-only=true.");
         }
         if (!"lax".equalsIgnoreCase(session.getCookieSameSite())
                 && !"strict".equalsIgnoreCase(session.getCookieSameSite())) {
             throw new IllegalStateException(
-                    "Prod profile requires server.servlet.session.cookie.same-site to be lax or strict."
-            );
+                    "Prod profile requires server.servlet.session.cookie.same-site to be lax or strict.");
         }
     }
 
     private void validateRemovedSettings() {
         String deprecatedDefaultProvider = firstNonBlank(
                 environment.getProperty("OAUTH_DEFAULT_PROVIDER"),
-                environment.getProperty("app.security.oauth.default-provider")
-        );
+                environment.getProperty("app.security.oauth.default-provider"));
         if (deprecatedDefaultProvider != null) {
             throw new IllegalStateException(
-                    "OAUTH_DEFAULT_PROVIDER has been removed. Expose provider choices through GET /api/session loginProviders[]."
-            );
+                    "OAUTH_DEFAULT_PROVIDER has been removed. Expose provider choices through GET /api/session"
+                            + " loginProviders[].");
         }
         String deprecatedAdminLogins = firstNonBlank(
-                environment.getProperty("ADMIN_LOGINS"),
-                environment.getProperty("app.security.admin-logins")
-        );
+                environment.getProperty("ADMIN_LOGINS"), environment.getProperty("app.security.admin-logins"));
         if (deprecatedAdminLogins != null) {
             throw new IllegalStateException(
-                    "ADMIN_LOGINS has been removed. Use APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES only for zero-admin bootstrap, then manage roles through /api/admin/users."
-            );
+                    "ADMIN_LOGINS has been removed. Use APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES only for zero-admin"
+                            + " bootstrap, then manage roles through /api/admin/users.");
         }
     }
 
     private void validateForwardedHeaderStrategy() {
         String forwardHeadersStrategy = environment.getProperty("server.forward-headers-strategy", "");
         if (!"framework".equalsIgnoreCase(forwardHeadersStrategy)) {
-            throw new IllegalStateException(
-                    "Prod profile requires server.forward-headers-strategy=framework."
-            );
+            throw new IllegalStateException("Prod profile requires server.forward-headers-strategy=framework.");
         }
     }
 
@@ -111,46 +100,39 @@ public class ProductionSecurityConfigurationValidator implements InitializingBea
             return;
         }
         SecuritySettingsProperties.OAuth oauthSettings = securitySettingsProperties.getOAuth();
-        Map<String, SecuritySettingsProperties.OAuth.Provider> configuredProviders = oauthSettings.configuredProviders();
+        Map<String, SecuritySettingsProperties.OAuth.Provider> configuredProviders =
+                oauthSettings.configuredProviders();
         if (configuredProviders.isEmpty()) {
             throw new IllegalStateException(
-                    "OAuth-enabled prod profile requires at least one configured identity provider."
-            );
+                    "OAuth-enabled prod profile requires at least one configured identity provider.");
         }
 
-        for (Map.Entry<String, SecuritySettingsProperties.OAuth.Provider> providerEntry : configuredProviders.entrySet()) {
+        for (Map.Entry<String, SecuritySettingsProperties.OAuth.Provider> providerEntry :
+                configuredProviders.entrySet()) {
             String registrationId = providerEntry.getKey();
             SecuritySettingsProperties.OAuth.Provider provider = providerEntry.getValue();
             validateProviderId(registrationId);
             validateProviderConfiguration(registrationId, provider);
         }
-
     }
 
     private void validateProviderId(String registrationId) {
         if (!PROVIDER_ID_PATTERN.matcher(registrationId).matches()) {
             throw new IllegalStateException(
                     "OAuth provider id must match [a-z0-9-] and start/end with alphanumeric. Invalid value: "
-                            + registrationId
-            );
+                            + registrationId);
         }
     }
 
     private void validateProviderConfiguration(
-            String registrationId,
-            SecuritySettingsProperties.OAuth.Provider provider
-    ) {
+            String registrationId, SecuritySettingsProperties.OAuth.Provider provider) {
         if (provider.getType() == null) {
             throw new IllegalStateException(
-                    "OAuth provider '%s' requires a type of GITHUB or OIDC."
-                            .formatted(registrationId)
-            );
+                    "OAuth provider '%s' requires a type of GITHUB or OIDC.".formatted(registrationId));
         }
         if (!provider.hasClientCredentials()) {
             throw new IllegalStateException(
-                    "OAuth provider '%s' requires both client-id and client-secret."
-                            .formatted(registrationId)
-            );
+                    "OAuth provider '%s' requires both client-id and client-secret.".formatted(registrationId));
         }
         switch (provider.getType()) {
             case GITHUB -> validateGithubProvider(registrationId, provider);
@@ -158,33 +140,19 @@ public class ProductionSecurityConfigurationValidator implements InitializingBea
         }
     }
 
-    private void validateGithubProvider(
-            String registrationId,
-            SecuritySettingsProperties.OAuth.Provider provider
-    ) {
+    private void validateGithubProvider(String registrationId, SecuritySettingsProperties.OAuth.Provider provider) {
         if (!provider.normalizedIssuerUri().isBlank()) {
             throw new IllegalStateException(
-                    "GitHub provider '%s' must not define issuer-uri."
-                            .formatted(registrationId)
-            );
+                    "GitHub provider '%s' must not define issuer-uri.".formatted(registrationId));
         }
     }
 
-    private void validateOidcProvider(
-            String registrationId,
-            SecuritySettingsProperties.OAuth.Provider provider
-    ) {
+    private void validateOidcProvider(String registrationId, SecuritySettingsProperties.OAuth.Provider provider) {
         if (provider.normalizedIssuerUri().isBlank()) {
-            throw new IllegalStateException(
-                    "OIDC provider '%s' requires issuer-uri."
-                            .formatted(registrationId)
-            );
+            throw new IllegalStateException("OIDC provider '%s' requires issuer-uri.".formatted(registrationId));
         }
         if (!provider.normalizedScope().contains("openid")) {
-            throw new IllegalStateException(
-                    "OIDC provider '%s' scope must include openid."
-                            .formatted(registrationId)
-            );
+            throw new IllegalStateException("OIDC provider '%s' scope must include openid.".formatted(registrationId));
         }
     }
 
@@ -200,8 +168,8 @@ public class ProductionSecurityConfigurationValidator implements InitializingBea
 
     private IllegalStateException invalidInitialAdminIdentities(String identity) {
         return new IllegalStateException(
-                "APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES must contain comma-separated provider:externalLogin values. Invalid value: "
-                        + identity
-        );
+                "APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES must contain comma-separated provider:externalLogin values."
+                        + " Invalid value: "
+                        + identity);
     }
 }

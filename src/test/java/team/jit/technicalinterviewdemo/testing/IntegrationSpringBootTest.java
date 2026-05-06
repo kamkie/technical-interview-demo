@@ -6,7 +6,6 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
 import org.springframework.boot.test.context.SpringBootTest;
 
 @Target(ElementType.TYPE)
@@ -15,5 +14,4 @@ import org.springframework.boot.test.context.SpringBootTest;
 @Inherited
 @TestcontainersTest
 @SpringBootTest
-public @interface IntegrationSpringBootTest {
-}
+public @interface IntegrationSpringBootTest {}

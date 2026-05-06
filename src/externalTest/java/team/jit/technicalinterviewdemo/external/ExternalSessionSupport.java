@@ -2,11 +2,10 @@ package team.jit.technicalinterviewdemo.external;
 
 import java.util.Map;
 import javax.sql.DataSource;
-
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextImpl;
@@ -26,8 +25,7 @@ final class ExternalSessionSupport implements AutoCloseable {
     private ExternalSessionSupport(
             AnnotationConfigApplicationContext context,
             JdbcTemplate jdbcTemplate,
-            SessionRepository<Session> sessionRepository
-    ) {
+            SessionRepository<Session> sessionRepository) {
         this.context = context;
         this.jdbcTemplate = jdbcTemplate;
         this.sessionRepository = sessionRepository;
@@ -43,8 +41,7 @@ final class ExternalSessionSupport implements AutoCloseable {
         DriverManagerDataSource dataSource = new DriverManagerDataSource(
                 requiredConfigurationValue("external.jdbc.url", "EXTERNAL_JDBC_URL"),
                 requiredConfigurationValue("external.jdbc.user", "EXTERNAL_JDBC_USER"),
-                requiredConfigurationValue("external.jdbc.password", "EXTERNAL_JDBC_PASSWORD")
-        );
+                requiredConfigurationValue("external.jdbc.password", "EXTERNAL_JDBC_PASSWORD"));
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
         context.registerBean(DataSource.class, () -> dataSource);
         context.registerBean(JdbcTemplate.class, () -> new JdbcTemplate(dataSource));
@@ -64,13 +61,10 @@ final class ExternalSessionSupport implements AutoCloseable {
                 Map.of(
                         "login", login,
                         "name", login + " display",
-                        "email", login + "@example.test"
-                ),
-                "login"
-        );
+                        "email", login + "@example.test"),
+                "login");
         SecurityContext securityContext = new SecurityContextImpl(
-                new OAuth2AuthenticationToken(oauth2User, oauth2User.getAuthorities(), "github")
-        );
+                new OAuth2AuthenticationToken(oauth2User, oauth2User.getAuthorities(), "github"));
         Session session = sessionRepository.createSession();
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
         sessionRepository.save(session);
@@ -79,24 +73,17 @@ final class ExternalSessionSupport implements AutoCloseable {
 
     int sessionRowCount(String sessionId) {
         Integer count = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM SPRING_SESSION WHERE SESSION_ID = ?",
-                Integer.class,
-                sessionId
-        );
+                "SELECT COUNT(*) FROM SPRING_SESSION WHERE SESSION_ID = ?", Integer.class, sessionId);
         return count == null ? 0 : count;
     }
 
     int sessionAttributeCount(String sessionId) {
-        Integer count = jdbcTemplate.queryForObject(
-                """
-                SELECT COUNT(*)
-                FROM SPRING_SESSION_ATTRIBUTES attributes
-                JOIN SPRING_SESSION sessions ON sessions.PRIMARY_ID = attributes.SESSION_PRIMARY_ID
-                WHERE sessions.SESSION_ID = ?
-                """,
-                Integer.class,
-                sessionId
-        );
+        Integer count = jdbcTemplate.queryForObject("""
+            SELECT COUNT(*)
+            FROM SPRING_SESSION_ATTRIBUTES attributes
+            JOIN SPRING_SESSION sessions ON sessions.PRIMARY_ID = attributes.SESSION_PRIMARY_ID
+            WHERE sessions.SESSION_ID = ?
+            """, Integer.class, sessionId);
         return count == null ? 0 : count;
     }
 
@@ -113,35 +100,28 @@ final class ExternalSessionSupport implements AutoCloseable {
     }
 
     boolean hasFlywaySchemaHistoryTable() {
-        Integer count = jdbcTemplate.queryForObject(
-                """
-                SELECT COUNT(*)
-                FROM information_schema.tables
-                WHERE table_schema = 'public' AND table_name = 'flyway_schema_history'
-                """,
-                Integer.class
-        );
+        Integer count = jdbcTemplate.queryForObject("""
+            SELECT COUNT(*)
+            FROM information_schema.tables
+            WHERE table_schema = 'public' AND table_name = 'flyway_schema_history'
+            """, Integer.class);
         return count != null && count == 1;
     }
 
     int successfulFlywayMigrationCount() {
         Integer count = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM flyway_schema_history WHERE success = true",
-                Integer.class
-        );
+                "SELECT COUNT(*) FROM flyway_schema_history WHERE success = true", Integer.class);
         return count == null ? 0 : count;
     }
 
     private static String requiredConfigurationValue(String propertyName, String environmentName) {
         String value = value(propertyName, environmentName);
         if (value == null || value.isBlank()) {
-            throw new IllegalStateException(
-                    "Missing JDBC configuration. Provide system property "
-                            + propertyName
-                            + " or environment variable "
-                            + environmentName
-                            + "."
-            );
+            throw new IllegalStateException("Missing JDBC configuration. Provide system property "
+                    + propertyName
+                    + " or environment variable "
+                    + environmentName
+                    + ".");
         }
         return value.trim();
     }

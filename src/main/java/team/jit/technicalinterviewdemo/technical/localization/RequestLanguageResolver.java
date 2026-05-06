@@ -2,12 +2,10 @@ package team.jit.technicalinterviewdemo.technical.localization;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.regex.Pattern;
-
 import org.springframework.stereotype.Component;
 import team.jit.technicalinterviewdemo.business.localization.SupportedLanguages;
 

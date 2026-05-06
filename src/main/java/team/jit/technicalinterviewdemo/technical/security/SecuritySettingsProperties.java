@@ -110,13 +110,10 @@ public class SecuritySettingsProperties {
             return providers.entrySet().stream()
                     .map(entry -> Map.entry(normalizeRegistrationId(entry.getKey()), entry.getValue()))
                     .filter(entry -> !entry.getKey().isBlank())
-                    .filter(entry -> entry.getValue() != null && entry.getValue().hasCredentialMaterial())
+                    .filter(entry ->
+                            entry.getValue() != null && entry.getValue().hasCredentialMaterial())
                     .collect(Collectors.toMap(
-                            Map.Entry::getKey,
-                            Map.Entry::getValue,
-                            (first, ignored) -> first,
-                            LinkedHashMap::new
-                    ));
+                            Map.Entry::getKey, Map.Entry::getValue, (first, ignored) -> first, LinkedHashMap::new));
         }
 
         public static String authorizationPath(String providerId) {
@@ -194,7 +191,8 @@ public class SecuritySettingsProperties {
             }
 
             public boolean hasClientCredentials() {
-                return !normalizedClientId().isBlank() && !normalizedClientSecret().isBlank();
+                return !normalizedClientId().isBlank()
+                        && !normalizedClientSecret().isBlank();
             }
 
             public String normalizedClientId() {

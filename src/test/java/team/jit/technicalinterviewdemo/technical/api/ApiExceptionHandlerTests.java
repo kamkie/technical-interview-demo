@@ -35,13 +35,12 @@ class ApiExceptionHandlerTests {
 
     @Test
     void handleMissingRequestHeaderIncludesHeaderNameAndLocalizedMetadata() {
-        when(localizationMessageService.findByMessageKeyForCurrentLanguageWithFallback(eq("error.request.missing_header")))
+        when(localizationMessageService.findByMessageKeyForCurrentLanguageWithFallback(
+                        eq("error.request.missing_header")))
                 .thenReturn(localizedMessage("error.request.missing_header", "Missing header"));
 
         ProblemDetail problemDetail = apiExceptionHandler.handleMissingRequestHeader(
-                new MissingRequestHeaderException("X-Request-Id", null),
-                request("/api/test")
-        );
+                new MissingRequestHeaderException("X-Request-Id", null), request("/api/test"));
 
         assertThat(problemDetail.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(problemDetail.getDetail()).isEqualTo("Required request header 'X-Request-Id' is missing.");
@@ -57,9 +56,7 @@ class ApiExceptionHandlerTests {
                 .thenReturn(localizedMessage("error.book.stale_version", "Stale version"));
 
         ProblemDetail problemDetail = apiExceptionHandler.handleConcurrentModification(
-                new ObjectOptimisticLockingFailureException(Book.class, 7L),
-                request("/api/books/7")
-        );
+                new ObjectOptimisticLockingFailureException(Book.class, 7L), request("/api/books/7"));
 
         assertThat(problemDetail.getStatus()).isEqualTo(HttpStatus.CONFLICT.value());
         assertThat(problemDetail.getDetail())
@@ -72,13 +69,14 @@ class ApiExceptionHandlerTests {
 
     @Test
     void handleDataIntegrityViolationIncludesRootCauseMessage() {
-        when(localizationMessageService.findByMessageKeyForCurrentLanguageWithFallback(eq("error.data.integrity_violation")))
+        when(localizationMessageService.findByMessageKeyForCurrentLanguageWithFallback(
+                        eq("error.data.integrity_violation")))
                 .thenReturn(localizedMessage("error.data.integrity_violation", "Integrity violation"));
 
         ProblemDetail problemDetail = apiExceptionHandler.handleDataIntegrityViolation(
-                new DataIntegrityViolationException("outer", new IllegalStateException("duplicate key value violates constraint")),
-                request("/api/books")
-        );
+                new DataIntegrityViolationException(
+                        "outer", new IllegalStateException("duplicate key value violates constraint")),
+                request("/api/books"));
 
         assertThat(problemDetail.getStatus()).isEqualTo(HttpStatus.CONFLICT.value());
         assertThat(problemDetail.getDetail()).isEqualTo("Book data violates a database constraint.");
@@ -93,10 +91,8 @@ class ApiExceptionHandlerTests {
         when(localizationMessageService.findByMessageKeyForCurrentLanguageWithFallback(eq("error.server.internal")))
                 .thenReturn(localizedMessage("error.server.internal", "Server error"));
 
-        ProblemDetail problemDetail = apiExceptionHandler.handleUnexpectedException(
-                new IllegalStateException("boom"),
-                request("/api/test")
-        );
+        ProblemDetail problemDetail =
+                apiExceptionHandler.handleUnexpectedException(new IllegalStateException("boom"), request("/api/test"));
 
         assertThat(problemDetail.getStatus()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
         assertThat(problemDetail.getTitle()).isEqualTo("Internal Server Error");

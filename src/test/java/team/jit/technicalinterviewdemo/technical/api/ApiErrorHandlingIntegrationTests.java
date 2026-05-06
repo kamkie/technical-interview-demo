@@ -29,13 +29,13 @@ class ApiErrorHandlingIntegrationTests extends AbstractBookCatalogMockMvcIntegra
                         .with(browserSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "title": "",
-                                  "author": " ",
-                                  "isbn": "",
-                                  "publicationYear": null
-                                }
-                                """))
+                            {
+                              "title": "",
+                              "author": " ",
+                              "isbn": "",
+                              "publicationYear": null
+                            }
+                            """))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.title").value("Validation Failed"))
                 .andExpect(jsonPath("$.fieldErrors.title").value("title is required"))
@@ -55,10 +55,10 @@ class ApiErrorHandlingIntegrationTests extends AbstractBookCatalogMockMvcIntegra
                         .with(browserSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "title": "Broken JSON",
-                                  "author": "Craig Walls",
-                                """))
+                            {
+                              "title": "Broken JSON",
+                              "author": "Craig Walls",
+                            """))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.title").value("Malformed Request Body"))
                 .andExpect(jsonPath("$.detail").value("Request body is missing or malformed."));

@@ -5,13 +5,12 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import jakarta.servlet.http.Cookie;
 import java.util.Map;
 import java.util.UUID;
-
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.session.Session;
 import org.springframework.session.SessionRepository;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
@@ -19,8 +18,7 @@ import team.jit.technicalinterviewdemo.technical.security.SameSiteCsrfContract;
 
 public final class SecurityTestSupport {
 
-    private SecurityTestSupport() {
-    }
+    private SecurityTestSupport() {}
 
     public static RequestPostProcessor oauthUser() {
         return oauthUser("demo-user");
@@ -35,9 +33,7 @@ public final class SecurityTestSupport {
     }
 
     public static <S extends Session> BrowserSession authenticatedBrowserSession(
-            SessionRepository<S> sessionRepository,
-            String login
-    ) {
+            SessionRepository<S> sessionRepository, String login) {
         return browserSession(createAuthenticatedSession(sessionRepository, login), login);
     }
 
@@ -65,20 +61,19 @@ public final class SecurityTestSupport {
         SecurityContextHolder.clearContext();
     }
 
-    public static <S extends Session> String createAuthenticatedSession(SessionRepository<S> sessionRepository, String login) {
+    public static <S extends Session> String createAuthenticatedSession(
+            SessionRepository<S> sessionRepository, String login) {
         S session = sessionRepository.createSession();
         session.setAttribute(
                 HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
-                new SecurityContextImpl(oauthAuthentication(login))
-        );
+                new SecurityContextImpl(oauthAuthentication(login)));
         sessionRepository.save(session);
         return session.getId();
     }
 
     public static Cookie sessionCookie(String sessionId) {
-        String encodedSessionId = java.util.Base64.getEncoder().encodeToString(
-                sessionId.getBytes(java.nio.charset.StandardCharsets.UTF_8)
-        );
+        String encodedSessionId = java.util.Base64.getEncoder()
+                .encodeToString(sessionId.getBytes(java.nio.charset.StandardCharsets.UTF_8));
         return new Cookie("technical-interview-demo-session", encodedSessionId);
     }
 
@@ -92,10 +87,8 @@ public final class SecurityTestSupport {
                 Map.of(
                         "login", login,
                         "name", login + " display",
-                        "email", login + "@example.test"
-                ),
-                "login"
-        );
+                        "email", login + "@example.test"),
+                "login");
         return new OAuth2AuthenticationToken(oauth2User, oauth2User.getAuthorities(), "github");
     }
 

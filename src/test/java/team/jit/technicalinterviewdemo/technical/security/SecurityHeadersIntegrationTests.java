@@ -22,7 +22,8 @@ class SecurityHeadersIntegrationTests extends AbstractMockMvcIntegrationTest {
     @Test
     void securityHeadersApplyToApiSessionAndProblemResponses() throws Exception {
         assertSecurityHeaders(mockMvc.perform(get("/api/session")).andExpect(status().isOk()));
-        assertSecurityHeaders(mockMvc.perform(get("/api/admin/operator-surface")).andExpect(status().isUnauthorized()));
+        assertSecurityHeaders(
+                mockMvc.perform(get("/api/admin/operator-surface")).andExpect(status().isUnauthorized()));
     }
 
     private void assertSecurityHeaders(ResultActions resultActions) throws Exception {

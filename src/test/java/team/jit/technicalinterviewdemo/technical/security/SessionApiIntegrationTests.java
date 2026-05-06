@@ -38,13 +38,11 @@ class SessionApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .andExpect(jsonPath("$.csrf.cookieName").value("XSRF-TOKEN"))
                 .andExpect(jsonPath("$.csrf.headerName").value("X-XSRF-TOKEN"))
                 .andExpect(header().string(
-                        HttpHeaders.SET_COOKIE,
-                        allOf(
-                                containsString("XSRF-TOKEN="),
-                                containsString("Path=/"),
-                                not(containsString("HttpOnly"))
-                        )
-                ));
+                                HttpHeaders.SET_COOKIE,
+                                allOf(
+                                        containsString("XSRF-TOKEN="),
+                                        containsString("Path=/"),
+                                        not(containsString("HttpOnly")))));
     }
 
     @Test
@@ -54,20 +52,16 @@ class SessionApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
                 .andExpect(header().stringValues(
-                        HttpHeaders.SET_COOKIE,
-                        allOf(
-                                hasItem(allOf(
-                                        containsString("technical-interview-demo-session="),
-                                        containsString("Max-Age=0"),
-                                        containsString("HttpOnly")
-                                )),
-                                hasItem(allOf(
-                                        containsString("XSRF-TOKEN="),
-                                        containsString("Max-Age=0"),
-                                        not(containsString("HttpOnly"))
-                                ))
-                        )
-                ))
+                                HttpHeaders.SET_COOKIE,
+                                allOf(
+                                        hasItem(allOf(
+                                                containsString("technical-interview-demo-session="),
+                                                containsString("Max-Age=0"),
+                                                containsString("HttpOnly"))),
+                                        hasItem(allOf(
+                                                containsString("XSRF-TOKEN="),
+                                                containsString("Max-Age=0"),
+                                                not(containsString("HttpOnly")))))))
                 .andExpect(content().string(""));
     }
 }

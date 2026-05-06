@@ -7,17 +7,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import team.jit.technicalinterviewdemo.business.book.BookRepository;
 import team.jit.technicalinterviewdemo.business.audit.AuditAction;
 import team.jit.technicalinterviewdemo.business.audit.AuditLogService;
 import team.jit.technicalinterviewdemo.business.audit.AuditTargetType;
+import team.jit.technicalinterviewdemo.business.book.BookRepository;
 import team.jit.technicalinterviewdemo.business.user.CurrentUserAccountService;
 import team.jit.technicalinterviewdemo.business.user.UserRole;
 import team.jit.technicalinterviewdemo.technical.api.InvalidRequestException;
@@ -72,8 +71,7 @@ public class CategoryService {
                 savedCategory.getId(),
                 AuditAction.CREATE,
                 "Created category '%s'.".formatted(savedCategory.getName()),
-                auditDetails(savedCategory.getName())
-        );
+                auditDetails(savedCategory.getName()));
         log.info("Created category id={} name={}", savedCategory.getId(), savedCategory.getName());
         return savedCategory;
     }
@@ -95,11 +93,7 @@ public class CategoryService {
                 updatedCategory.getId(),
                 AuditAction.UPDATE,
                 "Updated category '%s'.".formatted(updatedCategory.getName()),
-                Map.of(
-                        "previousName", previousName,
-                        "name", updatedCategory.getName()
-                )
-        );
+                Map.of("previousName", previousName, "name", updatedCategory.getName()));
         log.info("Updated category id={} name={}", updatedCategory.getId(), updatedCategory.getName());
         return updatedCategory;
     }
@@ -120,8 +114,7 @@ public class CategoryService {
                 id,
                 AuditAction.DELETE,
                 "Deleted category '%s'.".formatted(category.getName()),
-                auditDetails(category.getName())
-        );
+                auditDetails(category.getName()));
         log.info("Deleted category id={} name={}", id, category.getName());
     }
 
@@ -142,8 +135,7 @@ public class CategoryService {
     }
 
     private Category requireCategory(Long id) {
-        return categoryRepository.findById(id)
-                .orElseThrow(() -> new CategoryNotFoundException(id));
+        return categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
     }
 
     @SuppressWarnings("unchecked")
@@ -204,8 +196,7 @@ public class CategoryService {
         String normalizedName = name.trim();
         if (normalizedName.length() > MAX_CATEGORY_NAME_LENGTH) {
             throw new InvalidRequestException(
-                    "category name must be at most %d characters.".formatted(MAX_CATEGORY_NAME_LENGTH)
-            );
+                    "category name must be at most %d characters.".formatted(MAX_CATEGORY_NAME_LENGTH));
         }
         return normalizedName;
     }

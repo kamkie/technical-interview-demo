@@ -1,7 +1,6 @@
 package team.jit.technicalinterviewdemo.technical.localization;
 
 import java.util.Optional;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import team.jit.technicalinterviewdemo.business.user.CurrentUserAccountService;
@@ -32,4 +31,3 @@ public class LocalizationContext {
         CURRENT_LANGUAGE.remove();
     }
 }
-

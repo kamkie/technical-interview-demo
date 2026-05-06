@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 
 import java.time.Instant;
 import java.util.Set;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,11 +32,8 @@ class UserAccountServiceTests {
 
     @BeforeEach
     void setUp() {
-        userAccountService = new UserAccountService(
-                currentUserAccountService,
-                userAccountRepository,
-                applicationMetrics
-        );
+        userAccountService =
+                new UserAccountService(currentUserAccountService, userAccountRepository, applicationMetrics);
     }
 
     @Test
@@ -84,8 +80,7 @@ class UserAccountServiceTests {
                 "kamil@example.com",
                 null,
                 Instant.parse("2026-04-30T20:00:00Z"),
-                Set.of(UserRole.USER, UserRole.ADMIN)
-        );
+                Set.of(UserRole.USER, UserRole.ADMIN));
         when(currentUserAccountService.getCurrentUserOrSynchronize()).thenReturn(currentUser);
 
         UserAccountResponse response = userAccountService.getCurrentUserAccount();
@@ -101,8 +96,6 @@ class UserAccountServiceTests {
                 "kamil@example.com",
                 null,
                 Instant.parse("2026-04-30T20:00:00Z"),
-                Set.of(UserRole.USER)
-        );
+                Set.of(UserRole.USER));
     }
 }
-

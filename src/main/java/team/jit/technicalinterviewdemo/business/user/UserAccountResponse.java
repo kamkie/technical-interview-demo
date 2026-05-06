@@ -10,28 +10,35 @@ import java.util.List;
 public record UserAccountResponse(
         @Schema(description = "Database identifier.", example = "1")
         Long id,
+
         @Schema(description = "OAuth provider name.", example = "github")
         String provider,
+
         @Schema(description = "External login from the authenticated OAuth provider.", example = "kamkie")
         String login,
+
         @Schema(description = "Display name from the OAuth provider.", example = "Kamil Kiewisz")
         String displayName,
+
         @Schema(description = "Email address when available from the provider.")
         String email,
+
         @Schema(description = "Preferred two-letter language code used as the last localization fallback.")
         String preferredLanguage,
+
         @ArraySchema(
                 schema = @Schema(description = "Granted role name.", example = "USER"),
-                arraySchema = @Schema(description = "Roles assigned to the persisted user.")
-        )
+                arraySchema = @Schema(description = "Roles assigned to the persisted user."))
         List<String> roles,
+
         @Schema(description = "UTC instant of the latest authenticated request.")
         Instant lastLoginAt,
+
         @Schema(description = "Creation timestamp as a UTC instant.")
         Instant createdAt,
+
         @Schema(description = "Last update timestamp as a UTC instant.")
-        Instant updatedAt
-) {
+        Instant updatedAt) {
 
     public static UserAccountResponse from(UserAccount userAccount) {
         List<String> roles = userAccount.getRoles().stream()
@@ -48,7 +55,6 @@ public record UserAccountResponse(
                 roles,
                 userAccount.getLastLoginAt(),
                 userAccount.getCreatedAt(),
-                userAccount.getUpdatedAt()
-        );
+                userAccount.getUpdatedAt());
     }
 }

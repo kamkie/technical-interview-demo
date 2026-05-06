@@ -52,8 +52,7 @@ public class UserRoleGrant {
             UserRole role,
             UserRoleGrantSource grantSource,
             UserAccount grantedByUser,
-            String reason
-    ) {
+            String reason) {
         this.userAccount = Objects.requireNonNull(userAccount, "userAccount is required");
         this.role = Objects.requireNonNull(role, "role is required");
         this.grantSource = Objects.requireNonNull(grantSource, "grantSource is required");

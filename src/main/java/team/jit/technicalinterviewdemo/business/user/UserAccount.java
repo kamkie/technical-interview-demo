@@ -12,7 +12,6 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -22,7 +21,6 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,11 +31,10 @@ import lombok.Setter;
 @Entity
 @Table(
         name = "users",
-        uniqueConstraints = @UniqueConstraint(
-                name = "uk_users_provider_external_login",
-                columnNames = {"provider", "external_login"}
-        )
-)
+        uniqueConstraints =
+                @UniqueConstraint(
+                        name = "uk_users_provider_external_login",
+                        columnNames = {"provider", "external_login"}))
 public class UserAccount {
 
     @Id
@@ -82,8 +79,7 @@ public class UserAccount {
             String email,
             String preferredLanguage,
             Instant lastLoginAt,
-            Set<UserRole> roles
-    ) {
+            Set<UserRole> roles) {
         setProvider(provider);
         setExternalLogin(externalLogin);
         setDisplayName(displayName);
@@ -112,9 +108,8 @@ public class UserAccount {
 
     public void setPreferredLanguage(String preferredLanguage) {
         String normalizedPreferredLanguage = normalizeOptional(preferredLanguage);
-        this.preferredLanguage = normalizedPreferredLanguage == null
-                ? null
-                : normalizedPreferredLanguage.toLowerCase(Locale.ROOT);
+        this.preferredLanguage =
+                normalizedPreferredLanguage == null ? null : normalizedPreferredLanguage.toLowerCase(Locale.ROOT);
     }
 
     public void setLastLoginAt(Instant lastLoginAt) {
@@ -141,11 +136,7 @@ public class UserAccount {
     }
 
     public void ensureRoleGrant(
-            UserRole role,
-            UserRoleGrantSource grantSource,
-            UserAccount grantedByUser,
-            String reason
-    ) {
+            UserRole role, UserRoleGrantSource grantSource, UserAccount grantedByUser, String reason) {
         if (findRoleGrant(role).isPresent()) {
             return;
         }
@@ -160,12 +151,7 @@ public class UserAccount {
         roleGrants.removeIf(grant -> grant.getGrantSource() != UserRoleGrantSource.BOOTSTRAP);
         for (UserRole role : normalizedRoles) {
             roleGrants.add(new UserRoleGrant(
-                    this,
-                    role,
-                    UserRoleGrantSource.ADMIN_MANAGED,
-                    normalizedGrantor,
-                    normalizedReason
-            ));
+                    this, role, UserRoleGrantSource.ADMIN_MANAGED, normalizedGrantor, normalizedReason));
         }
     }
 
@@ -213,9 +199,7 @@ public class UserAccount {
     }
 
     private Optional<UserRoleGrant> findRoleGrant(UserRole role) {
-        return roleGrants.stream()
-                .filter(grant -> grant.getRole() == role)
-                .findFirst();
+        return roleGrants.stream().filter(grant -> grant.getRole() == role).findFirst();
     }
 
     private String normalizeRequired(String value, String fieldName) {

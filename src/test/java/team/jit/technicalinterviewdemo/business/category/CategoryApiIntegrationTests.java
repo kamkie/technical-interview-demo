@@ -1,8 +1,8 @@
 package team.jit.technicalinterviewdemo.business.category;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -17,8 +17,8 @@ import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
-import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
 import team.jit.technicalinterviewdemo.testdata.BookCatalogTestData;
+import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
 import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
 import team.jit.technicalinterviewdemo.testing.SecurityTestSupport.BrowserSession;
 
@@ -58,10 +58,10 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                         .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "name": "Architecture"
-                                }
-                                """))
+                            {
+                              "name": "Architecture"
+                            }
+                            """))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.name").value("Architecture"));
@@ -75,10 +75,10 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                         .with(userSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "name": "Architecture"
-                                }
-                                """))
+                            {
+                              "name": "Architecture"
+                            }
+                            """))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.title").value("Forbidden"))
                 .andExpect(jsonPath("$.status").value(403))
@@ -93,10 +93,10 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
         mockMvc.perform(post("/api/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "name": "Architecture"
-                                }
-                                """))
+                            {
+                              "name": "Architecture"
+                            }
+                            """))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.title").value("Unauthorized"))
                 .andExpect(jsonPath("$.status").value(401))
@@ -112,10 +112,10 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                         .queryParam("lang", "pl")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "name": "Architecture"
-                                }
-                                """))
+                            {
+                              "name": "Architecture"
+                            }
+                            """))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.messageKey").value("error.request.unauthorized"))
                 .andExpect(jsonPath("$.message").value("Musisz sie uwierzytelnic przed wykonaniem tej operacji."))
@@ -130,10 +130,10 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                         .with(adminSession.authenticatedSession())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "name": "Architecture"
-                                }
-                                """))
+                            {
+                              "name": "Architecture"
+                            }
+                            """))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.title").value("Invalid CSRF Token"))
                 .andExpect(jsonPath("$.detail").value("A valid CSRF token is required to perform this operation."))
@@ -148,10 +148,10 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                         .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "name": "java"
-                                }
-                                """))
+                            {
+                              "name": "java"
+                            }
+                            """))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.title").value("Invalid Request"))
                 .andExpect(jsonPath("$.detail").value("Category 'java' already exists."))
@@ -171,10 +171,10 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                         .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "name": "JVM"
-                                }
-                                """))
+                            {
+                              "name": "JVM"
+                            }
+                            """))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(javaCategory.getId()))
                 .andExpect(jsonPath("$.name").value("JVM"));
@@ -192,10 +192,10 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                         .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "name": "Best Practices"
-                                }
-                                """))
+                            {
+                              "name": "Best Practices"
+                            }
+                            """))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.title").value("Invalid Request"))
                 .andExpect(jsonPath("$.detail").value("Category 'Best Practices' already exists."))
@@ -210,10 +210,10 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                         .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "name": "Architecture"
-                                }
-                                """))
+                            {
+                              "name": "Architecture"
+                            }
+                            """))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.title").value("Category Not Found"))
                 .andExpect(jsonPath("$.detail").value("Category with id 9999 was not found."))
@@ -233,10 +233,10 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                         .with(userSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "name": "JVM"
-                                }
-                                """))
+                            {
+                              "name": "JVM"
+                            }
+                            """))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.detail").value("Category management requires the ADMIN role."))
                 .andExpect(jsonPath("$.messageKey").value("error.request.forbidden"));
@@ -247,8 +247,7 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
         Category architecture = categoryRepository.saveAndFlush(new Category("Architecture"));
         BrowserSession adminSession = adminSession();
 
-        mockMvc.perform(delete("/api/categories/{id}", architecture.getId())
-                        .with(adminSession.unsafeWrite()))
+        mockMvc.perform(delete("/api/categories/{id}", architecture.getId()).with(adminSession.unsafeWrite()))
                 .andExpect(status().isNoContent());
 
         assertThat(categoryRepository.findById(architecture.getId())).isEmpty();
@@ -262,14 +261,13 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .orElseThrow();
         BrowserSession adminSession = adminSession();
 
-        mockMvc.perform(delete("/api/categories/{id}", javaCategory.getId())
-                        .with(adminSession.unsafeWrite()))
+        mockMvc.perform(delete("/api/categories/{id}", javaCategory.getId()).with(adminSession.unsafeWrite()))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.title").value("Category In Use"))
-                .andExpect(jsonPath("$.detail").value(
-                        "Category 'Java' with id %d cannot be deleted because it is still assigned to one or more books."
-                                .formatted(javaCategory.getId())
-                ))
+                .andExpect(jsonPath("$.detail")
+                        .value(
+                                "Category 'Java' with id %d cannot be deleted because it is still assigned to one or more books."
+                                        .formatted(javaCategory.getId())))
                 .andExpect(jsonPath("$.messageKey").value("error.category.in_use"))
                 .andExpect(jsonPath("$.language").value("en"));
     }
@@ -278,8 +276,7 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
     void deleteMissingCategoryReturnsNotFound() throws Exception {
         BrowserSession adminSession = adminSession();
 
-        mockMvc.perform(delete("/api/categories/{id}", 9999)
-                        .with(adminSession.unsafeWrite()))
+        mockMvc.perform(delete("/api/categories/{id}", 9999).with(adminSession.unsafeWrite()))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.title").value("Category Not Found"))
                 .andExpect(jsonPath("$.detail").value("Category with id 9999 was not found."))

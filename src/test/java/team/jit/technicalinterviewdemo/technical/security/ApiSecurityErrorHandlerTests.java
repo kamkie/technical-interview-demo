@@ -24,7 +24,8 @@ import team.jit.technicalinterviewdemo.technical.api.ApiProblemFactory;
 @ExtendWith(MockitoExtension.class)
 class ApiSecurityErrorHandlerTests {
 
-    private static final JsonMapper JSON_MAPPER = JsonMapper.builder().findAndAddModules().build();
+    private static final JsonMapper JSON_MAPPER =
+            JsonMapper.builder().findAndAddModules().build();
 
     @Mock
     private LocalizationService localizationService;
@@ -48,10 +49,7 @@ class ApiSecurityErrorHandlerTests {
         MockHttpServletResponse response = new MockHttpServletResponse();
 
         apiAuthenticationEntryPoint.commence(
-                request,
-                response,
-                new InsufficientAuthenticationException("Authentication required")
-        );
+                request, response, new InsufficientAuthenticationException("Authentication required"));
 
         JsonNode body = JSON_MAPPER.readTree(response.getContentAsString());
         assertThat(response.getStatus()).isEqualTo(401);
@@ -73,10 +71,7 @@ class ApiSecurityErrorHandlerTests {
         MockHttpServletResponse response = new MockHttpServletResponse();
 
         apiAccessDeniedHandler.handle(
-                request,
-                response,
-                new AccessDeniedException("Category management requires the ADMIN role.")
-        );
+                request, response, new AccessDeniedException("Category management requires the ADMIN role."));
 
         JsonNode body = JSON_MAPPER.readTree(response.getContentAsString());
         assertThat(response.getStatus()).isEqualTo(403);

@@ -22,9 +22,10 @@ class OAuthProviderConfigurationTests {
     @Test
     void oauthClientRegistrationRepositoryBuildsConfiguredGithubProvider() {
         SecuritySettingsProperties settings = baseSettings();
-        settings.getOAuth().setProviders(new LinkedHashMap<>(Map.of(
-                "github", provider(SecuritySettingsProperties.OAuth.ProviderType.GITHUB, "gh-client", "gh-secret")
-        )));
+        settings.getOAuth()
+                .setProviders(new LinkedHashMap<>(Map.of(
+                        "github",
+                        provider(SecuritySettingsProperties.OAuth.ProviderType.GITHUB, "gh-client", "gh-secret"))));
 
         OAuthClientRegistrationConfiguration configuration = new OAuthClientRegistrationConfiguration();
         ClientRegistrationRepository repository = configuration.clientRegistrationRepository(settings);
@@ -35,9 +36,9 @@ class OAuthProviderConfigurationTests {
     @Test
     void oauthClientRegistrationRepositoryRejectsMissingClientSecret() {
         SecuritySettingsProperties settings = baseSettings();
-        settings.getOAuth().setProviders(new LinkedHashMap<>(Map.of(
-                "github", provider(SecuritySettingsProperties.OAuth.ProviderType.GITHUB, "gh-client", "")
-        )));
+        settings.getOAuth()
+                .setProviders(new LinkedHashMap<>(Map.of(
+                        "github", provider(SecuritySettingsProperties.OAuth.ProviderType.GITHUB, "gh-client", ""))));
 
         OAuthClientRegistrationConfiguration configuration = new OAuthClientRegistrationConfiguration();
 
@@ -49,9 +50,7 @@ class OAuthProviderConfigurationTests {
     @Test
     void oauthClientRegistrationRepositoryRejectsMissingProviderType() {
         SecuritySettingsProperties settings = baseSettings();
-        settings.getOAuth().setProviders(new LinkedHashMap<>(Map.of(
-                "custom", provider(null, "client", "secret")
-        )));
+        settings.getOAuth().setProviders(new LinkedHashMap<>(Map.of("custom", provider(null, "client", "secret"))));
 
         OAuthClientRegistrationConfiguration configuration = new OAuthClientRegistrationConfiguration();
 
@@ -63,9 +62,10 @@ class OAuthProviderConfigurationTests {
     @Test
     void oauthClientRegistrationRepositoryRejectsOidcWithoutIssuer() {
         SecuritySettingsProperties settings = baseSettings();
-        settings.getOAuth().setProviders(new LinkedHashMap<>(Map.of(
-                "oidc", provider(SecuritySettingsProperties.OAuth.ProviderType.OIDC, "oidc-client", "oidc-secret")
-        )));
+        settings.getOAuth()
+                .setProviders(new LinkedHashMap<>(Map.of(
+                        "oidc",
+                        provider(SecuritySettingsProperties.OAuth.ProviderType.OIDC, "oidc-client", "oidc-secret"))));
 
         OAuthClientRegistrationConfiguration configuration = new OAuthClientRegistrationConfiguration();
 
@@ -89,9 +89,10 @@ class OAuthProviderConfigurationTests {
     @Test
     void productionValidatorRejectsInvalidProviderId() {
         SecuritySettingsProperties settings = baseSettings();
-        settings.getOAuth().setProviders(new LinkedHashMap<>(Map.of(
-                "invalid_provider", provider(SecuritySettingsProperties.OAuth.ProviderType.GITHUB, "client", "secret")
-        )));
+        settings.getOAuth()
+                .setProviders(new LinkedHashMap<>(Map.of(
+                        "invalid_provider",
+                        provider(SecuritySettingsProperties.OAuth.ProviderType.GITHUB, "client", "secret"))));
 
         MockEnvironment environment = new MockEnvironment().withProperty("spring.profiles.active", "prod,oauth");
         environment.setActiveProfiles("prod", "oauth");
@@ -146,10 +147,16 @@ class OAuthProviderConfigurationTests {
     @Test
     void productionValidatorAllowsMultipleProvidersWithoutDefaultProvider() {
         SecuritySettingsProperties settings = baseSettings();
-        settings.getOAuth().setProviders(new LinkedHashMap<>(Map.of(
-                "github", provider(SecuritySettingsProperties.OAuth.ProviderType.GITHUB, "gh-client", "gh-secret"),
-                "internal", provider(SecuritySettingsProperties.OAuth.ProviderType.GITHUB, "internal-client", "internal-secret")
-        )));
+        settings.getOAuth()
+                .setProviders(new LinkedHashMap<>(Map.of(
+                        "github",
+                                provider(
+                                        SecuritySettingsProperties.OAuth.ProviderType.GITHUB, "gh-client", "gh-secret"),
+                        "internal",
+                                provider(
+                                        SecuritySettingsProperties.OAuth.ProviderType.GITHUB,
+                                        "internal-client",
+                                        "internal-secret"))));
 
         MockEnvironment environment = new MockEnvironment().withProperty("spring.profiles.active", "prod,oauth");
         environment.setActiveProfiles("prod", "oauth");
@@ -196,17 +203,12 @@ class OAuthProviderConfigurationTests {
     }
 
     private ProductionSecurityConfigurationValidator validator(
-            SecuritySettingsProperties settings,
-            MockEnvironment environment
-    ) {
+            SecuritySettingsProperties settings, MockEnvironment environment) {
         return new ProductionSecurityConfigurationValidator(new BootstrapSettingsProperties(), settings, environment);
     }
 
     private SecuritySettingsProperties.OAuth.Provider provider(
-            SecuritySettingsProperties.OAuth.ProviderType type,
-            String clientId,
-            String clientSecret
-    ) {
+            SecuritySettingsProperties.OAuth.ProviderType type, String clientId, String clientSecret) {
         SecuritySettingsProperties.OAuth.Provider provider = new SecuritySettingsProperties.OAuth.Provider();
         provider.setType(type);
         provider.setClientId(clientId);

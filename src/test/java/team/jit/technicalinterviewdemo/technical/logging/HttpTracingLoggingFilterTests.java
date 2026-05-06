@@ -36,8 +36,12 @@ class HttpTracingLoggingFilterTests {
 
         filter.doFilterInternal(request, response, new MockFilterChain());
 
-        assertThat(response.getHeader(HttpTracingLoggingFilter.REQUEST_ID_HEADER)).isNotBlank();
-        assertThat(response.getHeader(HttpTracingLoggingFilter.REQUEST_ID_HEADER)).isNotEqualTo(forgedRequestId);
-        assertThat(response.getHeader(HttpTracingLoggingFilter.REQUEST_ID_HEADER)).doesNotContain("\r").doesNotContain("\n");
+        assertThat(response.getHeader(HttpTracingLoggingFilter.REQUEST_ID_HEADER))
+                .isNotBlank();
+        assertThat(response.getHeader(HttpTracingLoggingFilter.REQUEST_ID_HEADER))
+                .isNotEqualTo(forgedRequestId);
+        assertThat(response.getHeader(HttpTracingLoggingFilter.REQUEST_ID_HEADER))
+                .doesNotContain("\r")
+                .doesNotContain("\n");
     }
 }

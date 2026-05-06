@@ -2,7 +2,6 @@ package team.jit.technicalinterviewdemo.technical.logging;
 
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
-
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
@@ -20,7 +19,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -55,8 +53,7 @@ public class ServiceLoggingAspect {
                     serviceName,
                     methodName,
                     parameters,
-                    toDurationMillis(startTimeNanos)
-            );
+                    toDurationMillis(startTimeNanos));
             return result;
         } catch (Throwable exception) {
             log.info(
@@ -64,8 +61,7 @@ public class ServiceLoggingAspect {
                     serviceName,
                     methodName,
                     parameters,
-                    toDurationMillis(startTimeNanos)
-            );
+                    toDurationMillis(startTimeNanos));
             throw exception;
         }
     }
@@ -75,9 +71,8 @@ public class ServiceLoggingAspect {
         IdentityHashMap<Object, Boolean> visited = new IdentityHashMap<>();
 
         for (int index = 0; index < arguments.length; index++) {
-            String parameterName = parameterNames != null && index < parameterNames.length
-                    ? parameterNames[index]
-                    : "arg" + index;
+            String parameterName =
+                    parameterNames != null && index < parameterNames.length ? parameterNames[index] : "arg" + index;
             sanitized.put(parameterName, sanitizeValue(parameterName, arguments[index], 0, visited));
         }
 
@@ -112,12 +107,12 @@ public class ServiceLoggingAspect {
             return switch (value) {
                 case Collection<?> collection -> sanitizeCollection(collection, depth, visited);
                 case Map<?, ?> map -> sanitizeMap(map, depth, visited);
-                case MultipartFile file -> Map.of(
-                        "name", file.getName(),
-                        "originalFilename", file.getOriginalFilename(),
-                        "contentType", file.getContentType(),
-                        "size", file.getSize()
-                );
+                case MultipartFile file ->
+                    Map.of(
+                            "name", file.getName(),
+                            "originalFilename", file.getOriginalFilename(),
+                            "contentType", file.getContentType(),
+                            "size", file.getSize());
                 default -> sanitizeObjectFields(value, depth, visited);
             };
         } finally {
@@ -137,7 +132,8 @@ public class ServiceLoggingAspect {
         return items;
     }
 
-    private List<Object> sanitizeCollection(Collection<?> collection, int depth, IdentityHashMap<Object, Boolean> visited) {
+    private List<Object> sanitizeCollection(
+            Collection<?> collection, int depth, IdentityHashMap<Object, Boolean> visited) {
         List<Object> items = new ArrayList<>(Math.min(collection.size(), MAX_COLLECTION_ITEMS));
         int index = 0;
         for (Object item : collection) {

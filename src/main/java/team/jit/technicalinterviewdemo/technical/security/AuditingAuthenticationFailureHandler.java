@@ -29,10 +29,8 @@ public class AuditingAuthenticationFailureHandler implements AuthenticationFailu
 
     @Override
     public void onAuthenticationFailure(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            AuthenticationException exception
-    ) throws IOException, ServletException {
+            HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
+            throws IOException, ServletException {
         AuditAction action = exception instanceof SessionAuthenticationException
                 ? AuditAction.SESSION_REJECTION
                 : AuditAction.LOGIN_FAILURE;
@@ -46,16 +44,12 @@ public class AuditingAuthenticationFailureHandler implements AuthenticationFailu
                 null,
                 null,
                 summary,
-                failureDetails(request, exception, action)
-        );
+                failureDetails(request, exception, action));
         redirectStrategy.sendRedirect(request, response, LOGIN_FAILED_TARGET_URL);
     }
 
     private Map<String, Object> failureDetails(
-            HttpServletRequest request,
-            AuthenticationException exception,
-            AuditAction action
-    ) {
+            HttpServletRequest request, AuthenticationException exception, AuditAction action) {
         Map<String, Object> details = new LinkedHashMap<>();
         String provider = resolveProvider(request);
         if (provider != null) {
@@ -63,8 +57,7 @@ public class AuditingAuthenticationFailureHandler implements AuthenticationFailu
         }
         details.put(
                 "failureType",
-                action == AuditAction.SESSION_REJECTION ? "maximum_sessions_exceeded" : "oauth_authentication_failure"
-        );
+                action == AuditAction.SESSION_REJECTION ? "maximum_sessions_exceeded" : "oauth_authentication_failure");
         if (exception instanceof OAuth2AuthenticationException oauth2AuthenticationException) {
             details.put("errorCode", oauth2AuthenticationException.getError().getErrorCode());
         }

@@ -63,8 +63,7 @@ class AdminUserManagementApiIntegrationTests extends AbstractMockMvcIntegrationT
         BrowserSession readerSession = readerSession();
         synchronizeAccount(readerSession, "reader-user");
 
-        mockMvc.perform(get("/api/admin/users")
-                        .with(readerSession.authenticatedSession()))
+        mockMvc.perform(get("/api/admin/users").with(readerSession.authenticatedSession()))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.title").value("Forbidden"))
                 .andExpect(jsonPath("$.detail").value("User management requires the ADMIN role."))
@@ -79,8 +78,7 @@ class AdminUserManagementApiIntegrationTests extends AbstractMockMvcIntegrationT
         synchronizeAccount(adminSession, "admin-user");
         synchronizeAccount(readerSession, "reader-user");
 
-        mockMvc.perform(get("/api/admin/users")
-                        .with(adminSession.authenticatedSession()))
+        mockMvc.perform(get("/api/admin/users").with(adminSession.authenticatedSession()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].login").value("admin-user"))
                 .andExpect(jsonPath("$[0].roles[0]").value("ADMIN"))
@@ -117,11 +115,11 @@ class AdminUserManagementApiIntegrationTests extends AbstractMockMvcIntegrationT
                         .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "roles": ["USER", "ADMIN"],
-                                  "reason": "Needs audit review access."
-                                }
-                                """))
+                            {
+                              "roles": ["USER", "ADMIN"],
+                              "reason": "Needs audit review access."
+                            }
+                            """))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.login").value("reader-user"))
                 .andExpect(jsonPath("$.roles[0]").value("ADMIN"))
@@ -135,7 +133,8 @@ class AdminUserManagementApiIntegrationTests extends AbstractMockMvcIntegrationT
                 .andExpect(jsonPath("$.createdAt").value(endsWith("Z")))
                 .andExpect(jsonPath("$.updatedAt").value(endsWith("Z")));
 
-        UserAccount updatedReader = userAccountRepository.findById(readerUser.getId()).orElseThrow();
+        UserAccount updatedReader =
+                userAccountRepository.findById(readerUser.getId()).orElseThrow();
         assertThat(updatedReader.getRoles()).containsExactlyInAnyOrder(UserRole.USER, UserRole.ADMIN);
         assertThat(updatedReader.getRoleGrants()).allSatisfy(roleGrant -> {
             assertThat(roleGrant.getGrantSource()).isEqualTo(UserRoleGrantSource.ADMIN_MANAGED);
@@ -167,16 +166,17 @@ class AdminUserManagementApiIntegrationTests extends AbstractMockMvcIntegrationT
                         .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "roles": ["ADMIN"],
-                                  "reason": "Invalid role set"
-                                }
-                                """))
+                            {
+                              "roles": ["ADMIN"],
+                              "reason": "Invalid role set"
+                            }
+                            """))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.title").value("Invalid Request"))
                 .andExpect(jsonPath("$.detail").value("USER role is required"));
 
-        UserAccount unchangedReader = userAccountRepository.findById(readerUser.getId()).orElseThrow();
+        UserAccount unchangedReader =
+                userAccountRepository.findById(readerUser.getId()).orElseThrow();
         assertThat(unchangedReader.getRoles()).containsExactly(UserRole.USER);
         assertThat(adminUser.getRoles()).contains(UserRole.ADMIN);
     }
@@ -190,22 +190,23 @@ class AdminUserManagementApiIntegrationTests extends AbstractMockMvcIntegrationT
                         .with(adminSession.unsafeWrite())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                  "roles": ["USER", "ADMIN"],
-                                  "reason": "Needs access."
-                                }
-                                """))
+                            {
+                              "roles": ["USER", "ADMIN"],
+                              "reason": "Needs access."
+                            }
+                            """))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.title").value("User Account Not Found"))
                 .andExpect(jsonPath("$.messageKey").value("error.user.not_found"));
     }
 
     private UserAccount synchronizeAccount(BrowserSession session, String login) throws Exception {
-        mockMvc.perform(get("/api/account")
-                        .with(session.authenticatedSession()))
+        mockMvc.perform(get("/api/account").with(session.authenticatedSession()))
                 .andExpect(status().isOk());
 
-        return userAccountRepository.findByProviderAndExternalLogin("github", login).orElseThrow();
+        return userAccountRepository
+                .findByProviderAndExternalLogin("github", login)
+                .orElseThrow();
     }
 
     private BrowserSession adminSession() {

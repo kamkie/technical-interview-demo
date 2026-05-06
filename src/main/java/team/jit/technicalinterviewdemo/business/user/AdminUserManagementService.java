@@ -35,12 +35,10 @@ public class AdminUserManagementService {
     public AdminUserAccountResponse replaceRoles(Long userId, AdminUserRoleUpdateRequest request) {
         currentUserAccountService.requireRole(UserRole.ADMIN, "User management requires the ADMIN role.");
         UserAccount currentAdmin = currentUserAccountService.getCurrentUserOrSynchronize();
-        UserAccount targetUser = userAccountRepository.findById(userId)
-                .orElseThrow(() -> new UserAccountNotFoundException(userId));
-        List<String> previousRoles = targetUser.getRoles().stream()
-                .map(Enum::name)
-                .sorted()
-                .toList();
+        UserAccount targetUser =
+                userAccountRepository.findById(userId).orElseThrow(() -> new UserAccountNotFoundException(userId));
+        List<String> previousRoles =
+                targetUser.getRoles().stream().map(Enum::name).sorted().toList();
 
         try {
             targetUser.replaceManagedRoleGrants(request.requestedRoles(), currentAdmin, request.reason());
@@ -49,10 +47,8 @@ public class AdminUserManagementService {
         }
 
         UserAccount updatedUser = userAccountRepository.saveAndFlush(targetUser);
-        List<String> updatedRoles = updatedUser.getRoles().stream()
-                .map(Enum::name)
-                .sorted()
-                .toList();
+        List<String> updatedRoles =
+                updatedUser.getRoles().stream().map(Enum::name).sorted().toList();
         applicationMetrics.recordUserOperation("replaceManagedRoles");
         auditLogService.record(
                 AuditTargetType.USER_ACCOUNT,
@@ -64,15 +60,12 @@ public class AdminUserManagementService {
                         "targetLogin", updatedUser.getExternalLogin(),
                         "previousRoles", previousRoles,
                         "roles", updatedRoles,
-                        "reason", request.reason()
-                )
-        );
+                        "reason", request.reason()));
         log.info(
                 "Replaced managed role grants userId={} roles={} grantedByUserId={}",
                 updatedUser.getId(),
                 updatedUser.getRoles(),
-                currentAdmin.getId()
-        );
+                currentAdmin.getId());
         return AdminUserAccountResponse.from(updatedUser);
     }
 }

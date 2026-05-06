@@ -10,8 +10,6 @@ public class StaleBookVersionException extends RuntimeException {
         super(
                 "Book with id %d is at version %d. Retry the update with the latest version instead of %d."
                         .formatted(id, currentVersion, requestedVersion),
-                cause
-        );
+                cause);
     }
 }
-

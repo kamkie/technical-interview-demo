@@ -4,8 +4,8 @@
 
 | Status | Current |
 | --- | --- |
-| Phase | Implementation |
-| Status | In Progress |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Summary
 
@@ -94,7 +94,7 @@ Likely build and formatter artifacts:
 - `.editorconfig`, likely delete or shrink to neutral editor defaults
 - `Default.xml`, delete
 - `scripts/classify-changed-files.ps1`, remove deleted formatter config entries from the lightweight allow-list
-- Java source files under `src/main/java/**/*.java`, `src/test/java/**/*.java`, and `src/externalTest/java/**/*.java` if the Spotless target includes them
+- Java source files under `src/**/*.java`, including main, test, external test, and Gatling Java sources
 
 Likely documentation and AI guidance:
 
@@ -245,6 +245,11 @@ Implementation validation:
 - 2026-05-06: `./build.ps1 -FullBuild spotlessCheck` passed for the preparation checkpoint.
 - 2026-05-06: `./build.ps1 build` passed for the preparation checkpoint; it ran the full Gradle build, tests, Spotless, PMD, SpotBugs/static security scan, Trivy dependency and image vulnerability scans, SBOM generation, Asciidoctor, boot jar, and Docker image build.
 - 2026-05-06: `git diff --check` passed for the preparation checkpoint.
+- 2026-05-06: `./build.ps1 -FullBuild spotlessApply` passed for the reformat checkpoint after removing temporary `spotless.ratchetFrom("HEAD")`; Palantir Java Format rewrote 157 Java files and left `build.gradle.kts` as the only non-Java diff in the reformat commit before tracking-artifact updates.
+- 2026-05-06: `./build.ps1 build` passed for the reformat checkpoint; it ran the full Gradle build, 264 tests, Spotless, PMD, SpotBugs/static security scan, Trivy dependency and image vulnerability scans, SBOM generation, Asciidoctor, boot jar, and Docker image build.
+- 2026-05-06: `git diff --check` passed for the reformat checkpoint.
+- 2026-05-06: Manual review sampled the Java diff and confirmed it is mechanical formatter output: import ordering, annotation layout, line wrapping, blank lines, and empty block compaction.
+- 2026-05-06: `./build.ps1 -FullBuild spotlessCheck` and `git diff --check` passed after final plan and roadmap tracking updates.
 
 ## User Validation
 

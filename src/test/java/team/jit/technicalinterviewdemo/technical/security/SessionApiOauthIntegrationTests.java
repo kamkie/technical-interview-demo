@@ -36,11 +36,14 @@ import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
 import team.jit.technicalinterviewdemo.testing.SecurityTestSupport.BrowserSession;
 
 @MockMvcIntegrationSpringBootTest
-@ActiveProfiles(value = {"test", "oauth"}, inheritProfiles = false)
-@TestPropertySource(properties = {
-        "app.security.oauth.providers.github.client-id=test-client-id",
-        "app.security.oauth.providers.github.client-secret=test-client-secret"
-})
+@ActiveProfiles(
+        value = {"test", "oauth"},
+        inheritProfiles = false)
+@TestPropertySource(
+        properties = {
+            "app.security.oauth.providers.github.client-id=test-client-id",
+            "app.security.oauth.providers.github.client-secret=test-client-secret"
+        })
 class SessionApiOauthIntegrationTests extends AbstractMockMvcIntegrationTest {
 
     @Autowired
@@ -86,21 +89,18 @@ class SessionApiOauthIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .andExpect(jsonPath("$.csrf.cookieName").value("XSRF-TOKEN"))
                 .andExpect(jsonPath("$.csrf.headerName").value("X-XSRF-TOKEN"))
                 .andExpect(header().string(
-                        HttpHeaders.SET_COOKIE,
-                        allOf(
-                                containsString("XSRF-TOKEN="),
-                                containsString("Path=/"),
-                                not(containsString("HttpOnly"))
-                        )
-                ));
+                                HttpHeaders.SET_COOKIE,
+                                allOf(
+                                        containsString("XSRF-TOKEN="),
+                                        containsString("Path=/"),
+                                        not(containsString("HttpOnly")))));
     }
 
     @Test
     void sessionEndpointReturnsAuthenticatedStateForJdbcBackedSession() throws Exception {
         String sessionId = createAuthenticatedSession(httpSessionRepository(), "reader-user");
 
-        mockMvc.perform(get("/api/session")
-                        .cookie(sessionCookie(sessionId)))
+        mockMvc.perform(get("/api/session").cookie(sessionCookie(sessionId)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.authenticated").value(true))
                 .andExpect(jsonPath("$.accountPath").value("/api/account"))
@@ -112,13 +112,11 @@ class SessionApiOauthIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .andExpect(jsonPath("$.csrf.cookieName").value("XSRF-TOKEN"))
                 .andExpect(jsonPath("$.csrf.headerName").value("X-XSRF-TOKEN"))
                 .andExpect(header().string(
-                        HttpHeaders.SET_COOKIE,
-                        allOf(
-                                containsString("XSRF-TOKEN="),
-                                containsString("Path=/"),
-                                not(containsString("HttpOnly"))
-                        )
-                ));
+                                HttpHeaders.SET_COOKIE,
+                                allOf(
+                                        containsString("XSRF-TOKEN="),
+                                        containsString("Path=/"),
+                                        not(containsString("HttpOnly")))));
     }
 
     @Test
@@ -129,7 +127,10 @@ class SessionApiOauthIntegrationTests extends AbstractMockMvcIntegrationTest {
 
         String location = result.getResponse().getHeader("Location");
         assertThat(location).startsWith("https://github.com/login/oauth/authorize?");
-        assertThat(UriComponentsBuilder.fromUriString(location).build(true).getQueryParams().getFirst("redirect_uri"))
+        assertThat(UriComponentsBuilder.fromUriString(location)
+                        .build(true)
+                        .getQueryParams()
+                        .getFirst("redirect_uri"))
                 .isEqualTo("http://localhost/api/session/login/oauth2/code/github");
     }
 
@@ -138,38 +139,30 @@ class SessionApiOauthIntegrationTests extends AbstractMockMvcIntegrationTest {
         String sessionId = createAuthenticatedSession(httpSessionRepository(), "reader-user");
         BrowserSession browserSession = browserSession(sessionId, "reader-user");
 
-        mockMvc.perform(get("/api/account")
-                        .with(browserSession.authenticatedSession()))
+        mockMvc.perform(get("/api/account").with(browserSession.authenticatedSession()))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(post("/api/session/logout")
-                        .with(browserSession.unsafeWrite()))
+        mockMvc.perform(post("/api/session/logout").with(browserSession.unsafeWrite()))
                 .andExpect(status().isNoContent())
                 .andExpect(header().stringValues(
-                        HttpHeaders.SET_COOKIE,
-                        allOf(
-                                hasItem(allOf(
-                                        containsString("technical-interview-demo-session="),
-                                        containsString("Max-Age=0"),
-                                        containsString("HttpOnly")
-                                )),
-                                hasItem(allOf(
-                                        containsString("XSRF-TOKEN="),
-                                        containsString("Max-Age=0"),
-                                        not(containsString("HttpOnly"))
-                                ))
-                        )
-                ));
+                                HttpHeaders.SET_COOKIE,
+                                allOf(
+                                        hasItem(allOf(
+                                                containsString("technical-interview-demo-session="),
+                                                containsString("Max-Age=0"),
+                                                containsString("HttpOnly"))),
+                                        hasItem(allOf(
+                                                containsString("XSRF-TOKEN="),
+                                                containsString("Max-Age=0"),
+                                                not(containsString("HttpOnly")))))));
 
         assertThat(httpSessionRepository().findById(sessionId)).isNull();
 
-        mockMvc.perform(get("/api/account")
-                        .cookie(sessionCookie(sessionId)))
+        mockMvc.perform(get("/api/account").cookie(sessionCookie(sessionId)))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.title").value("Unauthorized"));
 
-        mockMvc.perform(get("/api/session")
-                        .cookie(sessionCookie(sessionId)))
+        mockMvc.perform(get("/api/session").cookie(sessionCookie(sessionId)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.authenticated").value(false));
 
@@ -178,9 +171,7 @@ class SessionApiOauthIntegrationTests extends AbstractMockMvcIntegrationTest {
         assertThat(auditLog.getTargetType()).isEqualTo(AuditTargetType.AUTHENTICATION);
         assertThat(auditLog.getAction()).isEqualTo(AuditAction.LOGOUT);
         assertThat(auditLog.getActorLogin()).isEqualTo("reader-user");
-        assertThat(auditLog.getDetails())
-                .containsEntry("provider", "github")
-                .containsEntry("login", "reader-user");
+        assertThat(auditLog.getDetails()).containsEntry("provider", "github").containsEntry("login", "reader-user");
     }
 
     @Test
@@ -188,8 +179,7 @@ class SessionApiOauthIntegrationTests extends AbstractMockMvcIntegrationTest {
         String sessionId = createAuthenticatedSession(httpSessionRepository(), "reader-user");
         BrowserSession browserSession = browserSession(sessionId, "reader-user");
 
-        mockMvc.perform(post("/api/session/logout")
-                        .with(browserSession.authenticatedSession()))
+        mockMvc.perform(post("/api/session/logout").with(browserSession.authenticatedSession()))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.title").value("Invalid CSRF Token"))
                 .andExpect(jsonPath("$.detail").value("A valid CSRF token is required to perform this operation."))

@@ -6,4 +6,3 @@ public class BookNotFoundException extends RuntimeException {
         super("Book with id %d was not found.".formatted(id));
     }
 }
-

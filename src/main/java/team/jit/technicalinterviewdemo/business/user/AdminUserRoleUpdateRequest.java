@@ -13,15 +13,16 @@ import java.util.Set;
 public record AdminUserRoleUpdateRequest(
         @ArraySchema(
                 schema = @Schema(description = "Role name to keep assigned after replacement.", example = "ADMIN"),
-                arraySchema = @Schema(description = "Replacement role set. `USER` must always be present.")
-        )
+                arraySchema = @Schema(description = "Replacement role set. `USER` must always be present."))
         @NotEmpty(message = "roles are required")
         Set<@NotNull(message = "roles must not contain null values") UserRole> roles,
-        @Schema(description = "Short operator-supplied explanation for the role change.", example = "Needs audit review access.")
+
+        @Schema(
+                description = "Short operator-supplied explanation for the role change.",
+                example = "Needs audit review access.")
         @NotBlank(message = "reason is required")
         @Size(max = 255, message = "reason must be at most 255 characters")
-        String reason
-) {
+        String reason) {
 
     public Set<UserRole> requestedRoles() {
         return roles == null ? Set.of() : new LinkedHashSet<>(roles);

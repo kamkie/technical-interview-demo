@@ -40,7 +40,8 @@ class BookDataInitializerTests {
     void seedBooksWritesDefaultBooksWhenDemoBootstrapIsEnabled() throws Exception {
         BookDataInitializer initializer = new BookDataInitializer();
         when(bookRepository.count()).thenReturn(0L);
-        when(categoryRepository.findAllByNormalizedNames(anyList())).thenReturn(List.of(new Category("Best Practices")));
+        when(categoryRepository.findAllByNormalizedNames(anyList()))
+                .thenReturn(List.of(new Category("Best Practices")));
         when(bookRepository.save(any(Book.class))).thenAnswer(invocation -> invocation.getArgument(0, Book.class));
 
         CommandLineRunner runner = initializer.seedBooks(bookRepository, categoryRepository, bootstrapSettings(true));

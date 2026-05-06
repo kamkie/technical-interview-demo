@@ -7,26 +7,22 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.server.context.WebServerApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
-import team.jit.technicalinterviewdemo.testing.PostgresTestcontainersConfiguration;
 import team.jit.technicalinterviewdemo.TechnicalInterviewDemoApplication;
+import team.jit.technicalinterviewdemo.testing.PostgresTestcontainersConfiguration;
 
 public final class OpenApiBaselineGenerator {
 
     private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
 
-    private OpenApiBaselineGenerator() {
-    }
+    private OpenApiBaselineGenerator() {}
 
     public static void main(String[] args) throws Exception {
         Path outputPath = resolveOutputPath(args);
         try (ConfigurableApplicationContext context = new SpringApplicationBuilder(
-                TechnicalInterviewDemoApplication.class,
-                PostgresTestcontainersConfiguration.class
-        )
+                        TechnicalInterviewDemoApplication.class, PostgresTestcontainersConfiguration.class)
                 .profiles("test")
                 .run("--server.port=0")) {
             int port = ((WebServerApplicationContext) context).getWebServer().getPort();
@@ -34,8 +30,7 @@ public final class OpenApiBaselineGenerator {
                     HttpRequest.newBuilder(URI.create("http://localhost:" + port + "/v3/api-docs"))
                             .GET()
                             .build(),
-                    HttpResponse.BodyHandlers.ofString()
-            );
+                    HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() != 200) {
                 throw new IllegalStateException("Expected 200 from /v3/api-docs but got " + response.statusCode());
             }
@@ -44,8 +39,7 @@ public final class OpenApiBaselineGenerator {
             Files.writeString(
                     outputPath,
                     OpenApiContractSupport.normalizeToPrettyJson(response.body()) + System.lineSeparator(),
-                    StandardCharsets.UTF_8
-            );
+                    StandardCharsets.UTF_8);
         }
     }
 
