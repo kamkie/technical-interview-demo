@@ -109,6 +109,11 @@ val spotlessMiscTargets = arrayOf(
     "tooling/pmd/**/*.xml",
     "tooling/security/**/*.xml",
 )
+val ktlintEditorConfigOverride = mapOf(
+    "ktlint_code_style" to "intellij_idea",
+    "ij_kotlin_imports_layout" to "*,javax.**,java.**,kotlin.**,^",
+    "ktlint_standard_no-unused-imports" to "enabled",
+)
 
 java {
     toolchain {
@@ -458,21 +463,13 @@ spotless {
 
     kotlin {
         target("buildSrc/src/**/*.kt")
-        ktlint().editorConfigOverride(
-            mapOf(
-                "ktlint_code_style" to "intellij_idea",
-            ),
-        )
+        ktlint().editorConfigOverride(ktlintEditorConfigOverride)
         endWithNewline()
     }
 
     kotlinGradle {
         target("*.gradle.kts", "gradle/**/*.gradle.kts", "buildSrc/**/*.gradle.kts")
-        ktlint().editorConfigOverride(
-            mapOf(
-                "ktlint_code_style" to "intellij_idea",
-            ),
-        )
+        ktlint().editorConfigOverride(ktlintEditorConfigOverride)
         endWithNewline()
     }
 

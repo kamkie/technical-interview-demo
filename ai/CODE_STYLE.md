@@ -34,7 +34,7 @@ Keep changes:
 - treat Palantir Java Format as the Gradle-owned Java formatter; IntelliJ alignment comes from the Palantir formatter plugin plus committed project code-style settings for imports and non-Java options
 - use `./build.ps1 format` for repository-wide formatting and `./build.ps1 checkFormat` for formatter verification instead of hand-formatting source files
 - keep `.editorconfig` to portable editor defaults; put IntelliJ-specific project style in `.idea/codeStyles/`
-- keep REST Docs AsciiDoc sources out of IntelliJ reformatting; the IDE formatter can flatten nested lists even when no-wrap settings are enabled
+- keep REST Docs AsciiDoc sources formatter-managed; write nested lists with explicit marker depth (`*`, `**`) because IntelliJ's AsciiDoc formatter may remove indentation and flatten same-marker nesting
 
 ## Naming And Placement
 
