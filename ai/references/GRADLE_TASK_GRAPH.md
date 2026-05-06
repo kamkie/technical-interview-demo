@@ -2,12 +2,22 @@
 
 Use this on-demand reference to choose the smallest useful `./build.ps1` command.
 
+Last refreshed: 2026-05-07.
+
 Sources:
 
 - `build.gradle.kts`
 - `buildSrc/src/main/kotlin/team/jit/technicalinterviewdemo/build/JacocoCoverageConventionsPlugin.kt`
 - `buildSrc/src/main/kotlin/team/jit/technicalinterviewdemo/build/ExternalTestingConventionsPlugin.kt`
 - `./build.ps1 tasks --all --no-daemon`
+- `./build.ps1 -FullBuild build --dry-run --no-daemon`
+- `./build.ps1 check --dry-run --no-daemon`
+- `./build.ps1 checkFormat --dry-run --no-daemon`
+- `./build.ps1 format --dry-run --no-daemon`
+- `./build.ps1 externalSmokeTest --dry-run --no-daemon`
+- `./build.ps1 externalDeploymentCheck --dry-run --no-daemon`
+- `./build.ps1 scheduledExternalCheck --dry-run --no-daemon`
+- `./build.ps1 gatlingBenchmark --dry-run --no-daemon`
 
 In the graphs below, `A --> B` means running `A` also schedules `B`.
 For exact expansion after build changes, run:
@@ -15,6 +25,9 @@ For exact expansion after build changes, run:
 ```powershell
 ./build.ps1 <task-or-tasks> --dry-run --no-daemon
 ```
+
+Use `./build.ps1 -FullBuild build --dry-run --no-daemon` when inspecting the full `build` graph; without `-FullBuild`, the wrapper can take the lightweight-file shortcut and skip Gradle.
+Most dry-runs also list `updatePalantirJavaFormatXml` and `updateWorkspaceXml` from the Palantir IDEA plugin. Treat those as IDE metadata synchronization tasks, not validation gates; they are omitted from the graphs below.
 
 ## Standard Build
 
@@ -29,6 +42,7 @@ graph TD
 
   jar --> classes
   bootJar --> classes
+  bootJar --> resolveMainClassName
   bootJar --> asciidoctor
   dockerBuild --> bootJar
 
@@ -42,6 +56,8 @@ graph TD
 
   classes --> compileJava
   classes --> processResources
+  processResources --> bootBuildInfo
+  processResources --> generateGitProperties
 ```
 
 Decision shortcuts:
@@ -62,7 +78,7 @@ graph TD
   check --> pmdTest
   check --> pmdExternalTest
   check --> pmdGatling
-  check --> checkFormat
+  check --> spotlessCheck
   check --> spotbugsMain
   check --> spotbugsTest
   check --> spotbugsExternalTest
@@ -78,6 +94,8 @@ graph TD
   jacocoTestReport --> test
 
   staticSecurityScan --> spotbugsMain
+  vulnerabilityScan --> dependencyVulnerabilityScan
+  vulnerabilityScan --> imageVulnerabilityScan
 
   checkFormat --> spotlessCheck
   spotlessCheck --> spotlessJavaCheck
@@ -98,9 +116,44 @@ graph TD
 
 Notes:
 
+- `checkFormat` is an explicit convenience task for formatter checks; the standard `check` task schedules `spotlessCheck` directly.
+- Palantir Java Format contributes the Java formatter step through `spotlessJava`; retained Spotless targets also cover Kotlin, Gradle Kotlin DSL, and selected support-file whitespace normalization.
 - SpotBugs tasks for `test`, `externalTest`, and `gatling` are registered but disabled by the build script; `spotbugsMain` is the active static security scan target.
 - `-SkipChecks` excludes formatting, PMD, SpotBugs, Error Prone, coverage verification, vulnerability scans, and SBOM checks for local loops only.
 - `-SkipTests` is separate from `-SkipChecks`; use both only when intentionally doing a compile/package loop.
+
+## Formatting Entry Points
+
+```mermaid
+graph TD
+  checkFormat --> spotlessCheck
+  spotlessCheck --> spotlessJavaCheck
+  spotlessCheck --> spotlessKotlinCheck
+  spotlessCheck --> spotlessKotlinGradleCheck
+  spotlessCheck --> spotlessMiscCheck
+
+  spotlessJavaCheck --> spotlessJava
+  spotlessKotlinCheck --> spotlessKotlin
+  spotlessKotlinGradleCheck --> spotlessKotlinGradle
+  spotlessMiscCheck --> spotlessMisc
+
+  format --> spotlessApply
+  spotlessApply --> spotlessJavaApply
+  spotlessApply --> spotlessKotlinApply
+  spotlessApply --> spotlessKotlinGradleApply
+  spotlessApply --> spotlessMiscApply
+
+  spotlessJavaApply --> spotlessJava
+  spotlessKotlinApply --> spotlessKotlin
+  spotlessKotlinGradleApply --> spotlessKotlinGradle
+  spotlessMiscApply --> spotlessMisc
+```
+
+Decision shortcuts:
+
+- `./build.ps1 checkFormat`: verify Palantir-backed Java formatting and retained Spotless formatting without running tests, PMD, SpotBugs, scans, or SBOM tasks.
+- `./build.ps1 format`: apply the same formatter graph in-place.
+- `./build.ps1 formatDiff`: Palantir task for formatting only chunks that appear in the git diff; useful for narrow Java cleanup, but not a replacement for `checkFormat` before handoff.
 
 ## External And Benchmark Gates
 
@@ -146,6 +199,7 @@ Decision shortcuts:
 | Test-only compile change | `./build.ps1 testClasses` | targeted `test --tests <pattern>` or `build` |
 | Focused business or service rule | `./build.ps1 test --tests <pattern>` | `./build.ps1 build` |
 | Public API behavior or REST Docs | targeted integration/docs tests | `./build.ps1 build`; refresh OpenAPI only after intentional contract review |
+| Formatter-only change | `./build.ps1 checkFormat` or `./build.ps1 format --dry-run` | `./build.ps1 checkFormat`; `build` already includes equivalent formatter proof through `spotlessCheck` |
 | Build wrapper or Gradle config | `./build.ps1 -SkipChecks compileJava` or `--dry-run` | `./build.ps1 -FullBuild build` |
 | Docker image, runtime packaging, scans, SBOM | `./build.ps1 dockerBuild` when narrow | `./build.ps1 build` |
 | External smoke environment | `./build.ps1 externalSmokeTest` | combine with `build` in one invocation when both are required |
