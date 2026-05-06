@@ -19,11 +19,11 @@ import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import org.gradle.process.ExecOperations
 import org.gradle.work.DisableCachingByDefault
+import javax.inject.Inject
 import java.io.File
 import java.net.URI
 import java.time.Duration
 import java.time.Instant
-import javax.inject.Inject
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 

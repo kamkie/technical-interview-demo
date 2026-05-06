@@ -11,8 +11,8 @@ import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
 import org.gradle.work.DisableCachingByDefault
-import java.util.Locale
 import javax.xml.parsers.DocumentBuilderFactory
+import java.util.Locale
 
 @DisableCachingByDefault(because = "The task only logs coverage details and does not produce cacheable outputs.")
 abstract class JacocoCoverageSummaryTask : DefaultTask() {
