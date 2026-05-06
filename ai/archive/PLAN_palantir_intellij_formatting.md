@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Integration |
-| Status | Implemented |
+| Phase | Closed |
+| Status | Released |
 
 ## Summary
 - Supersede the partially implemented Eclipse-profile Spotless formatter plan with a Palantir-first formatter setup for `v2.0.0-RC5`.
@@ -16,7 +16,7 @@
 - Configure IntelliJ project style so formatting `.properties` files preserves intentional empty lines.
 - Remove the Eclipse formatter profile completely from Gradle, tooling, docs, and AI guidance.
 - Keep review history readable with two implementation commits: one configuration/guidance change, then one pure code reformatting commit.
-- Roadmap tracking: `ROADMAP.md` tracks this under `Ordered Plan` / `Moving to 2.0` as selected `v2.0.0-RC5` release-candidate work.
+- Release status: this plan is archived after the `v2.0.0-RC5` release-preparation cut; active roadmap tracking now stays on the manual regression gate for stable `v2.0.0`.
 - Success means the repository no longer contains or references the Eclipse formatter profile, Java formatting is enforced through Palantir in Gradle, IntelliJ project style covers imports and non-Java options where it is reliable, SpotBugs remains green, and the full wrapper build passes after the reformat commit.
 
 ## Scope
@@ -105,7 +105,7 @@
 ## Affected Artifacts
 - Planning/roadmap:
   - `ROADMAP.md`
-  - this `ai/PLAN_palantir_intellij_formatting.md`
+  - this `ai/archive/PLAN_palantir_intellij_formatting.md`
   - archived `ai/archive/PLAN_ci_owned_spotless_reformat.md`
 - Build/settings:
   - `build.gradle.kts`
@@ -293,6 +293,14 @@
   - initial `./build.ps1 build` failed at `spotlessKotlinCheck` because KtLint import ordering required `javax.*` imports before `java.*` imports in four `buildSrc` Kotlin task files.
   - `./build.ps1 format` passed and applied import-order-only fixes to `ExternalSmokeEnvironmentUpTask.kt`, `GatlingBenchmarkTask.kt`, `JacocoCoverageSummaryTask.kt`, and `TrivyVulnerabilityScanTask.kt`.
   - repeated `./build.ps1 build` passed: 264 tests, JaCoCo line coverage 93.3%, Asciidoctor generation, Docker image build, dependency and image Trivy scans, CycloneDX SBOM generation, Palantir/Spotless formatting, PMD, SpotBugs, and coverage verification all completed successfully.
+- 2026-05-07 `v2.0.0-RC5` release-preparation metadata:
+  - moved this plan to `ai/archive/` with lifecycle `Closed` / `Released`.
+  - moved the `CHANGELOG.md` unreleased entries into `v2.0.0-RC5` and retargeted `ROADMAP.md` to stable `v2.0.0`.
+  - `pwsh ./scripts/release/get-release-migration-impact.ps1 -PreviousReleaseTag v2.0.0-RC4 -CurrentRef HEAD` reported `none`.
+  - no approved OpenAPI baseline or Flyway migration SQL path appeared in the `v2.0.0-RC4..HEAD` diff.
+  - latest default-branch CodeQL workflow lookup completed successfully for remote `main`.
+  - `git diff --check` passed.
+  - `./build.ps1 build` reported only lightweight release-metadata changes and skipped the Gradle build.
 
 ## User Validation
 - Review the implementation as two commits:

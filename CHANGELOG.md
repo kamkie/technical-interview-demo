@@ -7,6 +7,8 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+## [v2.0.0-RC5] - 2026-05-07
+
 ### Added
 
 - Added a `v2.0.0-RC5` manual regression execution plan for supported public, authenticated, admin, and technical surfaces.
