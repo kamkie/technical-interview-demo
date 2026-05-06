@@ -1,12 +1,26 @@
-# An .aiignore file follows the same syntax as a .gitignore file.
-# .gitignore documentation: https://git-scm.com/docs/gitignore
-
-# you can ignore files
+# OS and temporary files
 .DS_Store
 *.log
 *.tmp
 
-# or folders
-dist/
-build/
-out/
+# Local secrets and private environment files
+/.env
+/src/test/resources/http/http-client.private.env.json
+
+# Gradle and build outputs
+/.gradle/
+/.kotlin/
+/build/
+/buildSrc/build/
+
+# IDE/editor state
+/.idea/
+/.vscode/
+*.iws
+*.iml
+*.ipr
+/out/
+
+# Local scratch/generated folders
+/dist/
+/temp/
