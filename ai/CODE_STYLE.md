@@ -36,6 +36,7 @@ Keep changes:
 - keep `.editorconfig` to portable editor defaults; put IntelliJ-specific project style in `.idea/codeStyles/`
 - keep REST Docs AsciiDoc sources formatter-managed; write nested lists with explicit marker depth (`*`, `**`) because IntelliJ's AsciiDoc formatter may remove indentation and flatten same-marker nesting
 - preserve intentional `.properties` blank-line separators with the checked-in IntelliJ EditorConfig key instead of excluding project properties files from IDE formatting
+- keep YAML flow mappings and sequences compact as `{}` and `[]`; `.editorconfig` disables IntelliJ spaces within YAML braces and brackets
 - keep Flyway migration SQL under `src/main/resources/db/migration/` hand-formatted and out of IntelliJ reformatting; Spotless may still trim trailing whitespace and enforce final newlines
 
 ## Naming And Placement

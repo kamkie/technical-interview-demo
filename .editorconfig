@@ -19,6 +19,8 @@ ij_properties_keep_blank_lines = true
 
 [*.{json,jsonc,yml,yaml}]
 indent_size = 2
+ij_yaml_spaces_within_braces = false
+ij_yaml_spaces_within_brackets = false
 
 [*.csv]
 indent_style = tab
