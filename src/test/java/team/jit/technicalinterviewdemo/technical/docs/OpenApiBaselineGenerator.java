@@ -1,5 +1,11 @@
 package team.jit.technicalinterviewdemo.technical.docs;
 
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.server.context.WebServerApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import team.jit.technicalinterviewdemo.TechnicalInterviewDemoApplication;
+import team.jit.technicalinterviewdemo.testing.PostgresTestcontainersConfiguration;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -7,12 +13,6 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.server.context.WebServerApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
-import team.jit.technicalinterviewdemo.testing.PostgresTestcontainersConfiguration;
-import team.jit.technicalinterviewdemo.TechnicalInterviewDemoApplication;
 
 public final class OpenApiBaselineGenerator {
 

@@ -1,13 +1,6 @@
 package team.jit.technicalinterviewdemo.technical;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.clearAuthentication;
-import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.setAdminAuthenticatedUser;
-
 import io.micrometer.core.instrument.MeterRegistry;
-
-import java.util.List;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,24 +8,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.PageRequest;
+import team.jit.technicalinterviewdemo.business.audit.AuditLogRepository;
 import team.jit.technicalinterviewdemo.business.book.BookCreateRequest;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
 import team.jit.technicalinterviewdemo.business.book.BookSearchRequest;
 import team.jit.technicalinterviewdemo.business.book.BookService;
-import team.jit.technicalinterviewdemo.technical.cache.CacheNames;
 import team.jit.technicalinterviewdemo.business.category.Category;
 import team.jit.technicalinterviewdemo.business.category.CategoryCreateRequest;
 import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
 import team.jit.technicalinterviewdemo.business.category.CategoryService;
-import team.jit.technicalinterviewdemo.business.audit.AuditLogRepository;
 import team.jit.technicalinterviewdemo.business.localization.Localization;
 import team.jit.technicalinterviewdemo.business.localization.LocalizationRepository;
 import team.jit.technicalinterviewdemo.business.localization.LocalizationRequest;
 import team.jit.technicalinterviewdemo.business.localization.LocalizationService;
 import team.jit.technicalinterviewdemo.business.user.UserAccountRepository;
+import team.jit.technicalinterviewdemo.technical.cache.CacheNames;
 import team.jit.technicalinterviewdemo.testdata.BookCatalogTestData;
 import team.jit.technicalinterviewdemo.testing.CacheTestSupport;
 import team.jit.technicalinterviewdemo.testing.IntegrationSpringBootTest;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.clearAuthentication;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.setAdminAuthenticatedUser;
 
 @IntegrationSpringBootTest
 class CachingAndMetricsTests {

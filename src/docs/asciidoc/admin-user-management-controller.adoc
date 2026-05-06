@@ -20,7 +20,8 @@ include::{snippets}/admin-users/list-admin-users/response-fields.adoc[]
 
 == `PUT /api/admin/users/{id}/roles`
 
-Replaces the non-bootstrap role set for one persisted user. The request must keep `USER` in the role set, bootstrap grants stay preserved, and manually managed grants record the acting admin plus the supplied reason.
+Replaces the non-bootstrap role set for one persisted user.
+The request must keep `USER` in the role set, bootstrap grants stay preserved, and manually managed grants record the acting admin plus the supplied reason.
 
 include::{snippets}/admin-users/replace-managed-user-roles/curl-request.adoc[]
 include::{snippets}/admin-users/replace-managed-user-roles/http-request.adoc[]

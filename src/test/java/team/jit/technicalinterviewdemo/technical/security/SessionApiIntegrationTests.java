@@ -1,5 +1,10 @@
 package team.jit.technicalinterviewdemo.technical.security;
 
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
+import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
+import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
+
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
@@ -10,11 +15,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpHeaders;
-import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
-import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
 
 @MockMvcIntegrationSpringBootTest
 class SessionApiIntegrationTests extends AbstractMockMvcIntegrationTest {

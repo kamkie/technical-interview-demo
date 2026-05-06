@@ -1,16 +1,16 @@
 package team.jit.technicalinterviewdemo.technical.logging;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+import team.jit.technicalinterviewdemo.testing.AbstractRandomPortIntegrationTest;
+import team.jit.technicalinterviewdemo.testing.RandomPortIntegrationSpringBootTest;
 
 import java.io.IOException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-import org.junit.jupiter.api.Test;
-import team.jit.technicalinterviewdemo.testing.AbstractRandomPortIntegrationTest;
-import team.jit.technicalinterviewdemo.testing.RandomPortIntegrationSpringBootTest;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @RandomPortIntegrationSpringBootTest
 class HttpTracingIntegrationTests extends AbstractRandomPortIntegrationTest {

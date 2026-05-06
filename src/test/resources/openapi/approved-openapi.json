@@ -1,649 +1,743 @@
 {
-  "openapi" : "3.0.1",
-  "info" : {
-    "title" : "technical-interview-demo API",
-    "description" : "Machine-readable contract for the demo application's supported external /api/** surface. Internal-only overview, documentation, OpenAPI publication, and actuator validation paths are intentionally excluded.",
-    "version" : "APPROVED"
+  "openapi": "3.0.1",
+  "info": {
+    "title": "technical-interview-demo API",
+    "description": "Machine-readable contract for the demo application's supported external /api/** surface. Internal-only overview, documentation, OpenAPI publication, and actuator validation paths are intentionally excluded.",
+    "version": "APPROVED"
   },
-  "tags" : [ {
-    "name" : "Books",
-    "description" : "Public book reads plus authenticated write operations."
-  }, {
-    "name" : "Categories",
-    "description" : "Public category reads with ADMIN-only category management."
-  }, {
-    "name" : "Admin Users",
-    "description" : "ADMIN-only persisted user and role-management endpoints."
-  }, {
-    "name" : "Account",
-    "description" : "Authenticated account endpoints."
-  }, {
-    "name" : "Operator",
-    "description" : "ADMIN-only operational inspection surface."
-  }, {
-    "name" : "Audit Logs",
-    "description" : "ADMIN-only audit log review endpoint."
-  }, {
-    "name" : "Localizations",
-    "description" : "Public localization reads with ADMIN-only management operations."
-  }, {
-    "name" : "Session",
-    "description" : "Same-site browser session contract endpoints for the separate first-party UI."
-  } ],
-  "paths" : {
-    "/api/localizations/{id}" : {
-      "get" : {
-        "tags" : [ "Localizations" ],
-        "summary" : "Get a localization by id",
-        "description" : "Public endpoint for a single localization.",
-        "operationId" : "findById",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "integer",
-            "format" : "int64"
+  "tags": [
+    {
+      "name": "Books",
+      "description": "Public book reads plus authenticated write operations."
+    },
+    {
+      "name": "Categories",
+      "description": "Public category reads with ADMIN-only category management."
+    },
+    {
+      "name": "Admin Users",
+      "description": "ADMIN-only persisted user and role-management endpoints."
+    },
+    {
+      "name": "Account",
+      "description": "Authenticated account endpoints."
+    },
+    {
+      "name": "Operator",
+      "description": "ADMIN-only operational inspection surface."
+    },
+    {
+      "name": "Audit Logs",
+      "description": "ADMIN-only audit log review endpoint."
+    },
+    {
+      "name": "Localizations",
+      "description": "Public localization reads with ADMIN-only management operations."
+    },
+    {
+      "name": "Session",
+      "description": "Same-site browser session contract endpoints for the separate first-party UI."
+    }
+  ],
+  "paths": {
+    "/api/localizations/{id}": {
+      "get": {
+        "tags": [
+          "Localizations"
+        ],
+        "summary": "Get a localization by id",
+        "description": "Public endpoint for a single localization.",
+        "operationId": "findById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
           }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "*/*" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/LocalizationResponse"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocalizationResponse"
                 }
               }
             }
           }
         }
       },
-      "put" : {
-        "tags" : [ "Localizations" ],
-        "summary" : "Update a localization",
-        "description" : "Requires an authenticated session with the ADMIN role and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.",
-        "operationId" : "update",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "integer",
-            "format" : "int64"
+      "put": {
+        "tags": [
+          "Localizations"
+        ],
+        "summary": "Update a localization",
+        "description": "Requires an authenticated session with the ADMIN role and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.",
+        "operationId": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "X-XSRF-TOKEN",
+            "in": "header",
+            "description": "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
+            "required": true
           }
-        }, {
-          "name" : "X-XSRF-TOKEN",
-          "in" : "header",
-          "description" : "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
-          "required" : true
-        } ],
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/LocalizationRequest"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LocalizationRequest"
               }
             }
           },
-          "required" : true
+          "required": true
         },
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "*/*" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/LocalizationResponse"
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocalizationResponse"
                 }
               }
             }
           }
         },
-        "security" : [ {
-          "sessionCookie" : [ ]
-        } ]
-      },
-      "delete" : {
-        "tags" : [ "Localizations" ],
-        "summary" : "Delete a localization",
-        "description" : "Requires an authenticated session with the ADMIN role and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.",
-        "operationId" : "delete",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "integer",
-            "format" : "int64"
+        "security": [
+          {
+            "sessionCookie": []
           }
-        }, {
-          "name" : "X-XSRF-TOKEN",
-          "in" : "header",
-          "description" : "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
-          "required" : true
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK"
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Localizations"
+        ],
+        "summary": "Delete a localization",
+        "description": "Requires an authenticated session with the ADMIN role and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.",
+        "operationId": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "X-XSRF-TOKEN",
+            "in": "header",
+            "description": "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         },
-        "security" : [ {
-          "sessionCookie" : [ ]
-        } ]
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ]
       }
     },
-    "/api/categories/{id}" : {
-      "put" : {
-        "tags" : [ "Categories" ],
-        "summary" : "Update a category",
-        "description" : "Requires an authenticated session with the ADMIN role and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.",
-        "operationId" : "update_1",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "integer",
-            "format" : "int64"
+    "/api/categories/{id}": {
+      "put": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Update a category",
+        "description": "Requires an authenticated session with the ADMIN role and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.",
+        "operationId": "update_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "X-XSRF-TOKEN",
+            "in": "header",
+            "description": "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
+            "required": true
           }
-        }, {
-          "name" : "X-XSRF-TOKEN",
-          "in" : "header",
-          "description" : "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
-          "required" : true
-        } ],
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/CategoryUpdateRequest"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CategoryUpdateRequest"
               }
             }
           },
-          "required" : true
+          "required": true
         },
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Category"
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Category"
                 }
               }
             }
           },
-          "401" : {
-            "description" : "Missing or invalid authenticated session.",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiProblemResponse"
+          "401": {
+            "description": "Missing or invalid authenticated session.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemResponse"
                 }
               }
             }
           },
-          "403" : {
-            "description" : "Authenticated user does not have the ADMIN role.",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiProblemResponse"
+          "403": {
+            "description": "Authenticated user does not have the ADMIN role.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemResponse"
                 }
               }
             }
           },
-          "404" : {
-            "description" : "Requested category was not found.",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiProblemResponse"
+          "404": {
+            "description": "Requested category was not found.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemResponse"
                 }
               }
             }
           }
         },
-        "security" : [ {
-          "sessionCookie" : [ ]
-        } ]
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ]
       },
-      "delete" : {
-        "tags" : [ "Categories" ],
-        "summary" : "Delete a category",
-        "description" : "Requires an authenticated session with the ADMIN role, a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie, and a category that is not still assigned to books.",
-        "operationId" : "delete_1",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "integer",
-            "format" : "int64"
+      "delete": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Delete a category",
+        "description": "Requires an authenticated session with the ADMIN role, a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie, and a category that is not still assigned to books.",
+        "operationId": "delete_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "X-XSRF-TOKEN",
+            "in": "header",
+            "description": "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
+            "required": true
           }
-        }, {
-          "name" : "X-XSRF-TOKEN",
-          "in" : "header",
-          "description" : "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
-          "required" : true
-        } ],
-        "responses" : {
-          "204" : {
-            "description" : "No Content"
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
           },
-          "401" : {
-            "description" : "Missing or invalid authenticated session.",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiProblemResponse"
+          "401": {
+            "description": "Missing or invalid authenticated session.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemResponse"
                 }
               }
             }
           },
-          "403" : {
-            "description" : "Authenticated user does not have the ADMIN role.",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiProblemResponse"
+          "403": {
+            "description": "Authenticated user does not have the ADMIN role.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemResponse"
                 }
               }
             }
           },
-          "404" : {
-            "description" : "Requested category was not found.",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiProblemResponse"
+          "404": {
+            "description": "Requested category was not found.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemResponse"
                 }
               }
             }
           },
-          "409" : {
-            "description" : "Category is still assigned to one or more books.",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiProblemResponse"
+          "409": {
+            "description": "Category is still assigned to one or more books.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemResponse"
                 }
               }
             }
           }
         },
-        "security" : [ {
-          "sessionCookie" : [ ]
-        } ]
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ]
       }
     },
-    "/api/books/{id}" : {
-      "get" : {
-        "tags" : [ "Books" ],
-        "summary" : "Get a book by id",
-        "description" : "Public endpoint that returns a single book with its assigned categories.",
-        "operationId" : "findById_1",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "integer",
-            "format" : "int64"
+    "/api/books/{id}": {
+      "get": {
+        "tags": [
+          "Books"
+        ],
+        "summary": "Get a book by id",
+        "description": "Public endpoint that returns a single book with its assigned categories.",
+        "operationId": "findById_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
           }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "*/*" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Book"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Book"
                 }
               }
             }
           }
         }
       },
-      "put" : {
-        "tags" : [ "Books" ],
-        "summary" : "Update a book",
-        "description" : "Requires an authenticated session, a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie, and the current optimistic-lock version.",
-        "operationId" : "update_2",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "integer",
-            "format" : "int64"
+      "put": {
+        "tags": [
+          "Books"
+        ],
+        "summary": "Update a book",
+        "description": "Requires an authenticated session, a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie, and the current optimistic-lock version.",
+        "operationId": "update_2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "X-XSRF-TOKEN",
+            "in": "header",
+            "description": "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
+            "required": true
           }
-        }, {
-          "name" : "X-XSRF-TOKEN",
-          "in" : "header",
-          "description" : "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
-          "required" : true
-        } ],
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/BookUpdateRequest"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookUpdateRequest"
               }
             }
           },
-          "required" : true
+          "required": true
         },
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "*/*" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Book"
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Book"
                 }
               }
             }
           }
         },
-        "security" : [ {
-          "sessionCookie" : [ ]
-        } ]
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ]
       },
-      "delete" : {
-        "tags" : [ "Books" ],
-        "summary" : "Delete a book",
-        "description" : "Requires an authenticated session and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.",
-        "operationId" : "delete_2",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "integer",
-            "format" : "int64"
+      "delete": {
+        "tags": [
+          "Books"
+        ],
+        "summary": "Delete a book",
+        "description": "Requires an authenticated session and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.",
+        "operationId": "delete_2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "X-XSRF-TOKEN",
+            "in": "header",
+            "description": "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
+            "required": true
           }
-        }, {
-          "name" : "X-XSRF-TOKEN",
-          "in" : "header",
-          "description" : "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
-          "required" : true
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         },
-        "security" : [ {
-          "sessionCookie" : [ ]
-        } ]
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ]
       }
     },
-    "/api/admin/users/{id}/roles" : {
-      "put" : {
-        "tags" : [ "Admin Users" ],
-        "summary" : "Replace managed user roles",
-        "description" : "Requires an authenticated session with the ADMIN role, a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie, and replaces the non-bootstrap role set for one persisted user.",
-        "operationId" : "replaceRoles",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "integer",
-            "format" : "int64"
+    "/api/admin/users/{id}/roles": {
+      "put": {
+        "tags": [
+          "Admin Users"
+        ],
+        "summary": "Replace managed user roles",
+        "description": "Requires an authenticated session with the ADMIN role, a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie, and replaces the non-bootstrap role set for one persisted user.",
+        "operationId": "replaceRoles",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "X-XSRF-TOKEN",
+            "in": "header",
+            "description": "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
+            "required": true
           }
-        }, {
-          "name" : "X-XSRF-TOKEN",
-          "in" : "header",
-          "description" : "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
-          "required" : true
-        } ],
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/AdminUserRoleUpdateRequest"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminUserRoleUpdateRequest"
               }
             }
           },
-          "required" : true
+          "required": true
         },
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/AdminUserAccountResponse"
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminUserAccountResponse"
                 }
               }
             }
           },
-          "400" : {
-            "description" : "Invalid request payload.",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiProblemResponse"
+          "400": {
+            "description": "Invalid request payload.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemResponse"
                 }
               }
             }
           },
-          "401" : {
-            "description" : "Missing or invalid authenticated session.",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiProblemResponse"
+          "401": {
+            "description": "Missing or invalid authenticated session.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemResponse"
                 }
               }
             }
           },
-          "403" : {
-            "description" : "Authenticated user does not have the ADMIN role.",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiProblemResponse"
+          "403": {
+            "description": "Authenticated user does not have the ADMIN role.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemResponse"
                 }
               }
             }
           },
-          "404" : {
-            "description" : "Persisted user was not found.",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiProblemResponse"
+          "404": {
+            "description": "Persisted user was not found.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemResponse"
                 }
               }
             }
           }
         },
-        "security" : [ {
-          "sessionCookie" : [ ]
-        } ]
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ]
       }
     },
-    "/api/account/language" : {
-      "put" : {
-        "tags" : [ "Account" ],
-        "summary" : "Update the account language",
-        "description" : "Requires an authenticated session and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie. Blank or null clears the preference.",
-        "operationId" : "updatePreferredLanguage",
-        "parameters" : [ {
-          "name" : "X-XSRF-TOKEN",
-          "in" : "header",
-          "description" : "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
-          "required" : true
-        } ],
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/UserAccountLanguageRequest"
+    "/api/account/language": {
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Update the account language",
+        "description": "Requires an authenticated session and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie. Blank or null clears the preference.",
+        "operationId": "updatePreferredLanguage",
+        "parameters": [
+          {
+            "name": "X-XSRF-TOKEN",
+            "in": "header",
+            "description": "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserAccountLanguageRequest"
               }
             }
           },
-          "required" : true
+          "required": true
         },
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "*/*" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/UserAccountResponse"
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserAccountResponse"
                 }
               }
             }
           }
         },
-        "security" : [ {
-          "sessionCookie" : [ ]
-        } ]
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ]
       }
     },
-    "/api/session/logout" : {
-      "post" : {
-        "tags" : [ "Session" ],
-        "summary" : "Log out the current browser session",
-        "description" : "Same-site logout endpoint for the separate first-party UI. Invalidates the current application session when present, clears both the session and readable CSRF cookies, requires a valid CSRF header when a current application session exists, and still returns 204 when no session exists.",
-        "operationId" : "logout",
-        "parameters" : [ {
-          "name" : "X-XSRF-TOKEN",
-          "in" : "header",
-          "description" : "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie when the browser currently has an authenticated application session."
-        } ],
-        "responses" : {
-          "204" : {
-            "description" : "Current session invalidated and cookie cleared."
+    "/api/session/logout": {
+      "post": {
+        "tags": [
+          "Session"
+        ],
+        "summary": "Log out the current browser session",
+        "description": "Same-site logout endpoint for the separate first-party UI. Invalidates the current application session when present, clears both the session and readable CSRF cookies, requires a valid CSRF header when a current application session exists, and still returns 204 when no session exists.",
+        "operationId": "logout",
+        "parameters": [
+          {
+            "name": "X-XSRF-TOKEN",
+            "in": "header",
+            "description": "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie when the browser currently has an authenticated application session."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Current session invalidated and cookie cleared."
           }
         }
       }
     },
-    "/api/localizations" : {
-      "get" : {
-        "tags" : [ "Localizations" ],
-        "summary" : "List localizations",
-        "description" : "Public endpoint with pageable results. Optional messageKey and language filters narrow the collection.",
-        "operationId" : "findAll",
-        "parameters" : [ {
-          "name" : "messageKey",
-          "in" : "query",
-          "required" : false,
-          "schema" : {
-            "type" : "string"
+    "/api/localizations": {
+      "get": {
+        "tags": [
+          "Localizations"
+        ],
+        "summary": "List localizations",
+        "description": "Public endpoint with pageable results. Optional messageKey and language filters narrow the collection.",
+        "operationId": "findAll",
+        "parameters": [
+          {
+            "name": "messageKey",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "pattern": "^[a-zA-Z]{2}$",
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Zero-based page index (0..N)",
+            "required": false,
+            "schema": {
+              "minimum": 0,
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "The size of the page to be returned",
+            "required": false,
+            "schema": {
+              "minimum": 1,
+              "type": "integer",
+              "default": 20
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "id,ASC"
+              ]
+            }
           }
-        }, {
-          "name" : "language",
-          "in" : "query",
-          "required" : false,
-          "schema" : {
-            "pattern" : "^[a-zA-Z]{2}$",
-            "type" : "string"
-          }
-        }, {
-          "name" : "page",
-          "in" : "query",
-          "description" : "Zero-based page index (0..N)",
-          "required" : false,
-          "schema" : {
-            "minimum" : 0,
-            "type" : "integer",
-            "default" : 0
-          }
-        }, {
-          "name" : "size",
-          "in" : "query",
-          "description" : "The size of the page to be returned",
-          "required" : false,
-          "schema" : {
-            "minimum" : 1,
-            "type" : "integer",
-            "default" : 20
-          }
-        }, {
-          "name" : "sort",
-          "in" : "query",
-          "description" : "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
-          "required" : false,
-          "schema" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string"
-            },
-            "default" : [ "id,ASC" ]
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "*/*" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/PageLocalizationResponse"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageLocalizationResponse"
                 }
               }
             }
           }
         }
       },
-      "post" : {
-        "tags" : [ "Localizations" ],
-        "summary" : "Create a localization",
-        "description" : "Requires an authenticated session with the ADMIN role and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.",
-        "operationId" : "create",
-        "parameters" : [ {
-          "name" : "X-XSRF-TOKEN",
-          "in" : "header",
-          "description" : "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
-          "required" : true
-        } ],
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/LocalizationRequest"
+      "post": {
+        "tags": [
+          "Localizations"
+        ],
+        "summary": "Create a localization",
+        "description": "Requires an authenticated session with the ADMIN role and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.",
+        "operationId": "create",
+        "parameters": [
+          {
+            "name": "X-XSRF-TOKEN",
+            "in": "header",
+            "description": "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LocalizationRequest"
               }
             }
           },
-          "required" : true
+          "required": true
         },
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "*/*" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/LocalizationResponse"
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocalizationResponse"
                 }
               }
             }
           }
         },
-        "security" : [ {
-          "sessionCookie" : [ ]
-        } ]
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ]
       }
     },
-    "/api/categories" : {
-      "get" : {
-        "tags" : [ "Categories" ],
-        "summary" : "List categories",
-        "description" : "Public endpoint that returns categories ordered by name.",
-        "operationId" : "findAll_1",
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "*/*" : {
-                "schema" : {
-                  "type" : "array",
-                  "items" : {
-                    "$ref" : "#/components/schemas/Category"
+    "/api/categories": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "List categories",
+        "description": "Public endpoint that returns categories ordered by name.",
+        "operationId": "findAll_1",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Category"
                   }
                 }
               }
@@ -651,249 +745,278 @@
           }
         }
       },
-      "post" : {
-        "tags" : [ "Categories" ],
-        "summary" : "Create a category",
-        "description" : "Requires an authenticated session with the ADMIN role and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.",
-        "operationId" : "create_1",
-        "parameters" : [ {
-          "name" : "X-XSRF-TOKEN",
-          "in" : "header",
-          "description" : "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
-          "required" : true
-        } ],
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/CategoryCreateRequest"
+      "post": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Create a category",
+        "description": "Requires an authenticated session with the ADMIN role and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.",
+        "operationId": "create_1",
+        "parameters": [
+          {
+            "name": "X-XSRF-TOKEN",
+            "in": "header",
+            "description": "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CategoryCreateRequest"
               }
             }
           },
-          "required" : true
+          "required": true
         },
-        "responses" : {
-          "201" : {
-            "description" : "Created",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Category"
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Category"
                 }
               }
             }
           },
-          "401" : {
-            "description" : "Missing or invalid authenticated session.",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiProblemResponse"
+          "401": {
+            "description": "Missing or invalid authenticated session.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemResponse"
                 }
               }
             }
           },
-          "403" : {
-            "description" : "Authenticated user does not have the ADMIN role.",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiProblemResponse"
+          "403": {
+            "description": "Authenticated user does not have the ADMIN role.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemResponse"
                 }
               }
             }
           }
         },
-        "security" : [ {
-          "sessionCookie" : [ ]
-        } ]
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ]
       }
     },
-    "/api/books" : {
-      "get" : {
-        "tags" : [ "Books" ],
-        "summary" : "List books",
-        "description" : "Public endpoint with pagination, sorting, text filters, category filters, and publication-year filters.",
-        "operationId" : "findAll_2",
-        "parameters" : [ {
-          "name" : "title",
-          "in" : "query",
-          "description" : "Case-insensitive substring filter for the title.",
-          "required" : false,
-          "schema" : {
-            "type" : "string",
-            "description" : "Case-insensitive substring filter for the title.",
-            "example" : "clean"
+    "/api/books": {
+      "get": {
+        "tags": [
+          "Books"
+        ],
+        "summary": "List books",
+        "description": "Public endpoint with pagination, sorting, text filters, category filters, and publication-year filters.",
+        "operationId": "findAll_2",
+        "parameters": [
+          {
+            "name": "title",
+            "in": "query",
+            "description": "Case-insensitive substring filter for the title.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Case-insensitive substring filter for the title.",
+              "example": "clean"
+            },
+            "example": "clean"
           },
-          "example" : "clean"
-        }, {
-          "name" : "author",
-          "in" : "query",
-          "description" : "Case-insensitive substring filter for the author.",
-          "required" : false,
-          "schema" : {
-            "type" : "string",
-            "description" : "Case-insensitive substring filter for the author.",
-            "example" : "bloch"
+          {
+            "name": "author",
+            "in": "query",
+            "description": "Case-insensitive substring filter for the author.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Case-insensitive substring filter for the author.",
+              "example": "bloch"
+            },
+            "example": "bloch"
           },
-          "example" : "bloch"
-        }, {
-          "name" : "isbn",
-          "in" : "query",
-          "description" : "Case-insensitive substring filter for the ISBN.",
-          "required" : false,
-          "schema" : {
-            "type" : "string",
-            "description" : "Case-insensitive substring filter for the ISBN.",
-            "example" : "978013"
+          {
+            "name": "isbn",
+            "in": "query",
+            "description": "Case-insensitive substring filter for the ISBN.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Case-insensitive substring filter for the ISBN.",
+              "example": "978013"
+            },
+            "example": 978013
           },
-          "example" : 978013
-        }, {
-          "name" : "year",
-          "in" : "query",
-          "description" : "Exact publication year. Cannot be combined with yearFrom or yearTo.",
-          "required" : false,
-          "schema" : {
-            "type" : "integer",
-            "description" : "Exact publication year. Cannot be combined with yearFrom or yearTo.",
-            "format" : "int32",
-            "example" : 2018
+          {
+            "name": "year",
+            "in": "query",
+            "description": "Exact publication year. Cannot be combined with yearFrom or yearTo.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "description": "Exact publication year. Cannot be combined with yearFrom or yearTo.",
+              "format": "int32",
+              "example": 2018
+            },
+            "example": 2018
           },
-          "example" : 2018
-        }, {
-          "name" : "yearFrom",
-          "in" : "query",
-          "description" : "Inclusive publication-year lower bound.",
-          "required" : false,
-          "schema" : {
-            "type" : "integer",
-            "description" : "Inclusive publication-year lower bound.",
-            "format" : "int32",
-            "example" : 2000
+          {
+            "name": "yearFrom",
+            "in": "query",
+            "description": "Inclusive publication-year lower bound.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "description": "Inclusive publication-year lower bound.",
+              "format": "int32",
+              "example": 2000
+            },
+            "example": 2000
           },
-          "example" : 2000
-        }, {
-          "name" : "yearTo",
-          "in" : "query",
-          "description" : "Inclusive publication-year upper bound.",
-          "required" : false,
-          "schema" : {
-            "type" : "integer",
-            "description" : "Inclusive publication-year upper bound.",
-            "format" : "int32",
-            "example" : 2020
+          {
+            "name": "yearTo",
+            "in": "query",
+            "description": "Inclusive publication-year upper bound.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "description": "Inclusive publication-year upper bound.",
+              "format": "int32",
+              "example": 2020
+            },
+            "example": 2020
           },
-          "example" : 2020
-        }, {
-          "name" : "category",
-          "in" : "query",
-          "required" : false,
-          "schema" : {
-            "type" : "array",
-            "description" : "Repeat the parameter to match any of multiple categories.",
-            "items" : {
-              "type" : "string",
-              "description" : "Category filter value.",
-              "example" : "Java"
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "description": "Repeat the parameter to match any of multiple categories.",
+              "items": {
+                "type": "string",
+                "description": "Category filter value.",
+                "example": "Java"
+              }
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Zero-based page index (0..N)",
+            "required": false,
+            "schema": {
+              "minimum": 0,
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "The size of the page to be returned",
+            "required": false,
+            "schema": {
+              "minimum": 1,
+              "type": "integer",
+              "default": 20
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "id,ASC"
+              ]
             }
           }
-        }, {
-          "name" : "page",
-          "in" : "query",
-          "description" : "Zero-based page index (0..N)",
-          "required" : false,
-          "schema" : {
-            "minimum" : 0,
-            "type" : "integer",
-            "default" : 0
-          }
-        }, {
-          "name" : "size",
-          "in" : "query",
-          "description" : "The size of the page to be returned",
-          "required" : false,
-          "schema" : {
-            "minimum" : 1,
-            "type" : "integer",
-            "default" : 20
-          }
-        }, {
-          "name" : "sort",
-          "in" : "query",
-          "description" : "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
-          "required" : false,
-          "schema" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string"
-            },
-            "default" : [ "id,ASC" ]
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "*/*" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/PageBook"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageBook"
                 }
               }
             }
           }
         }
       },
-      "post" : {
-        "tags" : [ "Books" ],
-        "summary" : "Create a book",
-        "description" : "Requires an authenticated session established through the configured OAuth provider login flow and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.",
-        "operationId" : "create_2",
-        "parameters" : [ {
-          "name" : "X-XSRF-TOKEN",
-          "in" : "header",
-          "description" : "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
-          "required" : true
-        } ],
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/BookCreateRequest"
+      "post": {
+        "tags": [
+          "Books"
+        ],
+        "summary": "Create a book",
+        "description": "Requires an authenticated session established through the configured OAuth provider login flow and a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie.",
+        "operationId": "create_2",
+        "parameters": [
+          {
+            "name": "X-XSRF-TOKEN",
+            "in": "header",
+            "description": "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookCreateRequest"
               }
             }
           },
-          "required" : true
+          "required": true
         },
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "*/*" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Book"
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Book"
                 }
               }
             }
           }
         },
-        "security" : [ {
-          "sessionCookie" : [ ]
-        } ]
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ]
       }
     },
-    "/api/session" : {
-      "get" : {
-        "tags" : [ "Session" ],
-        "summary" : "Get the current browser session contract",
-        "description" : "Public same-site session/bootstrap endpoint for the separate first-party UI. Returns the current authenticated state, persisted-account path, available OAuth login providers, logout path, session-cookie contract, and the readable CSRF cookie plus request-header names required for unsafe browser writes.",
-        "operationId" : "currentSession",
-        "responses" : {
-          "200" : {
-            "description" : "Current same-site browser session state.",
-            "content" : {
-              "*/*" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/SessionResponse"
+    "/api/session": {
+      "get": {
+        "tags": [
+          "Session"
+        ],
+        "summary": "Get the current browser session contract",
+        "description": "Public same-site session/bootstrap endpoint for the separate first-party UI. Returns the current authenticated state, persisted-account path, available OAuth login providers, logout path, session-cookie contract, and the readable CSRF cookie plus request-header names required for unsafe browser writes.",
+        "operationId": "currentSession",
+        "responses": {
+          "200": {
+            "description": "Current same-site browser session state.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponse"
                 }
               }
             }
@@ -901,1399 +1024,1480 @@
         }
       }
     },
-    "/api/admin/users" : {
-      "get" : {
-        "tags" : [ "Admin Users" ],
-        "summary" : "List persisted users",
-        "description" : "Requires an authenticated session with the ADMIN role and returns persisted users together with current roles and role-grant provenance.",
-        "operationId" : "listUsers",
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "array",
-                  "items" : {
-                    "$ref" : "#/components/schemas/AdminUserAccountResponse"
+    "/api/admin/users": {
+      "get": {
+        "tags": [
+          "Admin Users"
+        ],
+        "summary": "List persisted users",
+        "description": "Requires an authenticated session with the ADMIN role and returns persisted users together with current roles and role-grant provenance.",
+        "operationId": "listUsers",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminUserAccountResponse"
                   }
                 }
               }
             }
           },
-          "401" : {
-            "description" : "Missing or invalid authenticated session.",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiProblemResponse"
+          "401": {
+            "description": "Missing or invalid authenticated session.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemResponse"
                 }
               }
             }
           },
-          "403" : {
-            "description" : "Authenticated user does not have the ADMIN role.",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiProblemResponse"
+          "403": {
+            "description": "Authenticated user does not have the ADMIN role.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemResponse"
                 }
               }
             }
           }
         },
-        "security" : [ {
-          "sessionCookie" : [ ]
-        } ]
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ]
       }
     },
-    "/api/admin/operator-surface" : {
-      "get" : {
-        "tags" : [ "Operator" ],
-        "summary" : "Get operator inspection surface",
-        "description" : "Requires an authenticated session with the ADMIN role and returns audit, runtime, and operational visibility in one payload.",
-        "operationId" : "getSurface",
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/OperatorSurfaceResponse"
+    "/api/admin/operator-surface": {
+      "get": {
+        "tags": [
+          "Operator"
+        ],
+        "summary": "Get operator inspection surface",
+        "description": "Requires an authenticated session with the ADMIN role and returns audit, runtime, and operational visibility in one payload.",
+        "operationId": "getSurface",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperatorSurfaceResponse"
                 }
               }
             }
           },
-          "401" : {
-            "description" : "Missing or invalid authenticated session.",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiProblemResponse"
+          "401": {
+            "description": "Missing or invalid authenticated session.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemResponse"
                 }
               }
             }
           },
-          "403" : {
-            "description" : "Authenticated user does not have the ADMIN role.",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiProblemResponse"
+          "403": {
+            "description": "Authenticated user does not have the ADMIN role.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemResponse"
                 }
               }
             }
           }
         },
-        "security" : [ {
-          "sessionCookie" : [ ]
-        } ]
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ]
       }
     },
-    "/api/admin/audit-logs" : {
-      "get" : {
-        "tags" : [ "Audit Logs" ],
-        "summary" : "List audit logs",
-        "description" : "Requires an authenticated session with the ADMIN role and returns pageable audit entries.",
-        "operationId" : "findAll_3",
-        "parameters" : [ {
-          "name" : "targetType",
-          "in" : "query",
-          "required" : false,
-          "schema" : {
-            "type" : "string",
-            "enum" : [ "BOOK", "CATEGORY", "LOCALIZATION_MESSAGE", "USER_ACCOUNT", "AUTHENTICATION" ]
+    "/api/admin/audit-logs": {
+      "get": {
+        "tags": [
+          "Audit Logs"
+        ],
+        "summary": "List audit logs",
+        "description": "Requires an authenticated session with the ADMIN role and returns pageable audit entries.",
+        "operationId": "findAll_3",
+        "parameters": [
+          {
+            "name": "targetType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "BOOK",
+                "CATEGORY",
+                "LOCALIZATION_MESSAGE",
+                "USER_ACCOUNT",
+                "AUTHENTICATION"
+              ]
+            }
+          },
+          {
+            "name": "action",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "CREATE",
+                "UPDATE",
+                "DELETE",
+                "LOGIN_SUCCESS",
+                "LOGIN_FAILURE",
+                "LOGOUT",
+                "SESSION_REJECTION"
+              ]
+            }
+          },
+          {
+            "name": "actorLogin",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Zero-based page index (0..N)",
+            "required": false,
+            "schema": {
+              "minimum": 0,
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "The size of the page to be returned",
+            "required": false,
+            "schema": {
+              "minimum": 1,
+              "type": "integer",
+              "default": 20
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "id,DESC"
+              ]
+            }
           }
-        }, {
-          "name" : "action",
-          "in" : "query",
-          "required" : false,
-          "schema" : {
-            "type" : "string",
-            "enum" : [ "CREATE", "UPDATE", "DELETE", "LOGIN_SUCCESS", "LOGIN_FAILURE", "LOGOUT", "SESSION_REJECTION" ]
-          }
-        }, {
-          "name" : "actorLogin",
-          "in" : "query",
-          "required" : false,
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "name" : "page",
-          "in" : "query",
-          "description" : "Zero-based page index (0..N)",
-          "required" : false,
-          "schema" : {
-            "minimum" : 0,
-            "type" : "integer",
-            "default" : 0
-          }
-        }, {
-          "name" : "size",
-          "in" : "query",
-          "description" : "The size of the page to be returned",
-          "required" : false,
-          "schema" : {
-            "minimum" : 1,
-            "type" : "integer",
-            "default" : 20
-          }
-        }, {
-          "name" : "sort",
-          "in" : "query",
-          "description" : "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
-          "required" : false,
-          "schema" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string"
-            },
-            "default" : [ "id,DESC" ]
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/AuditLogPageResponse"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditLogPageResponse"
                 }
               }
             }
           },
-          "401" : {
-            "description" : "Missing or invalid authenticated session.",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiProblemResponse"
+          "401": {
+            "description": "Missing or invalid authenticated session.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemResponse"
                 }
               }
             }
           },
-          "403" : {
-            "description" : "Authenticated user does not have the ADMIN role.",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiProblemResponse"
+          "403": {
+            "description": "Authenticated user does not have the ADMIN role.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemResponse"
                 }
               }
             }
           }
         },
-        "security" : [ {
-          "sessionCookie" : [ ]
-        } ]
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ]
       }
     },
-    "/api/account" : {
-      "get" : {
-        "tags" : [ "Account" ],
-        "summary" : "Get the current account",
-        "description" : "Requires an authenticated session and returns the persisted application account.",
-        "operationId" : "currentUser",
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "*/*" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/UserAccountResponse"
+    "/api/account": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Get the current account",
+        "description": "Requires an authenticated session and returns the persisted application account.",
+        "operationId": "currentUser",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserAccountResponse"
                 }
               }
             }
           }
         },
-        "security" : [ {
-          "sessionCookie" : [ ]
-        } ]
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ]
       }
     }
   },
-  "components" : {
-    "schemas" : {
-      "LocalizationRequest" : {
-        "required" : [ "language", "messageKey", "messageText" ],
-        "type" : "object",
-        "properties" : {
-          "messageKey" : {
-            "maxLength" : 150,
-            "minLength" : 0,
-            "pattern" : "^[a-z0-9._-]+$",
-            "type" : "string",
-            "description" : "Stable message key managed by the application.",
-            "example" : "error.request.resource_not_found"
+  "components": {
+    "schemas": {
+      "LocalizationRequest": {
+        "required": [
+          "language",
+          "messageKey",
+          "messageText"
+        ],
+        "type": "object",
+        "properties": {
+          "messageKey": {
+            "maxLength": 150,
+            "minLength": 0,
+            "pattern": "^[a-z0-9._-]+$",
+            "type": "string",
+            "description": "Stable message key managed by the application.",
+            "example": "error.request.resource_not_found"
           },
-          "language" : {
-            "minLength" : 1,
-            "pattern" : "^[a-zA-Z]{2}$",
-            "type" : "string",
-            "description" : "Two-letter ISO 639-1 language code.",
-            "example" : "pl"
+          "language": {
+            "minLength": 1,
+            "pattern": "^[a-zA-Z]{2}$",
+            "type": "string",
+            "description": "Two-letter ISO 639-1 language code.",
+            "example": "pl"
           },
-          "messageText" : {
-            "maxLength" : 2000,
-            "minLength" : 0,
-            "type" : "string",
-            "description" : "Localized message text.",
-            "example" : "Nie znaleziono zasobu."
+          "messageText": {
+            "maxLength": 2000,
+            "minLength": 0,
+            "type": "string",
+            "description": "Localized message text.",
+            "example": "Nie znaleziono zasobu."
           },
-          "description" : {
-            "maxLength" : 1000,
-            "minLength" : 0,
-            "type" : "string",
-            "description" : "Optional reviewer-facing description.",
-            "example" : "Displayed when a requested resource does not exist."
+          "description": {
+            "maxLength": 1000,
+            "minLength": 0,
+            "type": "string",
+            "description": "Optional reviewer-facing description.",
+            "example": "Displayed when a requested resource does not exist."
           }
         },
-        "description" : "Payload for creating or updating a localization message."
+        "description": "Payload for creating or updating a localization message."
       },
-      "LocalizationResponse" : {
-        "type" : "object",
-        "properties" : {
-          "id" : {
-            "type" : "integer",
-            "description" : "Database identifier.",
-            "format" : "int64",
-            "example" : 1
+      "LocalizationResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Database identifier.",
+            "format": "int64",
+            "example": 1
           },
-          "messageKey" : {
-            "type" : "string",
-            "description" : "Stable message key.",
-            "example" : "error.request.resource_not_found"
+          "messageKey": {
+            "type": "string",
+            "description": "Stable message key.",
+            "example": "error.request.resource_not_found"
           },
-          "language" : {
-            "type" : "string",
-            "description" : "Two-letter ISO 639-1 language code.",
-            "example" : "en"
+          "language": {
+            "type": "string",
+            "description": "Two-letter ISO 639-1 language code.",
+            "example": "en"
           },
-          "messageText" : {
-            "type" : "string",
-            "description" : "Localized message text.",
-            "example" : "The requested resource was not found."
+          "messageText": {
+            "type": "string",
+            "description": "Localized message text.",
+            "example": "The requested resource was not found."
           },
-          "description" : {
-            "type" : "string",
-            "description" : "Optional reviewer-facing description."
+          "description": {
+            "type": "string",
+            "description": "Optional reviewer-facing description."
           },
-          "createdAt" : {
-            "type" : "string",
-            "description" : "Creation timestamp as a UTC instant.",
-            "format" : "date-time"
+          "createdAt": {
+            "type": "string",
+            "description": "Creation timestamp as a UTC instant.",
+            "format": "date-time"
           },
-          "updatedAt" : {
-            "type" : "string",
-            "description" : "Last update timestamp as a UTC instant.",
-            "format" : "date-time"
+          "updatedAt": {
+            "type": "string",
+            "description": "Last update timestamp as a UTC instant.",
+            "format": "date-time"
           }
         },
-        "description" : "Localization message returned by the API."
+        "description": "Localization message returned by the API."
       },
-      "CategoryUpdateRequest" : {
-        "required" : [ "name" ],
-        "type" : "object",
-        "properties" : {
-          "name" : {
-            "minLength" : 1,
-            "type" : "string",
-            "description" : "Unique category name.",
-            "example" : "Software Architecture"
+      "CategoryUpdateRequest": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique category name.",
+            "example": "Software Architecture"
           }
         },
-        "description" : "Payload for updating a category."
+        "description": "Payload for updating a category."
       },
-      "Category" : {
-        "type" : "object",
-        "properties" : {
-          "id" : {
-            "type" : "integer",
-            "description" : "Database identifier.",
-            "format" : "int64",
-            "example" : 1
+      "Category": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Database identifier.",
+            "format": "int64",
+            "example": 1
           },
-          "name" : {
-            "type" : "string",
-            "description" : "Unique category name.",
-            "example" : "Java"
+          "name": {
+            "type": "string",
+            "description": "Unique category name.",
+            "example": "Java"
           }
         },
-        "description" : "Book category."
+        "description": "Book category."
       },
-      "ApiProblemResponse" : {
-        "type" : "object",
-        "properties" : {
-          "title" : {
-            "type" : "string",
-            "description" : "Problem title.",
-            "example" : "Unauthorized"
+      "ApiProblemResponse": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Problem title.",
+            "example": "Unauthorized"
           },
-          "status" : {
-            "type" : "integer",
-            "description" : "HTTP status code.",
-            "format" : "int32",
-            "example" : 401
+          "status": {
+            "type": "integer",
+            "description": "HTTP status code.",
+            "format": "int32",
+            "example": 401
           },
-          "detail" : {
-            "type" : "string",
-            "description" : "Technical problem detail kept stable for debugging and logs.",
-            "example" : "Authentication is required to access this resource."
+          "detail": {
+            "type": "string",
+            "description": "Technical problem detail kept stable for debugging and logs.",
+            "example": "Authentication is required to access this resource."
           },
-          "messageKey" : {
-            "type" : "string",
-            "description" : "Stable localization key for the error type.",
-            "example" : "error.request.unauthorized"
+          "messageKey": {
+            "type": "string",
+            "description": "Stable localization key for the error type.",
+            "example": "error.request.unauthorized"
           },
-          "message" : {
-            "type" : "string",
-            "description" : "Localized end-user message resolved from the request language.",
-            "example" : "You must authenticate before performing this operation."
+          "message": {
+            "type": "string",
+            "description": "Localized end-user message resolved from the request language.",
+            "example": "You must authenticate before performing this operation."
           },
-          "language" : {
-            "type" : "string",
-            "description" : "Two-letter ISO 639-1 language code actually used for the localized message.",
-            "example" : "en"
+          "language": {
+            "type": "string",
+            "description": "Two-letter ISO 639-1 language code actually used for the localized message.",
+            "example": "en"
           }
         },
-        "description" : "Localized ProblemDetail payload returned for API errors."
+        "description": "Localized ProblemDetail payload returned for API errors."
       },
-      "BookUpdateRequest" : {
-        "required" : [ "author", "publicationYear", "title", "version" ],
-        "type" : "object",
-        "properties" : {
-          "title" : {
-            "minLength" : 1,
-            "type" : "string",
-            "description" : "Book title.",
-            "example" : "Effective Java, Third Edition"
+      "BookUpdateRequest": {
+        "required": [
+          "author",
+          "publicationYear",
+          "title",
+          "version"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Book title.",
+            "example": "Effective Java, Third Edition"
           },
-          "author" : {
-            "minLength" : 1,
-            "type" : "string",
-            "description" : "Primary author.",
-            "example" : "Joshua Bloch"
+          "author": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Primary author.",
+            "example": "Joshua Bloch"
           },
-          "version" : {
-            "type" : "integer",
-            "description" : "Current optimistic-lock version.",
-            "format" : "int64",
-            "example" : 0
+          "version": {
+            "type": "integer",
+            "description": "Current optimistic-lock version.",
+            "format": "int64",
+            "example": 0
           },
-          "publicationYear" : {
-            "type" : "integer",
-            "description" : "Publication year.",
-            "format" : "int32",
-            "example" : 2018
+          "publicationYear": {
+            "type": "integer",
+            "description": "Publication year.",
+            "format": "int32",
+            "example": 2018
           },
-          "categories" : {
-            "type" : "array",
-            "description" : "Optional replacement list of existing category names.",
-            "items" : {
-              "type" : "string",
-              "description" : "Existing category name.",
-              "example" : "Java"
+          "categories": {
+            "type": "array",
+            "description": "Optional replacement list of existing category names.",
+            "items": {
+              "type": "string",
+              "description": "Existing category name.",
+              "example": "Java"
             }
           }
         },
-        "description" : "Payload for updating an existing book. ISBN remains immutable."
+        "description": "Payload for updating an existing book. ISBN remains immutable."
       },
-      "Book" : {
-        "type" : "object",
-        "properties" : {
-          "id" : {
-            "type" : "integer",
-            "description" : "Database identifier.",
-            "format" : "int64",
-            "example" : 1
+      "Book": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Database identifier.",
+            "format": "int64",
+            "example": 1
           },
-          "version" : {
-            "type" : "integer",
-            "description" : "Optimistic-lock version used for updates.",
-            "format" : "int64",
-            "example" : 0
+          "version": {
+            "type": "integer",
+            "description": "Optimistic-lock version used for updates.",
+            "format": "int64",
+            "example": 0
           },
-          "title" : {
-            "type" : "string",
-            "description" : "Book title.",
-            "example" : "Effective Java"
+          "title": {
+            "type": "string",
+            "description": "Book title.",
+            "example": "Effective Java"
           },
-          "author" : {
-            "type" : "string",
-            "description" : "Primary author.",
-            "example" : "Joshua Bloch"
+          "author": {
+            "type": "string",
+            "description": "Primary author.",
+            "example": "Joshua Bloch"
           },
-          "isbn" : {
-            "type" : "string",
-            "description" : "Unique ISBN assigned at creation time.",
-            "example" : "9780134685991"
+          "isbn": {
+            "type": "string",
+            "description": "Unique ISBN assigned at creation time.",
+            "example": "9780134685991"
           },
-          "publicationYear" : {
-            "type" : "integer",
-            "description" : "Publication year.",
-            "format" : "int32",
-            "example" : 2018
+          "publicationYear": {
+            "type": "integer",
+            "description": "Publication year.",
+            "format": "int32",
+            "example": 2018
           },
-          "categories" : {
-            "type" : "array",
-            "description" : "Assigned categories ordered by name.",
-            "items" : {
-              "$ref" : "#/components/schemas/Category"
+          "categories": {
+            "type": "array",
+            "description": "Assigned categories ordered by name.",
+            "items": {
+              "$ref": "#/components/schemas/Category"
             }
           }
         },
-        "description" : "Book resource returned by the API."
+        "description": "Book resource returned by the API."
       },
-      "AdminUserRoleUpdateRequest" : {
-        "required" : [ "reason", "roles" ],
-        "type" : "object",
-        "properties" : {
-          "roles" : {
-            "minItems" : 1,
-            "uniqueItems" : true,
-            "type" : "array",
-            "description" : "Replacement role set. `USER` must always be present.",
-            "items" : {
-              "type" : "string",
-              "description" : "Role name to keep assigned after replacement.",
-              "example" : "ADMIN",
-              "enum" : [ "USER", "ADMIN" ]
+      "AdminUserRoleUpdateRequest": {
+        "required": [
+          "reason",
+          "roles"
+        ],
+        "type": "object",
+        "properties": {
+          "roles": {
+            "minItems": 1,
+            "uniqueItems": true,
+            "type": "array",
+            "description": "Replacement role set. `USER` must always be present.",
+            "items": {
+              "type": "string",
+              "description": "Role name to keep assigned after replacement.",
+              "example": "ADMIN",
+              "enum": [
+                "USER",
+                "ADMIN"
+              ]
             }
           },
-          "reason" : {
-            "maxLength" : 255,
-            "minLength" : 0,
-            "type" : "string",
-            "description" : "Short operator-supplied explanation for the role change.",
-            "example" : "Needs audit review access."
+          "reason": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string",
+            "description": "Short operator-supplied explanation for the role change.",
+            "example": "Needs audit review access."
           }
         },
-        "description" : "Payload for replacing the managed role set of one persisted user."
+        "description": "Payload for replacing the managed role set of one persisted user."
       },
-      "AdminUserAccountResponse" : {
-        "type" : "object",
-        "properties" : {
-          "id" : {
-            "type" : "integer",
-            "description" : "Database identifier.",
-            "format" : "int64",
-            "example" : 1
+      "AdminUserAccountResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Database identifier.",
+            "format": "int64",
+            "example": 1
           },
-          "provider" : {
-            "type" : "string",
-            "description" : "OAuth provider name.",
-            "example" : "github"
+          "provider": {
+            "type": "string",
+            "description": "OAuth provider name.",
+            "example": "github"
           },
-          "login" : {
-            "type" : "string",
-            "description" : "External login from the authenticated OAuth provider.",
-            "example" : "kamkie"
+          "login": {
+            "type": "string",
+            "description": "External login from the authenticated OAuth provider.",
+            "example": "kamkie"
           },
-          "displayName" : {
-            "type" : "string",
-            "description" : "Display name from the OAuth provider.",
-            "example" : "Kamil Kiewisz"
+          "displayName": {
+            "type": "string",
+            "description": "Display name from the OAuth provider.",
+            "example": "Kamil Kiewisz"
           },
-          "email" : {
-            "type" : "string",
-            "description" : "Email address when available from the provider."
+          "email": {
+            "type": "string",
+            "description": "Email address when available from the provider."
           },
-          "preferredLanguage" : {
-            "type" : "string",
-            "description" : "Preferred two-letter language code used as the last localization fallback."
+          "preferredLanguage": {
+            "type": "string",
+            "description": "Preferred two-letter language code used as the last localization fallback."
           },
-          "roles" : {
-            "type" : "array",
-            "description" : "Current roles assigned to the persisted user.",
-            "items" : {
-              "type" : "string",
-              "description" : "Granted role name.",
-              "example" : "USER"
+          "roles": {
+            "type": "array",
+            "description": "Current roles assigned to the persisted user.",
+            "items": {
+              "type": "string",
+              "description": "Granted role name.",
+              "example": "USER"
             }
           },
-          "roleGrants" : {
-            "type" : "array",
-            "description" : "Persisted role-grant provenance entries.",
-            "items" : {
-              "$ref" : "#/components/schemas/AdminUserRoleGrantResponse"
+          "roleGrants": {
+            "type": "array",
+            "description": "Persisted role-grant provenance entries.",
+            "items": {
+              "$ref": "#/components/schemas/AdminUserRoleGrantResponse"
             }
           },
-          "lastLoginAt" : {
-            "type" : "string",
-            "description" : "UTC instant of the latest authenticated request.",
-            "format" : "date-time"
+          "lastLoginAt": {
+            "type": "string",
+            "description": "UTC instant of the latest authenticated request.",
+            "format": "date-time"
           },
-          "createdAt" : {
-            "type" : "string",
-            "description" : "Creation timestamp as a UTC instant.",
-            "format" : "date-time"
+          "createdAt": {
+            "type": "string",
+            "description": "Creation timestamp as a UTC instant.",
+            "format": "date-time"
           },
-          "updatedAt" : {
-            "type" : "string",
-            "description" : "Last update timestamp as a UTC instant.",
-            "format" : "date-time"
+          "updatedAt": {
+            "type": "string",
+            "description": "Last update timestamp as a UTC instant.",
+            "format": "date-time"
           }
         },
-        "description" : "Persisted application user profile plus role-grant provenance for ADMIN review."
+        "description": "Persisted application user profile plus role-grant provenance for ADMIN review."
       },
-      "AdminUserRoleGrantResponse" : {
-        "type" : "object",
-        "properties" : {
-          "role" : {
-            "type" : "string",
-            "description" : "Granted role name.",
-            "example" : "ADMIN"
+      "AdminUserRoleGrantResponse": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "description": "Granted role name.",
+            "example": "ADMIN"
           },
-          "source" : {
-            "type" : "string",
-            "description" : "How the role grant entered application state.",
-            "example" : "BOOTSTRAP",
-            "enum" : [ "AUTHENTICATED_LOGIN", "BOOTSTRAP", "ADMIN_MANAGED" ]
+          "source": {
+            "type": "string",
+            "description": "How the role grant entered application state.",
+            "example": "BOOTSTRAP",
+            "enum": [
+              "AUTHENTICATED_LOGIN",
+              "BOOTSTRAP",
+              "ADMIN_MANAGED"
+            ]
           },
-          "grantedAt" : {
-            "type" : "string",
-            "description" : "UTC instant when this role grant was recorded.",
-            "format" : "date-time"
+          "grantedAt": {
+            "type": "string",
+            "description": "UTC instant when this role grant was recorded.",
+            "format": "date-time"
           },
-          "grantedByUserId" : {
-            "type" : "integer",
-            "description" : "Granting application user id when the role was assigned manually.",
-            "format" : "int64",
-            "example" : 1
+          "grantedByUserId": {
+            "type": "integer",
+            "description": "Granting application user id when the role was assigned manually.",
+            "format": "int64",
+            "example": 1
           },
-          "grantedByLogin" : {
-            "type" : "string",
-            "description" : "Granting application user login when the role was assigned manually.",
-            "example" : "admin-user"
+          "grantedByLogin": {
+            "type": "string",
+            "description": "Granting application user login when the role was assigned manually.",
+            "example": "admin-user"
           },
-          "reason" : {
-            "type" : "string",
-            "description" : "Optional operator-supplied reason captured for manually managed grants."
+          "reason": {
+            "type": "string",
+            "description": "Optional operator-supplied reason captured for manually managed grants."
           }
         },
-        "description" : "Persisted provenance for one granted application role."
+        "description": "Persisted provenance for one granted application role."
       },
-      "UserAccountLanguageRequest" : {
-        "type" : "object",
-        "properties" : {
-          "preferredLanguage" : {
-            "type" : "string",
-            "description" : "Two-letter ISO 639-1 language code. Use null or blank to clear the preference.",
-            "example" : "pl"
+      "UserAccountLanguageRequest": {
+        "type": "object",
+        "properties": {
+          "preferredLanguage": {
+            "type": "string",
+            "description": "Two-letter ISO 639-1 language code. Use null or blank to clear the preference.",
+            "example": "pl"
           }
         },
-        "description" : "Payload for updating the current user's preferred language."
+        "description": "Payload for updating the current user's preferred language."
       },
-      "UserAccountResponse" : {
-        "type" : "object",
-        "properties" : {
-          "id" : {
-            "type" : "integer",
-            "description" : "Database identifier.",
-            "format" : "int64",
-            "example" : 1
+      "UserAccountResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Database identifier.",
+            "format": "int64",
+            "example": 1
           },
-          "provider" : {
-            "type" : "string",
-            "description" : "OAuth provider name.",
-            "example" : "github"
+          "provider": {
+            "type": "string",
+            "description": "OAuth provider name.",
+            "example": "github"
           },
-          "login" : {
-            "type" : "string",
-            "description" : "External login from the authenticated OAuth provider.",
-            "example" : "kamkie"
+          "login": {
+            "type": "string",
+            "description": "External login from the authenticated OAuth provider.",
+            "example": "kamkie"
           },
-          "displayName" : {
-            "type" : "string",
-            "description" : "Display name from the OAuth provider.",
-            "example" : "Kamil Kiewisz"
+          "displayName": {
+            "type": "string",
+            "description": "Display name from the OAuth provider.",
+            "example": "Kamil Kiewisz"
           },
-          "email" : {
-            "type" : "string",
-            "description" : "Email address when available from the provider."
+          "email": {
+            "type": "string",
+            "description": "Email address when available from the provider."
           },
-          "preferredLanguage" : {
-            "type" : "string",
-            "description" : "Preferred two-letter language code used as the last localization fallback."
+          "preferredLanguage": {
+            "type": "string",
+            "description": "Preferred two-letter language code used as the last localization fallback."
           },
-          "roles" : {
-            "type" : "array",
-            "description" : "Roles assigned to the persisted user.",
-            "items" : {
-              "type" : "string",
-              "description" : "Granted role name.",
-              "example" : "USER"
+          "roles": {
+            "type": "array",
+            "description": "Roles assigned to the persisted user.",
+            "items": {
+              "type": "string",
+              "description": "Granted role name.",
+              "example": "USER"
             }
           },
-          "lastLoginAt" : {
-            "type" : "string",
-            "description" : "UTC instant of the latest authenticated request.",
-            "format" : "date-time"
+          "lastLoginAt": {
+            "type": "string",
+            "description": "UTC instant of the latest authenticated request.",
+            "format": "date-time"
           },
-          "createdAt" : {
-            "type" : "string",
-            "description" : "Creation timestamp as a UTC instant.",
-            "format" : "date-time"
+          "createdAt": {
+            "type": "string",
+            "description": "Creation timestamp as a UTC instant.",
+            "format": "date-time"
           },
-          "updatedAt" : {
-            "type" : "string",
-            "description" : "Last update timestamp as a UTC instant.",
-            "format" : "date-time"
+          "updatedAt": {
+            "type": "string",
+            "description": "Last update timestamp as a UTC instant.",
+            "format": "date-time"
           }
         },
-        "description" : "Persisted application profile for the current authenticated user."
+        "description": "Persisted application profile for the current authenticated user."
       },
-      "CategoryCreateRequest" : {
-        "required" : [ "name" ],
-        "type" : "object",
-        "properties" : {
-          "name" : {
-            "minLength" : 1,
-            "type" : "string",
-            "description" : "Unique category name.",
-            "example" : "Software Engineering"
+      "CategoryCreateRequest": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique category name.",
+            "example": "Software Engineering"
           }
         },
-        "description" : "Payload for creating a category."
+        "description": "Payload for creating a category."
       },
-      "BookCreateRequest" : {
-        "required" : [ "author", "isbn", "publicationYear", "title" ],
-        "type" : "object",
-        "properties" : {
-          "title" : {
-            "minLength" : 1,
-            "type" : "string",
-            "description" : "Book title.",
-            "example" : "Effective Java"
+      "BookCreateRequest": {
+        "required": [
+          "author",
+          "isbn",
+          "publicationYear",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Book title.",
+            "example": "Effective Java"
           },
-          "author" : {
-            "minLength" : 1,
-            "type" : "string",
-            "description" : "Primary author.",
-            "example" : "Joshua Bloch"
+          "author": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Primary author.",
+            "example": "Joshua Bloch"
           },
-          "isbn" : {
-            "minLength" : 1,
-            "type" : "string",
-            "description" : "Unique ISBN for the new book.",
-            "example" : "9780134685991"
+          "isbn": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique ISBN for the new book.",
+            "example": "9780134685991"
           },
-          "publicationYear" : {
-            "type" : "integer",
-            "description" : "Publication year.",
-            "format" : "int32",
-            "example" : 2018
+          "publicationYear": {
+            "type": "integer",
+            "description": "Publication year.",
+            "format": "int32",
+            "example": 2018
           },
-          "categories" : {
-            "type" : "array",
-            "description" : "Optional list of existing category names.",
-            "items" : {
-              "type" : "string",
-              "description" : "Existing category name.",
-              "example" : "Java"
+          "categories": {
+            "type": "array",
+            "description": "Optional list of existing category names.",
+            "items": {
+              "type": "string",
+              "description": "Existing category name.",
+              "example": "Java"
             }
           }
         },
-        "description" : "Payload for creating a new book."
+        "description": "Payload for creating a new book."
       },
-      "SessionCookieContract" : {
-        "type" : "object",
-        "properties" : {
-          "name" : {
-            "type" : "string",
-            "description" : "Session cookie name expected by protected operations.",
-            "example" : "technical-interview-demo-session"
+      "SessionCookieContract": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Session cookie name expected by protected operations.",
+            "example": "technical-interview-demo-session"
           },
-          "httpOnly" : {
-            "type" : "boolean",
-            "description" : "Whether the session cookie is HTTP-only.",
-            "example" : true
+          "httpOnly": {
+            "type": "boolean",
+            "description": "Whether the session cookie is HTTP-only.",
+            "example": true
           },
-          "sameSite" : {
-            "type" : "string",
-            "description" : "Session cookie SameSite mode.",
-            "example" : "lax"
+          "sameSite": {
+            "type": "string",
+            "description": "Session cookie SameSite mode.",
+            "example": "lax"
           },
-          "secure" : {
-            "type" : "boolean",
-            "description" : "Whether the session cookie requires HTTPS.",
-            "example" : false
+          "secure": {
+            "type": "boolean",
+            "description": "Whether the session cookie requires HTTPS.",
+            "example": false
           }
         },
-        "description" : "Session cookie settings relevant to same-site browser clients."
+        "description": "Session cookie settings relevant to same-site browser clients."
       },
-      "SessionCsrfContract" : {
-        "type" : "object",
-        "properties" : {
-          "enabled" : {
-            "type" : "boolean",
-            "description" : "Whether CSRF protection is currently enabled for browser writes.",
-            "example" : true
+      "SessionCsrfContract": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether CSRF protection is currently enabled for browser writes.",
+            "example": true
           },
-          "cookieName" : {
-            "type" : "string",
-            "description" : "Readable CSRF cookie name that the browser UI mirrors into the request header.",
-            "example" : "XSRF-TOKEN"
+          "cookieName": {
+            "type": "string",
+            "description": "Readable CSRF cookie name that the browser UI mirrors into the request header.",
+            "example": "XSRF-TOKEN"
           },
-          "headerName" : {
-            "type" : "string",
-            "description" : "Request header name required on unsafe browser writes.",
-            "example" : "X-XSRF-TOKEN"
+          "headerName": {
+            "type": "string",
+            "description": "Request header name required on unsafe browser writes.",
+            "example": "X-XSRF-TOKEN"
           }
         },
-        "description" : "Current CSRF contract for browser writes."
+        "description": "Current CSRF contract for browser writes."
       },
-      "SessionLoginProvider" : {
-        "type" : "object",
-        "properties" : {
-          "registrationId" : {
-            "type" : "string",
-            "description" : "Configured OAuth client registration id.",
-            "example" : "github"
+      "SessionLoginProvider": {
+        "type": "object",
+        "properties": {
+          "registrationId": {
+            "type": "string",
+            "description": "Configured OAuth client registration id.",
+            "example": "github"
           },
-          "clientName" : {
-            "type" : "string",
-            "description" : "Display name exposed by the configured OAuth client registration.",
-            "example" : "GitHub"
+          "clientName": {
+            "type": "string",
+            "description": "Display name exposed by the configured OAuth client registration.",
+            "example": "GitHub"
           },
-          "authorizationPath" : {
-            "type" : "string",
-            "description" : "Relative same-site authorization bootstrap path for the configured provider.",
-            "example" : "/api/session/oauth2/authorization/github"
+          "authorizationPath": {
+            "type": "string",
+            "description": "Relative same-site authorization bootstrap path for the configured provider.",
+            "example": "/api/session/oauth2/authorization/github"
           }
         },
-        "description" : "Available same-site OAuth login bootstrap option."
+        "description": "Available same-site OAuth login bootstrap option."
       },
-      "SessionResponse" : {
-        "type" : "object",
-        "properties" : {
-          "authenticated" : {
-            "type" : "boolean",
-            "description" : "Whether the current browser request is backed by an authenticated application session.",
-            "example" : true
+      "SessionResponse": {
+        "type": "object",
+        "properties": {
+          "authenticated": {
+            "type": "boolean",
+            "description": "Whether the current browser request is backed by an authenticated application session.",
+            "example": true
           },
-          "accountPath" : {
-            "type" : "string",
-            "description" : "Endpoint path for the authenticated persisted-account resource.",
-            "example" : "/api/account"
+          "accountPath": {
+            "type": "string",
+            "description": "Endpoint path for the authenticated persisted-account resource.",
+            "example": "/api/account"
           },
-          "loginProviders" : {
-            "type" : "array",
-            "description" : "Interactive login bootstrap options for the current runtime. It is an empty array when oauth is inactive.",
-            "items" : {
-              "$ref" : "#/components/schemas/SessionLoginProvider"
+          "loginProviders": {
+            "type": "array",
+            "description": "Interactive login bootstrap options for the current runtime. It is an empty array when oauth is inactive.",
+            "items": {
+              "$ref": "#/components/schemas/SessionLoginProvider"
             }
           },
-          "logoutPath" : {
-            "type" : "string",
-            "description" : "Same-site logout endpoint path.",
-            "example" : "/api/session/logout"
+          "logoutPath": {
+            "type": "string",
+            "description": "Same-site logout endpoint path.",
+            "example": "/api/session/logout"
           },
-          "sessionCookie" : {
-            "$ref" : "#/components/schemas/SessionCookieContract"
+          "sessionCookie": {
+            "$ref": "#/components/schemas/SessionCookieContract"
           },
-          "csrf" : {
-            "$ref" : "#/components/schemas/SessionCsrfContract"
+          "csrf": {
+            "$ref": "#/components/schemas/SessionCsrfContract"
           }
         },
-        "description" : "Same-site browser session contract for the separate first-party UI."
+        "description": "Same-site browser session contract for the separate first-party UI."
       },
-      "PageLocalizationResponse" : {
-        "type" : "object",
-        "properties" : {
-          "totalPages" : {
-            "type" : "integer",
-            "format" : "int32"
+      "PageLocalizationResponse": {
+        "type": "object",
+        "properties": {
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
           },
-          "totalElements" : {
-            "type" : "integer",
-            "format" : "int64"
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
           },
-          "size" : {
-            "type" : "integer",
-            "format" : "int32"
+          "size": {
+            "type": "integer",
+            "format": "int32"
           },
-          "content" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/LocalizationResponse"
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalizationResponse"
             }
           },
-          "number" : {
-            "type" : "integer",
-            "format" : "int32"
+          "number": {
+            "type": "integer",
+            "format": "int32"
           },
-          "first" : {
-            "type" : "boolean"
+          "first": {
+            "type": "boolean"
           },
-          "last" : {
-            "type" : "boolean"
+          "last": {
+            "type": "boolean"
           },
-          "numberOfElements" : {
-            "type" : "integer",
-            "format" : "int32"
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
           },
-          "pageable" : {
-            "$ref" : "#/components/schemas/PageableObject"
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
           },
-          "sort" : {
-            "$ref" : "#/components/schemas/SortObject"
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
           },
-          "empty" : {
-            "type" : "boolean"
+          "empty": {
+            "type": "boolean"
           }
         }
       },
-      "PageableObject" : {
-        "type" : "object",
-        "properties" : {
-          "offset" : {
-            "type" : "integer",
-            "format" : "int64"
+      "PageableObject": {
+        "type": "object",
+        "properties": {
+          "offset": {
+            "type": "integer",
+            "format": "int64"
           },
-          "pageNumber" : {
-            "type" : "integer",
-            "format" : "int32"
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
           },
-          "pageSize" : {
-            "type" : "integer",
-            "format" : "int32"
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
           },
-          "paged" : {
-            "type" : "boolean"
+          "paged": {
+            "type": "boolean"
           },
-          "sort" : {
-            "$ref" : "#/components/schemas/SortObject"
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
           },
-          "unpaged" : {
-            "type" : "boolean"
+          "unpaged": {
+            "type": "boolean"
           }
         }
       },
-      "SortObject" : {
-        "type" : "object",
-        "properties" : {
-          "empty" : {
-            "type" : "boolean"
+      "SortObject": {
+        "type": "object",
+        "properties": {
+          "empty": {
+            "type": "boolean"
           },
-          "sorted" : {
-            "type" : "boolean"
+          "sorted": {
+            "type": "boolean"
           },
-          "unsorted" : {
-            "type" : "boolean"
+          "unsorted": {
+            "type": "boolean"
           }
         }
       },
-      "PageBook" : {
-        "type" : "object",
-        "properties" : {
-          "totalPages" : {
-            "type" : "integer",
-            "format" : "int32"
+      "PageBook": {
+        "type": "object",
+        "properties": {
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
           },
-          "totalElements" : {
-            "type" : "integer",
-            "format" : "int64"
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
           },
-          "size" : {
-            "type" : "integer",
-            "format" : "int32"
+          "size": {
+            "type": "integer",
+            "format": "int32"
           },
-          "content" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/Book"
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Book"
             }
           },
-          "number" : {
-            "type" : "integer",
-            "format" : "int32"
+          "number": {
+            "type": "integer",
+            "format": "int32"
           },
-          "first" : {
-            "type" : "boolean"
+          "first": {
+            "type": "boolean"
           },
-          "last" : {
-            "type" : "boolean"
+          "last": {
+            "type": "boolean"
           },
-          "numberOfElements" : {
-            "type" : "integer",
-            "format" : "int32"
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
           },
-          "pageable" : {
-            "$ref" : "#/components/schemas/PageableObject"
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
           },
-          "sort" : {
-            "$ref" : "#/components/schemas/SortObject"
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
           },
-          "empty" : {
-            "type" : "boolean"
+          "empty": {
+            "type": "boolean"
           }
         }
       },
-      "AbuseProtectionDetails" : {
-        "type" : "object",
-        "properties" : {
-          "owner" : {
-            "type" : "string"
+      "AbuseProtectionDetails": {
+        "type": "object",
+        "properties": {
+          "owner": {
+            "type": "string"
           },
-          "loginBootstrapPathTemplate" : {
-            "type" : "string"
+          "loginBootstrapPathTemplate": {
+            "type": "string"
           },
-          "loginBootstrapControls" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string"
+          "loginBootstrapControls": {
+            "type": "array",
+            "items": {
+              "type": "string"
             }
           },
-          "unsafeWritePathPattern" : {
-            "type" : "string"
+          "unsafeWritePathPattern": {
+            "type": "string"
           },
-          "unsafeWriteExamples" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string"
+          "unsafeWriteExamples": {
+            "type": "array",
+            "items": {
+              "type": "string"
             }
           },
-          "unsafeWriteControls" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string"
+          "unsafeWriteControls": {
+            "type": "array",
+            "items": {
+              "type": "string"
             }
           }
         }
       },
-      "AuditLogResponse" : {
-        "type" : "object",
-        "properties" : {
-          "id" : {
-            "type" : "integer",
-            "description" : "Database identifier.",
-            "format" : "int64",
-            "example" : 42
+      "AuditLogResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Database identifier.",
+            "format": "int64",
+            "example": 42
           },
-          "targetType" : {
-            "type" : "string",
-            "description" : "Type of audited target.",
-            "example" : "BOOK",
-            "enum" : [ "BOOK", "CATEGORY", "LOCALIZATION_MESSAGE", "USER_ACCOUNT", "AUTHENTICATION" ]
+          "targetType": {
+            "type": "string",
+            "description": "Type of audited target.",
+            "example": "BOOK",
+            "enum": [
+              "BOOK",
+              "CATEGORY",
+              "LOCALIZATION_MESSAGE",
+              "USER_ACCOUNT",
+              "AUTHENTICATION"
+            ]
           },
-          "targetId" : {
-            "type" : "integer",
-            "description" : "Identifier of the audited target.",
-            "format" : "int64",
-            "example" : 7
+          "targetId": {
+            "type": "integer",
+            "description": "Identifier of the audited target.",
+            "format": "int64",
+            "example": 7
           },
-          "action" : {
-            "type" : "string",
-            "description" : "Recorded action.",
-            "example" : "UPDATE",
-            "enum" : [ "CREATE", "UPDATE", "DELETE", "LOGIN_SUCCESS", "LOGIN_FAILURE", "LOGOUT", "SESSION_REJECTION" ]
+          "action": {
+            "type": "string",
+            "description": "Recorded action.",
+            "example": "UPDATE",
+            "enum": [
+              "CREATE",
+              "UPDATE",
+              "DELETE",
+              "LOGIN_SUCCESS",
+              "LOGIN_FAILURE",
+              "LOGOUT",
+              "SESSION_REJECTION"
+            ]
           },
-          "actorLogin" : {
-            "type" : "string",
-            "description" : "Login of the acting user when known, or `system` for non-user writes.",
-            "example" : "admin-user"
+          "actorLogin": {
+            "type": "string",
+            "description": "Login of the acting user when known, or `system` for non-user writes.",
+            "example": "admin-user"
           },
-          "summary" : {
-            "type" : "string",
-            "description" : "Human-readable audit summary.",
-            "example" : "Updated book 'Clean Code' with ISBN 9780132350884."
+          "summary": {
+            "type": "string",
+            "description": "Human-readable audit summary.",
+            "example": "Updated book 'Clean Code' with ISBN 9780132350884."
           },
-          "details" : {
-            "type" : "object",
-            "additionalProperties" : {
-              "type" : "object",
-              "description" : "Structured audit details kept compact and safe for ADMIN review."
+          "details": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "description": "Structured audit details kept compact and safe for ADMIN review."
             },
-            "description" : "Structured audit details kept compact and safe for ADMIN review."
+            "description": "Structured audit details kept compact and safe for ADMIN review."
           },
-          "createdAt" : {
-            "type" : "string",
-            "description" : "Creation timestamp as a UTC instant.",
-            "format" : "date-time"
+          "createdAt": {
+            "type": "string",
+            "description": "Creation timestamp as a UTC instant.",
+            "format": "date-time"
           }
         },
-        "description" : "Recorded audit log entry."
+        "description": "Recorded audit log entry."
       },
-      "BuildDetails" : {
-        "type" : "object",
-        "properties" : {
-          "name" : {
-            "type" : "string"
+      "BuildDetails": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
           },
-          "group" : {
-            "type" : "string"
+          "group": {
+            "type": "string"
           },
-          "artifact" : {
-            "type" : "string"
+          "artifact": {
+            "type": "string"
           },
-          "version" : {
-            "type" : "string"
+          "version": {
+            "type": "string"
           },
-          "time" : {
-            "type" : "string",
-            "format" : "date-time"
+          "time": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
-      "ConfigurationDetails" : {
-        "type" : "object",
-        "properties" : {
-          "pagination" : {
-            "$ref" : "#/components/schemas/PaginationDetails"
+      "ConfigurationDetails": {
+        "type": "object",
+        "properties": {
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationDetails"
           },
-          "session" : {
-            "$ref" : "#/components/schemas/SessionDetails"
+          "session": {
+            "$ref": "#/components/schemas/SessionDetails"
           },
-          "observability" : {
-            "$ref" : "#/components/schemas/ObservabilityDetails"
+          "observability": {
+            "$ref": "#/components/schemas/ObservabilityDetails"
           },
-          "documentation" : {
-            "$ref" : "#/components/schemas/DocumentationDetails"
+          "documentation": {
+            "$ref": "#/components/schemas/DocumentationDetails"
           },
-          "security" : {
-            "$ref" : "#/components/schemas/SecurityDetails"
+          "security": {
+            "$ref": "#/components/schemas/SecurityDetails"
           },
-          "shutdown" : {
-            "$ref" : "#/components/schemas/ShutdownDetails"
+          "shutdown": {
+            "$ref": "#/components/schemas/ShutdownDetails"
           }
         }
       },
-      "DocumentationDetails" : {
-        "type" : "object",
-        "properties" : {
-          "html" : {
-            "type" : "string"
+      "DocumentationDetails": {
+        "type": "object",
+        "properties": {
+          "html": {
+            "type": "string"
           },
-          "openApiJson" : {
-            "type" : "string"
+          "openApiJson": {
+            "type": "string"
           },
-          "openApiYaml" : {
-            "type" : "string"
+          "openApiYaml": {
+            "type": "string"
           },
-          "openApiVersion" : {
-            "type" : "string"
+          "openApiVersion": {
+            "type": "string"
           }
         }
       },
-      "GitDetails" : {
-        "type" : "object",
-        "properties" : {
-          "branch" : {
-            "type" : "string"
+      "GitDetails": {
+        "type": "object",
+        "properties": {
+          "branch": {
+            "type": "string"
           },
-          "commitId" : {
-            "type" : "string"
+          "commitId": {
+            "type": "string"
           },
-          "shortCommitId" : {
-            "type" : "string"
+          "shortCommitId": {
+            "type": "string"
           },
-          "commitTime" : {
-            "type" : "string",
-            "format" : "date-time"
+          "commitTime": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
-      "ObservabilityDetails" : {
-        "type" : "object",
-        "properties" : {
-          "exposedEndpoints" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string"
+      "ObservabilityDetails": {
+        "type": "object",
+        "properties": {
+          "exposedEndpoints": {
+            "type": "array",
+            "items": {
+              "type": "string"
             }
           },
-          "healthProbesEnabled" : {
-            "type" : "boolean"
+          "healthProbesEnabled": {
+            "type": "boolean"
           },
-          "tracingSamplingProbability" : {
-            "type" : "number",
-            "format" : "double"
+          "tracingSamplingProbability": {
+            "type": "number",
+            "format": "double"
           }
         }
       },
-      "OperatorAuditSection" : {
-        "type" : "object",
-        "properties" : {
-          "auditLogEndpoint" : {
-            "type" : "string",
-            "description" : "Endpoint path for full audit log pagination.",
-            "example" : "/api/admin/audit-logs"
+      "OperatorAuditSection": {
+        "type": "object",
+        "properties": {
+          "auditLogEndpoint": {
+            "type": "string",
+            "description": "Endpoint path for full audit log pagination.",
+            "example": "/api/admin/audit-logs"
           },
-          "totalEntries" : {
-            "type" : "integer",
-            "description" : "Total number of audit log entries currently stored.",
-            "format" : "int64",
-            "example" : 42
+          "totalEntries": {
+            "type": "integer",
+            "description": "Total number of audit log entries currently stored.",
+            "format": "int64",
+            "example": 42
           },
-          "recentEntries" : {
-            "type" : "array",
-            "description" : "Most recent audit entries, newest first.",
-            "items" : {
-              "$ref" : "#/components/schemas/AuditLogResponse"
+          "recentEntries": {
+            "type": "array",
+            "description": "Most recent audit entries, newest first.",
+            "items": {
+              "$ref": "#/components/schemas/AuditLogResponse"
             }
           }
         },
-        "description" : "Audit endpoint summary for operators."
+        "description": "Audit endpoint summary for operators."
       },
-      "OperatorOperationalStatus" : {
-        "type" : "object",
-        "properties" : {
-          "actuatorHealthEndpoint" : {
-            "type" : "string",
-            "description" : "Endpoint path for actuator health.",
-            "example" : "/actuator/health"
+      "OperatorOperationalStatus": {
+        "type": "object",
+        "properties": {
+          "actuatorHealthEndpoint": {
+            "type": "string",
+            "description": "Endpoint path for actuator health.",
+            "example": "/actuator/health"
           },
-          "actuatorInfoEndpoint" : {
-            "type" : "string",
-            "description" : "Endpoint path for actuator info.",
-            "example" : "/actuator/info"
+          "actuatorInfoEndpoint": {
+            "type": "string",
+            "description": "Endpoint path for actuator info.",
+            "example": "/actuator/info"
           },
-          "actuatorPrometheusEndpoint" : {
-            "type" : "string",
-            "description" : "Endpoint path for deployment-scoped Prometheus scraping.",
-            "example" : "/actuator/prometheus"
+          "actuatorPrometheusEndpoint": {
+            "type": "string",
+            "description": "Endpoint path for deployment-scoped Prometheus scraping.",
+            "example": "/actuator/prometheus"
           },
-          "applicationHealthStatus" : {
-            "type" : "string",
-            "description" : "Current aggregated health status code.",
-            "example" : "UP"
+          "applicationHealthStatus": {
+            "type": "string",
+            "description": "Current aggregated health status code.",
+            "example": "UP"
           },
-          "livenessState" : {
-            "type" : "string",
-            "description" : "Current Spring Boot liveness state.",
-            "example" : "CORRECT"
+          "livenessState": {
+            "type": "string",
+            "description": "Current Spring Boot liveness state.",
+            "example": "CORRECT"
           },
-          "readinessState" : {
-            "type" : "string",
-            "description" : "Current Spring Boot readiness state.",
-            "example" : "ACCEPTING_TRAFFIC"
+          "readinessState": {
+            "type": "string",
+            "description": "Current Spring Boot readiness state.",
+            "example": "ACCEPTING_TRAFFIC"
           }
         },
-        "description" : "Operational status links and current readiness state."
+        "description": "Operational status links and current readiness state."
       },
-      "OperatorRuntimeDiagnostics" : {
-        "type" : "object",
-        "properties" : {
-          "technicalOverviewEndpoint" : {
-            "type" : "string",
-            "description" : "Endpoint path for the full technical overview.",
-            "example" : "/"
+      "OperatorRuntimeDiagnostics": {
+        "type": "object",
+        "properties": {
+          "technicalOverviewEndpoint": {
+            "type": "string",
+            "description": "Endpoint path for the full technical overview.",
+            "example": "/"
           },
-          "technicalOverview" : {
-            "$ref" : "#/components/schemas/TechnicalOverviewResponse"
+          "technicalOverview": {
+            "$ref": "#/components/schemas/TechnicalOverviewResponse"
           }
         },
-        "description" : "Runtime diagnostics available to operators."
+        "description": "Runtime diagnostics available to operators."
       },
-      "OperatorSurfaceResponse" : {
-        "type" : "object",
-        "properties" : {
-          "audit" : {
-            "$ref" : "#/components/schemas/OperatorAuditSection"
+      "OperatorSurfaceResponse": {
+        "type": "object",
+        "properties": {
+          "audit": {
+            "$ref": "#/components/schemas/OperatorAuditSection"
           },
-          "runtime" : {
-            "$ref" : "#/components/schemas/OperatorRuntimeDiagnostics"
+          "runtime": {
+            "$ref": "#/components/schemas/OperatorRuntimeDiagnostics"
           },
-          "operations" : {
-            "$ref" : "#/components/schemas/OperatorOperationalStatus"
+          "operations": {
+            "$ref": "#/components/schemas/OperatorOperationalStatus"
           }
         },
-        "description" : "ADMIN-only operational inspection surface."
+        "description": "ADMIN-only operational inspection surface."
       },
-      "PaginationDetails" : {
-        "type" : "object",
-        "properties" : {
-          "defaultPageSize" : {
-            "type" : "integer",
-            "format" : "int32"
+      "PaginationDetails": {
+        "type": "object",
+        "properties": {
+          "defaultPageSize": {
+            "type": "integer",
+            "format": "int32"
           },
-          "maxPageSize" : {
-            "type" : "integer",
-            "format" : "int32"
+          "maxPageSize": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
-      "RuntimeDetails" : {
-        "type" : "object",
-        "properties" : {
-          "applicationName" : {
-            "type" : "string"
+      "RuntimeDetails": {
+        "type": "object",
+        "properties": {
+          "applicationName": {
+            "type": "string"
           },
-          "javaVersion" : {
-            "type" : "string"
+          "javaVersion": {
+            "type": "string"
           },
-          "javaVendor" : {
-            "type" : "string"
+          "javaVendor": {
+            "type": "string"
           },
-          "activeProfiles" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string"
+          "activeProfiles": {
+            "type": "array",
+            "items": {
+              "type": "string"
             }
           }
         }
       },
-      "SecurityDetails" : {
-        "type" : "object",
-        "properties" : {
-          "csrfEnabled" : {
-            "type" : "boolean"
+      "SecurityDetails": {
+        "type": "object",
+        "properties": {
+          "csrfEnabled": {
+            "type": "boolean"
           },
-          "csrfCookieName" : {
-            "type" : "string"
+          "csrfCookieName": {
+            "type": "string"
           },
-          "csrfHeaderName" : {
-            "type" : "string"
+          "csrfHeaderName": {
+            "type": "string"
           },
-          "oauthProfileActive" : {
-            "type" : "boolean"
+          "oauthProfileActive": {
+            "type": "boolean"
           },
-          "publicApiPathPattern" : {
-            "type" : "string"
+          "publicApiPathPattern": {
+            "type": "string"
           },
-          "oauthAuthorizationBasePath" : {
-            "type" : "string"
+          "oauthAuthorizationBasePath": {
+            "type": "string"
           },
-          "oauthCallbackPathTemplate" : {
-            "type" : "string"
+          "oauthCallbackPathTemplate": {
+            "type": "string"
           },
-          "forwardHeadersStrategy" : {
-            "type" : "string"
+          "forwardHeadersStrategy": {
+            "type": "string"
           },
-          "abuseProtection" : {
-            "$ref" : "#/components/schemas/AbuseProtectionDetails"
+          "abuseProtection": {
+            "$ref": "#/components/schemas/AbuseProtectionDetails"
           }
         }
       },
-      "SessionDetails" : {
-        "type" : "object",
-        "properties" : {
-          "storeType" : {
-            "type" : "string"
+      "SessionDetails": {
+        "type": "object",
+        "properties": {
+          "storeType": {
+            "type": "string"
           },
-          "timeout" : {
-            "type" : "string"
+          "timeout": {
+            "type": "string"
           },
-          "cookieName" : {
-            "type" : "string"
+          "cookieName": {
+            "type": "string"
           },
-          "cookieHttpOnly" : {
-            "type" : "boolean"
+          "cookieHttpOnly": {
+            "type": "boolean"
           },
-          "cookieSameSite" : {
-            "type" : "string"
+          "cookieSameSite": {
+            "type": "string"
           }
         }
       },
-      "ShutdownDetails" : {
-        "type" : "object",
-        "properties" : {
-          "serverShutdown" : {
-            "type" : "string"
+      "ShutdownDetails": {
+        "type": "object",
+        "properties": {
+          "serverShutdown": {
+            "type": "string"
           },
-          "timeoutPerShutdownPhase" : {
-            "type" : "string"
+          "timeoutPerShutdownPhase": {
+            "type": "string"
           }
         }
       },
-      "TechnicalOverviewResponse" : {
-        "type" : "object",
-        "properties" : {
-          "build" : {
-            "$ref" : "#/components/schemas/BuildDetails"
+      "TechnicalOverviewResponse": {
+        "type": "object",
+        "properties": {
+          "build": {
+            "$ref": "#/components/schemas/BuildDetails"
           },
-          "git" : {
-            "$ref" : "#/components/schemas/GitDetails"
+          "git": {
+            "$ref": "#/components/schemas/GitDetails"
           },
-          "runtime" : {
-            "$ref" : "#/components/schemas/RuntimeDetails"
+          "runtime": {
+            "$ref": "#/components/schemas/RuntimeDetails"
           },
-          "dependencies" : {
-            "type" : "object",
-            "additionalProperties" : {
-              "type" : "string"
+          "dependencies": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
             }
           },
-          "configuration" : {
-            "$ref" : "#/components/schemas/ConfigurationDetails"
+          "configuration": {
+            "$ref": "#/components/schemas/ConfigurationDetails"
           }
         },
-        "description" : "Current technical overview payload."
+        "description": "Current technical overview payload."
       },
-      "AuditLogPageResponse" : {
-        "type" : "object",
-        "properties" : {
-          "content" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/AuditLogResponse"
+      "AuditLogPageResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuditLogResponse"
             }
           },
-          "pageable" : {
-            "type" : "object",
-            "description" : "Pagination request metadata."
+          "pageable": {
+            "type": "object",
+            "description": "Pagination request metadata."
           },
-          "sort" : {
-            "type" : "object",
-            "description" : "Applied sort metadata."
+          "sort": {
+            "type": "object",
+            "description": "Applied sort metadata."
           },
-          "totalPages" : {
-            "type" : "integer",
-            "description" : "Total number of pages.",
-            "format" : "int32",
-            "example" : 1
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages.",
+            "format": "int32",
+            "example": 1
           },
-          "totalElements" : {
-            "type" : "integer",
-            "description" : "Total number of matching audit log entries.",
-            "format" : "int64",
-            "example" : 3
+          "totalElements": {
+            "type": "integer",
+            "description": "Total number of matching audit log entries.",
+            "format": "int64",
+            "example": 3
           },
-          "last" : {
-            "type" : "boolean",
-            "description" : "Whether this page is the last page.",
-            "example" : true
+          "last": {
+            "type": "boolean",
+            "description": "Whether this page is the last page.",
+            "example": true
           },
-          "size" : {
-            "type" : "integer",
-            "description" : "Requested page size.",
-            "format" : "int32",
-            "example" : 20
+          "size": {
+            "type": "integer",
+            "description": "Requested page size.",
+            "format": "int32",
+            "example": 20
           },
-          "number" : {
-            "type" : "integer",
-            "description" : "Current zero-based page index.",
-            "format" : "int32",
-            "example" : 0
+          "number": {
+            "type": "integer",
+            "description": "Current zero-based page index.",
+            "format": "int32",
+            "example": 0
           },
-          "numberOfElements" : {
-            "type" : "integer",
-            "description" : "Number of audit entries returned in the current page.",
-            "format" : "int32",
-            "example" : 3
+          "numberOfElements": {
+            "type": "integer",
+            "description": "Number of audit entries returned in the current page.",
+            "format": "int32",
+            "example": 3
           },
-          "first" : {
-            "type" : "boolean",
-            "description" : "Whether this page is the first page.",
-            "example" : true
+          "first": {
+            "type": "boolean",
+            "description": "Whether this page is the first page.",
+            "example": true
           },
-          "empty" : {
-            "type" : "boolean",
-            "description" : "Whether the page content is empty.",
-            "example" : false
+          "empty": {
+            "type": "boolean",
+            "description": "Whether the page content is empty.",
+            "example": false
           }
         },
-        "description" : "Paginated audit log response."
+        "description": "Paginated audit log response."
       }
     },
-    "securitySchemes" : {
-      "sessionCookie" : {
-        "type" : "apiKey",
-        "description" : "Authenticated browser session cookie used by protected operations. It is established through a configured identity provider login path under /api/session/oauth2/authorization/{registrationId} when the optional oauth profile is active. Unsafe browser writes also require the X-XSRF-TOKEN request header mirrored from the readable XSRF-TOKEN cookie.",
-        "name" : "technical-interview-demo-session",
-        "in" : "cookie"
+    "securitySchemes": {
+      "sessionCookie": {
+        "type": "apiKey",
+        "description": "Authenticated browser session cookie used by protected operations. It is established through a configured identity provider login path under /api/session/oauth2/authorization/{registrationId} when the optional oauth profile is active. Unsafe browser writes also require the X-XSRF-TOKEN request header mirrored from the readable XSRF-TOKEN cookie.",
+        "name": "technical-interview-demo-session",
+        "in": "cookie"
       }
     }
   }

@@ -1,13 +1,5 @@
 package team.jit.technicalinterviewdemo.business.localization;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.clearAuthentication;
-import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.setAdminAuthenticatedUser;
-
-import java.util.List;
-import java.util.Map;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,11 +7,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import team.jit.technicalinterviewdemo.business.localization.seed.LocalizationSeedData;
-import team.jit.technicalinterviewdemo.technical.localization.LocalizationContext;
 import team.jit.technicalinterviewdemo.technical.cache.CacheNames;
+import team.jit.technicalinterviewdemo.technical.localization.LocalizationContext;
+import team.jit.technicalinterviewdemo.testdata.LocalizationTestData;
 import team.jit.technicalinterviewdemo.testing.CacheTestSupport;
 import team.jit.technicalinterviewdemo.testing.IntegrationSpringBootTest;
-import team.jit.technicalinterviewdemo.testdata.LocalizationTestData;
+
+import java.util.List;
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.clearAuthentication;
+import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.setAdminAuthenticatedUser;
 
 @IntegrationSpringBootTest
 class LocalizationServiceTests {

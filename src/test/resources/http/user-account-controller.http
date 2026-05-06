@@ -18,13 +18,13 @@ Cookie: technical-interview-demo-session={{sessionCookie}}
 Accept: application/json
 
 > {%
-const csrfCookie = response.cookiesByName("XSRF-TOKEN")[0];
-if (csrfCookie) {
-  client.global.set("csrfToken", csrfCookie.value);
-  client.log("Updated csrfToken from XSRF-TOKEN.");
-} else {
-  client.log("No XSRF-TOKEN cookie was returned; csrfToken was not updated.");
-}
+    const csrfCookie = response.cookiesByName("XSRF-TOKEN")[0];
+    if (csrfCookie) {
+        client.global.set("csrfToken", csrfCookie.value);
+        client.log("Updated csrfToken from XSRF-TOKEN.");
+    } else {
+        client.log("No XSRF-TOKEN cookie was returned; csrfToken was not updated.");
+    }
 %}
 
 ### UserAccountController - current authenticated user
@@ -45,6 +45,6 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "preferredLanguage": "pl"
+    "preferredLanguage": "pl"
 }
 

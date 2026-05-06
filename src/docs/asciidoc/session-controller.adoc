@@ -8,7 +8,8 @@ xref:index.adoc[Back to API overview]
 
 This page documents the explicit same-site browser session contract exposed by `SessionController`.
 
-The supported contract is for a separate first-party UI that shares one public origin with this backend through reverse-proxy deployment. It does not promise cross-origin browser calls, CORS support, JWT issuance, or bearer-token authentication for `/api/**`.
+The supported contract is for a separate first-party UI that shares one public origin with this backend through reverse-proxy deployment.
+It does not promise cross-origin browser calls, CORS support, JWT issuance, or bearer-token authentication for `/api/**`.
 
 `GET /api/session` is the supported bootstrap and session-state surface. `GET /api/account` remains the authenticated persisted-profile endpoint.
 
@@ -25,11 +26,15 @@ For the one-time migration narrative from `1.x`, see xref:upgrade-1x-to-2-0.adoc
 
 == `GET /api/session`
 
-Returns the current same-site browser session/bootstrap contract for the separate first-party UI. The payload exposes whether the current request is authenticated, the authenticated account resource path, the available OAuth login providers, the logout path, cookie metadata relevant to the browser, and the supported CSRF metadata.
+Returns the current same-site browser session/bootstrap contract for the separate first-party UI.
+The payload exposes whether the current request is authenticated, the authenticated account resource path, the available OAuth login providers, the logout path, cookie metadata relevant to the browser, and the supported CSRF metadata.
 
-When the optional `oauth` profile is inactive, `loginProviders` is an empty array. When `oauth` is active, each `loginProviders[]` item exposes the configured `registrationId`, the provider `clientName`, and the relative authorization path such as `/api/session/oauth2/authorization/github`.
+When the optional `oauth` profile is inactive, `loginProviders` is an empty array.
+When `oauth` is active, each `loginProviders[]` item exposes the configured `registrationId`, the provider `clientName`, and the relative authorization path such as `/api/session/oauth2/authorization/github`.
 
-The endpoint also issues or refreshes the readable `XSRF-TOKEN` cookie for same-site browser writes. Unsafe `/api/**` requests mirror that cookie value into the `X-XSRF-TOKEN` header. The raw token is not exposed in the JSON body.
+The endpoint also issues or refreshes the readable `XSRF-TOKEN` cookie for same-site browser writes.
+Unsafe `/api/**` requests mirror that cookie value into the `X-XSRF-TOKEN` header.
+The raw token is not exposed in the JSON body.
 
 include::{snippets}/session/get-session/curl-request.adoc[]
 include::{snippets}/session/get-session/http-request.adoc[]
@@ -48,9 +53,11 @@ include::{snippets}/session/get-session-authenticated/response-headers.adoc[]
 
 == `POST /api/session/logout`
 
-Invalidates the current same-site browser session when present and clears the configured session cookie plus `XSRF-TOKEN` at the application root path. The endpoint is public and idempotent so the first-party UI can call it safely even when the browser no longer has an active application session.
+Invalidates the current same-site browser session when present and clears the configured session cookie plus `XSRF-TOKEN` at the application root path.
+The endpoint is public and idempotent so the first-party UI can call it safely even when the browser no longer has an active application session.
 
-When a real current application session exists, the request must include the documented `X-XSRF-TOKEN` header. After login success or logout, the supported UI flow calls `GET /api/session` again before the next unsafe write so the browser receives the current CSRF cookie for the new session state.
+When a real current application session exists, the request must include the documented `X-XSRF-TOKEN` header.
+After login success or logout, the supported UI flow calls `GET /api/session` again before the next unsafe write so the browser receives the current CSRF cookie for the new session state.
 
 include::{snippets}/session/post-session-logout/curl-request.adoc[]
 include::{snippets}/session/post-session-logout/http-request.adoc[]

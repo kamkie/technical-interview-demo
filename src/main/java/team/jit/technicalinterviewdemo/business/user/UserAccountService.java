@@ -1,7 +1,5 @@
 package team.jit.technicalinterviewdemo.business.user;
 
-import java.util.Locale;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -9,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import team.jit.technicalinterviewdemo.business.localization.SupportedLanguages;
 import team.jit.technicalinterviewdemo.technical.api.InvalidRequestException;
 import team.jit.technicalinterviewdemo.technical.metrics.ApplicationMetrics;
+
+import java.util.Locale;
 
 @Slf4j
 @Service

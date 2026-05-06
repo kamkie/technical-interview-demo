@@ -1,13 +1,13 @@
 package team.jit.technicalinterviewdemo.technical.logging;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.core.io.ClassPathResource;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class LoggingConfigurationContractTests {
 

@@ -2,6 +2,7 @@ package team.jit.technicalinterviewdemo.business.user;
 
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;

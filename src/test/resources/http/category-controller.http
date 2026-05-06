@@ -16,13 +16,13 @@ Cookie: technical-interview-demo-session={{sessionCookie}}
 Accept: application/json
 
 > {%
-const csrfCookie = response.cookiesByName("XSRF-TOKEN")[0];
-if (csrfCookie) {
-  client.global.set("csrfToken", csrfCookie.value);
-  client.log("Updated csrfToken from XSRF-TOKEN.");
-} else {
-  client.log("No XSRF-TOKEN cookie was returned; csrfToken was not updated.");
-}
+    const csrfCookie = response.cookiesByName("XSRF-TOKEN")[0];
+    if (csrfCookie) {
+        client.global.set("csrfToken", csrfCookie.value);
+        client.log("Updated csrfToken from XSRF-TOKEN.");
+    } else {
+        client.log("No XSRF-TOKEN cookie was returned; csrfToken was not updated.");
+    }
 %}
 
 ### CategoryController - list categories
@@ -37,12 +37,12 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "Architecture"
+    "name": "Architecture"
 }
 > {%
-if (response.status === 201) {
-  client.global.set("writeCategoryId", String(response.body.id));
-}
+    if (response.status === 201) {
+        client.global.set("writeCategoryId", String(response.body.id));
+    }
 %}
 
 ### CategoryController - create category without authentication (401 localized ProblemDetail)
@@ -51,7 +51,7 @@ Content-Type: application/json
 Accept: application/problem+json
 
 {
-  "name": "Architecture"
+    "name": "Architecture"
 }
 
 ### CategoryController - create category as non-admin user (403 localized ProblemDetail)
@@ -64,7 +64,7 @@ Content-Type: application/json
 Accept: application/problem+json
 
 {
-  "name": "Architecture"
+    "name": "Architecture"
 }
 
 ### CategoryController - update category (ADMIN + authenticated session)
@@ -76,7 +76,7 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "Software Architecture"
+    "name": "Software Architecture"
 }
 
 ### CategoryController - delete unused category (ADMIN + authenticated session)

@@ -12,7 +12,8 @@ Authenticated same-site browser writes on this controller use the session cookie
 
 == `GET /api/books`
 
-Lists books in a paginated response. Supports `page`, `size`, `sort`, `title`, `author`, `isbn`, repeated `category`, `year`, `yearFrom`, and `yearTo` query parameters.
+Lists books in a paginated response.
+Supports `page`, `size`, `sort`, `title`, `author`, `isbn`, repeated `category`, `year`, `yearFrom`, and `yearTo` query parameters.
 
 include::{snippets}/books/list-books/curl-request.adoc[]
 include::{snippets}/books/list-books/http-request.adoc[]
@@ -34,7 +35,8 @@ include::{snippets}/books/get-book/response-fields.adoc[]
 
 == `POST /api/books`
 
-Creates a book. Optional `categories` must reference existing category names.
+Creates a book.
+Optional `categories` must reference existing category names.
 
 include::{snippets}/books/create-book/curl-request.adoc[]
 include::{snippets}/books/create-book/http-request.adoc[]
@@ -69,7 +71,9 @@ include::{snippets}/books/delete-book/response-headers.adoc[]
 
 == Error Response Examples
 
-Public book API errors use Spring `ProblemDetail` responses. Each error response keeps the technical `detail` field, and also adds `messageKey`, localized `message`, and resolved `language`. `Accept-Language` is honored, `lang` can override it per request, and cookie `language` is used as fallback. Supported languages are `en`, `es`, `de`, `fr`, `pl`, `uk`, and `no`.
+Public book API errors use Spring `ProblemDetail` responses.
+Each error response keeps the technical `detail` field, and also adds `messageKey`, localized `message`, and resolved `language`. `Accept-Language` is honored, `lang` can override it per request, and cookie `language` is used as fallback.
+Supported languages are `en`, `es`, `de`, `fr`, `pl`, `uk`, and `no`.
 
 === `POST /api/books` validation failure
 
