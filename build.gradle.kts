@@ -5,10 +5,9 @@ import com.github.spotbugs.snom.SpotBugsTask
 import net.ltgt.gradle.errorprone.errorprone
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
-import org.gradle.kotlin.dsl.register
 import team.jit.technicalinterviewdemo.build.TrivyFilesystemScanTask
 import team.jit.technicalinterviewdemo.build.TrivyImageScanTask
-import java.util.Properties
+import java.util.*
 
 buildscript {
     configurations.classpath {

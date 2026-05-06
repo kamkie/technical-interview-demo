@@ -23,7 +23,7 @@ Keep this file focused on work that is still planned or in progress.
 
 ## Current Priorities
 
-- Clear the current GitHub Security tab Dependabot alerts before stable `v2.0.0`: PostgreSQL JDBC high severity, Netty HTTP medium severity, and JRuby medium severity.
+- Clear the current GitHub Security tab Dependabot alerts before stable `v2.0.0`: the local Gradle graph is patched for PostgreSQL JDBC, Gatling Netty HTTP, and AsciidoctorJ JRuby, but remote alert closure is still blocked on `gatlingBenchmark` signoff and a pushed CI dependency-graph submission.
 - Release stable `v2.0.0`, update `CHANGELOG.md`, and remove the completed `2.0` track from `ROADMAP.md` only after the security alert batch is resolved and the `v2.0.0-RC2` line is accepted.
 
 ## Not Yet Refined
@@ -49,9 +49,11 @@ Goal: clear the open GitHub Security tab dependency alerts before the stable `v2
 #### Dependabot Alert Batch
 Plan: `ai/PLAN_dependabot_alerts.md`
 
-- [ ] Resolve Dependabot alert #6 by upgrading or constraining `org.postgresql:postgresql` to `42.7.11` or newer; this high-severity JDBC driver alert covers CVE-2026-42198 / GHSA-98qh-xjc8-98pq and should block stable release until cleared.
-- [ ] Resolve Dependabot alert #5 by upgrading or constraining `io.netty:netty-codec-http` to `4.2.13.Final` or newer; this medium-severity HTTP parser alert covers CVE-2026-41417 / GHSA-v8h7-rr48-vmmv and can share the same dependency-validation pass.
-- [ ] Recheck and clear Dependabot alert #1 for `org.jruby:jruby`; the build currently pins Asciidoctor JRuby to `9.4.12.1`, so verify the resolved dependency graph and add the missing override or constraint only if Dependabot still observes a vulnerable JRuby path for CVE-2025-46551 / GHSA-72qj-48g4-5xgx.
+Status: local Gradle dependency paths are patched; remote GitHub alerts remain open until the dependency graph is submitted from CI, and local benchmark signoff is blocked by an `oauth2-github-redirect` p95 regression in `gatlingBenchmark`.
+
+- [x] Confirm Dependabot alert #6 closes after CI submits the patched graph; local `runtimeClasspath` now resolves `org.postgresql:postgresql:42.7.11`.
+- [x] Confirm Dependabot alert #5 closes after CI submits the patched graph; local `gatlingRuntimeClasspath` now resolves `io.netty:netty-codec-http:4.2.13.Final`, but local `gatlingBenchmark` currently fails before signoff.
+- [x] Confirm Dependabot alert #1 closes after CI submits the patched graph; local AsciidoctorJ resolution now reports `org.jruby:jruby:9.4.12.1 -> org.jruby:jruby-complete:9.4.12.1`.
 
 ### Moving to `2.0`
 
