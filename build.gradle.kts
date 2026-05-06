@@ -7,7 +7,7 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import team.jit.technicalinterviewdemo.build.TrivyFilesystemScanTask
 import team.jit.technicalinterviewdemo.build.TrivyImageScanTask
-import java.util.*
+import java.util.Properties
 
 buildscript {
     configurations.classpath {
