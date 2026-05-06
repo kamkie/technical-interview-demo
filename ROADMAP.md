@@ -53,6 +53,7 @@ Goal: use manual regression coverage as the RC-to-stable gate, then finish the s
 #### AI Workflow Guidance
 
 - [x] Execute `ai/PLAN_pskoett_ai_skill_guidance_adoption.md` to selectively adopt session-start, context-quality, scope-drift, and hardening-check guidance from `pskoett/pskoett-ai-skills` without importing its external skill framework. Plan lifecycle: `Planning` / `Ready`.
+- [x] Execute `ai/PLAN_workflow_on_demand_split.md` to shrink `ai/WORKFLOW.md` into a compact mode router, move fanout mechanics into on-demand references, and rename execution modes by plan topology. Plan lifecycle: `Planning` / `Ready`.
 
 ## Deferred
 
