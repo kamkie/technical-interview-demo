@@ -4,8 +4,8 @@
 
 | Status | Current |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Implementation |
+| Status | In Progress |
 
 ## Summary
 
@@ -237,7 +237,13 @@ Planning validation:
 
 Implementation validation:
 
-- Pending.
+- 2026-05-06: Added targeted Gradle dependency management for `org.postgresql:postgresql:42.7.11`, `io.netty:netty-bom:4.2.13.Final`, and `org.jruby:jruby:9.4.12.1`.
+- 2026-05-06: Initial JRuby dependency-management-only validation still showed AsciidoctorJ requesting `org.jruby:jruby:9.3.8.0`, so implementation added a narrow component metadata rewrite for `org.asciidoctor:asciidoctorj` to request `org.jruby:jruby:9.4.12.1`.
+- 2026-05-06: `./build.ps1 dependencyInsight --configuration runtimeClasspath --dependency org.postgresql:postgresql` passed and showed `org.postgresql:postgresql:42.7.11`.
+- 2026-05-06: `./build.ps1 dependencyInsight --configuration gatlingRuntimeClasspath --dependency io.netty:netty-codec-http` passed and showed `io.netty:netty-codec-http:4.2.13.Final`, with Gatling's `netty-codec-http2` and `netty-handler-proxy` also aligned to `4.2.13.Final`.
+- 2026-05-06: `./build.ps1 dependencyInsight --configuration '__$$asciidoctorj$$___r' --dependency org.jruby:jruby` passed and showed `org.jruby:jruby:9.4.12.1 -> org.jruby:jruby-complete:9.4.12.1`.
+- 2026-05-06: `./build.ps1 dependencies --configuration '__$$asciidoctorj$$___r'` passed and confirmed AsciidoctorJ `2.5.7` now reports `org.jruby:jruby:9.4.12.1 -> org.jruby:jruby-complete:9.4.12.1`.
+- 2026-05-06: `./build.ps1 compileJava` passed.
 
 ## User Validation
 

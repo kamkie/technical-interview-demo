@@ -58,6 +58,8 @@ val pmdVersion = "7.22.0"
 val spotbugsVersion = "4.9.8"
 val gradleWrapperVersion = "9.5.0"
 val springdocVersion = "3.0.3"
+val postgresqlVersion = "42.7.11"
+val nettyVersion = "4.2.13.Final"
 val asciidoctorJrubyVersion = "9.4.12.1"
 val dockerImageName = providers.gradleProperty("dockerImageName").orElse("technical-interview-demo")
 val snippetsDir = layout.buildDirectory.dir("generated-snippets")
@@ -85,7 +87,29 @@ repositories {
     mavenCentral()
 }
 
+dependencyManagement {
+    imports {
+        mavenBom("io.netty:netty-bom:$nettyVersion")
+    }
+    dependencies {
+        dependency("org.postgresql:postgresql:$postgresqlVersion")
+        dependency("org.jruby:jruby:$asciidoctorJrubyVersion")
+    }
+}
+
 dependencies {
+    components {
+        withModule("org.asciidoctor:asciidoctorj") {
+            allVariants {
+                withDependencies {
+                    // AsciidoctorJ 2.5.7 publishes a stale JRuby dependency; keep dependency reports on the patched line.
+                    removeIf { it.group == "org.jruby" && it.name == "jruby" }
+                    add("org.jruby:jruby:$asciidoctorJrubyVersion")
+                }
+            }
+        }
+    }
+
     errorprone("com.google.errorprone:error_prone_core:$errorProneVersion")
     spotbugs("com.github.spotbugs:spotbugs:$spotbugsVersion")
     spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:$findSecBugsVersion")
