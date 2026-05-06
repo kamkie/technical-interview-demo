@@ -38,9 +38,6 @@ Keep rough candidate tasks here for manual editing before they are promoted into
 
 Add new rough tasks below.
 
-- migrate spotless to eclipse().configFile('config/eclipse-style.xml') exported from IntelliJ 
-- migrate spotless to .editorconfig formater exported from IntelliJ 
-
 ## Ordered Plan
 
 ### Pre-`2.0` Security And Quality Alert Sweep
@@ -64,6 +61,13 @@ Goal: finish the stable `2.0` line after the security alert batch is resolved by
 - [ ] Release stable `v2.0.0`, update `CHANGELOG.md`, and remove the completed `2.0` track from `ROADMAP.md`.
 
 ## Deferred
+
+### Post-`2.0` Formatter Configuration Ownership
+
+Status: Deferred until stable `2.0` is released
+
+- [ ] Choose the repository-owned Spotless Java formatter source, comparing `eclipse().configFile("config/eclipse-style.xml")` exported from IntelliJ against an IntelliJ-aligned `.editorconfig` setup.
+- [ ] Migrate Spotless Java formatting away from the local IntelliJ binary dependency to the selected checked-in formatter configuration, then update setup or AI command guidance only if developer invocation changes.
 
 ### Post-`2.0` Frontend AI Contract
 
