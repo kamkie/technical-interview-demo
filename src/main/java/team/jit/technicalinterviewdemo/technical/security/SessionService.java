@@ -49,10 +49,10 @@ public class SessionService {
         csrfTokenRepository.loadDeferredToken(request, response).get();
         return new SessionResponse(
             currentApplicationSessionResolver.hasAuthenticatedSession(request), ACCOUNT_PATH, loginProviders(), LOGOUT_PATH, new SessionResponse.SessionCookie(
-                sessionCookieName(), session.isCookieHttpOnly(), session.getCookieSameSite(), session.isCookieSecure()
-            ), new SessionResponse.Csrf(
-                true, SameSiteCsrfContract.COOKIE_NAME, SameSiteCsrfContract.HEADER_NAME
-            )
+            sessionCookieName(), session.isCookieHttpOnly(), session.getCookieSameSite(), session.isCookieSecure()
+        ), new SessionResponse.Csrf(
+            true, SameSiteCsrfContract.COOKIE_NAME, SameSiteCsrfContract.HEADER_NAME
+        )
         );
     }
 

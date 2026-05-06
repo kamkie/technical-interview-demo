@@ -6,11 +6,11 @@
         </encoder>
     </appender>
 
-    <logger name="io.netty" level="WARN" />
-    <logger name="io.gatling.http.client" level="WARN" />
-    <logger name="org.asynchttpclient" level="WARN" />
+    <logger name="io.netty" level="WARN"/>
+    <logger name="io.gatling.http.client" level="WARN"/>
+    <logger name="org.asynchttpclient" level="WARN"/>
 
     <root level="INFO">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="STDOUT"/>
     </root>
 </configuration>
