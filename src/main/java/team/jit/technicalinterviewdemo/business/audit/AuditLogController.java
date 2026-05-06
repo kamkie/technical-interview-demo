@@ -38,16 +38,16 @@ public class AuditLogController {
     )
     @ApiResponses({@ApiResponse(
         responseCode = "200", description = "OK", content = @Content(
-            mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AuditLogPageResponse.class)
-        )
+        mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AuditLogPageResponse.class)
+    )
     ), @ApiResponse(
         responseCode = "401", description = "Missing or invalid authenticated session.", content = @Content(
-            mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
-        )
+        mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
+    )
     ), @ApiResponse(
         responseCode = "403", description = "Authenticated user does not have the ADMIN role.", content = @Content(
-            mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
-        )
+        mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
+    )
     )
     })
     public ResponseEntity<Page<AuditLogResponse>> findAll(

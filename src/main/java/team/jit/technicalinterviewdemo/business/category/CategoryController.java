@@ -51,16 +51,16 @@ public class CategoryController {
     )
     @ApiResponses({@ApiResponse(
         responseCode = "201", description = "Created", content = @Content(
-            mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = CategoryResponse.class)
-        )
+        mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = CategoryResponse.class)
+    )
     ), @ApiResponse(
         responseCode = "401", description = "Missing or invalid authenticated session.", content = @Content(
-            mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
-        )
+        mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
+    )
     ), @ApiResponse(
         responseCode = "403", description = "Authenticated user does not have the ADMIN role.", content = @Content(
-            mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
-        )
+        mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
+    )
     )
     })
     public ResponseEntity<CategoryResponse> create(@Valid @RequestBody CategoryCreateRequest request) {
@@ -77,20 +77,20 @@ public class CategoryController {
     )
     @ApiResponses({@ApiResponse(
         responseCode = "200", description = "OK", content = @Content(
-            mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = CategoryResponse.class)
-        )
+        mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = CategoryResponse.class)
+    )
     ), @ApiResponse(
         responseCode = "401", description = "Missing or invalid authenticated session.", content = @Content(
-            mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
-        )
+        mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
+    )
     ), @ApiResponse(
         responseCode = "403", description = "Authenticated user does not have the ADMIN role.", content = @Content(
-            mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
-        )
+        mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
+    )
     ), @ApiResponse(
         responseCode = "404", description = "Requested category was not found.", content = @Content(
-            mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
-        )
+        mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
+    )
     )
     })
     public ResponseEntity<CategoryResponse> update(
@@ -109,20 +109,20 @@ public class CategoryController {
     )
     @ApiResponses({@ApiResponse(responseCode = "204", description = "No Content"), @ApiResponse(
         responseCode = "401", description = "Missing or invalid authenticated session.", content = @Content(
-            mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
-        )
+        mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
+    )
     ), @ApiResponse(
         responseCode = "403", description = "Authenticated user does not have the ADMIN role.", content = @Content(
-            mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
-        )
+        mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
+    )
     ), @ApiResponse(
         responseCode = "404", description = "Requested category was not found.", content = @Content(
-            mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
-        )
+        mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
+    )
     ), @ApiResponse(
         responseCode = "409", description = "Category is still assigned to one or more books.", content = @Content(
-            mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
-        )
+        mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
+    )
     )
     })
     public ResponseEntity<Void> delete(@PathVariable Long id) {

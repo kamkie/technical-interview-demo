@@ -58,8 +58,8 @@ final class ExternalSessionSupport implements AutoCloseable {
     String createAuthenticatedSession(String login) {
         DefaultOAuth2User oauth2User = new DefaultOAuth2User(
             AuthorityUtils.createAuthorityList("ROLE_USER"), Map.of(
-                "login", login, "name", login + " display", "email", login + "@example.test"
-            ), "login"
+            "login", login, "name", login + " display", "email", login + "@example.test"
+        ), "login"
         );
         SecurityContext securityContext = new SecurityContextImpl(
             new OAuth2AuthenticationToken(oauth2User, oauth2User.getAuthorities(), "github")

@@ -48,24 +48,24 @@ public class SecurityConfiguration {
             // Prometheus stays reachable for trusted deployment scraping; deployment boundaries keep it off the internet.
             .requestMatchers(HttpMethod.GET, "/actuator/info", "/actuator/prometheus").permitAll().requestMatchers(HttpMethod.POST, "/api/books", "/api/categories", "/api/localizations").authenticated().requestMatchers(HttpMethod.PUT, "/api/books/*", "/api/categories/*", "/api/localizations/*").authenticated().requestMatchers(HttpMethod.DELETE, "/api/books/*", "/api/categories/*", "/api/localizations/*").authenticated().anyRequest().permitAll()
         ).exceptionHandling(exceptions -> exceptions.defaultAuthenticationEntryPointFor(
-            apiAuthenticationEntryPoint, request -> request.getRequestURI().startsWith("/api/")
-        ).defaultAccessDeniedHandlerFor(
-            apiAccessDeniedHandler, request -> request.getRequestURI().startsWith("/api/")
-        )
+                apiAuthenticationEntryPoint, request -> request.getRequestURI().startsWith("/api/")
+            ).defaultAccessDeniedHandlerFor(
+                apiAccessDeniedHandler, request -> request.getRequestURI().startsWith("/api/")
+            )
         ).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).sessionFixation(sessionFixation -> sessionFixation.migrateSession())
         ).addFilterAfter(authenticatedUserSynchronizationFilter, AuthorizationFilter.class);
 
         if (prodProfileActive) {
             http.sessionManagement(session -> session.sessionConcurrency(concurrency -> concurrency.maximumSessions(securitySettingsProperties.getSession().getMaxConcurrentSessions()).maxSessionsPreventsLogin(securitySettingsProperties.getSession().isMaxSessionsPreventsLogin()).sessionRegistry(sessionRegistry)
-            )
+                )
             );
         }
 
         ClientRegistrationRepository registrationRepository = clientRegistrationRepository.getIfAvailable();
         if (registrationRepository != null) {
             http.oauth2Login(oauth2 -> oauth2.loginPage("/api/session").authorizationEndpoint(authorization -> authorization.baseUri(SecuritySettingsProperties.OAuth.AUTHORIZATION_BASE_URI)
-            ).redirectionEndpoint(redirection -> redirection.baseUri(SecuritySettingsProperties.OAuth.REDIRECTION_ENDPOINT_BASE_URI)
-            ).successHandler(oauthAuthenticationSuccessHandler).failureHandler(oauthAuthenticationFailureHandler)
+                ).redirectionEndpoint(redirection -> redirection.baseUri(SecuritySettingsProperties.OAuth.REDIRECTION_ENDPOINT_BASE_URI)
+                ).successHandler(oauthAuthenticationSuccessHandler).failureHandler(oauthAuthenticationFailureHandler)
             );
         }
 
