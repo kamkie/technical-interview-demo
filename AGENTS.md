@@ -21,11 +21,11 @@ Do not use this file for detailed local setup, IDE walkthroughs, Docker onboardi
 If you are a new agent entering this repository, follow these steps to ground yourself:
 
 1. **Read `AGENTS.md` first** to understand the engineering rules and spec-driven development philosophy.
-2. **Review `README.md`** for the high-level project overview and the map of AI guidance.
-3. **Check `SETUP.md`** to ensure your environment is ready (Java, Gradle, Docker).
-4. **Identify the current task's lifecycle phase** (Discovery, Planning, Implementation, etc.).
+2. **Use `README.md` only when needed** for the human-facing project overview or supported contract summary.
+3. **Open `SETUP.md` only when needed** for setup, local tooling, Docker, or troubleshooting detail.
+4. **Identify the current task's lifecycle phase** (Discovery, Planning, Implementation, Testing, Review, Integration, Release).
 5. **Load the relevant owner guide** from the `ai/` directory (e.g., `ai/PLAN.md` for planning).
-6. **Locate or create the task's plan** (`ai/PLAN_*.md`) before making any code changes.
+6. **Locate or create a task plan** (`ai/PLAN_*.md`) when the current workflow requires planned execution.
 
 ## AI Document Set
 
@@ -69,7 +69,7 @@ Load AI guidance on demand:
 Maintain a clean working context to optimize performance and prevent hallucinations:
 
 - **Drop stale context**: Once a milestone or sub-task is complete, stop referencing files that are no longer relevant to the next step.
-- **Avoid deep-file bulk loading**: Prefer targeted searches (`search_project`) or structure checks (`get_file_structure`) over opening every file in a package.
+- **Avoid deep-file bulk loading**: Prefer targeted searches and structure checks over opening every file in a package.
 - **Summarize complex state**: If a long investigation concludes, summarize the findings and use that summary as the new grounding instead of re-reading the raw logs.
 - **Close completed plans**: When a task is done, the plan moves to `ai/archive/` and should be removed from the active read set.
 

@@ -24,7 +24,10 @@ Use `Phase` for the coarse lifecycle:
 - `Discovery`: repo research or framing is still underway
 - `Planning`: the plan is being written, reviewed, or finalized
 - `Implementation`: approved work is being built
-- `Integration`: implementation is done and validation, merge, or release cleanup remains
+- `Testing`: validation or verification work is the primary focus
+- `Review`: security, maintainability, or peer review is the primary focus
+- `Integration`: implementation is done and merge or release cleanup remains
+- `Release`: release artifacts, tags, and documentation are being prepared
 - `Closed`: no active execution remains
 
 Use `Status` for immediate state:
@@ -86,6 +89,8 @@ Every concrete plan must answer:
 - what testing strategy (unit, integration, contract, smoke) applies
 - what validation proves completion
 - how the user can verify the delivered behavior
+
+The testing strategy should name which layers apply and which do not. For docs-only or AI-guidance-only plans, explicitly say that unit, integration, contract, smoke, or benchmark tests are not applicable and name the manual consistency checks that replace them.
 
 ## Milestone Rules
 

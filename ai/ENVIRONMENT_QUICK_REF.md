@@ -21,12 +21,10 @@ PowerShell (`pwsh`):
 ./build.ps1 gatlingBenchmark
 ```
 
-Bash/Sh (`sh`):
+Bash-compatible shells:
 
 ```bash
-# Ensure build.ps1 is executable or use pwsh directly if available
-# The wrapper is a PowerShell script, so pwsh is the primary way to run it.
-# On Linux/macOS, use 'pwsh' to execute the .ps1 script.
+# build.ps1 is the repository wrapper; from Bash, invoke it through PowerShell.
 pwsh ./build.ps1 compileJava
 pwsh ./build.ps1 checkFormat
 pwsh ./build.ps1 format
