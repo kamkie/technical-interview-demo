@@ -7,14 +7,22 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Added
+
+- Added a `v2.0.0-RC5` manual regression execution plan for supported public, authenticated, admin, and technical surfaces.
+- Added a reusable `Context Report` prompt for tracking repository AI-instruction context size over time.
+
 ### Changed
 
 - Switched Java formatting authority from the archived Eclipse-profile Spotless setup to Palantir Java Format while retaining Spotless for Kotlin, Gradle Kotlin DSL, and support-file whitespace normalization.
 - Extended retained Spotless Kotlin and Gradle Kotlin DSL formatting with KtLint import ordering and unused-import enforcement.
+- Aligned `buildSrc` Kotlin imports with retained KtLint ordering so the standard wrapper build passes under the Palantir/Spotless formatter setup.
 - Normalized REST Docs AsciiDoc lists to explicit marker depth so IntelliJ formatting preserves structure without excluding AsciiDoc files.
 - Left `.properties` files out of the generic Spotless misc formatter and added the IntelliJ EditorConfig blank-line setting so intentional blank-line separators are preserved.
 - Kept YAML flow mappings and sequences compact by disabling IntelliJ spaces inside YAML braces and brackets through `.editorconfig`.
 - Kept Flyway migration SQL hand-formatted with a narrow IntelliJ formatter exclusion instead of mirroring IntelliJ exclusions to Spotless targets.
+- Refined AI guidance, prompt metadata, and workflow references so standing rules stay current-state, detailed prompt bodies remain on demand, and repeated workflow guidance routes to the owning guide.
+- Refreshed the Gradle task-graph reference for the current wrapper commands and validation task flow.
 
 ## [v2.0.0-RC4] - 2026-05-06
 

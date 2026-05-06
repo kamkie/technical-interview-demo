@@ -1,4 +1,4 @@
-# Plan: Manual Regression Execution For RC5
+# Plan: Manual Regression Execution For Stable 2.0 Transition
 
 ## Lifecycle
 | Status | Current |
@@ -7,10 +7,11 @@
 | Status | Ready |
 
 ## Summary
-- Create and execute a manual regression pass for `v2.0.0-RC5` that touches the app's supported user-facing functionality without trying to duplicate every automated edge-case test.
+- Create and execute a manual regression pass against the final `2.0` release candidate, currently `v2.0.0-RC5`, that touches the app's supported user-facing functionality without trying to duplicate every automated edge-case test.
 - The manual pass focuses on business functionality, session behavior, admin flows, and deployment-visible health/docs surfaces.
-- Roadmap tracking: `ROADMAP.md` tracks this under `Ordered Plan` / `Moving to 2.0` as selected `v2.0.0-RC5` release-candidate confidence work.
-- Success means a human can set up the app locally, run the grouped suites below, capture pass/fail notes, and identify any release-blocking functional regressions before RC5 is prepared.
+- This plan is required to move from the `v2.0.0-RC*` phase to stable `v2.0.0`; it is not merely another RC-preparation checklist.
+- Roadmap tracking: `ROADMAP.md` tracks this under `Ordered Plan` / `Moving to 2.0` as selected stable-transition confidence work for the current final release candidate.
+- Success means a human can set up the app locally, run the grouped suites below, capture pass/fail notes, and identify any release-blocking functional regressions before stable `v2.0.0` is prepared.
 
 ## Scope
 - In scope:
@@ -35,17 +36,21 @@
 - Manual execution needs at least one authenticated admin session. A second non-admin user session is strongly recommended to verify representative `403` paths without mutating the only admin account.
 
 ## Requirement Gaps And Open Questions
-- Which OAuth provider should be used for manual RC5 execution: GitHub, OIDC, or both?
+- Which OAuth provider should be used for manual execution of the target release candidate: GitHub, OIDC, or both?
   Fallback: use GitHub because `SETUP.md` and the HTTP examples name it first.
 - Will the executor have two OAuth identities available, one admin bootstrap identity and one regular user?
   Fallback: execute all admin and authenticated-user happy paths with the admin identity, and record non-admin `403` checks as blocked or covered by automated tests.
-- Should this manual pass be local-only, or should it also be repeated against an RC5 container/deployment candidate?
+- Should this manual pass be local-only, or should it also be repeated against the target RC container/deployment candidate?
   Fallback: local-only, because deployment smoke and release workflows already own production-like validation.
+- Is `v2.0.0-RC5` still the final release candidate, or did another plan require a later RC before stable `v2.0.0`?
+  Fallback: if another RC is prepared before stable release, revise this plan to target that next RC and rerun readiness review before executing the manual suites.
 - Preferred result artifact location is not specified.
   Fallback: create an uncommitted or committed run log under `ai/tmp/manual-regression/v2_0_0_rc5.md` during execution, then summarize blockers in the plan's `Validation Results`.
 
 ## Locked Decisions And Assumptions
 - Target release candidate is `v2.0.0-RC5`.
+- This manual regression pass is the gate for transitioning from the RC phase to stable `v2.0.0`.
+- If another RC is prepared for other plans before stable `v2.0.0`, this plan must be replanned for that next RC before execution; do not use stale RC5 manual results as stable-release evidence.
 - Use local PostgreSQL through `docker-compose up -d` and run the app with `SPRING_PROFILES_ACTIVE=local,oauth`.
 - Use demo data seeding for predictable book, category, and localization reads.
 - Use `src/test/resources/http/*.http` as the primary request source. IntelliJ HTTP Client is preferred because the checked-in examples already capture `XSRF-TOKEN` into `csrfToken`.
@@ -65,7 +70,7 @@
 ## Affected Artifacts
 - Planning/roadmap:
   - add this plan file
-  - update `ROADMAP.md` to track the RC5 manual regression plan
+  - update `ROADMAP.md` to track the manual regression plan for the target release candidate
 - Existing manual execution inputs:
   - `src/test/resources/http/authentication.http`
   - `src/test/resources/http/book-controller.http`
@@ -269,7 +274,7 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
     - Not Run with reason
   - list cleanup performed and any manual data left behind
   - list release blockers separately from non-blocking observations
-  - ask the user whether any additional manual surfaces should be added before RC5 signoff
+  - ask the user whether any additional manual surfaces should be added before final release-candidate signoff
 - validation checkpoint:
   - result log exists and is understandable without reading console history
   - release-blocking failures are captured with endpoint, request file, expected result, actual result, and repro notes
@@ -299,6 +304,7 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
 - If cookie/CSRF handling is painful in Postman or curl, keep IntelliJ HTTP Client as the canonical manual harness because the repo already maintains `.http` examples.
 - If regular-user setup repeatedly blocks execution, add a small documented local identity-provider recipe or a manual admin role reset note in a later setup-doc plan.
 - Do not expand this manual pass into benchmark, security scan, or deployment validation; those have repo-owned automated workflows.
+- Replan this file when the final RC changes; update the target RC, result-log path, roadmap wording, and any changed supported-surface assumptions together.
 
 ## Validation Results
 - 2026-05-06 plan creation:

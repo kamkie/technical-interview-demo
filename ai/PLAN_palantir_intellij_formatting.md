@@ -289,6 +289,10 @@
   - kept `src/main/resources/**/*.sql` in Spotless misc formatting for trailing-whitespace and final-newline cleanup.
   - restored Flyway migration SQL from IntelliJ SQL formatter churn and excluded only `src/main/resources/db/migration/**/*.sql` from IntelliJ reformatting because the SQL formatter split PostgreSQL DDL clauses such as `alter column` and `create extension` in review-hostile ways.
   - XML parsing for `.idea/codeStyles/Project.xml`, `git diff --check`, `git diff --exit-code -- src/main/resources/db/migration/*.sql`, and `./build.ps1 checkFormat --no-daemon` passed.
+- 2026-05-07 release-preparation validation:
+  - initial `./build.ps1 build` failed at `spotlessKotlinCheck` because KtLint import ordering required `javax.*` imports before `java.*` imports in four `buildSrc` Kotlin task files.
+  - `./build.ps1 format` passed and applied import-order-only fixes to `ExternalSmokeEnvironmentUpTask.kt`, `GatlingBenchmarkTask.kt`, `JacocoCoverageSummaryTask.kt`, and `TrivyVulnerabilityScanTask.kt`.
+  - repeated `./build.ps1 build` passed: 264 tests, JaCoCo line coverage 93.3%, Asciidoctor generation, Docker image build, dependency and image Trivy scans, CycloneDX SBOM generation, Palantir/Spotless formatting, PMD, SpotBugs, and coverage verification all completed successfully.
 
 ## User Validation
 - Review the implementation as two commits:
