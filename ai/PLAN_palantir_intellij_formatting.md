@@ -10,6 +10,8 @@
 - Supersede the partially implemented Eclipse-profile Spotless formatter plan with a Palantir-first formatter setup for `v2.0.0-RC5`.
 - Use Gradle plugins `com.palantir.java-format` and `com.palantir.java-format-idea` for Java formatter enforcement and IntelliJ alignment, keep Gradle SpotBugs for static-analysis findings, and keep `.editorconfig` focused on fundamental text settings.
 - Use IntelliJ's project code-style file for imports, exclusions, and settings not covered by Palantir; keep non-Palantir file types as close to IntelliJ default code style as practical.
+- Configure IntelliJ project style so Markdown and AsciiDoc files do not automatically wrap prose lines, and audit `.editorconfig` for settings that could override or trigger wrapping for those file types.
+- Configure IntelliJ project style so formatting `.properties` files preserves intentional empty lines.
 - Remove the Eclipse formatter profile completely from Gradle, tooling, docs, and AI guidance.
 - Keep review history readable with two implementation commits: one configuration/guidance change, then one pure code reformatting commit.
 - Roadmap tracking: `ROADMAP.md` tracks this under `Ordered Plan` / `Moving to 2.0` as selected `v2.0.0-RC5` release-candidate work.
@@ -25,6 +27,8 @@
   - align `.idea/codeStyles/Project.xml` with the Gradle formatting scope for included and excluded files, using IntelliJ built-in settings for imports and options not covered by Palantir
   - keep IntelliJ Java import settings configured to avoid wildcard imports
   - keep `.editorconfig` as the fundamental cross-editor baseline for charset, line endings, indentation defaults, final newline, trailing whitespace, and max line length
+  - ensure IntelliJ does not wrap Markdown or AsciiDoc prose lines, including checking whether `.editorconfig` `max_line_length` or related settings interfere with that goal
+  - ensure IntelliJ formatting for `.properties` files does not remove intentional empty lines
   - for files not formatted by Palantir, keep settings close to IntelliJ defaults unless a repository contract already requires otherwise
   - update `SETUP.md`, `CONTRIBUTING.md`, and `ai/CODE_STYLE.md` where formatter ownership guidance changes
   - preserve the requested commit split: configuration/guidance first, code reformatting second
@@ -42,6 +46,8 @@
 - `build.gradle.kts` already applies `com.github.spotbugs` and runs `spotbugsMain` as the active SpotBugs task with repository-owned include and exclude filters under `tooling/security/`.
 - `.idea/codeStyles/Project.xml` currently contains formatter exclusions built around the superseded Spotless/Eclipse setup, including an exclusion for `tooling/formatting/intellij-exported-eclipse-java-formatter.xml`.
 - `.editorconfig` is already slimmed to portable text defaults.
+- `.editorconfig` currently applies `max_line_length = 120` globally; implementation must check whether IntelliJ EditorConfig support uses that value to wrap Markdown or AsciiDoc lines despite project code-style no-wrap settings.
+- `.idea/codeStyles/Project.xml` currently disables Markdown wrapping, but AsciiDoc no-wrap behavior and `.properties` empty-line preservation still need explicit verification during the IntelliJ style update.
 - `SETUP.md`, `CONTRIBUTING.md`, and `ai/CODE_STYLE.md` currently describe Spotless as the CI-owned formatter and the Eclipse formatter profile as the Java formatter input.
 - The repository is on `main` and has unreleased local commits ahead of `origin/main`; preserve unrelated commit history and do not rewrite it while executing this plan.
 
@@ -49,6 +55,8 @@
 - The request says `spotbugs` in formatter-scope contexts. SpotBugs does not format files. Fallback for execution: treat literal SpotBugs as the existing Gradle static-analysis gate, and mirror IntelliJ code-style inclusions/exclusions with the Gradle formatter scope instead of SpotBugs filters. If the intended word was `Spotless`, revise this plan before implementation.
 - Exact Palantir plugin versions are not selected in this plan. Fallback for execution: pin explicit stable plugin versions in `build.gradle.kts`, using the repository's normal Gradle plugin declaration style, and record the chosen versions in `Validation Results`.
 - Palantir Java Format is the Java authority. If `com.palantir.java-format` supports additional file types in the selected version, include only those documented supported types; otherwise do not invent a Gradle formatter for unsupported file types.
+- IntelliJ and EditorConfig precedence for Markdown/AsciiDoc line wrapping must be verified during Milestone 1. If global `.editorconfig` `max_line_length = 120` causes wrapping for Markdown or AsciiDoc, add the narrowest repo-owned override for `*.md`, `*.adoc`, and `*.asciidoc` instead of weakening Java or build-file margins globally.
+- The exact IntelliJ project-code-style setting for preserving `.properties` empty lines must be confirmed during Milestone 1. Do not solve this by excluding all `.properties` files unless IntelliJ lacks a precise project setting.
 
 ## Locked Decisions And Assumptions
 - Execute for release target `v2.0.0-RC5`.
@@ -57,6 +65,8 @@
 - `com.palantir.java-format-idea` is the IntelliJ integration path for Palantir-aware IDE alignment.
 - IntelliJ built-in project code style owns imports and project settings not covered by Palantir.
 - `.editorconfig` owns only fundamental cross-editor text settings and lightweight formatting defaults.
+- Markdown and AsciiDoc files must keep author-chosen line breaks; IntelliJ should not automatically wrap prose lines in those files.
+- `.properties` files must keep intentional blank-line separators after IntelliJ formatting.
 - SpotBugs remains a Gradle static-analysis gate; it is not a formatter and must not be described as one.
 - The Eclipse formatter is removed completely: no checked-in Eclipse formatter XML, no Gradle `eclipse().configFile(...)`, and no docs that direct maintainers to it.
 - The IntelliJ project code-style file must mirror the Gradle formatter's intended file inclusions and exclusions as closely as IntelliJ supports.
@@ -108,6 +118,10 @@
   - Java source under `buildSrc/src/**/*.java` if present or later added
   - any additional file types supported by the selected Palantir formatter plugin
   - non-Palantir file types only if the configuration commit keeps or adds a Gradle-enforced formatter for them
+- IntelliJ-only style behavior to verify:
+  - Markdown files under repo docs and AI guidance are not line-wrapped by IntelliJ formatting or EditorConfig interactions
+  - AsciiDoc files under `src/docs/asciidoc/**/*.adoc` and any future `*.asciidoc` files are not line-wrapped by IntelliJ formatting or EditorConfig interactions
+  - `.properties` files such as `gradle.properties`, `gradle/wrapper/gradle-wrapper.properties`, and `src/main/resources/*.properties` preserve empty lines
 - Formatter/style exclusions to keep aligned between Gradle formatter scope and IntelliJ code style:
   - generated, cache, and local output directories: `.git/**`, `.gradle/**`, `.kotlin/**`, `build/**`, `buildSrc/build/**`, `buildSrc/.gradle/**`, `out/**`, and `temp/**`
   - local IDE/workspace metadata: `.idea/**` except reviewed `.idea/codeStyles/**` files, plus `.run/**`
@@ -146,6 +160,9 @@
   - wire Palantir formatter checks into the standard verification flow if the plugin does not do so automatically
   - keep or refine SpotBugs Gradle configuration without presenting it as a formatter
   - update `.idea/codeStyles/Project.xml` so IntelliJ project style mirrors Gradle formatter inclusions/exclusions and owns import behavior not covered by Palantir
+  - update IntelliJ Markdown and AsciiDoc project style so formatting does not wrap prose lines
+  - audit `.editorconfig` global `max_line_length = 120`; if it overrides or conflicts with Markdown/AsciiDoc no-wrap behavior, add a narrow docs-file override that preserves no-wrap behavior without changing Java formatter expectations
+  - update IntelliJ `.properties` code style so formatting preserves intentional empty lines
   - remove stale IntelliJ exclusions for the removed Eclipse formatter file
   - keep `.editorconfig` focused on fundamental settings
   - update `SETUP.md`, `CONTRIBUTING.md`, and `ai/CODE_STYLE.md` so maintainers use Palantir/IntelliJ/EditorConfig terminology instead of the Eclipse-profile Spotless terminology
@@ -154,6 +171,7 @@
   - `./build.ps1 tasks --all --no-daemon`
   - `./build.ps1 checkFormat --no-daemon --continue` after confirming the Palantir plugin exposes `checkFormat`; expected source-format drift is acceptable before Milestone 2, but Gradle configuration errors are not
   - XML parsing or IDE loading check for `.idea/codeStyles/Project.xml`
+  - IntelliJ style smoke check on representative Markdown, AsciiDoc, and `.properties` files or scratch copies: no Markdown/AsciiDoc line wrapping and no `.properties` empty-line removal
 - commit checkpoint:
   - `build: switch java formatting to palantir`
 
@@ -168,6 +186,7 @@
   - no hand refactors mixed into formatting
   - no generated or ignored directories committed
   - no OpenAPI baseline, REST Docs snippets, or HTTP examples should change semantically
+  - no Markdown or AsciiDoc prose wrapping and no `.properties` empty-line removal caused by retained non-Java formatting
   - no formatter configuration, IntelliJ project style, roadmap, or docs changes in this commit unless Milestone 1 must be corrected first
 - exact deliverables:
   - run `./build.ps1 format --no-daemon` after confirming the Palantir plugin exposes `format`
@@ -191,6 +210,9 @@
 - If Palantir plugin task names differ from `format` and `checkFormat`, update this plan before claiming Milestone 1 validation or Milestone 2 execution.
 - If the configuration commit causes compilation or static-analysis failures unrelated to formatting drift, fix them before the reformat commit.
 - If IntelliJ reformat produces Java output different from Palantir after the project style update, Palantir wins for Java and the IntelliJ setup must be adjusted.
+- If `.editorconfig` global `max_line_length` drives Markdown or AsciiDoc wrapping in IntelliJ, add a narrow file-type override for docs instead of changing the Java right margin contract.
+- AsciiDoc files may be protected by formatter exclusions today, but exclusions alone do not prove no-wrap behavior for future AsciiDoc files or manual reformat actions; prefer explicit project style or a documented EditorConfig override when available.
+- IntelliJ properties-file formatting can collapse visual section spacing if blank-line preservation is not configured. Verify representative `.properties` files before committing the configuration milestone.
 - Do not let `.gitignore` exceptions accidentally expose broader `.idea/` workspace metadata.
 
 ## Validation Plan
@@ -198,6 +220,7 @@
   - `./build.ps1 tasks --all --no-daemon`
   - `./build.ps1 checkFormat --no-daemon --continue` after verifying the Palantir task name; expected source-format drift only
   - XML parsing or IntelliJ project load check for `.idea/codeStyles/Project.xml`
+  - IntelliJ style smoke check confirming Markdown and AsciiDoc files are not wrapped and `.properties` empty lines are preserved
 - Milestone 2:
   - `git diff --check`
   - `./build.ps1 checkFormat --no-daemon`
@@ -209,11 +232,14 @@
   - review the configuration commit separately from the reformat commit
   - confirm the Eclipse formatter profile is deleted and no references remain
   - confirm `.idea/codeStyles/Project.xml` and Gradle formatter scope stay aligned
+  - confirm `.editorconfig` does not override Markdown/AsciiDoc no-wrap intent
+  - confirm `.properties` empty lines survive IntelliJ formatting
   - confirm Java imports do not use wildcard imports after both Gradle formatting and IntelliJ optimize-imports checks
 
 ## Better Engineering Notes
 - Keep this transition separate from dependency sweeps, PMD tuning, SpotBugs rule-policy changes, and source refactors.
 - Do not create a custom formatter or hand-written formatting script.
+- Prefer narrow Markdown/AsciiDoc EditorConfig overrides over global margin changes if `.editorconfig` conflicts with IntelliJ no-wrap behavior.
 - If the repository still needs CI-owned formatting for non-Java file types, prefer a narrow, deterministic Gradle formatter configuration over broad root-level globs.
 - Record any deviation from the two-commit split in `Validation Results` before committing.
 
@@ -222,6 +248,9 @@
   - archived `ai/PLAN_ci_owned_spotless_reformat.md` as partially implemented and superseded.
   - created this replacement plan for the Palantir/IntelliJ/EditorConfig/SpotBugs direction requested by the user.
   - updated `ROADMAP.md` to point active formatter work at this plan.
+- 2026-05-06 plan refinement:
+  - added IntelliJ code-style goals for no automatic Markdown/AsciiDoc line wrapping and preserving empty lines in `.properties` files.
+  - checked current `.editorconfig` and recorded global `max_line_length = 120` as an implementation audit point for Markdown/AsciiDoc wrapping.
 
 ## User Validation
 - Review the implementation as two commits:
@@ -235,3 +264,4 @@
 ```
 
 - In IntelliJ, confirm the Palantir formatter plugin is active for Java and that project code style does not introduce wildcard imports.
+- In IntelliJ, format representative Markdown, AsciiDoc, and `.properties` files or scratch copies and confirm Markdown/AsciiDoc prose is not wrapped and `.properties` empty lines are preserved.
