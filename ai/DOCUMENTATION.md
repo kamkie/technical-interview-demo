@@ -38,6 +38,7 @@ If ownership is unclear, decide that before editing multiple docs.
 - update overlapping human-facing and AI-facing docs in the same change
 - keep prompts lean; move standing policy back to the owning guide
 - keep raw prompt bodies, full examples, templates, and deep references in on-demand files under `ai/prompts/`, `ai/templates/`, or `ai/references/`
+- write AI guidance as current-state rules, especially when incorporating user directives; put only still-useful historical context in an on-demand reference or narrowly scoped guideline-history file
 - keep repo-local skills narrow; route standing policy back to the owning guide instead of duplicating it
 - compact repeated standing guidance into the best owner instead of maintaining parallel copies
 - keep setup detail out of planning, workflow, and release guides
