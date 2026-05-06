@@ -97,6 +97,7 @@ abstract class GatlingBenchmarkTask @Inject constructor(
     @TaskAction
     fun runBenchmarks() {
         val docker = DockerSupport(execOperations, logger)
+        val environment = DockerApplicationEnvironment(docker, logger)
         val timeout = Duration.ofSeconds(timeoutSeconds.get().toLong())
         val normalizedBaseUrl = baseUrl.get().trimEnd('/')
         val baseUri = URI.create(normalizedBaseUrl)
@@ -112,76 +113,32 @@ abstract class GatlingBenchmarkTask @Inject constructor(
                 "Port $port on host '$host' is already in use. Stop the conflicting process before running gatlingBenchmark."
             )
         }
+        val resources = DockerApplicationEnvironmentResources(
+            logPrefix = "[gatlingBenchmark]",
+            networkName = networkName.get(),
+            postgresContainerName = postgresContainerName.get(),
+            appContainerName = appContainerName.get()
+        )
+        val config = DockerApplicationEnvironmentConfig(
+            resources = resources,
+            imageName = imageName.get(),
+            postgresImage = postgresImage.get(),
+            databaseName = databaseName.get(),
+            databaseUser = databaseUser.get(),
+            databasePassword = databasePassword.get(),
+            appHostPort = port,
+            springProfiles = "local,oauth",
+            appEnvironment = mapOf(
+                "GITHUB_CLIENT_ID" to oauthClientId.get(),
+                "GITHUB_CLIENT_SECRET" to oauthClientSecret.get(),
+                "SESSION_COOKIE_SECURE" to "false"
+            ),
+            applicationDescription = "benchmark application"
+        )
 
-        cleanup(docker)
+        environment.cleanup(resources)
         try {
-            logger.lifecycle("[gatlingBenchmark] Provisioning Docker network '{}'.", networkName.get())
-            docker.docker("network", "create", networkName.get())
-
-            logger.lifecycle("[gatlingBenchmark] Starting PostgreSQL container '{}'.", postgresContainerName.get())
-            docker.docker(
-                "run",
-                "--detach",
-                "--name",
-                postgresContainerName.get(),
-                "--network",
-                networkName.get(),
-                "--env",
-                "POSTGRES_DB=${databaseName.get()}",
-                "--env",
-                "POSTGRES_USER=${databaseUser.get()}",
-                "--env",
-                "POSTGRES_PASSWORD=${databasePassword.get()}",
-                postgresImage.get()
-            )
-
-            logger.lifecycle("[gatlingBenchmark] Waiting for PostgreSQL readiness.")
-            docker.waitUntil(timeout, "PostgreSQL readiness") {
-                docker.docker(
-                    "exec",
-                    postgresContainerName.get(),
-                    "pg_isready",
-                    "-U",
-                    databaseUser.get(),
-                    "-d",
-                    databaseName.get(),
-                    allowFailure = true
-                ).exitCode == 0
-            }
-
-            logger.lifecycle("[gatlingBenchmark] Starting benchmark application container '{}'.", appContainerName.get())
-            docker.docker(
-                "run",
-                "--detach",
-                "--name",
-                appContainerName.get(),
-                "--network",
-                networkName.get(),
-                "--publish",
-                "${port}:8080",
-                "--env",
-                "SPRING_PROFILES_ACTIVE=local,oauth",
-                "--env",
-                "DATABASE_HOST=${postgresContainerName.get()}",
-                "--env",
-                "DATABASE_PORT=5432",
-                "--env",
-                "DATABASE_NAME=${databaseName.get()}",
-                "--env",
-                "DATABASE_USER=${databaseUser.get()}",
-                "--env",
-                "DATABASE_PASSWORD=${databasePassword.get()}",
-                "--env",
-                "GITHUB_CLIENT_ID=${oauthClientId.get()}",
-                "--env",
-                "GITHUB_CLIENT_SECRET=${oauthClientSecret.get()}",
-                "--env",
-                "SESSION_COOKIE_SECURE=false",
-                imageName.get()
-            )
-
-            logger.lifecycle("[gatlingBenchmark] Waiting for application readiness at {}.", normalizedBaseUrl)
-            docker.waitForReadiness(normalizedBaseUrl, timeout)
+            environment.provision(config, normalizedBaseUrl, timeout)
 
             val publicReportDirectory = runSimulation(
                 simulationClassName = PUBLIC_API_SIMULATION_CLASS,
@@ -204,12 +161,11 @@ abstract class GatlingBenchmarkTask @Inject constructor(
             decideBaseline(benchmarkResult)
         } catch (exception: Exception) {
             logger.error("[gatlingBenchmark] Benchmark run failed.")
-            docker.logContainerLogs(postgresContainerName.get(), "[gatlingBenchmark]")
-            docker.logContainerLogs(appContainerName.get(), "[gatlingBenchmark]")
+            environment.logContainerLogs(resources)
             throw exception
         } finally {
             logger.lifecycle("[gatlingBenchmark] Tearing down Docker benchmark environment.")
-            cleanup(docker)
+            environment.cleanup(resources)
         }
     }
 
@@ -470,12 +426,6 @@ abstract class GatlingBenchmarkTask @Inject constructor(
     private fun writeResult(file: File, content: BenchmarkBaseline) {
         file.parentFile.mkdirs()
         OBJECT_MAPPER.writeValue(file, content)
-    }
-
-    private fun cleanup(docker: DockerSupport) {
-        docker.removeDockerResource("rm", "-f", appContainerName.get())
-        docker.removeDockerResource("rm", "-f", postgresContainerName.get())
-        docker.removeDockerResource("network", "rm", networkName.get())
     }
 
     private companion object {

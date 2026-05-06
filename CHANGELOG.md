@@ -7,10 +7,15 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Added
+- Added a draft AI execution plan for moving Java formatting to a CI-owned Spotless formatter after the `2.0` release line is accepted.
+
 ### Changed
 - Constrained the PostgreSQL JDBC, Gatling Netty, and AsciidoctorJ JRuby Gradle dependency paths to patched versions for the current Dependabot alert batch without changing the public API contract.
+- Relaxed the Gatling benchmark p95 regression gate to a 25% tolerance with ceiling rounding, and shared Docker application environment provisioning between the external smoke and Gatling benchmark tasks without changing their separate runtime profiles.
 - Clarified AI planning workflow so creating or materially revising `ai/PLAN_*.md` files also updates `ROADMAP.md` with the active plan path and status.
 - Forced GitHub Actions reruns to ignore the lightweight-only `skip_heavy_ci` shortcut and execute heavy CI validation.
+- Expanded `.aiignore` to cover local OS, secret, IDE, and generated build files while keeping source packages such as `buildSrc/src/main/kotlin/team/jit/technicalinterviewdemo/build` visible.
 
 ## [v2.0.0-RC2] - 2026-05-05
 

@@ -29,9 +29,14 @@ abstract class ExternalSmokeEnvironmentDownTask @Inject constructor(
     @TaskAction
     fun tearDownEnvironment() {
         val docker = DockerSupport(execOperations, logger)
+        val environment = DockerApplicationEnvironment(docker, logger)
+        val resources = DockerApplicationEnvironmentResources(
+            logPrefix = "[externalSmokeTest]",
+            networkName = networkName.get(),
+            postgresContainerName = postgresContainerName.get(),
+            appContainerName = appContainerName.get()
+        )
         logger.lifecycle("[externalSmokeTest] Tearing down Docker smoke environment.")
-        docker.removeDockerResource("rm", "-f", appContainerName.get())
-        docker.removeDockerResource("rm", "-f", postgresContainerName.get())
-        docker.removeDockerResource("network", "rm", networkName.get())
+        environment.cleanup(resources)
     }
 }
