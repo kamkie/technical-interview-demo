@@ -16,12 +16,12 @@ For the one-time migration narrative from `1.x`, see xref:upgrade-1x-to-2-0.adoc
 
 == UI Integration Checklist
 
-- call `GET /api/session` on initial load to discover the current session state, `loginProviders[]`, logout path, and CSRF metadata
-- start interactive login from the returned relative provider `authorizationPath`
-- keep `GET /api/account` for authenticated persisted-profile reads after the session is established
-- after login success or logout, call `GET /api/session` again before the next unsafe write so the browser receives the current `XSRF-TOKEN`
-- mirror the readable `XSRF-TOKEN` cookie into the `X-XSRF-TOKEN` request header on unsafe `/api/**` requests
-- keep the deployment one-origin and same-site; this contract does not add CORS or cross-origin browser support
+* call `GET /api/session` on initial load to discover the current session state, `loginProviders[]`, logout path, and CSRF metadata
+* start interactive login from the returned relative provider `authorizationPath`
+* keep `GET /api/account` for authenticated persisted-profile reads after the session is established
+* after login success or logout, call `GET /api/session` again before the next unsafe write so the browser receives the current `XSRF-TOKEN`
+* mirror the readable `XSRF-TOKEN` cookie into the `X-XSRF-TOKEN` request header on unsafe `/api/**` requests
+* keep the deployment one-origin and same-site; this contract does not add CORS or cross-origin browser support
 
 == `GET /api/session`
 

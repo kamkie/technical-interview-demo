@@ -12,11 +12,11 @@ It is migration guidance, not a second source of truth for the steady-state `2.0
 
 == What Changed
 
-- only `/api/**` is intended to be internet-public from this application
-- login bootstrap and provider callbacks live under `/api/session/**`
-- `GET /api/session` is now the supported browser bootstrap and refresh endpoint
-- `GET /api/account` remains the authenticated persisted-profile resource and should not be used as anonymous session discovery
-- unsafe browser writes now require the readable `XSRF-TOKEN` cookie value to be mirrored into the `X-XSRF-TOKEN` request header
+* only `/api/**` is intended to be internet-public from this application
+* login bootstrap and provider callbacks live under `/api/session/**`
+* `GET /api/session` is now the supported browser bootstrap and refresh endpoint
+* `GET /api/account` remains the authenticated persisted-profile resource and should not be used as anonymous session discovery
+* unsafe browser writes now require the readable `XSRF-TOKEN` cookie value to be mirrored into the `X-XSRF-TOKEN` request header
 
 == Public Boundary Changes
 
@@ -60,9 +60,9 @@ This repository does not promise cross-origin browser flows or CORS support.
 
 Deployment is expected to:
 
-- expose only `/api/**` from this application to the public internet
-- keep `/`, `/hello`, `/docs`, `/v3/api-docs*`, and `/actuator/**` private or trusted-only
-- own abuse protection for `/api/session/oauth2/authorization/{registrationId}` and unsafe internet-public `/api/**` writes
+* expose only `/api/**` from this application to the public internet
+* keep `/`, `/hello`, `/docs`, `/v3/api-docs*`, and `/actuator/**` private or trusted-only
+* own abuse protection for `/api/session/oauth2/authorization/{registrationId}` and unsafe internet-public `/api/**` writes
 
 That means burst limiting, suspicious-client challenge or block capability, per-client throttling, request-size enforcement, and rejection visibility belong at the edge or gateway layer, not inside the application.
 

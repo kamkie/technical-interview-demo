@@ -281,9 +281,9 @@
   - observed IntelliJ reformat flattening the nested list under `src/docs/asciidoc/index.adoc` despite AsciiDoc no-wrap settings.
   - implementation finding: the IntelliJ AsciiDoc plugin attempts to standardize document structure and may remove leading blanks; AsciiDoc nesting is determined by marker depth, so `**` is a child of `*`, while indentation with the same marker can flatten.
   - removed IntelliJ `DO_NOT_FORMAT` exclusions for `src/docs/asciidoc/**/*.adoc` and `src/docs/asciidoc/**/*.asciidoc`; AsciiDoc files remain formatter-managed.
-  - normalized `src/docs/asciidoc/index.adoc` lists to explicit AsciiDoc marker depth.
+  - normalized REST Docs AsciiDoc lists to explicit marker depth across `src/docs/asciidoc/**/*.adoc`.
   - configured retained Spotless Kotlin and Gradle Kotlin DSL targets with KtLint import ordering and unused-import enforcement.
-  - removed `.properties` files from the generic Spotless misc target after `checkFormat` collapsed intentional blank-line separators in `src/test/resources/application-test.properties`; `.properties` files remain governed by `.editorconfig` and IntelliJ's `KEEP_BLANK_LINES=true` setting.
+  - removed `.properties` files from the generic Spotless misc target after `checkFormat` collapsed intentional blank-line separators in `src/test/resources/application-test.properties`; `.properties` files remain governed by `.editorconfig`, `ij_properties_keep_blank_lines=true`, and IntelliJ's `KEEP_BLANK_LINES=true` setting.
   - recorded the AsciiDoc marker-depth rule in `SETUP.md` and `ai/CODE_STYLE.md`.
   - XML parsing for `.idea/codeStyles/Project.xml`, `git diff --check`, `./build.ps1 checkFormat --no-daemon`, and `./build.ps1 asciidoctor --no-daemon -x test` passed.
 

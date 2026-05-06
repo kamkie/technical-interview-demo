@@ -35,6 +35,7 @@ Keep changes:
 - use `./build.ps1 format` for repository-wide formatting and `./build.ps1 checkFormat` for formatter verification instead of hand-formatting source files
 - keep `.editorconfig` to portable editor defaults; put IntelliJ-specific project style in `.idea/codeStyles/`
 - keep REST Docs AsciiDoc sources formatter-managed; write nested lists with explicit marker depth (`*`, `**`) because IntelliJ's AsciiDoc formatter may remove indentation and flatten same-marker nesting
+- preserve intentional `.properties` blank-line separators with the checked-in IntelliJ EditorConfig key instead of excluding project properties files from IDE formatting
 
 ## Naming And Placement
 
