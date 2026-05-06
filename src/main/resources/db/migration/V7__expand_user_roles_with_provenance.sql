@@ -6,13 +6,13 @@ alter table user_roles
 
 update user_roles
 set grant_source = 'AUTHENTICATED_LOGIN',
-    granted_at   = users.created_at from users
+    granted_at = users.created_at
+from users
 where users.id = user_roles.user_id;
 
 alter table user_roles
     alter column grant_source set not null,
-alter
-column granted_at set not null;
+    alter column granted_at set not null;
 
 alter table user_roles
     add constraint fk_user_roles_granted_by_user

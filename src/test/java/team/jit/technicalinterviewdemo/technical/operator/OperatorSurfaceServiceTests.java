@@ -1,5 +1,17 @@
 package team.jit.technicalinterviewdemo.technical.operator;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
+
+import java.lang.reflect.InvocationTargetException;
+import java.time.Instant;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,18 +37,6 @@ import team.jit.technicalinterviewdemo.business.user.UserRole;
 import team.jit.technicalinterviewdemo.technical.api.ForbiddenOperationException;
 import team.jit.technicalinterviewdemo.technical.info.TechnicalOverviewResponse;
 import team.jit.technicalinterviewdemo.technical.info.TechnicalOverviewService;
-
-import java.lang.reflect.InvocationTargetException;
-import java.time.Instant;
-import java.util.List;
-import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class OperatorSurfaceServiceTests {
@@ -228,8 +228,9 @@ class OperatorSurfaceServiceTests {
             var constructor = IndicatedHealthDescriptor.class.getDeclaredConstructor(Health.class);
             constructor.setAccessible(true);
             return constructor.newInstance(Health.status(status).build());
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException
-                 | NoSuchMethodException exception) {
+        }
+        catch (InstantiationException | IllegalAccessException | InvocationTargetException
+                | NoSuchMethodException exception) {
             throw new LinkageError("Failed to create HealthDescriptor test fixture.", exception);
         }
     }

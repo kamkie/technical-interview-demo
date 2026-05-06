@@ -12,8 +12,7 @@ Authenticated same-site browser writes on this controller use the session cookie
 
 == `GET /api/localizations`
 
-Lists localizations in a paginated response.
-Supports optional `messageKey` and `language` filters, plus `page`, `size`, and repeated `sort` query parameters.
+Lists localizations in a paginated response. Supports optional `messageKey` and `language` filters, plus `page`, `size`, and repeated `sort` query parameters.
 
 include::{snippets}/localization/list-localizations/curl-request.adoc[]
 include::{snippets}/localization/list-localizations/http-request.adoc[]
@@ -92,9 +91,7 @@ include::{snippets}/localization/list-localizations-by-language/response-fields.
 
 == Error Response Examples
 
-Public localization API errors use Spring `ProblemDetail` responses.
-Each error response keeps the technical `detail` field, and also adds `messageKey`, localized `message`, and resolved `language`. `Accept-Language` is honored, `lang` can override it per request, and cookie `language` is used as fallback.
-Supported languages are `en`, `es`, `de`, `fr`, `pl`, `uk`, and `no`.
+Public localization API errors use Spring `ProblemDetail` responses. Each error response keeps the technical `detail` field, and also adds `messageKey`, localized `message`, and resolved `language`. `Accept-Language` is honored, `lang` can override it per request, and cookie `language` is used as fallback. Supported languages are `en`, `es`, `de`, `fr`, `pl`, `uk`, and `no`.
 
 === `POST /api/localizations` validation failure
 

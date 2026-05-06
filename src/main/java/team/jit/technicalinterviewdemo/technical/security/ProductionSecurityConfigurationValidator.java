@@ -1,15 +1,14 @@
 package team.jit.technicalinterviewdemo.technical.security;
 
+import java.time.Duration;
+import java.util.Map;
+import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
 import org.springframework.stereotype.Component;
 import team.jit.technicalinterviewdemo.technical.bootstrap.BootstrapSettingsProperties;
-
-import java.time.Duration;
-import java.util.Map;
-import java.util.regex.Pattern;
 
 @Component
 @RequiredArgsConstructor

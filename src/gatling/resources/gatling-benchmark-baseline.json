@@ -1,97 +1,82 @@
 {
-  "capturedAt": "2026-05-01T12:34:11.404440700Z",
-  "gitCommit": "eb579324fc71287ca07b071f00f286893d3ec193",
-  "baseUrl": "http://127.0.0.1:18080",
-  "javaVersion": "25.0.3+9-LTS",
-  "activeProfiles": [
-    "local",
-    "oauth"
-  ],
-  "simulations": [
-    {
-      "simulation": "PublicApiSimulation",
-      "description": "List books, search books, and localization lookup against the public API.",
-      "injectionProfile": "5 users at once, ramp 1->6 users/s for 20s, then hold 6 users/s for 20s"
-    },
-    {
-      "simulation": "AuthenticationRedirectSimulation",
-      "description": "Start the GitHub OAuth redirect flow without following the redirect.",
-      "injectionProfile": "3 users at once, ramp 1->4 users/s for 15s, then hold 4 users/s for 15s"
-    }
-  ],
-  "requests": [
-    {
-      "requestName": "list-books",
-      "requestCount": 195,
-      "okCount": 195,
-      "koCount": 0,
-      "koPercentage": 0.0,
-      "successfulRequestPercentage": 100.0,
-      "countPerSecond": 4.76,
-      "minMs": 7,
-      "p50Ms": 10,
-      "p75Ms": 12,
-      "p95Ms": 17,
-      "p99Ms": 114,
-      "maxMs": 114,
-      "meanMs": 13,
-      "stdDevMs": 18
-    },
-    {
-      "requestName": "search-books",
-      "requestCount": 195,
-      "okCount": 195,
-      "koCount": 0,
-      "koPercentage": 0.0,
-      "successfulRequestPercentage": 100.0,
-      "countPerSecond": 4.76,
-      "minMs": 6,
-      "p50Ms": 8,
-      "p75Ms": 11,
-      "p95Ms": 16,
-      "p99Ms": 39,
-      "maxMs": 45,
-      "meanMs": 10,
-      "stdDevMs": 6
-    },
-    {
-      "requestName": "lookup-localization-message",
-      "requestCount": 195,
-      "okCount": 195,
-      "koCount": 0,
-      "koPercentage": 0.0,
-      "successfulRequestPercentage": 100.0,
-      "countPerSecond": 4.76,
-      "minMs": 4,
-      "p50Ms": 6,
-      "p75Ms": 8,
-      "p95Ms": 12,
-      "p99Ms": 57,
-      "maxMs": 57,
-      "meanMs": 8,
-      "stdDevMs": 9
-    },
-    {
-      "requestName": "oauth2-github-redirect",
-      "requestCount": 100,
-      "okCount": 100,
-      "koCount": 0,
-      "koPercentage": 0.0,
-      "successfulRequestPercentage": 100.0,
-      "countPerSecond": 3.33,
-      "minMs": 7,
-      "p50Ms": 9,
-      "p75Ms": 9,
-      "p95Ms": 12,
-      "p99Ms": 63,
-      "maxMs": 63,
-      "meanMs": 11,
-      "stdDevMs": 11
-    }
-  ],
-  "notes": [
-    "This benchmark uses the packaged Docker image and a Dockerized PostgreSQL container.",
-    "The OAuth benchmark uses fake GitHub credentials because only client registration is needed for redirects.",
-    "AuthenticatedUserProfileSimulation remains excluded from automation because it requires a real authenticated session cookie."
-  ]
+  "capturedAt" : "2026-05-01T12:34:11.404440700Z",
+  "gitCommit" : "eb579324fc71287ca07b071f00f286893d3ec193",
+  "baseUrl" : "http://127.0.0.1:18080",
+  "javaVersion" : "25.0.3+9-LTS",
+  "activeProfiles" : [ "local", "oauth" ],
+  "simulations" : [ {
+    "simulation" : "PublicApiSimulation",
+    "description" : "List books, search books, and localization lookup against the public API.",
+    "injectionProfile" : "5 users at once, ramp 1->6 users/s for 20s, then hold 6 users/s for 20s"
+  }, {
+    "simulation" : "AuthenticationRedirectSimulation",
+    "description" : "Start the GitHub OAuth redirect flow without following the redirect.",
+    "injectionProfile" : "3 users at once, ramp 1->4 users/s for 15s, then hold 4 users/s for 15s"
+  } ],
+  "requests" : [ {
+    "requestName" : "list-books",
+    "requestCount" : 195,
+    "okCount" : 195,
+    "koCount" : 0,
+    "koPercentage" : 0.0,
+    "successfulRequestPercentage" : 100.0,
+    "countPerSecond" : 4.76,
+    "minMs" : 7,
+    "p50Ms" : 10,
+    "p75Ms" : 12,
+    "p95Ms" : 17,
+    "p99Ms" : 114,
+    "maxMs" : 114,
+    "meanMs" : 13,
+    "stdDevMs" : 18
+  }, {
+    "requestName" : "search-books",
+    "requestCount" : 195,
+    "okCount" : 195,
+    "koCount" : 0,
+    "koPercentage" : 0.0,
+    "successfulRequestPercentage" : 100.0,
+    "countPerSecond" : 4.76,
+    "minMs" : 6,
+    "p50Ms" : 8,
+    "p75Ms" : 11,
+    "p95Ms" : 16,
+    "p99Ms" : 39,
+    "maxMs" : 45,
+    "meanMs" : 10,
+    "stdDevMs" : 6
+  }, {
+    "requestName" : "lookup-localization-message",
+    "requestCount" : 195,
+    "okCount" : 195,
+    "koCount" : 0,
+    "koPercentage" : 0.0,
+    "successfulRequestPercentage" : 100.0,
+    "countPerSecond" : 4.76,
+    "minMs" : 4,
+    "p50Ms" : 6,
+    "p75Ms" : 8,
+    "p95Ms" : 12,
+    "p99Ms" : 57,
+    "maxMs" : 57,
+    "meanMs" : 8,
+    "stdDevMs" : 9
+  }, {
+    "requestName" : "oauth2-github-redirect",
+    "requestCount" : 100,
+    "okCount" : 100,
+    "koCount" : 0,
+    "koPercentage" : 0.0,
+    "successfulRequestPercentage" : 100.0,
+    "countPerSecond" : 3.33,
+    "minMs" : 7,
+    "p50Ms" : 9,
+    "p75Ms" : 9,
+    "p95Ms" : 12,
+    "p99Ms" : 63,
+    "maxMs" : 63,
+    "meanMs" : 11,
+    "stdDevMs" : 11
+  } ],
+  "notes" : [ "This benchmark uses the packaged Docker image and a Dockerized PostgreSQL container.", "The OAuth benchmark uses fake GitHub credentials because only client registration is needed for redirects.", "AuthenticatedUserProfileSimulation remains excluded from automation because it requires a real authenticated session cookie." ]
 }

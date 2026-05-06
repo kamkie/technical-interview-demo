@@ -3,6 +3,9 @@ package team.jit.technicalinterviewdemo.technical.security;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.web.DefaultRedirectStrategy;
@@ -12,10 +15,6 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 import team.jit.technicalinterviewdemo.business.audit.AuditAction;
 import team.jit.technicalinterviewdemo.business.audit.AuditLogService;
 import team.jit.technicalinterviewdemo.business.audit.AuditTargetType;
-
-import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class AuditingAuthenticationFailureHandler implements AuthenticationFailureHandler {
 

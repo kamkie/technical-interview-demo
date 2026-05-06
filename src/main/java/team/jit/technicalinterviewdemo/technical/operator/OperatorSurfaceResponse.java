@@ -2,10 +2,9 @@ package team.jit.technicalinterviewdemo.technical.operator;
 
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
 import team.jit.technicalinterviewdemo.business.audit.AuditLogResponse;
 import team.jit.technicalinterviewdemo.technical.info.TechnicalOverviewResponse;
-
-import java.util.List;
 
 @Schema(name = "OperatorSurfaceResponse", description = "ADMIN-only operational inspection surface.")
 public record OperatorSurfaceResponse(

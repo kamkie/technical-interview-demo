@@ -1,7 +1,6 @@
 package team.jit.technicalinterviewdemo.business.localization;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-
 import java.time.Instant;
 
 @Schema(description = "Localization message returned by the API.")

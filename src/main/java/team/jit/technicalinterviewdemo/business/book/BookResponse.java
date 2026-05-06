@@ -2,10 +2,9 @@ package team.jit.technicalinterviewdemo.business.book;
 
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
-import team.jit.technicalinterviewdemo.business.category.CategoryResponse;
-
 import java.util.Comparator;
 import java.util.List;
+import team.jit.technicalinterviewdemo.business.category.CategoryResponse;
 
 @Schema(name = "Book", description = "Book resource returned by the API.")
 public record BookResponse(

@@ -43,13 +43,13 @@ Cookie: technical-interview-demo-session={{sessionCookie}}
 Accept: application/json
 
 > {%
-    const csrfCookie = response.cookiesByName("XSRF-TOKEN")[0];
-    if (csrfCookie) {
-        client.global.set("csrfToken", csrfCookie.value);
-        client.log("Updated csrfToken from XSRF-TOKEN.");
-    } else {
-        client.log("No XSRF-TOKEN cookie was returned; csrfToken was not updated.");
-    }
+const csrfCookie = response.cookiesByName("XSRF-TOKEN")[0];
+if (csrfCookie) {
+  client.global.set("csrfToken", csrfCookie.value);
+  client.log("Updated csrfToken from XSRF-TOKEN.");
+} else {
+  client.log("No XSRF-TOKEN cookie was returned; csrfToken was not updated.");
+}
 %}
 
 ### App authentication - verify the authenticated app session cookie
@@ -67,8 +67,8 @@ Cookie: technical-interview-demo-session={{sessionCookie}}
 X-XSRF-TOKEN: {{csrfToken}}
 
 > {%
-    client.global.clear("csrfToken");
-    client.log("Cleared csrfToken after logout. Run the authenticated GET /api/session request before the next unsafe write.");
+client.global.clear("csrfToken");
+client.log("Cleared csrfToken after logout. Run the authenticated GET /api/session request before the next unsafe write.");
 %}
 
 ### Next step

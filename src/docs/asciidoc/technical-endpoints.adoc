@@ -61,11 +61,9 @@ include::{snippets}/actuator/get-health-readiness/response-fields.adoc[]
 
 == `GET /actuator/prometheus`
 
-Returns Prometheus-formatted metrics for scraping.
-This includes the default Spring and JVM meters, cache activity meters for the in-memory caches, and custom application meters under the `technical.interview.demo.*` prefix.
+Returns Prometheus-formatted metrics for scraping. This includes the default Spring and JVM meters, cache activity meters for the in-memory caches, and custom application meters under the `technical.interview.demo.*` prefix.
 
-This endpoint is intended for trusted deployment scraping such as the in-cluster ServiceMonitor assets checked into this repository.
-It is supported for that purpose, but it is not part of the internet-public endpoint contract.
+This endpoint is intended for trusted deployment scraping such as the in-cluster ServiceMonitor assets checked into this repository. It is supported for that purpose, but it is not part of the internet-public endpoint contract.
 
 include::{snippets}/actuator/get-prometheus/curl-request.adoc[]
 include::{snippets}/actuator/get-prometheus/http-request.adoc[]

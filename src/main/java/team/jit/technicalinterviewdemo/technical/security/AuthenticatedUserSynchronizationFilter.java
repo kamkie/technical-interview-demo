@@ -5,11 +5,12 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.filter.OncePerRequestFilter;
-import team.jit.technicalinterviewdemo.business.user.CurrentUserAccountService;
 
 import java.io.IOException;
+
+import lombok.RequiredArgsConstructor;
+import team.jit.technicalinterviewdemo.business.user.CurrentUserAccountService;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @RequiredArgsConstructor
 public class AuthenticatedUserSynchronizationFilter extends OncePerRequestFilter {

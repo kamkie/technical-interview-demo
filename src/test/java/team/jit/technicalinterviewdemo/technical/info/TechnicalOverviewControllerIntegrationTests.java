@@ -1,17 +1,17 @@
 package team.jit.technicalinterviewdemo.technical.info;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.SpringBootVersion;
-import org.springframework.core.SpringVersion;
-import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
-import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
-
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.SpringBootVersion;
+import org.springframework.core.SpringVersion;
+import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
+import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
 
 @MockMvcIntegrationSpringBootTest
 class TechnicalOverviewControllerIntegrationTests extends AbstractMockMvcIntegrationTest {

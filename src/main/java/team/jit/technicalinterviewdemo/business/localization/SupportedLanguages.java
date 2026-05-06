@@ -1,9 +1,8 @@
 package team.jit.technicalinterviewdemo.business.localization;
 
-import team.jit.technicalinterviewdemo.business.localization.seed.LocalizationSeedData;
-
 import java.util.List;
 import java.util.Set;
+import team.jit.technicalinterviewdemo.business.localization.seed.LocalizationSeedData;
 
 public final class SupportedLanguages {
 

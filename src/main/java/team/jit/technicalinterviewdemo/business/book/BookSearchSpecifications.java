@@ -1,9 +1,10 @@
 package team.jit.technicalinterviewdemo.business.book;
 
 import jakarta.persistence.criteria.JoinType;
-import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
+
+import org.springframework.data.jpa.domain.Specification;
 
 public final class BookSearchSpecifications {
 

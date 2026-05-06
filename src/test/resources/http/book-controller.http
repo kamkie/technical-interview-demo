@@ -20,13 +20,13 @@ Cookie: technical-interview-demo-session={{sessionCookie}}
 Accept: application/json
 
 > {%
-    const csrfCookie = response.cookiesByName("XSRF-TOKEN")[0];
-    if (csrfCookie) {
-        client.global.set("csrfToken", csrfCookie.value);
-        client.log("Updated csrfToken from XSRF-TOKEN.");
-    } else {
-        client.log("No XSRF-TOKEN cookie was returned; csrfToken was not updated.");
-    }
+const csrfCookie = response.cookiesByName("XSRF-TOKEN")[0];
+if (csrfCookie) {
+  client.global.set("csrfToken", csrfCookie.value);
+  client.log("Updated csrfToken from XSRF-TOKEN.");
+} else {
+  client.log("No XSRF-TOKEN cookie was returned; csrfToken was not updated.");
+}
 %}
 
 ### BookController - list books with pagination and sorting
@@ -42,12 +42,12 @@ GET {{baseUrl}}/api/books?page=0&size=1&sort=id,asc
 Accept: application/json
 
 > {%
-    const books = response.body.content;
-    if (books && books.length > 0) {
-        const firstBook = books[0];
-        client.global.set("bookId", String(firstBook.id));
-        client.global.set("bookVersion", String(firstBook.version));
-    }
+const books = response.body.content;
+if (books && books.length > 0) {
+  const firstBook = books[0];
+  client.global.set("bookId", String(firstBook.id));
+  client.global.set("bookVersion", String(firstBook.version));
+}
 %}
 
 ### BookController - get book by id
@@ -63,20 +63,17 @@ Content-Type: application/json
 Accept: application/json
 
 {
-    "title": "Spring in Action",
-    "author": "Craig Walls",
-    "isbn": "{{demoBookIsbn}}",
-    "publicationYear": 2022,
-    "categories": [
-        "Java",
-        "Software Engineering"
-    ]
+  "title": "Spring in Action",
+  "author": "Craig Walls",
+  "isbn": "{{demoBookIsbn}}",
+  "publicationYear": 2022,
+  "categories": ["Java", "Software Engineering"]
 }
 > {%
-    if (response.status === 201) {
-        client.global.set("writeBookId", String(response.body.id));
-        client.global.set("writeBookVersion", String(response.body.version));
-    }
+if (response.status === 201) {
+  client.global.set("writeBookId", String(response.body.id));
+  client.global.set("writeBookVersion", String(response.body.version));
+}
 %}
 
 ### BookController - update the book created above (run create first)
@@ -87,18 +84,16 @@ Content-Type: application/json
 Accept: application/json
 
 {
-    "title": "Spring in Action, Second Edition",
-    "author": "Craig Walls",
-    "version": {{writeBookVersion}},
-    "publicationYear": 2026,
-    "categories": [
-        "Java"
-    ]
+  "title": "Spring in Action, Second Edition",
+  "author": "Craig Walls",
+  "version": {{writeBookVersion}},
+  "publicationYear": 2026,
+  "categories": ["Java"]
 }
 > {%
-    if (response.status === 200) {
-        client.global.set("writeBookVersion", String(response.body.version));
-    }
+if (response.status === 200) {
+  client.global.set("writeBookVersion", String(response.body.version));
+}
 %}
 
 ### BookController - delete the book created above (run create first)

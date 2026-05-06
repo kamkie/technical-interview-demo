@@ -10,12 +10,9 @@ This page documents the audit review endpoint exposed by `AuditLogController`.
 
 == `GET /api/admin/audit-logs`
 
-Lists recorded audit entries in a paginated response.
-Requires an authenticated session with the `ADMIN` role.
-Supports optional exact-match `targetType`, `action`, and `actorLogin` filters, plus `page`, `size`, and repeated `sort` query parameters.
+Lists recorded audit entries in a paginated response. Requires an authenticated session with the `ADMIN` role. Supports optional exact-match `targetType`, `action`, and `actorLogin` filters, plus `page`, `size`, and repeated `sort` query parameters.
 
-The response exposes compact structured `details` for role-management changes, category writes, and owned authentication lifecycle events.
-Audit retention and archival remain deployment responsibilities; the application does not purge audit rows itself.
+The response exposes compact structured `details` for role-management changes, category writes, and owned authentication lifecycle events. Audit retention and archival remain deployment responsibilities; the application does not purge audit rows itself.
 
 include::{snippets}/audit/list-audit-logs/curl-request.adoc[]
 include::{snippets}/audit/list-audit-logs/http-request.adoc[]

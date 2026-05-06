@@ -1,16 +1,16 @@
 package team.jit.technicalinterviewdemo.technical.docs;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import org.junit.jupiter.api.Test;
-import team.jit.technicalinterviewdemo.testing.AbstractRandomPortIntegrationTest;
-import team.jit.technicalinterviewdemo.testing.RandomPortIntegrationSpringBootTest;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+import team.jit.technicalinterviewdemo.testing.AbstractRandomPortIntegrationTest;
+import team.jit.technicalinterviewdemo.testing.RandomPortIntegrationSpringBootTest;
 
 @RandomPortIntegrationSpringBootTest
 class OpenApiCompatibilityIntegrationTests extends AbstractRandomPortIntegrationTest {

@@ -17,13 +17,13 @@ Cookie: technical-interview-demo-session={{sessionCookie}}
 Accept: application/json
 
 > {%
-    const csrfCookie = response.cookiesByName("XSRF-TOKEN")[0];
-    if (csrfCookie) {
-        client.global.set("csrfToken", csrfCookie.value);
-        client.log("Updated csrfToken from XSRF-TOKEN.");
-    } else {
-        client.log("No XSRF-TOKEN cookie was returned; csrfToken was not updated.");
-    }
+const csrfCookie = response.cookiesByName("XSRF-TOKEN")[0];
+if (csrfCookie) {
+  client.global.set("csrfToken", csrfCookie.value);
+  client.log("Updated csrfToken from XSRF-TOKEN.");
+} else {
+  client.log("No XSRF-TOKEN cookie was returned; csrfToken was not updated.");
+}
 %}
 
 ### LocalizationController - list localizations with pagination and sorting
@@ -35,9 +35,9 @@ GET {{baseUrl}}/api/localizations?messageKey=error.book.not_found&language=en
 Accept: application/json
 
 > {%
-    if (response.status === 200 && response.body.content.length > 0) {
-        client.global.set("localizationId", String(response.body.content[0].id));
-    }
+if (response.status === 200 && response.body.content.length > 0) {
+  client.global.set("localizationId", String(response.body.content[0].id));
+}
 %}
 
 ### LocalizationController - get localization message by id
@@ -57,15 +57,15 @@ Content-Type: application/json
 Accept: application/json
 
 {
-    "messageKey": "{{demoMessageKey}}",
-    "language": "fr",
-    "messageText": "Le livre a ete cree.",
-    "description": "French success message for demo requests."
+  "messageKey": "{{demoMessageKey}}",
+  "language": "fr",
+  "messageText": "Le livre a ete cree.",
+  "description": "French success message for demo requests."
 }
 > {%
-    if (response.status === 201) {
-        client.global.set("writeLocalizationId", String(response.body.id));
-    }
+if (response.status === 201) {
+  client.global.set("writeLocalizationId", String(response.body.id));
+}
 %}
 
 ### LocalizationController - update the localization message created above (run create first)
@@ -76,10 +76,10 @@ Content-Type: application/json
 Accept: application/json
 
 {
-    "messageKey": "{{demoMessageKey}}",
-    "language": "fr",
-    "messageText": "Le livre a ete cree avec succes.",
-    "description": "Updated French success message for demo requests."
+  "messageKey": "{{demoMessageKey}}",
+  "language": "fr",
+  "messageText": "Le livre a ete cree avec succes.",
+  "description": "Updated French success message for demo requests."
 }
 
 ### LocalizationController - delete the localization created above (run create first)

@@ -1,25 +1,5 @@
 package team.jit.technicalinterviewdemo.business.user;
 
-import io.micrometer.core.instrument.MeterRegistry;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
-import org.springframework.http.MediaType;
-import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
-import team.jit.technicalinterviewdemo.business.audit.AuditLogRepository;
-import team.jit.technicalinterviewdemo.business.book.BookRepository;
-import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
-import team.jit.technicalinterviewdemo.technical.cache.CacheNames;
-import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
-import team.jit.technicalinterviewdemo.testing.CacheTestSupport;
-import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
-import team.jit.technicalinterviewdemo.testing.SecurityTestSupport.BrowserSession;
-
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.hamcrest.Matchers.endsWith;
@@ -30,6 +10,27 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminBrowserSession;
 import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.authenticatedBrowserSession;
+
+import io.micrometer.core.instrument.MeterRegistry;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.http.MediaType;
+import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
+import team.jit.technicalinterviewdemo.business.audit.AuditLogRepository;
+import team.jit.technicalinterviewdemo.business.book.BookRepository;
+import team.jit.technicalinterviewdemo.technical.cache.CacheNames;
+import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
+import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
+import team.jit.technicalinterviewdemo.testing.CacheTestSupport;
+import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
+import team.jit.technicalinterviewdemo.testing.SecurityTestSupport.BrowserSession;
 
 @MockMvcIntegrationSpringBootTest
 class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {

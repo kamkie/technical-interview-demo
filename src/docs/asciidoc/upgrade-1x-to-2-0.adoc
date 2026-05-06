@@ -8,8 +8,7 @@ xref:index.adoc[Back to API overview]
 
 This guide is for clients moving from the `1.x` contract to the current `2.0` same-site browser and `/api/**` deployment boundary.
 
-It is migration guidance, not a second source of truth for the steady-state `2.0` contract.
-Use xref:index.adoc[the API overview] and xref:session-controller.adoc[the session API docs] for the standing `2.0` contract after migration.
+It is migration guidance, not a second source of truth for the steady-state `2.0` contract. Use xref:index.adoc[the API overview] and xref:session-controller.adoc[the session API docs] for the standing `2.0` contract after migration.
 
 == What Changed
 

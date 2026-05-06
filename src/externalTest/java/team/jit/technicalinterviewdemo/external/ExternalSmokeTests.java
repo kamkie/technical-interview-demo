@@ -1,18 +1,18 @@
 package team.jit.technicalinterviewdemo.external;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-import java.net.http.HttpResponse;
-import java.util.Map;
-import java.util.stream.StreamSupport;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import java.io.IOException;
+import java.net.http.HttpResponse;
+import java.util.Map;
+import java.util.stream.StreamSupport;
+
+import org.junit.jupiter.api.Test;
 
 class ExternalSmokeTests extends ExternalHttpTestSupport {
 
@@ -223,10 +223,10 @@ class ExternalSmokeTests extends ExternalHttpTestSupport {
                             CSRF_COOKIE_NAME, csrfToken
                     ),
                     """
-                            {
-                              "preferredLanguage": "pl"
-                            }
-                            """
+                    {
+                      "preferredLanguage": "pl"
+                    }
+                    """
             );
             JsonNode account = jsonBody(response);
 

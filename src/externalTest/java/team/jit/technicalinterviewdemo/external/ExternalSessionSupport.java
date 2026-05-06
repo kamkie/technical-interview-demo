@@ -1,9 +1,12 @@
 package team.jit.technicalinterviewdemo.external;
 
+import java.util.Map;
+import javax.sql.DataSource;
+
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextImpl;
@@ -13,9 +16,6 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.session.Session;
 import org.springframework.session.SessionRepository;
 import team.jit.technicalinterviewdemo.technical.security.SessionConfiguration;
-
-import javax.sql.DataSource;
-import java.util.Map;
 
 final class ExternalSessionSupport implements AutoCloseable {
 
@@ -89,11 +89,11 @@ final class ExternalSessionSupport implements AutoCloseable {
     int sessionAttributeCount(String sessionId) {
         Integer count = jdbcTemplate.queryForObject(
                 """
-                        SELECT COUNT(*)
-                        FROM SPRING_SESSION_ATTRIBUTES attributes
-                        JOIN SPRING_SESSION sessions ON sessions.PRIMARY_ID = attributes.SESSION_PRIMARY_ID
-                        WHERE sessions.SESSION_ID = ?
-                        """,
+                SELECT COUNT(*)
+                FROM SPRING_SESSION_ATTRIBUTES attributes
+                JOIN SPRING_SESSION sessions ON sessions.PRIMARY_ID = attributes.SESSION_PRIMARY_ID
+                WHERE sessions.SESSION_ID = ?
+                """,
                 Integer.class,
                 sessionId
         );
@@ -115,10 +115,10 @@ final class ExternalSessionSupport implements AutoCloseable {
     boolean hasFlywaySchemaHistoryTable() {
         Integer count = jdbcTemplate.queryForObject(
                 """
-                        SELECT COUNT(*)
-                        FROM information_schema.tables
-                        WHERE table_schema = 'public' AND table_name = 'flyway_schema_history'
-                        """,
+                SELECT COUNT(*)
+                FROM information_schema.tables
+                WHERE table_schema = 'public' AND table_name = 'flyway_schema_history'
+                """,
                 Integer.class
         );
         return count != null && count == 1;

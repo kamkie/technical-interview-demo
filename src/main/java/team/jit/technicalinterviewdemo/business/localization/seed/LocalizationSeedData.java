@@ -1,9 +1,8 @@
 package team.jit.technicalinterviewdemo.business.localization.seed;
 
-import team.jit.technicalinterviewdemo.business.localization.Localization;
-
 import java.util.ArrayList;
 import java.util.List;
+import team.jit.technicalinterviewdemo.business.localization.Localization;
 
 public final class LocalizationSeedData {
 

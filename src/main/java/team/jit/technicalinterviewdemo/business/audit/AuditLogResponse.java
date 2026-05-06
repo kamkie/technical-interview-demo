@@ -1,7 +1,6 @@
 package team.jit.technicalinterviewdemo.business.audit;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-
 import java.time.Instant;
 import java.util.Map;
 

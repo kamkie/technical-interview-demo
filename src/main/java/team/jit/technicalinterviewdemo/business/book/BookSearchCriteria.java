@@ -1,11 +1,11 @@
 package team.jit.technicalinterviewdemo.business.book;
 
-import team.jit.technicalinterviewdemo.technical.api.InvalidRequestException;
-
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
+
+import team.jit.technicalinterviewdemo.technical.api.InvalidRequestException;
 
 record BookSearchCriteria(
         String title,

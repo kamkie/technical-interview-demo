@@ -2,6 +2,10 @@ package team.jit.technicalinterviewdemo.technical.info;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import io.micrometer.core.instrument.MeterRegistry;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.flywaydb.core.Flyway;
 import org.hibernate.Version;
@@ -14,13 +18,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.core.SpringSecurityCoreVersion;
 import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
 import org.springframework.stereotype.Service;
-import team.jit.technicalinterviewdemo.technical.security.SameSiteCsrfContract;
 import team.jit.technicalinterviewdemo.technical.security.SecuritySettingsProperties;
-
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import team.jit.technicalinterviewdemo.technical.security.SameSiteCsrfContract;
 
 @Service
 @RequiredArgsConstructor

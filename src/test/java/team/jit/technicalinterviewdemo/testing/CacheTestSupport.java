@@ -1,11 +1,11 @@
 package team.jit.technicalinterviewdemo.testing;
 
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 
 public final class CacheTestSupport {
 

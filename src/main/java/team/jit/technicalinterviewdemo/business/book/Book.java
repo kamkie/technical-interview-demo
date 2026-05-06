@@ -1,14 +1,25 @@
 package team.jit.technicalinterviewdemo.business.book;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 
-import jakarta.persistence.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import team.jit.technicalinterviewdemo.business.category.Category;
-
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Getter
 @Setter

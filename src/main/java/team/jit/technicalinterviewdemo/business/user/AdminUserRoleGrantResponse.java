@@ -1,7 +1,6 @@
 package team.jit.technicalinterviewdemo.business.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-
 import java.time.Instant;
 
 @Schema(name = "AdminUserRoleGrantResponse", description = "Persisted provenance for one granted application role.")
