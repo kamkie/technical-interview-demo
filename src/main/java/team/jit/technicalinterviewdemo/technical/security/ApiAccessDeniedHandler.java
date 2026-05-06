@@ -13,8 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.web.csrf.CsrfException;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.csrf.CsrfException;
 import org.springframework.stereotype.Component;
 import team.jit.technicalinterviewdemo.technical.api.ApiProblemFactory;
 
@@ -28,29 +28,13 @@ public class ApiAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            AccessDeniedException accessDeniedException
+                       HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException
     ) throws IOException, ServletException {
-        ProblemDetail problemDetail = accessDeniedException instanceof CsrfException
-                ? apiProblemFactory.clientProblem(
-                        HttpStatus.FORBIDDEN,
-                        "Invalid CSRF Token",
-                        "A valid CSRF token is required to perform this operation.",
-                        "error.request.csrf_invalid",
-                        request,
-                        Map.of("exception", accessDeniedException.getClass().getSimpleName())
-                )
-                : apiProblemFactory.clientProblem(
-                        HttpStatus.FORBIDDEN,
-                        "Forbidden",
-                        accessDeniedException.getMessage() == null || accessDeniedException.getMessage().isBlank()
-                                ? "Access is denied."
-                                : accessDeniedException.getMessage(),
-                        "error.request.forbidden",
-                        request,
-                        Map.of("exception", accessDeniedException.getClass().getSimpleName())
-                );
+        ProblemDetail problemDetail = accessDeniedException instanceof CsrfException ? apiProblemFactory.clientProblem(
+                HttpStatus.FORBIDDEN, "Invalid CSRF Token", "A valid CSRF token is required to perform this operation.", "error.request.csrf_invalid", request, Map.of("exception", accessDeniedException.getClass().getSimpleName())
+        ) : apiProblemFactory.clientProblem(
+                HttpStatus.FORBIDDEN, "Forbidden", accessDeniedException.getMessage() == null || accessDeniedException.getMessage().isBlank() ? "Access is denied." : accessDeniedException.getMessage(), "error.request.forbidden", request, Map.of("exception", accessDeniedException.getClass().getSimpleName())
+        );
         writeProblem(response, problemDetail, HttpStatus.FORBIDDEN);
     }
 

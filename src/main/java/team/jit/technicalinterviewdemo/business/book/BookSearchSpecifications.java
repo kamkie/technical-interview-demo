@@ -1,9 +1,7 @@
 package team.jit.technicalinterviewdemo.business.book;
 
 import jakarta.persistence.criteria.JoinType;
-
 import java.util.List;
-
 import org.springframework.data.jpa.domain.Specification;
 
 public final class BookSearchSpecifications {
@@ -30,8 +28,7 @@ public final class BookSearchSpecifications {
             return null;
         }
 
-        return (root, query, criteriaBuilder) ->
-                criteriaBuilder.like(criteriaBuilder.lower(root.get(property)), "%" + normalizedValue + "%");
+        return (root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get(property)), "%" + normalizedValue + "%");
     }
 
     private static Specification<Book> publicationYearMatches(Integer year, Integer yearFrom, Integer yearTo) {

@@ -49,4 +49,3 @@ volumes:
 networks:
   dev-network:
     driver: bridge
-

@@ -19,7 +19,6 @@ class DocumentationWebConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/docs/**")
-                .addResourceLocations(CLASSPATH_DOCS_LOCATION, GENERATED_DOCS_LOCATION);
+        registry.addResourceHandler("/docs/**").addResourceLocations(CLASSPATH_DOCS_LOCATION, GENERATED_DOCS_LOCATION);
     }
 }

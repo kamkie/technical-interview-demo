@@ -5,13 +5,12 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import jakarta.servlet.http.Cookie;
 import java.util.Map;
 import java.util.UUID;
-
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.session.Session;
 import org.springframework.session.SessionRepository;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
@@ -35,8 +34,7 @@ public final class SecurityTestSupport {
     }
 
     public static <S extends Session> BrowserSession authenticatedBrowserSession(
-            SessionRepository<S> sessionRepository,
-            String login
+                                                                                 SessionRepository<S> sessionRepository, String login
     ) {
         return browserSession(createAuthenticatedSession(sessionRepository, login), login);
     }
@@ -68,8 +66,7 @@ public final class SecurityTestSupport {
     public static <S extends Session> String createAuthenticatedSession(SessionRepository<S> sessionRepository, String login) {
         S session = sessionRepository.createSession();
         session.setAttribute(
-                HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
-                new SecurityContextImpl(oauthAuthentication(login))
+                HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, new SecurityContextImpl(oauthAuthentication(login))
         );
         sessionRepository.save(session);
         return session.getId();
@@ -88,13 +85,9 @@ public final class SecurityTestSupport {
 
     private static OAuth2AuthenticationToken oauthAuthentication(String login) {
         DefaultOAuth2User oauth2User = new DefaultOAuth2User(
-                AuthorityUtils.createAuthorityList("ROLE_USER"),
-                Map.of(
-                        "login", login,
-                        "name", login + " display",
-                        "email", login + "@example.test"
-                ),
-                "login"
+                AuthorityUtils.createAuthorityList("ROLE_USER"), Map.of(
+                        "login", login, "name", login + " display", "email", login + "@example.test"
+                ), "login"
         );
         return new OAuth2AuthenticationToken(oauth2User, oauth2User.getAuthorities(), "github");
     }

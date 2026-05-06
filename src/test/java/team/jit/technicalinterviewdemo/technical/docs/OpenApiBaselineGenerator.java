@@ -7,12 +7,11 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.server.context.WebServerApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
-import team.jit.technicalinterviewdemo.testing.PostgresTestcontainersConfiguration;
 import team.jit.technicalinterviewdemo.TechnicalInterviewDemoApplication;
+import team.jit.technicalinterviewdemo.testing.PostgresTestcontainersConfiguration;
 
 public final class OpenApiBaselineGenerator {
 
@@ -24,17 +23,11 @@ public final class OpenApiBaselineGenerator {
     public static void main(String[] args) throws Exception {
         Path outputPath = resolveOutputPath(args);
         try (ConfigurableApplicationContext context = new SpringApplicationBuilder(
-                TechnicalInterviewDemoApplication.class,
-                PostgresTestcontainersConfiguration.class
-        )
-                .profiles("test")
-                .run("--server.port=0")) {
+                TechnicalInterviewDemoApplication.class, PostgresTestcontainersConfiguration.class
+        ).profiles("test").run("--server.port=0")) {
             int port = ((WebServerApplicationContext) context).getWebServer().getPort();
             HttpResponse<String> response = HTTP_CLIENT.send(
-                    HttpRequest.newBuilder(URI.create("http://localhost:" + port + "/v3/api-docs"))
-                            .GET()
-                            .build(),
-                    HttpResponse.BodyHandlers.ofString()
+                    HttpRequest.newBuilder(URI.create("http://localhost:" + port + "/v3/api-docs")).GET().build(), HttpResponse.BodyHandlers.ofString()
             );
             if (response.statusCode() != 200) {
                 throw new IllegalStateException("Expected 200 from /v3/api-docs but got " + response.statusCode());
@@ -42,9 +35,7 @@ public final class OpenApiBaselineGenerator {
 
             Files.createDirectories(outputPath.getParent());
             Files.writeString(
-                    outputPath,
-                    OpenApiContractSupport.normalizeToPrettyJson(response.body()) + System.lineSeparator(),
-                    StandardCharsets.UTF_8
+                    outputPath, OpenApiContractSupport.normalizeToPrettyJson(response.body()) + System.lineSeparator(), StandardCharsets.UTF_8
             );
         }
     }

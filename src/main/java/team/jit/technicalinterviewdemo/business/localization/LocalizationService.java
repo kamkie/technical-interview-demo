@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.Cache;
@@ -70,14 +69,12 @@ public class LocalizationService {
 
     public Localization findById(Long id) {
         applicationMetrics.recordLocalizationOperation("get");
-        return localizationRepository.findById(id)
-                .orElseThrow(() -> new LocalizationNotFoundException(id));
+        return localizationRepository.findById(id).orElseThrow(() -> new LocalizationNotFoundException(id));
     }
 
     public Localization findByMessageKeyAndLanguage(String messageKey, String language) {
         applicationMetrics.recordLocalizationOperation("lookupExact");
-        return findMessage(normalizeMessageKey(messageKey), normalizeSupportedLanguage(language))
-                .orElseThrow(() -> new LocalizationNotFoundException(messageKey, language));
+        return findMessage(normalizeMessageKey(messageKey), normalizeSupportedLanguage(language)).orElseThrow(() -> new LocalizationNotFoundException(messageKey, language));
     }
 
     public String getMessage(String messageKey, String language) {
@@ -96,9 +93,7 @@ public class LocalizationService {
 
     public Localization findByMessageKeyForCurrentLanguageWithFallback(String messageKey) {
         return findByMessageKeyAndLanguageWithFallback(
-                messageKey,
-                localizationContext.resolveCurrentLanguageOrDefault(),
-                RequestLanguageResolver.DEFAULT_LANGUAGE
+                messageKey, localizationContext.resolveCurrentLanguageOrDefault(), RequestLanguageResolver.DEFAULT_LANGUAGE
         );
     }
 
@@ -120,27 +115,16 @@ public class LocalizationService {
         validateUniqueMessage(messageKey, language, null);
 
         Localization message = new Localization(
-                messageKey,
-                language,
-                request.messageText(),
-                request.description()
+                messageKey, language, request.messageText(), request.description()
         );
         Localization savedMessage = localizationRepository.saveAndFlush(message);
         evictLocalizationCaches();
         applicationMetrics.recordLocalizationOperation("create");
         auditLogService.record(
-                AuditTargetType.LOCALIZATION_MESSAGE,
-                savedMessage.getId(),
-                AuditAction.CREATE,
-                "Created localization message '%s' in language %s."
-                        .formatted(savedMessage.getMessageKey(), savedMessage.getLanguage()),
-                auditDetails(savedMessage)
+                AuditTargetType.LOCALIZATION_MESSAGE, savedMessage.getId(), AuditAction.CREATE, "Created localization message '%s' in language %s.".formatted(savedMessage.getMessageKey(), savedMessage.getLanguage()), auditDetails(savedMessage)
         );
         log.info(
-                "Created localization message id={} key={} language={}",
-                savedMessage.getId(),
-                savedMessage.getMessageKey(),
-                savedMessage.getLanguage()
+                "Created localization message id={} key={} language={}", savedMessage.getId(), savedMessage.getMessageKey(), savedMessage.getLanguage()
         );
         return savedMessage;
     }
@@ -162,18 +146,10 @@ public class LocalizationService {
         evictLocalizationCaches();
         applicationMetrics.recordLocalizationOperation("update");
         auditLogService.record(
-                AuditTargetType.LOCALIZATION_MESSAGE,
-                updatedMessage.getId(),
-                AuditAction.UPDATE,
-                "Updated localization message '%s' in language %s."
-                        .formatted(updatedMessage.getMessageKey(), updatedMessage.getLanguage()),
-                auditDetails(updatedMessage)
+                AuditTargetType.LOCALIZATION_MESSAGE, updatedMessage.getId(), AuditAction.UPDATE, "Updated localization message '%s' in language %s.".formatted(updatedMessage.getMessageKey(), updatedMessage.getLanguage()), auditDetails(updatedMessage)
         );
         log.info(
-                "Updated localization message id={} key={} language={}",
-                updatedMessage.getId(),
-                updatedMessage.getMessageKey(),
-                updatedMessage.getLanguage()
+                "Updated localization message id={} key={} language={}", updatedMessage.getId(), updatedMessage.getMessageKey(), updatedMessage.getLanguage()
         );
         return updatedMessage;
     }
@@ -186,12 +162,7 @@ public class LocalizationService {
         evictLocalizationCaches();
         applicationMetrics.recordLocalizationOperation("delete");
         auditLogService.record(
-                AuditTargetType.LOCALIZATION_MESSAGE,
-                id,
-                AuditAction.DELETE,
-                "Deleted localization message '%s' in language %s."
-                        .formatted(message.getMessageKey(), message.getLanguage()),
-                auditDetails(message)
+                AuditTargetType.LOCALIZATION_MESSAGE, id, AuditAction.DELETE, "Deleted localization message '%s' in language %s.".formatted(message.getMessageKey(), message.getLanguage()), auditDetails(message)
         );
         log.info("Deleted localization message id={} key={} language={}", id, message.getMessageKey(), message.getLanguage());
     }
@@ -201,18 +172,13 @@ public class LocalizationService {
     }
 
     private Localization resolveMessageWithFallback(LocalizationLookupRequest lookupRequest) {
-        return findMessage(lookupRequest.normalizedMessageKey(), lookupRequest.normalizedLanguage())
-                .or(() -> findMessage(lookupRequest.normalizedMessageKey(), lookupRequest.normalizedFallbackLanguage()))
-                .orElseThrow(() -> new LocalizationNotFoundException(
-                        lookupRequest.requestedMessageKey(),
-                        lookupRequest.requestedLanguage(),
-                        lookupRequest.requestedFallbackLanguage()
-                ));
+        return findMessage(lookupRequest.normalizedMessageKey(), lookupRequest.normalizedLanguage()).or(() -> findMessage(lookupRequest.normalizedMessageKey(), lookupRequest.normalizedFallbackLanguage())).orElseThrow(() -> new LocalizationNotFoundException(
+                lookupRequest.requestedMessageKey(), lookupRequest.requestedLanguage(), lookupRequest.requestedFallbackLanguage()
+        ));
     }
 
     private Localization requireMessage(Long id) {
-        return localizationRepository.findById(id)
-                .orElseThrow(() -> new LocalizationNotFoundException(id));
+        return localizationRepository.findById(id).orElseThrow(() -> new LocalizationNotFoundException(id));
     }
 
     private String normalizeMessageKey(String messageKey) {
@@ -249,19 +215,13 @@ public class LocalizationService {
 
     private LocalizationFilters normalizeFilters(String messageKey, String language) {
         return new LocalizationFilters(
-                normalizeOptionalMessageKey(messageKey),
-                normalizeOptionalSupportedLanguage(language)
+                normalizeOptionalMessageKey(messageKey), normalizeOptionalSupportedLanguage(language)
         );
     }
 
     private LocalizationLookupRequest normalizeLookupRequest(String messageKey, String language, String fallbackLanguage) {
         return new LocalizationLookupRequest(
-                messageKey,
-                language,
-                fallbackLanguage,
-                normalizeMessageKey(messageKey),
-                normalizeLanguage(language),
-                normalizeSupportedLanguage(fallbackLanguage)
+                messageKey, language, fallbackLanguage, normalizeMessageKey(messageKey), normalizeLanguage(language), normalizeSupportedLanguage(fallbackLanguage)
         );
     }
 
@@ -282,8 +242,7 @@ public class LocalizationService {
         for (Sort.Order order : sort) {
             if (!ALLOWED_SORT_FIELDS.contains(order.getProperty())) {
                 throw new InvalidRequestException(
-                        "Sort field '%s' is not supported. Use one of: id, messageKey, language, createdAt, updatedAt."
-                                .formatted(order.getProperty())
+                        "Sort field '%s' is not supported. Use one of: id, messageKey, language, createdAt, updatedAt.".formatted(order.getProperty())
                 );
             }
         }
@@ -291,9 +250,7 @@ public class LocalizationService {
     }
 
     private void validateUniqueMessage(String messageKey, String language, Long id) {
-        boolean exists = id == null
-                ? localizationRepository.existsByMessageKeyAndLanguage(messageKey, language)
-                : localizationRepository.existsByMessageKeyAndLanguageAndIdNot(messageKey, language, id);
+        boolean exists = id == null ? localizationRepository.existsByMessageKeyAndLanguage(messageKey, language) : localizationRepository.existsByMessageKeyAndLanguageAndIdNot(messageKey, language, id);
         if (exists) {
             throw new DuplicateLocalizationException(messageKey, language);
         }
@@ -320,30 +277,21 @@ public class LocalizationService {
 
     private Localization getCachedLookup(LocalizationLookupRequest lookupRequest) {
         return getCachedValue(
-                CacheNames.LOCALIZATION_LOOKUPS,
-                lookupRequest.cacheKey(),
-                Localization.class,
-                () -> resolveMessageWithFallback(lookupRequest)
+                CacheNames.LOCALIZATION_LOOKUPS, lookupRequest.cacheKey(), Localization.class, () -> resolveMessageWithFallback(lookupRequest)
         );
     }
 
     @SuppressWarnings("unchecked")
     private Map<String, String> getCachedMessageMap(String normalizedLanguage) {
         return (Map<String, String>) getCachedSupportedLanguageValue(
-                CacheNames.LOCALIZATION_MESSAGE_MAPS,
-                normalizedLanguage,
-                Map.class,
-                () -> loadMessagesByKey(normalizedLanguage)
+                CacheNames.LOCALIZATION_MESSAGE_MAPS, normalizedLanguage, Map.class, () -> loadMessagesByKey(normalizedLanguage)
         );
     }
 
     @SuppressWarnings("unchecked")
     private List<Localization> getCachedLocalizationList(String normalizedLanguage) {
         return (List<Localization>) getCachedSupportedLanguageValue(
-                CacheNames.LOCALIZATION_LISTS,
-                normalizedLanguage,
-                List.class,
-                () -> loadLocalizationsByLanguage(normalizedLanguage)
+                CacheNames.LOCALIZATION_LISTS, normalizedLanguage, List.class, () -> loadLocalizationsByLanguage(normalizedLanguage)
         );
     }
 
@@ -360,10 +308,7 @@ public class LocalizationService {
     }
 
     private <T> T getCachedSupportedLanguageValue(
-            String cacheName,
-            String normalizedLanguage,
-            Class<T> valueType,
-            Supplier<T> valueLoader
+                                                  String cacheName, String normalizedLanguage, Class<T> valueType, Supplier<T> valueLoader
     ) {
         return getCachedValue(cacheName, normalizedLanguage, valueType, valueLoader);
     }
@@ -385,8 +330,7 @@ public class LocalizationService {
 
     private Map<String, Object> auditDetails(Localization message) {
         return Map.of(
-                "messageKey", message.getMessageKey(),
-                "language", message.getLanguage()
+                "messageKey", message.getMessageKey(), "language", message.getLanguage()
         );
     }
 
@@ -402,19 +346,17 @@ public class LocalizationService {
     }
 
     private record LocalizationLookupRequest(
-            String requestedMessageKey,
-            String requestedLanguage,
-            String requestedFallbackLanguage,
-            String normalizedMessageKey,
-            String normalizedLanguage,
-            String normalizedFallbackLanguage
+                                             String requestedMessageKey,
+                                             String requestedLanguage,
+                                             String requestedFallbackLanguage,
+                                             String normalizedMessageKey,
+                                             String normalizedLanguage,
+                                             String normalizedFallbackLanguage
     ) {
 
         private String cacheKey() {
             return "%s::%s::%s".formatted(
-                    normalizedMessageKey,
-                    normalizedLanguage,
-                    normalizedFallbackLanguage
+                    normalizedMessageKey, normalizedLanguage, normalizedFallbackLanguage
             );
         }
     }

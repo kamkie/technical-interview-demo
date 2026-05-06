@@ -25,11 +25,9 @@ public class SessionController {
 
     @GetMapping
     @Operation(
-            summary = "Get the current browser session contract",
-            description = "Public same-site session/bootstrap endpoint for the separate first-party UI. Returns the current authenticated state, persisted-account path, available OAuth login providers, logout path, session-cookie contract, and the readable CSRF cookie plus request-header names required for unsafe browser writes."
+            summary = "Get the current browser session contract", description = "Public same-site session/bootstrap endpoint for the separate first-party UI. Returns the current authenticated state, persisted-account path, available OAuth login providers, logout path, session-cookie contract, and the readable CSRF cookie plus request-header names required for unsafe browser writes."
     )
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Current same-site browser session state.")
+    @ApiResponses({@ApiResponse(responseCode = "200", description = "Current same-site browser session state.")
     })
     public ResponseEntity<SessionResponse> currentSession(HttpServletRequest request, HttpServletResponse response) {
         SessionResponse payload = sessionService.currentSession(request, response);
@@ -38,17 +36,12 @@ public class SessionController {
 
     @PostMapping("/logout")
     @Operation(
-            summary = "Log out the current browser session",
-            description = "Same-site logout endpoint for the separate first-party UI. Invalidates the current application session when present, clears both the session and readable CSRF cookies, requires a valid CSRF header when a current application session exists, and still returns 204 when no session exists."
+            summary = "Log out the current browser session", description = "Same-site logout endpoint for the separate first-party UI. Invalidates the current application session when present, clears both the session and readable CSRF cookies, requires a valid CSRF header when a current application session exists, and still returns 204 when no session exists."
     )
     @Parameter(
-            name = SameSiteCsrfContract.HEADER_NAME,
-            in = ParameterIn.HEADER,
-            required = false,
-            description = "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie when the browser currently has an authenticated application session."
+            name = SameSiteCsrfContract.HEADER_NAME, in = ParameterIn.HEADER, required = false, description = "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie when the browser currently has an authenticated application session."
     )
-    @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Current session invalidated and cookie cleared.")
+    @ApiResponses({@ApiResponse(responseCode = "204", description = "Current session invalidated and cookie cleared.")
     })
     public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
         sessionService.logoutCurrentSession(request, response);

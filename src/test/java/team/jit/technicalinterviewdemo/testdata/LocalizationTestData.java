@@ -13,16 +13,14 @@ public final class LocalizationTestData {
         localizationMessageRepository.deleteAll();
         localizationMessageRepository.saveAll(LocalizationSeedData.defaultMessages());
         return new DefaultLocalizations(
-                localizationMessageRepository.findByMessageKeyAndLanguage("error.book.not_found", "en").orElseThrow(),
-                localizationMessageRepository.findByMessageKeyAndLanguage("error.book.not_found", "es").orElseThrow(),
-                localizationMessageRepository.findByMessageKeyAndLanguage("error.request.invalid", "en").orElseThrow()
+                localizationMessageRepository.findByMessageKeyAndLanguage("error.book.not_found", "en").orElseThrow(), localizationMessageRepository.findByMessageKeyAndLanguage("error.book.not_found", "es").orElseThrow(), localizationMessageRepository.findByMessageKeyAndLanguage("error.request.invalid", "en").orElseThrow()
         );
     }
 
     public record DefaultLocalizations(
-            Localization bookNotFoundEn,
-            Localization bookNotFoundEs,
-            Localization invalidRequestEn
+                                       Localization bookNotFoundEn,
+                                       Localization bookNotFoundEs,
+                                       Localization invalidRequestEn
     ) {
     }
 }

@@ -1,17 +1,16 @@
 package team.jit.technicalinterviewdemo.build
 
-import javax.inject.Inject
 import org.gradle.api.DefaultTask
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 import org.gradle.process.ExecOperations
 import org.gradle.work.DisableCachingByDefault
+import javax.inject.Inject
 
 @DisableCachingByDefault(because = "Stops Docker containers created for external smoke testing.")
-abstract class ExternalSmokeEnvironmentDownTask @Inject constructor(
-    private val execOperations: ExecOperations
-) : DefaultTask() {
+abstract class ExternalSmokeEnvironmentDownTask @Inject constructor(private val execOperations: ExecOperations) :
+    DefaultTask() {
 
     @get:Input
     abstract val networkName: Property<String>
@@ -34,7 +33,7 @@ abstract class ExternalSmokeEnvironmentDownTask @Inject constructor(
             logPrefix = "[externalSmokeTest]",
             networkName = networkName.get(),
             postgresContainerName = postgresContainerName.get(),
-            appContainerName = appContainerName.get()
+            appContainerName = appContainerName.get(),
         )
         logger.lifecycle("[externalSmokeTest] Tearing down Docker smoke environment.")
         environment.cleanup(resources)

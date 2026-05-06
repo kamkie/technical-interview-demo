@@ -13,7 +13,7 @@ buildscript {
     configurations.classpath {
         resolutionStrategy.force(
             "org.apache.commons:commons-lang3:3.20.0",
-            "org.codehaus.plexus:plexus-utils:4.0.3"
+            "org.codehaus.plexus:plexus-utils:4.0.3",
         )
     }
 }
@@ -100,7 +100,7 @@ val spotlessTargetExcludes = arrayOf(
     "src/test/resources/http/http-client.private.env.json",
     "src/test/resources/openapi/approved-openapi.json",
     "src/gatling/resources/gatling-benchmark-baseline.json",
-    "tooling/formatting/intellij-exported-eclipse-java-formatter.xml"
+    "tooling/formatting/intellij-exported-eclipse-java-formatter.xml",
 )
 
 java {
@@ -211,7 +211,7 @@ tasks.register<Exec>("dockerBuild") {
             "JAR_FILE=build/libs/${bootJarFile.name}",
             "-t",
             dockerImageName.get(),
-            "."
+            ".",
         )
     }
 }
@@ -281,7 +281,7 @@ val applicationSbom = tasks.register<Exec>("applicationSbom") {
             "--output",
             "/workspace/output/application.cyclonedx.json",
             "--quiet",
-            "--no-progress"
+            "--no-progress",
         )
     }
 }
@@ -301,7 +301,7 @@ val imageSbom = tasks.register<Exec>("imageSbom") {
             "-v", "//var/run/docker.sock:/var/run/docker.sock",
             "-v", "$outputMount:/workspace/output",
             trivyContainerImage.get(), "image", dockerImageName.get(),
-            "--format", "cyclonedx", "--output", "/workspace/output/image.cyclonedx.json", "--quiet", "--no-progress"
+            "--format", "cyclonedx", "--output", "/workspace/output/image.cyclonedx.json", "--quiet", "--no-progress",
         )
     }
 }
@@ -415,15 +415,15 @@ asciidoctorTask {
             "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
             "--add-opens=java.base/java.io=ALL-UNNAMED",
             "--sun-misc-unsafe-memory-access=allow",
-            "-Xshare:off"
+            "-Xshare:off",
         )
     }
     inputs.dir(snippetsDir)
     inputs.file(buildInfoPropertiesFile)
     attributes(
         mapOf(
-            "snippets" to snippetsDir.get().asFile
-        )
+            "snippets" to snippetsDir.get().asFile,
+        ),
     )
     doFirst {
         val buildInfo = Properties()
@@ -435,8 +435,8 @@ asciidoctorTask {
                 "build-group" to buildInfo.getProperty("build.group", "unknown"),
                 "build-artifact" to buildInfo.getProperty("build.artifact", "unknown"),
                 "build-version" to buildInfo.getProperty("build.version", "unknown"),
-                "build-time" to buildInfo.getProperty("build.time", "unknown")
-            )
+                "build-time" to buildInfo.getProperty("build.time", "unknown"),
+            ),
         )
     }
 }
@@ -455,8 +455,8 @@ spotless {
         targetExclude(*spotlessTargetExcludes)
         ktlint().editorConfigOverride(
             mapOf(
-                "ktlint_code_style" to "intellij_idea"
-            )
+                "ktlint_code_style" to "intellij_idea",
+            ),
         )
         endWithNewline()
     }
@@ -466,8 +466,8 @@ spotless {
         targetExclude(*spotlessTargetExcludes)
         ktlint().editorConfigOverride(
             mapOf(
-                "ktlint_code_style" to "intellij_idea"
-            )
+                "ktlint_code_style" to "intellij_idea",
+            ),
         )
         endWithNewline()
     }
@@ -486,7 +486,7 @@ spotless {
             "**/*.yaml",
             "**/*.xml",
             "**/*.json",
-            "**/*.http"
+            "**/*.http",
         )
         targetExclude("HELP.md", *spotlessTargetExcludes)
         trimTrailingWhitespace()

@@ -1,6 +1,5 @@
 package team.jit.technicalinterviewdemo.build
 
-import java.math.BigDecimal
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
@@ -11,6 +10,7 @@ import org.gradle.kotlin.dsl.named
 import org.gradle.kotlin.dsl.register
 import org.gradle.testing.jacoco.tasks.JacocoCoverageVerification
 import org.gradle.testing.jacoco.tasks.JacocoReport
+import java.math.BigDecimal
 
 class JacocoCoverageConventionsPlugin : Plugin<Project> {
 

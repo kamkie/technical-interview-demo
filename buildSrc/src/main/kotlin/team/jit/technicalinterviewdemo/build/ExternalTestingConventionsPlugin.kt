@@ -50,7 +50,9 @@ class ExternalTestingConventionsPlugin : Plugin<Project> {
             .orElse("technical-interview-demo")
         val smokeHostPort = intProperty("externalSmoke.hostPort", 18080)
         val smokeDatabaseHostPort = intProperty("externalSmoke.postgresHostPort", 15432)
-        val smokeDatabaseName = providers.gradleProperty("externalSmoke.databaseName").orElse("technical_interview_demo")
+        val smokeDatabaseName = providers.gradleProperty(
+            "externalSmoke.databaseName",
+        ).orElse("technical_interview_demo")
         val smokeDatabaseUser = providers.gradleProperty("externalSmoke.databaseUser").orElse("postgres")
         val smokeDatabasePassword = providers.gradleProperty("externalSmoke.databasePassword").orElse("changeme")
         val smokeBaseUrl = providers.gradleProperty("externalSmoke.baseUrl")
@@ -119,7 +121,8 @@ class ExternalTestingConventionsPlugin : Plugin<Project> {
             .orElse(providers.environmentVariable("EXTERNAL_CHECK_EXPECTED_SESSION_TIMEOUT"))
 
         val deploymentCheckTask = tasks.register<Test>("externalDeploymentCheck") {
-            description = "Executes src/externalTest against a deployed environment without provisioning Docker resources."
+            description =
+                "Executes src/externalTest against a deployed environment without provisioning Docker resources."
             group = "verification"
             dependsOn(tasks.named(externalTestSourceSet.classesTaskName))
             testClassesDirs = externalTestSourceSet.output.classesDirs
@@ -131,7 +134,7 @@ class ExternalTestingConventionsPlugin : Plugin<Project> {
                 val baseUrl = deploymentBaseUrl.orNull?.trim()
                 if (baseUrl.isNullOrBlank()) {
                     throw GradleException(
-                        "externalDeploymentCheck requires externalCheck.baseUrl or EXTERNAL_CHECK_BASE_URL."
+                        "externalDeploymentCheck requires externalCheck.baseUrl or EXTERNAL_CHECK_BASE_URL.",
                     )
                 }
                 val jdbcUrl = deploymentJdbcUrl.orNull?.trim()
@@ -141,7 +144,7 @@ class ExternalTestingConventionsPlugin : Plugin<Project> {
                 val allJdbcConfigured = listOf(jdbcUrl, jdbcUser, jdbcPassword).all { !it.isNullOrBlank() }
                 if (anyJdbcConfigured && !allJdbcConfigured) {
                     throw GradleException(
-                        "externalDeploymentCheck requires externalCheck.jdbcUrl, externalCheck.jdbcUser, and externalCheck.jdbcPassword together when JDBC-backed checks are enabled."
+                        "externalDeploymentCheck requires externalCheck.jdbcUrl, externalCheck.jdbcUser, and externalCheck.jdbcPassword together when JDBC-backed checks are enabled.",
                     )
                 }
                 val buildVersion = expectedBuildVersion.orNull?.trim()
@@ -150,7 +153,7 @@ class ExternalTestingConventionsPlugin : Plugin<Project> {
                 val allIdentityConfigured = listOf(buildVersion, shortCommitId).all { !it.isNullOrBlank() }
                 if (anyIdentityConfigured && !allIdentityConfigured) {
                     throw GradleException(
-                        "externalDeploymentCheck requires externalCheck.expectedBuildVersion and externalCheck.expectedShortCommitId together when release identity checks are enabled."
+                        "externalDeploymentCheck requires externalCheck.expectedBuildVersion and externalCheck.expectedShortCommitId together when release identity checks are enabled.",
                     )
                 }
                 val activeProfile = expectedActiveProfile.orNull?.trim()
@@ -162,7 +165,7 @@ class ExternalTestingConventionsPlugin : Plugin<Project> {
                     .all { !it.isNullOrBlank() }
                 if (anyRuntimeConfigured && !allRuntimeConfigured) {
                     throw GradleException(
-                        "externalDeploymentCheck requires externalCheck.expectedActiveProfile, externalCheck.expectedSessionStoreType, and externalCheck.expectedSessionTimeout together when runtime posture checks are enabled."
+                        "externalDeploymentCheck requires externalCheck.expectedActiveProfile, externalCheck.expectedSessionStoreType, and externalCheck.expectedSessionTimeout together when runtime posture checks are enabled.",
                     )
                 }
                 logger.lifecycle("[externalDeploymentCheck] Running deployed smoke assertions against {}.", baseUrl)
@@ -171,21 +174,21 @@ class ExternalTestingConventionsPlugin : Plugin<Project> {
                 environment("EXTERNAL_BASE_URL", baseUrl)
                 if (allJdbcConfigured) {
                     logger.lifecycle(
-                        "[externalDeploymentCheck] JDBC-backed session, GET /api/session, CSRF write, and Flyway checks are enabled."
+                        "[externalDeploymentCheck] JDBC-backed session, GET /api/session, CSRF write, and Flyway checks are enabled.",
                     )
                     systemProperty("external.jdbc.url", jdbcUrl)
                     systemProperty("external.jdbc.user", jdbcUser)
                     systemProperty("external.jdbc.password", jdbcPassword)
                 } else {
                     logger.lifecycle(
-                        "[externalDeploymentCheck] JDBC-backed checks are disabled; running HTTP-only smoke assertions."
+                        "[externalDeploymentCheck] JDBC-backed checks are disabled; running HTTP-only smoke assertions.",
                     )
                 }
                 if (allIdentityConfigured) {
                     val resolvedBuildVersion = requireNotNull(buildVersion)
                     val resolvedShortCommitId = requireNotNull(shortCommitId)
                     logger.lifecycle(
-                        "[externalDeploymentCheck] Expecting deployed release identity build.version=$resolvedBuildVersion and git.shortCommitId=$resolvedShortCommitId."
+                        "[externalDeploymentCheck] Expecting deployed release identity build.version=$resolvedBuildVersion and git.shortCommitId=$resolvedShortCommitId.",
                     )
                     systemProperty("external.expected.buildVersion", resolvedBuildVersion)
                     systemProperty("external.expected.shortCommitId", resolvedShortCommitId)
@@ -197,7 +200,7 @@ class ExternalTestingConventionsPlugin : Plugin<Project> {
                     val resolvedSessionStoreType = requireNotNull(sessionStoreType)
                     val resolvedSessionTimeout = requireNotNull(sessionTimeout)
                     logger.lifecycle(
-                        "[externalDeploymentCheck] Expecting prod posture profile=$resolvedActiveProfile, session store=$resolvedSessionStoreType, session timeout=$resolvedSessionTimeout, csrf enabled with XSRF-TOKEN/X-XSRF-TOKEN and edge-owned abuse protection."
+                        "[externalDeploymentCheck] Expecting prod posture profile=$resolvedActiveProfile, session store=$resolvedSessionStoreType, session timeout=$resolvedSessionTimeout, csrf enabled with XSRF-TOKEN/X-XSRF-TOKEN and edge-owned abuse protection.",
                     )
                     systemProperty("external.expected.activeProfile", resolvedActiveProfile)
                     systemProperty("external.expected.sessionStoreType", resolvedSessionStoreType)
@@ -221,27 +224,29 @@ class ExternalTestingConventionsPlugin : Plugin<Project> {
 
     private fun Project.registerExternalSmokeEnvironmentUpTask(
         dockerImageName: org.gradle.api.provider.Provider<String>,
-        smokeHostPort: org.gradle.api.provider.Provider<Int>
+        smokeHostPort: org.gradle.api.provider.Provider<Int>,
     ): TaskProvider<ExternalSmokeEnvironmentUpTask> = tasks.register<ExternalSmokeEnvironmentUpTask>(
-        "externalSmokeEnvironmentUp"
+        "externalSmokeEnvironmentUp",
     ) {
         group = "verification"
         description = "Starts Docker resources required for external smoke testing."
         dependsOn(tasks.named("dockerBuild"))
         imageName.convention(dockerImageName)
         postgresImage.convention(providers.gradleProperty("externalSmoke.postgresImage").orElse("postgres:16-alpine"))
-        databaseName.convention(providers.gradleProperty("externalSmoke.databaseName").orElse("technical_interview_demo"))
+        databaseName.convention(
+            providers.gradleProperty("externalSmoke.databaseName").orElse("technical_interview_demo"),
+        )
         databaseUser.convention(providers.gradleProperty("externalSmoke.databaseUser").orElse("postgres"))
         databasePassword.convention(providers.gradleProperty("externalSmoke.databasePassword").orElse("changeme"))
         networkName.convention(
-            providers.gradleProperty("externalSmoke.networkName").orElse("technical-interview-demo-smoke-network")
+            providers.gradleProperty("externalSmoke.networkName").orElse("technical-interview-demo-smoke-network"),
         )
         postgresContainerName.convention(
             providers.gradleProperty("externalSmoke.postgresContainerName")
-                .orElse("technical-interview-demo-smoke-postgres")
+                .orElse("technical-interview-demo-smoke-postgres"),
         )
         appContainerName.convention(
-            providers.gradleProperty("externalSmoke.appContainerName").orElse("technical-interview-demo-smoke-app")
+            providers.gradleProperty("externalSmoke.appContainerName").orElse("technical-interview-demo-smoke-app"),
         )
         hostPort.convention(smokeHostPort)
         postgresHostPort.convention(intProperty("externalSmoke.postgresHostPort", 15432))
@@ -253,14 +258,14 @@ class ExternalTestingConventionsPlugin : Plugin<Project> {
             group = "verification"
             description = "Stops Docker resources created for external smoke testing."
             networkName.convention(
-                providers.gradleProperty("externalSmoke.networkName").orElse("technical-interview-demo-smoke-network")
+                providers.gradleProperty("externalSmoke.networkName").orElse("technical-interview-demo-smoke-network"),
             )
             postgresContainerName.convention(
                 providers.gradleProperty("externalSmoke.postgresContainerName")
-                    .orElse("technical-interview-demo-smoke-postgres")
+                    .orElse("technical-interview-demo-smoke-postgres"),
             )
             appContainerName.convention(
-                providers.gradleProperty("externalSmoke.appContainerName").orElse("technical-interview-demo-smoke-app")
+                providers.gradleProperty("externalSmoke.appContainerName").orElse("technical-interview-demo-smoke-app"),
             )
         }
 
@@ -276,38 +281,40 @@ class ExternalTestingConventionsPlugin : Plugin<Project> {
 
             imageName.convention(dockerImageName)
             postgresImage.convention(providers.gradleProperty("benchmark.postgresImage").orElse("postgres:16-alpine"))
-            databaseName.convention(providers.gradleProperty("benchmark.databaseName").orElse("technical_interview_demo"))
+            databaseName.convention(
+                providers.gradleProperty("benchmark.databaseName").orElse("technical_interview_demo"),
+            )
             databaseUser.convention(providers.gradleProperty("benchmark.databaseUser").orElse("postgres"))
             databasePassword.convention(providers.gradleProperty("benchmark.databasePassword").orElse("changeme"))
             networkName.convention(
-                providers.gradleProperty("benchmark.networkName").orElse("technical-interview-demo-benchmark-network")
+                providers.gradleProperty("benchmark.networkName").orElse("technical-interview-demo-benchmark-network"),
             )
             postgresContainerName.convention(
                 providers.gradleProperty("benchmark.postgresContainerName")
-                    .orElse("technical-interview-demo-benchmark-postgres")
+                    .orElse("technical-interview-demo-benchmark-postgres"),
             )
             appContainerName.convention(
                 providers.gradleProperty("benchmark.appContainerName")
-                    .orElse("technical-interview-demo-benchmark-app")
+                    .orElse("technical-interview-demo-benchmark-app"),
             )
             baseUrl.convention(providers.gradleProperty("benchmark.baseUrl").orElse("http://127.0.0.1:18080"))
             timeoutSeconds.convention(intProperty("benchmark.timeoutSeconds", 120))
             oauthClientId.convention(providers.gradleProperty("benchmark.githubClientId").orElse("benchmark-client-id"))
             oauthClientSecret.convention(
-                providers.gradleProperty("benchmark.githubClientSecret").orElse("benchmark-client-secret")
+                providers.gradleProperty("benchmark.githubClientSecret").orElse("benchmark-client-secret"),
             )
             updateBaseline.convention(booleanProperty("benchmark.updateBaseline", false))
             responseTimeToleranceMultiplier.convention(
-                doubleProperty("benchmark.responseTimeToleranceMultiplier", 1.25)
+                doubleProperty("benchmark.responseTimeToleranceMultiplier", 1.25),
             )
             successRateTolerancePercentage.convention(
-                doubleProperty("benchmark.successRateTolerancePercentage", 0.50)
+                doubleProperty("benchmark.successRateTolerancePercentage", 0.50),
             )
             baselineFile.convention(
                 layout.projectDirectory.file(
                     providers.gradleProperty("benchmark.baselineFile")
-                        .orElse(defaultBaselinePath)
-                )
+                        .orElse(defaultBaselinePath),
+                ),
             )
             latestResultFile.convention(layout.buildDirectory.file("performance/phase-9-latest.json"))
             reportDirectory.convention(layout.buildDirectory.dir("reports/gatling"))
@@ -321,8 +328,9 @@ class ExternalTestingConventionsPlugin : Plugin<Project> {
                 .sorted()
             val resourceDirectory = resourceDirectories.singleOrNull()
                 ?: throw GradleException(
-                    "gatlingBenchmark requires exactly one Gatling resources directory to derive the default baseline path, but found: " +
-                        resourceDirectories.ifEmpty { listOf("none") }.joinToString(", ")
+                    "gatlingBenchmark requires exactly one Gatling resources directory " +
+                        "to derive the default baseline path, but found: " +
+                        resourceDirectories.ifEmpty { listOf("none") }.joinToString(", "),
                 )
             "$resourceDirectory/$GATLING_BENCHMARK_BASELINE_FILE_NAME"
         }

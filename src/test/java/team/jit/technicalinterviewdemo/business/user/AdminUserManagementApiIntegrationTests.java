@@ -52,10 +52,7 @@ class AdminUserManagementApiIntegrationTests extends AbstractMockMvcIntegrationT
 
     @Test
     void listAdminUsersWithoutAuthenticationReturnsUnauthorized() throws Exception {
-        mockMvc.perform(get("/api/admin/users"))
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.title").value("Unauthorized"))
-                .andExpect(jsonPath("$.messageKey").value("error.request.unauthorized"));
+        mockMvc.perform(get("/api/admin/users")).andExpect(status().isUnauthorized()).andExpect(jsonPath("$.title").value("Unauthorized")).andExpect(jsonPath("$.messageKey").value("error.request.unauthorized"));
     }
 
     @Test
@@ -63,12 +60,7 @@ class AdminUserManagementApiIntegrationTests extends AbstractMockMvcIntegrationT
         BrowserSession readerSession = readerSession();
         synchronizeAccount(readerSession, "reader-user");
 
-        mockMvc.perform(get("/api/admin/users")
-                        .with(readerSession.authenticatedSession()))
-                .andExpect(status().isForbidden())
-                .andExpect(jsonPath("$.title").value("Forbidden"))
-                .andExpect(jsonPath("$.detail").value("User management requires the ADMIN role."))
-                .andExpect(jsonPath("$.messageKey").value("error.request.forbidden"));
+        mockMvc.perform(get("/api/admin/users").with(readerSession.authenticatedSession())).andExpect(status().isForbidden()).andExpect(jsonPath("$.title").value("Forbidden")).andExpect(jsonPath("$.detail").value("User management requires the ADMIN role.")).andExpect(jsonPath("$.messageKey").value("error.request.forbidden"));
     }
 
     @Test
@@ -79,30 +71,7 @@ class AdminUserManagementApiIntegrationTests extends AbstractMockMvcIntegrationT
         synchronizeAccount(adminSession, "admin-user");
         synchronizeAccount(readerSession, "reader-user");
 
-        mockMvc.perform(get("/api/admin/users")
-                        .with(adminSession.authenticatedSession()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].login").value("admin-user"))
-                .andExpect(jsonPath("$[0].roles[0]").value("ADMIN"))
-                .andExpect(jsonPath("$[0].roles[1]").value("USER"))
-                .andExpect(jsonPath("$[0].roleGrants[0].role").value("ADMIN"))
-                .andExpect(jsonPath("$[0].roleGrants[0].source").value("BOOTSTRAP"))
-                .andExpect(jsonPath("$[0].roleGrants[0].grantedAt").value(endsWith("Z")))
-                .andExpect(jsonPath("$[0].roleGrants[0].grantedByUserId").doesNotExist())
-                .andExpect(jsonPath("$[0].roleGrants[1].role").value("USER"))
-                .andExpect(jsonPath("$[0].roleGrants[1].source").value("AUTHENTICATED_LOGIN"))
-                .andExpect(jsonPath("$[0].roleGrants[1].grantedAt").value(endsWith("Z")))
-                .andExpect(jsonPath("$[0].lastLoginAt").value(endsWith("Z")))
-                .andExpect(jsonPath("$[0].createdAt").value(endsWith("Z")))
-                .andExpect(jsonPath("$[0].updatedAt").value(endsWith("Z")))
-                .andExpect(jsonPath("$[1].login").value("reader-user"))
-                .andExpect(jsonPath("$[1].roles[0]").value("USER"))
-                .andExpect(jsonPath("$[1].roleGrants[0].role").value("USER"))
-                .andExpect(jsonPath("$[1].roleGrants[0].source").value("AUTHENTICATED_LOGIN"))
-                .andExpect(jsonPath("$[1].roleGrants[0].grantedAt").value(endsWith("Z")))
-                .andExpect(jsonPath("$[1].lastLoginAt").value(endsWith("Z")))
-                .andExpect(jsonPath("$[1].createdAt").value(endsWith("Z")))
-                .andExpect(jsonPath("$[1].updatedAt").value(endsWith("Z")));
+        mockMvc.perform(get("/api/admin/users").with(adminSession.authenticatedSession())).andExpect(status().isOk()).andExpect(jsonPath("$[0].login").value("admin-user")).andExpect(jsonPath("$[0].roles[0]").value("ADMIN")).andExpect(jsonPath("$[0].roles[1]").value("USER")).andExpect(jsonPath("$[0].roleGrants[0].role").value("ADMIN")).andExpect(jsonPath("$[0].roleGrants[0].source").value("BOOTSTRAP")).andExpect(jsonPath("$[0].roleGrants[0].grantedAt").value(endsWith("Z"))).andExpect(jsonPath("$[0].roleGrants[0].grantedByUserId").doesNotExist()).andExpect(jsonPath("$[0].roleGrants[1].role").value("USER")).andExpect(jsonPath("$[0].roleGrants[1].source").value("AUTHENTICATED_LOGIN")).andExpect(jsonPath("$[0].roleGrants[1].grantedAt").value(endsWith("Z"))).andExpect(jsonPath("$[0].lastLoginAt").value(endsWith("Z"))).andExpect(jsonPath("$[0].createdAt").value(endsWith("Z"))).andExpect(jsonPath("$[0].updatedAt").value(endsWith("Z"))).andExpect(jsonPath("$[1].login").value("reader-user")).andExpect(jsonPath("$[1].roles[0]").value("USER")).andExpect(jsonPath("$[1].roleGrants[0].role").value("USER")).andExpect(jsonPath("$[1].roleGrants[0].source").value("AUTHENTICATED_LOGIN")).andExpect(jsonPath("$[1].roleGrants[0].grantedAt").value(endsWith("Z"))).andExpect(jsonPath("$[1].lastLoginAt").value(endsWith("Z"))).andExpect(jsonPath("$[1].createdAt").value(endsWith("Z"))).andExpect(jsonPath("$[1].updatedAt").value(endsWith("Z")));
     }
 
     @Test
@@ -113,27 +82,12 @@ class AdminUserManagementApiIntegrationTests extends AbstractMockMvcIntegrationT
         UserAccount adminUser = synchronizeAccount(adminSession, "admin-user");
         UserAccount readerUser = synchronizeAccount(readerSession, "reader-user");
 
-        mockMvc.perform(put("/api/admin/users/{id}/roles", readerUser.getId())
-                        .with(adminSession.unsafeWrite())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {
-                                  "roles": ["USER", "ADMIN"],
-                                  "reason": "Needs audit review access."
-                                }
-                                """))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.login").value("reader-user"))
-                .andExpect(jsonPath("$.roles[0]").value("ADMIN"))
-                .andExpect(jsonPath("$.roles[1]").value("USER"))
-                .andExpect(jsonPath("$.roleGrants[0].source").value("ADMIN_MANAGED"))
-                .andExpect(jsonPath("$.roleGrants[0].grantedAt").value(endsWith("Z")))
-                .andExpect(jsonPath("$.roleGrants[0].grantedByUserId").value(adminUser.getId()))
-                .andExpect(jsonPath("$.roleGrants[0].grantedByLogin").value("admin-user"))
-                .andExpect(jsonPath("$.roleGrants[0].reason").value("Needs audit review access."))
-                .andExpect(jsonPath("$.lastLoginAt").value(endsWith("Z")))
-                .andExpect(jsonPath("$.createdAt").value(endsWith("Z")))
-                .andExpect(jsonPath("$.updatedAt").value(endsWith("Z")));
+        mockMvc.perform(put("/api/admin/users/{id}/roles", readerUser.getId()).with(adminSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
+                {
+                  "roles": ["USER", "ADMIN"],
+                  "reason": "Needs audit review access."
+                }
+                """)).andExpect(status().isOk()).andExpect(jsonPath("$.login").value("reader-user")).andExpect(jsonPath("$.roles[0]").value("ADMIN")).andExpect(jsonPath("$.roles[1]").value("USER")).andExpect(jsonPath("$.roleGrants[0].source").value("ADMIN_MANAGED")).andExpect(jsonPath("$.roleGrants[0].grantedAt").value(endsWith("Z"))).andExpect(jsonPath("$.roleGrants[0].grantedByUserId").value(adminUser.getId())).andExpect(jsonPath("$.roleGrants[0].grantedByLogin").value("admin-user")).andExpect(jsonPath("$.roleGrants[0].reason").value("Needs audit review access.")).andExpect(jsonPath("$.lastLoginAt").value(endsWith("Z"))).andExpect(jsonPath("$.createdAt").value(endsWith("Z"))).andExpect(jsonPath("$.updatedAt").value(endsWith("Z")));
 
         UserAccount updatedReader = userAccountRepository.findById(readerUser.getId()).orElseThrow();
         assertThat(updatedReader.getRoles()).containsExactlyInAnyOrder(UserRole.USER, UserRole.ADMIN);
@@ -163,18 +117,12 @@ class AdminUserManagementApiIntegrationTests extends AbstractMockMvcIntegrationT
         UserAccount adminUser = synchronizeAccount(adminSession, "admin-user");
         UserAccount readerUser = synchronizeAccount(readerSession(), "reader-user");
 
-        mockMvc.perform(put("/api/admin/users/{id}/roles", readerUser.getId())
-                        .with(adminSession.unsafeWrite())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {
-                                  "roles": ["ADMIN"],
-                                  "reason": "Invalid role set"
-                                }
-                                """))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.title").value("Invalid Request"))
-                .andExpect(jsonPath("$.detail").value("USER role is required"));
+        mockMvc.perform(put("/api/admin/users/{id}/roles", readerUser.getId()).with(adminSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
+                {
+                  "roles": ["ADMIN"],
+                  "reason": "Invalid role set"
+                }
+                """)).andExpect(status().isBadRequest()).andExpect(jsonPath("$.title").value("Invalid Request")).andExpect(jsonPath("$.detail").value("USER role is required"));
 
         UserAccount unchangedReader = userAccountRepository.findById(readerUser.getId()).orElseThrow();
         assertThat(unchangedReader.getRoles()).containsExactly(UserRole.USER);
@@ -186,24 +134,16 @@ class AdminUserManagementApiIntegrationTests extends AbstractMockMvcIntegrationT
         BrowserSession adminSession = adminSession();
         synchronizeAccount(adminSession, "admin-user");
 
-        mockMvc.perform(put("/api/admin/users/{id}/roles", 9999L)
-                        .with(adminSession.unsafeWrite())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {
-                                  "roles": ["USER", "ADMIN"],
-                                  "reason": "Needs access."
-                                }
-                                """))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.title").value("User Account Not Found"))
-                .andExpect(jsonPath("$.messageKey").value("error.user.not_found"));
+        mockMvc.perform(put("/api/admin/users/{id}/roles", 9999L).with(adminSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
+                {
+                  "roles": ["USER", "ADMIN"],
+                  "reason": "Needs access."
+                }
+                """)).andExpect(status().isNotFound()).andExpect(jsonPath("$.title").value("User Account Not Found")).andExpect(jsonPath("$.messageKey").value("error.user.not_found"));
     }
 
     private UserAccount synchronizeAccount(BrowserSession session, String login) throws Exception {
-        mockMvc.perform(get("/api/account")
-                        .with(session.authenticatedSession()))
-                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/account").with(session.authenticatedSession())).andExpect(status().isOk());
 
         return userAccountRepository.findByProviderAndExternalLogin("github", login).orElseThrow();
     }

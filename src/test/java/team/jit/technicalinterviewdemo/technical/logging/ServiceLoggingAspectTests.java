@@ -30,16 +30,12 @@ class ServiceLoggingAspectTests {
     private <T> T createProxy(T target) {
         AspectJProxyFactory proxyFactory = new AspectJProxyFactory(target);
         proxyFactory.addAspect(new ServiceLoggingAspect());
-        @SuppressWarnings("unchecked")
-        T proxy = (T) proxyFactory.getProxy();
+        @SuppressWarnings("unchecked") T proxy = (T) proxyFactory.getProxy();
         return proxy;
     }
 
     private String findLogLine(CapturedOutput output, String messageFragment) {
-        return Arrays.stream(output.getOut().split("\\R"))
-                .filter(line -> line.contains(messageFragment))
-                .findFirst()
-                .orElseThrow(() -> new AssertionError("Missing log entry fragment: " + messageFragment));
+        return Arrays.stream(output.getOut().split("\\R")).filter(line -> line.contains(messageFragment)).findFirst().orElseThrow(() -> new AssertionError("Missing log entry fragment: " + messageFragment));
     }
 
     @Service

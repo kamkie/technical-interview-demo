@@ -28,28 +28,14 @@ public class ApplicationMetrics {
     private final MeterRegistry meterRegistry;
 
     public ApplicationMetrics(
-            MeterRegistry meterRegistry,
-            BookRepository bookRepository,
-            CategoryRepository categoryRepository,
-            LocalizationRepository localizationRepository,
-            UserAccountRepository userAccountRepository
+                              MeterRegistry meterRegistry, BookRepository bookRepository, CategoryRepository categoryRepository, LocalizationRepository localizationRepository, UserAccountRepository userAccountRepository
     ) {
         this.meterRegistry = meterRegistry;
-        Gauge.builder(BOOK_TOTAL, bookRepository, BookRepository::count)
-                .description("Current number of books.")
-                .register(meterRegistry);
-        Gauge.builder(CATEGORY_TOTAL, categoryRepository, CategoryRepository::count)
-                .description("Current number of categories.")
-                .register(meterRegistry);
-        Gauge.builder(LOCALIZATION_TOTAL, localizationRepository, LocalizationRepository::count)
-                .description("Current number of localization messages.")
-                .register(meterRegistry);
-        Gauge.builder(USER_TOTAL, userAccountRepository, UserAccountRepository::count)
-                .description("Current number of persisted application users.")
-                .register(meterRegistry);
-        Gauge.builder(ADMIN_TOTAL, userAccountRepository, repository -> repository.countByRole(UserRole.ADMIN))
-                .description("Current number of persisted admin users.")
-                .register(meterRegistry);
+        Gauge.builder(BOOK_TOTAL, bookRepository, BookRepository::count).description("Current number of books.").register(meterRegistry);
+        Gauge.builder(CATEGORY_TOTAL, categoryRepository, CategoryRepository::count).description("Current number of categories.").register(meterRegistry);
+        Gauge.builder(LOCALIZATION_TOTAL, localizationRepository, LocalizationRepository::count).description("Current number of localization messages.").register(meterRegistry);
+        Gauge.builder(USER_TOTAL, userAccountRepository, UserAccountRepository::count).description("Current number of persisted application users.").register(meterRegistry);
+        Gauge.builder(ADMIN_TOTAL, userAccountRepository, repository -> repository.countByRole(UserRole.ADMIN)).description("Current number of persisted admin users.").register(meterRegistry);
         log.debug("Registered application gauges for books, categories, localization messages, and users.");
     }
 

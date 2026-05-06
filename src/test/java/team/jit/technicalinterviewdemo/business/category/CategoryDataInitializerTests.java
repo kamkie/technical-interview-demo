@@ -34,17 +34,14 @@ class CategoryDataInitializerTests {
     void seedCategoriesWritesDefaultNamesWhenDemoBootstrapIsEnabled() throws Exception {
         CategoryDataInitializer initializer = new CategoryDataInitializer();
         when(categoryRepository.existsByNameIgnoreCase(org.mockito.ArgumentMatchers.anyString())).thenReturn(false);
-        when(categoryRepository.save(org.mockito.ArgumentMatchers.any(Category.class)))
-                .thenAnswer(invocation -> invocation.getArgument(0, Category.class));
+        when(categoryRepository.save(org.mockito.ArgumentMatchers.any(Category.class))).thenAnswer(invocation -> invocation.getArgument(0, Category.class));
 
         CommandLineRunner runner = initializer.seedCategories(categoryRepository, bootstrapSettings(true));
         runner.run();
 
         ArgumentCaptor<Category> savedCategories = ArgumentCaptor.forClass(Category.class);
         verify(categoryRepository, org.mockito.Mockito.times(3)).save(savedCategories.capture());
-        assertThat(savedCategories.getAllValues())
-                .extracting(Category::getName)
-                .containsExactlyElementsOf(List.of("Best Practices", "Java", "Software Engineering"));
+        assertThat(savedCategories.getAllValues()).extracting(Category::getName).containsExactlyElementsOf(List.of("Best Practices", "Java", "Software Engineering"));
     }
 
     private static BootstrapSettingsProperties bootstrapSettings(boolean demoDataEnabled) {

@@ -3,7 +3,6 @@ package team.jit.technicalinterviewdemo.business.user;
 import java.time.Instant;
 import java.util.Locale;
 import java.util.Optional;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -28,23 +27,14 @@ public class CurrentUserAccountService {
 
     @Transactional
     public UserAccount synchronizeCurrentAuthenticatedUser() {
-        AuthenticatedUserDetails authenticatedUser = currentAuthenticatedUser()
-                .orElseThrow(() -> new ForbiddenOperationException("Authenticated user information is not available."));
+        AuthenticatedUserDetails authenticatedUser = currentAuthenticatedUser().orElseThrow(() -> new ForbiddenOperationException("Authenticated user information is not available."));
         boolean shouldBootstrapAdmin = shouldBootstrapAdmin(authenticatedUser);
 
         UserAccount userAccount = userAccountRepository.findByProviderAndExternalLogin(
-                        authenticatedUser.provider(),
-                        authenticatedUser.login()
-                )
-                .orElseGet(() -> new UserAccount(
-                        authenticatedUser.provider(),
-                        authenticatedUser.login(),
-                        authenticatedUser.displayName(),
-                        authenticatedUser.email(),
-                        null,
-                        Instant.now(),
-                        java.util.Set.of(UserRole.USER)
-                ));
+                authenticatedUser.provider(), authenticatedUser.login()
+        ).orElseGet(() -> new UserAccount(
+                authenticatedUser.provider(), authenticatedUser.login(), authenticatedUser.displayName(), authenticatedUser.email(), null, Instant.now(), java.util.Set.of(UserRole.USER)
+        ));
 
         boolean created = userAccount.getId() == null;
         userAccount.setDisplayName(authenticatedUser.displayName());
@@ -58,21 +48,15 @@ public class CurrentUserAccountService {
         UserAccount savedUser = userAccountRepository.saveAndFlush(userAccount);
         applicationMetrics.recordUserOperation(created ? "create" : "loginSync");
         log.info(
-                "Synchronized authenticated user id={} provider={} login={} roles={}",
-                savedUser.getId(),
-                savedUser.getProvider(),
-                savedUser.getExternalLogin(),
-                savedUser.getRoles()
+                "Synchronized authenticated user id={} provider={} login={} roles={}", savedUser.getId(), savedUser.getProvider(), savedUser.getExternalLogin(), savedUser.getRoles()
         );
         return savedUser;
     }
 
     public Optional<UserAccount> findCurrentUser() {
-        return currentAuthenticatedUser()
-                .flatMap(authenticatedUser -> userAccountRepository.findByProviderAndExternalLogin(
-                        authenticatedUser.provider(),
-                        authenticatedUser.login()
-                ));
+        return currentAuthenticatedUser().flatMap(authenticatedUser -> userAccountRepository.findByProviderAndExternalLogin(
+                authenticatedUser.provider(), authenticatedUser.login()
+        ));
     }
 
     @Transactional
@@ -101,26 +85,18 @@ public class CurrentUserAccountService {
 
     private Optional<AuthenticatedUserDetails> currentAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!(authentication instanceof OAuth2AuthenticationToken oauth2AuthenticationToken)
-                || !oauth2AuthenticationToken.isAuthenticated()) {
+        if (!(authentication instanceof OAuth2AuthenticationToken oauth2AuthenticationToken) || !oauth2AuthenticationToken.isAuthenticated()) {
             return Optional.empty();
         }
 
         OAuth2User principal = oauth2AuthenticationToken.getPrincipal();
         String login = normalizeRequiredPrincipalValue(
-                findAttribute(principal, "login")
-                        .or(() -> findAttribute(principal, "preferred_username"))
-                        .or(() -> findAttribute(principal, "email"))
-                        .orElse(principal.getName()),
-                "login"
+                findAttribute(principal, "login").or(() -> findAttribute(principal, "preferred_username")).or(() -> findAttribute(principal, "email")).orElse(principal.getName()), "login"
         );
         String displayName = findAttribute(principal, "name").orElse(login);
         String email = findAttribute(principal, "email").orElse(null);
         return Optional.of(new AuthenticatedUserDetails(
-                oauth2AuthenticationToken.getAuthorizedClientRegistrationId().toLowerCase(Locale.ROOT),
-                login,
-                displayName,
-                email
+                oauth2AuthenticationToken.getAuthorizedClientRegistrationId().toLowerCase(Locale.ROOT), login, displayName, email
         ));
     }
 
@@ -133,8 +109,7 @@ public class CurrentUserAccountService {
     }
 
     private boolean shouldBootstrapAdmin(AuthenticatedUserDetails authenticatedUser) {
-        return userAccountRepository.countByRole(UserRole.ADMIN) == 0
-                && bootstrapSettingsProperties.normalizedInitialAdminIdentities().contains(authenticatedUser.identityKey());
+        return userAccountRepository.countByRole(UserRole.ADMIN) == 0 && bootstrapSettingsProperties.normalizedInitialAdminIdentities().contains(authenticatedUser.identityKey());
     }
 
     private String normalizeRequiredPrincipalValue(String value, String fieldName) {
@@ -145,10 +120,10 @@ public class CurrentUserAccountService {
     }
 
     private record AuthenticatedUserDetails(
-            String provider,
-            String login,
-            String displayName,
-            String email
+                                            String provider,
+                                            String login,
+                                            String displayName,
+                                            String email
     ) {
         private String identityKey() {
             return "%s:%s".formatted(provider, login);

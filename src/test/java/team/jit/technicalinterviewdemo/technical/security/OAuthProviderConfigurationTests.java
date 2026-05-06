@@ -15,8 +15,7 @@ class OAuthProviderConfigurationTests {
 
     @Test
     void oauthAuthorizationPathUsesApiSessionBaseUri() {
-        assertThat(SecuritySettingsProperties.OAuth.authorizationPath("Internal"))
-                .isEqualTo("/api/session/oauth2/authorization/internal");
+        assertThat(SecuritySettingsProperties.OAuth.authorizationPath("Internal")).isEqualTo("/api/session/oauth2/authorization/internal");
     }
 
     @Test
@@ -41,9 +40,7 @@ class OAuthProviderConfigurationTests {
 
         OAuthClientRegistrationConfiguration configuration = new OAuthClientRegistrationConfiguration();
 
-        assertThatThrownBy(() -> configuration.clientRegistrationRepository(settings))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("requires both client-id and client-secret");
+        assertThatThrownBy(() -> configuration.clientRegistrationRepository(settings)).isInstanceOf(IllegalStateException.class).hasMessageContaining("requires both client-id and client-secret");
     }
 
     @Test
@@ -55,9 +52,7 @@ class OAuthProviderConfigurationTests {
 
         OAuthClientRegistrationConfiguration configuration = new OAuthClientRegistrationConfiguration();
 
-        assertThatThrownBy(() -> configuration.clientRegistrationRepository(settings))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("requires a provider type");
+        assertThatThrownBy(() -> configuration.clientRegistrationRepository(settings)).isInstanceOf(IllegalStateException.class).hasMessageContaining("requires a provider type");
     }
 
     @Test
@@ -69,9 +64,7 @@ class OAuthProviderConfigurationTests {
 
         OAuthClientRegistrationConfiguration configuration = new OAuthClientRegistrationConfiguration();
 
-        assertThatThrownBy(() -> configuration.clientRegistrationRepository(settings))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("requires issuer-uri");
+        assertThatThrownBy(() -> configuration.clientRegistrationRepository(settings)).isInstanceOf(IllegalStateException.class).hasMessageContaining("requires issuer-uri");
     }
 
     @Test
@@ -99,16 +92,13 @@ class OAuthProviderConfigurationTests {
 
         ProductionSecurityConfigurationValidator validator = validator(settings, environment);
 
-        assertThatThrownBy(validator::afterPropertiesSet)
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("OAuth provider id must match");
+        assertThatThrownBy(validator::afterPropertiesSet).isInstanceOf(IllegalStateException.class).hasMessageContaining("OAuth provider id must match");
     }
 
     @Test
     void productionValidatorRejectsGithubProviderWithIssuer() {
         SecuritySettingsProperties settings = baseSettings();
-        SecuritySettingsProperties.OAuth.Provider provider =
-                provider(SecuritySettingsProperties.OAuth.ProviderType.GITHUB, "gh-client", "gh-secret");
+        SecuritySettingsProperties.OAuth.Provider provider = provider(SecuritySettingsProperties.OAuth.ProviderType.GITHUB, "gh-client", "gh-secret");
         provider.setIssuerUri("https://issuer.example.com");
         settings.getOAuth().setProviders(new LinkedHashMap<>(Map.of("github", provider)));
 
@@ -118,16 +108,13 @@ class OAuthProviderConfigurationTests {
 
         ProductionSecurityConfigurationValidator validator = validator(settings, environment);
 
-        assertThatThrownBy(validator::afterPropertiesSet)
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("must not define issuer-uri");
+        assertThatThrownBy(validator::afterPropertiesSet).isInstanceOf(IllegalStateException.class).hasMessageContaining("must not define issuer-uri");
     }
 
     @Test
     void productionValidatorRejectsOidcWithoutOpenidScope() {
         SecuritySettingsProperties settings = baseSettings();
-        SecuritySettingsProperties.OAuth.Provider provider =
-                provider(SecuritySettingsProperties.OAuth.ProviderType.OIDC, "oidc-client", "oidc-secret");
+        SecuritySettingsProperties.OAuth.Provider provider = provider(SecuritySettingsProperties.OAuth.ProviderType.OIDC, "oidc-client", "oidc-secret");
         provider.setIssuerUri("https://issuer.example.com");
         provider.setScope(java.util.Set.of("profile", "email"));
         settings.getOAuth().setProviders(new LinkedHashMap<>(Map.of("oidc", provider)));
@@ -138,17 +125,14 @@ class OAuthProviderConfigurationTests {
 
         ProductionSecurityConfigurationValidator validator = validator(settings, environment);
 
-        assertThatThrownBy(validator::afterPropertiesSet)
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("scope must include openid");
+        assertThatThrownBy(validator::afterPropertiesSet).isInstanceOf(IllegalStateException.class).hasMessageContaining("scope must include openid");
     }
 
     @Test
     void productionValidatorAllowsMultipleProvidersWithoutDefaultProvider() {
         SecuritySettingsProperties settings = baseSettings();
         settings.getOAuth().setProviders(new LinkedHashMap<>(Map.of(
-                "github", provider(SecuritySettingsProperties.OAuth.ProviderType.GITHUB, "gh-client", "gh-secret"),
-                "internal", provider(SecuritySettingsProperties.OAuth.ProviderType.GITHUB, "internal-client", "internal-secret")
+                "github", provider(SecuritySettingsProperties.OAuth.ProviderType.GITHUB, "gh-client", "gh-secret"), "internal", provider(SecuritySettingsProperties.OAuth.ProviderType.GITHUB, "internal-client", "internal-secret")
         )));
 
         MockEnvironment environment = new MockEnvironment().withProperty("spring.profiles.active", "prod,oauth");
@@ -170,9 +154,7 @@ class OAuthProviderConfigurationTests {
 
         ProductionSecurityConfigurationValidator validator = validator(settings, environment);
 
-        assertThatThrownBy(validator::afterPropertiesSet)
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("OAUTH_DEFAULT_PROVIDER has been removed");
+        assertThatThrownBy(validator::afterPropertiesSet).isInstanceOf(IllegalStateException.class).hasMessageContaining("OAUTH_DEFAULT_PROVIDER has been removed");
     }
 
     @Test
@@ -184,9 +166,7 @@ class OAuthProviderConfigurationTests {
 
         ProductionSecurityConfigurationValidator validator = validator(settings, environment);
 
-        assertThatThrownBy(validator::afterPropertiesSet)
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("server.forward-headers-strategy=framework");
+        assertThatThrownBy(validator::afterPropertiesSet).isInstanceOf(IllegalStateException.class).hasMessageContaining("server.forward-headers-strategy=framework");
     }
 
     private SecuritySettingsProperties baseSettings() {
@@ -196,16 +176,13 @@ class OAuthProviderConfigurationTests {
     }
 
     private ProductionSecurityConfigurationValidator validator(
-            SecuritySettingsProperties settings,
-            MockEnvironment environment
+                                                               SecuritySettingsProperties settings, MockEnvironment environment
     ) {
         return new ProductionSecurityConfigurationValidator(new BootstrapSettingsProperties(), settings, environment);
     }
 
     private SecuritySettingsProperties.OAuth.Provider provider(
-            SecuritySettingsProperties.OAuth.ProviderType type,
-            String clientId,
-            String clientSecret
+                                                               SecuritySettingsProperties.OAuth.ProviderType type, String clientId, String clientSecret
     ) {
         SecuritySettingsProperties.OAuth.Provider provider = new SecuritySettingsProperties.OAuth.Provider();
         provider.setType(type);

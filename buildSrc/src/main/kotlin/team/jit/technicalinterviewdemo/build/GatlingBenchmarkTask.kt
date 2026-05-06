@@ -4,13 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import java.io.File
-import java.net.URI
-import java.time.Duration
-import java.time.Instant
-import javax.inject.Inject
-import kotlin.math.ceil
-import kotlin.math.roundToInt
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.file.ConfigurableFileCollection
@@ -26,11 +19,16 @@ import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import org.gradle.process.ExecOperations
 import org.gradle.work.DisableCachingByDefault
+import java.io.File
+import java.net.URI
+import java.time.Duration
+import java.time.Instant
+import javax.inject.Inject
+import kotlin.math.ceil
+import kotlin.math.roundToInt
 
 @DisableCachingByDefault(because = "Runs Docker-backed Gatling benchmarks and compares runtime measurements.")
-abstract class GatlingBenchmarkTask @Inject constructor(
-    private val execOperations: ExecOperations
-) : DefaultTask() {
+abstract class GatlingBenchmarkTask @Inject constructor(private val execOperations: ExecOperations) : DefaultTask() {
 
     @get:Classpath
     abstract val gatlingRuntimeClasspath: ConfigurableFileCollection
@@ -110,14 +108,14 @@ abstract class GatlingBenchmarkTask @Inject constructor(
 
         if (docker.portIsBusy(host, port)) {
             throw GradleException(
-                "Port $port on host '$host' is already in use. Stop the conflicting process before running gatlingBenchmark."
+                "Port $port on host '$host' is already in use. Stop the conflicting process before running gatlingBenchmark.",
             )
         }
         val resources = DockerApplicationEnvironmentResources(
             logPrefix = "[gatlingBenchmark]",
             networkName = networkName.get(),
             postgresContainerName = postgresContainerName.get(),
-            appContainerName = appContainerName.get()
+            appContainerName = appContainerName.get(),
         )
         val config = DockerApplicationEnvironmentConfig(
             resources = resources,
@@ -131,9 +129,9 @@ abstract class GatlingBenchmarkTask @Inject constructor(
             appEnvironment = mapOf(
                 "GITHUB_CLIENT_ID" to oauthClientId.get(),
                 "GITHUB_CLIENT_SECRET" to oauthClientSecret.get(),
-                "SESSION_COOKIE_SECURE" to "false"
+                "SESSION_COOKIE_SECURE" to "false",
             ),
-            applicationDescription = "benchmark application"
+            applicationDescription = "benchmark application",
         )
 
         environment.cleanup(resources)
@@ -143,19 +141,20 @@ abstract class GatlingBenchmarkTask @Inject constructor(
             val publicReportDirectory = runSimulation(
                 simulationClassName = PUBLIC_API_SIMULATION_CLASS,
                 reportLabel = "PublicApiSimulation",
-                baseUrlValue = normalizedBaseUrl
+                baseUrlValue = normalizedBaseUrl,
             )
             val oauthRedirectReportDirectory = runSimulation(
                 simulationClassName = AUTH_REDIRECT_SIMULATION_CLASS,
                 reportLabel = "AuthenticationRedirectSimulation",
-                baseUrlValue = normalizedBaseUrl
+                baseUrlValue = normalizedBaseUrl,
             )
 
-            val benchmarkResult = captureBenchmarkResult(publicReportDirectory, oauthRedirectReportDirectory, normalizedBaseUrl, docker)
+            val benchmarkResult =
+                captureBenchmarkResult(publicReportDirectory, oauthRedirectReportDirectory, normalizedBaseUrl, docker)
             writeResult(latestResultFile.get().asFile, benchmarkResult)
             logger.lifecycle(
                 "[gatlingBenchmark] Latest benchmark result written to {}.",
-                latestResultFile.get().asFile.absolutePath
+                latestResultFile.get().asFile.absolutePath,
             )
 
             decideBaseline(benchmarkResult)
@@ -182,7 +181,7 @@ abstract class GatlingBenchmarkTask @Inject constructor(
                 "--add-opens=java.base/java.lang=ALL-UNNAMED",
                 "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
                 "--add-opens=java.base/java.io=ALL-UNNAMED",
-                "-Xshare:off"
+                "-Xshare:off",
             )
             args(
                 "-s",
@@ -190,7 +189,7 @@ abstract class GatlingBenchmarkTask @Inject constructor(
                 "-rf",
                 reportDirectory.get().asFile.absolutePath,
                 "-rd",
-                "gatlingBenchmark"
+                "gatlingBenchmark",
             )
             isIgnoreExitValue = true
         }
@@ -200,8 +199,9 @@ abstract class GatlingBenchmarkTask @Inject constructor(
             }
 
             2 -> throw GradleException("Gatling assertions failed for simulation '$simulationClassName'.")
+
             else -> throw GradleException(
-                "Gatling simulation '$simulationClassName' crashed with exit code ${executionResult.exitValue}."
+                "Gatling simulation '$simulationClassName' crashed with exit code ${executionResult.exitValue}.",
             )
         }
 
@@ -209,11 +209,13 @@ abstract class GatlingBenchmarkTask @Inject constructor(
             .filterNot { previousReports.contains(it.absolutePath) }
             .sortedByDescending(File::lastModified)
         val reportDirectoryFile = newReports.firstOrNull()
-            ?: throw GradleException("Could not find the report directory generated for simulation '$simulationClassName'.")
+            ?: throw GradleException(
+                "Could not find the report directory generated for simulation '$simulationClassName'.",
+            )
         logger.lifecycle(
             "[gatlingBenchmark] Finished simulation {}. Report directory: {}",
             reportLabel,
-            reportDirectoryFile.absolutePath
+            reportDirectoryFile.absolutePath,
         )
         return reportDirectoryFile
     }
@@ -230,7 +232,7 @@ abstract class GatlingBenchmarkTask @Inject constructor(
         publicReportDirectory: File,
         oauthRedirectReportDirectory: File,
         normalizedBaseUrl: String,
-        docker: DockerSupport
+        docker: DockerSupport,
     ): BenchmarkBaseline {
         val publicIndex = File(publicReportDirectory, "index.html")
         val oauthRedirectIndex = File(oauthRedirectReportDirectory, "index.html")
@@ -239,7 +241,7 @@ abstract class GatlingBenchmarkTask @Inject constructor(
             requestStats(publicIndex, "list-books"),
             requestStats(publicIndex, "search-books"),
             requestStats(publicIndex, "lookup-localization-message", aliases = listOf("filter-localizations")),
-            requestStats(oauthRedirectIndex, "oauth2-github-redirect")
+            requestStats(oauthRedirectIndex, "oauth2-github-redirect"),
         )
 
         val gitCommit = docker.command(listOf("git", "rev-parse", "HEAD"), allowFailure = true)
@@ -257,24 +259,28 @@ abstract class GatlingBenchmarkTask @Inject constructor(
                 BenchmarkSimulation(
                     simulation = "PublicApiSimulation",
                     description = "List books, search books, and localization lookup against the public API.",
-                    injectionProfile = "5 users at once, ramp 1->6 users/s for 20s, then hold 6 users/s for 20s"
+                    injectionProfile = "5 users at once, ramp 1->6 users/s for 20s, then hold 6 users/s for 20s",
                 ),
                 BenchmarkSimulation(
                     simulation = "AuthenticationRedirectSimulation",
                     description = "Start the GitHub OAuth redirect flow without following the redirect.",
-                    injectionProfile = "3 users at once, ramp 1->4 users/s for 15s, then hold 4 users/s for 15s"
-                )
+                    injectionProfile = "3 users at once, ramp 1->4 users/s for 15s, then hold 4 users/s for 15s",
+                ),
             ),
             requests = requests,
             notes = listOf(
                 "This benchmark uses the packaged Docker image and a Dockerized PostgreSQL container.",
                 "The OAuth benchmark uses fake GitHub credentials because only client registration is needed for redirects.",
-                "AuthenticatedUserProfileSimulation remains excluded from automation because it requires a real authenticated session cookie."
-            )
+                "AuthenticatedUserProfileSimulation remains excluded from automation because it requires a real authenticated session cookie.",
+            ),
         )
     }
 
-    private fun requestStats(indexFile: File, requestName: String, aliases: List<String> = emptyList()): BenchmarkRequestStats {
+    private fun requestStats(
+        indexFile: File,
+        requestName: String,
+        aliases: List<String> = emptyList(),
+    ): BenchmarkRequestStats {
         val allNames = listOf(requestName) + aliases
         val indexContent = indexFile.readText()
         for (candidate in allNames) {
@@ -293,7 +299,7 @@ abstract class GatlingBenchmarkTask @Inject constructor(
     private fun parseRequestStats(indexContent: String, requestName: String): BenchmarkRequestStats? {
         val escapedRequestName = Regex.escape(requestName)
         val rowPattern = Regex(
-            "(?s)<tr id=\"req_[^\"]+\" data-parent=\"ROOT\">.*?<span[^>]*class=\"ellipsed-name\">$escapedRequestName</span>.*?</tr>"
+            "(?s)<tr id=\"req_[^\"]+\" data-parent=\"ROOT\">.*?<span[^>]*class=\"ellipsed-name\">$escapedRequestName</span>.*?</tr>",
         )
         val rowMatch = rowPattern.find(indexContent) ?: return null
 
@@ -332,7 +338,7 @@ abstract class GatlingBenchmarkTask @Inject constructor(
             p99Ms = parseInt(valuesByColumn.getValue("11")),
             maxMs = parseInt(valuesByColumn.getValue("12")),
             meanMs = parseInt(valuesByColumn.getValue("13")),
-            stdDevMs = parseInt(valuesByColumn.getValue("14"))
+            stdDevMs = parseInt(valuesByColumn.getValue("14")),
         )
     }
 
@@ -357,14 +363,14 @@ abstract class GatlingBenchmarkTask @Inject constructor(
             writeResult(baselineFilePath, currentResult)
             logger.lifecycle(
                 "[gatlingBenchmark] Baseline decision: update requested, baseline overwritten at {}.",
-                baselineFilePath.absolutePath
+                baselineFilePath.absolutePath,
             )
             return
         }
 
         if (!baselineFilePath.exists()) {
             throw GradleException(
-                "Baseline file not found at ${baselineFilePath.absolutePath}. Run with -Pbenchmark.updateBaseline=true to create it."
+                "Baseline file not found at ${baselineFilePath.absolutePath}. Run with -Pbenchmark.updateBaseline=true to create it.",
             )
         }
 
@@ -395,7 +401,7 @@ abstract class GatlingBenchmarkTask @Inject constructor(
                     current.p95Ms,
                     maxAllowedP95,
                     currentSuccess,
-                    minSuccess
+                    minSuccess,
                 )
             } else {
                 val failure = buildString {
@@ -416,11 +422,13 @@ abstract class GatlingBenchmarkTask @Inject constructor(
         if (failures.isNotEmpty()) {
             throw GradleException(
                 "Benchmark regression detected:\n${failures.joinToString(separator = "\n") { "- $it" }}\n" +
-                    "Run with -Pbenchmark.updateBaseline=true only after intentional baseline review."
+                    "Run with -Pbenchmark.updateBaseline=true only after intentional baseline review.",
             )
         }
 
-        logger.lifecycle("[gatlingBenchmark] Baseline decision: current run is within allowed tolerance; baseline unchanged.")
+        logger.lifecycle(
+            "[gatlingBenchmark] Baseline decision: current run is within allowed tolerance; baseline unchanged.",
+        )
     }
 
     private fun writeResult(file: File, content: BenchmarkBaseline) {
@@ -430,7 +438,8 @@ abstract class GatlingBenchmarkTask @Inject constructor(
 
     private companion object {
         const val GATLING_MAIN_CLASS: String = "io.gatling.app.Gatling"
-        const val PUBLIC_API_SIMULATION_CLASS: String = "team.jit.technicalinterviewdemo.performance.PublicApiSimulation"
+        const val PUBLIC_API_SIMULATION_CLASS: String =
+            "team.jit.technicalinterviewdemo.performance.PublicApiSimulation"
         const val AUTH_REDIRECT_SIMULATION_CLASS: String =
             "team.jit.technicalinterviewdemo.performance.AuthenticationRedirectSimulation"
 
@@ -448,14 +457,10 @@ internal data class BenchmarkBaseline(
     val activeProfiles: List<String>,
     val simulations: List<BenchmarkSimulation>,
     val requests: List<BenchmarkRequestStats>,
-    val notes: List<String>
+    val notes: List<String>,
 )
 
-internal data class BenchmarkSimulation(
-    val simulation: String,
-    val description: String,
-    val injectionProfile: String
-)
+internal data class BenchmarkSimulation(val simulation: String, val description: String, val injectionProfile: String)
 
 internal data class BenchmarkRequestStats(
     val requestName: String,
@@ -472,5 +477,5 @@ internal data class BenchmarkRequestStats(
     val p99Ms: Int,
     val maxMs: Int,
     val meanMs: Int,
-    val stdDevMs: Int
+    val stdDevMs: Int,
 )

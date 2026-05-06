@@ -7,17 +7,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import team.jit.technicalinterviewdemo.business.book.BookRepository;
 import team.jit.technicalinterviewdemo.business.audit.AuditAction;
 import team.jit.technicalinterviewdemo.business.audit.AuditLogService;
 import team.jit.technicalinterviewdemo.business.audit.AuditTargetType;
+import team.jit.technicalinterviewdemo.business.book.BookRepository;
 import team.jit.technicalinterviewdemo.business.user.CurrentUserAccountService;
 import team.jit.technicalinterviewdemo.business.user.UserRole;
 import team.jit.technicalinterviewdemo.technical.api.InvalidRequestException;
@@ -44,8 +43,7 @@ public class CategoryService {
     public List<Category> findAll() {
         applicationMetrics.recordCategoryOperation("list");
         Cache categoriesCache = requireCache(CacheNames.CATEGORIES);
-        @SuppressWarnings("unchecked")
-        List<Category> cachedCategories = categoriesCache.get(ALL_CATEGORIES_CACHE_KEY, List.class);
+        @SuppressWarnings("unchecked") List<Category> cachedCategories = categoriesCache.get(ALL_CATEGORIES_CACHE_KEY, List.class);
         if (cachedCategories != null) {
             applicationMetrics.recordCacheEvent(CacheNames.CATEGORIES, "hit");
             return cachedCategories;
@@ -68,11 +66,7 @@ public class CategoryService {
         evictCategoryCaches();
         applicationMetrics.recordCategoryOperation("create");
         auditLogService.record(
-                AuditTargetType.CATEGORY,
-                savedCategory.getId(),
-                AuditAction.CREATE,
-                "Created category '%s'.".formatted(savedCategory.getName()),
-                auditDetails(savedCategory.getName())
+                AuditTargetType.CATEGORY, savedCategory.getId(), AuditAction.CREATE, "Created category '%s'.".formatted(savedCategory.getName()), auditDetails(savedCategory.getName())
         );
         log.info("Created category id={} name={}", savedCategory.getId(), savedCategory.getName());
         return savedCategory;
@@ -91,13 +85,8 @@ public class CategoryService {
         evictCategoryCaches();
         applicationMetrics.recordCategoryOperation("update");
         auditLogService.record(
-                AuditTargetType.CATEGORY,
-                updatedCategory.getId(),
-                AuditAction.UPDATE,
-                "Updated category '%s'.".formatted(updatedCategory.getName()),
-                Map.of(
-                        "previousName", previousName,
-                        "name", updatedCategory.getName()
+                AuditTargetType.CATEGORY, updatedCategory.getId(), AuditAction.UPDATE, "Updated category '%s'.".formatted(updatedCategory.getName()), Map.of(
+                        "previousName", previousName, "name", updatedCategory.getName()
                 )
         );
         log.info("Updated category id={} name={}", updatedCategory.getId(), updatedCategory.getName());
@@ -116,11 +105,7 @@ public class CategoryService {
         evictCategoryCaches();
         applicationMetrics.recordCategoryOperation("delete");
         auditLogService.record(
-                AuditTargetType.CATEGORY,
-                id,
-                AuditAction.DELETE,
-                "Deleted category '%s'.".formatted(category.getName()),
-                auditDetails(category.getName())
+                AuditTargetType.CATEGORY, id, AuditAction.DELETE, "Deleted category '%s'.".formatted(category.getName()), auditDetails(category.getName())
         );
         log.info("Deleted category id={} name={}", id, category.getName());
     }
@@ -142,8 +127,7 @@ public class CategoryService {
     }
 
     private Category requireCategory(Long id) {
-        return categoryRepository.findById(id)
-                .orElseThrow(() -> new CategoryNotFoundException(id));
+        return categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
     }
 
     @SuppressWarnings("unchecked")
@@ -163,9 +147,7 @@ public class CategoryService {
     }
 
     private List<String> findMissingNames(Set<String> normalizedNames, Map<String, Long> categoryDirectory) {
-        return normalizedNames.stream()
-                .filter(name -> !categoryDirectory.containsKey(normalizeLookupName(name)))
-                .toList();
+        return normalizedNames.stream().filter(name -> !categoryDirectory.containsKey(normalizeLookupName(name))).toList();
     }
 
     private Set<String> normalizeLookupNames(Set<String> normalizedNames) {
@@ -215,9 +197,7 @@ public class CategoryService {
     }
 
     private void validateUniqueName(String normalizedName, Long id) {
-        boolean exists = id == null
-                ? categoryRepository.existsByNameIgnoreCase(normalizedName)
-                : categoryRepository.existsByNameIgnoreCaseAndIdNot(normalizedName, id);
+        boolean exists = id == null ? categoryRepository.existsByNameIgnoreCase(normalizedName) : categoryRepository.existsByNameIgnoreCaseAndIdNot(normalizedName, id);
         if (exists) {
             throw new InvalidRequestException("Category '%s' already exists.".formatted(normalizedName));
         }

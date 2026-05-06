@@ -4,17 +4,16 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
-
 import team.jit.technicalinterviewdemo.technical.api.InvalidRequestException;
 
 record BookSearchCriteria(
-        String title,
-        String author,
-        String isbn,
-        Integer year,
-        Integer yearFrom,
-        Integer yearTo,
-        List<String> categories
+                          String title,
+                          String author,
+                          String isbn,
+                          Integer year,
+                          Integer yearFrom,
+                          Integer yearTo,
+                          List<String> categories
 ) {
 
     private static final int MAX_TEXT_FILTER_LENGTH = 100;
@@ -40,20 +39,12 @@ record BookSearchCriteria(
         if (request.getYear() != null && (request.getYearFrom() != null || request.getYearTo() != null)) {
             throw new InvalidRequestException("Use either 'year' or the 'yearFrom'/'yearTo' range parameters, not both.");
         }
-        if (request.getYearFrom() != null
-                && request.getYearTo() != null
-                && request.getYearFrom() > request.getYearTo()) {
+        if (request.getYearFrom() != null && request.getYearTo() != null && request.getYearFrom() > request.getYearTo()) {
             throw new InvalidRequestException("'yearFrom' must be less than or equal to 'yearTo'.");
         }
 
         return new BookSearchCriteria(
-                normalizedTitle,
-                normalizedAuthor,
-                normalizedIsbn,
-                request.getYear(),
-                request.getYearFrom(),
-                request.getYearTo(),
-                normalizedCategories
+                normalizedTitle, normalizedAuthor, normalizedIsbn, request.getYear(), request.getYearFrom(), request.getYearTo(), normalizedCategories
         );
     }
 

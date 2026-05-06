@@ -15,7 +15,6 @@ import jakarta.persistence.Table;
 import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -65,24 +64,13 @@ public class AuditLog {
     private Instant createdAt;
 
     public AuditLog(
-            AuditTargetType targetType,
-            Long targetId,
-            AuditAction action,
-            UserAccount actorUser,
-            String actorLogin,
-            String summary
+                    AuditTargetType targetType, Long targetId, AuditAction action, UserAccount actorUser, String actorLogin, String summary
     ) {
         this(targetType, targetId, action, actorUser, actorLogin, summary, Map.of());
     }
 
     public AuditLog(
-            AuditTargetType targetType,
-            Long targetId,
-            AuditAction action,
-            UserAccount actorUser,
-            String actorLogin,
-            String summary,
-            Map<String, Object> details
+                    AuditTargetType targetType, Long targetId, AuditAction action, UserAccount actorUser, String actorLogin, String summary, Map<String, Object> details
     ) {
         this.targetType = targetType;
         this.targetId = targetId;

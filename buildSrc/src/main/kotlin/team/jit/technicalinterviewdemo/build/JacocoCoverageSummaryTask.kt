@@ -1,7 +1,5 @@
 package team.jit.technicalinterviewdemo.build
 
-import java.util.Locale
-import javax.xml.parsers.DocumentBuilderFactory
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.RegularFileProperty
@@ -13,6 +11,8 @@ import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
 import org.gradle.work.DisableCachingByDefault
+import java.util.Locale
+import javax.xml.parsers.DocumentBuilderFactory
 
 @DisableCachingByDefault(because = "The task only logs coverage details and does not produce cacheable outputs.")
 abstract class JacocoCoverageSummaryTask : DefaultTask() {
@@ -74,7 +74,7 @@ abstract class JacocoCoverageSummaryTask : DefaultTask() {
             "JaCoCo line coverage: {}% (covered={}, missed={})",
             formatPercentage(overallCoverage),
             coveredLines,
-            missedLines
+            missedLines,
         )
         logger.lifecycle("JaCoCo HTML report: {}", htmlReportDirectory.get().asFile.absolutePath)
         logger.lifecycle("Lowest-covered classes:")
@@ -89,18 +89,14 @@ abstract class JacocoCoverageSummaryTask : DefaultTask() {
                     classSummary.className,
                     formatPercentage(classSummary.coveragePercentage),
                     classSummary.coveredLines,
-                    classSummary.missedLines
+                    classSummary.missedLines,
                 )
             }
     }
 
     private fun formatPercentage(value: Double): String = String.format(Locale.ROOT, "%.1f", value)
 
-    private data class ClassCoverage(
-        val className: String,
-        val missedLines: Int,
-        val coveredLines: Int
-    ) {
+    private data class ClassCoverage(val className: String, val missedLines: Int, val coveredLines: Int) {
         val totalLines: Int
             get() = missedLines + coveredLines
 

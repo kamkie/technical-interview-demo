@@ -1,18 +1,17 @@
 package team.jit.technicalinterviewdemo.build
 
-import java.time.Duration
-import javax.inject.Inject
 import org.gradle.api.DefaultTask
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 import org.gradle.process.ExecOperations
 import org.gradle.work.DisableCachingByDefault
+import java.time.Duration
+import javax.inject.Inject
 
 @DisableCachingByDefault(because = "Starts Docker containers required for external smoke testing.")
-abstract class ExternalSmokeEnvironmentUpTask @Inject constructor(
-    private val execOperations: ExecOperations
-) : DefaultTask() {
+abstract class ExternalSmokeEnvironmentUpTask @Inject constructor(private val execOperations: ExecOperations) :
+    DefaultTask() {
 
     @get:Input
     abstract val imageName: Property<String>
@@ -61,7 +60,7 @@ abstract class ExternalSmokeEnvironmentUpTask @Inject constructor(
             logPrefix = "[externalSmokeTest]",
             networkName = networkName.get(),
             postgresContainerName = postgresContainerName.get(),
-            appContainerName = appContainerName.get()
+            appContainerName = appContainerName.get(),
         )
         val config = DockerApplicationEnvironmentConfig(
             resources = resources,
@@ -72,7 +71,7 @@ abstract class ExternalSmokeEnvironmentUpTask @Inject constructor(
             databasePassword = databasePassword.get(),
             appHostPort = hostPort.get(),
             springProfiles = "prod",
-            postgresHostPort = postgresHostPort.get()
+            postgresHostPort = postgresHostPort.get(),
         )
 
         environment.cleanup(resources)

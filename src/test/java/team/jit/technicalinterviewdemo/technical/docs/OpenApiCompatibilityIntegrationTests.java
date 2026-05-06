@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-
 import org.junit.jupiter.api.Test;
 import team.jit.technicalinterviewdemo.testing.AbstractRandomPortIntegrationTest;
 import team.jit.technicalinterviewdemo.testing.RandomPortIntegrationSpringBootTest;

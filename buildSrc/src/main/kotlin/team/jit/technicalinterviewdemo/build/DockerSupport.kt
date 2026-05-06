@@ -1,5 +1,8 @@
 package team.jit.technicalinterviewdemo.build
 
+import org.gradle.api.GradleException
+import org.gradle.api.logging.Logger
+import org.gradle.process.ExecOperations
 import java.io.ByteArrayOutputStream
 import java.net.InetSocketAddress
 import java.net.Socket
@@ -10,20 +13,10 @@ import java.net.http.HttpResponse
 import java.time.Duration
 import java.time.Instant
 import java.util.Locale
-import org.gradle.api.GradleException
-import org.gradle.api.logging.Logger
-import org.gradle.process.ExecOperations
 
-internal data class CommandResult(
-    val exitCode: Int,
-    val stdout: String,
-    val stderr: String
-)
+internal data class CommandResult(val exitCode: Int, val stdout: String, val stderr: String)
 
-internal class DockerSupport(
-    private val execOperations: ExecOperations,
-    private val logger: Logger
-) {
+internal class DockerSupport(private val execOperations: ExecOperations, private val logger: Logger) {
 
     fun docker(vararg args: String, allowFailure: Boolean = false): CommandResult =
         command(listOf("docker", *args), allowFailure)
@@ -40,7 +33,7 @@ internal class DockerSupport(
         val result = CommandResult(
             exitCode = execResult.exitValue,
             stdout = stdout.toString(Charsets.UTF_8),
-            stderr = stderr.toString(Charsets.UTF_8)
+            stderr = stderr.toString(Charsets.UTF_8),
         )
         if (!allowFailure && result.exitCode != 0) {
             throw GradleException(
@@ -54,7 +47,7 @@ internal class DockerSupport(
                         appendLine("stderr:")
                         appendLine(result.stderr.trimEnd())
                     }
-                }.trimEnd()
+                }.trimEnd(),
             )
         }
         return result
@@ -68,7 +61,7 @@ internal class DockerSupport(
         timeout: Duration,
         description: String,
         pollInterval: Duration = Duration.ofSeconds(2),
-        condition: () -> Boolean
+        condition: () -> Boolean,
     ) {
         val deadline = Instant.now().plus(timeout)
         while (Instant.now().isBefore(deadline)) {

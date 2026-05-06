@@ -12,11 +12,9 @@ import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminB
 import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.authenticatedBrowserSession;
 
 import io.micrometer.core.instrument.MeterRegistry;
-
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +23,8 @@ import org.springframework.http.MediaType;
 import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
 import team.jit.technicalinterviewdemo.business.audit.AuditLogRepository;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
-import team.jit.technicalinterviewdemo.technical.cache.CacheNames;
 import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
+import team.jit.technicalinterviewdemo.technical.cache.CacheNames;
 import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
 import team.jit.technicalinterviewdemo.testing.CacheTestSupport;
 import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
@@ -73,21 +71,16 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
     void authenticatedBookWritePersistsUserWithDefaultUserRole() throws Exception {
         BrowserSession readerSession = readerSession();
 
-        mockMvc.perform(post("/api/books")
-                        .with(readerSession.unsafeWrite())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {
-                                  "title": "Spring in Action",
-                                  "author": "Craig Walls",
-                                  "isbn": "9781617297571",
-                                  "publicationYear": 2022
-                                }
-                                """))
-                .andExpect(status().isCreated());
+        mockMvc.perform(post("/api/books").with(readerSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
+                {
+                  "title": "Spring in Action",
+                  "author": "Craig Walls",
+                  "isbn": "9781617297571",
+                  "publicationYear": 2022
+                }
+                """)).andExpect(status().isCreated());
 
-        UserAccount userAccount = userAccountRepository.findByProviderAndExternalLogin("github", "reader-user")
-                .orElseThrow();
+        UserAccount userAccount = userAccountRepository.findByProviderAndExternalLogin("github", "reader-user").orElseThrow();
 
         assertThat(userAccount.getRoles()).containsExactly(UserRole.USER);
         assertThat(userAccount.getDisplayName()).isEqualTo("reader-user display");
@@ -99,26 +92,18 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
     void bootstrapAdminIdentityGetsPersistedAdminGrantAndCanManageCategories() throws Exception {
         BrowserSession adminSession = adminSession();
 
-        mockMvc.perform(post("/api/categories")
-                        .with(adminSession.unsafeWrite())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {
-                                  "name": "Architecture"
-                                }
-                                """))
-                .andExpect(status().isCreated());
+        mockMvc.perform(post("/api/categories").with(adminSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
+                {
+                  "name": "Architecture"
+                }
+                """)).andExpect(status().isCreated());
 
-        UserAccount userAccount = userAccountRepository.findByProviderAndExternalLogin("github", "admin-user")
-                .orElseThrow();
+        UserAccount userAccount = userAccountRepository.findByProviderAndExternalLogin("github", "admin-user").orElseThrow();
 
         assertThat(userAccount.getRoles()).containsExactlyInAnyOrder(UserRole.USER, UserRole.ADMIN);
-        assertThat(userAccount.getRoleGrants())
-                .extracting(UserRoleGrant::getRole, UserRoleGrant::getGrantSource)
-                .containsExactlyInAnyOrder(
-                        tuple(UserRole.ADMIN, UserRoleGrantSource.BOOTSTRAP),
-                        tuple(UserRole.USER, UserRoleGrantSource.AUTHENTICATED_LOGIN)
-                );
+        assertThat(userAccount.getRoleGrants()).extracting(UserRoleGrant::getRole, UserRoleGrant::getGrantSource).containsExactlyInAnyOrder(
+                tuple(UserRole.ADMIN, UserRoleGrantSource.BOOTSTRAP), tuple(UserRole.USER, UserRoleGrantSource.AUTHENTICATED_LOGIN)
+        );
     }
 
     @Test
@@ -126,124 +111,72 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
         BrowserSession adminSession = adminSession();
         BrowserSession secondAdminSession = authenticatedBrowserSession(sessionRepository, "second-admin");
 
-        mockMvc.perform(post("/api/categories")
-                        .with(adminSession.unsafeWrite())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {
-                                  "name": "Architecture"
-                                }
-                                """))
-                .andExpect(status().isCreated());
+        mockMvc.perform(post("/api/categories").with(adminSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
+                {
+                  "name": "Architecture"
+                }
+                """)).andExpect(status().isCreated());
 
-        mockMvc.perform(post("/api/categories")
-                        .with(secondAdminSession.unsafeWrite())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {
-                                  "name": "Operations"
-                                }
-                                """))
-                .andExpect(status().isForbidden())
-                .andExpect(jsonPath("$.detail").value("Category management requires the ADMIN role."));
+        mockMvc.perform(post("/api/categories").with(secondAdminSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
+                {
+                  "name": "Operations"
+                }
+                """)).andExpect(status().isForbidden()).andExpect(jsonPath("$.detail").value("Category management requires the ADMIN role."));
 
-        UserAccount secondAdmin = userAccountRepository.findByProviderAndExternalLogin("github", "second-admin")
-                .orElseThrow();
+        UserAccount secondAdmin = userAccountRepository.findByProviderAndExternalLogin("github", "second-admin").orElseThrow();
 
         assertThat(secondAdmin.getRoles()).containsExactly(UserRole.USER);
-        assertThat(secondAdmin.getRoleGrants())
-                .extracting(UserRoleGrant::getRole, UserRoleGrant::getGrantSource)
-                .containsExactly(tuple(UserRole.USER, UserRoleGrantSource.AUTHENTICATED_LOGIN));
+        assertThat(secondAdmin.getRoleGrants()).extracting(UserRoleGrant::getRole, UserRoleGrant::getGrantSource).containsExactly(tuple(UserRole.USER, UserRoleGrantSource.AUTHENTICATED_LOGIN));
     }
 
     @Test
     void currentUserEndpointReturnsPersistedProfile() throws Exception {
         BrowserSession readerSession = readerSession();
 
-        mockMvc.perform(get("/api/account")
-                        .with(readerSession.authenticatedSession()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.provider").value("github"))
-                .andExpect(jsonPath("$.login").value("reader-user"))
-                .andExpect(jsonPath("$.displayName").value("reader-user display"))
-                .andExpect(jsonPath("$.email").value("reader-user@example.test"))
-                .andExpect(jsonPath("$.roles[0]").value("USER"))
-                .andExpect(jsonPath("$.lastLoginAt").value(endsWith("Z")))
-                .andExpect(jsonPath("$.createdAt").value(endsWith("Z")))
-                .andExpect(jsonPath("$.updatedAt").value(endsWith("Z")));
+        mockMvc.perform(get("/api/account").with(readerSession.authenticatedSession())).andExpect(status().isOk()).andExpect(jsonPath("$.provider").value("github")).andExpect(jsonPath("$.login").value("reader-user")).andExpect(jsonPath("$.displayName").value("reader-user display")).andExpect(jsonPath("$.email").value("reader-user@example.test")).andExpect(jsonPath("$.roles[0]").value("USER")).andExpect(jsonPath("$.lastLoginAt").value(endsWith("Z"))).andExpect(jsonPath("$.createdAt").value(endsWith("Z"))).andExpect(jsonPath("$.updatedAt").value(endsWith("Z")));
     }
 
     @Test
     void preferredLanguageIsStoredAndUsedAsFallbackForAuthenticatedErrors() throws Exception {
         BrowserSession readerSession = readerSession();
 
-        mockMvc.perform(put("/api/account/language")
-                        .with(readerSession.unsafeWrite())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {
-                                  "preferredLanguage": "pl"
-                                }
-                                """))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.preferredLanguage").value("pl"))
-                .andExpect(jsonPath("$.lastLoginAt").value(endsWith("Z")))
-                .andExpect(jsonPath("$.createdAt").value(endsWith("Z")))
-                .andExpect(jsonPath("$.updatedAt").value(endsWith("Z")));
+        mockMvc.perform(put("/api/account/language").with(readerSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
+                {
+                  "preferredLanguage": "pl"
+                }
+                """)).andExpect(status().isOk()).andExpect(jsonPath("$.preferredLanguage").value("pl")).andExpect(jsonPath("$.lastLoginAt").value(endsWith("Z"))).andExpect(jsonPath("$.createdAt").value(endsWith("Z"))).andExpect(jsonPath("$.updatedAt").value(endsWith("Z")));
 
-        mockMvc.perform(post("/api/categories")
-                        .with(readerSession.unsafeWrite())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {
-                                  "name": "Architecture"
-                                }
-                                """))
-                .andExpect(status().isForbidden())
-                .andExpect(jsonPath("$.title").value("Forbidden"))
-                .andExpect(jsonPath("$.status").value(403))
-                .andExpect(jsonPath("$.detail").value("Category management requires the ADMIN role."))
-                .andExpect(jsonPath("$.messageKey").value("error.request.forbidden"))
-                .andExpect(jsonPath("$.message").value("Nie masz uprawnien do wykonania tej operacji."))
-                .andExpect(jsonPath("$.language").value("pl"));
+        mockMvc.perform(post("/api/categories").with(readerSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
+                {
+                  "name": "Architecture"
+                }
+                """)).andExpect(status().isForbidden()).andExpect(jsonPath("$.title").value("Forbidden")).andExpect(jsonPath("$.status").value(403)).andExpect(jsonPath("$.detail").value("Category management requires the ADMIN role.")).andExpect(jsonPath("$.messageKey").value("error.request.forbidden")).andExpect(jsonPath("$.message").value("Nie masz uprawnien do wykonania tej operacji.")).andExpect(jsonPath("$.language").value("pl"));
     }
 
     @Test
     void updatePreferredLanguageWithInvalidCsrfReturnsDedicatedForbiddenProblem() throws Exception {
         BrowserSession readerSession = readerSession();
 
-        mockMvc.perform(put("/api/account/language")
-                        .with(readerSession.unsafeWriteWithInvalidCsrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {
-                                  "preferredLanguage": "pl"
-                                }
-                                """))
-                .andExpect(status().isForbidden())
-                .andExpect(jsonPath("$.title").value("Invalid CSRF Token"))
-                .andExpect(jsonPath("$.messageKey").value("error.request.csrf_invalid"));
+        mockMvc.perform(put("/api/account/language").with(readerSession.unsafeWriteWithInvalidCsrf()).contentType(MediaType.APPLICATION_JSON).content("""
+                {
+                  "preferredLanguage": "pl"
+                }
+                """)).andExpect(status().isForbidden()).andExpect(jsonPath("$.title").value("Invalid CSRF Token")).andExpect(jsonPath("$.messageKey").value("error.request.csrf_invalid"));
     }
 
     @Test
     void repeatedAuthenticatedRequestsRefreshLastLoginTimestamp() throws Exception {
         BrowserSession readerSession = readerSession();
 
-        mockMvc.perform(get("/api/account")
-                        .with(readerSession.authenticatedSession()))
-                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/account").with(readerSession.authenticatedSession())).andExpect(status().isOk());
 
-        UserAccount storedUser = userAccountRepository.findByProviderAndExternalLogin("github", "reader-user")
-                .orElseThrow();
+        UserAccount storedUser = userAccountRepository.findByProviderAndExternalLogin("github", "reader-user").orElseThrow();
         storedUser.setLastLoginAt(Instant.now().minus(2, ChronoUnit.DAYS));
         userAccountRepository.saveAndFlush(storedUser);
 
-        mockMvc.perform(get("/api/account")
-                        .with(readerSession.authenticatedSession()))
-                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/account").with(readerSession.authenticatedSession())).andExpect(status().isOk());
 
-        UserAccount refreshedUser = userAccountRepository.findByProviderAndExternalLogin("github", "reader-user")
-                .orElseThrow();
+        UserAccount refreshedUser = userAccountRepository.findByProviderAndExternalLogin("github", "reader-user").orElseThrow();
         assertThat(refreshedUser.getLastLoginAt()).isAfter(Instant.now().minus(1, ChronoUnit.HOURS));
     }
 
@@ -254,27 +187,17 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
         BrowserSession readerSession = readerSession();
         BrowserSession adminSession = adminSession();
 
-        mockMvc.perform(get("/api/account")
-                        .with(readerSession.authenticatedSession()))
-                .andExpect(status().isOk());
-        mockMvc.perform(put("/api/account/language")
-                        .with(readerSession.unsafeWrite())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {
-                                  "preferredLanguage": "fr"
-                                }
-                                """))
-                .andExpect(status().isOk());
-        mockMvc.perform(post("/api/categories")
-                        .with(adminSession.unsafeWrite())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {
-                                  "name": "Architecture"
-                                }
-                                """))
-                .andExpect(status().isCreated());
+        mockMvc.perform(get("/api/account").with(readerSession.authenticatedSession())).andExpect(status().isOk());
+        mockMvc.perform(put("/api/account/language").with(readerSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
+                {
+                  "preferredLanguage": "fr"
+                }
+                """)).andExpect(status().isOk());
+        mockMvc.perform(post("/api/categories").with(adminSession.unsafeWrite()).contentType(MediaType.APPLICATION_JSON).content("""
+                {
+                  "name": "Architecture"
+                }
+                """)).andExpect(status().isCreated());
 
         assertThat(counterValue(USER_OPERATIONS, "operation", "create") - createBefore).isEqualTo(2.0d);
         assertThat(counterValue(USER_OPERATIONS, "operation", "updatePreferredLanguage") - updatePreferenceBefore).isEqualTo(1.0d);

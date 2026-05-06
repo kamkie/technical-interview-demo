@@ -1,7 +1,6 @@
 package team.jit.technicalinterviewdemo.business.category;
 
 import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -16,8 +15,7 @@ public class CategoryDataInitializer {
     @Bean
     @Order(10)
     CommandLineRunner seedCategories(
-            CategoryRepository categoryRepository,
-            BootstrapSettingsProperties bootstrapSettingsProperties
+                                     CategoryRepository categoryRepository, BootstrapSettingsProperties bootstrapSettingsProperties
     ) {
         return args -> {
             if (!bootstrapSettingsProperties.getSeed().isDemoData()) {

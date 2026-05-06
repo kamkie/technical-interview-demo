@@ -2,7 +2,6 @@ package team.jit.technicalinterviewdemo.technical.logging;
 
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
-
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
@@ -20,7 +19,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -51,20 +49,12 @@ public class ServiceLoggingAspect {
         try {
             Object result = joinPoint.proceed();
             log.info(
-                    "Service call {}.{} parameters={} durationMs={}",
-                    serviceName,
-                    methodName,
-                    parameters,
-                    toDurationMillis(startTimeNanos)
+                    "Service call {}.{} parameters={} durationMs={}", serviceName, methodName, parameters, toDurationMillis(startTimeNanos)
             );
             return result;
         } catch (Throwable exception) {
             log.info(
-                    "Service call {}.{} parameters={} durationMs={} completedWithException=true",
-                    serviceName,
-                    methodName,
-                    parameters,
-                    toDurationMillis(startTimeNanos)
+                    "Service call {}.{} parameters={} durationMs={} completedWithException=true", serviceName, methodName, parameters, toDurationMillis(startTimeNanos)
             );
             throw exception;
         }
@@ -75,9 +65,7 @@ public class ServiceLoggingAspect {
         IdentityHashMap<Object, Boolean> visited = new IdentityHashMap<>();
 
         for (int index = 0; index < arguments.length; index++) {
-            String parameterName = parameterNames != null && index < parameterNames.length
-                    ? parameterNames[index]
-                    : "arg" + index;
+            String parameterName = parameterNames != null && index < parameterNames.length ? parameterNames[index] : "arg" + index;
             sanitized.put(parameterName, sanitizeValue(parameterName, arguments[index], 0, visited));
         }
 
@@ -113,10 +101,7 @@ public class ServiceLoggingAspect {
                 case Collection<?> collection -> sanitizeCollection(collection, depth, visited);
                 case Map<?, ?> map -> sanitizeMap(map, depth, visited);
                 case MultipartFile file -> Map.of(
-                        "name", file.getName(),
-                        "originalFilename", file.getOriginalFilename(),
-                        "contentType", file.getContentType(),
-                        "size", file.getSize()
+                        "name", file.getName(), "originalFilename", file.getOriginalFilename(), "contentType", file.getContentType(), "size", file.getSize()
                 );
                 default -> sanitizeObjectFields(value, depth, visited);
             };
@@ -191,25 +176,11 @@ public class ServiceLoggingAspect {
     }
 
     private boolean isSimpleValue(Object value) {
-        return value instanceof Number
-                || value instanceof Boolean
-                || value instanceof Character
-                || value instanceof CharSequence
-                || value instanceof Enum<?>
-                || value instanceof UUID
-                || value instanceof Temporal;
+        return value instanceof Number || value instanceof Boolean || value instanceof Character || value instanceof CharSequence || value instanceof Enum<?> || value instanceof UUID || value instanceof Temporal;
     }
 
     private boolean isInfrastructureType(Object value) {
-        return value instanceof ServletRequest
-                || value instanceof ServletResponse
-                || value instanceof Principal
-                || value instanceof BindingResult
-                || value instanceof InputStream
-                || value instanceof OutputStream
-                || value instanceof Reader
-                || value instanceof Writer
-                || value instanceof Resource;
+        return value instanceof ServletRequest || value instanceof ServletResponse || value instanceof Principal || value instanceof BindingResult || value instanceof InputStream || value instanceof OutputStream || value instanceof Reader || value instanceof Writer || value instanceof Resource;
     }
 
     private long toDurationMillis(long startTimeNanos) {

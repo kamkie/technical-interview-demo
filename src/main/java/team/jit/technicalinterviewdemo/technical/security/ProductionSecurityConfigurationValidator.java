@@ -14,10 +14,8 @@ import team.jit.technicalinterviewdemo.technical.bootstrap.BootstrapSettingsProp
 @RequiredArgsConstructor
 public class ProductionSecurityConfigurationValidator implements InitializingBean {
 
-    private static final Pattern EXTERNAL_LOGIN_PATTERN =
-            Pattern.compile("^[A-Za-z\\d](?:[A-Za-z\\d._@-]{0,126}[A-Za-z\\d])?$");
-    private static final Pattern PROVIDER_ID_PATTERN =
-            Pattern.compile("^[a-z\\d](?:[a-z\\d-]{0,48}[a-z\\d])?$");
+    private static final Pattern EXTERNAL_LOGIN_PATTERN = Pattern.compile("^[A-Za-z\\d](?:[A-Za-z\\d._@-]{0,126}[A-Za-z\\d])?$");
+    private static final Pattern PROVIDER_ID_PATTERN = Pattern.compile("^[a-z\\d](?:[a-z\\d-]{0,48}[a-z\\d])?$");
 
     private final BootstrapSettingsProperties bootstrapSettingsProperties;
     private final SecuritySettingsProperties securitySettingsProperties;
@@ -52,8 +50,7 @@ public class ProductionSecurityConfigurationValidator implements InitializingBea
                     "Prod profile requires server.servlet.session.cookie.http-only=true."
             );
         }
-        if (!"lax".equalsIgnoreCase(session.getCookieSameSite())
-                && !"strict".equalsIgnoreCase(session.getCookieSameSite())) {
+        if (!"lax".equalsIgnoreCase(session.getCookieSameSite()) && !"strict".equalsIgnoreCase(session.getCookieSameSite())) {
             throw new IllegalStateException(
                     "Prod profile requires server.servlet.session.cookie.same-site to be lax or strict."
             );
@@ -62,8 +59,7 @@ public class ProductionSecurityConfigurationValidator implements InitializingBea
 
     private void validateRemovedSettings() {
         String deprecatedDefaultProvider = firstNonBlank(
-                environment.getProperty("OAUTH_DEFAULT_PROVIDER"),
-                environment.getProperty("app.security.oauth.default-provider")
+                environment.getProperty("OAUTH_DEFAULT_PROVIDER"), environment.getProperty("app.security.oauth.default-provider")
         );
         if (deprecatedDefaultProvider != null) {
             throw new IllegalStateException(
@@ -71,8 +67,7 @@ public class ProductionSecurityConfigurationValidator implements InitializingBea
             );
         }
         String deprecatedAdminLogins = firstNonBlank(
-                environment.getProperty("ADMIN_LOGINS"),
-                environment.getProperty("app.security.admin-logins")
+                environment.getProperty("ADMIN_LOGINS"), environment.getProperty("app.security.admin-logins")
         );
         if (deprecatedAdminLogins != null) {
             throw new IllegalStateException(
@@ -99,8 +94,7 @@ public class ProductionSecurityConfigurationValidator implements InitializingBea
 
             String providerId = identity.substring(0, separatorIndex);
             String externalLogin = identity.substring(separatorIndex + 1);
-            if (!PROVIDER_ID_PATTERN.matcher(providerId).matches()
-                    || !EXTERNAL_LOGIN_PATTERN.matcher(externalLogin).matches()) {
+            if (!PROVIDER_ID_PATTERN.matcher(providerId).matches() || !EXTERNAL_LOGIN_PATTERN.matcher(externalLogin).matches()) {
                 throw invalidInitialAdminIdentities(identity);
             }
         }
@@ -130,26 +124,22 @@ public class ProductionSecurityConfigurationValidator implements InitializingBea
     private void validateProviderId(String registrationId) {
         if (!PROVIDER_ID_PATTERN.matcher(registrationId).matches()) {
             throw new IllegalStateException(
-                    "OAuth provider id must match [a-z0-9-] and start/end with alphanumeric. Invalid value: "
-                            + registrationId
+                    "OAuth provider id must match [a-z0-9-] and start/end with alphanumeric. Invalid value: " + registrationId
             );
         }
     }
 
     private void validateProviderConfiguration(
-            String registrationId,
-            SecuritySettingsProperties.OAuth.Provider provider
+                                               String registrationId, SecuritySettingsProperties.OAuth.Provider provider
     ) {
         if (provider.getType() == null) {
             throw new IllegalStateException(
-                    "OAuth provider '%s' requires a type of GITHUB or OIDC."
-                            .formatted(registrationId)
+                    "OAuth provider '%s' requires a type of GITHUB or OIDC.".formatted(registrationId)
             );
         }
         if (!provider.hasClientCredentials()) {
             throw new IllegalStateException(
-                    "OAuth provider '%s' requires both client-id and client-secret."
-                            .formatted(registrationId)
+                    "OAuth provider '%s' requires both client-id and client-secret.".formatted(registrationId)
             );
         }
         switch (provider.getType()) {
@@ -159,31 +149,26 @@ public class ProductionSecurityConfigurationValidator implements InitializingBea
     }
 
     private void validateGithubProvider(
-            String registrationId,
-            SecuritySettingsProperties.OAuth.Provider provider
+                                        String registrationId, SecuritySettingsProperties.OAuth.Provider provider
     ) {
         if (!provider.normalizedIssuerUri().isBlank()) {
             throw new IllegalStateException(
-                    "GitHub provider '%s' must not define issuer-uri."
-                            .formatted(registrationId)
+                    "GitHub provider '%s' must not define issuer-uri.".formatted(registrationId)
             );
         }
     }
 
     private void validateOidcProvider(
-            String registrationId,
-            SecuritySettingsProperties.OAuth.Provider provider
+                                      String registrationId, SecuritySettingsProperties.OAuth.Provider provider
     ) {
         if (provider.normalizedIssuerUri().isBlank()) {
             throw new IllegalStateException(
-                    "OIDC provider '%s' requires issuer-uri."
-                            .formatted(registrationId)
+                    "OIDC provider '%s' requires issuer-uri.".formatted(registrationId)
             );
         }
         if (!provider.normalizedScope().contains("openid")) {
             throw new IllegalStateException(
-                    "OIDC provider '%s' scope must include openid."
-                            .formatted(registrationId)
+                    "OIDC provider '%s' scope must include openid.".formatted(registrationId)
             );
         }
     }
@@ -200,8 +185,7 @@ public class ProductionSecurityConfigurationValidator implements InitializingBea
 
     private IllegalStateException invalidInitialAdminIdentities(String identity) {
         return new IllegalStateException(
-                "APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES must contain comma-separated provider:externalLogin values. Invalid value: "
-                        + identity
+                "APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES must contain comma-separated provider:externalLogin values. Invalid value: " + identity
         );
     }
 }

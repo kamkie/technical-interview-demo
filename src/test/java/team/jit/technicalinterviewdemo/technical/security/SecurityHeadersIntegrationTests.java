@@ -26,11 +26,6 @@ class SecurityHeadersIntegrationTests extends AbstractMockMvcIntegrationTest {
     }
 
     private void assertSecurityHeaders(ResultActions resultActions) throws Exception {
-        resultActions
-                .andExpect(header().string("X-Content-Type-Options", "nosniff"))
-                .andExpect(header().string("X-Frame-Options", "DENY"))
-                .andExpect(header().string("Referrer-Policy", "no-referrer"))
-                .andExpect(header().string("Permissions-Policy", "geolocation=(), microphone=(), camera=()"))
-                .andExpect(header().doesNotExist("Strict-Transport-Security"));
+        resultActions.andExpect(header().string("X-Content-Type-Options", "nosniff")).andExpect(header().string("X-Frame-Options", "DENY")).andExpect(header().string("Referrer-Policy", "no-referrer")).andExpect(header().string("Permissions-Policy", "geolocation=(), microphone=(), camera=()")).andExpect(header().doesNotExist("Strict-Transport-Security"));
     }
 }

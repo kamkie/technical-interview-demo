@@ -20,4 +20,3 @@ public final class SupportedLanguages {
         return String.join(", ", VALUES);
     }
 }
-

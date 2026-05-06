@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.session.Session;
 import org.springframework.session.SessionRepository;
@@ -47,20 +47,10 @@ public class SessionService {
         SecuritySettingsProperties.Session session = securitySettingsProperties.getSession();
         csrfTokenRepository.loadDeferredToken(request, response).get();
         return new SessionResponse(
-                currentApplicationSessionResolver.hasAuthenticatedSession(request),
-                ACCOUNT_PATH,
-                loginProviders(),
-                LOGOUT_PATH,
-                new SessionResponse.SessionCookie(
-                        sessionCookieName(),
-                        session.isCookieHttpOnly(),
-                        session.getCookieSameSite(),
-                        session.isCookieSecure()
-                ),
-                new SessionResponse.Csrf(
-                        true,
-                        SameSiteCsrfContract.COOKIE_NAME,
-                        SameSiteCsrfContract.HEADER_NAME
+                currentApplicationSessionResolver.hasAuthenticatedSession(request), ACCOUNT_PATH, loginProviders(), LOGOUT_PATH, new SessionResponse.SessionCookie(
+                        sessionCookieName(), session.isCookieHttpOnly(), session.getCookieSameSite(), session.isCookieSecure()
+                ), new SessionResponse.Csrf(
+                        true, SameSiteCsrfContract.COOKIE_NAME, SameSiteCsrfContract.HEADER_NAME
                 )
         );
     }
@@ -74,15 +64,8 @@ public class SessionService {
         }
         sessionId.ifPresent(sessionRepository::deleteById);
         currentUser.ifPresent(userAccount -> auditLogService.recordWithActor(
-                AuditTargetType.AUTHENTICATION,
-                userAccount.getId(),
-                AuditAction.LOGOUT,
-                userAccount,
-                userAccount.getExternalLogin(),
-                "Logged out current session for '%s'.".formatted(userAccount.getExternalLogin()),
-                Map.of(
-                        "provider", userAccount.getProvider(),
-                        "login", userAccount.getExternalLogin()
+                AuditTargetType.AUTHENTICATION, userAccount.getId(), AuditAction.LOGOUT, userAccount, userAccount.getExternalLogin(), "Logged out current session for '%s'.".formatted(userAccount.getExternalLogin()), Map.of(
+                        "provider", userAccount.getProvider(), "login", userAccount.getExternalLogin()
                 )
         ));
         SecurityContextHolder.clearContext();
@@ -104,9 +87,7 @@ public class SessionService {
         for (Object registration : iterableRegistrationRepository) {
             if (registration instanceof ClientRegistration clientRegistration) {
                 loginProviders.add(new SessionResponse.LoginProvider(
-                        clientRegistration.getRegistrationId(),
-                        clientRegistration.getClientName(),
-                        SecuritySettingsProperties.OAuth.authorizationPath(clientRegistration.getRegistrationId())
+                        clientRegistration.getRegistrationId(), clientRegistration.getClientName(), SecuritySettingsProperties.OAuth.authorizationPath(clientRegistration.getRegistrationId())
                 ));
             }
         }
@@ -119,12 +100,7 @@ public class SessionService {
 
     private ResponseCookie expiredSessionCookie() {
         SecuritySettingsProperties.Session session = securitySettingsProperties.getSession();
-        ResponseCookie.ResponseCookieBuilder cookieBuilder = ResponseCookie
-                .from(sessionCookieName(), "")
-                .path("/")
-                .httpOnly(session.isCookieHttpOnly())
-                .secure(session.isCookieSecure())
-                .maxAge(Duration.ZERO);
+        ResponseCookie.ResponseCookieBuilder cookieBuilder = ResponseCookie.from(sessionCookieName(), "").path("/").httpOnly(session.isCookieHttpOnly()).secure(session.isCookieSecure()).maxAge(Duration.ZERO);
 
         if (session.getCookieSameSite() != null && !session.getCookieSameSite().isBlank()) {
             cookieBuilder.sameSite(session.getCookieSameSite());

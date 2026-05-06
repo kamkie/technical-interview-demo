@@ -3,7 +3,6 @@ package team.jit.technicalinterviewdemo.business.book;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,8 +24,7 @@ public class BookSearchRequest {
     @Schema(description = "Inclusive publication-year upper bound.", example = "2020")
     private Integer yearTo;
     @ArraySchema(
-            schema = @Schema(description = "Category filter value.", example = "Java"),
-            arraySchema = @Schema(description = "Repeat the parameter to match any of multiple categories.")
+            schema = @Schema(description = "Category filter value.", example = "Java"), arraySchema = @Schema(description = "Repeat the parameter to match any of multiple categories.")
     )
     private List<String> category;
 }

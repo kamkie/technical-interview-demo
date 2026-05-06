@@ -35,8 +35,7 @@ class LocalizationDataInitializerTests {
     void seedLocalizationsWritesDefaultMessagesWhenDemoBootstrapIsEnabled() throws Exception {
         LocalizationDataInitializer initializer = new LocalizationDataInitializer();
         when(localizationRepository.existsByMessageKeyAndLanguage(any(String.class), any(String.class))).thenReturn(false);
-        when(localizationRepository.save(any(Localization.class)))
-                .thenAnswer(invocation -> invocation.getArgument(0, Localization.class));
+        when(localizationRepository.save(any(Localization.class))).thenAnswer(invocation -> invocation.getArgument(0, Localization.class));
 
         CommandLineRunner runner = initializer.seedLocalizations(localizationRepository, bootstrapSettings(true));
         runner.run();

@@ -2,7 +2,6 @@ package team.jit.technicalinterviewdemo.business.book;
 
 import java.util.LinkedHashSet;
 import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -19,9 +18,7 @@ public class BookDataInitializer {
     @Bean
     @Order(20)
     CommandLineRunner seedBooks(
-            BookRepository bookRepository,
-            CategoryRepository categoryRepository,
-            BootstrapSettingsProperties bootstrapSettingsProperties
+                                BookRepository bookRepository, CategoryRepository categoryRepository, BootstrapSettingsProperties bootstrapSettingsProperties
     ) {
         return args -> {
             if (!bootstrapSettingsProperties.getSeed().isDemoData()) {

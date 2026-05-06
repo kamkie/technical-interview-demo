@@ -30,10 +30,7 @@ class RequestLoggingIntegrationTests extends AbstractBookCatalogMockMvcIntegrati
     void requestLoggingRedactsSensitiveQueryParameters(CapturedOutput output) throws Exception {
         String secret = "secret-log-token-123";
 
-        mockMvc.perform(get("/hello")
-                        .queryParam("token", secret)
-                        .queryParam("page", "1"))
-                .andExpect(status().isOk());
+        mockMvc.perform(get("/hello").queryParam("token", secret).queryParam("page", "1")).andExpect(status().isOk());
 
         JsonNode requestLog = parseJsonLog(findLogLine(output, "HTTP request started method=GET path=/hello"));
         assertThat(requestLog.path("@timestamp").asText()).isNotBlank();
@@ -51,10 +48,7 @@ class RequestLoggingIntegrationTests extends AbstractBookCatalogMockMvcIntegrati
     void errorLoggingRedactsSensitiveQueryParameters(CapturedOutput output) throws Exception {
         String secret = "Bearer raw-secret-value";
 
-        mockMvc.perform(get("/api/books/{id}", "abc")
-                        .queryParam("authorization", secret))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.title").value("Invalid Parameter"));
+        mockMvc.perform(get("/api/books/{id}", "abc").queryParam("authorization", secret)).andExpect(status().isBadRequest()).andExpect(jsonPath("$.title").value("Invalid Parameter"));
 
         JsonNode requestLog = parseJsonLog(findLogLine(output, "HTTP request started method=GET path=/api/books/abc"));
         assertThat(requestLog.path("message").asText()).contains("params={authorization=<redacted>}");
@@ -68,9 +62,6 @@ class RequestLoggingIntegrationTests extends AbstractBookCatalogMockMvcIntegrati
     }
 
     private String findLogLine(CapturedOutput output, String messageFragment) {
-        return Arrays.stream(output.getOut().split("\\R"))
-                .filter(line -> line.contains(messageFragment))
-                .findFirst()
-                .orElseThrow(() -> new AssertionError("Missing log entry fragment: " + messageFragment));
+        return Arrays.stream(output.getOut().split("\\R")).filter(line -> line.contains(messageFragment)).findFirst().orElseThrow(() -> new AssertionError("Missing log entry fragment: " + messageFragment));
     }
 }

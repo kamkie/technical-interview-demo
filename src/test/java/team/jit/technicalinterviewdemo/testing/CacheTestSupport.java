@@ -3,7 +3,6 @@ package team.jit.technicalinterviewdemo.testing;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 

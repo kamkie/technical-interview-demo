@@ -9,10 +9,8 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-
 import java.time.Instant;
 import java.util.Locale;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,10 +20,8 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(
-        name = "localization_messages",
-        uniqueConstraints = @UniqueConstraint(
-                name = "uk_localization_messages_message_key_language",
-                columnNames = {"message_key", "language"}
+        name = "localization_messages", uniqueConstraints = @UniqueConstraint(
+                name = "uk_localization_messages_message_key_language", columnNames = {"message_key", "language"}
         )
 )
 public class Localization {

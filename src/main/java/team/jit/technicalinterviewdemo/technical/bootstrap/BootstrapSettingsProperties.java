@@ -15,11 +15,7 @@ public class BootstrapSettingsProperties {
     private final Seed seed = new Seed();
 
     public Set<String> normalizedInitialAdminIdentities() {
-        return initialAdminIdentities.stream()
-                .map(String::trim)
-                .filter(value -> !value.isBlank())
-                .map(value -> value.toLowerCase(Locale.ROOT))
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+        return initialAdminIdentities.stream().map(String::trim).filter(value -> !value.isBlank()).map(value -> value.toLowerCase(Locale.ROOT)).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     public Set<String> getInitialAdminIdentities() {

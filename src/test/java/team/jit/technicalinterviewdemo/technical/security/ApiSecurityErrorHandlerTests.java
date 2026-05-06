@@ -41,16 +41,13 @@ class ApiSecurityErrorHandlerTests {
 
     @Test
     void authenticationEntryPointWritesLocalizedUnauthorizedProblem() throws Exception {
-        when(localizationService.findByMessageKeyForCurrentLanguageWithFallback(eq("error.request.unauthorized")))
-                .thenReturn(localizedMessage("error.request.unauthorized", "You must authenticate first.", "en"));
+        when(localizationService.findByMessageKeyForCurrentLanguageWithFallback(eq("error.request.unauthorized"))).thenReturn(localizedMessage("error.request.unauthorized", "You must authenticate first.", "en"));
 
         MockHttpServletRequest request = new MockHttpServletRequest("POST", "/api/categories");
         MockHttpServletResponse response = new MockHttpServletResponse();
 
         apiAuthenticationEntryPoint.commence(
-                request,
-                response,
-                new InsufficientAuthenticationException("Authentication required")
+                request, response, new InsufficientAuthenticationException("Authentication required")
         );
 
         JsonNode body = JSON_MAPPER.readTree(response.getContentAsString());
@@ -66,16 +63,13 @@ class ApiSecurityErrorHandlerTests {
 
     @Test
     void accessDeniedHandlerPreservesExplicitDetailWhenPresent() throws Exception {
-        when(localizationService.findByMessageKeyForCurrentLanguageWithFallback(eq("error.request.forbidden")))
-                .thenReturn(localizedMessage("error.request.forbidden", "Forbidden message.", "pl"));
+        when(localizationService.findByMessageKeyForCurrentLanguageWithFallback(eq("error.request.forbidden"))).thenReturn(localizedMessage("error.request.forbidden", "Forbidden message.", "pl"));
 
         MockHttpServletRequest request = new MockHttpServletRequest("POST", "/api/categories");
         MockHttpServletResponse response = new MockHttpServletResponse();
 
         apiAccessDeniedHandler.handle(
-                request,
-                response,
-                new AccessDeniedException("Category management requires the ADMIN role.")
+                request, response, new AccessDeniedException("Category management requires the ADMIN role.")
         );
 
         JsonNode body = JSON_MAPPER.readTree(response.getContentAsString());
@@ -88,8 +82,7 @@ class ApiSecurityErrorHandlerTests {
 
     @Test
     void accessDeniedHandlerUsesFallbackDetailWhenMessageIsBlank() throws Exception {
-        when(localizationService.findByMessageKeyForCurrentLanguageWithFallback(eq("error.request.forbidden")))
-                .thenReturn(localizedMessage("error.request.forbidden", "Forbidden message.", "en"));
+        when(localizationService.findByMessageKeyForCurrentLanguageWithFallback(eq("error.request.forbidden"))).thenReturn(localizedMessage("error.request.forbidden", "Forbidden message.", "en"));
 
         MockHttpServletRequest request = new MockHttpServletRequest("POST", "/api/categories");
         MockHttpServletResponse response = new MockHttpServletResponse();
@@ -107,8 +100,7 @@ class ApiSecurityErrorHandlerTests {
 
     @Test
     void accessDeniedHandlerMapsCsrfFailuresToDedicatedLocalizedProblem() throws Exception {
-        when(localizationService.findByMessageKeyForCurrentLanguageWithFallback(eq("error.request.csrf_invalid")))
-                .thenReturn(localizedMessage("error.request.csrf_invalid", "CSRF message.", "fr"));
+        when(localizationService.findByMessageKeyForCurrentLanguageWithFallback(eq("error.request.csrf_invalid"))).thenReturn(localizedMessage("error.request.csrf_invalid", "CSRF message.", "fr"));
 
         MockHttpServletRequest request = new MockHttpServletRequest("POST", "/api/books");
         MockHttpServletResponse response = new MockHttpServletResponse();

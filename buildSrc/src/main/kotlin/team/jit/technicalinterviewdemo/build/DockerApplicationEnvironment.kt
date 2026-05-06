@@ -1,14 +1,14 @@
 package team.jit.technicalinterviewdemo.build
 
-import java.time.Duration
 import org.gradle.api.GradleException
 import org.gradle.api.logging.Logger
+import java.time.Duration
 
 internal data class DockerApplicationEnvironmentResources(
     val logPrefix: String,
     val networkName: String,
     val postgresContainerName: String,
-    val appContainerName: String
+    val appContainerName: String,
 )
 
 internal data class DockerApplicationEnvironmentConfig(
@@ -22,13 +22,10 @@ internal data class DockerApplicationEnvironmentConfig(
     val springProfiles: String,
     val postgresHostPort: Int? = null,
     val appEnvironment: Map<String, String> = emptyMap(),
-    val applicationDescription: String = "application"
+    val applicationDescription: String = "application",
 )
 
-internal class DockerApplicationEnvironment(
-    private val docker: DockerSupport,
-    private val logger: Logger
-) {
+internal class DockerApplicationEnvironment(private val docker: DockerSupport, private val logger: Logger) {
 
     fun provision(config: DockerApplicationEnvironmentConfig, readinessBaseUrl: String, timeout: Duration) {
         val resources = config.resources
@@ -54,7 +51,7 @@ internal class DockerApplicationEnvironment(
             "-d",
             config.databaseName,
             "-tAc",
-            "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'flyway_schema_history';"
+            "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'flyway_schema_history';",
         ).stdout.trim()
         if (flywayTableCount != "1") {
             throw GradleException("Flyway schema history table was not created in PostgreSQL.")
@@ -69,7 +66,7 @@ internal class DockerApplicationEnvironment(
             "-d",
             config.databaseName,
             "-tAc",
-            "SELECT COUNT(*) FROM flyway_schema_history WHERE success = true;"
+            "SELECT COUNT(*) FROM flyway_schema_history WHERE success = true;",
         ).stdout.trim().toIntOrNull() ?: 0
         if (flywaySuccessCount < 1) {
             throw GradleException("Flyway did not record successful migrations.")
@@ -96,7 +93,7 @@ internal class DockerApplicationEnvironment(
             "--name",
             resources.postgresContainerName,
             "--network",
-            resources.networkName
+            resources.networkName,
         )
         config.postgresHostPort?.let { hostPort ->
             args += listOf("--publish", "$hostPort:5432")
@@ -105,8 +102,8 @@ internal class DockerApplicationEnvironment(
             mapOf(
                 "POSTGRES_DB" to config.databaseName,
                 "POSTGRES_USER" to config.databaseUser,
-                "POSTGRES_PASSWORD" to config.databasePassword
-            )
+                "POSTGRES_PASSWORD" to config.databasePassword,
+            ),
         )
         args += config.postgresImage
         docker.docker(*args.toTypedArray())
@@ -124,7 +121,7 @@ internal class DockerApplicationEnvironment(
                 config.databaseUser,
                 "-d",
                 config.databaseName,
-                allowFailure = true
+                allowFailure = true,
             ).exitCode == 0
         }
     }
@@ -135,7 +132,7 @@ internal class DockerApplicationEnvironment(
             "{} Starting {} container '{}'.",
             resources.logPrefix,
             config.applicationDescription,
-            resources.appContainerName
+            resources.appContainerName,
         )
         val appEnvironment = linkedMapOf(
             "SPRING_PROFILES_ACTIVE" to config.springProfiles,
@@ -143,7 +140,7 @@ internal class DockerApplicationEnvironment(
             "DATABASE_PORT" to "5432",
             "DATABASE_NAME" to config.databaseName,
             "DATABASE_USER" to config.databaseUser,
-            "DATABASE_PASSWORD" to config.databasePassword
+            "DATABASE_PASSWORD" to config.databasePassword,
         )
         appEnvironment.putAll(config.appEnvironment)
 
@@ -155,7 +152,7 @@ internal class DockerApplicationEnvironment(
             "--network",
             resources.networkName,
             "--publish",
-            "${config.appHostPort}:8080"
+            "${config.appHostPort}:8080",
         )
         args += environmentArgs(appEnvironment)
         args += config.imageName

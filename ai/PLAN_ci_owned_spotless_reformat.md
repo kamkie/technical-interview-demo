@@ -286,6 +286,14 @@
   - slimmed `.editorconfig` to portable editor defaults and updated formatter guidance in setup, contributor, and AI code-style docs.
   - `./build.ps1 tasks --all --no-daemon` passed.
   - optional `./build.ps1 spotlessCheck --no-daemon --continue` failed as expected on formatting drift only: `spotlessJavaCheck`, `spotlessKotlinCheck`, `spotlessKotlinGradleCheck`, and `spotlessMiscCheck` reported files for Milestone 2 `spotlessApply`.
+- 2026-05-06 Milestone 2 execution:
+  - ran `./build.ps1 spotlessApply --no-daemon`; the first two attempts stopped on ktlint max-line-length violations in `buildSrc`, then passed after mechanical string-line splits in `ExternalTestingConventionsPlugin.kt` and `GatlingBenchmarkTask.kt`.
+  - reviewed the reformat diff: 217 files changed, no `.idea/`, approved OpenAPI baseline, Gatling benchmark baseline, generated output, or formatter-profile files changed.
+  - confirmed no Java wildcard imports remained under `src/` or `buildSrc/`.
+  - `git diff --check` passed.
+  - `./build.ps1 spotlessCheck --no-daemon` passed.
+  - first `./build.ps1 build --no-daemon` attempt failed in `imageSbom` because Trivy's Java DB download from `mirror.gcr.io` was reset by peer after tests, checks, Docker image build, and application SBOM work had run.
+  - retried `./build.ps1 build --no-daemon`; it passed, including 264 tests, JaCoCo line coverage 92.6%, Docker image build, vulnerability scans, SBOM tasks, Spotless, PMD, and SpotBugs.
 
 ## User Validation
 - Review the three commits separately:

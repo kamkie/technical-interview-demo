@@ -1,7 +1,5 @@
 package team.jit.technicalinterviewdemo.business.localization.seed;
 
-import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -16,8 +14,7 @@ public class LocalizationDataInitializer {
 
     @Bean
     CommandLineRunner seedLocalizations(
-            LocalizationRepository localizationMessageRepository,
-            BootstrapSettingsProperties bootstrapSettingsProperties
+                                        LocalizationRepository localizationMessageRepository, BootstrapSettingsProperties bootstrapSettingsProperties
     ) {
         return args -> {
             if (!bootstrapSettingsProperties.getSeed().isDemoData()) {
@@ -31,10 +28,7 @@ public class LocalizationDataInitializer {
 
                 Localization savedMessage = localizationMessageRepository.save(seedMessage);
                 log.info(
-                        "Seeded localization message id={} key={} language={}",
-                        savedMessage.getId(),
-                        savedMessage.getMessageKey(),
-                        savedMessage.getLanguage()
+                        "Seeded localization message id={} key={} language={}", savedMessage.getId(), savedMessage.getMessageKey(), savedMessage.getLanguage()
                 );
             }
         };

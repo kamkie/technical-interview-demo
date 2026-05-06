@@ -34,4 +34,3 @@ CREATE TABLE IF NOT EXISTS flyway_schema_history (
 
 -- Grant privileges on flyway table
 GRANT ALL PRIVILEGES ON flyway_schema_history TO demo_user;
-

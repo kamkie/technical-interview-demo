@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.IOException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-
 import org.junit.jupiter.api.Test;
 import team.jit.technicalinterviewdemo.testing.AbstractRandomPortIntegrationTest;
 import team.jit.technicalinterviewdemo.testing.RandomPortIntegrationSpringBootTest;
@@ -17,10 +16,7 @@ class HttpTracingIntegrationTests extends AbstractRandomPortIntegrationTest {
 
     @Test
     void helloResponseIncludesGeneratedTraceparent() throws IOException, InterruptedException {
-        HttpResponse<String> response = send(HttpRequest.newBuilder()
-                .uri(uri("/hello"))
-                .GET()
-                .build());
+        HttpResponse<String> response = send(HttpRequest.newBuilder().uri(uri("/hello")).GET().build());
 
         assertEquals(200, response.statusCode());
         assertEquals("Hello World!", response.body());
@@ -32,11 +28,7 @@ class HttpTracingIntegrationTests extends AbstractRandomPortIntegrationTest {
     void incomingTraceparentPreservesTraceIdInResponse() throws IOException, InterruptedException {
         String incomingTraceparent = "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01";
 
-        HttpResponse<String> response = send(HttpRequest.newBuilder()
-                .uri(uri("/hello"))
-                .header("traceparent", incomingTraceparent)
-                .GET()
-                .build());
+        HttpResponse<String> response = send(HttpRequest.newBuilder().uri(uri("/hello")).header("traceparent", incomingTraceparent).GET().build());
 
         assertEquals(200, response.statusCode());
         String responseTraceparent = response.headers().firstValue("traceparent").orElse(null);
@@ -48,11 +40,7 @@ class HttpTracingIntegrationTests extends AbstractRandomPortIntegrationTest {
     void incomingRequestIdIsReturnedInResponse() throws IOException, InterruptedException {
         String incomingRequestId = "request-12345";
 
-        HttpResponse<String> response = send(HttpRequest.newBuilder()
-                .uri(uri("/hello"))
-                .header("X-Request-Id", incomingRequestId)
-                .GET()
-                .build());
+        HttpResponse<String> response = send(HttpRequest.newBuilder().uri(uri("/hello")).header("X-Request-Id", incomingRequestId).GET().build());
 
         assertEquals(200, response.statusCode());
         assertEquals(incomingRequestId, response.headers().firstValue("X-Request-Id").orElse(null));
@@ -60,10 +48,7 @@ class HttpTracingIntegrationTests extends AbstractRandomPortIntegrationTest {
 
     @Test
     void errorResponseIncludesTraceparent() throws IOException, InterruptedException {
-        HttpResponse<String> response = send(HttpRequest.newBuilder()
-                .uri(uri("/api/missing"))
-                .GET()
-                .build());
+        HttpResponse<String> response = send(HttpRequest.newBuilder().uri(uri("/api/missing")).GET().build());
 
         assertEquals(404, response.statusCode());
         assertMatchesRequestId(response.headers().firstValue("X-Request-Id").orElse(null));

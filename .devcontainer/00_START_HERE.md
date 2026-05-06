@@ -54,7 +54,7 @@ All developers can now use VS Code's Remote - Containers extension to work in a 
   - Auto-starts with dev container
   - Persistence via Docker volumes
   - Health checks enabled
-  
+
 - **Prometheus** (port 9090)
   - Automatically scrapes Spring Boot metrics
   - Persistence via Docker volumes
@@ -68,7 +68,7 @@ All developers can now use VS Code's Remote - Containers extension to work in a 
   - GitLens
   - SonarLint (code quality)
   - Copilot (if available)
-  
+
 - **Settings pre-configured:**
   - Java formatter & auto-format on save
   - Proper Java home paths
@@ -273,4 +273,3 @@ After implementation:
 The dev container implementation is **complete and production-ready**. Developers can now get up and running with a single VS Code command.
 
 **See `.devcontainer/QUICK_START.md` for instant setup instructions.**
-

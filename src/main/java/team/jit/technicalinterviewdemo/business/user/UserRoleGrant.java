@@ -48,11 +48,7 @@ public class UserRoleGrant {
     private String reason;
 
     public UserRoleGrant(
-            UserAccount userAccount,
-            UserRole role,
-            UserRoleGrantSource grantSource,
-            UserAccount grantedByUser,
-            String reason
+                         UserAccount userAccount, UserRole role, UserRoleGrantSource grantSource, UserAccount grantedByUser, String reason
     ) {
         this.userAccount = Objects.requireNonNull(userAccount, "userAccount is required");
         this.role = Objects.requireNonNull(role, "role is required");
