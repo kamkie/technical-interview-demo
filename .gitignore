@@ -50,3 +50,4 @@ out/
 
 ### Local temp files ###
 /temp
+/.output.txt

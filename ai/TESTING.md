@@ -13,6 +13,8 @@ Treat validation as part of the product:
 - benchmark and compatibility gates are not optional cleanup
 - the final verification story should match the change and the plan's `Validation Results`
 
+When a validation command fails, load `ai/references/TROUBLESHOOTING.md` on demand before choosing a recovery path.
+
 ## Pick The Smallest Sufficient Proof
 
 - integration tests for externally visible API behavior and end-to-end feature flow
@@ -73,6 +75,7 @@ Wrapper exception:
 - when multiple Gradle targets are required, prefer one wrapper invocation such as `./build.ps1 build gatlingBenchmark --no-daemon` so shared prerequisites run once and validation does not repeat the full build unnecessarily
 - do not run overlapping Gradle validations in parallel when one task depends on the other or both write shared `build/` outputs; this includes `build` with `gatlingBenchmark`, `externalSmokeTest`, `externalDeploymentCheck`, `scheduledExternalCheck`, or similar Docker/test/report tasks
 - treat failing compatibility or benchmark checks as spec failures
+- fix the first real validation failure before weakening commands, tests, assertions, or contract artifacts
 - if required validation cannot run, report that explicitly
 - the same classifier script also powers CI push or pull-request short-circuit decisions; run it directly only when validating a diff boundary other than the current uncommitted change set
 

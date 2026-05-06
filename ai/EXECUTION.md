@@ -48,7 +48,7 @@ A milestone is not done until the implementation, validation, tracking artifacts
 2. Update the governing spec first when behavior is intentionally changing.
 3. Implement the smallest coherent code or documentation change that satisfies that milestone.
 4. Keep artifact routing aligned through `ai/DOCUMENTATION.md`.
-5. Run the milestone validation named by the plan, then any broader validation required by `ai/TESTING.md`.
+5. Run the milestone validation named by the plan, then any broader validation required by `ai/TESTING.md`; if validation fails, load `ai/references/TROUBLESHOOTING.md` before choosing the recovery path.
 6. Update the tracking artifacts required by the active mode in `ai/WORKFLOW.md`.
 7. Create a normal non-interactive commit for the completed milestone.
 8. Repeat for the next milestone or stop and report status if the requested scope is complete.
