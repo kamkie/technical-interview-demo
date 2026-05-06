@@ -7,6 +7,9 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Changed
+- Constrained the PostgreSQL JDBC, Gatling Netty, and AsciidoctorJ JRuby Gradle dependency paths to patched versions for the current Dependabot alert batch without changing the public API contract.
+
 ## [v2.0.0-RC2] - 2026-05-05
 
 ### Added

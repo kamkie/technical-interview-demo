@@ -32,9 +32,10 @@ final class ExternalSessionSupport implements AutoCloseable {
     }
 
     static boolean isJdbcConfigured() {
-        return value("external.jdbc.url", "EXTERNAL_JDBC_URL") != null
-                && value("external.jdbc.user", "EXTERNAL_JDBC_USER") != null
-                && value("external.jdbc.password", "EXTERNAL_JDBC_PASSWORD") != null;
+        String jdbcUrl = value("external.jdbc.url", "EXTERNAL_JDBC_URL");
+        String jdbcUser = value("external.jdbc.user", "EXTERNAL_JDBC_USER");
+        String jdbcPassword = value("external.jdbc.password", "EXTERNAL_JDBC_PASSWORD");
+        return jdbcUrl != null && jdbcUser != null && jdbcPassword != null;
     }
 
     static ExternalSessionSupport create() {
