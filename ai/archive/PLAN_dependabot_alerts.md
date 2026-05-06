@@ -271,6 +271,8 @@ Release-attempt validation:
 - 2026-05-06: `./build.ps1 gatlingBenchmark --no-daemon` passed after the benchmark p95 gate was adjusted to a 25% tolerance with ceiling rounding; the run kept the tracked baseline unchanged and passed `list-books` (`p95 19ms <= 22ms`), `search-books` (`p95 19ms <= 20ms`), `lookup-localization-message` (`p95 14ms <= 15ms`), and `oauth2-github-redirect` (`p95 14ms <= 15ms`).
 - 2026-05-06: `./build.ps1 externalSmokeTest --no-daemon` passed after the shared Docker application environment helper refactor, proving the external smoke task still starts the packaged app with `prod`, published PostgreSQL, readiness checks, Flyway verification, and teardown.
 - 2026-05-06: `./build.ps1 build --no-daemon` passed after the shared Docker application environment helper refactor, including tests, REST Docs generation, Docker image build, Trivy dependency and image scans, SBOM generation, PMD, SpotBugs, Spotless, and coverage verification.
+- 2026-05-06: The pushed `v2.0.0-RC3` tag triggered the `Release` workflow, but the workflow failed before image publication because PowerShell split the unquoted `-PdockerImageName=ghcr.io/...:v2.0.0-RC3` Gradle property.
+- 2026-05-06: Recovery kept the pushed `v2.0.0-RC3` tag intact, quoted release-workflow Gradle image-property arguments, and moved the publication attempt to `v2.0.0-RC4` to avoid rewriting remote tag history.
 
 ## User Validation
 

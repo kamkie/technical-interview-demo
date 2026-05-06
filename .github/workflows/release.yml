@@ -71,9 +71,9 @@ jobs:
 
       - name: Run full verification and build tagged image
         shell: pwsh
-        run: >-
-          ./build.ps1 -FullBuild build
-          -PdockerImageName=${{ steps.image.outputs.repository }}:${{ steps.image.outputs.tag }}
+        run: |
+          ./build.ps1 -FullBuild build `
+          "-PdockerImageName=${{ steps.image.outputs.repository }}:${{ steps.image.outputs.tag }}" `
           --no-daemon
 
       - name: Upload security scan artifacts
@@ -107,10 +107,10 @@ jobs:
 
       - name: Validate tagged image with external smoke test
         shell: pwsh
-        run: >-
-          ./build.ps1 externalSmokeTest
-          -PexternalSmokeImageName=${{ steps.image.outputs.repository }}:${{ steps.image.outputs.tag }}
-          -PdockerImageName=${{ steps.image.outputs.repository }}:${{ steps.image.outputs.tag }}
+        run: |
+          ./build.ps1 externalSmokeTest `
+          "-PexternalSmokeImageName=${{ steps.image.outputs.repository }}:${{ steps.image.outputs.tag }}" `
+          "-PdockerImageName=${{ steps.image.outputs.repository }}:${{ steps.image.outputs.tag }}" `
           --no-daemon
 
       - name: Tag immutable commit image

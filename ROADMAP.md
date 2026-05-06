@@ -23,7 +23,7 @@ Keep this file focused on work that is still planned or in progress.
 
 ## Current Priorities
 
-- Release stable `v2.0.0` after the `v2.0.0-RC3` line is accepted, update `CHANGELOG.md`, and remove the completed `2.0` track from `ROADMAP.md` once the stable release is cut.
+- Release stable `v2.0.0` after the `v2.0.0-RC4` line is accepted, update `CHANGELOG.md`, and remove the completed `2.0` track from `ROADMAP.md` once the stable release is cut.
 
 ## Not Yet Refined
 
@@ -43,7 +43,7 @@ Add new rough tasks below.
 
 Status: Planned
 
-Goal: finish the stable `2.0` line after the `v2.0.0-RC3` candidate is accepted.
+Goal: finish the stable `2.0` line after the `v2.0.0-RC4` candidate is accepted.
 
 #### Release Confidence
 - [ ] Release stable `v2.0.0`, update `CHANGELOG.md`, and remove the completed `2.0` track from `ROADMAP.md`.

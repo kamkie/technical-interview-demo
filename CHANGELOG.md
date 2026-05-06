@@ -7,6 +7,11 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+## [v2.0.0-RC4] - 2026-05-06
+
+### Changed
+- Quoted release-workflow Gradle image-property arguments so GHCR image coordinates containing `:` are forwarded through PowerShell to Gradle as single properties.
+
 ## [v2.0.0-RC3] - 2026-05-06
 
 ### Added
