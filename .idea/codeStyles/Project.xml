@@ -78,8 +78,10 @@
       </indentOptions>
     </codeStyleSettings>
     <codeStyleSettings language="Markdown">
-      <option name="RIGHT_MARGIN" value="1000" />
-      <option name="WRAP_ON_TYPING" value="0" />
+     <option name="WRAP_TEXT_IF_LONG" value="false" />
+        <option name="RIGHT_MARGIN" value="9999" />
+        <option name="WRAP_ON_TYPING" value="0" />
+        <option name="WRAP_LONG_LINES" value="false" />
     </codeStyleSettings>
     <codeStyleSettings language="kotlin">
       <option name="CODE_STYLE_DEFAULTS" value="KOTLIN_OFFICIAL" />

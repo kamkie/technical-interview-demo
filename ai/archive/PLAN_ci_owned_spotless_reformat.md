@@ -3,10 +3,13 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Integration |
-| Status | Implemented |
+| Phase | Closed |
+| Status | Superseded |
 
 ## Summary
+- Archived on 2026-05-06 as partially implemented and superseded by `ai/PLAN_palantir_intellij_formatting.md`.
+- The implemented portions removed the IntelliJ-binary requirement, moved Java formatting to a CI-owned Eclipse formatter profile through Spotless, applied a repository-wide reformat, and added IntelliJ project code-style files. That approach is no longer the intended end state.
+- Do not resume this plan for `v2.0.0-RC5`; use the replacement Palantir/IntelliJ/EditorConfig/SpotBugs plan instead.
 - Replace the current IntelliJ-binary-dependent Spotless Java formatter with a CI-owned formatter configuration that works when IntelliJ IDEA is not installed.
 - Move the existing exported Eclipse formatter profile from `Default.xml` to a descriptive path under `tooling/`, and make that profile the Spotless Java formatter input.
 - Slim `.editorconfig` so it owns portable editor basics only, not duplicated language-specific code-formatting rules.
@@ -268,6 +271,10 @@
 - If exact IntelliJ import layout becomes a hard requirement later, that should be a separate decision because it would require either CI-installed IntelliJ or a different import-formatting tool with matching behavior.
 
 ## Validation Results
+- 2026-05-06 archive update:
+  - marked this plan `Closed` / `Superseded`.
+  - archived it under `ai/archive/` because the Eclipse-profile Spotless end state is partially implemented but no longer desired.
+  - replacement active work moved to `ai/PLAN_palantir_intellij_formatting.md`.
 - 2026-05-06 planning revision: repo fact-check and roadmap sync completed.
 - 2026-05-06 planning revision validation:
   - `git diff --check` passed.
