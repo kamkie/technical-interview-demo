@@ -47,6 +47,8 @@ Status: Planned
 Goal: clear the open GitHub Security tab dependency alerts before the stable `v2.0.0` release.
 
 #### Dependabot Alert Batch
+Plan: `ai/PLAN_dependabot_alerts.md`
+
 - [ ] Resolve Dependabot alert #6 by upgrading or constraining `org.postgresql:postgresql` to `42.7.11` or newer; this high-severity JDBC driver alert covers CVE-2026-42198 / GHSA-98qh-xjc8-98pq and should block stable release until cleared.
 - [ ] Resolve Dependabot alert #5 by upgrading or constraining `io.netty:netty-codec-http` to `4.2.13.Final` or newer; this medium-severity HTTP parser alert covers CVE-2026-41417 / GHSA-v8h7-rr48-vmmv and can share the same dependency-validation pass.
 - [ ] Recheck and clear Dependabot alert #1 for `org.jruby:jruby`; the build currently pins Asciidoctor JRuby to `9.4.12.1`, so verify the resolved dependency graph and add the missing override or constraint only if Dependabot still observes a vulnerable JRuby path for CVE-2025-46551 / GHSA-72qj-48g4-5xgx.
