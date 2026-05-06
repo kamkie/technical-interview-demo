@@ -8,32 +8,8 @@
     <option name="FORMATTER_OFF_TAG" value="@formatter:off" />
     <option name="DO_NOT_FORMAT">
       <list>
-        <fileSet type="globPattern" pattern="**/*.gif" />
-        <fileSet type="globPattern" pattern="**/*.ico" />
-        <fileSet type="globPattern" pattern="**/*.jar" />
-        <fileSet type="globPattern" pattern="**/*.jks" />
-        <fileSet type="globPattern" pattern="**/*.jpeg" />
-        <fileSet type="globPattern" pattern="**/*.jpg" />
-        <fileSet type="globPattern" pattern="**/*.keystore" />
-        <fileSet type="globPattern" pattern="**/*.p12" />
-        <fileSet type="globPattern" pattern="**/*.pdf" />
-        <fileSet type="globPattern" pattern="**/*.png" />
-        <fileSet type="globPattern" pattern="**/*.zip" />
-        <fileSet type="globPattern" pattern="*.bat" />
-        <fileSet type="globPattern" pattern="*.ignore" />
-        <fileSet type="globPattern" pattern=".devcontainer/**/*.sh" />
-        <fileSet type="globPattern" pattern=".devcontainer/**/*.txt" />
-        <fileSet type="globPattern" pattern=".git/**" />
-        <fileSet type="globPattern" pattern=".gradle/**" />
-        <fileSet type="globPattern" pattern=".kotlin/**" />
-        <fileSet type="globPattern" pattern=".run/**" />
-        <fileSet type="globPattern" pattern="build/**" />
-        <fileSet type="globPattern" pattern="buildSrc/.gradle/**" />
-        <fileSet type="globPattern" pattern="buildSrc/build/**" />
-        <fileSet type="globPattern" pattern="out/**" />
         <fileSet type="globPattern" pattern="src/gatling/resources/gatling-benchmark-baseline.json" />
         <fileSet type="globPattern" pattern="src/test/resources/openapi/approved-openapi.json" />
-        <fileSet type="globPattern" pattern="temp/**" />
       </list>
     </option>
     <AsciiDocCodeStyleSettings>
@@ -58,9 +34,6 @@
       <option name="WRAP_TEXT_INSIDE_BLOCKQUOTES" value="false" />
       <option name="FORMAT_TABLES" value="false" />
     </Markdown>
-    <Properties>
-      <option name="KEEP_BLANK_LINES" value="true" />
-    </Properties>
     <codeStyleSettings language="JAVA">
       <option name="RIGHT_MARGIN" value="120" />
       <option name="ALIGN_MULTILINE_PARAMETERS" value="false" />
