@@ -21,25 +21,17 @@
         <fileSet type="globPattern" pattern="**/*.zip" />
         <fileSet type="globPattern" pattern="*.bat" />
         <fileSet type="globPattern" pattern="*.ignore" />
-        <fileSet type="globPattern" pattern="*.ps1" />
-        <fileSet type="globPattern" pattern="*.py" />
-        <fileSet type="globPattern" pattern="*.tpl" />
         <fileSet type="globPattern" pattern=".devcontainer/**/*.sh" />
         <fileSet type="globPattern" pattern=".devcontainer/**/*.txt" />
-        <fileSet type="globPattern" pattern=".devcontainer/**/Dockerfile" />
-        <fileSet type="globPattern" pattern=".env" />
         <fileSet type="globPattern" pattern=".git/**" />
         <fileSet type="globPattern" pattern=".gradle/**" />
-        <fileSet type="globPattern" pattern=".idea/**" />
         <fileSet type="globPattern" pattern=".kotlin/**" />
         <fileSet type="globPattern" pattern=".run/**" />
         <fileSet type="globPattern" pattern="build/**" />
         <fileSet type="globPattern" pattern="buildSrc/.gradle/**" />
         <fileSet type="globPattern" pattern="buildSrc/build/**" />
-        <fileSet type="globPattern" pattern="gradle/wrapper/gradle-wrapper.jar" />
         <fileSet type="globPattern" pattern="out/**" />
         <fileSet type="globPattern" pattern="src/gatling/resources/gatling-benchmark-baseline.json" />
-        <fileSet type="globPattern" pattern="src/test/resources/http/http-client.private.env.json" />
         <fileSet type="globPattern" pattern="src/test/resources/openapi/approved-openapi.json" />
         <fileSet type="globPattern" pattern="temp/**" />
       </list>
