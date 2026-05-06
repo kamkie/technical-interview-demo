@@ -29,18 +29,18 @@ class AuditLogApiIntegrationTests extends AbstractMockMvcIntegrationTest {
         auditLogRepository.deleteAll();
         auditLogRepository.saveAndFlush(new AuditLog(
             AuditTargetType.BOOK, 101L, AuditAction.CREATE, null, "reader-user", "Created book 'Spring in Action' with ISBN 9781617297571.", Map.of(
-            "title", "Spring in Action", "isbn", "9781617297571"
-        )
+                "title", "Spring in Action", "isbn", "9781617297571"
+            )
         ));
         updateBookLog = auditLogRepository.saveAndFlush(new AuditLog(
             AuditTargetType.BOOK, 102L, AuditAction.UPDATE, null, "admin-user", "Updated book 'Clean Code' with ISBN 9780132350884.", Map.of(
-            "title", "Clean Code", "isbn", "9780132350884", "publicationYear", 2008
-        )
+                "title", "Clean Code", "isbn", "9780132350884", "publicationYear", 2008
+            )
         ));
         deleteLocalizationLog = auditLogRepository.saveAndFlush(new AuditLog(
             AuditTargetType.LOCALIZATION_MESSAGE, 103L, AuditAction.DELETE, null, "admin-user", "Deleted localization message 'error.book.not_found' in language fr.", Map.of(
-            "messageKey", "error.book.not_found", "language", "fr"
-        )
+                "messageKey", "error.book.not_found", "language", "fr"
+            )
         ));
     }
 

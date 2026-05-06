@@ -41,28 +41,28 @@ public class TechnicalOverviewService {
             new TechnicalOverviewResponse.BuildDetails(
                 buildProperties.getName(), buildProperties.getGroup(), buildProperties.getArtifact(), buildProperties.getVersion(), buildProperties.getTime()
             ), new TechnicalOverviewResponse.GitDetails(
-            gitProperties.getBranch(), gitProperties.getCommitId(), gitProperties.getShortCommitId(), gitProperties.getCommitTime()
-        ), new TechnicalOverviewResponse.RuntimeDetails(
-            environment.getProperty("spring.application.name", "technical-interview-demo"), System.getProperty("java.version", "unknown"), System.getProperty("java.vendor", "unknown"), activeProfiles
-        ), dependencyVersions(), new TechnicalOverviewResponse.ConfigurationDetails(
-            new TechnicalOverviewResponse.PaginationDetails(
-                intProperty("spring.data.web.pageable.default-page-size", 20), intProperty("spring.data.web.pageable.max-page-size", 100)
-            ), new TechnicalOverviewResponse.SessionDetails(
-            property("spring.session.store-type", "unknown"), property("server.servlet.session.timeout", "unknown"), property("server.servlet.session.cookie.name", "unknown"), booleanProperty("server.servlet.session.cookie.http-only", true), property("server.servlet.session.cookie.same-site", "unknown")
-        ), new TechnicalOverviewResponse.ObservabilityDetails(
-            listProperty("management.endpoints.web.exposure.include"), booleanProperty("management.endpoint.health.probes.enabled", false), doubleProperty("management.tracing.sampling.probability", 0.0d)
-        ), new TechnicalOverviewResponse.DocumentationDetails(
-            DOCS_PATH, OPEN_API_JSON_PATH, OPEN_API_YAML_PATH, property("springdoc.api-docs.version", "unknown")
-        ), new TechnicalOverviewResponse.SecurityDetails(
-            true, SameSiteCsrfContract.COOKIE_NAME, SameSiteCsrfContract.HEADER_NAME, activeProfiles.contains("oauth"), PUBLIC_API_PATH_PATTERN, SecuritySettingsProperties.OAuth.AUTHORIZATION_BASE_URI, SecuritySettingsProperties.OAuth.CALLBACK_BASE_URI + "/{registrationId}", property("server.forward-headers-strategy", "none"), new TechnicalOverviewResponse.AbuseProtectionDetails(
-            "edge-or-gateway", SecuritySettingsProperties.OAuth.AUTHORIZATION_BASE_URI + "/{registrationId}", List.of("burst-rate-limiting", "challenge-or-block-suspicious-clients"), PUBLIC_API_PATH_PATTERN, List.of(
-            "/api/session/logout", "/api/books", "/api/categories", "/api/localizations", "/api/account/language"
-        ), List.of("per-client-throttling", "request-size-enforcement", "rejection-visibility")
-        )
-        ), new TechnicalOverviewResponse.ShutdownDetails(
-            property("server.shutdown", "unknown"), property("spring.lifecycle.timeout-per-shutdown-phase", "unknown")
-        )
-        )
+                gitProperties.getBranch(), gitProperties.getCommitId(), gitProperties.getShortCommitId(), gitProperties.getCommitTime()
+            ), new TechnicalOverviewResponse.RuntimeDetails(
+                environment.getProperty("spring.application.name", "technical-interview-demo"), System.getProperty("java.version", "unknown"), System.getProperty("java.vendor", "unknown"), activeProfiles
+            ), dependencyVersions(), new TechnicalOverviewResponse.ConfigurationDetails(
+                new TechnicalOverviewResponse.PaginationDetails(
+                    intProperty("spring.data.web.pageable.default-page-size", 20), intProperty("spring.data.web.pageable.max-page-size", 100)
+                ), new TechnicalOverviewResponse.SessionDetails(
+                    property("spring.session.store-type", "unknown"), property("server.servlet.session.timeout", "unknown"), property("server.servlet.session.cookie.name", "unknown"), booleanProperty("server.servlet.session.cookie.http-only", true), property("server.servlet.session.cookie.same-site", "unknown")
+                ), new TechnicalOverviewResponse.ObservabilityDetails(
+                    listProperty("management.endpoints.web.exposure.include"), booleanProperty("management.endpoint.health.probes.enabled", false), doubleProperty("management.tracing.sampling.probability", 0.0d)
+                ), new TechnicalOverviewResponse.DocumentationDetails(
+                    DOCS_PATH, OPEN_API_JSON_PATH, OPEN_API_YAML_PATH, property("springdoc.api-docs.version", "unknown")
+                ), new TechnicalOverviewResponse.SecurityDetails(
+                    true, SameSiteCsrfContract.COOKIE_NAME, SameSiteCsrfContract.HEADER_NAME, activeProfiles.contains("oauth"), PUBLIC_API_PATH_PATTERN, SecuritySettingsProperties.OAuth.AUTHORIZATION_BASE_URI, SecuritySettingsProperties.OAuth.CALLBACK_BASE_URI + "/{registrationId}", property("server.forward-headers-strategy", "none"), new TechnicalOverviewResponse.AbuseProtectionDetails(
+                        "edge-or-gateway", SecuritySettingsProperties.OAuth.AUTHORIZATION_BASE_URI + "/{registrationId}", List.of("burst-rate-limiting", "challenge-or-block-suspicious-clients"), PUBLIC_API_PATH_PATTERN, List.of(
+                            "/api/session/logout", "/api/books", "/api/categories", "/api/localizations", "/api/account/language"
+                        ), List.of("per-client-throttling", "request-size-enforcement", "rejection-visibility")
+                    )
+                ), new TechnicalOverviewResponse.ShutdownDetails(
+                    property("server.shutdown", "unknown"), property("spring.lifecycle.timeout-per-shutdown-phase", "unknown")
+                )
+            )
         );
         return response;
     }

@@ -32,8 +32,8 @@ import java.util.Set;
 @Entity
 @Table(
     name = "users", uniqueConstraints = @UniqueConstraint(
-    name = "uk_users_provider_external_login", columnNames = {"provider", "external_login"}
-)
+        name = "uk_users_provider_external_login", columnNames = {"provider", "external_login"}
+    )
 )
 public class UserAccount {
 

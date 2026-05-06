@@ -42,16 +42,16 @@ public class AdminUserManagementController {
     )
     @ApiResponses({@ApiResponse(
         responseCode = "200", description = "OK", content = @Content(
-        mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = AdminUserAccountResponse.class))
-    )
+            mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = AdminUserAccountResponse.class))
+        )
     ), @ApiResponse(
         responseCode = "401", description = "Missing or invalid authenticated session.", content = @Content(
-        mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
-    )
+            mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
+        )
     ), @ApiResponse(
         responseCode = "403", description = "Authenticated user does not have the ADMIN role.", content = @Content(
-        mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
-    )
+            mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
+        )
     )
     })
     public ResponseEntity<List<AdminUserAccountResponse>> listUsers() {
@@ -68,24 +68,24 @@ public class AdminUserManagementController {
     )
     @ApiResponses({@ApiResponse(
         responseCode = "200", description = "OK", content = @Content(
-        mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AdminUserAccountResponse.class)
-    )
+            mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AdminUserAccountResponse.class)
+        )
     ), @ApiResponse(
         responseCode = "400", description = "Invalid request payload.", content = @Content(
-        mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
-    )
+            mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
+        )
     ), @ApiResponse(
         responseCode = "401", description = "Missing or invalid authenticated session.", content = @Content(
-        mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
-    )
+            mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
+        )
     ), @ApiResponse(
         responseCode = "403", description = "Authenticated user does not have the ADMIN role.", content = @Content(
-        mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
-    )
+            mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
+        )
     ), @ApiResponse(
         responseCode = "404", description = "Persisted user was not found.", content = @Content(
-        mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
-    )
+            mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ApiProblemResponse.class)
+        )
     )
     })
     public ResponseEntity<AdminUserAccountResponse> replaceRoles(
