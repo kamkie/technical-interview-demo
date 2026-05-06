@@ -452,8 +452,8 @@ asciidoctorTask {
 
 spotless {
     java {
-        target("src/**/*.java")
-        importOrder()
+        target("src/**/*.java", "buildSrc/src/**/*.java")
+        importOrder("", "javax", "java", "\\#")
         removeUnusedImports()
         eclipse().configFile("tooling/formatting/intellij-exported-eclipse-java-formatter.xml")
     }

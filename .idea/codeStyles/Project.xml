@@ -6,6 +6,46 @@
     <option name="FORMATTER_TAGS_ENABLED" value="true" />
     <option name="FORMATTER_OFF_TAG" value="@formatter:off" />
     <option name="FORMATTER_ON_TAG" value="@formatter:on" />
+    <option name="DO_NOT_FORMAT">
+      <list>
+        <fileSet type="globPattern" pattern=".git/**" />
+        <fileSet type="globPattern" pattern=".gradle/**" />
+        <fileSet type="globPattern" pattern=".kotlin/**" />
+        <fileSet type="globPattern" pattern="build/**" />
+        <fileSet type="globPattern" pattern="buildSrc/.gradle/**" />
+        <fileSet type="globPattern" pattern="buildSrc/build/**" />
+        <fileSet type="globPattern" pattern="out/**" />
+        <fileSet type="globPattern" pattern="temp/**" />
+        <fileSet type="globPattern" pattern=".idea/**" />
+        <fileSet type="globPattern" pattern=".run/**" />
+        <fileSet type="globPattern" pattern="gradle/wrapper/gradle-wrapper.jar" />
+        <fileSet type="globPattern" pattern="**/*.jar" />
+        <fileSet type="globPattern" pattern="**/*.zip" />
+        <fileSet type="globPattern" pattern="**/*.png" />
+        <fileSet type="globPattern" pattern="**/*.jpg" />
+        <fileSet type="globPattern" pattern="**/*.jpeg" />
+        <fileSet type="globPattern" pattern="**/*.gif" />
+        <fileSet type="globPattern" pattern="**/*.ico" />
+        <fileSet type="globPattern" pattern="**/*.pdf" />
+        <fileSet type="globPattern" pattern="**/*.jks" />
+        <fileSet type="globPattern" pattern="**/*.p12" />
+        <fileSet type="globPattern" pattern="**/*.keystore" />
+        <fileSet type="globPattern" pattern=".env" />
+        <fileSet type="globPattern" pattern="src/test/resources/http/http-client.private.env.json" />
+        <fileSet type="globPattern" pattern="src/test/resources/openapi/approved-openapi.json" />
+        <fileSet type="globPattern" pattern="src/gatling/resources/gatling-benchmark-baseline.json" />
+        <fileSet type="globPattern" pattern="tooling/formatting/intellij-exported-eclipse-java-formatter.xml" />
+        <fileSet type="globPattern" pattern="src/docs/asciidoc/**/*.adoc" />
+        <fileSet type="globPattern" pattern="*.ps1" />
+        <fileSet type="globPattern" pattern="*.bat" />
+        <fileSet type="globPattern" pattern="*.py" />
+        <fileSet type="globPattern" pattern="*.tpl" />
+        <fileSet type="globPattern" pattern="*.ignore" />
+        <fileSet type="globPattern" pattern=".devcontainer/**/*.sh" />
+        <fileSet type="globPattern" pattern=".devcontainer/**/*.txt" />
+        <fileSet type="globPattern" pattern=".devcontainer/**/Dockerfile" />
+      </list>
+    </option>
     <JavaCodeStyleSettings>
       <option name="CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND" value="999" />
       <option name="NAMES_COUNT_TO_USE_IMPORT_ON_DEMAND" value="999" />
