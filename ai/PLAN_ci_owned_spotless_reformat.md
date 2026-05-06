@@ -307,6 +307,9 @@
   - Updated `build.gradle.kts` so Java, Kotlin, and Kotlin Gradle Spotless targets no longer carry generated-directory excludes, and misc formatting uses explicit repo-owned support-file target roots instead of root-wide `**/*` globs plus broad excludes.
   - `./build.ps1 spotlessCheck --no-daemon` passed.
   - `./build.ps1 -FullBuild build --no-daemon` passed, including 264 tests, JaCoCo line coverage 92.6%, Docker image build, vulnerability scans, SBOM tasks, Spotless, PMD, and SpotBugs.
+- 2026-05-06 IDE code-style load follow-up:
+  - fixed `.idea/codeStyles/Project.xml` so the project code scheme is wrapped in IntelliJ's expected `ProjectCodeStyleConfiguration` component and the Java import-on-demand thresholds remain set to `999`.
+  - XML parsing of `.idea/codeStyles/Project.xml` passed.
 
 ## User Validation
 - Review the three commits separately:
