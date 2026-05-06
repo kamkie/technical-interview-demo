@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Implementation |
+| Status | In Progress |
 
 ## Summary
 - Supersede the partially implemented Eclipse-profile Spotless formatter plan with a Palantir-first formatter setup for `v2.0.0-RC5`.
@@ -53,7 +53,7 @@
 
 ## Requirement Gaps And Open Questions
 - The request says `spotbugs` in formatter-scope contexts. SpotBugs does not format files. Fallback for execution: treat literal SpotBugs as the existing Gradle static-analysis gate, and mirror IntelliJ code-style inclusions/exclusions with the Gradle formatter scope instead of SpotBugs filters. If the intended word was `Spotless`, revise this plan before implementation.
-- Exact Palantir plugin versions are not selected in this plan. Fallback for execution: pin explicit stable plugin versions in `build.gradle.kts`, using the repository's normal Gradle plugin declaration style, and record the chosen versions in `Validation Results`.
+- Exact Palantir plugin versions were not selected during planning. Execution selected and pinned `com.palantir.java-format` `2.90.0` and `com.palantir.java-format-idea` `2.90.0` in `build.gradle.kts`.
 - Palantir Java Format is the Java authority. If `com.palantir.java-format` supports additional file types in the selected version, include only those documented supported types; otherwise do not invent a Gradle formatter for unsupported file types.
 - IntelliJ and EditorConfig precedence for Markdown/AsciiDoc line wrapping must be verified during Milestone 1. If global `.editorconfig` `max_line_length = 120` causes wrapping for Markdown or AsciiDoc, add the narrowest repo-owned override for `*.md`, `*.adoc`, and `*.asciidoc` instead of weakening Java or build-file margins globally.
 - The exact IntelliJ project-code-style setting for preserving `.properties` empty lines must be confirmed during Milestone 1. Do not solve this by excluding all `.properties` files unless IntelliJ lacks a precise project setting.
@@ -89,7 +89,11 @@
   - `tooling/formatting/intellij-exported-eclipse-java-formatter.xml`
   - `SETUP.md`
   - `CONTRIBUTING.md`
+  - `.devcontainer/` command references if formatter task names changed there
   - `ai/CODE_STYLE.md`
+  - `ai/ENVIRONMENT_QUICK_REF.md` if formatter wrapper commands are added there
+  - `ai/references/GRADLE_TASK_GRAPH.md` if formatter task graph references changed there
+  - `CHANGELOG.md` unreleased entry required by Single Branch execution tracking
   - `ROADMAP.md`
   - this plan file
 - If delegation becomes necessary, use only read-only verification workers after the configuration commit is prepared.
@@ -169,7 +173,7 @@
   - avoid source reformatting in this commit except unavoidable build file formatting
 - validation checkpoint:
   - `./build.ps1 tasks --all --no-daemon`
-  - `./build.ps1 checkFormat --no-daemon --continue` after confirming the Palantir plugin exposes `checkFormat`; expected source-format drift is acceptable before Milestone 2, but Gradle configuration errors are not
+  - `./build.ps1 checkFormat --no-daemon --continue`; execution added repo-owned `checkFormat` and `format` aliases because the Palantir plugin only exposes `formatDiff` directly and otherwise enforces Java formatting through its Spotless bridge
   - XML parsing or IDE loading check for `.idea/codeStyles/Project.xml`
   - IntelliJ style smoke check on representative Markdown, AsciiDoc, and `.properties` files or scratch copies: no Markdown/AsciiDoc line wrapping and no `.properties` empty-line removal
 - commit checkpoint:
@@ -189,7 +193,7 @@
   - no Markdown or AsciiDoc prose wrapping and no `.properties` empty-line removal caused by retained non-Java formatting
   - no formatter configuration, IntelliJ project style, roadmap, or docs changes in this commit unless Milestone 1 must be corrected first
 - exact deliverables:
-  - run `./build.ps1 format --no-daemon` after confirming the Palantir plugin exposes `format`
+- run `./build.ps1 format --no-daemon`; execution added the repo-owned `format` alias for the retained Spotless apply task graph
   - run any retained non-Java formatter apply task documented by Milestone 1
   - review `git diff --stat` and spot-check representative formatted Java files for formatter-only churn
   - confirm no Java wildcard imports remain under formatter-managed Java source roots
@@ -207,7 +211,7 @@
 - `com.palantir.java-format-idea` may configure IDE behavior without committing every IDE-generated file. Commit only reviewed project-level code-style files.
 - SpotBugs include/exclude filters are bug-detector policy, not formatter file scope. Do not force IntelliJ formatter exclusions to mirror SpotBugs detector filters.
 - Removing Spotless entirely can remove Gradle-enforced non-Java whitespace normalization. If that is unacceptable, keep a narrow non-Java formatter in Gradle and document why it remains.
-- If Palantir plugin task names differ from `format` and `checkFormat`, update this plan before claiming Milestone 1 validation or Milestone 2 execution.
+- The Palantir plugin exposes `formatDiff` directly and contributes Java formatting through Spotless; execution adds repo-owned `format` and `checkFormat` aliases so the planned wrapper commands remain stable.
 - If the configuration commit causes compilation or static-analysis failures unrelated to formatting drift, fix them before the reformat commit.
 - If IntelliJ reformat produces Java output different from Palantir after the project style update, Palantir wins for Java and the IntelliJ setup must be adjusted.
 - If `.editorconfig` global `max_line_length` drives Markdown or AsciiDoc wrapping in IntelliJ, add a narrow file-type override for docs instead of changing the Java right margin contract.
@@ -251,6 +255,16 @@
 - 2026-05-06 plan refinement:
   - added IntelliJ code-style goals for no automatic Markdown/AsciiDoc line wrapping and preserving empty lines in `.properties` files.
   - checked current `.editorconfig` and recorded global `max_line_length = 120` as an implementation audit point for Markdown/AsciiDoc wrapping.
+- 2026-05-06 Milestone 1 configuration:
+  - selected and pinned `com.palantir.java-format` `2.90.0` and `com.palantir.java-format-idea` `2.90.0`.
+  - retained Spotless for Kotlin, Gradle Kotlin DSL, support-file whitespace normalization, and as the Palantir Java Format task bridge; added repo-owned `format` and `checkFormat` aliases.
+  - removed the Eclipse formatter XML and the Gradle `eclipse().configFile(...)` formatter path.
+  - added the narrow `.editorconfig` `max_line_length = off` override for Markdown, AsciiDoc, and `.asciidoc` files so the global 120-column baseline does not drive prose wrapping.
+  - kept `.idea/palantir-java-format.xml` ignored because the Palantir IDEA task writes machine-local Gradle cache paths into it.
+  - `./build.ps1 tasks --all --no-daemon` passed and confirmed `format`, `checkFormat`, `formatDiff`, `updatePalantirJavaFormatXml`, and `updateWorkspaceXml` are available.
+  - XML parsing for `.idea/codeStyles/Project.xml` passed.
+  - static IntelliJ style smoke check passed for Markdown no-wrap, AsciiDoc one-sentence-per-line disabled, docs `max_line_length = off`, and `.properties` `KEEP_BLANK_LINES=true`.
+  - `./build.ps1 checkFormat --no-daemon --continue` failed only at `spotlessJavaCheck` with expected Palantir Java formatting drift across 155 Java files; `spotlessKotlinCheck`, `spotlessKotlinGradleCheck`, and `spotlessMiscCheck` passed.
 
 ## User Validation
 - Review the implementation as two commits:

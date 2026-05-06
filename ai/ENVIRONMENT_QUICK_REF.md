@@ -11,6 +11,8 @@ PowerShell (`pwsh`):
 
 ```powershell
 ./build.ps1 compileJava
+./build.ps1 checkFormat
+./build.ps1 format
 ./build.ps1 build
 ./build.ps1 -FullBuild build
 ./build.ps1 -SkipTests -SkipChecks build

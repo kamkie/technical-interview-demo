@@ -237,8 +237,8 @@ At a minimum, release preparation should include:
 
 ## Formatting Expectations
 
-Spotless is the formatting entry point.
+`./build.ps1 format` is the formatting entry point.
 
-Java formatting is CI-owned through the repository Spotless configuration and does not require IntelliJ IDEA or local formatter environment variables.
+Java formatting is Gradle-owned through Palantir Java Format. IntelliJ alignment comes from the Palantir Java Format plugin plus the committed project code-style settings for imports and non-Java options.
 
-Use `./build.ps1 spotlessApply` to normalize formatting before review, and use `SETUP.md` for local IDE configuration.
+Use `./build.ps1 checkFormat` to verify formatting and `./build.ps1 format` to normalize formatting before review. Retained Spotless tasks still handle Kotlin, Gradle Kotlin DSL, and lightweight support-file whitespace normalization.

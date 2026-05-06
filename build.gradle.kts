@@ -29,6 +29,8 @@ plugins {
     id("com.gorylenko.gradle-git-properties") version "2.5.7"
     id("com.github.spotbugs") version "6.5.4"
     id("com.diffplug.spotless") version "8.4.0"
+    id("com.palantir.java-format") version "2.90.0"
+    id("com.palantir.java-format-idea") version "2.90.0"
     id("net.ltgt.errorprone") version "5.1.0"
     id("org.springframework.boot") version "4.0.6"
     id("io.spring.dependency-management") version "1.1.7"
@@ -452,10 +454,10 @@ asciidoctorTask {
 
 spotless {
     java {
+        // com.palantir.java-format-spotless contributes the Java formatter step for this target.
         target("src/**/*.java", "buildSrc/src/**/*.java")
         importOrder("", "javax", "java", "\\#")
         removeUnusedImports("cleanthat-javaparser-unnecessaryimport")
-        eclipse().configFile("tooling/formatting/intellij-exported-eclipse-java-formatter.xml")
     }
 
     kotlin {
@@ -483,6 +485,18 @@ spotless {
         trimTrailingWhitespace()
         endWithNewline()
     }
+}
+
+tasks.register("checkFormat") {
+    group = "verification"
+    description = "Checks repository formatting through Palantir Java Format and retained Spotless formatters."
+    dependsOn(tasks.named("spotlessCheck"))
+}
+
+tasks.register("format") {
+    group = "formatting"
+    description = "Applies Palantir Java Format and retained Spotless formatters."
+    dependsOn(tasks.named("spotlessApply"))
 }
 
 tasks.withType<DependencyUpdatesTask> {

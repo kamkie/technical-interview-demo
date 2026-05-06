@@ -30,8 +30,8 @@ print_warning() {
 alias gb='./gradlew.bat'
 alias gbt='./gradlew.bat test'
 alias gbr='./gradlew.bat bootRun'
-alias gbscan='./gradlew.bat spotlessCheck'
-alias gbformat='./gradlew.bat spotlessApply'
+alias gbscan='./gradlew.bat checkFormat'
+alias gbformat='./gradlew.bat format'
 alias gbpmd='./gradlew.bat --no-problems-report pmdMain'
 alias gbdocs='./gradlew.bat asciidoctor'
 alias gbdocker='./gradlew.bat dockerBuild'
@@ -65,8 +65,8 @@ dev-test() {
 
 dev-quality() {
     print_section "Running quality checks..."
-    print_warning "Running spotlessCheck..."
-    ./gradlew.bat spotlessCheck || print_error "Format check failed!"
+    print_warning "Running checkFormat..."
+    ./gradlew.bat checkFormat || print_error "Format check failed!"
     print_warning "Running PMD..."
     ./gradlew.bat --no-problems-report pmdMain || print_error "PMD check failed!"
     print_warning "Running tests..."
@@ -109,8 +109,8 @@ ${YELLOW}Gradle Shortcuts:${NC}
   gb              ./gradlew.bat
   gbt             ./gradlew.bat test
   gbr             ./gradlew.bat bootRun
-  gbscan          ./gradlew.bat spotlessCheck
-  gbformat        ./gradlew.bat spotlessApply
+  gbscan          ./gradlew.bat checkFormat
+  gbformat        ./gradlew.bat format
   gbpmd           ./gradlew.bat --no-problems-report pmdMain
   gbdocs          ./gradlew.bat asciidoctor
   gbdocker        ./gradlew.bat dockerBuild

@@ -102,7 +102,7 @@ The app will start on `http://localhost:8080`
 ### Run Quality Checks
 
 ```bash
-./gradlew.bat spotlessCheck
+./gradlew.bat checkFormat
 ./gradlew.bat --no-problems-report pmdMain
 ./gradlew.bat asciidoctor
 ```

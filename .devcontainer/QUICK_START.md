@@ -26,8 +26,8 @@
 |------|---------|
 | **Start App** | `./gradlew.bat bootRun` |
 | **Run Tests** | `./gradlew.bat test` |
-| **Check Format** | `./gradlew.bat spotlessCheck` |
-| **Fix Format** | `./gradlew.bat spotlessApply` |
+| **Check Format** | `./gradlew.bat checkFormat` |
+| **Fix Format** | `./gradlew.bat format` |
 | **Run PMD** | `./gradlew.bat --no-problems-report pmdMain` |
 | **Generate Docs** | `./gradlew.bat asciidoctor` |
 | **Build Docker** | `./gradlew.bat dockerBuild` |

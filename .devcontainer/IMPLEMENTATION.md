@@ -183,7 +183,7 @@ docker ps
 ./gradlew.bat test
 
 # Quality checks
-./gradlew.bat spotlessCheck
+./gradlew.bat checkFormat
 ./gradlew.bat pmdMain
 
 # Generate docs

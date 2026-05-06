@@ -50,7 +50,7 @@ Decision shortcuts:
 - `./build.ps1 test --tests <pattern>`: focused executable spec check.
 - `./build.ps1 build`: normal final verification; may skip Gradle for lightweight-only uncommitted changes.
 - `./build.ps1 -FullBuild build`: force final full verification, including Docker image, checks, scans, and SBOM.
-- Do not separately run `test`, `asciidoctor`, `dockerBuild`, PMD, SpotBugs, Spotless, vulnerability scans, or SBOM when `build` already provides the required proof.
+- Do not separately run `test`, `asciidoctor`, `dockerBuild`, PMD, SpotBugs, `checkFormat`, vulnerability scans, or SBOM when `build` already provides the required proof.
 
 ## Check And Quality Gates
 
@@ -62,7 +62,7 @@ graph TD
   check --> pmdTest
   check --> pmdExternalTest
   check --> pmdGatling
-  check --> spotlessCheck
+  check --> checkFormat
   check --> spotbugsMain
   check --> spotbugsTest
   check --> spotbugsExternalTest
@@ -79,6 +79,9 @@ graph TD
 
   staticSecurityScan --> spotbugsMain
 
+  checkFormat --> spotlessCheck
+  spotlessCheck --> spotlessJavaCheck
+  spotlessCheck --> spotlessKotlinCheck
   spotlessCheck --> spotlessKotlinGradleCheck
   spotlessCheck --> spotlessMiscCheck
 

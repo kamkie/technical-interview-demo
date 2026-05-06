@@ -31,8 +31,8 @@ Keep changes:
 - do not broaden a small fix into cross-repo cleanup unless the repetition is already real
 - do not change public contract behavior accidentally while cleaning up internals
 - when build or workflow files change, prefer existing Gradle tasks and workflows over parallel scripts
-- treat Spotless as the CI-owned repository formatter; Java formatting uses `tooling/formatting/intellij-exported-eclipse-java-formatter.xml` and does not require IntelliJ binaries or formatter environment variables
-- use `./build.ps1 spotlessApply` for repository-wide formatting instead of hand-formatting source files
+- treat Palantir Java Format as the Gradle-owned Java formatter; IntelliJ alignment comes from the Palantir formatter plugin plus committed project code-style settings for imports and non-Java options
+- use `./build.ps1 format` for repository-wide formatting and `./build.ps1 checkFormat` for formatter verification instead of hand-formatting source files
 - keep `.editorconfig` to portable editor defaults; put IntelliJ-specific project style in `.idea/codeStyles/`
 
 ## Naming And Placement
