@@ -1,14 +1,15 @@
 package team.jit.technicalinterviewdemo.testing;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.springframework.boot.test.web.server.LocalServerPort;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import org.springframework.boot.test.web.server.LocalServerPort;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public abstract class AbstractRandomPortIntegrationTest extends AbstractIntegrationTest {
 

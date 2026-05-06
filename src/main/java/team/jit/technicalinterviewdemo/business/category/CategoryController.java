@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 import team.jit.technicalinterviewdemo.technical.api.ApiProblemResponse;
 import team.jit.technicalinterviewdemo.technical.docs.OpenApiConfiguration;
 import team.jit.technicalinterviewdemo.technical.security.SameSiteCsrfContract;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController

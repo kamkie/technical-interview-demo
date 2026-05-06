@@ -2,6 +2,7 @@ package team.jit.technicalinterviewdemo.business.audit;
 
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.util.List;
 
 @Schema(name = "AuditLogPageResponse", description = "Paginated audit log response.")

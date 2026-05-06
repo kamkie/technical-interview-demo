@@ -1,9 +1,5 @@
 package team.jit.technicalinterviewdemo.technical.security;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +16,10 @@ import org.springframework.security.web.csrf.MissingCsrfTokenException;
 import team.jit.technicalinterviewdemo.business.localization.Localization;
 import team.jit.technicalinterviewdemo.business.localization.LocalizationService;
 import team.jit.technicalinterviewdemo.technical.api.ApiProblemFactory;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ApiSecurityErrorHandlerTests {

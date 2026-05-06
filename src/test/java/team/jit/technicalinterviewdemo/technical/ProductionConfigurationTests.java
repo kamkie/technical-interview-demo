@@ -1,13 +1,5 @@
 package team.jit.technicalinterviewdemo.technical;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DynamicTest;
@@ -22,6 +14,15 @@ import org.testcontainers.utility.DockerImageName;
 import team.jit.technicalinterviewdemo.TechnicalInterviewDemoApplication;
 import team.jit.technicalinterviewdemo.technical.bootstrap.BootstrapSettingsProperties;
 import team.jit.technicalinterviewdemo.technical.security.SecuritySettingsProperties;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ProductionConfigurationTests {
 

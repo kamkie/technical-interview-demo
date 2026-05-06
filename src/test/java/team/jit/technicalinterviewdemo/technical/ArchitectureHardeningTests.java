@@ -1,13 +1,9 @@
 package team.jit.technicalinterviewdemo.technical;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.github.benmanes.caffeine.cache.Cache;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.PersistenceUnitUtil;
-import java.lang.reflect.Field;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +29,11 @@ import team.jit.technicalinterviewdemo.technical.cache.CacheNames;
 import team.jit.technicalinterviewdemo.technical.cache.CachingConfiguration;
 import team.jit.technicalinterviewdemo.testdata.BookCatalogTestData;
 import team.jit.technicalinterviewdemo.testing.IntegrationSpringBootTest;
+
+import java.lang.reflect.Field;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @IntegrationSpringBootTest
 class ArchitectureHardeningTests {

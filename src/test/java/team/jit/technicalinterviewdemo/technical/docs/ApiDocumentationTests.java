@@ -1,5 +1,20 @@
 package team.jit.technicalinterviewdemo.technical.docs;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.http.MediaType;
+import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
+import team.jit.technicalinterviewdemo.business.book.Book;
+import team.jit.technicalinterviewdemo.business.book.BookRepository;
+import team.jit.technicalinterviewdemo.business.category.Category;
+import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
+import team.jit.technicalinterviewdemo.testdata.BookCatalogTestData;
+import team.jit.technicalinterviewdemo.testing.AbstractDocumentationIntegrationTest;
+import team.jit.technicalinterviewdemo.testing.RestDocsIntegrationSpringBootTest;
+import team.jit.technicalinterviewdemo.testing.SecurityTestSupport.BrowserSession;
+
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -21,21 +36,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.authenticatedBrowserSession;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
-import org.springframework.http.MediaType;
-import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
-import team.jit.technicalinterviewdemo.business.book.Book;
-import team.jit.technicalinterviewdemo.business.book.BookRepository;
-import team.jit.technicalinterviewdemo.business.category.Category;
-import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
-import team.jit.technicalinterviewdemo.testdata.BookCatalogTestData;
-import team.jit.technicalinterviewdemo.testing.AbstractDocumentationIntegrationTest;
-import team.jit.technicalinterviewdemo.testing.RestDocsIntegrationSpringBootTest;
-import team.jit.technicalinterviewdemo.testing.SecurityTestSupport.BrowserSession;
 
 @RestDocsIntegrationSpringBootTest
 class ApiDocumentationTests extends AbstractDocumentationIntegrationTest {

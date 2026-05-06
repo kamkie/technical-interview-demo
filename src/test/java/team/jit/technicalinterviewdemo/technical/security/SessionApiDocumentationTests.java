@@ -1,5 +1,18 @@
 package team.jit.technicalinterviewdemo.technical.security;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.session.Session;
+import org.springframework.session.SessionRepository;
+import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
+import team.jit.technicalinterviewdemo.testing.AbstractDocumentationIntegrationTest;
+import team.jit.technicalinterviewdemo.testing.RestDocsIntegrationSpringBootTest;
+import team.jit.technicalinterviewdemo.testing.SecurityTestSupport.BrowserSession;
+
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
@@ -13,19 +26,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.browserSession;
 import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.createAuthenticatedSession;
 import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.sessionCookie;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.session.Session;
-import org.springframework.session.SessionRepository;
-import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
-import team.jit.technicalinterviewdemo.testing.AbstractDocumentationIntegrationTest;
-import team.jit.technicalinterviewdemo.testing.RestDocsIntegrationSpringBootTest;
-import team.jit.technicalinterviewdemo.testing.SecurityTestSupport.BrowserSession;
 
 @RestDocsIntegrationSpringBootTest
 @ActiveProfiles(value = {"test", "oauth"}, inheritProfiles = false)

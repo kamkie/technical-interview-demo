@@ -3,8 +3,6 @@ package team.jit.technicalinterviewdemo.technical.api;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -30,6 +28,9 @@ import team.jit.technicalinterviewdemo.business.category.CategoryNotFoundExcepti
 import team.jit.technicalinterviewdemo.business.localization.DuplicateLocalizationException;
 import team.jit.technicalinterviewdemo.business.localization.LocalizationNotFoundException;
 import team.jit.technicalinterviewdemo.business.user.UserAccountNotFoundException;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @RestControllerAdvice
 @RequiredArgsConstructor

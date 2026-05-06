@@ -1,5 +1,13 @@
 package team.jit.technicalinterviewdemo.business.audit;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import team.jit.technicalinterviewdemo.testing.AbstractDocumentationIntegrationTest;
+import team.jit.technicalinterviewdemo.testing.RestDocsIntegrationSpringBootTest;
+
+import java.util.Map;
+
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.relaxedResponseFields;
@@ -12,13 +20,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminOauthUser;
 import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.oauthUser;
-
-import java.util.Map;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import team.jit.technicalinterviewdemo.testing.AbstractDocumentationIntegrationTest;
-import team.jit.technicalinterviewdemo.testing.RestDocsIntegrationSpringBootTest;
 
 @RestDocsIntegrationSpringBootTest
 class AuditLogApiDocumentationTests extends AbstractDocumentationIntegrationTest {

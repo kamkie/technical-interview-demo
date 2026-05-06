@@ -1,6 +1,5 @@
 package team.jit.technicalinterviewdemo.technical.operator;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.availability.ApplicationAvailability;
 import org.springframework.boot.health.actuate.endpoint.HealthEndpoint;
@@ -14,6 +13,8 @@ import team.jit.technicalinterviewdemo.business.user.CurrentUserAccountService;
 import team.jit.technicalinterviewdemo.business.user.UserRole;
 import team.jit.technicalinterviewdemo.technical.info.TechnicalOverviewResponse;
 import team.jit.technicalinterviewdemo.technical.info.TechnicalOverviewService;
+
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)

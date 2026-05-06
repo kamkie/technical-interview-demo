@@ -1,17 +1,18 @@
 package team.jit.technicalinterviewdemo.technical.docs;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import java.net.http.HttpResponse;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import team.jit.technicalinterviewdemo.testing.AbstractRandomPortIntegrationTest;
 import team.jit.technicalinterviewdemo.testing.RandomPortIntegrationSpringBootTest;
+
+import java.io.IOException;
+import java.net.http.HttpResponse;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @RandomPortIntegrationSpringBootTest
 class OpenApiIntegrationTests extends AbstractRandomPortIntegrationTest {

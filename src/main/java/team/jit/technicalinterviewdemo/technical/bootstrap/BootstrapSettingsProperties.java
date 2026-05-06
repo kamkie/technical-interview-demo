@@ -1,11 +1,12 @@
 package team.jit.technicalinterviewdemo.technical.bootstrap;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 @Component
 @ConfigurationProperties(prefix = "app.bootstrap")

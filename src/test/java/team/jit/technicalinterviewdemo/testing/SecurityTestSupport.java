@@ -1,10 +1,6 @@
 package team.jit.technicalinterviewdemo.testing;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
-
 import jakarta.servlet.http.Cookie;
-import java.util.Map;
-import java.util.UUID;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
@@ -15,6 +11,11 @@ import org.springframework.session.Session;
 import org.springframework.session.SessionRepository;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import team.jit.technicalinterviewdemo.technical.security.SameSiteCsrfContract;
+
+import java.util.Map;
+import java.util.UUID;
+
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 
 public final class SecurityTestSupport {
 

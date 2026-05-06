@@ -1,7 +1,5 @@
 package team.jit.technicalinterviewdemo.external;
 
-import java.util.Map;
-import javax.sql.DataSource;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -15,6 +13,10 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.session.Session;
 import org.springframework.session.SessionRepository;
 import team.jit.technicalinterviewdemo.technical.security.SessionConfiguration;
+
+import javax.sql.DataSource;
+
+import java.util.Map;
 
 final class ExternalSessionSupport implements AutoCloseable {
 

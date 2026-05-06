@@ -1,8 +1,5 @@
 package team.jit.technicalinterviewdemo.technical.logging;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
@@ -10,6 +7,10 @@ import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(OutputCaptureExtension.class)
 class ServiceLoggingAspectTests {

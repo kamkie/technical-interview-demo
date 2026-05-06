@@ -1,7 +1,5 @@
 package team.jit.technicalinterviewdemo.business.book;
 
-import java.util.LinkedHashSet;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +8,9 @@ import org.springframework.core.annotation.Order;
 import team.jit.technicalinterviewdemo.business.category.Category;
 import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
 import team.jit.technicalinterviewdemo.technical.bootstrap.BootstrapSettingsProperties;
+
+import java.util.LinkedHashSet;
+import java.util.List;
 
 @Slf4j
 @Configuration

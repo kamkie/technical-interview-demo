@@ -1,6 +1,7 @@
 package team.jit.technicalinterviewdemo.technical.security;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.util.List;
 
 @Schema(name = "SessionResponse", description = "Same-site browser session contract for the separate first-party UI.")
