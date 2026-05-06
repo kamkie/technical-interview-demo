@@ -301,6 +301,12 @@
   - manually reviewed the IDE code-style artifact for indentation, wrapping, line length, formatter tags, and import behavior alignment with the Spotless formatter contract.
   - XML parsing of `.idea/codeStyles/codeStyleConfig.xml` and `.idea/codeStyles/Project.xml` passed.
   - interactive IntelliJ `Reformat Code` / `Optimize Imports` verification was not run from this terminal session; keep the user-validation step as the final IDE check before release handoff.
+- 2026-05-06 CI failure follow-up:
+  - GitHub Actions run `25438789744` failed in `./build.ps1 -FullBuild build --no-daemon` at `:spotlessJava` because Gradle tried to read the Docker-created Trivy cache path `build/security/trivy-cache/image/fanal`, which was not readable on the Linux runner.
+  - Root cause: the shared `targetExclude("build/**", ...)` collection forced Spotless/Gradle input fingerprinting to walk generated build output even for narrow source targets.
+  - Updated `build.gradle.kts` so Java, Kotlin, and Kotlin Gradle Spotless targets no longer carry generated-directory excludes, and misc formatting uses explicit repo-owned support-file target roots instead of root-wide `**/*` globs plus broad excludes.
+  - `./build.ps1 spotlessCheck --no-daemon` passed.
+  - `./build.ps1 -FullBuild build --no-daemon` passed, including 264 tests, JaCoCo line coverage 92.6%, Docker image build, vulnerability scans, SBOM tasks, Spotless, PMD, and SpotBugs.
 
 ## User Validation
 - Review the three commits separately:

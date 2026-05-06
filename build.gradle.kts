@@ -73,34 +73,43 @@ val trivyFailOnSeverities = listOf("HIGH", "CRITICAL")
 val applicationSbomReportDir = layout.buildDirectory.dir("reports/sbom/application")
 val imageSbomReportDir = layout.buildDirectory.dir("reports/sbom/image")
 val skipChecks = providers.gradleProperty("skipChecks").map(String::toBoolean).orElse(false)
-val spotlessTargetExcludes = arrayOf(
-    ".git/**",
-    ".gradle/**",
-    ".kotlin/**",
-    ".idea/**",
-    ".run/**",
-    "build/**",
-    "buildSrc/build/**",
-    "buildSrc/.gradle/**",
-    "out/**",
-    "temp/**",
-    "gradle/wrapper/gradle-wrapper.jar",
-    "**/*.jar",
-    "**/*.zip",
-    "**/*.png",
-    "**/*.jpg",
-    "**/*.jpeg",
-    "**/*.gif",
-    "**/*.ico",
-    "**/*.pdf",
-    "**/*.jks",
-    "**/*.p12",
-    "**/*.keystore",
-    ".env",
-    "src/test/resources/http/http-client.private.env.json",
-    "src/test/resources/openapi/approved-openapi.json",
-    "src/gatling/resources/gatling-benchmark-baseline.json",
-    "tooling/formatting/intellij-exported-eclipse-java-formatter.xml",
+val spotlessMiscTargets = arrayOf(
+    "AGENTS.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "README.md",
+    "ROADMAP.md",
+    "SETUP.md",
+    "WORKING_WITH_AI.md",
+    ".editorconfig",
+    ".gitattributes",
+    ".gitignore",
+    "Dockerfile",
+    "docker-compose*.yml",
+    ".devcontainer/**/*.json",
+    ".devcontainer/**/*.md",
+    ".devcontainer/**/*.sql",
+    ".devcontainer/**/*.yml",
+    ".github/**/*.yml",
+    "ai/**/*.json",
+    "ai/**/*.md",
+    "ai/**/*.yaml",
+    "ai/**/*.yml",
+    "gradle/**/*.properties",
+    "gradle.properties",
+    "infra/**/*.json",
+    "infra/**/*.md",
+    "infra/**/*.yaml",
+    "infra/**/*.yml",
+    "src/gatling/resources/*.xml",
+    "src/main/resources/**/*.json",
+    "src/main/resources/**/*.properties",
+    "src/main/resources/**/*.sql",
+    "src/main/resources/**/*.xml",
+    "src/test/resources/**/*.http",
+    "src/test/resources/**/*.properties",
+    "tooling/pmd/**/*.xml",
+    "tooling/security/**/*.xml",
 )
 
 java {
@@ -444,7 +453,6 @@ asciidoctorTask {
 spotless {
     java {
         target("src/**/*.java")
-        targetExclude(*spotlessTargetExcludes)
         importOrder()
         removeUnusedImports()
         eclipse().configFile("tooling/formatting/intellij-exported-eclipse-java-formatter.xml")
@@ -452,7 +460,6 @@ spotless {
 
     kotlin {
         target("buildSrc/src/**/*.kt")
-        targetExclude(*spotlessTargetExcludes)
         ktlint().editorConfigOverride(
             mapOf(
                 "ktlint_code_style" to "intellij_idea",
@@ -463,7 +470,6 @@ spotless {
 
     kotlinGradle {
         target("*.gradle.kts", "gradle/**/*.gradle.kts", "buildSrc/**/*.gradle.kts")
-        targetExclude(*spotlessTargetExcludes)
         ktlint().editorConfigOverride(
             mapOf(
                 "ktlint_code_style" to "intellij_idea",
@@ -473,22 +479,7 @@ spotless {
     }
 
     format("misc") {
-        target(
-            "**/*.md",
-            ".gitignore",
-            ".gitattributes",
-            ".editorconfig",
-            "Dockerfile",
-            "docker-compose*.yml",
-            "**/*.properties",
-            "**/*.sql",
-            "**/*.yml",
-            "**/*.yaml",
-            "**/*.xml",
-            "**/*.json",
-            "**/*.http",
-        )
-        targetExclude("HELP.md", *spotlessTargetExcludes)
+        target(*spotlessMiscTargets)
         trimTrailingWhitespace()
         endWithNewline()
     }
