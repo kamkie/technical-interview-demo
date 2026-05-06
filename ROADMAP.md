@@ -50,6 +50,10 @@ Goal: use manual regression coverage as the RC-to-stable gate, then finish the s
 - [x] Execute `ai/PLAN_manual_regression_execution.md` as the manual business-functionality regression gate for the final `2.0` release candidate, currently `v2.0.0-RC5`; replan it to the next RC if another RC is prepared first. Plan lifecycle: `Planning` / `Ready`.
 - [ ] Release stable `v2.0.0`, update `CHANGELOG.md`, and remove the completed `2.0` track from `ROADMAP.md`.
 
+#### AI Workflow Guidance
+
+- [x] Execute `ai/PLAN_pskoett_ai_skill_guidance_adoption.md` to selectively adopt session-start, context-quality, scope-drift, and hardening-check guidance from `pskoett/pskoett-ai-skills` without importing its external skill framework. Plan lifecycle: `Planning` / `Ready`.
+
 ## Deferred
 
 ### Post-`2.0` Frontend AI Contract
