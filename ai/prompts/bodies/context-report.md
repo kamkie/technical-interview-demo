@@ -1,5 +1,3 @@
-# Context Report Prompt
-
 Prepare a report measuring how much context the repository AI instructions consume over time.
 
 Use a temporary git worktree. Analyze the diff between the last commit and current HEAD, unless a specific commit range is provided as input (e.g., `START..END` or `START~1..HEAD`). Analyze commits in chronological first-parent order.
@@ -123,6 +121,6 @@ Do not run the build, tests, or validation checks.
 
 Write the final report under a temporary directory outside the worktree, for example:
 
-`temp/context-report.md`
+`temp/context-report-<date>.md`
 
 After the report is written, delete the temporary git worktree. Leave the report file in place.

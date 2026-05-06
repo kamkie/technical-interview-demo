@@ -101,7 +101,7 @@
 - Manual checks: required-section audit for this plan, cross-reference review across the touched AI guides, `git diff --check`, and targeted text search for the new guidance.
 
 ## Better Engineering Notes
-- Keep this guideline cleanup separate from the unrelated `ai/prompts/bodies/context-report-prompt.md` working-tree change.
+- Keep this guideline cleanup separate from the unrelated `ai/prompts/bodies/context-report.md` prompt-body change.
 - Do not broaden this plan into a repository-wide AI-document rewrite; route future durable changes to the owning guide named in `ai/DOCUMENTATION.md`.
 - Consider archiving this plan during the next release cleanup if it no longer represents active work.
 

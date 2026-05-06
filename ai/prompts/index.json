@@ -78,6 +78,13 @@
       "placeholders": []
     },
     {
+      "title": "Context Report",
+      "slug": "context-report",
+      "category": "Maintenance",
+      "path": "ai/prompts/bodies/context-report.md",
+      "placeholders": []
+    },
+    {
       "title": "Create Plan",
       "slug": "create-plan",
       "category": "Planning",
