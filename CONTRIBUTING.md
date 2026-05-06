@@ -239,6 +239,6 @@ At a minimum, release preparation should include:
 
 Spotless is the formatting entry point.
 
-Java formatting delegates to IntelliJ IDEA when the formatter is available. If the formatter is not configured, Java formatting is skipped instead of failing the build.
+Java formatting uses Palantir Java Format through Spotless. Use `./build.ps1 spotlessApply` for repository formatting signoff; local IntelliJ formatting should use the Palantir Java Format plugin when editor consistency is needed.
 
 Use `SETUP.md` for formatter setup details and local IDE configuration.

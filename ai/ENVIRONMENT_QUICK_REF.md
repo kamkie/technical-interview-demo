@@ -11,6 +11,7 @@ PowerShell (`pwsh`):
 
 ```powershell
 ./build.ps1 compileJava
+./build.ps1 spotlessApply
 ./build.ps1 build
 ./build.ps1 -FullBuild build
 ./build.ps1 -SkipTests -SkipChecks build
@@ -29,6 +30,7 @@ PowerShell (`pwsh`):
 - let `./build.ps1 -SkipChecks build` exclude formatting, PMD, SpotBugs, Error Prone, coverage verification, vulnerability scans, and SBOM checks for local loops
 - keep direct `gradlew` usage available when the shell is already configured
 - let Gradle's toolchain checks report Java misconfiguration clearly
+- keep Spotless as the formatting entry point; Java formatting uses Palantir Java Format and does not require IntelliJ formatter environment variables
 
 ## Instruction-Writing Rule
 

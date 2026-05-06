@@ -48,7 +48,7 @@ The wrapper also classifies the current uncommitted change set for `./build.ps1 
 Direct `gradlew` commands, IDE run configurations, and non-Gradle shell commands still need the variables exported in the usual way.
 
 1. Copy `.env.example` to `.env` if you want a private local reference file.
-2. Fill in your actual paths (especially `JAVA_HOME` and `IDEA_HOME`).
+2. Fill in your actual paths, especially `JAVA_HOME`.
 3. Use `./build.ps1` for Gradle commands, or export the values in your shell, IDE run configuration, or Docker Compose environment when you bypass the wrapper.
 
 **Easiest Gradle path for PowerShell:**
@@ -70,7 +70,6 @@ Use `./build.ps1 -FullBuild build` when you want to force the full Gradle build 
 Variables you are most likely to need:
 
 - `JAVA_HOME` for Gradle and the toolchain
-- `IDEA_HOME` or `IDEA_FORMATTER_BINARY` for Spotless Java formatting
 - `SPRING_PROFILES_ACTIVE` if you want to override the default `local` profile
 - `DATABASE_*` variables when overriding the default PostgreSQL connection
 - `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` for the built-in GitHub provider when enabling the optional `oauth` profile
@@ -151,15 +150,7 @@ Recommended baseline:
 1. Import the project as a Gradle project
 2. Set the project SDK to Java 25
 3. Set Gradle JVM to Java 25
-4. If you want Spotless to delegate Java formatting to IntelliJ, export one of:
-
-```powershell
-$env:IDEA_FORMATTER_BINARY='<path-to-intellij>\bin\idea64.exe'
-```
-
-```powershell
-$env:IDEA_HOME='<path-to-intellij>'
-```
+4. Install the Palantir Java Format IntelliJ plugin if you want IDE reformat behavior to match CI
 
 ### VS Code
 
@@ -237,6 +228,7 @@ Quick implementation-loop checks:
 
 ```powershell
 ./build.ps1 compileJava
+./build.ps1 spotlessApply
 ./build.ps1 -SkipTests -SkipChecks build
 ```
 
@@ -251,6 +243,8 @@ Use the full build task for final verification:
 
 A full `build` covers Spotless, PMD, SpotBugs plus FindSecBugs via `staticSecurityScan`, dependency/image vulnerability scanning, CycloneDX SBOM generation, tests, Asciidoctor generation, boot jar creation, and the Docker image build.
 Use focused commands such as `test`, `asciidoctor`, or `dockerBuild` only when you intentionally want a narrower loop.
+
+Formatting is enforced through Spotless. Java source uses Palantir Java Format through the Gradle Spotless integration, so `spotlessApply` and `spotlessCheck` do not require a local IntelliJ executable.
 
 Security scan shortcuts:
 
@@ -885,18 +879,15 @@ Fix:
 4. Port-forward the app service and verify `GET /actuator/prometheus` manually.
 5. Confirm the monitoring stack is allowed to watch `technical-interview-demo` and `monitoring` namespaces.
 
-### Spotless skips Java formatting
+### IntelliJ Java formatting differs from CI
 
 Symptom:
 
-- format checks pass, but Java files are not reformatted
+- IntelliJ reformats Java differently than `./build.ps1 spotlessApply` or CI
 
 Fix:
 
-Set one of these variables before running `spotlessApply`:
-
-- `IDEA_FORMATTER_BINARY`
-- `IDEA_HOME`
+Install and enable the Palantir Java Format IntelliJ plugin, then reimport the Gradle project.
 
 ### Port 8080 or 5432 is already in use
 

@@ -24,7 +24,6 @@ $lightweightPatterns = @(
     ".gitignore",
     "*/.gitignore",
     ".aiignore",
-    "Default.xml",
     ".run/*.run.xml",
     ".githooks/*.sample",
     ".env.example",

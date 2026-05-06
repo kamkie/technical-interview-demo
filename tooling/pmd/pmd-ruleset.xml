@@ -5,7 +5,7 @@
          xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.github.io/schema/ruleset_2_0_0.xsd">
     <description>
         Curated low-noise PMD rules for this Spring Boot demo project.
-        Spotless and IntelliJ already handle formatting, so this ruleset focuses on maintainability
+        Spotless already handles formatting, so this ruleset focuses on maintainability
         and correctness checks that complement Error Prone.
     </description>
 

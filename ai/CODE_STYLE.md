@@ -21,6 +21,7 @@ Keep changes:
 - keep REST responses JSON-friendly and repo-owned
 - when returning `ResponseEntity`, assign the payload to a local variable first
 - use Lombok only when it removes routine boilerplate without hiding behavior
+- use Palantir Java Format through Spotless for Java source formatting
 - keep code compatible with Error Prone and the curated PMD ruleset
 - log successful operations that change database state
 
@@ -31,6 +32,7 @@ Keep changes:
 - do not broaden a small fix into cross-repo cleanup unless the repetition is already real
 - do not change public contract behavior accidentally while cleaning up internals
 - when build or workflow files change, prefer existing Gradle tasks and workflows over parallel scripts
+- use `./build.ps1 spotlessApply` for repository formatting instead of IDE-specific formatter commands
 
 ## Naming And Placement
 

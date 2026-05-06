@@ -4,8 +4,8 @@
 
 | Status | Current |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Implementation |
+| Status | In Progress |
 
 ## Summary
 
@@ -239,7 +239,12 @@ Planning validation:
 
 Implementation validation:
 
-- Pending.
+- 2026-05-06: Confirmed Palantir Java Format Gradle plugin line `2.90.0` remained current before implementation.
+- 2026-05-06: Preparation implementation used explicit `com.palantir.java-format-spotless` and `com.palantir.java-format-idea` plugin wiring, retained a minimal neutral `.editorconfig`, removed the old local IntelliJ formatter binary path, and staged Java enforcement with temporary `spotless.ratchetFrom("HEAD")`.
+- 2026-05-06: `./build.ps1 -FullBuild spotlessApply` passed and only formatted preparation-side Gradle/misc files.
+- 2026-05-06: `./build.ps1 -FullBuild spotlessCheck` passed for the preparation checkpoint.
+- 2026-05-06: `./build.ps1 build` passed for the preparation checkpoint; it ran the full Gradle build, tests, Spotless, PMD, SpotBugs/static security scan, Trivy dependency and image vulnerability scans, SBOM generation, Asciidoctor, boot jar, and Docker image build.
+- 2026-05-06: `git diff --check` passed for the preparation checkpoint.
 
 ## User Validation
 
