@@ -4,46 +4,46 @@
     <option name="LINE_SEPARATOR" value="&#10;" />
     <option name="RIGHT_MARGIN" value="120" />
     <option name="FORMATTER_TAGS_ENABLED" value="true" />
-    <option name="FORMATTER_OFF_TAG" value="@formatter:off" />
     <option name="FORMATTER_ON_TAG" value="@formatter:on" />
+    <option name="FORMATTER_OFF_TAG" value="@formatter:off" />
     <option name="DO_NOT_FORMAT">
       <list>
-        <fileSet type="globPattern" pattern=".git/**" />
-        <fileSet type="globPattern" pattern=".gradle/**" />
-        <fileSet type="globPattern" pattern=".kotlin/**" />
-        <fileSet type="globPattern" pattern="build/**" />
-        <fileSet type="globPattern" pattern="buildSrc/.gradle/**" />
-        <fileSet type="globPattern" pattern="buildSrc/build/**" />
-        <fileSet type="globPattern" pattern="out/**" />
-        <fileSet type="globPattern" pattern="temp/**" />
-        <fileSet type="globPattern" pattern=".idea/**" />
-        <fileSet type="globPattern" pattern=".run/**" />
-        <fileSet type="globPattern" pattern="gradle/wrapper/gradle-wrapper.jar" />
-        <fileSet type="globPattern" pattern="**/*.jar" />
-        <fileSet type="globPattern" pattern="**/*.zip" />
-        <fileSet type="globPattern" pattern="**/*.png" />
-        <fileSet type="globPattern" pattern="**/*.jpg" />
-        <fileSet type="globPattern" pattern="**/*.jpeg" />
         <fileSet type="globPattern" pattern="**/*.gif" />
         <fileSet type="globPattern" pattern="**/*.ico" />
-        <fileSet type="globPattern" pattern="**/*.pdf" />
+        <fileSet type="globPattern" pattern="**/*.jar" />
         <fileSet type="globPattern" pattern="**/*.jks" />
-        <fileSet type="globPattern" pattern="**/*.p12" />
+        <fileSet type="globPattern" pattern="**/*.jpeg" />
+        <fileSet type="globPattern" pattern="**/*.jpg" />
         <fileSet type="globPattern" pattern="**/*.keystore" />
-        <fileSet type="globPattern" pattern=".env" />
-        <fileSet type="globPattern" pattern="src/test/resources/http/http-client.private.env.json" />
-        <fileSet type="globPattern" pattern="src/test/resources/openapi/approved-openapi.json" />
-        <fileSet type="globPattern" pattern="src/gatling/resources/gatling-benchmark-baseline.json" />
-        <fileSet type="globPattern" pattern="tooling/formatting/intellij-exported-eclipse-java-formatter.xml" />
-        <fileSet type="globPattern" pattern="src/docs/asciidoc/**/*.adoc" />
-        <fileSet type="globPattern" pattern="*.ps1" />
+        <fileSet type="globPattern" pattern="**/*.p12" />
+        <fileSet type="globPattern" pattern="**/*.pdf" />
+        <fileSet type="globPattern" pattern="**/*.png" />
+        <fileSet type="globPattern" pattern="**/*.zip" />
         <fileSet type="globPattern" pattern="*.bat" />
+        <fileSet type="globPattern" pattern="*.ignore" />
+        <fileSet type="globPattern" pattern="*.ps1" />
         <fileSet type="globPattern" pattern="*.py" />
         <fileSet type="globPattern" pattern="*.tpl" />
-        <fileSet type="globPattern" pattern="*.ignore" />
         <fileSet type="globPattern" pattern=".devcontainer/**/*.sh" />
         <fileSet type="globPattern" pattern=".devcontainer/**/*.txt" />
         <fileSet type="globPattern" pattern=".devcontainer/**/Dockerfile" />
+        <fileSet type="globPattern" pattern=".env" />
+        <fileSet type="globPattern" pattern=".git/**" />
+        <fileSet type="globPattern" pattern=".gradle/**" />
+        <fileSet type="globPattern" pattern=".idea/**" />
+        <fileSet type="globPattern" pattern=".kotlin/**" />
+        <fileSet type="globPattern" pattern=".run/**" />
+        <fileSet type="globPattern" pattern="build/**" />
+        <fileSet type="globPattern" pattern="buildSrc/.gradle/**" />
+        <fileSet type="globPattern" pattern="buildSrc/build/**" />
+        <fileSet type="globPattern" pattern="gradle/wrapper/gradle-wrapper.jar" />
+        <fileSet type="globPattern" pattern="out/**" />
+        <fileSet type="globPattern" pattern="src/docs/asciidoc/**/*.adoc" />
+        <fileSet type="globPattern" pattern="src/gatling/resources/gatling-benchmark-baseline.json" />
+        <fileSet type="globPattern" pattern="src/test/resources/http/http-client.private.env.json" />
+        <fileSet type="globPattern" pattern="src/test/resources/openapi/approved-openapi.json" />
+        <fileSet type="globPattern" pattern="temp/**" />
+        <fileSet type="globPattern" pattern="tooling/formatting/intellij-exported-eclipse-java-formatter.xml" />
       </list>
     </option>
     <JavaCodeStyleSettings>
@@ -52,51 +52,22 @@
       <option name="PACKAGES_TO_USE_IMPORT_ON_DEMAND">
         <value />
       </option>
-      <option name="IMPORT_LAYOUT_TABLE">
-        <value>
-          <package name="" withSubpackages="true" static="false" />
-          <emptyLine />
-          <package name="javax" withSubpackages="true" static="false" />
-          <package name="java" withSubpackages="true" static="false" />
-          <emptyLine />
-          <package name="" withSubpackages="true" static="true" />
-        </value>
-      </option>
     </JavaCodeStyleSettings>
     <JetCodeStyleSettings>
-      <option name="NAME_COUNT_TO_USE_STAR_IMPORT" value="999" />
-      <option name="NAME_COUNT_TO_USE_STAR_IMPORT_FOR_MEMBERS" value="999" />
       <option name="PACKAGES_TO_USE_STAR_IMPORTS">
         <value />
       </option>
+      <option name="NAME_COUNT_TO_USE_STAR_IMPORT" value="999" />
+      <option name="NAME_COUNT_TO_USE_STAR_IMPORT_FOR_MEMBERS" value="999" />
     </JetCodeStyleSettings>
     <codeStyleSettings language="JAVA">
       <option name="RIGHT_MARGIN" value="120" />
-      <option name="KEEP_LINE_BREAKS" value="true" />
-      <option name="KEEP_FIRST_COLUMN_COMMENT" value="true" />
-      <option name="KEEP_CONTROL_STATEMENT_IN_ONE_LINE" value="true" />
-      <option name="KEEP_BLANK_LINES_IN_CODE" value="2" />
-      <option name="KEEP_BLANK_LINES_IN_DECLARATIONS" value="2" />
-      <option name="KEEP_BLANK_LINES_BEFORE_RBRACE" value="2" />
-      <indentOptions>
-        <option name="INDENT_SIZE" value="4" />
-        <option name="CONTINUATION_INDENT_SIZE" value="8" />
-        <option name="TAB_SIZE" value="4" />
-        <option name="USE_TAB_CHARACTER" value="false" />
-        <option name="SMART_TABS" value="false" />
-        <option name="KEEP_INDENTS_ON_EMPTY_LINES" value="false" />
-      </indentOptions>
     </codeStyleSettings>
     <codeStyleSettings language="kotlin">
-      <option name="RIGHT_MARGIN" value="120" />
       <option name="CODE_STYLE_DEFAULTS" value="KOTLIN_OFFICIAL" />
+      <option name="RIGHT_MARGIN" value="120" />
       <indentOptions>
-        <option name="INDENT_SIZE" value="4" />
         <option name="CONTINUATION_INDENT_SIZE" value="4" />
-        <option name="TAB_SIZE" value="4" />
-        <option name="USE_TAB_CHARACTER" value="false" />
-        <option name="SMART_TABS" value="false" />
-        <option name="KEEP_INDENTS_ON_EMPTY_LINES" value="false" />
       </indentOptions>
     </codeStyleSettings>
     <codeStyleSettings language="kotlin gradle">

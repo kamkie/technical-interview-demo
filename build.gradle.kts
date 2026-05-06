@@ -454,7 +454,7 @@ spotless {
     java {
         target("src/**/*.java", "buildSrc/src/**/*.java")
         importOrder("", "javax", "java", "\\#")
-        removeUnusedImports()
+        removeUnusedImports("cleanthat-javaparser-unnecessaryimport")
         eclipse().configFile("tooling/formatting/intellij-exported-eclipse-java-formatter.xml")
     }
 
