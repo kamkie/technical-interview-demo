@@ -11,6 +11,20 @@ Use this scope ladder when deciding where a new insight belongs:
 - **Symbol-local behavior:** put it in code near the symbol.
 - **Naming or API confusion:** prefer renaming or reshaping the API over adding more prose.
 
+## When To Consider A Learning
+
+Evaluate whether a durable repo-wide lesson should be added during the task, not only during release cleanup, when:
+
+- a command, tool, or validation step fails in a way future agents could avoid
+- the user corrects a repo assumption, workflow interpretation, or implementation direction
+- a requested capability or workflow does not exist and the gap is likely to recur
+- an external API, dependency, build tool, or platform behaves differently than expected
+- an assumption is outdated compared with current repo truth, tool behavior, or supported contract
+- a better approach is discovered for a recurring task, diagnosis path, or validation loop
+
+Add only lessons that should survive refactors.
+Do not accumulate per-incident history, one-off mistakes, or temporary workaround notes here.
+
 ## Engineering Habits
 
 - **Spec-first beats code-first.**

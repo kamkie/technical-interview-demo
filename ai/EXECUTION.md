@@ -94,6 +94,7 @@ When the user asks for only one milestone:
 
 - use `ai/DOCUMENTATION.md` to choose which contract or maintainer artifacts must move
 - use `ai/TESTING.md` to choose the required validation and any benchmark or compatibility extras
+- evaluate the in-flight learning triggers in `ai/LEARNINGS.md` when a task uncovers a recurring repo-wide lesson
 - follow `ai/WORKFLOW.md` whenever the mode changes who can edit the plan file, changelog files, worker logs, or other shared artifacts
 - if required validation cannot run, record that explicitly in the plan or worker log and in the final status report
 - if the plan stops matching repo reality, revise it before continuing instead of improvising new scope
