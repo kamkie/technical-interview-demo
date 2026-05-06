@@ -66,8 +66,8 @@ Goal: finish the stable `2.0` line after the security alert batch is resolved by
 
 Status: Deferred until stable `2.0` is released
 
-- [ ] Choose the repository-owned Spotless Java formatter source, comparing `eclipse().configFile("config/eclipse-style.xml")` exported from IntelliJ against an IntelliJ-aligned `.editorconfig` setup.
-- [ ] Migrate Spotless Java formatting away from the local IntelliJ binary dependency to the selected checked-in formatter configuration, then update setup or AI command guidance only if developer invocation changes.
+- [ ] Evaluate deterministic Spotless Java formatting options, preferring `eclipse().configFile("config/eclipse-style.xml")` from a checked-in formatter profile if it preserves current style with acceptable churn; compare `palantirJavaFormat()` only if the team is willing to accept an opinionated style reset.
+- [ ] Migrate Java formatting away from the local IntelliJ binary dependency, keep `.editorconfig` for IDE alignment, and update `SETUP.md` or contributor guidance when formatter invocation changes.
 
 ### Post-`2.0` Frontend AI Contract
 
