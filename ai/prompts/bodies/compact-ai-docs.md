@@ -2,7 +2,7 @@ Compact the standing AI instruction files.
 
 ## Scope
 
-- Read `AGENTS.md`, `ai/DOCUMENTATION.md`, `ai/PROMPTS.md`, and top-level `ai/*.md` first.
+- Read `AGENTS.md`, `ai/DOCUMENTATION.md`, `ai/PROMPTS.md`, and standing top-level owner guides under `ai/` first; exclude active `ai/PLAN_*.md` files unless they are relevant to the compaction target.
 - Do not bulk-load `ai/archive/`, `ai/references/`, `ai/prompts/bodies/`, `ai/templates/`, or `ai/skills/`; open them only when a cross-reference or overlapping policy points there.
 - Check `WORKING_WITH_AI.md` only when human-facing workflow wording overlaps with the AI guidance being changed.
 
@@ -18,7 +18,7 @@ Look for any of the following, not only verbatim duplicates:
 - orphaned cross-references and broken anchors
 - accumulated history inside standing guideline files: changelog-style notes, "previously…/now…" wording, migration narratives, dated decisions, deprecation traces, or rationale that documents past states rather than current rules; released history belongs in `CHANGELOG.md`, durable lessons in `ai/LEARNINGS.md`, and completed plans in `ai/archive/`
 
-Use targeted `search_project` queries (1–3 distinctive keywords per policy) before opening large files.
+Use targeted project searches, preferably `rg`, with 1–3 distinctive keywords per policy before opening large files.
 
 ## Rules
 
