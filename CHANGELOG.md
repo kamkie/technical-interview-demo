@@ -7,6 +7,8 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+## [v2.0.0-RC3] - 2026-05-06
+
 ### Added
 - Added a draft AI execution plan for moving Java formatting to a CI-owned Spotless formatter after the `2.0` release line is accepted.
 

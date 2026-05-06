@@ -23,8 +23,7 @@ Keep this file focused on work that is still planned or in progress.
 
 ## Current Priorities
 
-- Clear the current GitHub Security tab Dependabot alert batch before stable `v2.0.0`: the local Gradle graph is patched, GitHub no longer reports the PostgreSQL JDBC, Gatling Netty HTTP, or AsciidoctorJ JRuby alerts as open, and local benchmark signoff has passed.
-- Release `v2.0.0-RC3` for the Dependabot alert batch, then release stable `v2.0.0`, update `CHANGELOG.md`, and remove the completed `2.0` track from `ROADMAP.md` only after the RC line is accepted.
+- Release stable `v2.0.0` after the `v2.0.0-RC3` line is accepted, update `CHANGELOG.md`, and remove the completed `2.0` track from `ROADMAP.md` once the stable release is cut.
 
 ## Not Yet Refined
 
@@ -40,29 +39,13 @@ Add new rough tasks below.
 
 ## Ordered Plan
 
-### Pre-`2.0` Security And Quality Alert Sweep
-
-Status: Planned
-
-Goal: clear the open GitHub Security tab dependency alerts before the stable `v2.0.0` release.
-
-#### Dependabot Alert Batch
-Plan: `ai/PLAN_dependabot_alerts.md`
-
-Status: local Gradle dependency paths are patched, GitHub no longer reports the three Dependabot alerts as open, and local benchmark signoff has passed.
-
-- [x] Confirm Dependabot alert #6 is no longer open; local `runtimeClasspath` now resolves `org.postgresql:postgresql:42.7.11`.
-- [x] Confirm Dependabot alert #5 is no longer open; local `gatlingRuntimeClasspath` now resolves `io.netty:netty-codec-http:4.2.13.Final`, and local `gatlingBenchmark` signoff has passed.
-- [x] Confirm Dependabot alert #1 is no longer open; local AsciidoctorJ resolution now reports `org.jruby:jruby:9.4.12.1 -> org.jruby:jruby-complete:9.4.12.1`.
-
 ### Moving to `2.0`
 
 Status: Planned
 
-Goal: finish the stable `2.0` line after the security alert batch is resolved by releasing an accepted `v2.0.0-RC3` and then releasing `v2.0.0`.
+Goal: finish the stable `2.0` line after the `v2.0.0-RC3` candidate is accepted.
 
 #### Release Confidence
-- [ ] Release `v2.0.0-RC3` for the Dependabot alert batch.
 - [ ] Release stable `v2.0.0`, update `CHANGELOG.md`, and remove the completed `2.0` track from `ROADMAP.md`.
 
 ## Deferred
