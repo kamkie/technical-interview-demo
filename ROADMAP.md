@@ -54,8 +54,8 @@ Goal: finish the stable `2.0` line after the `v2.0.0-RC4` candidate is accepted.
 
 Status: Deferred until stable `2.0` is released
 
-- [ ] Choose the repository-owned Spotless Java formatter source, comparing `eclipse().configFile("config/eclipse-style.xml")` exported from IntelliJ against an IntelliJ-aligned `.editorconfig` setup.
-- [ ] Migrate Spotless Java formatting away from the local IntelliJ binary dependency to the selected checked-in formatter configuration, then update setup or AI command guidance only if developer invocation changes.
+- [ ] Execute `ai/PLAN_ci_owned_spotless_reformat.md` for the post-`2.0` Spotless formatter ownership migration.
+  Plan lifecycle: `Planning` / `Ready`; execution remains deferred until stable `v2.0.0` unless explicitly selected earlier.
 
 ### Post-`2.0` Frontend AI Contract
 

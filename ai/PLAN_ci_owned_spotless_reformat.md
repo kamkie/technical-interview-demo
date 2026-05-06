@@ -4,7 +4,7 @@
 | Status | Current |
 | --- | --- |
 | Phase | Planning |
-| Status | Draft |
+| Status | Ready |
 
 ## Summary
 - Replace the current IntelliJ-binary-dependent Spotless Java formatter with a CI-owned formatter configuration that works when IntelliJ IDEA is not installed.
@@ -13,6 +13,7 @@
 - Add project-local IntelliJ code style files under `.idea/codeStyles/` so IDE formatting converges with the same shared style without requiring IntelliJ in CI.
 - Adjust the committed IntelliJ project style so optimize imports does not create wildcard imports.
 - Keep review history readable with two commits: one settings/documentation commit, then one repository-wide formatting and import-organization commit.
+- Roadmap tracking: `ROADMAP.md` tracks this under `Deferred` / `Post-2.0 Formatter Configuration Ownership`; execution remains deferred until stable `v2.0.0` is released unless the user explicitly selects it earlier.
 - Success means `spotlessCheck` and the full wrapper build pass at the branch tip without requiring `IDEA_HOME` or `IDEA_FORMATTER_BINARY`.
 
 ## Scope
@@ -28,15 +29,19 @@
   - make misc formatting cover tracked support/code files where Spotless can safely normalize whitespace and final newlines
   - preserve import organization by keeping Spotless `importOrder` and `removeUnusedImports` in the Java pipeline
   - run IntelliJ `Reformat Code`/`Optimize Imports` once during the formatting commit when an executor has IntelliJ available, followed by `spotlessApply` as the authoritative CI-normalized result
-  - update human and AI formatter guidance that currently says Java formatting is skipped without IntelliJ
+  - update human formatter guidance that currently says Java formatting is skipped without IntelliJ
+  - update AI formatter guidance only where durable command, validation, or code-style ownership guidance changes
+  - keep this plan and its `ROADMAP.md` entry aligned as lifecycle/status changes
 - Out of scope:
   - public REST API behavior, OpenAPI baseline, REST Docs snippets, HTTP examples, benchmark behavior, and release history
   - changing Java package structure or application behavior
   - introducing a new formatter that requires an IDE or developer-local binary in CI
   - formatting ignored/generated directories such as `.gradle/`, `build/`, `.idea/` outside `.idea/codeStyles/`, `out/`, and `temp/`
   - IDE workspace metadata beyond project code-style files
+  - cutting or preparing the stable `v2.0.0` release
 
 ## Current State
+- `ROADMAP.md` now tracks this plan as deferred post-`2.0` work, not as selected current implementation work.
 - `build.gradle.kts` currently discovers `ideaFormatterBinary` from `ideaFormatterBinary`, `IDEA_FORMATTER_BINARY`, or `IDEA_HOME`, and only configures `spotless { java { ... idea() ... } }` when the binary exists.
 - If IntelliJ is absent, Java formatting is not configured, so CI can pass formatting checks without actually checking Java source formatting.
 - Current Java Spotless targets only `src/main/java/**/*.java` and `src/test/java/**/*.java`; it misses `src/externalTest/java/**/*.java` and `src/gatling/java/**/*.java`.
@@ -44,21 +49,25 @@
 - Current Spotless configuration does not format `buildSrc/src/main/kotlin/**/*.kt`.
 - `.editorconfig` contains exported IntelliJ settings, including Java import layout metadata, which duplicates formatter and IDE code-style configuration.
 - `.editorconfig` currently includes IntelliJ Java import-on-demand settings such as `ij_java_class_count_to_use_import_on_demand = 5`; moving style ownership to `.idea/codeStyles/` is the right time to raise those thresholds and prevent wildcard imports.
-- `Default.xml` is an Eclipse JDT formatter profile exported from IntelliJ tooling. Its root-level path and generic name do not explain its purpose.
+- Root `Default.xml` is a tracked Eclipse JDT formatter profile exported from IntelliJ tooling. Its root-level path and generic name do not explain its purpose.
+- This workspace also has ignored local `.idea/codeStyles/` files, including `codeStyleConfig.xml` and `Default.xml`. Treat local `.idea` files as optional source material only; the deliverable is reviewed, project-local `.idea/codeStyles/` files with no broader IDE metadata.
 - `.gitignore` currently ignores `.idea/` broadly and needs a narrow exception before `.idea/codeStyles/` can be versioned.
 - `SETUP.md`, `.env.example`, and `CONTRIBUTING.md` still document `IDEA_HOME` or `IDEA_FORMATTER_BINARY` as relevant to Spotless Java formatting.
+- `ai/CODE_STYLE.md` does not currently document formatter ownership; update it only if the implementation introduces durable AI-facing formatting guidance.
 - The referenced sibling project uses a CI-friendly Spotless Java shape based on `eclipse().configFile(...)`; copy the pattern, not the whole build.
 
 ## Requirement Gaps And Open Questions
 - No blocking product question remains.
+- Roadmap sequencing is not a requirement gap: this plan is ready as a decision-complete execution plan, but it remains deferred until the stable `v2.0.0` release unless the user explicitly selects it earlier.
 - Exact IntelliJ `Optimize Imports` behavior is not fully reproducible in CI unless CI installs and configures IntelliJ, which is the failure mode this work is removing. Fallback: run IntelliJ optimize imports once in the reformat commit when available, then let Spotless `importOrder` and `removeUnusedImports` define the durable CI-enforced import state.
 - If IntelliJ and Spotless disagree during the formatting commit, Spotless wins because CI must be able to reproduce the final state without an IDE.
 
 ## Locked Decisions And Assumptions
+- Execute after stable `v2.0.0` is released, or earlier only with an explicit user override.
 - Rename and move `Default.xml` to `tooling/formatting/intellij-exported-eclipse-java-formatter.xml`.
 - Use `tooling/formatting/intellij-exported-eclipse-java-formatter.xml` through Spotless `eclipse().configFile(...)` for Java formatting.
 - Keep `.editorconfig` as a portable editor baseline only; remove exported IntelliJ language-formatting keys that duplicate `.idea/codeStyles/` and the Eclipse formatter profile.
-- Track `.idea/codeStyles/codeStyleConfig.xml` and `.idea/codeStyles/Project.xml` as project-local IntelliJ formatter settings.
+- Track `.idea/codeStyles/codeStyleConfig.xml` and `.idea/codeStyles/Project.xml` as project-local IntelliJ formatter settings; do not track ignored local `.idea/codeStyles/Default.xml` unless it is intentionally transformed into the reviewed `Project.xml` deliverable.
 - Configure `.idea/codeStyles/Project.xml` to avoid wildcard imports by setting Java class/static import-on-demand thresholds to a high value, for example `999`, and leaving the packages-to-use-import-on-demand list empty.
 - Keep all other `.idea/` workspace files ignored.
 - Keep Spotless `importOrder` and `removeUnusedImports` enabled for Java.
@@ -86,10 +95,14 @@
   - `.env.example`
   - `CONTRIBUTING.md`
   - `ai/CODE_STYLE.md`
+  - `ROADMAP.md`
   - this plan file
 - If delegation becomes necessary later, use only read-only review/validation workers after the two commits are prepared.
 
 ## Affected Artifacts
+- Planning/roadmap:
+  - `ROADMAP.md` tracks this plan under deferred post-`2.0` work and must stay aligned if execution status or sequencing changes
+  - this `ai/PLAN_ci_owned_spotless_reformat.md`
 - Build/settings:
   - `build.gradle.kts`
   - `.editorconfig`
@@ -104,10 +117,9 @@
   - `CONTRIBUTING.md`
 - AI guidance:
   - `ai/CODE_STYLE.md` if formatter ownership guidance changes durably
-  - this `ai/PLAN_ci_owned_spotless_reformat.md`
 - Reformat targets:
   - `src/**/*.java`
-  - `buildSrc/src/main/kotlin/**/*.kt`
+  - `buildSrc/src/**/*.kt`
   - root `*.gradle.kts`
   - `buildSrc/**/*.gradle.kts`
   - `gradle/**/*.gradle.kts`
@@ -151,16 +163,17 @@
   - remove `ideaFormatterBinaryCandidate`, `ideaFormatterBinary`, and IntelliJ skip warning from `build.gradle.kts`
   - move `Default.xml` to `tooling/formatting/intellij-exported-eclipse-java-formatter.xml`
   - configure Java Spotless unconditionally with `target("src/**/*.java")`, `importOrder`, `removeUnusedImports`, and `eclipse().configFile("tooling/formatting/intellij-exported-eclipse-java-formatter.xml")`
-  - generate `.idea/codeStyles/codeStyleConfig.xml` and `.idea/codeStyles/Project.xml` from the current IntelliJ project style or imported formatter profile
+  - create or regenerate `.idea/codeStyles/codeStyleConfig.xml` and `.idea/codeStyles/Project.xml` from reviewed IntelliJ project style settings or the imported formatter profile
   - adjust `.idea/codeStyles/Project.xml` so Java optimize imports does not create wildcard imports, using high import-on-demand thresholds and an empty package-on-demand list
   - update `.gitignore` to allow tracking only `.idea/codeStyles/` under `.idea/`
   - remove duplicated exported IntelliJ language-formatting keys from `.editorconfig`; keep only portable editor rules and file-type basics that are not duplicated by the formatter/profile files
   - encode the proposed formatter exclusions in Spotless targets or `targetExclude` patterns
-  - add Kotlin formatting for `buildSrc/src/main/kotlin/**/*.kt`
+  - add Kotlin formatting for `buildSrc/src/**/*.kt`
   - expand Kotlin Gradle formatting to include `buildSrc/**/*.gradle.kts`
   - expand misc targets only to safe tracked files and exclude ignored/generated directories
   - remove `IDEA_HOME`/`IDEA_FORMATTER_BINARY` as Spotless requirements from setup docs and `.env.example`
   - update contributor/AI wording to say Spotless is CI-owned and does not require IntelliJ
+  - keep `ROADMAP.md` and this plan lifecycle/status current if implementation starts
 - validation checkpoint:
   - run `./build.ps1 tasks --all --no-daemon` to catch Gradle configuration errors without requiring formatting to already be clean
   - optionally run `./build.ps1 spotlessCheck --no-daemon --continue` and confirm any failure is only expected formatting drift, not formatter configuration failure
@@ -198,6 +211,7 @@
 - Spotless `removeUnusedImports` can expose compile failures if unused imports were masking ambiguous simple names or if formatting changes reveal existing issues. Full `build` is required after the reformat commit.
 - IntelliJ optimize imports can introduce wildcard imports depending on IDE thresholds. Milestone 1 must set project style thresholds high enough to prevent this before Milestone 2 runs IDE optimize imports.
 - Overbroad `**/*.xml` or `**/*.json` targets can rewrite IDE metadata and reviewed baseline files. Prefer explicit include globs plus the exclusion list above over broad recursive globs.
+- Ignored local `.idea` files may contain user-specific state or IDE-generated defaults. Never bulk-add `.idea/`; add only the reviewed `.idea/codeStyles/` deliverables.
 - Formatting all tracked support files can create noisy but low-value diffs. Keep misc targets to file types with deterministic whitespace/final-newline normalization and avoid generated artifacts.
 - Because commit 1 tightens Spotless before commit 2 applies it, commit 1 may be red for `spotlessCheck` if checked independently. The branch tip must be green.
 
@@ -225,7 +239,10 @@
 - If exact IntelliJ import layout becomes a hard requirement later, that should be a separate decision because it would require either CI-installed IntelliJ or a different import-formatting tool with matching behavior.
 
 ## Validation Results
-- To be filled in during execution.
+- 2026-05-06 planning revision: repo fact-check and roadmap sync completed.
+- 2026-05-06 planning revision validation:
+  - `git diff --check` passed.
+  - `./build.ps1 build` passed through the lightweight-file shortcut, reporting that only `ai/PLAN_ci_owned_spotless_reformat.md` and `ROADMAP.md` changed and that the Gradle build was skipped.
 
 ## User Validation
 - Review the two commits separately:
