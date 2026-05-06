@@ -35,8 +35,8 @@ Out of scope:
 
 ## Current State
 
-- `ROADMAP.md` lists three open pre-`2.0` Dependabot alerts as stable-release blockers.
-- GitHub Dependabot alerts currently report:
+- `ROADMAP.md` listed three open pre-`2.0` Dependabot alerts as stable-release blockers when this plan was created.
+- GitHub Dependabot alerts initially reported:
   - #6 open: `org.postgresql:postgresql`, vulnerable `>= 42.2.0, < 42.7.11`, first patched `42.7.11`, severity high
   - #5 open: `io.netty:netty-codec-http`, vulnerable `>= 4.2.0.Alpha1, <= 4.2.12.Final`, first patched `4.2.13.Final`, severity medium
   - #1 open: `org.jruby:jruby`, vulnerable `>= 9.3.4.0, < 9.4.12.1`, first patched `9.4.12.1`, severity medium
@@ -45,7 +45,8 @@ Out of scope:
 - `io.netty:netty-codec-http` is not on `runtimeClasspath`, `testRuntimeClasspath`, or `externalTestRuntimeClasspath`.
 - `io.netty:netty-codec-http` is on `gatlingRuntimeClasspath` through Gatling and currently resolves to `4.2.12.Final`.
 - `asciidoctorj { setJrubyVersion(asciidoctorJrubyVersion) }` sets `asciidoctorJrubyVersion = "9.4.12.1"`, and Gradle currently resolves the internal AsciidoctorJ configuration as `org.jruby:jruby:9.3.8.0 -> org.jruby:jruby-complete:9.4.12.1`.
-- The GitHub alert for `org.jruby:jruby` remains open despite the Gradle substitution, so implementation should make the managed `org.jruby:jruby` version explicit enough for GitHub's dependency graph to observe the patched version.
+- The GitHub alert for `org.jruby:jruby` initially remained open despite the Gradle substitution, so implementation needed to make the managed `org.jruby:jruby` version explicit enough for GitHub's dependency graph to observe the patched version.
+- As of the `v2.0.0-RC3` release attempt on 2026-05-06, the GitHub API no longer reports open Dependabot alerts #6, #5, or #1; release remains blocked by `gatlingBenchmark` baseline regressions.
 
 ## Requirement Gaps And Open Questions
 
@@ -54,7 +55,7 @@ No blocking product requirement gaps remain.
 Execution-time checks:
 
 - confirm the dependency-management override changes the resolved Gradle graph before relying on it
-- confirm whether GitHub closes alert #1 after a pushed CI dependency snapshot; if it remains open while local Gradle shows only patched resolved artifacts, record the GitHub dependency-graph mismatch as the remaining blocker
+- confirm whether GitHub closes alert #1 after a pushed CI dependency snapshot; this was resolved during the `v2.0.0-RC3` release attempt when the GitHub API returned no open alerts
 - decide only if needed whether a direct dependency version, dependency-management dependency, Netty BOM import, or narrow configuration constraint is the smallest reliable Gradle mechanism for a specific path
 
 ## Locked Decisions And Assumptions
@@ -256,11 +257,20 @@ Implementation validation:
 - 2026-05-06: `git diff --check` passed.
 - 2026-05-06: `gh api repos/kamkie/technical-interview-demo/dependabot/alerts --jq '.[] | select(.state == "open") | {number, dependency: .dependency.package.name, vulnerable: .security_vulnerability.vulnerable_version_range, patched: .security_vulnerability.first_patched_version.identifier}'` passed and still reported open alerts #6 `org.postgresql:postgresql`, #5 `io.netty:netty-codec-http`, and #1 `org.jruby:jruby`; no pushed CI dependency graph submission occurred during this local run.
 
+Release-attempt validation:
+
+- 2026-05-06: `git diff --name-status v2.0.0-RC2..HEAD -- src/main/resources/db/migration src/main/resources/db/migration/metadata` passed and showed no changed Flyway migration or migration metadata files.
+- 2026-05-06: `pwsh ./scripts/release/get-release-migration-impact.ps1 -PreviousReleaseTag v2.0.0-RC2 -CurrentRef HEAD` passed and reported `none`.
+- 2026-05-06: `git diff --check` passed.
+- 2026-05-06: `gh api repos/kamkie/technical-interview-demo/dependabot/alerts --jq '.[] | select(.state == "open") | {number, dependency: .dependency.package.name, vulnerable: .security_vulnerability.vulnerable_version_range, patched: .security_vulnerability.first_patched_version.identifier, state}'` passed and returned no open Dependabot alerts.
+- 2026-05-06: `./build.ps1 -FullBuild build gatlingBenchmark --no-daemon` failed at `gatlingBenchmark`; the `build` task work reached tests, REST Docs generation, Docker image build, Trivy dependency and image scans, SBOM generation, PMD, SpotBugs, Spotless, and coverage verification, then the benchmark baseline rejected `oauth2-github-redirect` (`p95 15ms > 14ms`) even though the Gatling simulation SLA passed with 100% successful requests.
+- 2026-05-06: `./build.ps1 gatlingBenchmark --no-daemon` reran and failed again; `oauth2-github-redirect` passed (`p95 13ms <= 14ms`), but the benchmark baseline rejected `lookup-localization-message` (`p95 15ms > 14ms`) even though the Gatling simulation SLA passed with 100% successful requests.
+
 ## User Validation
 
 After implementation, the user can verify:
 
-- `gh api repos/kamkie/technical-interview-demo/dependabot/alerts` no longer reports open alerts #6, #5, or #1 after CI submits an updated dependency graph
+- `gh api repos/kamkie/technical-interview-demo/dependabot/alerts` no longer reports open alerts #6, #5, or #1
 - `./build.ps1 dependencyInsight --configuration runtimeClasspath --dependency org.postgresql:postgresql` resolves `42.7.11` or newer
 - `./build.ps1 dependencyInsight --configuration gatlingRuntimeClasspath --dependency io.netty:netty-codec-http` resolves `4.2.13.Final` or newer
 - `./build.ps1 dependencyInsight --configuration '__$$asciidoctorj$$___r' --dependency org.jruby:jruby` no longer exposes a vulnerable selected JRuby path
