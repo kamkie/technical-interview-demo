@@ -265,6 +265,9 @@ Release-attempt validation:
 - 2026-05-06: `gh api repos/kamkie/technical-interview-demo/dependabot/alerts --jq '.[] | select(.state == "open") | {number, dependency: .dependency.package.name, vulnerable: .security_vulnerability.vulnerable_version_range, patched: .security_vulnerability.first_patched_version.identifier, state}'` passed and returned no open Dependabot alerts.
 - 2026-05-06: `./build.ps1 -FullBuild build gatlingBenchmark --no-daemon` failed at `gatlingBenchmark`; the `build` task work reached tests, REST Docs generation, Docker image build, Trivy dependency and image scans, SBOM generation, PMD, SpotBugs, Spotless, and coverage verification, then the benchmark baseline rejected `oauth2-github-redirect` (`p95 15ms > 14ms`) even though the Gatling simulation SLA passed with 100% successful requests.
 - 2026-05-06: `./build.ps1 gatlingBenchmark --no-daemon` reran and failed again; `oauth2-github-redirect` passed (`p95 13ms <= 14ms`), but the benchmark baseline rejected `lookup-localization-message` (`p95 15ms > 14ms`) even though the Gatling simulation SLA passed with 100% successful requests.
+- 2026-05-06: A second `v2.0.0-RC3` release attempt confirmed the preflight checks still passed: no migration files changed since `v2.0.0-RC2`, migration impact reported `none`, `git diff --check` passed, no open Dependabot alerts were returned, and the latest listed default-branch CodeQL runs were successful.
+- 2026-05-06: `./build.ps1 -FullBuild build gatlingBenchmark --no-daemon` reran and failed at `gatlingBenchmark`; the standard build checks completed first, then the benchmark baseline rejected `list-books` (`p95 21ms > 20ms`).
+- 2026-05-06: `./build.ps1 gatlingBenchmark --no-daemon` reran and failed again; the benchmark baseline rejected `list-books` (`p95 23ms > 20ms`) and `search-books` (`p95 20ms > 19ms`).
 
 ## User Validation
 
