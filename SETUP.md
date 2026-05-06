@@ -152,6 +152,7 @@ Recommended baseline:
 3. Set Gradle JVM to Java 25
 4. Use `./build.ps1 format` when you want to normalize repository formatting from the same formatter configuration CI uses.
 5. Keep IntelliJ project code-style settings enabled; AsciiDoc sources stay formatter-managed, so nested lists must use explicit AsciiDoc marker depth such as `*` for parents and `**` for children.
+6. Keep Flyway migration SQL under `src/main/resources/db/migration/` hand-formatted; those scripts are excluded from IntelliJ reformatting because SQL formatter churn makes migration review harder.
 
 ### VS Code
 

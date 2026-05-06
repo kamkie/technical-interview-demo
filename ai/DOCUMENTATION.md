@@ -44,6 +44,7 @@ If ownership is unclear, decide that before editing multiple docs.
 - keep active or selected work in `ROADMAP.md` and released history in `CHANGELOG.md`
 - when AI docs move or rename, update `AGENTS.md` and all affected cross-references in the same change
 - keep REST Docs AsciiDoc files formatter-managed; write unordered lists with explicit AsciiDoc marker depth (`*`, `**`) so IntelliJ formatting cannot flatten indentation-only nesting
+- keep migration SQL documentation and examples aligned with hand-formatted Flyway scripts; do not normalize migration SQL through IntelliJ reformatting when documenting schema changes
 
 ## Common Routing
 

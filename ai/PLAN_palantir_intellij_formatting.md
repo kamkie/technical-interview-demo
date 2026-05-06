@@ -9,7 +9,7 @@
 ## Summary
 - Supersede the partially implemented Eclipse-profile Spotless formatter plan with a Palantir-first formatter setup for `v2.0.0-RC5`.
 - Use Gradle plugins `com.palantir.java-format` and `com.palantir.java-format-idea` for Java formatter enforcement and IntelliJ alignment, keep Gradle SpotBugs for static-analysis findings, and keep `.editorconfig` focused on fundamental text settings.
-- Use IntelliJ's project code-style file for imports, exclusions, and settings not covered by Palantir; keep non-Palantir file types as close to IntelliJ default code style as practical.
+- Use IntelliJ's project code-style file for imports and settings not covered by Palantir; keep formatter exclusions narrow and risk-based rather than synchronized with Spotless targets.
 - Configure IntelliJ project style so Markdown and AsciiDoc files do not automatically wrap prose lines, and audit `.editorconfig` for settings that could override or trigger wrapping for those file types.
 - Keep AsciiDoc files formatter-managed; preserve nested lists with explicit AsciiDoc marker depth such as `*` for parents and `**` for children instead of formatter exclusions.
 - Configure retained Spotless Kotlin and Gradle Kotlin DSL targets with KtLint import ordering and unused-import enforcement.
@@ -17,7 +17,7 @@
 - Remove the Eclipse formatter profile completely from Gradle, tooling, docs, and AI guidance.
 - Keep review history readable with two implementation commits: one configuration/guidance change, then one pure code reformatting commit.
 - Roadmap tracking: `ROADMAP.md` tracks this under `Ordered Plan` / `Moving to 2.0` as selected `v2.0.0-RC5` release-candidate work.
-- Success means the repository no longer contains or references the Eclipse formatter profile, Java formatting is enforced through Palantir in Gradle, IntelliJ project style aligns with the Gradle formatter scope, SpotBugs remains green, and the full wrapper build passes after the reformat commit.
+- Success means the repository no longer contains or references the Eclipse formatter profile, Java formatting is enforced through Palantir in Gradle, IntelliJ project style covers imports and non-Java options where it is reliable, SpotBugs remains green, and the full wrapper build passes after the reformat commit.
 
 ## Scope
 - In scope:
@@ -27,7 +27,7 @@
   - configure retained Spotless Kotlin and Gradle Kotlin DSL formatting for import ordering and unused-import cleanup
   - remove `tooling/formatting/intellij-exported-eclipse-java-formatter.xml`
   - remove user-facing and AI-facing references that describe the Eclipse formatter profile as the Java formatter authority
-  - align `.idea/codeStyles/Project.xml` with the Gradle formatting scope for included and excluded files, using IntelliJ built-in settings for imports and options not covered by Palantir
+  - use `.idea/codeStyles/Project.xml` for IntelliJ imports, reliable non-Java options, and narrow formatter exclusions for files where IDE reformatting damages review clarity
   - keep IntelliJ Java import settings configured to avoid wildcard imports
   - keep `.editorconfig` as the fundamental cross-editor baseline for charset, line endings, indentation defaults, final newline, trailing whitespace, and max line length
   - ensure IntelliJ does not wrap Markdown or AsciiDoc prose lines, including checking whether `.editorconfig` `max_line_length` or related settings interfere with that goal
@@ -73,7 +73,7 @@
 - `.properties` files must keep intentional blank-line separators after IntelliJ formatting.
 - SpotBugs remains a Gradle static-analysis gate; it is not a formatter and must not be described as one.
 - The Eclipse formatter is removed completely: no checked-in Eclipse formatter XML, no Gradle `eclipse().configFile(...)`, and no docs that direct maintainers to it.
-- The IntelliJ project code-style file must mirror the Gradle formatter's intended file inclusions and exclusions as closely as IntelliJ supports.
+- The IntelliJ project code-style file must not mirror Spotless inclusions by default; exclusions should be narrow exceptions for files where IntelliJ reformatting is harmful or misleading.
 - For file types outside Palantir support, prefer IntelliJ defaults unless the repo already has an explicit style rule.
 - Keep Java wildcard-import thresholds high and on-demand import package lists empty.
 - Split implementation into exactly two review commits unless an implementation blocker forces a documented change:
@@ -130,12 +130,10 @@
   - Markdown files under repo docs and AI guidance are not line-wrapped by IntelliJ formatting or EditorConfig interactions
   - AsciiDoc files under `src/docs/asciidoc/**/*.adoc` and any future `*.asciidoc` files are not line-wrapped by IntelliJ formatting or EditorConfig interactions
   - `.properties` files such as `gradle.properties`, `gradle/wrapper/gradle-wrapper.properties`, and `src/main/resources/*.properties` preserve empty lines
-- Formatter/style exclusions to keep aligned between Gradle formatter scope and IntelliJ code style:
-  - generated, cache, and local output directories: `.git/**`, `.gradle/**`, `.kotlin/**`, `build/**`, `buildSrc/build/**`, `buildSrc/.gradle/**`, `out/**`, and `temp/**`
-  - local IDE/workspace metadata: `.idea/**` except reviewed `.idea/codeStyles/**` files, plus `.run/**`
-  - binary or non-text artifacts: `gradle/wrapper/gradle-wrapper.jar`, `**/*.jar`, `**/*.zip`, `**/*.png`, `**/*.jpg`, `**/*.jpeg`, `**/*.gif`, `**/*.ico`, `**/*.pdf`, `**/*.jks`, `**/*.p12`, and `**/*.keystore`
-  - local/private environment files: `.env` and `src/test/resources/http/http-client.private.env.json`
-  - generated or reviewed baselines where whitespace churn is not useful: `src/test/resources/openapi/approved-openapi.json`, `src/gatling/resources/gatling-benchmark-baseline.json`, generated REST Docs snippets, build reports, SBOMs, and security scan outputs
+- IntelliJ formatter exclusions:
+  - do not try to synchronize IntelliJ exclusions with Spotless targets
+  - keep only reviewed risk-based project exclusions, currently `src/gatling/resources/gatling-benchmark-baseline.json`, `src/main/resources/db/migration/**/*.sql`, and `src/test/resources/openapi/approved-openapi.json`
+  - keep Flyway migration SQL hand-formatted because IntelliJ SQL reformatting can obscure PostgreSQL DDL intent and make migration review noisier
 - Tests:
   - no behavior tests should be added or changed for formatter-only work
 
@@ -167,7 +165,7 @@
   - remove `com.diffplug.spotless` only if no remaining Gradle-enforced non-Java formatting uses it
   - wire Palantir formatter checks into the standard verification flow if the plugin does not do so automatically
   - keep or refine SpotBugs Gradle configuration without presenting it as a formatter
-  - update `.idea/codeStyles/Project.xml` so IntelliJ project style mirrors Gradle formatter inclusions/exclusions and owns import behavior not covered by Palantir
+  - update `.idea/codeStyles/Project.xml` so IntelliJ project style owns import behavior and reliable non-Java options not covered by Palantir
   - update IntelliJ Markdown and AsciiDoc project style so formatting does not wrap prose lines
   - audit `.editorconfig` global `max_line_length = 120`; if it overrides or conflicts with Markdown/AsciiDoc no-wrap behavior, add a narrow docs-file override that preserves no-wrap behavior without changing Java formatter expectations
   - update IntelliJ `.properties` code style so formatting preserves intentional empty lines
@@ -239,7 +237,7 @@
 - Manual review:
   - review the configuration commit separately from the reformat commit
   - confirm the Eclipse formatter profile is deleted and no references remain
-  - confirm `.idea/codeStyles/Project.xml` and Gradle formatter scope stay aligned
+  - confirm `.idea/codeStyles/Project.xml` keeps only narrow reviewed formatter exclusions instead of mirroring Spotless targets
   - confirm AsciiDoc files remain formatter-managed and nested lists use explicit marker depth
   - confirm `.editorconfig` does not override Markdown/AsciiDoc no-wrap intent
   - confirm `.properties` empty lines survive IntelliJ formatting
@@ -286,6 +284,11 @@
   - removed `.properties` files from the generic Spotless misc target after `checkFormat` collapsed intentional blank-line separators in `src/test/resources/application-test.properties`; `.properties` files remain governed by `.editorconfig`, `ij_properties_keep_blank_lines=true`, and IntelliJ's `KEEP_BLANK_LINES=true` setting.
   - recorded the AsciiDoc marker-depth rule in `SETUP.md` and `ai/CODE_STYLE.md`.
   - XML parsing for `.idea/codeStyles/Project.xml`, `git diff --check`, `./build.ps1 checkFormat --no-daemon`, and `./build.ps1 asciidoctor --no-daemon -x test` passed.
+- 2026-05-06 IntelliJ Flyway SQL follow-up:
+  - dropped the goal of synchronizing IntelliJ formatter exclusions with Spotless inclusions; IntelliJ exclusions are now narrow risk-based exceptions.
+  - kept `src/main/resources/**/*.sql` in Spotless misc formatting for trailing-whitespace and final-newline cleanup.
+  - restored Flyway migration SQL from IntelliJ SQL formatter churn and excluded only `src/main/resources/db/migration/**/*.sql` from IntelliJ reformatting because the SQL formatter split PostgreSQL DDL clauses such as `alter column` and `create extension` in review-hostile ways.
+  - XML parsing for `.idea/codeStyles/Project.xml`, `git diff --check`, `git diff --exit-code -- src/main/resources/db/migration/*.sql`, and `./build.ps1 checkFormat --no-daemon` passed.
 
 ## User Validation
 - Review the implementation as two commits:
