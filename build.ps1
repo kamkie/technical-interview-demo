@@ -26,20 +26,24 @@ param (
 
     [switch]$SkipChecks,
 
-    [Parameter(ValueFromRemainingArguments=$true)]
+    [Parameter(ValueFromRemainingArguments = $true)]
     [string[]]$GradleArgs = @()
 )
 
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
 
-$repoRoot = if ([string]::IsNullOrWhiteSpace($PSScriptRoot)) {
+$repoRoot = if ( [string]::IsNullOrWhiteSpace($PSScriptRoot))
+{
     (Get-Location).Path
-} else {
+}
+else
+{
     $PSScriptRoot
 }
 
-function Get-RequestedGradleTasks {
+function Get-RequestedGradleTasks
+{
     param(
         [string[]]$Arguments = @()
     )
@@ -64,18 +68,23 @@ function Get-RequestedGradleTasks {
 
     $tasks = @()
     $skipNext = $false
-    foreach ($argument in $Arguments) {
-        if ($skipNext) {
+    foreach ($argument in $Arguments)
+    {
+        if ($skipNext)
+        {
             $skipNext = $false
             continue
         }
 
-        if ([string]::IsNullOrWhiteSpace($argument)) {
+        if ( [string]::IsNullOrWhiteSpace($argument))
+        {
             continue
         }
 
-        if ($argument.StartsWith("-")) {
-            if ($optionsWithValues -contains $argument) {
+        if ( $argument.StartsWith("-"))
+        {
+            if ($optionsWithValues -contains $argument)
+            {
                 $skipNext = $true
             }
             continue
@@ -87,44 +96,52 @@ function Get-RequestedGradleTasks {
     return $tasks
 }
 
-function Test-IsBuildOnlyInvocation {
+function Test-IsBuildOnlyInvocation
+{
     param(
         [string[]]$Arguments = @()
     )
 
     $requestedTasks = @(Get-RequestedGradleTasks -Arguments $Arguments)
-    if ($requestedTasks.Count -ne 1) {
+    if ($requestedTasks.Count -ne 1)
+    {
         return $false
     }
 
     return $requestedTasks[0] -eq "build" -or $requestedTasks[0] -eq ":build"
 }
 
-function Test-ShouldSkipBuildForLightweightChanges {
+function Test-ShouldSkipBuildForLightweightChanges
+{
     param(
         [string]$Root,
         [string[]]$Arguments = @()
     )
 
-    if ($FullBuild -or -not (Test-IsBuildOnlyInvocation -Arguments $Arguments)) {
+    if ($FullBuild -or -not (Test-IsBuildOnlyInvocation -Arguments $Arguments))
+    {
         return $false
     }
 
     $classifierScript = Join-Path $Root "scripts\classify-changed-files.ps1"
-    if (-not (Test-Path -LiteralPath $classifierScript)) {
+    if (-not (Test-Path -LiteralPath $classifierScript))
+    {
         Write-Warning "Could not find scripts\classify-changed-files.ps1; running Gradle build."
         return $false
     }
 
-    try {
+    try
+    {
         $classification = & $classifierScript -Uncommitted
     }
-    catch {
+    catch
+    {
         Write-Warning "Could not classify changed files: $_. Running Gradle build."
         return $false
     }
 
-    if (-not [bool]$classification.skipHeavyValidation) {
+    if (-not [bool]$classification.skipHeavyValidation)
+    {
         return $false
     }
 
@@ -133,7 +150,8 @@ function Test-ShouldSkipBuildForLightweightChanges {
     Write-Host "Manual consistency review is sufficient for these uncommitted changes."
     Write-Host "Use './build.ps1 -FullBuild build' to force the full Gradle build."
 
-    if ($changedFiles.Count -gt 0) {
+    if ($changedFiles.Count -gt 0)
+    {
         Write-Host "Changed files:"
         $changedFiles | ForEach-Object { Write-Host "  $_" }
     }
@@ -141,14 +159,16 @@ function Test-ShouldSkipBuildForLightweightChanges {
     return $true
 }
 
-function Get-EffectiveGradleArgs {
+function Get-EffectiveGradleArgs
+{
     param(
         [string[]]$Arguments = @()
     )
 
     $effectiveArguments = @($Arguments)
 
-    if ($SkipTests) {
+    if ($SkipTests)
+    {
         $effectiveArguments += @(
             "-x",
             "test",
@@ -163,7 +183,8 @@ function Get-EffectiveGradleArgs {
         )
     }
 
-    if ($SkipChecks) {
+    if ($SkipChecks)
+    {
         $checkTasks = @(
             "jacocoTestCoverageVerification",
             "pmdMain",
@@ -190,7 +211,8 @@ function Get-EffectiveGradleArgs {
         )
 
         $effectiveArguments += "-PskipChecks=true"
-        foreach ($task in $checkTasks) {
+        foreach ($task in $checkTasks)
+        {
             $effectiveArguments += @("-x", $task)
         }
     }
@@ -200,14 +222,18 @@ function Get-EffectiveGradleArgs {
 
 # Step 1: Auto-load .env if it exists
 $envPath = Join-Path $repoRoot ".env"
-if (Test-Path -LiteralPath $envPath) {
-    try {
+if (Test-Path -LiteralPath $envPath)
+{
+    try
+    {
         $dotenvScript = Join-Path $repoRoot "scripts\load-dotenv.ps1"
-        if (Test-Path -LiteralPath $dotenvScript) {
+        if (Test-Path -LiteralPath $dotenvScript)
+        {
             & $dotenvScript -Path $envPath -Quiet
         }
     }
-    catch {
+    catch
+    {
         Write-Warning "Could not load .env: $_"
     }
 }
@@ -215,9 +241,11 @@ if (Test-Path -LiteralPath $envPath) {
 $gradleExitCode = 0
 $effectiveGradleArgs = @(Get-EffectiveGradleArgs -Arguments $GradleArgs)
 Push-Location $repoRoot
-try {
+try
+{
     # Step 2: Skip the default validation build when only lightweight files changed
-    if (Test-ShouldSkipBuildForLightweightChanges -Root $repoRoot -Arguments $effectiveGradleArgs) {
+    if (Test-ShouldSkipBuildForLightweightChanges -Root $repoRoot -Arguments $effectiveGradleArgs)
+    {
         return
     }
 
@@ -225,19 +253,29 @@ try {
     $runningOnWindows = [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform(
         [System.Runtime.InteropServices.OSPlatform]::Windows
     )
-    $gradlewFileName = if ($runningOnWindows) { "gradlew.bat" } else { "gradlew" }
+    $gradlewFileName = if ($runningOnWindows)
+    {
+        "gradlew.bat"
+    }
+    else
+    {
+        "gradlew"
+    }
     $gradlewPath = Join-Path $repoRoot $gradlewFileName
-    if (-not (Test-Path -LiteralPath $gradlewPath)) {
+    if (-not (Test-Path -LiteralPath $gradlewPath))
+    {
         throw "$gradlewFileName not found in repository root: $repoRoot"
     }
 
     & $gradlewPath @effectiveGradleArgs
     $gradleExitCode = $LASTEXITCODE
 }
-finally {
+finally
+{
     Pop-Location
 }
 
-if ($gradleExitCode -ne 0) {
+if ($gradleExitCode -ne 0)
+{
     exit $gradleExitCode
 }

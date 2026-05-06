@@ -1,32 +1,34 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="TechnicalInterviewDemoApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-    <option name="ACTIVE_PROFILES" value="local,oauth" />
-    <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
-    <module name="technical-interview-demo.main" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="team.jit.technicalinterviewdemo.TechnicalInterviewDemoApplication" />
-    <envs>
-      <env name="DATABASE_HOST" value="localhost" />
-      <env name="DATABASE_PORT" value="5432" />
-      <env name="DATABASE_NAME" value="technical_interview_demo" />
-      <env name="DATABASE_USER" value="postgres" />
-      <env name="DATABASE_PASSWORD" value="changeme" />
-      <env name="GITHUB_CLIENT_ID" value="local-dev-github-client-id" />
-      <env name="GITHUB_CLIENT_SECRET" value="local-dev-github-client-secret" />
-      <env name="OAUTH_DEFAULT_PROVIDER" value="github" />
-    </envs>
-    <extension name="net.ashald.envfile">
-      <option name="IS_ENABLED" value="true" />
-      <option name="IS_SUBST" value="false" />
-      <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
-      <option name="IS_IGNORE_MISSING_FILES" value="false" />
-      <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="true" />
-      <ENTRIES>
-        <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
-        <ENTRY IS_ENABLED="true" PARSER="env" IS_EXECUTABLE="false" PATH=".env" />
-      </ENTRIES>
-    </extension>
-    <method v="2">
-      <option name="Make" enabled="true" />
-    </method>
-  </configuration>
+    <configuration default="false" name="TechnicalInterviewDemoApplication"
+                   type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+        <option name="ACTIVE_PROFILES" value="local,oauth"/>
+        <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources"/>
+        <module name="technical-interview-demo.main"/>
+        <option name="SPRING_BOOT_MAIN_CLASS"
+                value="team.jit.technicalinterviewdemo.TechnicalInterviewDemoApplication"/>
+        <envs>
+            <env name="DATABASE_HOST" value="localhost"/>
+            <env name="DATABASE_PORT" value="5432"/>
+            <env name="DATABASE_NAME" value="technical_interview_demo"/>
+            <env name="DATABASE_USER" value="postgres"/>
+            <env name="DATABASE_PASSWORD" value="changeme"/>
+            <env name="GITHUB_CLIENT_ID" value="local-dev-github-client-id"/>
+            <env name="GITHUB_CLIENT_SECRET" value="local-dev-github-client-secret"/>
+            <env name="OAUTH_DEFAULT_PROVIDER" value="github"/>
+        </envs>
+        <extension name="net.ashald.envfile">
+            <option name="IS_ENABLED" value="true"/>
+            <option name="IS_SUBST" value="false"/>
+            <option name="IS_PATH_MACRO_SUPPORTED" value="false"/>
+            <option name="IS_IGNORE_MISSING_FILES" value="false"/>
+            <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="true"/>
+            <ENTRIES>
+                <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false"/>
+                <ENTRY IS_ENABLED="true" PARSER="env" IS_EXECUTABLE="false" PATH=".env"/>
+            </ENTRIES>
+        </extension>
+        <method v="2">
+            <option name="Make" enabled="true"/>
+        </method>
+    </configuration>
 </component>

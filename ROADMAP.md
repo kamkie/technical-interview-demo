@@ -46,6 +46,7 @@ Status: Planned
 Goal: prepare `v2.0.0-RC5` with Palantir/IntelliJ formatter ownership cleanup and manual regression coverage, then finish the stable `2.0` line after that release candidate is accepted.
 
 #### Release Confidence
+
 - [x] Execute `ai/PLAN_palantir_intellij_formatting.md` for `v2.0.0-RC5`, superseding archived `ai/archive/PLAN_ci_owned_spotless_reformat.md`. Plan lifecycle: `Integration` / `Implemented`.
 - [x] Execute `ai/PLAN_manual_regression_execution.md` for `v2.0.0-RC5` manual business-functionality regression coverage. Plan lifecycle: `Planning` / `Ready`.
 - [ ] Release stable `v2.0.0`, update `CHANGELOG.md`, and remove the completed `2.0` track from `ROADMAP.md`.
@@ -63,19 +64,23 @@ Status: Deferred until stable `2.0` is released
 Status: Deferred until the core roadmap is complete
 
 #### Batch Processing
+
 - [ ] Add Spring Batch if bulk import/export becomes necessary
 - [ ] Add jobs for book import or audit cleanup
 
 #### Async Message Processing
+
 - [ ] Add RabbitMQ or Kafka if event-driven flows become necessary
 - [ ] Move notifications or audit fan-out to async processing
 
 #### Full-Text Search
+
 - [ ] Add Elasticsearch if search requirements outgrow the relational model
 - [ ] Index books and localization messages
 - [ ] Expose advanced search endpoints
 
 #### GraphQL API
+
 - [ ] Add Spring GraphQL only if there is a real client need
 - [ ] Define schema for books, users, and localization data
 - [ ] Implement queries and mutations

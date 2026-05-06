@@ -11,19 +11,19 @@ NC='\033[0m' # No Color
 
 # Function to print colored headers
 print_section() {
-    echo -e "${BLUE}>>> $1${NC}"
+  echo -e "${BLUE}>>> $1${NC}"
 }
 
 print_success() {
-    echo -e "${GREEN}✓ $1${NC}"
+  echo -e "${GREEN}✓ $1${NC}"
 }
 
 print_error() {
-    echo -e "${RED}✗ $1${NC}"
+  echo -e "${RED}✗ $1${NC}"
 }
 
 print_warning() {
-    echo -e "${YELLOW}⚠ $1${NC}"
+  echo -e "${YELLOW}⚠ $1${NC}"
 }
 
 # Development shortcuts
@@ -48,61 +48,61 @@ alias docker-logs-prom='docker logs -f technical-interview-demo-prometheus'
 
 # Common workflows
 dev-setup() {
-    print_section "Setting up development environment..."
-    ./gradlew.bat clean build
-    print_success "Setup complete!"
+  print_section "Setting up development environment..."
+  ./gradlew.bat clean build
+  print_success "Setup complete!"
 }
 
 dev-start() {
-    print_section "Starting Spring Boot application..."
-    ./gradlew.bat bootRun
+  print_section "Starting Spring Boot application..."
+  ./gradlew.bat bootRun
 }
 
 dev-test() {
-    print_section "Running tests..."
-    ./gradlew.bat test
+  print_section "Running tests..."
+  ./gradlew.bat test
 }
 
 dev-quality() {
-    print_section "Running quality checks..."
-    print_warning "Running checkFormat..."
-    ./gradlew.bat checkFormat || print_error "Format check failed!"
-    print_warning "Running PMD..."
-    ./gradlew.bat --no-problems-report pmdMain || print_error "PMD check failed!"
-    print_warning "Running tests..."
-    ./gradlew.bat test || print_error "Tests failed!"
-    print_success "Quality checks complete!"
+  print_section "Running quality checks..."
+  print_warning "Running checkFormat..."
+  ./gradlew.bat checkFormat || print_error "Format check failed!"
+  print_warning "Running PMD..."
+  ./gradlew.bat --no-problems-report pmdMain || print_error "PMD check failed!"
+  print_warning "Running tests..."
+  ./gradlew.bat test || print_error "Tests failed!"
+  print_success "Quality checks complete!"
 }
 
 dev-docs() {
-    print_section "Generating API documentation..."
-    ./gradlew.bat asciidoctor
-    print_success "Docs generated at: build/docs/asciidoc/index.html"
+  print_section "Generating API documentation..."
+  ./gradlew.bat asciidoctor
+  print_success "Docs generated at: build/docs/asciidoc/index.html"
 }
 
 dev-db-reset() {
-    print_warning "Resetting PostgreSQL database..."
-    psql -h postgres -U demo_user -d postgres -c "DROP DATABASE IF EXISTS technical_interview_demo;"
-    psql -h postgres -U demo_user -d postgres -c "CREATE DATABASE technical_interview_demo;"
-    print_success "Database reset complete!"
+  print_warning "Resetting PostgreSQL database..."
+  psql -h postgres -U demo_user -d postgres -c "DROP DATABASE IF EXISTS technical_interview_demo;"
+  psql -h postgres -U demo_user -d postgres -c "CREATE DATABASE technical_interview_demo;"
+  print_success "Database reset complete!"
 }
 
 dev-ps() {
-    print_section "Running containers:"
-    docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+  print_section "Running containers:"
+  docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 }
 
 dev-logs() {
-    print_section "Here are logs from recent containers:"
-    echo "PostgreSQL logs:"
-    docker logs --tail 10 technical-interview-demo-postgres
-    echo ""
-    echo "Prometheus logs:"
-    docker logs --tail 10 technical-interview-demo-prometheus
+  print_section "Here are logs from recent containers:"
+  echo "PostgreSQL logs:"
+  docker logs --tail 10 technical-interview-demo-postgres
+  echo ""
+  echo "Prometheus logs:"
+  docker logs --tail 10 technical-interview-demo-prometheus
 }
 
 dev-help() {
-    cat << EOF
+  cat <<EOF
 ${BLUE}Development Container Quick Reference${NC}
 
 ${YELLOW}Gradle Shortcuts:${NC}
@@ -150,7 +150,7 @@ EOF
 
 # Print help on source
 if [ "${BASH_SOURCE[0]}" == "${0}" ]; then
-    dev-help
+  dev-help
 else
-    print_success "Dev container shortcuts loaded! Type 'dev-help' for more info."
+  print_success "Dev container shortcuts loaded! Type 'dev-help' for more info."
 fi

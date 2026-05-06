@@ -6,8 +6,8 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 import org.gradle.process.ExecOperations
 import org.gradle.work.DisableCachingByDefault
-import javax.inject.Inject
 import java.time.Duration
+import javax.inject.Inject
 
 @DisableCachingByDefault(because = "Starts Docker containers required for external smoke testing.")
 abstract class ExternalSmokeEnvironmentUpTask @Inject constructor(private val execOperations: ExecOperations) :

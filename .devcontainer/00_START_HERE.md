@@ -37,11 +37,13 @@ All developers can now use VS Code's Remote - Containers extension to work in a 
 ## Key Features
 
 ### ✨ Zero Configuration
+
 - Works out of the box - no manual setup needed
 - Automatic dependency downloading on first run
 - Pre-configured Java home and paths
 
 ### 🎯 Complete Development Environment
+
 - **Java 25 JDK** (Microsoft official container)
 - **Gradle** (via wrapper)
 - **Docker-in-Docker** (run containers inside dev container)
@@ -50,32 +52,35 @@ All developers can now use VS Code's Remote - Containers extension to work in a 
 - **PostgreSQL client** tools
 
 ### 🚀 Pre-configured Services
+
 - **PostgreSQL 16** (port 5432)
-  - Auto-starts with dev container
-  - Persistence via Docker volumes
-  - Health checks enabled
+    - Auto-starts with dev container
+    - Persistence via Docker volumes
+    - Health checks enabled
 
 - **Prometheus** (port 9090)
-  - Automatically scrapes Spring Boot metrics
-  - Persistence via Docker volumes
+    - Automatically scrapes Spring Boot metrics
+    - Persistence via Docker volumes
 
 ### 📦 VS Code Integration
+
 - **Extensions pre-installed:**
-  - Extension Pack for Java
-  - Spring Boot Dashboard
-  - Gradle for Java
-  - Docker
-  - GitLens
-  - SonarLint (code quality)
-  - Copilot (if available)
+    - Extension Pack for Java
+    - Spring Boot Dashboard
+    - Gradle for Java
+    - Docker
+    - GitLens
+    - SonarLint (code quality)
+    - Copilot (if available)
 
 - **Settings pre-configured:**
-  - Java formatter & auto-format on save
-  - Proper Java home paths
-  - Code rulers at 100 & 120 characters
-  - Git config integration
+    - Java formatter & auto-format on save
+    - Proper Java home paths
+    - Code rulers at 100 & 120 characters
+    - Git config integration
 
 ### 🔧 Helper Commands
+
 After sourcing `commands.sh`, developers get convenient shortcuts:
 
 ```bash
@@ -98,21 +103,25 @@ docker-ps       # Show containers
 ## Quick Start for Users
 
 ### 1. **Install Extension**
+
 ```bash
 code --install-extension ms-vscode-remote.remote-containers
 ```
 
 ### 2. **Open Project**
+
 ```bash
 code /path/to/technical-interview-demo
 ```
 
 ### 3. **Reopen in Container**
+
 - Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on macOS)
 - Type: "Dev Containers: Reopen in Container"
 - Wait 5-10 minutes for first build
 
 ### 4. **Verify Setup**
+
 ```bash
 java -version
 ./gradlew --version
@@ -120,6 +129,7 @@ docker ps
 ```
 
 ### 5. **Start Developing**
+
 ```bash
 # Run the app
 ./gradlew.bat bootRun
@@ -191,14 +201,18 @@ From Inside Container:
 ## Documentation
 
 ### For Quick Reference
+
 - **`.devcontainer/QUICK_START.md`** - One-page cheat sheet
 - **`.devcontainer/README.md`** - 200+ lines of comprehensive guide
 
 ### For Technical Details
+
 - **`.devcontainer/IMPLEMENTATION.md`** - Complete technical documentation
 
 ### Inline Comments
+
 All shell scripts and config files include detailed comments explaining:
+
 - What each section does
 - Why it's configured that way
 - How to customize it
@@ -226,6 +240,7 @@ See `.devcontainer/README.md` section "Troubleshooting" for more.
 ## Future Enhancements
 
 The dev container can easily be extended with:
+
 - Additional services (Redis, MinIO, MailHog)
 - Pre-configured debugging
 - Git pre-commit hooks

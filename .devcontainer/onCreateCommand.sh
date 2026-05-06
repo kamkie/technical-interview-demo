@@ -7,4 +7,3 @@ echo "🔨 Initializing container..."
 chmod +x .devcontainer/*.sh
 
 echo "✅ Container initialization complete"
-

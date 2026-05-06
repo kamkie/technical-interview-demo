@@ -7,10 +7,11 @@ This project includes a preconfigured development container (dev container) that
 1. **VS Code** (version 1.52 or later)
 2. **Docker Desktop** (installed and running)
 3. **VS Code Extensions:**
-   - Remote - Containers
-   - Dev Containers
+    - Remote - Containers
+    - Dev Containers
 
 Install the extensions:
+
 ```bash
 code --install-extension ms-vscode-remote.remote-containers
 code --install-extension ms-vscode.remote-explorer
@@ -44,29 +45,33 @@ docker ps
 ## What's Included
 
 ### Development Container Image
+
 - **Base Image:** Microsoft's official Java development container (Java 25)
 - **OS:** Debian Bookworm
 - **Pre-installed Tools:**
-  - Java 25 JDK (official Microsoft OpenJDK)
-  - Gradle (via wrapper)
-  - Docker & Docker Compose (Docker-in-Docker)
-  - PostgreSQL client tools
-  - Node.js/npm (for potential frontend work)
+    - Java 25 JDK (official Microsoft OpenJDK)
+    - Gradle (via wrapper)
+    - Docker & Docker Compose (Docker-in-Docker)
+    - PostgreSQL client tools
+    - Node.js/npm (for potential frontend work)
 
 ### Supporting Services (Docker Compose)
+
 The `.devcontainer/docker-compose.yml` defines optional services:
 
 - **PostgreSQL** (port 5432)
-  - Database: `technical_interview_demo`
-  - User: `demo_user`
-  - Password: `demo_password`
+    - Database: `technical_interview_demo`
+    - User: `demo_user`
+    - Password: `demo_password`
 
 - **Prometheus** (port 9090)
-  - Metrics collection from Spring Boot app
-  - Accessible at `http://localhost:9090`
+    - Metrics collection from Spring Boot app
+    - Accessible at `http://localhost:9090`
 
 ### VS Code Extensions
+
 Automatically installed in the container:
+
 - Extension Pack for Java
 - Spring Boot Dashboard
 - Gradle for Java
@@ -76,7 +81,9 @@ Automatically installed in the container:
 - SonarLint (code quality)
 
 ### VS Code Settings
+
 Custom Java and editor settings are automatically applied:
+
 - Java formatter and auto-format on save
 - Proper Java home configuration
 - Code rulers at 100 and 120 characters
@@ -134,6 +141,7 @@ psql -h localhost -p 5432 -U demo_user -d technical_interview_demo
 ```
 
 Or from your IDE:
+
 - **Host:** `localhost`
 - **Port:** `5432`
 - **Database:** `technical_interview_demo`
@@ -145,28 +153,31 @@ Or from your IDE:
 The container runs these scripts in order:
 
 1. **onCreateCommand.sh** - Runs once when container is first created
-   - Makes scripts executable
-   - Sets up basic permissions
+    - Makes scripts executable
+    - Sets up basic permissions
 
 2. **postCreateCommand.sh** - Runs once after container creation
-   - Installs system dependencies
-   - Downloads Gradle dependencies
-   - Performs initial build (without tests)
-   - Displays helpful information
+    - Installs system dependencies
+    - Downloads Gradle dependencies
+    - Performs initial build (without tests)
+    - Displays helpful information
 
 3. **postStartCommand.sh** - Runs every time container starts
-   - Verifies Docker availability
-   - Shows ready status
+    - Verifies Docker availability
+    - Shows ready status
 
 ## Tips & Tricks
 
 ### 1. Faster Builds
+
 On the first run, Gradle dependencies are pre-downloaded. Subsequent builds will be much faster.
 
 ### 2. Share Maven/Gradle Cache
+
 The container automatically mounts your host machine's `~/.m2` and `~/.gradle` directories. This speeds up builds and allows you to reuse dependencies from the host.
 
 ### 3. Working with Git
+
 Git is available in the container. Your SSH keys and git config are available:
 
 ```bash
@@ -175,13 +186,16 @@ git commit -m "message"
 ```
 
 ### 4. Using Spring Boot Dashboard
+
 Open the VS Code Spring Boot Dashboard to:
+
 - Start/stop applications
 - View running apps
 - Access app endpoints
 - View logs
 
 ### 5. Debug Mode
+
 Set breakpoints in VS Code and use the debugger:
 
 1. Click the Debug icon in the sidebar
@@ -190,6 +204,7 @@ Set breakpoints in VS Code and use the debugger:
 4. Breakpoints will trigger in the running application
 
 ### 6. Watch Mode
+
 For continuous testing or compilation:
 
 ```bash
@@ -198,6 +213,7 @@ For continuous testing or compilation:
 ```
 
 ### 7. Hot Reload
+
 Spring Boot DevTools is included. Changes to Java classes or resources may trigger auto-reload:
 
 ```bash
@@ -213,6 +229,7 @@ Make code changes, and the app will restart automatically (if DevTools is enable
 **Problem:** Build times out or runs out of resources
 
 **Solution:**
+
 1. Increase Docker Desktop resources (CPU/Memory)
 2. Clear Docker cache: `docker system prune`
 3. Rebuild: `Ctrl+Shift+P` → "Dev Containers: Rebuild Container"
@@ -222,6 +239,7 @@ Make code changes, and the app will restart automatically (if DevTools is enable
 **Problem:** Port 8080 or 5432 is already in use
 
 **Solution:**
+
 1. Find the process: `lsof -i :8080`
 2. Kill it: `kill -9 <PID>`
 3. OR use different port in `application.properties`
@@ -231,6 +249,7 @@ Make code changes, and the app will restart automatically (if DevTools is enable
 **Problem:** `docker ps` returns error
 
 **Solution:**
+
 1. Ensure Docker Desktop is running
 2. Restart VS Code
 3. Rebuild the container
@@ -240,6 +259,7 @@ Make code changes, and the app will restart automatically (if DevTools is enable
 **Problem:** `java: command not found`
 
 **Solution:**
+
 1. The Java home may not be set correctly
 2. Rebuild the container: `Ctrl+Shift+P` → "Dev Containers: Rebuild Container"
 
@@ -248,6 +268,7 @@ Make code changes, and the app will restart automatically (if DevTools is enable
 **Problem:** Can't connect to database
 
 **Solution:**
+
 1. Ensure services are running: `docker ps`
 2. Wait a few seconds for PostgreSQL to fully start
 3. Check connection string: `postgresql://demo_user:demo_password@localhost:5432/technical_interview_demo`
@@ -324,6 +345,7 @@ Edit `.devcontainer/docker-compose.yml` to add more services:
 ```
 
 Then reference the container name in your app configuration:
+
 ```properties
 spring.redis.host=redis
 spring.redis.port=6379
