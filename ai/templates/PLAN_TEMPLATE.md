@@ -50,7 +50,7 @@
 - goal
 - owned files or packages
 - shared files that a `Single-Plan Fanout` worker must leave to the coordinator
-- optional context required for large, long-running, or fanout-prone milestones
+- context required before execution (`none beyond AGENTS.md, ai/EXECUTION.md, and this plan` for small milestones; otherwise name exact guides, references, plan sections, source packages, or spec artifacts)
 - behavior to preserve
 - exact deliverables
 - validation checkpoint
@@ -96,6 +96,7 @@
 - what requirement gaps still need input and whether they block planning
 - which execution mode fits: `Linear Plan`, `Single-Plan Fanout`, or `Multi-Plan Fanout`
 - which files stay coordinator-owned if worker fanout is realistic
+- what context each milestone requires before execution, with no-extra-context milestones stated explicitly
 - which tests, docs, OpenAPI, HTTP examples, README, or AI guides must move
 - what testing strategy applies, including non-applicable layers for docs-only or AI-guidance-only plans
 - what validation proves completion

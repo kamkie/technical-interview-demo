@@ -53,7 +53,7 @@ Do not add manual `JAVA_HOME` or dotenv setup steps to plans, prompts, or worker
 Every execution mode follows the same milestone loop.
 A milestone is not done until the implementation, validation, tracking artifacts, and commit are all in place.
 
-1. Re-read the target scope, in-scope outcome, locked decisions, non-goals, and the current milestone checkpoint.
+1. Re-read the target scope, in-scope outcome, locked decisions, non-goals, the current milestone checkpoint, and that milestone's `context required before execution` field; load only the extra context named there before starting the milestone.
 2. Update the governing spec first when behavior is intentionally changing.
 3. Implement the smallest coherent code or documentation change that satisfies that milestone.
 4. Keep artifact routing aligned through `ai/DOCUMENTATION.md`.

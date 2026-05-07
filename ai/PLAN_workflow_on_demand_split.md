@@ -124,6 +124,8 @@
   - `ROADMAP.md`
 - shared files that a fanout worker must leave to the coordinator:
   - not applicable in current `Linear Plan` execution
+- context required before execution:
+  - `AGENTS.md`, `ai/PLAN.md`, `ai/DOCUMENTATION.md`, `ROADMAP.md`, and this milestone
 - behavior to preserve:
   - no application behavior or public contract changes
   - no implementation of the workflow split yet
@@ -144,6 +146,8 @@
   - `ai/references/WORKFLOW_MULTI_PLAN_FANOUT.md`
 - shared files that a fanout worker must leave to the coordinator:
   - this plan and `ROADMAP.md`
+- context required before execution:
+  - `ai/WORKFLOW.md`, `ai/DOCUMENTATION.md`, existing workflow-related references under `ai/references/`, and this milestone
 - behavior to preserve:
   - `ai/WORKFLOW.md` remains the owner for execution-mode selection, branch/worktree topology, and coordinator or worker integration rules
   - default execution remains the smallest mode with the lowest coordination cost
@@ -181,6 +185,8 @@
   - active `ai/PLAN_*.md` files
 - shared files that a fanout worker must leave to the coordinator:
   - all owned files in this milestone should stay coordinator-owned because terminology drift is the main risk
+- context required before execution:
+  - `AGENTS.md`, `ai/PLAN.md`, `ai/EXECUTION.md`, `ai/RELEASES.md`, `ai/PROMPTS.md`, `ai/prompts/index.json`, affected prompt bodies under `ai/prompts/bodies/`, and this milestone
 - behavior to preserve:
   - prompt loading still uses `scripts/ai/get-prompt.ps1`
   - `ai/PROMPTS.md` remains a lean index, not a policy owner
@@ -210,6 +216,8 @@
   - this plan's `Validation Results`
 - shared files that a fanout worker must leave to the coordinator:
   - not applicable in current `Linear Plan` execution
+- context required before execution:
+  - `ai/TESTING.md`, `ai/REVIEWS.md`, `ai/PROMPTS.md`, the workflow references changed by this plan, and this milestone
 - behavior to preserve:
   - no application build, runtime, API, or release behavior changes
   - no permanent duplicate mode guidance in standing docs

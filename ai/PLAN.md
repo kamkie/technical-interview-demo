@@ -75,7 +75,7 @@ When a plan is later released or no longer active, follow the execution and rele
 
 Every concrete plan must be decision-complete enough for another agent to execute without inventing missing behavior.
 
-At minimum, identify the behavior, governing specs or contract artifacts, scope and non-goals, affected files, compatibility promises, requirement gaps, execution mode, shared-file boundaries, milestone checkpoints, validation, and user verification.
+At minimum, identify the behavior, governing specs or contract artifacts, scope and non-goals, affected files, compatibility promises, requirement gaps, execution mode, shared-file boundaries, per-milestone context requirements, milestone checkpoints, validation, and user verification.
 Use `ai/templates/PLAN_TEMPLATE.md` for the full skeleton and required-content checklist.
 
 ## Milestone Rules
@@ -86,10 +86,15 @@ Each milestone should name:
 - goal
 - owned files or packages
 - shared files reserved to the coordinator, if any
+- context required before execution
 - behavior to preserve
 - exact deliverables
 - validation checkpoint
 - commit checkpoint
+
+For context requirements, name the smallest useful read set for that milestone.
+Use `none beyond AGENTS.md, ai/EXECUTION.md, and this plan` when no extra context is needed; otherwise name the exact guide, reference, plan section, source package, or spec artifact to load before starting the milestone.
+Do not list broad descriptive docs as defensive context.
 
 Prefer `Linear Plan`.
 Use `Single-Plan Fanout` only when one plan can be split into disjoint worker-owned slices.
@@ -119,6 +124,7 @@ Before presenting a plan, verify that it:
 - records unresolved gaps and fallback assumptions explicitly
 - names likely files to change
 - identifies execution mode and shared-file boundaries
+- defines per-milestone context requirements without broad just-in-case reads
 - defines specific, validatable milestones
 - includes repo-specific validation
 - respects the demo scope of the application

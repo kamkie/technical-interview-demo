@@ -89,6 +89,8 @@
   - `ROADMAP.md`
 - shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
   - not applicable in `Linear Plan`
+- context required before execution:
+  - `AGENTS.md`, `ai/PLAN.md`, `ai/DOCUMENTATION.md`, `ROADMAP.md`, and this plan
 - behavior to preserve:
   - no application or public-contract changes
   - no external skill import
@@ -109,6 +111,8 @@
   - `AGENTS.md`
 - shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
   - this plan and `ROADMAP.md`
+- context required before execution:
+  - `AGENTS.md`, `ai/DOCUMENTATION.md`, `ai/LEARNINGS.md`, and this milestone
 - behavior to preserve:
   - the load policy remains on-demand and does not require bulk-loading plans or references
 - exact deliverables:
@@ -129,6 +133,8 @@
   - `ai/EXECUTION.md`
 - shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
   - this plan and `ROADMAP.md`
+- context required before execution:
+  - `ai/EXECUTION.md`, `ai/REVIEWS.md`, `ai/DOCUMENTATION.md`, and this milestone
 - behavior to preserve:
   - milestone validation and commit discipline remain as currently defined
   - review rules stay owned by `ai/REVIEWS.md`

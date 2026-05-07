@@ -206,6 +206,8 @@
   - optional `ai/tmp/manual-regression/v2_0_0_rc5.md`
 - shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
   - this plan and roadmap
+- context required before execution:
+  - `SETUP.md` local run and OAuth setup sections, `ai/ENVIRONMENT_QUICK_REF.md`, `src/test/resources/http/authentication.http`, and this milestone
 - behavior to preserve:
   - no application or contract changes
 - exact deliverables:
@@ -259,6 +261,8 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
   - optional `ai/tmp/manual-regression/v2_0_0_rc5.md`
 - shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
   - this plan and roadmap
+- context required before execution:
+  - `README.md` supported surface summary, `SETUP.md` local endpoint notes, `src/test/resources/http/technical-overview-controller.http`, `documentation.http`, `technical-endpoints.http`, `book-controller.http`, `category-controller.http`, `localization-controller.http`, and this milestone
 - behavior to preserve:
   - read-only requests should not mutate persisted business data
 - exact deliverables:
@@ -294,6 +298,8 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
   - optional `ai/tmp/manual-regression/v2_0_0_rc5.md`
 - shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
   - this plan and roadmap
+- context required before execution:
+  - `SETUP.md` CSRF/session guidance, `src/test/resources/http/authentication.http`, `user-account-controller.http`, `book-controller.http`, `category-controller.http`, `localization-controller.http`, and this milestone
 - behavior to preserve:
   - write tests use unique data and clean up created records when possible
   - do not rely on or mutate production data
@@ -335,6 +341,8 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
   - optional `ai/tmp/manual-regression/v2_0_0_rc5.md`
 - shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
   - this plan and roadmap
+- context required before execution:
+  - `src/test/resources/http/admin-user-management-controller.http`, `audit-log-controller.http`, `operator-surface-controller.http`, `authentication.http`, and this milestone
 - behavior to preserve:
   - do not remove the only admin grant
   - restore any test user role changes before ending the run
@@ -366,6 +374,8 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
   - this plan's `Validation Results` if the manual run is executed in this branch
 - shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
   - `CHANGELOG.md` unless release work is explicitly requested
+- context required before execution:
+  - this plan's `Validation Results`, the manual result log under `ai/tmp/manual-regression/` if one exists, `ai/TESTING.md` for validation wording, and this milestone
 - behavior to preserve:
   - release history is not updated by this manual planning pass
 - exact deliverables:

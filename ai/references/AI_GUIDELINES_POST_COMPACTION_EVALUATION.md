@@ -4,7 +4,7 @@ Evaluation date: 2026-05-07
 
 ## Summary
 - Overall grade after follow-up compaction: **A**.
-- The current guidance set is materially stronger than the historical scratch-note `B+`: workflow fanout mechanics, release runbooks, prompt bodies, detailed planning examples, and plan skeleton detail are now on demand, and business-feature ownership has been folded into `ai/ARCHITECTURE.md`.
+- The current guidance set is materially stronger than the historical scratch-note `B+`: workflow fanout mechanics, release runbooks, prompt bodies, detailed planning examples, and plan skeleton detail are now on demand, business-feature ownership has been folded into `ai/ARCHITECTURE.md`, and per-milestone context requirements are standardized for active plans.
 - The remaining cost is concentrated in the unavoidable `AGENTS.md` default floor, the workflow router, and descriptive docs that must stay easy to find without becoming default context.
 - No blocking contradiction was found in the active standing guidance. Old workflow names remain only as intentional migration notes inside the implemented workflow-split plan.
 
@@ -89,6 +89,7 @@ The total standing size is below the historical scratch estimate, and the practi
 - The prompt index remains lean, and raw prompt bodies are still on demand. The largest body, `context-report.md`, is a maintenance report prompt rather than standing policy.
 - Targeted relevance scanning, context-quality checkpoints, per-milestone scope checks, and post-validation review triggers are now in owner guides instead of external skill instructions.
 - Business-feature ownership moved from the separate `ai/BUSINESS_MODULES.md` guide into `ai/ARCHITECTURE.md`, removing one overlapping descriptive file from the standing guide set.
+- Per-milestone context requirements are now required by `ai/PLAN.md`, present in `ai/templates/PLAN_TEMPLATE.md`, consumed by the execution loop in `ai/EXECUTION.md`, and added to active `ai/PLAN_*.md` files.
 - The evaluation report itself is correctly on demand under `ai/references/` rather than becoming another standing owner guide.
 
 ## Remaining Costs
@@ -106,7 +107,7 @@ The total standing size is below the historical scratch estimate, and the practi
 | Slim `ai/PLAN.md` | Handled. Required-content checklist detail moved to `ai/templates/PLAN_TEMPLATE.md`. |
 | Add phase-to-guide context map | Handled. `ai/PROMPTS.md` now has a compact phase-to-guide read-set table and descriptive-doc triggers. |
 | Tighten `ai/EXECUTION.md` reading list | Handled. Implementation reads are now base-plus-conditional instead of a broad standing list. |
-| Add context-drop markers in plans | Partly handled by `AGENTS.md` context hygiene and execution per-milestone checks, but not standardized as a plan-section requirement. |
+| Add context-drop markers in plans | Handled. `ai/PLAN.md`, `ai/templates/PLAN_TEMPLATE.md`, `ai/EXECUTION.md`, and active `ai/PLAN_*.md` files now use explicit per-milestone context requirements. |
 
 ## Follow-Up Ranking
 This section records the original ranking plus the current follow-up state.
@@ -121,12 +122,10 @@ This section records the original ranking plus the current follow-up state.
 - `ai/RELEASES.md` runbook split: implemented through `ai/references/RELEASE_CHECKLIST.md` and `ai/references/RELEASE_ARTIFACT_VERIFICATION.md`.
 - `ai/PLAN.md` slimming: implemented by moving exhaustive checklist detail to `ai/templates/PLAN_TEMPLATE.md`.
 - Phase-to-guide and descriptive-doc triggers: implemented in `ai/PROMPTS.md`.
+- Per-milestone context requirements: implemented through the planning rules, plan template, execution loop, and active plan files.
 
 ### Remaining Lower ROI
-1. Add explicit per-milestone context requirements to every plan.
-   - Why: context-drop markers could help long plans, but they would add boilerplate to small plans and may duplicate milestone validation notes.
-   - Suggested approach: try only on large or fanout-prone plans first.
-2. Split more from `ai/WORKFLOW.md`.
+1. Split more from `ai/WORKFLOW.md`.
    - Why: the largest workflow win already landed. Further cuts may be possible, but the remaining router still owns branch/worktree and coordinator invariants that agents need before choosing a mode.
    - Suggested approach: revisit only if workflow-selection reads remain too large in practice.
 

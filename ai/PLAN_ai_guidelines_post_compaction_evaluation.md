@@ -118,6 +118,8 @@
   - `ROADMAP.md`
 - shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
   - not applicable in `Linear Plan`
+- context required before execution:
+  - `AGENTS.md`, `ai/PLAN.md`, `ai/DOCUMENTATION.md`, `ROADMAP.md`, both prerequisite plan lifecycle blocks, and this milestone
 - behavior to preserve:
   - no AI-guidance implementation changes
   - no application or public-contract changes
@@ -139,6 +141,8 @@
   - this plan's `Validation Results`
 - shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
   - this plan, `ROADMAP.md`, and `CHANGELOG.md`
+- context required before execution:
+  - `AGENTS.md`, `ai/DOCUMENTATION.md`, `ai/REVIEWS.md`, top-level `ai/*.md` owner guides excluding active plans, `ai/prompts/index.json`, representative large prompt bodies, and this milestone
 - behavior to preserve:
   - active owner docs remain role-distinct
   - on-demand references are opened only when needed for cross-reference checks
@@ -165,6 +169,8 @@
   - `CHANGELOG.md`
 - shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
   - not applicable in `Linear Plan`
+- context required before execution:
+  - `ai/DOCUMENTATION.md`, `ai/REVIEWS.md`, `CHANGELOG.md`, `ROADMAP.md`, `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md`, and this milestone
 - behavior to preserve:
   - no hidden implementation work
   - no new active implementation plans unless explicitly requested
