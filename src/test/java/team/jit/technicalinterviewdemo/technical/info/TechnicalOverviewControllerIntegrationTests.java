@@ -9,6 +9,7 @@ import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -97,5 +98,10 @@ class TechnicalOverviewControllerIntegrationTests extends AbstractMockMvcIntegra
         mockMvc.perform(get("/hello"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Hello World!"));
+    }
+
+    @Test
+    void debugEchoEndpointIsUnavailableOutsideLocalProfile() throws Exception {
+        mockMvc.perform(post("/debug/echo").content("local helper only")).andExpect(status().isNotFound());
     }
 }

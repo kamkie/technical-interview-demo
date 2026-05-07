@@ -12,7 +12,7 @@
 ### Suite 10 — Admin User Management
 # @name suite_10_setup
 GET {{baseUrl}}/api/admin/users?page=0&size=50
-Cookie: technical-interview-demo-session={{sessionCookie}}
+Cookie: technical-interview-demo-session={{adminSessionCookie}}
 
 > {%
     var date = new Date().toISOString().split('T')[0];
@@ -91,7 +91,7 @@ Cookie: technical-interview-demo-session={{sessionCookie}}
 ### 10-1 List Users as Admin
 # @name list_users_admin
 GET {{baseUrl}}/api/admin/users
-Cookie: technical-interview-demo-session={{sessionCookie}}
+Cookie: technical-interview-demo-session={{adminSessionCookie}}
 Accept: application/json
 
 > {%
@@ -116,7 +116,7 @@ Accept: application/json
     request.variables.set("requestRunTag", client.global.get("runTag") || client.variables.file.get("runTag"));
 %}
 PUT {{baseUrl}}/api/admin/users/{{requestTargetUserId}}/roles
-Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{requestCsrfToken}}
+Cookie: technical-interview-demo-session={{adminSessionCookie}}; XSRF-TOKEN={{requestCsrfToken}}
 X-XSRF-TOKEN: {{requestCsrfToken}}
 Content-Type: application/json
 
@@ -155,7 +155,7 @@ Content-Type: application/json
     request.variables.set("requestRunTag", client.global.get("runTag") || client.variables.file.get("runTag"));
 %}
 PUT {{baseUrl}}/api/admin/users/{{requestTargetUserId}}/roles
-Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{requestCsrfToken}}
+Cookie: technical-interview-demo-session={{adminSessionCookie}}; XSRF-TOKEN={{requestCsrfToken}}
 X-XSRF-TOKEN: {{requestCsrfToken}}
 Content-Type: application/json
 

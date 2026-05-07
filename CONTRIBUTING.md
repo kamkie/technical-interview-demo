@@ -26,7 +26,7 @@ Keep these repository constraints intact unless the change explicitly redefines 
 - use PostgreSQL for runtime work and keep the local developer path Docker-friendly
 - keep the public application contract centered on `/api/**`
 - treat `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, and `/actuator/**` as internal or deployment-scoped surfaces unless a reviewed contract change says otherwise
-- treat executable specs, REST Docs, the approved OpenAPI baseline, and reviewer HTTP examples as part of the product rather than optional documentation
+- treat executable specs, REST Docs, and the approved OpenAPI baseline as product evidence; keep reviewer HTTP examples and suites as convenience tools aligned with that behavior
 
 When documentation changes, keep the right human-facing files aligned:
 
@@ -52,16 +52,16 @@ Authoritative artifact map:
 - `src/test/java/` for executable behavior specs
 - `src/docs/asciidoc/` for published REST Docs content
 - `src/test/resources/openapi/approved-openapi.json` for the approved machine-readable public contract
-- `src/manualTests/http/examples/` for reviewer-facing runnable request examples
-- `src/manualTests/http/suites/` for semi-automated IntelliJ HTTP Client manual-regression scripts
+- `src/manualTests/http/examples/` for reviewer-facing convenience request examples
+- `src/manualTests/http/suites/` for semi-automated IntelliJ HTTP Client manual-regression convenience scripts
 - `README.md` for the supported human-facing contract summary
 - `ROADMAP.md` for active work only
 - `CHANGELOG.md` for released history only
 
 Change-routing rules:
 
-- public API change: update implementation, tests, REST Docs, HTTP examples, OpenAPI when intentionally changed, and `README.md` if the supported contract changed
-- internal refactor with no contract change: keep existing specs green and avoid unnecessary OpenAPI, HTTP example, or README edits
+- public API change: update implementation, tests, REST Docs, OpenAPI when intentionally changed, and `README.md` if the supported contract changed; update HTTP convenience files when reviewer workflows should mirror the change
+- internal refactor with no contract change: keep existing specs green and avoid unnecessary OpenAPI or README edits
 - setup or tooling change: update `SETUP.md`
 - AI workflow or AI guidance change: update the owning AI guide and keep `AGENTS.md` aligned when the AI document set or maintenance rules changed
 - roadmap reprioritization: update `ROADMAP.md`
@@ -253,8 +253,8 @@ Common routing:
 - `WORKING_WITH_AI.md` for the human-facing AI collaboration lifecycle
 - `AGENTS.md` and the relevant `.agents/references/` guide when AI rules, ownership, workflow, or execution guidance changed
 - `src/docs/asciidoc/` and the related REST Docs tests when public API behavior changed
-- `src/manualTests/http/examples/` when reviewer-facing request examples changed
-- `src/manualTests/http/suites/` when semi-automated manual-regression HTTP Client scripts changed
+- `src/manualTests/http/examples/` when reviewer-facing convenience request examples changed
+- `src/manualTests/http/suites/` when semi-automated manual-regression HTTP Client convenience scripts changed
 - `ROADMAP.md` when active work changed
 - `CHANGELOG.md` when preparing or documenting a release
 

@@ -15,7 +15,7 @@ Entry points:
 
 Update the artifact that owns the truth being changed:
 
-- runtime behavior and public API contract: executable tests, `src/docs/asciidoc/`, `src/manualTests/http/examples/`, `src/manualTests/http/suites/`, `src/test/resources/openapi/approved-openapi.json`, and `README.md`
+- runtime behavior and public API contract: executable tests, `src/docs/asciidoc/`, `src/test/resources/openapi/approved-openapi.json`, and `README.md`
 - human-facing guide for developers using AI through the application lifecycle: `WORKING_WITH_AI.md`
 - AI repository rules and AI-document inventory: `AGENTS.md`
 - repository knowledge layout and file ownership: this guide, especially `## Artifact Ownership` and `### AI Document Maintenance`
@@ -39,6 +39,7 @@ Update the artifact that owns the truth being changed:
 - edit-shaping rules: `.agents/references/code-style.md`
 - validation scope and commands: `.agents/references/testing.md`
 - review and security-review expectations: `.agents/references/reviews.md`
+- reviewer/operator HTTP convenience tools: `src/manualTests/http/examples/` and `src/manualTests/http/suites/`
 
 If ownership is unclear, decide that before editing multiple docs.
 
@@ -84,14 +85,14 @@ Update all affected artifacts in the same change:
 - integration tests
 - REST Docs tests and Asciidoc pages when public behavior is documented there
 - approved OpenAPI baseline if the contract intentionally changed
-- HTTP example files under `src/manualTests/http/examples/` and manual-regression HTTP Client suite scripts under `src/manualTests/http/suites/`
+- HTTP convenience files under `src/manualTests/http/examples/` and `src/manualTests/http/suites/` when reviewer or manual-regression workflows should reflect the behavior
 - `README.md` if the supported contract changed
 - `CHANGELOG.md` only when the change is being released
 
 ### Internal refactor with no contract change
 
 - keep existing specs green without unnecessary contract edits
-- avoid changing OpenAPI, README, or HTTP examples unless behavior actually changed
+- avoid changing OpenAPI or README unless behavior actually changed
 - prefer renames and moves that reduce exceptions in naming and packaging
 
 ### Setup or environment change

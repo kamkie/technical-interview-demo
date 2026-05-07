@@ -10,7 +10,7 @@
 ### Suite 08 — Category Lifecycle Admin
 # @name suite_08_setup
 GET {{baseUrl}}/api/session
-Cookie: technical-interview-demo-session={{sessionCookie}}
+Cookie: technical-interview-demo-session={{adminSessionCookie}}
 
 > {%
     var date = new Date().toISOString().split('T')[0];
@@ -74,7 +74,7 @@ Cookie: technical-interview-demo-session={{sessionCookie}}
     request.variables.set("requestRunTag", client.global.get("runTag") || client.variables.file.get("runTag"));
 %}
 POST {{baseUrl}}/api/categories
-Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{requestCsrfToken}}
+Cookie: technical-interview-demo-session={{adminSessionCookie}}; XSRF-TOKEN={{requestCsrfToken}}
 X-XSRF-TOKEN: {{requestCsrfToken}}
 Content-Type: application/json
 
@@ -110,7 +110,7 @@ Content-Type: application/json
     request.variables.set("requestRunTag", client.global.get("runTag") || client.variables.file.get("runTag"));
 %}
 PUT {{baseUrl}}/api/categories/{{requestCreatedCategoryId}}
-Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{requestCsrfToken}}
+Cookie: technical-interview-demo-session={{adminSessionCookie}}; XSRF-TOKEN={{requestCsrfToken}}
 X-XSRF-TOKEN: {{requestCsrfToken}}
 Content-Type: application/json
 
@@ -140,7 +140,7 @@ Content-Type: application/json
     request.variables.set("requestCreatedCategoryId", client.global.get("createdCategoryId") || client.variables.file.get("createdCategoryId"));
 %}
 DELETE {{baseUrl}}/api/categories/{{requestCreatedCategoryId}}
-Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{requestCsrfToken}}
+Cookie: technical-interview-demo-session={{adminSessionCookie}}; XSRF-TOKEN={{requestCsrfToken}}
 X-XSRF-TOKEN: {{requestCsrfToken}}
 
 > {%
@@ -160,7 +160,7 @@ X-XSRF-TOKEN: {{requestCsrfToken}}
 ### 08-4 Verify Deleted
 # @name verify_deleted
 GET {{baseUrl}}/api/categories
-Cookie: technical-interview-demo-session={{sessionCookie}}
+Cookie: technical-interview-demo-session={{adminSessionCookie}}
 Accept: application/json
 
 > {%

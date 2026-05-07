@@ -75,6 +75,10 @@ val trivyFailOnSeverities = listOf("HIGH", "CRITICAL")
 val applicationSbomReportDir = layout.buildDirectory.dir("reports/sbom/application")
 val imageSbomReportDir = layout.buildDirectory.dir("reports/sbom/image")
 val skipChecks = providers.gradleProperty("skipChecks").map(String::toBoolean).orElse(false)
+fun isGradleTaskRequested(taskName: String): Boolean = gradle.startParameter.taskNames.any { requestedTaskName ->
+    requestedTaskName == taskName || requestedTaskName == ":$taskName" || requestedTaskName.endsWith(":$taskName")
+}
+
 val spotlessMiscTargets = arrayOf(
     "AGENTS.md",
     "CHANGELOG.md",
@@ -237,6 +241,9 @@ val manualTests = tasks.register<Test>("manualTests") {
     useJUnitPlatform()
     shouldRunAfter(tasks.named("test"))
     outputs.upToDateWhen { false }
+    onlyIf("manual regression harness runs only when the manualTests task is explicitly requested") {
+        isGradleTaskRequested("manualTests")
+    }
     // Forward all -PmanualTests.* Gradle properties as system properties so the harness can read them.
     doFirst {
         @Suppress("UNCHECKED_CAST")
@@ -271,6 +278,9 @@ tasks.register<JavaExec>("manualRegressionExampleReport") {
     dependsOn(tasks.named("manualTestsClasses"))
     classpath = manualTestsSourceSet.runtimeClasspath
     mainClass.set("team.jit.technicalinterviewdemo.manualregression.harness.ExampleReportGenerator")
+    onlyIf("manual example report generation runs only when explicitly requested") {
+        isGradleTaskRequested("manualRegressionExampleReport")
+    }
 }
 
 springBoot {
@@ -458,7 +468,7 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 tasks.withType<SpotBugsTask>().configureEach {
-    enabled = name == "spotbugsMain"
+    enabled = name == "spotbugsMain" || (name == "spotbugsManualTests" && isGradleTaskRequested(name))
     effort.set(Effort.MAX)
     reportLevel.set(Confidence.HIGH)
     maxHeapSize.set("1g")
@@ -499,6 +509,12 @@ asciidoctorj {
 tasks.withType<Pmd>().configureEach {
     isConsoleOutput = true
     exclude("**/build/generated/**")
+}
+
+tasks.matching { it.name == "pmdManualTests" || it.name == "spotbugsManualTests" }.configureEach {
+    onlyIf("manual test source validation runs only when its task is explicitly requested") {
+        isGradleTaskRequested(name)
+    }
 }
 
 asciidoctorTask {

@@ -1,21 +1,24 @@
 # Semi-Automated Manual Regression Via IntelliJ HTTP Client
 
-This directory contains `.http` scripts that cover the same requests as the Java manual regression suites found in `src/manualTests/java/.../suites/`.
+This directory contains convenience `.http` scripts that cover the same requests as the Java manual regression suites found in `src/manualTests/java/.../suites/`. They are operator/reviewer tools, not public API contract artifacts.
 
 ## Prerequisites
 
 1.  **IntelliJ IDEA** (with HTTP Client plugin enabled).
-2.  **Environment Configuration**: Ensure `src/manualTests/http/suites/http-client.private.env.json` contains a valid `baseUrl` and `sessionCookie`.
+2.  **Environment Configuration**: Ensure `src/manualTests/http/suites/http-client.private.env.json` contains a valid `baseUrl`, `sessionCookie`, and `adminSessionCookie`.
     ```json
     {
       "dev": {
         "baseUrl": "http://localhost:8080",
-        "sessionCookie": "your-session-cookie-here"
+        "sessionCookie": "your-user-session-cookie-here",
+        "adminSessionCookie": "your-admin-session-cookie-here"
       }
     }
     ```
     Do not provide a `csrfToken`; authenticated suites capture the `XSRF-TOKEN` cookie during setup.
-3.  **Active Application**: The application should be running, usually on `http://localhost:8080`.
+    Suites 06 and 07 use `sessionCookie`; admin-only suites 08 through 12 use `adminSessionCookie`.
+    The two cookie values may be the same only when that one browser session is authenticated as an ADMIN user.
+3.  **Active Application**: The application should be running with the `local` profile, usually on `http://localhost:8080`.
 4.  **CLI Java Runtime**: `ijhttp 2025.3` needs a Java 21 runtime on `PATH` or through `JAVA_HOME`.
 
 ## Running the Suites
@@ -31,7 +34,7 @@ Each script builds a markdown report.
 
 ### Option A: Automatic Redirection (Suite 01+)
 
-`suite-01` (and other updated suites) automatically redirect their report to a file using the `>>!` operator and a `/debug/echo` reflecting endpoint.
+`suite-01` (and other updated suites) automatically redirect their report to a file using the `>>!` operator and a `/debug/echo` reflecting endpoint. That helper endpoint is available only when the app runs with the `local` profile.
 
 1.  Run the suite in the IDE or via CLI.
 2.  Check `src/manualTests/http/reports/` for the generated `.md` file.

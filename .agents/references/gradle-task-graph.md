@@ -120,6 +120,7 @@ Notes:
 - `checkFormat` is an explicit convenience task for formatter checks; the standard `check` task schedules `spotlessCheck` directly.
 - Palantir Java Format contributes the Java formatter step through `spotlessJava`; retained Spotless targets also cover Kotlin, Gradle Kotlin DSL, and selected support-file whitespace normalization.
 - SpotBugs tasks for `test`, `externalTest`, and `gatling` are registered but disabled by the build script; `spotbugsMain` is the active static security scan target.
+- Manual regression under `src/manualTests` is opt-in: automated/release builds may compile and format it, but `manualTests`, `pmdManualTests`, and `spotbugsManualTests` run only when explicitly requested.
 - `imageVulnerabilityScan` remains available through explicit task selection and through `vulnerabilityScan`; it is intentionally not a `build` or `check` dependency.
 - `-SkipChecks` excludes formatting, PMD, SpotBugs, Error Prone, coverage verification, the build-wired dependency vulnerability scan, explicit vulnerability scan tasks, and SBOM checks for local loops only.
 - `-SkipTests` is separate from `-SkipChecks`; use both only when intentionally doing a compile/package loop.

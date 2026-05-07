@@ -38,19 +38,19 @@
   - exhaustive validation errors, malformed JSON, invalid sort aliases, optimistic-lock race cases, cache internals, logging sanitization, and every ProblemDetail edge case already covered by automated tests
   - browser UI testing for a separate frontend repository
   - production cluster, Helm, Kubernetes, or post-deploy smoke workflow validation unless the user explicitly expands this plan
-  - changing application behavior, API contracts, OpenAPI baseline, REST Docs, HTTP examples, or setup docs
+  - changing application behavior, API contracts, OpenAPI baseline, REST Docs, or setup docs
 
 ## Current State
 - `README.md` defines the included app scope as public read APIs for books, categories, and localization data; authenticated account and session endpoints; admin-only audit, operator-surface, and user-management APIs; PostgreSQL runtime profiles; REST Docs; OpenAPI compatibility checks; and Gatling benchmark coverage.
 - `SETUP.md` documents the local flow with Docker-backed PostgreSQL, `./build.ps1 bootRun`, OAuth setup, first-admin bootstrap through `APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES`, CSRF handling through `GET /api/session`, and useful local endpoints.
 - `docs/ARCHITECTURE.md` lists the API families that need manual coverage: `/`, `/hello`, `/docs`, `/api/books`, `/api/categories`, `/api/localizations`, `/api/account`, `/api/admin/audit-logs`, `/api/admin/operator-surface`, `/api/admin/users`, actuator endpoints, and OpenAPI docs.
 - `docs/ARCHITECTURE.md` maps the functional owners: books, categories, localization, user accounts, and audit logs.
-- `src/manualTests/http/examples/` contains reviewer-facing IntelliJ HTTP Client request examples for the relevant endpoint families; `src/manualTests/http/suites/` contains semi-automated HTTP Client scripts aligned with the manual-regression suite order.
+- `src/manualTests/http/examples/` contains reviewer-facing IntelliJ HTTP Client convenience request examples for the relevant endpoint families; `src/manualTests/http/suites/` contains semi-automated HTTP Client convenience scripts aligned with the manual-regression suite order.
 - Manual execution needs at least one authenticated admin session. A second non-admin user session is strongly recommended to verify representative `403` paths without mutating the only admin account.
 
 ## Requirement Gaps And Open Questions
 - Which OAuth provider should be used for manual execution of the target release candidate: GitHub, OIDC, or both?
-  Fallback: use GitHub because `SETUP.md` and the HTTP examples name it first.
+  Fallback: use GitHub because `SETUP.md` and the HTTP convenience examples name it first.
 - Will the executor have two OAuth identities available, one admin bootstrap identity and one regular user?
   Fallback: execute all admin and authenticated-user happy paths with the admin identity, and record non-admin `403` checks as blocked or covered by automated tests.
 - Should this manual pass be local-only, or should it also be repeated against the target RC container/deployment candidate?
@@ -77,7 +77,7 @@
 - If another RC is prepared for other plans before stable `v2.0.0`, this plan must be replanned for that next RC before execution; do not use stale earlier-RC manual results as stable-release evidence.
 - Use local PostgreSQL through `docker-compose up -d` and run the app with `SPRING_PROFILES_ACTIVE=local,oauth`.
 - Use demo data seeding for predictable book, category, and localization reads.
-- Use `src/manualTests/http/examples/*.http` for reviewer-facing request examples and `src/manualTests/http/suites/*.http` for ordered IntelliJ HTTP Client suite execution. IntelliJ HTTP Client is preferred because the checked-in examples capture `XSRF-TOKEN` into `csrfToken`.
+- Use `src/manualTests/http/examples/*.http` for reviewer-facing convenience request examples and `src/manualTests/http/suites/*.http` for ordered IntelliJ HTTP Client suite execution. IntelliJ HTTP Client is preferred because the checked-in examples capture `XSRF-TOKEN` into `csrfToken`.
 - Use a browser for the OAuth redirect/login flow and browser developer tools to copy the `technical-interview-demo-session` cookie into the HTTP client.
 - Use unique names and ISBN/message keys for write tests so repeat runs do not collide with previous manual data.
 - Keep manual regression focused on representative happy paths plus a few high-value access-control failures. Automated tests remain the authority for dense edge cases.
@@ -210,8 +210,8 @@
   - any active `.agents/plans/PLAN_*.md` that still cites the old path
 - New paths owned by the follow-up implementation plan:
   - `src/manualTests/java/team/jit/technicalinterviewdemo/manualregression/` for suite classes
-  - `src/manualTests/http/examples/` for reviewer-facing IntelliJ HTTP Client examples
-  - `src/manualTests/http/suites/` for semi-automated HTTP Client suite scripts
+  - `src/manualTests/http/examples/` for reviewer-facing IntelliJ HTTP Client convenience examples
+  - `src/manualTests/http/suites/` for semi-automated HTTP Client convenience suite scripts
   - `src/manualTests/resources/run.properties.example` for the input precedence example
   - `src/manualTests/resources/report-templates/` for Markdown report fragments
   - `build.gradle.kts` (registers the `manualTests` source set, dependencies, and Gradle task)
@@ -234,7 +234,7 @@
   - `temp/manual-regression/example/run-<UTC-timestamp>/report.json`
   - `temp/manual-regression/example/run-<UTC-timestamp>/execution-log.ndjson`
   - `temp/manual-regression/example/run-<UTC-timestamp>/checklist.md`
-- Contract docs/OpenAPI/HTTP examples:
+- Contract docs/OpenAPI:
   - no contract artifact changes expected
 - Tests:
   - no production automated tests should be added or changed for this manual regression plan
@@ -505,7 +505,7 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
 
 ## Better Engineering Notes
 - If the manual pass becomes repeated release ceremony, promote the suite list into a stable human-facing `docs/manual-regression.md` or `SETUP.md` section only after confirming maintainers want it outside AI planning files.
-- If cookie/CSRF handling is painful in Postman or curl, keep IntelliJ HTTP Client as the canonical manual harness because the repo already maintains `.http` examples.
+- If cookie/CSRF handling is painful in Postman or curl, keep IntelliJ HTTP Client as the preferred manual convenience harness because the repo already maintains `.http` examples.
 - If regular-user setup repeatedly blocks execution, add a small documented local identity-provider recipe or a manual admin role reset note in a later setup-doc plan.
 - Do not expand this manual pass into benchmark, security scan, or deployment validation; those have repo-owned automated workflows.
 - Replan this file when the final RC changes; update the target RC, result-log path, roadmap wording, and any changed supported-surface assumptions together.
@@ -562,8 +562,8 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
   - updated the synthetic example report generation path so `./build.ps1 manualRegressionExampleReport` also writes example checklist output under `temp/manual-regression/example/run-<UTC-timestamp>/`.
   - validation is recorded in the implementing commit.
 - 2026-05-07 HTTP Client suite refactor:
-  - moved reviewer-facing HTTP Client examples to `src/manualTests/http/examples/`.
-  - added semi-automated HTTP Client suite scripts under `src/manualTests/http/suites/`.
+  - moved reviewer-facing HTTP Client convenience examples to `src/manualTests/http/examples/`.
+  - added semi-automated HTTP Client convenience suite scripts under `src/manualTests/http/suites/`.
   - refreshed active path references, formatter coverage, and lightweight-file classification for the new HTTP Client locations.
   - `git diff --check` passed.
   - `git diff --cached --check` passed.

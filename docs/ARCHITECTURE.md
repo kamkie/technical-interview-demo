@@ -23,7 +23,7 @@ Current scope includes:
 - public overview, docs, and smoke-test endpoints
 - book, category, localization, authenticated account, and ADMIN operator APIs
 - OAuth 2.0 protected writes with JDBC-backed HTTP sessions
-- generated REST Docs, approved OpenAPI compatibility, and HTTP examples
+- generated REST Docs, approved OpenAPI compatibility, and HTTP convenience examples
 - PostgreSQL runtime profiles and Testcontainers-backed integration tests
 - audit logging, tracing, caches, metrics, deployment manifests, and tracked benchmark baselines
 

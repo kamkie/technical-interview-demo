@@ -8,6 +8,7 @@ import org.junit.jupiter.api.TestFactory;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.env.StandardEnvironment;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -224,7 +225,10 @@ class ProductionConfigurationTests {
     }
 
     private static ConfigurableApplicationContext runApplication(String[] arguments) {
+        StandardEnvironment environment = new StandardEnvironment();
+        environment.getPropertySources().remove(StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME);
         return new SpringApplicationBuilder(TechnicalInterviewDemoApplication.class)
+                .environment(environment)
                 .web(WebApplicationType.SERVLET)
                 .run(arguments);
     }

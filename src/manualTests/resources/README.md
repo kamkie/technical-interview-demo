@@ -5,6 +5,8 @@ This source set hosts the manual-regression harness referenced by
 admin REST contract against a locally running app, captures every request/response into a per-run
 report and execution log, and is **not** wired into the default `./build.ps1 build` pipeline. Invoke
 it explicitly when you want to validate a release candidate end-to-end.
+Default validation and release builds may still compile and format this source set; they must not
+execute the manual-regression harness unless `manualTests` is requested directly.
 
 ## What it covers
 
@@ -92,8 +94,8 @@ explicitly listed via `MANUAL_TESTS_ALLOWED_HOSTS`. It also refuses to run when
 
 Related IntelliJ HTTP Client material lives outside the runtime resource classpath:
 
-- `src/manualTests/http/examples/` — reviewer-facing runnable request examples.
-- `src/manualTests/http/suites/` — semi-automated HTTP Client scripts aligned with the Java
+- `src/manualTests/http/examples/` — reviewer-facing convenience request examples.
+- `src/manualTests/http/suites/` — semi-automated HTTP Client convenience scripts aligned with the Java
   manual-regression suites.
 
 The Java harness does not parse these files at runtime; they are kept beside the harness so the

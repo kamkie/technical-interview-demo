@@ -49,7 +49,7 @@ A plan is ready only when it is decision-complete for another agent to execute w
 Before writing the plan:
 
 - read `AGENTS.md`
-- inspect the governing specs, tests, docs, OpenAPI baseline, HTTP examples, and source files relevant to the requested behavior
+- inspect the governing specs, tests, docs, OpenAPI baseline, source files, and any HTTP convenience scripts relevant to the requested workflow
 - read `ROADMAP.md` so new or revised plans stay tied to active work and release sequencing
 - read the owning AI guide when durable architecture, design, code-style, testing, review, release, documentation, workflow, or learning guidance changes
 - read referenced tickets, PRs, examples, documents, or web pages before planning from them
@@ -104,7 +104,7 @@ If multiple plans must move together, say which plan coordinates the work and ho
 
 - Route public behavior, internal refactor, setup, AI-guidance, roadmap, and release-history changes through `.agents/references/documentation.md` instead of copying artifact lists into each plan.
 - Use `.agents/references/testing.md` to name validation, benchmark, compatibility, and documentation-review proof for the planned change type.
-- Internal refactors should preserve existing specs and avoid OpenAPI, REST Docs, HTTP example, or README churn unless behavior actually changes.
+- Internal refactors should preserve existing specs and avoid OpenAPI, REST Docs, or README churn unless behavior actually changes.
 - Setup or environment changes belong in `SETUP.md`; AI-facing command-wrapper guidance belongs in `.agents/references/environment-quick-ref.md`.
 - Durable architecture, design, code-style, testing, review, release, workflow, or engineering lessons belong in their focused AI owner files, not only in a temporary plan.
 - Roadmap-only work updates `ROADMAP.md`; do not create an execution plan when work is not ready to implement.

@@ -46,7 +46,7 @@ Use `.agents/references/gradle-task-graph.md` when command choice depends on Gra
 ### Internal refactors
 
 - keep the existing specs green without unnecessary contract edits
-- avoid touching OpenAPI, `README.md`, or HTTP examples unless behavior actually changed
+- avoid touching OpenAPI or `README.md` unless behavior actually changed
 
 ### Documentation-only or lightweight support-file work
 
@@ -72,6 +72,7 @@ Use `.agents/references/environment-quick-ref.md` for wrapper behavior, includin
 
 - refresh the approved OpenAPI baseline only with the wrapper command, for example `./build.ps1 refreshOpenApiBaseline`, after intentional contract review
 - run `./build.ps1 imageVulnerabilityScan` or `./build.ps1 vulnerabilityScan` explicitly when container image vulnerability-scan evidence is required; `build` does not schedule `imageVulnerabilityScan`
+- run `./build.ps1 manualTests` only on demand for manual regression evidence; automated validation and release builds may compile and format `src/manualTests`, but must not execute the manual-regression harness
 - when multiple Gradle targets are required, prefer one wrapper invocation such as `./build.ps1 build gatlingBenchmark --no-daemon` so shared prerequisites run once and validation does not repeat the full build unnecessarily
 - do not run overlapping Gradle validations in parallel when one task depends on the other or both write shared `build/` outputs; this includes `build` with `gatlingBenchmark`, `externalSmokeTest`, `externalDeploymentCheck`, `scheduledExternalCheck`, or similar Docker/test/report tasks
 - treat failing compatibility or benchmark checks as spec failures

@@ -36,7 +36,7 @@ When resolving truth, use this order:
 
 1. explicit user request in the current task
 2. executable specs: integration tests, REST Docs tests, OpenAPI compatibility tests, benchmark checks
-3. published contract docs: `README.md`, `src/docs/asciidoc/`, HTTP example collections
+3. published contract docs: `README.md`, `src/docs/asciidoc/`
 4. `ROADMAP.md` `## Current Project State` for the active release phase, breaking-change policy, and next target version
 5. active planning in `ROADMAP.md` ordered plan sections
 6. historical release notes in `CHANGELOG.md`
@@ -49,6 +49,7 @@ Use these artifacts deliberately:
 - `src/docs/asciidoc/`: published REST Docs structure
 - `src/test/resources/openapi/approved-openapi.json`: approved machine-readable public API contract
 - `README.md`: supported human-facing contract summary
+- `src/manualTests/http/`: convenience IntelliJ HTTP Client examples and suites for reviewer/operator workflows, not public contract authority
 - `ROADMAP.md`: active release phase, roadmap sequencing, and current project state
 - `CHANGELOG.md`: release history only
 - `SETUP.md`: local environment, tooling, onboarding, and troubleshooting

@@ -11,7 +11,7 @@
 ### Suite 09 — Localization Lifecycle Admin
 # @name suite_09_setup
 GET {{baseUrl}}/api/session
-Cookie: technical-interview-demo-session={{sessionCookie}}
+Cookie: technical-interview-demo-session={{adminSessionCookie}}
 
 > {%
     var date = new Date().toISOString().split('T')[0];
@@ -78,7 +78,7 @@ Cookie: technical-interview-demo-session={{sessionCookie}}
     request.variables.set("requestRunTag", client.global.get("runTag") || client.variables.file.get("runTag"));
 %}
 POST {{baseUrl}}/api/localizations
-Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{requestCsrfToken}}
+Cookie: technical-interview-demo-session={{adminSessionCookie}}; XSRF-TOKEN={{requestCsrfToken}}
 X-XSRF-TOKEN: {{requestCsrfToken}}
 Content-Type: application/json
 
@@ -114,7 +114,7 @@ Content-Type: application/json
     request.variables.set("requestCreatedLocalizationId", client.global.get("createdLocalizationId") || client.variables.file.get("createdLocalizationId"));
 %}
 GET {{baseUrl}}/api/localizations/{{requestCreatedLocalizationId}}
-Cookie: technical-interview-demo-session={{sessionCookie}}
+Cookie: technical-interview-demo-session={{adminSessionCookie}}
 Accept: application/json
 
 > {%
@@ -140,7 +140,7 @@ Accept: application/json
     request.variables.set("requestRunTag", client.global.get("runTag") || client.variables.file.get("runTag"));
 %}
 PUT {{baseUrl}}/api/localizations/{{requestCreatedLocalizationId}}
-Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{requestCsrfToken}}
+Cookie: technical-interview-demo-session={{adminSessionCookie}}; XSRF-TOKEN={{requestCsrfToken}}
 X-XSRF-TOKEN: {{requestCsrfToken}}
 Content-Type: application/json
 
@@ -173,7 +173,7 @@ Content-Type: application/json
     request.variables.set("requestCreatedLocalizationId", client.global.get("createdLocalizationId") || client.variables.file.get("createdLocalizationId"));
 %}
 DELETE {{baseUrl}}/api/localizations/{{requestCreatedLocalizationId}}
-Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{requestCsrfToken}}
+Cookie: technical-interview-demo-session={{adminSessionCookie}}; XSRF-TOKEN={{requestCsrfToken}}
 X-XSRF-TOKEN: {{requestCsrfToken}}
 
 > {%
@@ -196,7 +196,7 @@ X-XSRF-TOKEN: {{requestCsrfToken}}
     request.variables.set("requestCreatedLocalizationId", client.global.get("createdLocalizationId") || client.variables.file.get("createdLocalizationId"));
 %}
 GET {{baseUrl}}/api/localizations/{{requestCreatedLocalizationId}}
-Cookie: technical-interview-demo-session={{sessionCookie}}
+Cookie: technical-interview-demo-session={{adminSessionCookie}}
 Accept: application/json
 
 > {%

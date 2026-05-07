@@ -248,7 +248,7 @@ Published and executable specs are part of the delivery architecture:
 - integration tests define runtime behavior
 - REST Docs tests define public documentation snippets
 - OpenAPI compatibility tests gate backward compatibility
-- HTTP example files support reviewability
+- HTTP convenience files support reviewability
 
 This is not optional documentation around the code. It is part of the delivered system.
 

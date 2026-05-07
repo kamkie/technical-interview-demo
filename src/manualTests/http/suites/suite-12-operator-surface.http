@@ -25,7 +25,7 @@ GET {{baseUrl}}/hello
 ### 12-1 Operator Surface as Admin
 # @name operator_surface_admin
 GET {{baseUrl}}/api/admin/operator-surface
-Cookie: technical-interview-demo-session={{sessionCookie}}
+Cookie: technical-interview-demo-session={{adminSessionCookie}}
 Accept: application/json
 
 > {%

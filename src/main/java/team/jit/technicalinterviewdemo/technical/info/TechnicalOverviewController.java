@@ -6,8 +6,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -33,11 +31,5 @@ public class TechnicalOverviewController {
     public ResponseEntity<String> hello() {
         String payload = "Hello World!";
         return ResponseEntity.ok(payload);
-    }
-
-    @PostMapping(value = "/debug/echo", consumes = "*/*", produces = "*/*")
-    @Operation(summary = "Echo the request body", description = "Internal endpoint for test report generation.")
-    public ResponseEntity<String> echo(@RequestBody String body) {
-        return ResponseEntity.ok(body);
     }
 }

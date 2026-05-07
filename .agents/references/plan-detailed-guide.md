@@ -85,7 +85,7 @@ At minimum, inspect:
 - relevant tests under `src/test/java/`
 - relevant docs under `src/docs/asciidoc/`
 - `src/test/resources/openapi/approved-openapi.json` if API behavior may change
-- relevant HTTP examples under `src/manualTests/http/examples/`
+- relevant HTTP convenience scripts under `src/manualTests/http/examples/` when reviewer workflows need to mirror the change
 - implementation code in `src/main/java/`
 
 If the user referenced another document, ticket, PR, issue, API example, or web page, read it before planning.
@@ -111,7 +111,7 @@ Use these rules:
    Write down what behavior is changing, who uses it, and whether it is public API, internal behavior, setup, or roadmap-only work.
 
 2. Find the governing spec artifacts.
-   Identify which tests, docs, OpenAPI baseline, HTTP examples, README sections, or roadmap entries define the current behavior.
+   Identify which tests, docs, OpenAPI baseline, README sections, or roadmap entries define the current behavior.
 
 3. Research before asking.
    Search the repo and inspect likely source files before asking the user questions. Do not ask questions whose answers are already in the codebase, docs, configs, or tests.
@@ -246,7 +246,7 @@ Request: move duplicate mapping logic from a controller into a service helper wi
 A good plan would:
 
 - treat the current tests as the contract to preserve
-- keep OpenAPI, REST Docs, and HTTP examples unchanged unless behavior really changes
+- keep OpenAPI and REST Docs unchanged unless behavior really changes; update HTTP convenience scripts only when reviewer workflows should mirror the change
 - list the exact classes to refactor
 - validate with the existing test suite and standard repository checks
 - stay small enough that one local branch remains the obvious execution shape

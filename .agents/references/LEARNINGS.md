@@ -7,7 +7,7 @@ Use this scope ladder when deciding where a new insight belongs:
 - **Repo-wide and durable:** put it in `.agents/references/LEARNINGS.md`.
 - **Current structure or ownership:** put it in `docs/ARCHITECTURE.md`.
 - **Product or contract direction:** put it in `docs/DESIGN.md`.
-- **Public behavior or payload shape:** put it in the governing specs, published docs, HTTP examples, and approved OpenAPI.
+- **Public behavior or payload shape:** put it in the governing specs, published docs, and approved OpenAPI.
 - **Symbol-local behavior:** put it in code near the symbol.
 - **Naming or API confusion:** prefer renaming or reshaping the API over adding more prose.
 
@@ -44,7 +44,7 @@ Do not accumulate per-incident history, one-off mistakes, or temporary workaroun
 
 - **Public API changes are multi-artifact changes.**
 - **The approved OpenAPI file is reviewed contract, not generated noise.**
-- **Examples and generated docs are contract evidence.**
+- **Generated docs are contract evidence.**
 - **Error shape is public surface area.**
 - **Quality gates are behavior.** Compatibility checks, benchmarks, static analysis, docs generation, and build gates are not optional cleanup.
 
