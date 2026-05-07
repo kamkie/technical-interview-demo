@@ -2,7 +2,13 @@
 
 [optional body: explain what changed and why]
 
-[optional footer(s)]
+Project-Source: <plan|milestone|task|prompt|manual>
+Project-Plan: <.agents/plans/PLAN_*.md or omit>
+Project-Milestone: <milestone name or omit>
+Project-Task: <repo-task slug/title or omit>
+Project-Prompt: <short direct-request summary or omit>
+Refs: <paths/issues/PRs or omit>
+Validation: <command/result>
 
 # Conventional Commits 1.0.0 shape:
 #   <type>[optional scope][optional !]: <description>
@@ -25,8 +31,18 @@
 # Breaking changes are disallowed while ROADMAP.md says so.
 # Use ! or a BREAKING CHANGE: footer only when the repo's breaking-change policy permits it.
 #
+# Project metadata footers:
+#   Project-Source is required for AI-created commits.
+#   Use plan for whole-plan or plan/spec-only commits.
+#   Use milestone for one named plan milestone.
+#   Use task for a repo-task starter.
+#   Use prompt for a direct ad hoc user request.
+#   Use manual only for human-authored commits outside the AI workflow.
+#   Include only the Project-* footers that apply.
+#   Validation is required for AI-created commits; say "not run" with a reason when needed.
+#
 # Examples:
 #   feat(books): add publication-year search filter
 #   fix(security): reject forged csrf headers
-#   docs: update manual regression workflow
+#   docs(plan): update manual regression workflow
 #   test(manual-regression): add execution log example report

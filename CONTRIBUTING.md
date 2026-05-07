@@ -128,16 +128,53 @@ Rules:
 - use `feat` for new user-facing or API behavior and `fix` for bug fixes
 - use one of the repo-supported maintenance types when it fits better: `docs`, `test`, `refactor`, `chore`, `build`, `ci`, `perf`, `style`, or `revert`
 - add a body when the motivation, plan path, milestone, or validation context would help reviewers
-- put references such as plan paths, issue ids, or task titles in the body or in git-trailer-style footers such as `Refs: .agents/plans/PLAN_example.md`
 - do not use `!` or a `BREAKING CHANGE:` footer while `ROADMAP.md` says breaking changes are disallowed
+- include project metadata footers for AI-created commits so provenance and validation stay machine-readable
 
 The repository includes an optional `.gitmessage` template with this structure; enable it locally with `git config commit.template .gitmessage`.
 
+Project metadata footers:
+
+```text
+Project-Source: <plan|milestone|task|prompt|manual>
+Project-Plan: <.agents/plans/PLAN_*.md>
+Project-Milestone: <milestone name or number>
+Project-Task: <repo-task slug or task title>
+Project-Prompt: <short direct-request summary>
+Refs: <paths/issues/PRs>
+Validation: <command/result>
+```
+
+Footer rules:
+
+- `Project-Source` is required for AI-created commits.
+- Use `Project-Source: plan` for whole-plan execution or plan/spec-only commits; include `Project-Plan` when a concrete plan is involved.
+- Use `Project-Source: milestone` for one named plan milestone; include `Project-Plan` and `Project-Milestone`.
+- Use `Project-Source: task` for a reusable `$repo-task` starter; include `Project-Task`.
+- Use `Project-Source: prompt` for a direct ad hoc user request; include `Project-Prompt`.
+- Use `Project-Source: manual` only for human-authored commits outside the AI workflow.
+- Include only the `Project-*` footers that apply.
+- `Validation` is required for AI-created commits; write the exact command/result or `not run - <reason>`.
+- Use `Refs` for additional paths, issue ids, or PRs that are useful but not the primary source.
+
 Good examples:
 
-- `feat(admin): add user management examples`
-- `docs(release): document post-deploy smoke expectations`
-- `chore(guidance): refresh contributor workflow guide`
+```text
+feat(admin): add user management examples
+
+Project-Source: milestone
+Project-Plan: .agents/plans/PLAN_admin_user_management.md
+Project-Milestone: Milestone 2 - Document admin examples
+Validation: ./build.ps1 build - passed
+```
+
+```text
+docs(release): document post-deploy smoke expectations
+
+Project-Source: prompt
+Project-Prompt: Document post-deploy smoke expectations
+Validation: ./build.ps1 build - lightweight shortcut
+```
 
 ## Pull Request Expectations
 

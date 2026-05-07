@@ -121,7 +121,8 @@ The useful output is a readiness judgment: lifecycle state, requirement gaps, mi
 Once the plan is ready, use AI to implement either the whole plan or one milestone.
 The repository expects milestone-sized checkpoints: implementation, validation evidence, tracking artifacts, and a commit before the milestone is treated as done.
 Ask AI to write commit messages in the Conventional Commits style described by `CONTRIBUTING.md`, such as `feat(scope): summary`, `fix(scope): summary`, or `docs(scope): summary`.
-When the source of the work matters, ask AI to put the plan path, milestone name, task title, or validation context in the commit body or a `Refs:` footer.
+Ask AI to include the project metadata footers from `CONTRIBUTING.md`, including `Project-Source`, the relevant `Project-*` provenance footer, and `Validation`.
+For a direct prompt, use `Project-Source: prompt` and `Project-Prompt`; for a milestone, use `Project-Source: milestone`, `Project-Plan`, and `Project-Milestone`; for a reusable task, use `Project-Source: task` and `Project-Task`.
 
 #### AI Commit Message Guidance
 
@@ -131,7 +132,7 @@ IntelliJ AI Assistant can be aligned with the repository's `.gitmessage` templat
 2. Navigate to **Tools | AI Assistant | Prompt Library**.
 3. Select **Commit Message Generation**.
 4. Update the prompt to include the rules from `.gitmessage`, or instruct it to:
-   "Follow the Conventional Commits 1.0.0 format and use the repository-supported types (feat, fix, docs, test, refactor, chore, build, ci, perf, style, revert) as defined in .gitmessage."
+   "Follow the Conventional Commits 1.0.0 format and use the repository-supported types (feat, fix, docs, test, refactor, chore, build, ci, perf, style, revert) as defined in .gitmessage. Include Project-Source, applicable Project-* provenance, and Validation footers."
 5. Alternatively, when asking the AI to commit, you can explicitly say: "Write a commit message following the rules in .gitmessage."
 
 ### Workflow Execution And Integration
