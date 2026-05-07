@@ -48,7 +48,6 @@ Use these artifacts deliberately:
 - `src/test/java/`: executable behavior specs
 - `src/docs/asciidoc/`: published REST Docs structure
 - `src/test/resources/openapi/approved-openapi.json`: approved machine-readable public API contract
-- `src/manualTests/resources/http/`: reviewer-facing runnable request examples (also used as the manual-regression harness input source)
 - `README.md`: supported human-facing contract summary
 - `ROADMAP.md`: active release phase, roadmap sequencing, and current project state
 - `CHANGELOG.md`: release history only
@@ -131,6 +130,8 @@ Maintain a clean working context to optimize performance and prevent hallucinati
 - **Summarize complex state**: If a long investigation concludes, summarize the findings and use that summary as the new grounding instead of re-reading the raw logs.
 - **Checkpoint degraded context quality**: If contradiction, unstable assumptions, unjustified hedging, or repeated re-derivation appears, write a short current-state summary before continuing. Put it in the active plan, worker log, or validation notes when such an artifact exists; otherwise use a concise user update or final note.
 - **Close completed plans**: When a task is done, the plan moves to `ai/archive/` and should be removed from the active read set.
+
+### AI Document Maintenance
 
 Rules for maintaining the `ai/` documents:
 
