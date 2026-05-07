@@ -18,6 +18,8 @@ PowerShell (`pwsh`):
 ./build.ps1 -SkipTests -SkipChecks build
 ./build.ps1 test
 ./build.ps1 bootRun
+./build.ps1 imageVulnerabilityScan
+./build.ps1 vulnerabilityScan
 ./build.ps1 gatlingBenchmark
 ```
 
@@ -33,6 +35,8 @@ pwsh ./build.ps1 -FullBuild build
 pwsh ./build.ps1 -SkipTests -SkipChecks build
 pwsh ./build.ps1 test
 pwsh ./build.ps1 bootRun
+pwsh ./build.ps1 imageVulnerabilityScan
+pwsh ./build.ps1 vulnerabilityScan
 pwsh ./build.ps1 gatlingBenchmark
 ```
 
@@ -43,7 +47,7 @@ pwsh ./build.ps1 gatlingBenchmark
 - let `./build.ps1 build` skip Gradle when the uncommitted change set is lightweight-only
 - let `./build.ps1 -FullBuild build` force the full Gradle build
 - let `./build.ps1 -SkipTests build` exclude test-dependent tasks for local loops
-- let `./build.ps1 -SkipChecks build` exclude formatting, PMD, SpotBugs, Error Prone, coverage verification, vulnerability scans, and SBOM checks for local loops
+- let `./build.ps1 -SkipChecks build` exclude formatting, PMD, SpotBugs, Error Prone, coverage verification, the build-wired dependency vulnerability scan, explicit vulnerability scan tasks, and SBOM checks for local loops
 - keep direct `gradlew` usage available when the shell is already configured
 - let Gradle's toolchain checks report Java misconfiguration clearly
 

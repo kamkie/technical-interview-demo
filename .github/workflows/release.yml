@@ -69,10 +69,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ github.token }}
 
-      - name: Run full verification and build tagged image
+      - name: Run full verification, image scan, and build tagged image
         shell: pwsh
         run: |
-          ./build.ps1 -FullBuild build `
+          ./build.ps1 -FullBuild build imageVulnerabilityScan `
           "-PdockerImageName=${{ steps.image.outputs.repository }}:${{ steps.image.outputs.tag }}" `
           --no-daemon
 

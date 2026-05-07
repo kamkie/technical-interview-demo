@@ -98,10 +98,10 @@ jobs:
         if: needs.change_detection.outputs.skip_heavy_ci != 'true'
         run: docker version
 
-      - name: Run full build
+      - name: Run full build and image vulnerability scan
         if: needs.change_detection.outputs.skip_heavy_ci != 'true'
         shell: pwsh
-        run: ./build.ps1 -FullBuild build --no-daemon
+        run: ./build.ps1 -FullBuild build imageVulnerabilityScan --no-daemon
 
       - name: Upload coverage to Codecov
         if: needs.change_detection.outputs.skip_heavy_ci != 'true'

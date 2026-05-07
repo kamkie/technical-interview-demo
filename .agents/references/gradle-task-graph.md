@@ -14,6 +14,7 @@ Sources:
 - `./build.ps1 check --dry-run --no-daemon`
 - `./build.ps1 checkFormat --dry-run --no-daemon`
 - `./build.ps1 format --dry-run --no-daemon`
+- `./build.ps1 -FullBuild build imageVulnerabilityScan --dry-run --no-daemon`
 - `./build.ps1 externalSmokeTest --dry-run --no-daemon`
 - `./build.ps1 externalDeploymentCheck --dry-run --no-daemon`
 - `./build.ps1 scheduledExternalCheck --dry-run --no-daemon`
@@ -65,8 +66,9 @@ Decision shortcuts:
 - `./build.ps1 compileJava`: fastest Java production compile check.
 - `./build.ps1 test --tests <pattern>`: focused executable spec check.
 - `./build.ps1 build`: normal final verification; may skip Gradle for lightweight-only uncommitted changes.
-- `./build.ps1 -FullBuild build`: force final full verification, including Docker image, checks, scans, and SBOM.
-- Do not separately run `test`, `asciidoctor`, `dockerBuild`, PMD, SpotBugs, `checkFormat`, vulnerability scans, or SBOM when `build` already provides the required proof.
+- `./build.ps1 -FullBuild build`: force final full verification, including Docker image build, checks, dependency vulnerability scan, and SBOM.
+- `./build.ps1 imageVulnerabilityScan`: explicit container image vulnerability scan; not scheduled by `build`.
+- Do not separately run `test`, `asciidoctor`, `dockerBuild`, PMD, SpotBugs, `checkFormat`, dependency vulnerability scan, or SBOM when `build` already provides the required proof.
 
 ## Check And Quality Gates
 
@@ -85,7 +87,6 @@ graph TD
   check --> spotbugsGatling
   check --> staticSecurityScan
   check --> dependencyVulnerabilityScan
-  check --> imageVulnerabilityScan
   check --> sbom
 
   jacocoTestCoverageVerification --> test
@@ -119,7 +120,8 @@ Notes:
 - `checkFormat` is an explicit convenience task for formatter checks; the standard `check` task schedules `spotlessCheck` directly.
 - Palantir Java Format contributes the Java formatter step through `spotlessJava`; retained Spotless targets also cover Kotlin, Gradle Kotlin DSL, and selected support-file whitespace normalization.
 - SpotBugs tasks for `test`, `externalTest`, and `gatling` are registered but disabled by the build script; `spotbugsMain` is the active static security scan target.
-- `-SkipChecks` excludes formatting, PMD, SpotBugs, Error Prone, coverage verification, vulnerability scans, and SBOM checks for local loops only.
+- `imageVulnerabilityScan` remains available through explicit task selection and through `vulnerabilityScan`; it is intentionally not a `build` or `check` dependency.
+- `-SkipChecks` excludes formatting, PMD, SpotBugs, Error Prone, coverage verification, the build-wired dependency vulnerability scan, explicit vulnerability scan tasks, and SBOM checks for local loops only.
 - `-SkipTests` is separate from `-SkipChecks`; use both only when intentionally doing a compile/package loop.
 
 ## Formatting Entry Points
@@ -201,7 +203,8 @@ Decision shortcuts:
 | Public API behavior or REST Docs | targeted integration/docs tests | `./build.ps1 build`; refresh OpenAPI only after intentional contract review |
 | Formatter-only change | `./build.ps1 checkFormat` or `./build.ps1 format --dry-run` | `./build.ps1 checkFormat`; `build` already includes equivalent formatter proof through `spotlessCheck` |
 | Build wrapper or Gradle config | `./build.ps1 -SkipChecks compileJava` or `--dry-run` | `./build.ps1 -FullBuild build` |
-| Docker image, runtime packaging, scans, SBOM | `./build.ps1 dockerBuild` when narrow | `./build.ps1 build` |
+| Docker image and runtime packaging | `./build.ps1 dockerBuild` when narrow | `./build.ps1 build` |
+| Container image vulnerability scan | `./build.ps1 imageVulnerabilityScan` | `./build.ps1 vulnerabilityScan` when dependency scan is also needed |
 | External smoke environment | `./build.ps1 externalSmokeTest` | combine with `build` in one invocation when both are required |
 | Already deployed environment | `./build.ps1 externalDeploymentCheck` | use only after target URL and credentials are configured |
 | Benchmark-sensitive behavior | targeted tests first | `./build.ps1 gatlingBenchmark`; combine with `build` in one invocation when both are required |

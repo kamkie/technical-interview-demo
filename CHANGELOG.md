@@ -7,6 +7,10 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Changed
+
+- Removed `imageVulnerabilityScan` from the Gradle `build`/`check` lifecycle; CI and release workflows now request the container image vulnerability scan explicitly when they need that evidence.
+
 ## [v2.0.0-RC7] - 2026-05-07
 
 ### Added

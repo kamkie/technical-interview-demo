@@ -434,7 +434,7 @@ tasks.build {
 }
 
 tasks.check {
-    dependsOn(staticSecurityScan, dependencyVulnerabilityScan, imageVulnerabilityScan, sbom)
+    dependsOn(staticSecurityScan, dependencyVulnerabilityScan, sbom)
 }
 
 tasks.withType<Test> {
