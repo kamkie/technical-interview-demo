@@ -24,6 +24,7 @@ Update the artifact that owns the truth being changed:
 - contributor workflow and maintainer expectations: `CONTRIBUTING.md`
 - active planned work: `ROADMAP.md`
 - released history: `CHANGELOG.md`
+- commit message template and AI commit rules: `.gitmessage`
 - planning process and plan-file shape: `.agents/references/planning.md`
 - whole active-plan execution across milestones: `.agents/references/plan-execution.md`
 - ad hoc task and single-milestone execution: `.agents/references/execution.md`

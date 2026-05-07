@@ -7,6 +7,7 @@ Project-Plan: <.agents/plans/PLAN_*.md or omit>
 Project-Milestone: <milestone name or omit>
 Project-Task: <repo-task slug/title or omit>
 Project-Prompt: <short direct-request summary or omit>
+Co-authored-by: Junie <junie@jetbrains.com>
 Refs: <paths/issues/PRs or omit>
 Validation: <command/result>
 
@@ -33,6 +34,7 @@ Validation: <command/result>
 #
 # Project metadata footers:
 #   Project-Source is required for AI-created commits.
+#   Co-authored-by footer is required for AI-created commits.
 #   Use plan for whole-plan or plan/spec-only commits.
 #   Use milestone for one named plan milestone.
 #   Use task for a repo-task starter.
@@ -43,6 +45,12 @@ Validation: <command/result>
 #
 # Examples:
 #   feat(books): add publication-year search filter
+#
+#   Project-Source: prompt
+#   Project-Prompt: add publication-year search filter
+#   Co-authored-by: Junie <junie@jetbrains.com>
+#   Validation: ./build.ps1 build - green
+#
 #   fix(security): reject forged csrf headers
 #   docs(plan): update manual regression workflow
 #   test(manual-regression): add execution log example report
