@@ -1,30 +1,30 @@
-# Lifecycle Lenses And Loops Specification
+# Lifecycle Phase Activities And Loops Specification
 
-This is the on-demand reference that defines the lens-and-loop vocabulary for AI agents working in this repository.
+This is the on-demand reference that defines the phase activity and loop vocabulary for AI agents working in this repository.
 It is a vocabulary specification, not a workflow policy.
 Owner guides under `ai/` may adopt these names to make context switches explicit, but they remain the source of truth for their own rules.
 
 Use this file when:
 
-- adding lens labels to an owner guide such as `ai/EXECUTION.md`, `ai/PLANNING.md`, `ai/TESTING.md`, or `ai/REVIEWS.md`
+- adding activity tags to an owner guide such as `ai/EXECUTION.md`, `ai/PLANNING.md`, `ai/TESTING.md`, or `ai/REVIEWS.md`
 - discussing where a recurring activity belongs in the lifecycle
-- diagnosing wrong-lens-at-wrong-time failures during a task
+- diagnosing wrong-activity-at-wrong-time failures during a task
 - proposing new owner guides for currently uncovered phases
 
 Do not use this file as a substitute for the owner guides.
-Lens names here are descriptive shortcuts; the binding rules live in the owning guide.
+Activity names here are descriptive shortcuts; the binding rules live in the owning guide.
 
 ## Definitions
 
-- **Lens**: a single mental mode an agent adopts while doing one kind of work. A lens has a question it answers, a primary owner guide, and an exit condition.
-- **Switch**: an explicit transition between two lenses. A switch always implies dropping the previous lens's working set per the `Context Hygiene` rule in `AGENTS.md`.
+- **Activity**: a single mental mode an agent adopts while doing one kind of work. An activity has a question it answers, a primary owner guide, and an exit condition.
+- **Switch**: an explicit transition between two phase activities. A switch always implies dropping the previous activity's working set per the `Context Hygiene` rule in `AGENTS.md`.
 - **Trigger**: a signal that requires a switch. Triggers can be planned (the next step in a loop) or conditional (e.g. a security-relevant change, a discovered plan gap).
-- **Loop**: a sequence of lenses that iterates until an exit condition is met. Loops can nest.
-- **Phase**: a coarse lifecycle stage that contains one or more lenses, mapped to the `Phase` enum in `ai/PLANNING.md`.
+- **Loop**: a sequence of phase activities that iterates until an exit condition is met. Loops can nest.
+- **Phase**: a coarse lifecycle stage that contains one or more phase activities, mapped to the `Phase` enum in `ai/PLANNING.md`.
 
-## Lens Catalogue
+## Activity Catalogue
 
-Each lens lists its question, primary owner guide, and typical exit condition.
+Each activity lists its question, primary owner guide, and typical exit condition.
 
 ### Discovery and Framing
 
@@ -91,7 +91,7 @@ Each lens lists its question, primary owner guide, and typical exit condition.
 
 ### Deployment And Operations
 
-These lenses are listed for completeness; they currently have **no AI owner guide** in this repository. Treat them as aspirational until a guide owns them.
+These phase activities are listed for completeness; they currently have **no AI owner guide** in this repository. Treat them as aspirational until a guide owns them.
 
 - `Stage` — promote the artifact into a non-production environment.
 - `Smoke` — run the smoke or external verification suite.
@@ -113,11 +113,11 @@ These lenses are listed for completeness; they currently have **no AI owner guid
 - `Tech-Debt-Plan?` — convert recurring pain into a planned roadmap item.
 - `Sync` — feed outcomes back into `ROADMAP.md`.
 
-## Phase To Lens Map
+## Phase Activity Sequence
 
-The repository uses the `Phase` enum from `ai/PLANNING.md`. This table maps each phase to its in-order lens sequence; `?` marks conditional lenses.
+The repository uses the `Phase` enum from `ai/PLANNING.md`. This table maps each phase to its in-order activity sequence; `?` marks conditional phase activities.
 
-| Phase | In-order lenses | Primary owner guides |
+| Phase | In-order phase activities | Primary owner guides |
 | --- | --- | --- |
 | Discovery | `Scan` → `Frame` → `Clarify?` → `Capture?` | `AGENTS.md`, `ai/ARCHITECTURE.md`, `ai/LEARNINGS.md` |
 | Roadmap intake | `Intake` → `Refine` → `Prioritize` → `Sequence` → `Sync` | `ROADMAP.md`, `ai/DESIGN.md` |
@@ -132,7 +132,7 @@ The repository uses the `Phase` enum from `ai/PLANNING.md`. This table maps each
 | Continuous improvement | `Retrospect` → `Capture-Learning` → `Refactor?` → `Tech-Debt-Plan?` → `Sync` | `ai/LEARNINGS.md`, `ROADMAP.md` |
 | Closed | none | `ai/PLANNING.md`, `ai/archive/` |
 
-The `Implementation` row deliberately includes review and validation lenses because the existing milestone loop in `ai/EXECUTION.md` interleaves them. Do not split that loop apart on the basis of this table; the table is descriptive.
+The `Implementation` row deliberately includes review and validation phase activities because the existing milestone loop in `ai/EXECUTION.md` interleaves them. Do not split that loop apart on the basis of this table; the table is descriptive.
 
 ## Loops
 
@@ -149,42 +149,42 @@ Outer Product Loop                              [per release]
 
 ### 1. Outer Product Loop
 
-- Lenses: `Sync` (roadmap) → planning → implementation → release → `Retrospect` → `Capture-Learning` → `Sync` (roadmap).
+- Phase Activities: `Sync` (roadmap) → planning → implementation → release → `Retrospect` → `Capture-Learning` → `Sync` (roadmap).
 - Cadence: per release.
 - Owner: `ROADMAP.md` plus `ai/RELEASES.md` and `ai/LEARNINGS.md`.
 - Exit: a release ships and its outcomes feed the next intake.
 
 ### 2. Plan Loop
 
-- Lenses: `Frame` → `Design` → `Spec` → `Decompose` → `Validate-Plan` → `Replan?` → `Validate-Plan`.
+- Phase Activities: `Frame` → `Design` → `Spec` → `Decompose` → `Validate-Plan` → `Replan?` → `Validate-Plan`.
 - Cadence: per plan, until decision-complete.
 - Owner: `ai/PLANNING.md`.
 - Exit: plan reaches `Status=Ready`.
 
 ### 3. Milestone Execution Loop
 
-- Lenses: the existing numbered loop in `ai/EXECUTION.md` Common Milestone Loop, expressed as `Spec` → `Code` → `Docs` → `Run` → `Replan?` → `Self-Review` → `Code Review` → `Security Review?` → `Commit` → `Handoff`.
+- Phase Activities: the existing numbered loop in `ai/EXECUTION.md` Common Milestone Loop, expressed as `Spec` → `Code` → `Docs` → `Run` → `Replan?` → `Self-Review` → `Code Review` → `Security Review?` → `Commit` → `Handoff`.
 - Cadence: per milestone within an approved plan.
 - Owner: `ai/EXECUTION.md`.
 - Exit: milestone commit lands and tracking artifacts are updated.
 
 ### 4. Red-Green Loop
 
-- Lenses: `Run` → `Diagnose` → `Fix` → `Re-run`.
+- Phase Activities: `Run` → `Diagnose` → `Fix` → `Re-run`.
 - Cadence: per failing validation, inside a milestone.
 - Owner: `ai/TESTING.md`, with `ai/references/TROUBLESHOOTING.md` loaded on demand.
 - Exit: previously failing validation passes; if it cannot pass, exit through `Replan?`.
 
 ### 5. Review Loop
 
-- Lenses: `Self-Review` → `Code Review` → `Security Review?` → `Docs Review?` → `Decide` → loop back to `Code` or `Run` if changes are requested.
+- Phase Activities: `Self-Review` → `Code Review` → `Security Review?` → `Docs Review?` → `Decide` → loop back to `Code` or `Run` if changes are requested.
 - Cadence: per diff before merge.
 - Owner: `ai/REVIEWS.md`.
 - Exit: an `Approve` decision; otherwise re-enter the milestone loop.
 
 ### 6. Operate-and-Improve Loop
 
-- Lenses: `Observe` → `Triage` → (`Hotfix?` or `Patch?`) → `Capture-Learning` → `Sync`.
+- Phase Activities: `Observe` → `Triage` → (`Hotfix?` or `Patch?`) → `Capture-Learning` → `Sync`.
 - Cadence: continuous, post-release.
 - Owner: gap. Currently scattered across `ai/LEARNINGS.md`, `ROADMAP.md`, and `CHANGELOG.md`.
 - Exit: the signal is resolved or scheduled as planned work.
@@ -198,29 +198,29 @@ These triggers can fire from any phase and force a switch.
 - `Sync` — any change that affects active-work tracking or contract artifacts. Owner: `ROADMAP.md`, `ai/DOCUMENTATION.md`.
 - `Capture-Learning` — recurring repo-wide lesson surfaces. Owner: `ai/LEARNINGS.md`.
 - `Docs-Routing` — any artifact touch that changes a contract or maintainer-facing document. Owner: `ai/DOCUMENTATION.md`.
-- `Context-Hygiene` — fires between any two lenses; agent must drop the prior lens's working set before loading the next. Owner: `AGENTS.md`.
+- `Context-Hygiene` — fires between any two phase activities; agent must drop the prior activity's working set before loading the next. Owner: `AGENTS.md`.
 
 ## Adoption Guidance For Owner Guides
 
-When an owner guide adopts lens names from this spec:
+When an owner guide adopts activity names from this spec:
 
-- list only the lenses that fire in the loop or section that guide actually owns
-- tag the existing prose with the lens name in square brackets, for example `[Code]`, `[Validation]`, `[Replan?]`
-- do not copy lens definitions from this file; link to this file for the definition and keep policy in the owner guide
-- do not introduce a new lens name without adding it here first
+- list only the phase activities that fire in the loop or section that guide actually owns
+- tag the existing prose with the activity name in square brackets, for example `[Code]`, `[Validation]`, `[Replan?]`
+- do not copy activity definitions from this file; link to this file for the definition and keep policy in the owner guide
+- do not introduce a new activity name without adding it here first
 - keep `Context-Hygiene` implicit in prose; do not annotate every sentence with it
 
 When this spec changes:
 
-- update the dependent owner guides only if a lens name they reference was renamed or removed
+- update the dependent owner guides only if an activity name they reference was renamed or removed
 - routine vocabulary additions in this file do not force changes elsewhere
 - record any rename in `CHANGELOG.md` only if at least one owner guide adopted the old name in a released revision
 
 ## Known Gaps In Current Repo Guidance
 
-Items the lens map exposes that this repository does not yet cover. None of these block adoption of the spec; they are recorded so future planning can address them.
+Items the phase activity sequence exposes that this repository does not yet cover. None of these block adoption of the spec; they are recorded so future planning can address them.
 
-- no AI owner guide for `Deployment` or `Operations` lenses; `infra/` and `src/externalTest/` exist but are not bound to lenses
+- no AI owner guide for `Deployment` or `Operations` phase activities; `infra/` and `src/externalTest/` exist but are not bound to phase activities
 - the `Red-Green Loop` is not named in `ai/TESTING.md`, even though it is where most validation work happens
 - the `Outer Product Loop` is not summarized in any single guide; readers must compose it from `ROADMAP.md`, `ai/RELEASES.md`, and `ai/LEARNINGS.md`
 - the `Review Loop` exit back into the milestone loop is implicit in `ai/REVIEWS.md` and `ai/EXECUTION.md`
@@ -235,10 +235,10 @@ Items the lens map exposes that this repository does not yet cover. None of thes
 
 ## Cross-References
 
-- `AGENTS.md` for the lifecycle owner map and `Context Hygiene` rule
+- `AGENTS.md` for the phase owner map and `Context Hygiene` rule
 - `ai/PLANNING.md` and `ai/references/PLAN_DETAILED_GUIDE.md` for the `Phase` and `Status` enums
 - `ai/EXECUTION.md` for the canonical milestone loop
 - `ai/TESTING.md` and `ai/references/TROUBLESHOOTING.md` for the validation and red-green details
 - `ai/REVIEWS.md` for review priorities and security triggers
-- `ai/RELEASES.md` for release lenses
+- `ai/RELEASES.md` for release phase activities
 - `ai/WORKFLOW.md` for execution shapes that constrain who owns which artifact during a loop

@@ -2,7 +2,7 @@
 
 `ai/REVIEWS.md` owns standing AI guidance for self-review, code review, and security review in this repository.
 
-Use this file before finalizing a change, when the user asks for a review, or when a change touches security-sensitive behavior that needs an explicit review lens.
+Use this file before finalizing a change, when the user asks for a review, or when a change touches security-sensitive behavior that needs an explicit review activity.
 
 ## Review Priorities
 
@@ -17,7 +17,7 @@ Default review order:
 
 Do not lead with style-only comments when there are correctness, contract, or security risks still open.
 
-## Code Review Lens
+## Code Review Activity
 
 Look for:
 
@@ -27,7 +27,7 @@ Look for:
 - hidden scope expansion beyond the plan or user request
 - changes that make the demo harder to understand without solving a real problem
 
-## Security Review Lens
+## Security Review Activity
 
 Apply an explicit security pass when the change touches:
 

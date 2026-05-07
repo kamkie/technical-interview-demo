@@ -7,20 +7,20 @@ A new repository should treat this spec as a normative description of *what* mus
 The spec is organized around three layered models:
 
 1. **Phases** — the coarse stages a piece of work passes through.
-2. **Lenses** — the focused mental modes used inside each phase.
-3. **Loops** — the iteration patterns that connect phases and lenses.
+2. **Phase Activities** — the focused mental modes used inside each phase.
+3. **Loops** — the iteration patterns that connect phases and phase activities.
 
-A repository is conformant with this spec when each phase has an identifiable owner artifact, each lens has an identifiable owner artifact or owner role, and each loop has a defined entry, exit, and cadence.
+A repository is conformant with this spec when each phase has an identifiable owner artifact, each activity has an identifiable owner artifact or owner role, and each loop has a defined entry, exit, and cadence.
 
 ## 1. Definitions
 
 - **Phase**: a coarse lifecycle stage with explicit entry and exit criteria. A piece of work is in exactly one phase at a time.
-- **Lens**: a single focused activity an agent or human performs inside a phase. A lens has a question it answers, an owner artifact, and an exit condition.
-- **Switch**: an explicit transition between two lenses or two phases. Every switch requires the prior working set to be dropped before the next one is loaded (`Context Hygiene`).
+- **Activity**: a single focused activity an agent or human performs inside a phase. An activity has a question it answers, an owner artifact, and an exit condition.
+- **Switch**: an explicit transition between two phase activities or two phases. Every switch requires the prior working set to be dropped before the next one is loaded (`Context Hygiene`).
 - **Trigger**: a signal that mandates a switch. Triggers are either *planned* (the next step in a loop) or *conditional* (e.g. a security-relevant change, a discovered plan gap, a failing validation).
-- **Loop**: a sequence of lenses or phases that iterates until a defined exit condition is met. Loops may nest.
+- **Loop**: a sequence of phase activities or phases that iterates until a defined exit condition is met. Loops may nest.
 - **Artifact**: a durable file or record that is the source of truth for some behavior, decision, or rule. Artifacts are categorized as *spec*, *contract*, *plan*, *log*, or *guide*.
-- **Owner**: the artifact (or, when no artifact applies, the role) that is authoritative for a given lens, phase, or rule. Each rule has exactly one owner.
+- **Owner**: the artifact (or, when no artifact applies, the role) that is authoritative for a given activity, phase, or rule. Each rule has exactly one owner.
 - **Gate**: a checkpoint that must pass before a phase transition is allowed. Gates are mechanical (executable) where possible, and human-judged otherwise.
 
 ## 2. Phases
@@ -50,9 +50,9 @@ A `Closed` state exists for plans whose lifecycle is complete and archived; it i
 - A phase **can be re-entered** when a downstream phase fails its gate (e.g. failed Review re-enters Implementation).
 - A phase exit gate is either an **executable check** (build, tests, contract checks, smoke tests) or a **named approval** (reviewer sign-off, release manager gate).
 
-## 3. Lenses
+## 3. Phase Activities
 
-Lenses are grouped by the phase that owns them. A lens may appear in more than one phase when it represents the same activity at different cadences (e.g. `Sync` fires in Roadmap, Planning, and Continuous Improvement).
+Phase activities are grouped by the phase that owns them. An activity may appear in more than one phase when it represents the same activity at different cadences (e.g. `Sync` fires in Roadmap, Planning, and Continuous Improvement).
 
 ### 3.1 Discovery And Framing
 
@@ -142,11 +142,11 @@ Lenses are grouped by the phase that owns them. A lens may appear in more than o
 - `Tech-Debt-Plan?` — convert recurring pain into a planned roadmap item. *(conditional)*
 - `Sync` — feed outcomes back into active-work tracking.
 
-## 4. Phase-To-Lens Map
+## 4. Phase Activity Sequence
 
-Each phase has an in-order primary lens sequence. `?` marks conditional lenses.
+Each phase has an in-order primary activity sequence. `?` marks conditional phase activities.
 
-| Phase | In-order lenses |
+| Phase | In-order phase activities |
 | --- | --- |
 | Discovery | `Scan` → `Frame` → `Clarify?` → `Capture?` |
 | Roadmap Intake | `Intake` → `Refine` → `Prioritize` → `Sequence` → `Sync` |
@@ -160,7 +160,7 @@ Each phase has an in-order primary lens sequence. `?` marks conditional lenses.
 | Operations | `Observe` → `Triage` → `Hotfix?` → `Patch?` → `Backport?` → `Deprecate?` |
 | Continuous Improvement | `Retrospect` → `Capture-Learning` → `Refactor?` → `Tech-Debt-Plan?` → `Sync` |
 
-The `Implementation` row deliberately interleaves review and validation lenses because the milestone execution loop runs them in tight succession; this is descriptive, not a license to skip the dedicated `Testing` and `Review` phases for the overall change.
+The `Implementation` row deliberately interleaves review and validation phase activities because the milestone execution loop runs them in tight succession; this is descriptive, not a license to skip the dedicated `Testing` and `Review` phases for the overall change.
 
 ## 5. Loops
 
@@ -177,37 +177,37 @@ Outer Product Loop                              [per release]
 
 ### 5.1 Outer Product Loop
 
-- Lenses: `Sync` (roadmap) → planning → implementation → release → `Retrospect` → `Capture-Learning` → `Sync`.
+- Phase Activities: `Sync` (roadmap) → planning → implementation → release → `Retrospect` → `Capture-Learning` → `Sync`.
 - Cadence: per release.
 - Exit: a release ships and its outcomes feed the next intake.
 
 ### 5.2 Plan Loop
 
-- Lenses: `Frame` → `Design` → `Spec` → `Decompose` → `Validate-Plan` → `Replan?` → `Validate-Plan`.
+- Phase Activities: `Frame` → `Design` → `Spec` → `Decompose` → `Validate-Plan` → `Replan?` → `Validate-Plan`.
 - Cadence: per plan, until the plan is decision-complete.
 - Exit: plan is approved and ready for execution.
 
 ### 5.3 Milestone Execution Loop
 
-- Lenses: `Spec` → `Code` → `Docs` → `Run` → `Replan?` → `Self-Review` → `Code Review` → `Security Review?` → `Commit` → `Handoff`.
+- Phase Activities: `Spec` → `Code` → `Docs` → `Run` → `Replan?` → `Self-Review` → `Code Review` → `Security Review?` → `Commit` → `Handoff`.
 - Cadence: per milestone within an approved plan.
 - Exit: milestone commit lands and tracking artifacts are updated.
 
 ### 5.4 Red-Green Loop
 
-- Lenses: `Run` → `Diagnose` → `Fix` → `Re-run`.
+- Phase Activities: `Run` → `Diagnose` → `Fix` → `Re-run`.
 - Cadence: per failing validation, inside a milestone.
 - Exit: previously failing validation passes; if it cannot pass, exit through `Replan?`.
 
 ### 5.5 Review Loop
 
-- Lenses: `Self-Review` → `Code Review` → `Security Review?` → `Docs Review?` → `Decide` → loop back to `Code` or `Run` if changes requested.
+- Phase Activities: `Self-Review` → `Code Review` → `Security Review?` → `Docs Review?` → `Decide` → loop back to `Code` or `Run` if changes requested.
 - Cadence: per diff before merge.
 - Exit: an `Approve` decision; otherwise re-enter the milestone loop.
 
 ### 5.6 Operate-and-Improve Loop
 
-- Lenses: `Observe` → `Triage` → (`Hotfix?` or `Patch?`) → `Capture-Learning` → `Sync`.
+- Phase Activities: `Observe` → `Triage` → (`Hotfix?` or `Patch?`) → `Capture-Learning` → `Sync`.
 - Cadence: continuous, post-release.
 - Exit: the signal is resolved or scheduled as planned work.
 
@@ -220,7 +220,7 @@ Triggers can fire from any phase and force a switch.
 - `Sync` — any change that affects active-work tracking or contract artifacts.
 - `Capture-Learning` — a recurring repo-wide lesson surfaces.
 - `Docs-Routing` — a change touches a contract or maintainer-facing document.
-- `Context-Hygiene` — fires between any two lenses; the prior lens's working set must be dropped before the next is loaded.
+- `Context-Hygiene` — fires between any two phase activities; the prior activity's working set must be dropped before the next is loaded.
 - `Rollback` — deployed behavior fails verification.
 - `Hotfix` — a production incident requires a fix outside the normal plan flow.
 
@@ -238,7 +238,7 @@ A conformant repository must provide artifacts that own the following responsibi
 | Executable Spec | behavior verified by automation | tests, contract checks, benchmarks |
 | Published Contract | human-facing API/contract docs | reference docs, OpenAPI/JSON schema, example requests |
 | Engineering Rules | spec-driven rules, lifecycle, branch and worktree policy, definition of done | an engineering rules doc |
-| Phase Owner Guides | one guide per phase or owning lens group | per-phase guides (planning, execution, testing, review, release, etc.) |
+| Phase Owner Guides | one guide per phase or owning activity group | per-phase guides (planning, execution, testing, review, release, etc.) |
 | Learnings | durable engineering lessons that survive refactors | a learnings doc |
 | Architecture Snapshot | current codebase map and structural guidance | an architecture doc |
 
@@ -306,11 +306,11 @@ Roles can be filled by humans, AI agents, or both. A single person may hold mult
 To adopt this spec in a new repository:
 
 1. **Create the artifact set** named in §7, using whatever file names fit the repo's conventions.
-2. **Map each lens to an owner artifact.** Every lens in §3 needs exactly one owner. Where a single artifact is too small, split it; where two artifacts overlap, merge.
+2. **Map each activity to an owner artifact.** Every activity in §3 needs exactly one owner. Where a single artifact is too small, split it; where two artifacts overlap, merge.
 3. **Pick the workflow modes** the repo will support (e.g. linear, single-plan parallel, multi-plan parallel) and document them in the engineering-rules artifact.
-4. **Adopt lens labels incrementally.** Tag existing prose in owner artifacts with bracketed lens names (e.g. `[Code]`, `[Run]`, `[Replan?]`) rather than rewriting the prose.
-5. **Define the change-class table.** For each change-class (public behavior, internal refactor, docs-only, setup, release-history), state which artifacts must move together. This is the routing table the `Docs` lens consumes.
-6. **Define the validation table.** For each change-class, state the smallest sufficient validation. This is the table the `Plan-Tests` and `Run` lenses consume.
+4. **Adopt activity tags incrementally.** Tag existing prose in owner artifacts with bracketed activity names (e.g. `[Code]`, `[Run]`, `[Replan?]`) rather than rewriting the prose.
+5. **Define the change-class table.** For each change-class (public behavior, internal refactor, docs-only, setup, release-history), state which artifacts must move together. This is the routing table the `Docs` activity consumes.
+6. **Define the validation table.** For each change-class, state the smallest sufficient validation. This is the table the `Plan-Tests` and `Run` phase activities consume.
 7. **Define the gates.** For each phase exit, state whether the gate is executable or named-approval.
 8. **Wire up cross-cutting triggers.** Each trigger in §6 must point to the artifact that owns it.
 9. **Record gaps.** Anything in the spec that the repo does not (yet) cover becomes a roadmap item with an owner.
@@ -322,7 +322,7 @@ A repository declares its conformance level explicitly.
 - **L1 — Spec-Driven Core**: §7 artifacts exist, §8 spec-first rule is enforced, §9 definition of done is enforced. Phases 1–7 are owned. This is the minimum.
 - **L2 — Released**: L1 plus phases 8 (Release) and 11 (Continuous Improvement).
 - **L3 — Operated**: L2 plus phases 9 (Deployment) and 10 (Operations).
-- **L4 — Lens-Annotated**: any of the above, plus owner artifacts that have adopted lens labels (§12 step 4) and explicit cross-cutting trigger wiring (§12 step 8).
+- **L4 — Activity-Tagged**: any of the above, plus owner artifacts that have adopted activity tags (§12 step 4) and explicit cross-cutting trigger wiring (§12 step 8).
 
 Conformance level is recorded in the engineering-rules artifact and reviewed at each release.
 
@@ -348,6 +348,6 @@ When mapping the spec onto common stacks, the following are typical (not normati
 
 ## 16. Versioning Of This Spec
 
-- This spec is itself versioned. Breaking changes increment the major version; additive lens or phase entries increment the minor version; clarifications increment the patch version.
+- This spec is itself versioned. Breaking changes increment the major version; additive activity or phase entries increment the minor version; clarifications increment the patch version.
 - A repository pins the spec version it conforms to in its engineering-rules artifact.
-- Renames of lenses or phases are breaking changes and must be recorded with the rename map for downstream repos to follow.
+- Renames of phase activities or phases are breaking changes and must be recorded with the rename map for downstream repos to follow.

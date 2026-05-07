@@ -127,7 +127,7 @@ Bundling **regresses** narrow loads because the agent now pays for code-style an
 
 ### Option C — Status Quo with Tighter Triggers
 
-Keep the current 14-file owner set. Strengthen on-demand triggers in `AGENTS.md` "Lifecycle Owner Map" and in each guide's first paragraph so that:
+Keep the current 14-file owner set. Strengthen on-demand triggers in `AGENTS.md` "Phase Owner Map" and in each guide's first paragraph so that:
 
 - "lookup where artifact X lives" reads only `ai/DOCUMENTATION.md` §"Artifact Ownership" (already a self-contained section);
 - "structural code reading" reads only `ai/ARCHITECTURE.md` §"System Snapshot" + §"Package Layout";
@@ -162,7 +162,7 @@ Numbers are estimates rounded to the nearest 100 tokens; assumptions are stated 
 **Adopt Option C (status quo with tighter triggers).** Concrete steps:
 
 1. Add a one-line "lookup-only entry point" pointer at the top of `ai/DOCUMENTATION.md` and `ai/ARCHITECTURE.md` directing agents to the specific section to read when the task is a pure ownership lookup or a pure structural read.
-2. Tighten the `AGENTS.md` "Lifecycle Owner Map" rows so descriptive guides (`ARCHITECTURE`, `DESIGN`, `LEARNINGS`) explicitly stay out of routine implementation and routine review loads.
+2. Tighten the `AGENTS.md` "Phase Owner Map" rows so descriptive guides (`ARCHITECTURE`, `DESIGN`, `LEARNINGS`) explicitly stay out of routine implementation and routine review loads.
 3. **Do not** create `_REF.md` / `_EDIT.md` siblings or per-lifecycle bundles. The savings are marginal (≤5% on common phases, sometimes negative) and the cross-reference cost is real.
 4. **Do not** restructure `ai/CODE_STYLE.md`, `ai/DESIGN.md`, `ai/LEARNINGS.md`, or any of the imperative phase guides; their content shape does not benefit from a reference/modification split.
 5. Re-evaluate only after the next round of release cleanup retires implemented active plans, since active-plan inventory currently dominates per-task context far more than owner-file shape.

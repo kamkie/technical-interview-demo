@@ -63,11 +63,11 @@ If you are a new agent entering this repository, follow these steps to ground yo
 2. **Use `README.md` only when needed** for the human-facing project overview or supported contract summary.
 3. **Open `SETUP.md` only when needed** for setup, local tooling, Docker, or troubleshooting detail.
 4. **Identify the current task's lifecycle phase** (Discovery, Planning, Implementation, Testing, Review, Integration, Release).
-5. **Load the relevant owner guide** from the lifecycle owner map below.
+5. **Load the relevant owner guide** from the phase owner map below.
 6. **Locate or create a task plan** (`ai/plans/active/PLAN_*.md`) when the current workflow requires planned execution.
 7. **Run a targeted relevance scan** using task terms against `ai/LEARNINGS.md` and active `ai/plans/active/PLAN_*.md` files, then open only matches that overlap the current task.
 
-## Lifecycle Owner Map
+## Phase Owner Map
 
 Start with `AGENTS.md`, then add only the owner guides that match the current lifecycle phase and changed artifacts.
 Task titles, skills, templates, and deep references stay on demand until directly invoked or required by the selected workflow.

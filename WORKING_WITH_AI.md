@@ -31,13 +31,13 @@ Use this guide as a navigation aid, not as a second copy of the AI runbooks.
 | --- | --- |
 | Project overview and implemented scope | `README.md` |
 | Local setup, tools, and troubleshooting | `SETUP.md` |
-| Repository-specific AI rules and lifecycle owner map | `AGENTS.md` |
+| Repository-specific AI rules and phase owner map | `AGENTS.md` |
 | Reusable task titles and task loader usage | `ai/TASK_LIBRARY.md` |
 | Creating or revising execution plans | `ai/PLANNING.md` |
 | Executing a whole approved plan | `ai/PLAN_EXECUTION.md` |
 | Implementing an ad hoc task or one milestone | `ai/EXECUTION.md` |
 | Delegation, worktrees, worker logs, or integration mechanics | `ai/WORKFLOW.md` |
-| Validation scope and review lens | `ai/TESTING.md` and `ai/REVIEWS.md` |
+| Validation scope and review activity | `ai/TESTING.md` and `ai/REVIEWS.md` |
 | Documentation and artifact routing | `ai/DOCUMENTATION.md` |
 | Intentional release preparation after integration | `ai/RELEASES.md` |
 

@@ -410,7 +410,7 @@
   - Ran a targeted search for exact legacy execution-shape names, retained compatibility-loader wording, the old roadmap candidate row, and unresolved task-library filename ambiguity against this plan and `ROADMAP.md`; no matches.
   - Ran a targeted decision-reference search for `Planned Work`, `ai/TASK_LIBRARY.md`, execution-shape ownership, task-loader unknown-name checks, and old-loader nonexistence checks; confirmed the hardened references.
   - Ran `git diff --check`; passed.
-  - Ran `./build.ps1 build`; passed through the lightweight-file shortcut and skipped Gradle. The wrapper reported changed files as this plan, `ROADMAP.md`, and pre-existing untracked `ai/references/LIFECYCLE_LENSES.md`.
+  - Ran `./build.ps1 build`; passed through the lightweight-file shortcut and skipped Gradle. The wrapper reported changed files as this plan, `ROADMAP.md`, and a pre-existing untracked lifecycle vocabulary reference.
 
 ## User Validation
 - Review this plan's owner split and the locked names: `ai/PLANNING.md`, `ai/PLAN_EXECUTION.md`, `ai/EXECUTION.md`, `ai/WORKFLOW.md`, and `ai/task-library/`.

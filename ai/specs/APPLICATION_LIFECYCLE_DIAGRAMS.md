@@ -1,15 +1,15 @@
 # Application Development Lifecycle Diagrams
 
-This document accompanies `ai/specs/APPLICATION_LIFECYCLE_SPEC.md` and visualizes its three layered models (Phases, Lenses, Loops) plus cross-cutting triggers.
+This document accompanies `ai/specs/APPLICATION_LIFECYCLE_SPEC.md` and visualizes its three layered models (Phases, Phase Activities, Loops) plus cross-cutting triggers.
 
 All diagrams use [Mermaid](https://mermaid.js.org/) syntax so they render natively on GitHub, IntelliJ Markdown preview, and most static-site renderers. The diagrams are descriptive, not normative; the spec text remains authoritative when text and diagrams disagree.
 
 ## How To Read These Diagrams
 
-- **Solid arrows** mark the planned forward path between phases or lenses.
-- **Dashed arrows** mark *conditional* transitions: re-entry on failure, conditional lenses (`?` in the spec), or trigger-driven switches.
+- **Solid arrows** mark the planned forward path between phases or phase activities.
+- **Dashed arrows** mark *conditional* transitions: re-entry on failure, conditional phase activities (`?` in the spec), or trigger-driven switches.
 - **Dotted arrows** mark cross-cutting triggers that may fire from any phase.
-- A node label ending in `?` is a conditional lens or phase, matching the spec.
+- A node label ending in `?` is a conditional activity or phase, matching the spec.
 - Loop boundaries are shown as Mermaid `subgraph` boxes.
 
 ## 1. Phase Flow
@@ -75,7 +75,7 @@ flowchart TB
 
 ## 3. Implementation Milestone Execution Loop
 
-The lens sequence inside a single milestone, with the inner Red-Green and Review loops drawn explicitly. This is the loop the spec's section 5.3 names as "Milestone Execution Loop".
+The activity sequence inside a single milestone, with the inner Red-Green and Review loops drawn explicitly. This is the loop the spec's section 5.3 names as "Milestone Execution Loop".
 
 ```mermaid
 flowchart LR
@@ -102,7 +102,7 @@ flowchart LR
 
 ## 4. Plan Loop
 
-Lens sequence for producing a decision-complete plan, with `Replan?` re-entry.
+Activity sequence for producing a decision-complete plan, with `Replan?` re-entry.
 
 ```mermaid
 flowchart LR
@@ -112,9 +112,9 @@ flowchart LR
     Replan --> Frame
 ```
 
-## 5. Phase-To-Lens Map
+## 5. Phase Activity Sequence
 
-A compact view of the in-order primary lens sequence per phase. Each row mirrors section 4 of the spec.
+A compact view of the in-order primary activity sequence per phase. Each row mirrors section 4 of the spec.
 
 ```mermaid
 flowchart TB
@@ -168,7 +168,7 @@ flowchart LR
     AnyPhase -. tracking impact .-> Sync[Sync]
     AnyPhase -. recurring lesson .-> CL[Capture-Learning]
     AnyPhase -. contract/doc touch .-> DR[Docs-Routing]
-    AnyPhase -. lens switch .-> CH[Context-Hygiene]
+    AnyPhase -. activity switch .-> CH[Context-Hygiene]
     AnyPhase -. failed verify .-> RB[Rollback]
     AnyPhase -. production incident .-> HF[Hotfix]
 ```
@@ -199,7 +199,7 @@ Section 11 of the spec defines four conformance levels. Visualized as a maturity
 
 ```mermaid
 flowchart LR
-    L1["L1 — Phases identified, owners named"] --> L2["L2 — Lenses named, switches explicit"]
+    L1["L1 — Phases identified, owners named"] --> L2["L2 — Phase Activities named, switches explicit"]
     L2 --> L3["L3 — Loops named, gates mechanical where possible"]
     L3 --> L4["L4 — Cross-cutting triggers automated, learnings closed back to roadmap"]
 ```
@@ -207,4 +207,4 @@ flowchart LR
 ## Cross-References
 
 - `ai/specs/APPLICATION_LIFECYCLE_SPEC.md` — the normative spec these diagrams accompany
-- `ai/references/LIFECYCLE_LENSES.md` — the repo-specific instantiation of the lens vocabulary
+- `ai/specs/LIFECYCLE_PHASE_ACTIVITIES.md` — the repo-specific instantiation of the activity vocabulary
