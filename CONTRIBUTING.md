@@ -113,6 +113,20 @@ Suggested branch types:
 - `test`
 
 Use concise, imperative commit subjects that describe one logical change.
+Each commit message should also record what triggered the commit in the body:
+
+```text
+Trigger: <category> - <source>
+```
+
+Use these categories:
+
+- `plan/spec work`: planning, spec preparation, or contract/documentation setup before implementation
+- `plan implementation`: executing a whole active plan
+- `milestone`: executing one named plan milestone
+- `ad hoc task`: a direct user request or reusable task-library starter
+
+Name the concrete source after the dash, such as the plan path, milestone name, spec artifact, task-library title, or short user-request summary.
 
 Good examples:
 
