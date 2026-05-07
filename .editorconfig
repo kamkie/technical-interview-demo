@@ -31,7 +31,7 @@ indent_style = tab
 [gradlew]
 ij_formatter_enabled = false
 
-[ai/**]
+[.agents/**]
 ij_formatter_enabled = false
 
 [src/gatling/resources/gatling-benchmark-baseline.json]
