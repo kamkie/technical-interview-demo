@@ -1,0 +1,132 @@
+@baseUrl = http://localhost:8080
+
+### Suite 08 — Category Lifecycle Admin
+# @name suite_08_setup
+GET {{baseUrl}}/api/session
+Cookie: technical-interview-demo-session={{sessionCookie}}
+
+> {%
+    var date = new Date().toISOString().split('T')[0];
+    client.global.set("report_file", "08-category-lifecycle-admin_raport_" + date + ".md");
+    var report = "# Manual Regression Report - Suite 08\n\n";
+    report += "- Suite: `08-category-lifecycle-admin`\n";
+    report += "- Run Date: " + new Date().toString() + "\n";
+    report += "- Base URL: " + client.global.get("baseUrl") + "\n\n";
+    report += "## Test Results\n\n";
+    report += "| # | Test | Method | Path | Status | Result | Note |\n";
+    report += "|---|------|--------|------|--------|--------|------|\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", 1);
+
+    const csrfCookie = response.cookiesByName("XSRF-TOKEN")[0];
+    if (csrfCookie) {
+        client.global.set("csrfToken", csrfCookie.value);
+    }
+
+    var tag = client.global.get("runTag") || ("HTTP-" + Math.floor(Math.random() * 10000));
+    client.global.set("runTag", tag);
+%}
+
+### 08-1 Create Category
+# @name create_category
+POST {{baseUrl}}/api/categories
+Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
+Content-Type: application/json
+
+{
+  "name": "manual-regression-{{runTag}}"
+}
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var validStatuses = [200, 201];
+    var result = validStatuses.includes(response.status) ? "PASS" : "FAIL";
+    report += "| " + idx + " | createCategory | POST | /api/categories | " + response.status + " | " + result + " | create category |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 200 or 201", function() {
+        client.assert(validStatuses.includes(response.status), "Response status is not 200 or 201");
+    });
+
+    if (response.body.id) {
+        client.global.set("createdCategoryId", response.body.id);
+        client.global.set("createdCategoryVersion", response.body.version || 0);
+    }
+%}
+
+### 08-2 Update Category
+# @name update_category
+PUT {{baseUrl}}/api/categories/{{createdCategoryId}}
+Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
+Content-Type: application/json
+
+{
+  "name": "manual-regression-{{runTag}}-updated",
+  "version": {{createdCategoryVersion}}
+}
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var validStatuses = [200, 204];
+    var result = validStatuses.includes(response.status) ? "PASS" : "FAIL";
+    report += "| " + idx + " | updateCreatedCategoryName | PUT | /api/categories/" + client.global.get("createdCategoryId") + " | " + response.status + " | " + result + " | update category |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 200 or 204", function() {
+        client.assert(validStatuses.includes(response.status), "Response status is not 200 or 204");
+    });
+%}
+
+### 08-3 Delete Category
+# @name delete_category
+DELETE {{baseUrl}}/api/categories/{{createdCategoryId}}
+Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var validStatuses = [200, 204];
+    var result = validStatuses.includes(response.status) ? "PASS" : "FAIL";
+    report += "| " + idx + " | deleteCategoryAndAssertNotFound (Delete) | DELETE | /api/categories/" + client.global.get("createdCategoryId") + " | " + response.status + " | " + result + " | delete category |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 200 or 204", function() {
+        client.assert(validStatuses.includes(response.status), "Response status is not 200 or 204");
+    });
+%}
+
+### 08-4 Verify Deleted
+# @name verify_deleted
+GET {{baseUrl}}/api/categories
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/json
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var tag = client.global.get("runTag");
+    var stillPresent = JSON.stringify(response.body).includes("manual-regression-" + tag);
+    var result = !stillPresent ? "PASS" : "FAIL";
+    report += "| " + idx + " | deleteCategoryAndAssertNotFound (Verify) | GET | /api/categories | " + response.status + " | " + result + " | verify deleted category is gone |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Category not in list", function() {
+        client.assert(!stillPresent, "Category is still present in the list");
+    });
+%}
+
+### Finalize Report
+GET {{baseUrl}}/hello
+
+> {%
+    client.log(client.global.get("report"));
+%}

@@ -1,0 +1,124 @@
+@baseUrl = http://localhost:8080
+
+### Suite 02 — Actuator and Observability
+# @name suite_02_setup
+GET {{baseUrl}}/hello
+
+> {%
+    var date = new Date().toISOString().split('T')[0];
+    client.global.set("report_file", "02-actuator-and-observability_raport_" + date + ".md");
+    var report = "# Manual Regression Report - Suite 02\n\n";
+    report += "- Suite: `02-actuator-and-observability`\n";
+    report += "- Run Date: " + new Date().toString() + "\n";
+    report += "- Base URL: " + client.global.get("baseUrl") + "\n\n";
+    report += "## Test Results\n\n";
+    report += "| # | Test | Method | Path | Status | Result | Note |\n";
+    report += "|---|------|--------|------|--------|--------|------|\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", 1);
+%}
+
+### 02-1 Actuator Info
+# @name actuator_info
+GET {{baseUrl}}/actuator/info
+Accept: application/json
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var result = response.status === 200 ? "PASS" : "FAIL";
+    report += "| " + idx + " | actuatorInfo | GET | /actuator/info | " + response.status + " | " + result + " | actuator info |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 200", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+
+### 02-2 Actuator Health
+# @name actuator_health
+GET {{baseUrl}}/actuator/health
+Accept: application/json
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var isUp = response.body.status === "UP";
+    var result = (response.status === 200 && isUp) ? "PASS" : "FAIL";
+    report += "| " + idx + " | actuatorHealth | GET | /actuator/health | " + response.status + " | " + result + " | aggregate health |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is UP", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.status === "UP", "Status is not UP");
+    });
+%}
+
+### 02-3 Liveness Probe
+# @name actuator_liveness
+GET {{baseUrl}}/actuator/health/liveness
+Accept: application/json
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var isUp = response.body.status === "UP";
+    var result = (response.status === 200 && isUp) ? "PASS" : "FAIL";
+    report += "| " + idx + " | livenessProbe | GET | /actuator/health/liveness | " + response.status + " | " + result + " | liveness |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is UP", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.status === "UP", "Status is not UP");
+    });
+%}
+
+### 02-4 Readiness Probe
+# @name actuator_readiness
+GET {{baseUrl}}/actuator/health/readiness
+Accept: application/json
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var isUp = response.body.status === "UP";
+    var result = (response.status === 200 && isUp) ? "PASS" : "FAIL";
+    report += "| " + idx + " | readinessProbe | GET | /actuator/health/readiness | " + response.status + " | " + result + " | readiness |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is UP", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.status === "UP", "Status is not UP");
+    });
+%}
+
+### 02-5 Prometheus Scrape
+# @name actuator_prometheus
+GET {{baseUrl}}/actuator/prometheus
+Accept: text/plain
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var hasContent = response.body && response.body.length > 0;
+    var result = (response.status === 200 && hasContent) ? "PASS" : "FAIL";
+    report += "| " + idx + " | prometheusScrape | GET | /actuator/prometheus | " + response.status + " | " + result + " | prometheus scrape |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 200 and has content", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(hasContent, "Body is empty");
+    });
+%}
+
+### Finalize Report
+GET {{baseUrl}}/hello
+
+> {%
+    client.log(client.global.get("report"));
+%}

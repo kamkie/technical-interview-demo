@@ -87,8 +87,14 @@ explicitly listed via `MANUAL_TESTS_ALLOWED_HOSTS`. It also refuses to run when
 
 ## Files in this directory
 
-- `http/` — IntelliJ HTTP Client request collection (also the harness's source of truth for
-  endpoint shapes and example payloads). The harness does not parse these files at runtime; they
-  are kept here so the manual reviewer flow and the harness stay aligned.
 - `run.properties.example` — template for a local `run.properties`.
 - `junit-platform.properties` — orders suite classes alphabetically (matches the numeric prefix).
+
+Related IntelliJ HTTP Client material lives outside the runtime resource classpath:
+
+- `src/manualTests/http/examples/` — reviewer-facing runnable request examples.
+- `src/manualTests/http/suites/` — semi-automated HTTP Client scripts aligned with the Java
+  manual-regression suites.
+
+The Java harness does not parse these files at runtime; they are kept beside the harness so the
+manual reviewer flow and executable suites stay aligned.

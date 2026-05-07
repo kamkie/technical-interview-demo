@@ -33,7 +33,7 @@ public final class HarnessJsonPath {
         if (value instanceof List<?> list) {
             return (List<T>) list;
         }
-        return null;
+        return List.of();
     }
 
     public String getString(String path) {

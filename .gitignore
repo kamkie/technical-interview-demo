@@ -46,8 +46,7 @@ out/
 
 ### Local environment files ###
 .env
-/src/test/resources/http/http-client.private.env.json
-/src/manualTests/resources/http/http-client.private.env.json
+http-client.private.env.json
 /src/manualTests/resources/run.properties
 ### AI workflow scratch ###
 /.agents/tmp/

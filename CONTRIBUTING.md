@@ -52,7 +52,8 @@ Authoritative artifact map:
 - `src/test/java/` for executable behavior specs
 - `src/docs/asciidoc/` for published REST Docs content
 - `src/test/resources/openapi/approved-openapi.json` for the approved machine-readable public contract
-- `src/manualTests/resources/http/` for reviewer-facing runnable request examples
+- `src/manualTests/http/examples/` for reviewer-facing runnable request examples
+- `src/manualTests/http/suites/` for semi-automated IntelliJ HTTP Client manual-regression scripts
 - `README.md` for the supported human-facing contract summary
 - `ROADMAP.md` for active work only
 - `CHANGELOG.md` for released history only
@@ -252,7 +253,8 @@ Common routing:
 - `WORKING_WITH_AI.md` for the human-facing AI collaboration lifecycle
 - `AGENTS.md` and the relevant `.agents/references/` guide when AI rules, ownership, workflow, or execution guidance changed
 - `src/docs/asciidoc/` and the related REST Docs tests when public API behavior changed
-- `src/manualTests/resources/http/` when reviewer-facing request examples changed
+- `src/manualTests/http/examples/` when reviewer-facing request examples changed
+- `src/manualTests/http/suites/` when semi-automated manual-regression HTTP Client scripts changed
 - `ROADMAP.md` when active work changed
 - `CHANGELOG.md` when preparing or documenting a release
 

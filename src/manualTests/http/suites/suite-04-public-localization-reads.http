@@ -1,0 +1,67 @@
+@baseUrl = http://localhost:8080
+
+### Suite 04 — Public Localization Reads
+# @name suite_04_setup
+GET {{baseUrl}}/hello
+
+> {%
+    var date = new Date().toISOString().split('T')[0];
+    client.global.set("report_file", "04-public-localization-reads_raport_" + date + ".md");
+    var report = "# Manual Regression Report - Suite 04\n\n";
+    report += "- Suite: `04-public-localization-reads`\n";
+    report += "- Run Date: " + new Date().toString() + "\n";
+    report += "- Base URL: " + client.global.get("baseUrl") + "\n\n";
+    report += "## Test Results\n\n";
+    report += "| # | Test | Method | Path | Status | Result | Note |\n";
+    report += "|---|------|--------|------|--------|--------|------|\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", 1);
+%}
+
+### 04-1 List Localizations
+# @name list_localizations
+GET {{baseUrl}}/api/localizations?page=0&size=5&sort=messageKey,asc&sort=language,asc
+Accept: application/json
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var result = response.status === 200 ? "PASS" : "FAIL";
+    report += "| " + idx + " | listLocalizationsWithPagination | GET | /api/localizations | " + response.status + " | " + result + " | paginated localization list |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 200", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+
+### 04-2 Filter Localization
+# @name filter_localization
+GET {{baseUrl}}/api/localizations?messageKey=error.book.not_found&language=en
+Accept: application/json
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var result = response.status === 200 ? "PASS" : "FAIL";
+    report += "| " + idx + " | filterByKnownKey | GET | /api/localizations | " + response.status + " | " + result + " | filter by known message key |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 200", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+
+    if (response.body.content && response.body.content.length > 0) {
+        client.global.set("firstLocalizationId", response.body.content[0].id);
+        client.log("Captured firstLocalizationId: " + response.body.content[0].id);
+    }
+%}
+
+### Finalize Report
+GET {{baseUrl}}/hello
+
+> {%
+    client.log(client.global.get("report"));
+%}

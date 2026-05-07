@@ -1,0 +1,122 @@
+@baseUrl = http://localhost:8080
+
+### Suite 05 — Anonymous Negative Access
+# @name suite_05_setup
+GET {{baseUrl}}/hello
+
+> {%
+    var date = new Date().toISOString().split('T')[0];
+    client.global.set("report_file", "05-anonymous-negative-access_raport_" + date + ".md");
+    var report = "# Manual Regression Report - Suite 05\n\n";
+    report += "- Suite: `05-anonymous-negative-access`\n";
+    report += "- Run Date: " + new Date().toString() + "\n";
+    report += "- Base URL: " + client.global.get("baseUrl") + "\n\n";
+    report += "## Test Results\n\n";
+    report += "| # | Test | Method | Path | Status | Result | Note |\n";
+    report += "|---|------|--------|------|--------|--------|------|\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", 1);
+%}
+
+### 05-1 Anonymous Account Read
+# @name get_account_anon
+GET {{baseUrl}}/api/account
+Accept: application/json
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var result = response.status === 401 ? "PASS" : "FAIL";
+    report += "| " + idx + " | getAccount_anonymous | GET | /api/account | " + response.status + " | " + result + " | anonymous /api/account |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 401", function() {
+        client.assert(response.status === 401, "Response status is not 401");
+    });
+%}
+
+### 05-2 Anonymous Users Read
+# @name list_users_anon
+GET {{baseUrl}}/api/admin/users
+Accept: application/json
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var result = response.status === 401 ? "PASS" : "FAIL";
+    report += "| " + idx + " | listUsers_anonymous | GET | /api/admin/users | " + response.status + " | " + result + " | anonymous /api/admin/users |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 401", function() {
+        client.assert(response.status === 401, "Response status is not 401");
+    });
+%}
+
+### 05-3 Anonymous Audit Logs Read
+# @name list_audit_logs_anon
+GET {{baseUrl}}/api/admin/audit-logs
+Accept: application/json
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var result = response.status === 401 ? "PASS" : "FAIL";
+    report += "| " + idx + " | listAuditLogs_anonymous | GET | /api/admin/audit-logs | " + response.status + " | " + result + " | anonymous /api/admin/audit-logs |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 401", function() {
+        client.assert(response.status === 401, "Response status is not 401");
+    });
+%}
+
+### 05-4 Anonymous Operator Surface Read
+# @name operator_surface_anon
+GET {{baseUrl}}/api/admin/operator-surface
+Accept: application/json
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var result = response.status === 401 ? "PASS" : "FAIL";
+    report += "| " + idx + " | operatorSurface_anonymous | GET | /api/admin/operator-surface | " + response.status + " | " + result + " | anonymous operator surface |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 401", function() {
+        client.assert(response.status === 401, "Response status is not 401");
+    });
+%}
+
+### 05-5 Anonymous Create Category
+# @name create_category_anon
+POST {{baseUrl}}/api/categories
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "manual-regression-anon"
+}
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var validStatuses = [401, 403];
+    var result = validStatuses.includes(response.status) ? "PASS" : "FAIL";
+    report += "| " + idx + " | createCategory_anonymous | POST | /api/categories | " + response.status + " | " + result + " | anonymous POST /api/categories |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 401 or 403", function() {
+        client.assert(validStatuses.includes(response.status), "Response status is not 401 or 403");
+    });
+%}
+
+### Finalize Report
+GET {{baseUrl}}/hello
+
+> {%
+    client.log(client.global.get("report"));
+%}

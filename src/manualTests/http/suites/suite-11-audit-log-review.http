@@ -1,0 +1,92 @@
+@baseUrl = http://localhost:8080
+
+### Suite 11 — Audit Log Review
+# @name suite_11_setup
+GET {{baseUrl}}/api/session
+Cookie: technical-interview-demo-session={{sessionCookie}}
+
+> {%
+    var date = new Date().toISOString().split('T')[0];
+    client.global.set("report_file", "11-audit-log-review_raport_" + date + ".md");
+    var report = "# Manual Regression Report - Suite 11\n\n";
+    report += "- Suite: `11-audit-log-review`\n";
+    report += "- Run Date: " + new Date().toString() + "\n";
+    report += "- Base URL: " + client.global.get("baseUrl") + "\n\n";
+    report += "## Test Results\n\n";
+    report += "| # | Test | Method | Path | Status | Result | Note |\n";
+    report += "|---|------|--------|------|--------|--------|------|\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", 1);
+
+    const csrfCookie = response.cookiesByName("XSRF-TOKEN")[0];
+    if (csrfCookie) {
+        client.global.set("csrfToken", csrfCookie.value);
+    }
+%}
+
+### 11-1 List Audit Logs
+# @name list_audit_logs
+GET {{baseUrl}}/api/admin/audit-logs?page=0&size=20&sort=id,desc
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/json
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var result = response.status === 200 ? "PASS" : "FAIL";
+    report += "| " + idx + " | listAuditLogs_paginated_returns200 | GET | /api/admin/audit-logs | " + response.status + " | " + result + " | audit logs page 0 desc |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 200", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+
+### 11-2 Filter Audit Logs
+# @name filter_audit_logs
+GET {{baseUrl}}/api/admin/audit-logs?targetType=AUTHENTICATION&action=LOGIN_SUCCESS
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/json
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var result = response.status === 200 ? "PASS" : "FAIL";
+    report += "| " + idx + " | filterAuditLogs_byActorAndAction_returns200 | GET | /api/admin/audit-logs | " + response.status + " | " + result + " | audit logs filter authentication |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 200", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+
+### 11-3 Verify Recent Entries
+# @name verify_recent
+GET {{baseUrl}}/api/admin/audit-logs?page=0&size=50&sort=id,desc
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/json
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var tag = client.global.get("runTag");
+    var found = tag ? JSON.stringify(response.body).includes(tag) : false;
+    var result = (response.status === 200 && (!tag || found)) ? "PASS" : "FAIL";
+    var note = tag ? ("found runTag " + tag) : "no runTag to search for";
+    report += "| " + idx + " | recentEntriesIncludeManualRegressionWrites | GET | /api/admin/audit-logs | " + response.status + " | " + result + " | " + note + " |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 200", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+
+### Finalize Report
+GET {{baseUrl}}/hello
+
+> {%
+    client.log(client.global.get("report"));
+%}

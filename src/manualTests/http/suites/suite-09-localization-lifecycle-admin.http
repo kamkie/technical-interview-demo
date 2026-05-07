@@ -1,0 +1,157 @@
+@baseUrl = http://localhost:8080
+
+### Suite 09 — Localization Lifecycle Admin
+# @name suite_09_setup
+GET {{baseUrl}}/api/session
+Cookie: technical-interview-demo-session={{sessionCookie}}
+
+> {%
+    var date = new Date().toISOString().split('T')[0];
+    client.global.set("report_file", "09-localization-lifecycle-admin_raport_" + date + ".md");
+    var report = "# Manual Regression Report - Suite 09\n\n";
+    report += "- Suite: `09-localization-lifecycle-admin`\n";
+    report += "- Run Date: " + new Date().toString() + "\n";
+    report += "- Base URL: " + client.global.get("baseUrl") + "\n\n";
+    report += "## Test Results\n\n";
+    report += "| # | Test | Method | Path | Status | Result | Note |\n";
+    report += "|---|------|--------|------|--------|--------|------|\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", 1);
+
+    const csrfCookie = response.cookiesByName("XSRF-TOKEN")[0];
+    if (csrfCookie) {
+        client.global.set("csrfToken", csrfCookie.value);
+    }
+
+    var tag = client.global.get("runTag") || ("HTTP-" + Math.floor(Math.random() * 10000));
+    client.global.set("runTag", tag);
+    var key = "manual.regression." + tag.toLowerCase().replace('-', '.');
+    client.global.set("createdLocalizationKey", key);
+%}
+
+### 09-1 Create Localization
+# @name create_localization
+POST {{baseUrl}}/api/localizations
+Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
+Content-Type: application/json
+
+{
+  "messageKey": "{{createdLocalizationKey}}",
+  "language": "en",
+  "messageText": "Manual regression marker for {{runTag}}",
+  "description": "Created by the manual regression script"
+}
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var validStatuses = [200, 201];
+    var result = validStatuses.includes(response.status) ? "PASS" : "FAIL";
+    report += "| " + idx + " | createLocalization | POST | /api/localizations | " + response.status + " | " + result + " | create localization |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 200 or 201", function() {
+        client.assert(validStatuses.includes(response.status), "Response status is not 200 or 201");
+    });
+
+    if (response.body.id) {
+        client.global.set("createdLocalizationId", response.body.id);
+        client.global.set("createdLocalizationVersion", response.body.version || 0);
+    }
+%}
+
+### 09-2 Read Localization
+# @name read_localization
+GET {{baseUrl}}/api/localizations/{{createdLocalizationId}}
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/json
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var result = response.status === 200 ? "PASS" : "FAIL";
+    report += "| " + idx + " | readCreatedLocalizationById | GET | /api/localizations/" + client.global.get("createdLocalizationId") + " | " + response.status + " | " + result + " | read created localization |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 200", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+
+### 09-3 Update Localization
+# @name update_localization
+PUT {{baseUrl}}/api/localizations/{{createdLocalizationId}}
+Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
+Content-Type: application/json
+
+{
+  "messageKey": "{{createdLocalizationKey}}",
+  "language": "en",
+  "messageText": "Manual regression marker for {{runTag}} (updated)",
+  "description": "Updated by the manual regression script",
+  "version": {{createdLocalizationVersion}}
+}
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var validStatuses = [200, 204];
+    var result = validStatuses.includes(response.status) ? "PASS" : "FAIL";
+    report += "| " + idx + " | updateCreatedLocalizationText | PUT | /api/localizations/" + client.global.get("createdLocalizationId") + " | " + response.status + " | " + result + " | update created localization |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 200 or 204", function() {
+        client.assert(validStatuses.includes(response.status), "Response status is not 200 or 204");
+    });
+%}
+
+### 09-4 Delete Localization
+# @name delete_localization
+DELETE {{baseUrl}}/api/localizations/{{createdLocalizationId}}
+Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var validStatuses = [200, 204];
+    var result = validStatuses.includes(response.status) ? "PASS" : "FAIL";
+    report += "| " + idx + " | deleteLocalizationAndAssertNotFound (Delete) | DELETE | /api/localizations/" + client.global.get("createdLocalizationId") + " | " + response.status + " | " + result + " | delete created localization |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 200 or 204", function() {
+        client.assert(validStatuses.includes(response.status), "Response status is not 200 or 204");
+    });
+%}
+
+### 09-5 Verify Deleted
+# @name verify_deleted
+GET {{baseUrl}}/api/localizations/{{createdLocalizationId}}
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/json
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var result = response.status === 404 ? "PASS" : "FAIL";
+    report += "| " + idx + " | deleteLocalizationAndAssertNotFound (Verify) | GET | /api/localizations/" + client.global.get("createdLocalizationId") + " | " + response.status + " | " + result + " | verify deleted localization is gone |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 404", function() {
+        client.assert(response.status === 404, "Response status is not 404");
+    });
+%}
+
+### Finalize Report
+GET {{baseUrl}}/hello
+
+> {%
+    client.log(client.global.get("report"));
+%}

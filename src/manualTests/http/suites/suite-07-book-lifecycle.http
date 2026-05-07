@@ -1,0 +1,161 @@
+@baseUrl = http://localhost:8080
+
+### Suite 07 — Book Lifecycle
+# @name suite_07_setup
+GET {{baseUrl}}/api/session
+Cookie: technical-interview-demo-session={{sessionCookie}}
+
+> {%
+    var date = new Date().toISOString().split('T')[0];
+    client.global.set("report_file", "07-book-lifecycle_raport_" + date + ".md");
+    var report = "# Manual Regression Report - Suite 07\n\n";
+    report += "- Suite: `07-book-lifecycle`\n";
+    report += "- Run Date: " + new Date().toString() + "\n";
+    report += "- Base URL: " + client.global.get("baseUrl") + "\n\n";
+    report += "## Test Results\n\n";
+    report += "| # | Test | Method | Path | Status | Result | Note |\n";
+    report += "|---|------|--------|------|--------|--------|------|\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", 1);
+
+    const csrfCookie = response.cookiesByName("XSRF-TOKEN")[0];
+    if (csrfCookie) {
+        client.global.set("csrfToken", csrfCookie.value);
+    }
+
+    var tag = "HTTP-" + Math.floor(Math.random() * 10000);
+    client.global.set("runTag", tag);
+    var isbn = "978-MR-" + Math.floor(Math.random() * 1000000000);
+    client.global.set("createdBookIsbn", isbn);
+%}
+
+### 07-1 Create Book
+# @name create_book
+POST {{baseUrl}}/api/books
+Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
+Content-Type: application/json
+
+{
+  "title": "Manual Regression Book {{runTag}}",
+  "author": "Manual Regression",
+  "isbn": "{{createdBookIsbn}}",
+  "publicationYear": 2025,
+  "categories": [{{firstCategoryId}}]
+}
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var validStatuses = [200, 201];
+    var result = validStatuses.includes(response.status) ? "PASS" : "FAIL";
+    report += "| " + idx + " | createBook_returnsLocationOrEntity | POST | /api/books | " + response.status + " | " + result + " | create book |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 200 or 201", function() {
+        client.assert(validStatuses.includes(response.status), "Response status is not 200 or 201");
+    });
+
+    if (response.body.id) {
+        client.global.set("createdBookId", response.body.id);
+        client.global.set("createdBookVersion", response.body.version || 0);
+    }
+%}
+
+### 07-2 Read Book
+# @name read_book
+GET {{baseUrl}}/api/books/{{createdBookId}}
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/json
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var result = response.status === 200 ? "PASS" : "FAIL";
+    report += "| " + idx + " | readCreatedBookById_returnsIt | GET | /api/books/" + client.global.get("createdBookId") + " | " + response.status + " | " + result + " | read created book |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 200", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+
+### 07-3 Update Book
+# @name update_book
+PUT {{baseUrl}}/api/books/{{createdBookId}}
+Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
+Content-Type: application/json
+
+{
+  "title": "Manual Regression Book {{runTag}} (updated)",
+  "author": "Manual Regression",
+  "version": {{createdBookVersion}},
+  "publicationYear": 2026
+}
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var validStatuses = [200, 204];
+    var result = validStatuses.includes(response.status) ? "PASS" : "FAIL";
+    report += "| " + idx + " | updateCreatedBookTitle | PUT | /api/books/" + client.global.get("createdBookId") + " | " + response.status + " | " + result + " | update created book |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 200 or 204", function() {
+        client.assert(validStatuses.includes(response.status), "Response status is not 200 or 204");
+    });
+
+    if (response.body.version) {
+        client.global.set("createdBookVersion", response.body.version);
+    }
+%}
+
+### 07-4 Delete Book
+# @name delete_book
+DELETE {{baseUrl}}/api/books/{{createdBookId}}
+Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var validStatuses = [200, 204];
+    var result = validStatuses.includes(response.status) ? "PASS" : "FAIL";
+    report += "| " + idx + " | deleteCreatedBookAndAssertNotFound (Delete) | DELETE | /api/books/" + client.global.get("createdBookId") + " | " + response.status + " | " + result + " | delete created book |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 200 or 204", function() {
+        client.assert(validStatuses.includes(response.status), "Response status is not 200 or 204");
+    });
+%}
+
+### 07-5 Verify Deleted
+# @name verify_deleted
+GET {{baseUrl}}/api/books/{{createdBookId}}
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/json
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var result = response.status === 404 ? "PASS" : "FAIL";
+    report += "| " + idx + " | deleteCreatedBookAndAssertNotFound (Verify) | GET | /api/books/" + client.global.get("createdBookId") + " | " + response.status + " | " + result + " | verify deleted book is gone |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 404", function() {
+        client.assert(response.status === 404, "Response status is not 404");
+    });
+%}
+
+### Finalize Report
+GET {{baseUrl}}/hello
+
+> {%
+    client.log(client.global.get("report"));
+%}

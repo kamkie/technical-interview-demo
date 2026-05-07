@@ -1,0 +1,63 @@
+@baseUrl = http://localhost:8080
+
+### Suite 12 — Operator Surface
+# @name suite_12_setup
+GET {{baseUrl}}/hello
+
+> {%
+    var date = new Date().toISOString().split('T')[0];
+    client.global.set("report_file", "12-operator-surface_raport_" + date + ".md");
+    var report = "# Manual Regression Report - Suite 12\n\n";
+    report += "- Suite: `12-operator-surface`\n";
+    report += "- Run Date: " + new Date().toString() + "\n";
+    report += "- Base URL: " + client.global.get("baseUrl") + "\n\n";
+    report += "## Test Results\n\n";
+    report += "| # | Test | Method | Path | Status | Result | Note |\n";
+    report += "|---|------|--------|------|--------|--------|------|\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", 1);
+%}
+
+### 12-1 Operator Surface as Admin
+# @name operator_surface_admin
+GET {{baseUrl}}/api/admin/operator-surface
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/json
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var result = response.status === 200 ? "PASS" : "FAIL";
+    report += "| " + idx + " | operatorSurface_asAdmin_returns200 | GET | /api/admin/operator-surface | " + response.status + " | " + result + " | admin operator-surface |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 200", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+
+### 12-2 Operator Surface Anonymous
+# @name operator_surface_anon
+GET {{baseUrl}}/api/admin/operator-surface
+Accept: application/json
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var result = response.status === 401 ? "PASS" : "FAIL";
+    report += "| " + idx + " | operatorSurface_anonymous | GET | /api/admin/operator-surface | " + response.status + " | " + result + " | anonymous operator surface |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 401", function() {
+        client.assert(response.status === 401, "Response status is not 401");
+    });
+%}
+
+### Finalize Report
+GET {{baseUrl}}/hello
+
+> {%
+    client.log(client.global.get("report"));
+%}

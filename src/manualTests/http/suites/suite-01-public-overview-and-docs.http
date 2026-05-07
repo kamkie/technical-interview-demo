@@ -1,0 +1,97 @@
+### Suite 01 — Public Overview and Docs
+# @name suite_01_setup
+GET {{baseUrl}}/hello
+
+> {%
+    var date = new Date().toISOString().split('T')[0];
+    client.global.set("report_file", "01-public-overview-and-docs_raport_" + date + ".md");
+    var report = "# Manual Regression Report - Suite 01\n\n";
+    report += "- Suite: `01-public-overview-and-docs`\n";
+    report += "- Run Date: " + new Date().toString() + "\n";
+    report += "- Base URL: " + client.global.get("baseUrl") + "\n\n";
+    report += "## Test Results\n\n";
+    report += "| # | Test | Method | Path | Status | Result | Note |\n";
+    report += "|---|------|--------|------|--------|--------|------|\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", 1);
+%}
+
+### 01-1 Root Overview
+# @name root_overview
+GET {{baseUrl}}/
+Accept: application/json
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var result = response.status === 200 ? "PASS" : "FAIL";
+    report += "| " + idx + " | rootOverview | GET | / | " + response.status + " | " + result + " | public root overview |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 200", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+
+### 01-2 Hello Smoke
+# @name hello_smoke
+GET {{baseUrl}}/hello
+Accept: text/plain
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var result = response.status === 200 ? "PASS" : "FAIL";
+    report += "| " + idx + " | helloSmoke | GET | /hello | " + response.status + " | " + result + " | public hello smoke |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 200", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+
+### 01-3 Docs Redirect
+# @name docs_redirect
+GET {{baseUrl}}/docs
+Accept: text/html
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var validStatuses = [200, 301, 302, 303, 307, 308];
+    var result = validStatuses.includes(response.status) ? "PASS" : "FAIL";
+    report += "| " + idx + " | docsRedirect | GET | /docs | " + response.status + " | " + result + " | docs redirect |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Redirect or OK", function() {
+        client.assert(validStatuses.includes(response.status), "Response status is not 2xx or 3xx");
+    });
+%}
+
+### 01-4 OpenAPI JSON
+# @name openapi_json
+GET {{baseUrl}}/v3/api-docs
+Accept: application/json
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var result = response.status === 200 ? "PASS" : "FAIL";
+    report += "| " + idx + " | openApiJson | GET | /v3/api-docs | " + response.status + " | " + result + " | OpenAPI JSON |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 200", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+
+### Finalize Report
+GET {{baseUrl}}/hello
+
+> {%
+    client.log(client.global.get("report"));
+%}

@@ -1,0 +1,133 @@
+@baseUrl = http://localhost:8080
+
+### Suite 06 — Session and Account
+# @name suite_06_setup
+GET {{baseUrl}}/api/session
+Cookie: technical-interview-demo-session={{sessionCookie}}
+
+> {%
+    var date = new Date().toISOString().split('T')[0];
+    client.global.set("report_file", "06-session-and-account_raport_" + date + ".md");
+    var report = "# Manual Regression Report - Suite 06\n\n";
+    report += "- Suite: `06-session-and-account`\n";
+    report += "- Run Date: " + new Date().toString() + "\n";
+    report += "- Base URL: " + client.global.get("baseUrl") + "\n\n";
+    report += "## Test Results\n\n";
+    report += "| # | Test | Method | Path | Status | Result | Note |\n";
+    report += "|---|------|--------|------|--------|--------|------|\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", 1);
+
+    const csrfCookie = response.cookiesByName("XSRF-TOKEN")[0];
+    if (csrfCookie) {
+        client.global.set("csrfToken", csrfCookie.value);
+    }
+%}
+
+### 06-1 Session Authenticated
+# @name session_auth
+GET {{baseUrl}}/api/session
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/json
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var isAuthenticated = response.body.authenticated === true;
+    var result = (response.status === 200 && isAuthenticated) ? "PASS" : "FAIL";
+    report += "| " + idx + " | session_isAuthenticated | GET | /api/session | " + response.status + " | " + result + " | admin /api/session |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Is authenticated", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.authenticated === true, "Not authenticated");
+    });
+%}
+
+### 06-2 Account Identity
+# @name account_identity
+# @no-cookie-jar
+GET {{baseUrl}}/api/account
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/json
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var result = response.status === 200 ? "PASS" : "FAIL";
+    report += "| " + idx + " | account_returnsAdminIdentity | GET | /api/account | " + response.status + " | " + result + " | admin /api/account |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 200", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+
+    var originalLanguage = response.body && Object.prototype.hasOwnProperty.call(response.body, "preferredLanguage")
+        ? response.body.preferredLanguage
+        : null;
+    client.global.set(
+        "originalPreferredLanguageJson",
+        originalLanguage === null || originalLanguage === undefined ? "null" : JSON.stringify(originalLanguage)
+    );
+    client.global.set("temporaryPreferredLanguageJson", JSON.stringify(originalLanguage === "pl" ? "en" : "pl"));
+%}
+
+### 06-3 Change Language
+# @name change_language
+PUT {{baseUrl}}/api/account/language
+Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
+Content-Type: application/json
+
+{
+  "preferredLanguage": {{temporaryPreferredLanguageJson}}
+}
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var validStatuses = [200, 204];
+    var result = validStatuses.includes(response.status) ? "PASS" : "FAIL";
+
+    report += "| " + idx + " | changePreferredLanguageToPl | PUT | /api/account/language | " + response.status + " | " + result + " | change preferred language |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 200 or 204", function() {
+        client.assert(validStatuses.includes(response.status), "Response status is not 200 or 204");
+    });
+%}
+
+### 06-4 Restore Language
+# @name restore_language
+PUT {{baseUrl}}/api/account/language
+Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
+Content-Type: application/json
+
+{
+  "preferredLanguage": {{originalPreferredLanguageJson}}
+}
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var validStatuses = [200, 204];
+    var result = validStatuses.includes(response.status) ? "PASS" : "FAIL";
+    report += "| " + idx + " | restorePreferredLanguage | PUT | /api/account/language | " + response.status + " | " + result + " | restore original preferred language |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 200 or 204", function() {
+        client.assert(validStatuses.includes(response.status), "Response status is not 200 or 204");
+    });
+%}
+
+### Finalize Report
+GET {{baseUrl}}/hello
+
+> {%
+    client.log(client.global.get("report"));
+%}

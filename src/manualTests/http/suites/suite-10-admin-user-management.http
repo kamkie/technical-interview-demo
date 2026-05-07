@@ -1,0 +1,139 @@
+@baseUrl = http://localhost:8080
+
+### Suite 10 — Admin User Management
+# @name suite_10_setup
+GET {{baseUrl}}/api/admin/users?page=0&size=50
+Cookie: technical-interview-demo-session={{sessionCookie}}
+
+> {%
+    var date = new Date().toISOString().split('T')[0];
+    client.global.set("report_file", "10-admin-user-management_raport_" + date + ".md");
+    var report = "# Manual Regression Report - Suite 10\n\n";
+    report += "- Suite: `10-admin-user-management`\n";
+    report += "- Run Date: " + new Date().toString() + "\n";
+    report += "- Base URL: " + client.global.get("baseUrl") + "\n\n";
+    report += "## Test Results\n\n";
+    report += "| # | Test | Method | Path | Status | Result | Note |\n";
+    report += "|---|------|--------|------|--------|--------|------|\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", 1);
+    client.global.set("targetUserId", "0");
+    client.global.set("originalRoles", "[]");
+    client.global.set("grantedRoles", "[]");
+    client.global.set("roleRoundTripEnabled", "false");
+    client.global.set("runTag", client.global.get("runTag") || ("HTTP-" + Math.floor(Math.random() * 10000)));
+
+    const csrfCookie = response.cookiesByName("XSRF-TOKEN")[0];
+    if (csrfCookie) {
+        client.global.set("csrfToken", csrfCookie.value);
+    }
+
+    // Attempt to find a regular user (non-admin) for the role round-trip
+    var users = response.body.content || response.body;
+    if (users && users.length > 0) {
+        for (var i = 0; i < users.length; i++) {
+            if (!users[i].roles.includes("ADMIN")) {
+                client.global.set("targetUserId", users[i].id);
+                client.global.set("originalRoles", JSON.stringify(users[i].roles));
+                var granted = [...users[i].roles];
+                if (!granted.includes("AUDIT")) granted.push("AUDIT");
+                client.global.set("grantedRoles", JSON.stringify(granted));
+                client.global.set("roleRoundTripEnabled", "true");
+                client.log("Found regular user for round-trip: " + users[i].id);
+                break;
+            }
+        }
+    }
+%}
+
+### 10-1 List Users as Admin
+# @name list_users_admin
+GET {{baseUrl}}/api/admin/users
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/json
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var result = response.status === 200 ? "PASS" : "FAIL";
+    report += "| " + idx + " | listUsersAsAdmin_returnsContent | GET | /api/admin/users | " + response.status + " | " + result + " | admin /api/admin/users |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 200", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+
+### 10-2 Grant Roles
+# @name grant_roles
+PUT {{baseUrl}}/api/admin/users/{{targetUserId}}/roles
+Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
+Content-Type: application/json
+
+{
+  "roles": {{grantedRoles}},
+  "reason": "Manual regression round-trip for {{runTag}}"
+}
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var roleRoundTripEnabled = client.global.get("roleRoundTripEnabled") === "true";
+    if (!roleRoundTripEnabled) {
+        report += "| " + idx + " | grantAndRestoreRolesForRegularUser (Grant) | SKIP | N/A | N/A | N/A | no target user found |\n";
+    } else {
+        var validStatuses = [200, 204];
+        var result = validStatuses.includes(response.status) ? "PASS" : "FAIL";
+        report += "| " + idx + " | grantAndRestoreRolesForRegularUser (Grant) | PUT | /api/admin/users/.../roles | " + response.status + " | " + result + " | grant roles round-trip |\n";
+    }
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    if (roleRoundTripEnabled) {
+        client.test("Status is 200 or 204", function() {
+            client.assert([200, 204].includes(response.status), "Response status is not 200 or 204");
+        });
+    }
+%}
+
+### 10-3 Restore Roles
+# @name restore_roles
+PUT {{baseUrl}}/api/admin/users/{{targetUserId}}/roles
+Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
+Content-Type: application/json
+
+{
+  "roles": {{originalRoles}},
+  "reason": "Manual regression round-trip restore for {{runTag}}"
+}
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var roleRoundTripEnabled = client.global.get("roleRoundTripEnabled") === "true";
+    if (!roleRoundTripEnabled) {
+        report += "| " + idx + " | grantAndRestoreRolesForRegularUser (Restore) | SKIP | N/A | N/A | N/A | no target user found |\n";
+    } else {
+        var validStatuses = [200, 204];
+        var result = validStatuses.includes(response.status) ? "PASS" : "FAIL";
+        report += "| " + idx + " | grantAndRestoreRolesForRegularUser (Restore) | PUT | /api/admin/users/.../roles | " + response.status + " | " + result + " | restore original roles |\n";
+    }
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    if (roleRoundTripEnabled) {
+        client.test("Status is 200 or 204", function() {
+            client.assert([200, 204].includes(response.status), "Response status is not 200 or 204");
+        });
+    }
+%}
+
+### Finalize Report
+GET {{baseUrl}}/hello
+
+> {%
+    client.log(client.global.get("report"));
+%}
