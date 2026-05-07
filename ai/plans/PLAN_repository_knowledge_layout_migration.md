@@ -3,11 +3,11 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Implementation |
+| Status | In Progress |
 
 ## Summary
-- Migrate durable repository knowledge to the layout described by `temp/repository-knowledge-spec.md`, with repo-specific additions for `.agents/plans/` and `.agents/templates/`.
+- Migrate durable repository knowledge to the layout described by `.agents/references/repository-knowledge-spec.md`, with repo-specific additions for `.agents/plans/` and `.agents/templates/`.
 - Keep conventional root documentation in place, including `README.md`, `SETUP.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, `ROADMAP.md`, and `WORKING_WITH_AI.md`.
 - Move human-and-agent project knowledge into `docs/`, Codex-specific guidance into `.agents/references/`, active plans into `.agents/plans/`, templates into `.agents/templates/`, generated reports into `.agents/reports/`, historical AI artifacts into `.agents/archive/`, and repo-local skills under `.agents/skills/`.
 - Target this as next-RC work. If it lands before stable `v2.0.0`, the next release candidate is expected to be `v2.0.0-RC7` unless release sequencing changes.
@@ -40,7 +40,7 @@
 ## Move Mapping
 | Current path | Target path | Notes |
 | --- | --- | --- |
-| `temp/repository-knowledge-spec.md` | `.agents/references/repository-knowledge-spec.md` | Promote the spec before moving other knowledge files; update it with repo-specific owners for `.agents/plans/` and `.agents/templates/`. |
+| repository knowledge spec | `.agents/references/repository-knowledge-spec.md` | Promoted before moving other knowledge files; update it with repo-specific owners for `.agents/plans/` and `.agents/templates/`. |
 | `ai/ARCHITECTURE.md` | `docs/ARCHITECTURE.md` | Human-and-agent architecture summary. |
 | `ai/DESIGN.md` | `docs/DESIGN.md` | Human-and-agent product and contract direction. |
 | `ai/specs/APPLICATION_LIFECYCLE_SPEC.md` | `docs/specs/application-lifecycle-spec.md` | Durable project spec; normalize to lowercase hyphenated filename under `docs/specs/`. |
@@ -101,7 +101,7 @@
 - AI references, templates, skills, specs, and archives currently sit under `ai/`.
 - Reusable task starters already moved to `.agents/skills/repo-task/`.
 - The repository currently has only `.agents/skills/` under `.agents/`.
-- `temp/repository-knowledge-spec.md` is a temporary proposed spec, not yet an authoritative repository artifact.
+- `.agents/references/repository-knowledge-spec.md` is the authoritative repository knowledge layout spec.
 - `ROADMAP.md` currently targets stable `v2.0.0` after final RC validation, but this plan is intended for the next RC if selected before stable.
 
 ## Requirement Gaps And Open Questions
@@ -126,7 +126,6 @@
 
 ## Affected Artifacts
 - Repository knowledge spec:
-  - `temp/repository-knowledge-spec.md`
   - `.agents/references/repository-knowledge-spec.md`
 - Root guidance and conventional docs:
   - `AGENTS.md`
@@ -159,15 +158,15 @@
 ## Execution Milestones
 ### Milestone 1: Promote Repository Knowledge Spec
 - goal: make the proposed layout spec authoritative and repo-specific before moving files
-- owned files or packages: `.agents/references/repository-knowledge-spec.md`, `temp/repository-knowledge-spec.md`, `AGENTS.md`, current documentation owner guide
+- owned files or packages: `.agents/references/repository-knowledge-spec.md`, `AGENTS.md`, current documentation owner guide
 - shared files reserved to the coordinator: `ROADMAP.md`
-- context required before execution: `AGENTS.md`, current planning/execution/documentation guides, this plan, and `temp/repository-knowledge-spec.md`
+- context required before execution: `AGENTS.md`, current planning/execution/documentation guides, this plan, and `.agents/references/repository-knowledge-spec.md`
 - behavior to preserve: spec-driven ownership, conventional root docs, and on-demand loading
 - exact deliverables:
-  - move `temp/repository-knowledge-spec.md` to `.agents/references/repository-knowledge-spec.md`
+  - move the temporary repository knowledge spec to `.agents/references/repository-knowledge-spec.md`
   - add repo-specific owner rules for `.agents/plans/`, `.agents/templates/`, conventional root docs, and `WORKING_WITH_AI.md`
   - update `AGENTS.md` and the current documentation owner guide to point at the new spec
-- validation checkpoint: `git diff --check`; targeted search confirms no live instruction still treats `temp/repository-knowledge-spec.md` as authoritative
+- validation checkpoint: `git diff --check`; targeted search confirms no live instruction still treats the old temporary spec path as authoritative
 - commit checkpoint: commit-ready spec promotion
 
 ### Milestone 2: Move Human-And-Agent Project Knowledge
@@ -256,7 +255,7 @@
 - Path and stale-reference checks:
   - targeted `rg` for old live `ai/` paths in root docs, `.agents/`, `docs/`, `ROADMAP.md`, and `CHANGELOG.md`
   - targeted `rg` for accidental `WORKING_WITH_AI.md` default-load language
-  - targeted `rg` for `temp/repository-knowledge-spec.md`
+  - targeted `rg` for the old temporary repository knowledge spec path
 - Tooling checks:
   - classifier comparison proving `docs/` and `.agents/` support files are lightweight-only when no non-lightweight files changed
   - `git diff --check`
@@ -281,7 +280,9 @@
 - Consider refreshing the archived AI-guideline evaluation only after the migration if context measurements are needed for release notes; do not make that a blocker for the layout migration.
 
 ## Validation Results
-- To be filled in during execution.
+- Milestone 1:
+  - `git diff --check` passed.
+  - `rg -n "temp/repository-knowledge-spec[.]md" AGENTS.md ai .agents README.md SETUP.md CONTRIBUTING.md CHANGELOG.md ROADMAP.md WORKING_WITH_AI.md` returned no matches.
 
 ## User Validation
 - Review `.agents/references/repository-knowledge-spec.md` for the final ownership rules.
@@ -293,7 +294,7 @@
 - Behavior changing: repository knowledge ownership and file layout.
 - Roadmap tracking: `ROADMAP.md` active release track points to this plan for next-RC work.
 - Out of scope: app runtime, public API, root conventional doc relocation, archive rewriting, ADR backfill, plugin marketplace.
-- Governing specs: current user request and `temp/repository-knowledge-spec.md`, promoted to `.agents/references/repository-knowledge-spec.md` during execution.
+- Governing specs: current user request and `.agents/references/repository-knowledge-spec.md`.
 - Likely files to change: listed in `## Affected Artifacts`.
 - Compatibility promise: no application contract changes; old live `ai/` paths removed after migration; archived historical paths may remain.
 - Risks: path churn, duplicate owners, accidental `WORKING_WITH_AI.md` default load, stale references, classifier drift, release-target timing.

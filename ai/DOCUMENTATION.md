@@ -18,6 +18,7 @@ Update the artifact that owns the truth being changed:
 - runtime behavior and public API contract: executable tests, `src/docs/asciidoc/`, `src/manualTests/resources/http/`, `src/test/resources/openapi/approved-openapi.json`, and `README.md`
 - human-facing guide for developers using AI through the application lifecycle: `WORKING_WITH_AI.md`
 - AI repository rules and AI-document inventory: `AGENTS.md`
+- repository knowledge layout and file ownership: `.agents/references/repository-knowledge-spec.md`
 - AI local command wrapper shortcut: `ai/ENVIRONMENT_QUICK_REF.md`
 - local setup, tools, troubleshooting, and onboarding: `SETUP.md`
 - contributor workflow and maintainer expectations: `CONTRIBUTING.md`
@@ -64,6 +65,7 @@ Rules for maintaining the `ai/` documents:
 - treat `ai/ARCHITECTURE.md`, `ai/DESIGN.md`, and `ai/LEARNINGS.md` as descriptive guidance, not executable spec authority
 - if an interrupted tool or IDE run leaves an `ai/` document incomplete, finish it or clearly mark the gaps instead of leaving misleading partial content
 - when moving or renaming AI documents, update references in `AGENTS.md` and other `ai/` files in the same change
+- when adding or moving repository knowledge files, apply `.agents/references/repository-knowledge-spec.md` first and update it when no existing owner fits
 
 ## Change-Type Routing
 

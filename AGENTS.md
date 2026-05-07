@@ -52,6 +52,7 @@ Use these artifacts deliberately:
 - `ROADMAP.md`: active release phase, roadmap sequencing, and current project state
 - `CHANGELOG.md`: release history only
 - `SETUP.md`: local environment, tooling, onboarding, and troubleshooting
+- `.agents/references/repository-knowledge-spec.md`: repository knowledge layout and file ownership
 
 The `ai/` documents are guidance and planning aids. They are not higher-priority truth than executable specs, published contract docs, or the human-facing artifact that owns the topic.
 
@@ -115,6 +116,7 @@ Use these files deliberately:
 - `ai/references/`: other on-demand detailed references that should not be part of the default read set
 - `ai/templates/`: on-demand templates for creating new AI artifacts
 - `ai/skills/`: on-demand repo-local workflow skills; read a skill's `SKILL.md` only when that skill is invoked or clearly applies
+- `.agents/references/repository-knowledge-spec.md`: repository knowledge layout and file ownership spec; read before adding or moving repository knowledge files
 - `.agents/plugins/marketplace.json`: Codex repo-scoped plugin marketplace configuration, only if this repository later promotes a reusable workflow to an installable Codex plugin
 - `ai/archive/`: archived AI execution plans and historical report-like analysis artifacts; read only for historical investigation
 
