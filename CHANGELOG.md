@@ -7,6 +7,8 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+## [v2.0.0-RC7] - 2026-05-07
+
 ### Added
 
 - Added a `.gitmessage` commit template based on Conventional Commits with repository-supported type guidance.
@@ -31,6 +33,7 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 - Refreshed the on-demand post-compaction AI guideline evaluation report for the new owner-guide and reusable-task structure.
 - Archived AI-guideline evaluation and workflow-selection comparison report artifacts under `.agents/archive/`, keeping `.agents/references/` for operative references.
 - Updated the manual-regression harness so generated reports default to `temp/manual-regression/...`, and every recorded HTTP exchange is written to `execution-log.ndjson` with request/response detail, timing, status expectations, suite/test context, and redacted secret-bearing values.
+- Updated `.editorconfig` so the IntelliJ formatter exclusion follows the relocated `.agents/**` AI guidance tree instead of retired `ai/**` paths.
 - Shortened the active-plan path to `.agents/plans/` across live AI guidance and roadmap references.
 - Replaced the custom commit-message body-line taxonomy with Conventional Commits subject rules and project metadata footer provenance.
 - Renamed lifecycle vocabulary to phase activities across active AI guidance and lifecycle specs.
