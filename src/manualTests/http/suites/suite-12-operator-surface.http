@@ -6,7 +6,7 @@ GET {{baseUrl}}/hello
 
 > {%
     var date = new Date().toISOString().split('T')[0];
-    client.global.set("report_file", "12-operator-surface_raport_" + date + ".md");
+    client.global.set("report_file", "../reports/12-operator-surface_raport_" + date + ".md");
     var report = "# Manual Regression Report - Suite 12\n\n";
     report += "- Suite: `12-operator-surface`\n";
     report += "- Run Date: " + new Date().toString() + "\n";
@@ -56,8 +56,14 @@ Accept: application/json
 %}
 
 ### Finalize Report
-GET {{baseUrl}}/hello
+POST {{baseUrl}}/debug/echo
+Content-Type: text/plain
+
+{{report}}
+
+>>! {{report_file}}
 
 > {%
+    client.log("Report saved to: " + client.global.get("report_file"));
     client.log(client.global.get("report"));
 %}

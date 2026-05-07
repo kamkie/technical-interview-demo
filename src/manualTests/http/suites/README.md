@@ -25,25 +25,30 @@ This directory contains `.http` scripts that cover the same requests as the Java
 
 ## Producing Reports
 
-Each script is designed to build a markdown report during execution.
+Each script builds a markdown report.
 
-### Option A: Manual Export (IntelliJ)
+### Option A: Automatic Redirection (Suite 01+)
+
+`suite-01` (and other updated suites) automatically redirect their report to a file using the `>>!` operator and a `/debug/echo` reflecting endpoint.
+
+1.  Run the suite in the IDE or via CLI.
+2.  Check `src/manualTests/http/reports/` for the generated `.md` file.
+
+### Option B: Manual Export (IntelliJ)
 
 1.  After running the suite, open the **Services** tool window.
 2.  Find the last request named **"Finalize Report"**.
 3.  The report content will be visible in the **Response** -> **Console** tab through `client.log`.
-4.  Save exported report files under `temp/manual-regression/http-client/`.
 
-### Option B: Command Line (ijhttp)
+### Option C: Command Line (ijhttp)
 
 If you have the `ijhttp` CLI installed:
 
 ```powershell
-New-Item -ItemType Directory -Force temp/manual-regression/http-client
-ijhttp --env dev src/manualTests/http/suites/suite-01-public-overview-and-docs.http > temp/manual-regression/http-client/01-public-overview-and-docs_report_$(Get-Date -Format "yyyy-MM-dd").md
+ijhttp --env dev src/manualTests/http/suites/suite-01-public-overview-and-docs.http
 ```
 
-You may need to clean up the output if `ijhttp` adds extra logging.
+The report will be automatically saved to `src/manualTests/http/reports/` as defined in the script.
 
 ## Suite Dependencies
 

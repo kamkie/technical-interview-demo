@@ -50,6 +50,7 @@ Do not accumulate per-incident history, one-off mistakes, or temporary workaroun
 
 ## Operational Lessons
 
+- **IntelliJ HTTP Client formatting requires an empty line.** Always include an empty line between the request line (or the last header) and a response handler script block (`> {%`). Without it, the client may fail to parse the script or the request correctly.
 - **PostgreSQL behavior is the truth.**
 - **Cached reads need an eviction story.**
 - **State-changing operations need auditable evidence.**

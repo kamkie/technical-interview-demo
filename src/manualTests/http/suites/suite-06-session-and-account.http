@@ -7,7 +7,7 @@ Cookie: technical-interview-demo-session={{sessionCookie}}
 
 > {%
     var date = new Date().toISOString().split('T')[0];
-    client.global.set("report_file", "06-session-and-account_raport_" + date + ".md");
+    client.global.set("report_file", "../reports/06-session-and-account_raport_" + date + ".md");
     var report = "# Manual Regression Report - Suite 06\n\n";
     report += "- Suite: `06-session-and-account`\n";
     report += "- Run Date: " + new Date().toString() + "\n";
@@ -126,8 +126,14 @@ Content-Type: application/json
 %}
 
 ### Finalize Report
-GET {{baseUrl}}/hello
+POST {{baseUrl}}/debug/echo
+Content-Type: text/plain
+
+{{report}}
+
+>>! {{report_file}}
 
 > {%
+    client.log("Report saved to: " + client.global.get("report_file"));
     client.log(client.global.get("report"));
 %}
