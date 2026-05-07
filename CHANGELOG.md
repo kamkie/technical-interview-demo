@@ -10,10 +10,20 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 ### Added
 
 - Added a generated manual-regression `checklist.md` artifact with suite and test checkboxes beside each `manualTests` report.
+- Added semi-automated IntelliJ HTTP Client manual-regression suite scripts under `src/manualTests/http/suites/`, with per-suite Markdown report generation under gitignored `src/manualTests/http/reports/`.
 
 ### Changed
 
 - Removed `imageVulnerabilityScan` from the Gradle `build`/`check` lifecycle; CI and release workflows now request the container image vulnerability scan explicitly when they need that evidence.
+- Updated the manual-regression harness for stable `2.0` verification with safer local run configuration, clearer pre-response failure recording, status-mismatch reporting, and a replacement HTTP transport for authenticated write flows.
+- Updated manual-regression HTTP Client suites and documentation for `ijhttp 2025.3`: explicit private environment file usage, Java 21 CLI runtime notes, generated report redirection, response-handler variable-scope handling, request-scoped substitutions, CSRF capture from `/api/session`, and ordered full-suite execution.
+- Recorded accepted `v2.0.0-RC7` manual-regression evidence in the active plan and advanced the roadmap's next release-track action to stable `v2.0.0` preparation.
+
+### Fixed
+
+- Fixed manual-regression CSRF/session handling so authenticated Java harness and HTTP Client write suites derive CSRF tokens from the active session instead of requiring caller-supplied token variables.
+- Fixed HTTP Client report fallback paths so suite-local generated reports do not create stray `report.md` files in `src/manualTests/http/suites/`.
+- Fixed HTTP Client JSON snippet substitution for nullable account language values in `suite-06-session-and-account.http`.
 
 ## [v2.0.0-RC7] - 2026-05-07
 
