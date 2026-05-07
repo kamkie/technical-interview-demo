@@ -75,7 +75,6 @@ The `ai/` directory is the AI-facing working set for non-contract repository kno
 Use these files deliberately:
 
 - `ai/ARCHITECTURE.md`: compact descriptive repository snapshot, codebase map, package responsibilities, and structural guidance
-- `ai/BUSINESS_MODULES.md`: descriptive business-feature package map and ownership guide
 - `ai/CODE_STYLE.md`: AI-facing code-style and change-shaping guidance for repo edits
 - `ai/DESIGN.md`: intended design direction, product tradeoffs, and open design decisions
 - `ai/DOCUMENTATION.md`: AI-facing documentation ownership and update guidance
@@ -132,7 +131,7 @@ Rules for maintaining the `ai/` documents:
 - when a repo-local skill wraps a workflow owned by another guide, update the skill and the owning guide together if that workflow changes
 - when AI instruction files accumulate overlap, compact them by moving duplicated guidance into the single best owning file and updating cross-references in the same change
 - archive executed `ai/PLAN_*.md` files under `ai/archive/` as part of the release cleanup once that work has been released
-- treat `ai/ARCHITECTURE.md`, `ai/BUSINESS_MODULES.md`, `ai/DESIGN.md`, and `ai/LEARNINGS.md` as descriptive guidance, not executable spec authority
+- treat `ai/ARCHITECTURE.md`, `ai/DESIGN.md`, and `ai/LEARNINGS.md` as descriptive guidance, not executable spec authority
 - if an interrupted tool or IDE run leaves an `ai/` document incomplete, finish it or clearly mark the gaps instead of leaving misleading partial content
 - when moving or renaming AI documents, update references in `AGENTS.md` and other `ai/` files in the same change
 
@@ -155,7 +154,7 @@ Use `ai/references/ARCHITECTURE_DETAILED_MAP.md` only when the compact map is no
 
 When making architecture-sensitive changes:
 
-- follow `ai/ARCHITECTURE.md` and `ai/BUSINESS_MODULES.md`
+- follow `ai/ARCHITECTURE.md`
 - preserve the demo nature of the project and prefer direct code over abstraction
 - keep `AGENTS.md` aligned only when repo-level architectural rules or AI-document ownership changed
 

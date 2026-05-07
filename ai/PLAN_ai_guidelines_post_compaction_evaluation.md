@@ -177,7 +177,7 @@
     - slimming `ai/PLAN.md` by pushing skeleton detail to `ai/templates/PLAN_TEMPLATE.md`
     - clarifying phase-to-guide read sets without bloating `AGENTS.md`
     - tightening `ai/EXECUTION.md` conditional read triggers
-    - clarifying when descriptive docs such as `ai/ARCHITECTURE.md`, `ai/BUSINESS_MODULES.md`, `ai/DESIGN.md`, and `ai/LEARNINGS.md` should be loaded
+    - clarifying when descriptive docs such as `ai/ARCHITECTURE.md`, `ai/DESIGN.md`, and `ai/LEARNINGS.md` should be loaded
     - adding per-milestone context requirements only if they reduce real execution noise
   - update `CHANGELOG.md` under `## [Unreleased]`
   - update this plan to the final non-release execution state, normally `Phase=Integration` / `Status=Implemented`

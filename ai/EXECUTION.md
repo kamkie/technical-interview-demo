@@ -36,7 +36,7 @@ Load additional guides only when their trigger applies:
 - `ai/REVIEWS.md`: final diff review, user-requested review, or security-sensitive change
 - `ai/CODE_STYLE.md`: changing source code, tests, Gradle/build logic, workflow YAML, or other implementation files
 - `ai/ENVIRONMENT_QUICK_REF.md`: writing or running local Gradle wrapper commands
-- `ai/ARCHITECTURE.md`, `ai/BUSINESS_MODULES.md`, `ai/DESIGN.md`, or `ai/LEARNINGS.md`: only when their descriptive triggers match the task or a targeted relevance scan finds a task-overlapping hit
+- `ai/ARCHITECTURE.md`, `ai/DESIGN.md`, or `ai/LEARNINGS.md`: only when their descriptive triggers match the task or a targeted relevance scan finds a task-overlapping hit
 
 Before writing code or docs:
 

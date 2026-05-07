@@ -38,7 +38,6 @@ Use the owner guides instead:
 Descriptive docs stay conditional:
 
 - `ai/ARCHITECTURE.md`: package layout, module boundaries, cross-cutting infrastructure, or structural placement
-- `ai/BUSINESS_MODULES.md`: business-feature package ownership or feature-local boundaries
 - `ai/DESIGN.md`: user-visible behavior, supported scope, security posture, operational defaults, or roadmap tradeoffs
 - `ai/LEARNINGS.md`: task-overlapping relevance-scan hits or a new durable learning trigger
 

@@ -2,7 +2,7 @@
 
 `ai/ARCHITECTURE.md` is the compact AI-facing architecture map for `technical-interview-demo`.
 The detailed architecture reference lives on demand in `ai/references/ARCHITECTURE_DETAILED_MAP.md`.
-Use `ai/BUSINESS_MODULES.md` for the detailed business-feature package map.
+This file owns package shape, feature ownership, and structural guidance.
 
 This file is descriptive, not authoritative.
 Behavioral truth lives in the spec artifacts described by `AGENTS.md`.
@@ -39,11 +39,21 @@ Practical rules:
 - technical packages provide repo-specific infrastructure, not a generic framework
 - public controllers use response DTOs rather than exposing JPA entities directly
 
+## Business Feature Ownership
+
+The business layer is organized by feature, not by technical role.
+Each feature package should keep its controller, service, repository, entities, request and response types, and feature-local exceptions close together unless the concern is clearly cross-cutting.
+
+- `business.book`: owns book pagination, filtering, optimistic locking, category assignment, and audit logging.
+- `business.category`: owns category creation, list ordering, cache eviction, and admin-only write control.
+- `business.localization`: owns localized message lookup, fallback behavior, filtering, write authorization, supported-language policy, seed support, and cache eviction.
+- `business.user`: owns persisted user profile data, preferred-language updates, role state, and synchronization of authenticated users into application state.
+- `business.audit`: owns append-only write auditing for feature services.
+
 ## Important Boundaries
 
 - Infrastructure assets live under `infra/`.
 - Build and security policy files live under `tooling/`.
-- Business package details live in `ai/BUSINESS_MODULES.md`.
 - Setup and tool walkthroughs live in `SETUP.md`, not architecture notes.
 - Contract and documentation routing lives in `ai/DOCUMENTATION.md`.
 - Validation expectations live in `ai/TESTING.md`.
@@ -112,3 +122,10 @@ Usually risky:
 - reducing observability logging or correlation fields without operational evidence
 
 Before structural changes, ask whether the change reduces concepts, keeps behavior near the owning feature, preserves public contract artifacts, and remains readable for a demo audience.
+
+Before moving code across business packages, ask:
+
+- which feature actually owns the behavior?
+- would the move make the public or test-facing behavior harder to trace?
+- is this a real cross-cutting concern, or shared code that still belongs to one feature?
+- is a new abstraction solving repeated repo reality, or only style preference?

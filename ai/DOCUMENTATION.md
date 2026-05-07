@@ -23,8 +23,7 @@ Update the artifact that owns the truth being changed:
 - release sequencing and tagging: `ai/RELEASES.md`; detailed release checklist and artifact verification: `ai/references/RELEASE_CHECKLIST.md` and `ai/references/RELEASE_ARTIFACT_VERIFICATION.md`
 - prompt-title index: `ai/PROMPTS.md`; prompt metadata and raw bodies: `ai/prompts/`; prompt loader script: `scripts/ai/get-prompt.ps1`
 - repo-local reusable workflow wrappers: `ai/skills/`
-- compact codebase map and structural guidance: `ai/ARCHITECTURE.md`; deeper references: `ai/references/`
-- business feature ownership: `ai/BUSINESS_MODULES.md`
+- compact codebase map, structural guidance, and business feature ownership: `ai/ARCHITECTURE.md`; deeper references: `ai/references/`
 - product and contract direction: `ai/DESIGN.md`
 - durable repo-wide lessons: `ai/LEARNINGS.md`
 - edit-shaping rules: `ai/CODE_STYLE.md`

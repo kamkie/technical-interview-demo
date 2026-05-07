@@ -4,7 +4,7 @@ Evaluation date: 2026-05-07
 
 ## Summary
 - Overall grade after follow-up compaction: **A**.
-- The current guidance set is materially stronger than the historical scratch-note `B+`: workflow fanout mechanics, release runbooks, prompt bodies, detailed planning examples, and plan skeleton detail are now on demand.
+- The current guidance set is materially stronger than the historical scratch-note `B+`: workflow fanout mechanics, release runbooks, prompt bodies, detailed planning examples, and plan skeleton detail are now on demand, and business-feature ownership has been folded into `ai/ARCHITECTURE.md`.
 - The remaining cost is concentrated in the unavoidable `AGENTS.md` default floor, the workflow router, and descriptive docs that must stay easy to find without becoming default context.
 - No blocking contradiction was found in the active standing guidance. Old workflow names remain only as intentional migration notes inside the implemented workflow-split plan.
 
@@ -25,17 +25,16 @@ Standing owner files are `AGENTS.md` plus top-level `ai/*.md` files other than a
 
 | File | KB | Lines | Load Class |
 | --- | ---: | ---: | --- |
-| `AGENTS.md` | 13.5 | 147 | Default entry |
-| `ai/ARCHITECTURE.md` | 5.0 | 84 | Conditional descriptive |
-| `ai/BUSINESS_MODULES.md` | 2.8 | 55 | Conditional descriptive |
+| `AGENTS.md` | 13.3 | 146 | Default entry |
+| `ai/ARCHITECTURE.md` | 6.2 | 96 | Conditional descriptive |
 | `ai/CODE_STYLE.md` | 3.4 | 40 | Phase-specific |
 | `ai/DESIGN.md` | 6.4 | 107 | Conditional descriptive |
-| `ai/DOCUMENTATION.md` | 6.7 | 81 | Phase-specific |
+| `ai/DOCUMENTATION.md` | 6.6 | 80 | Phase-specific |
 | `ai/ENVIRONMENT_QUICK_REF.md` | 2.1 | 45 | Phase-specific |
-| `ai/EXECUTION.md` | 7.6 | 94 | Phase-specific |
+| `ai/EXECUTION.md` | 7.5 | 94 | Phase-specific |
 | `ai/LEARNINGS.md` | 3.2 | 47 | Conditional descriptive |
 | `ai/PLAN.md` | 5.6 | 91 | Phase-specific |
-| `ai/PROMPTS.md` | 4.3 | 88 | Conditional index |
+| `ai/PROMPTS.md` | 4.2 | 87 | Conditional index |
 | `ai/RELEASES.md` | 3.4 | 43 | Phase-specific |
 | `ai/REVIEWS.md` | 2.6 | 45 | Phase-specific |
 | `ai/TESTING.md` | 5.0 | 62 | Phase-specific |
@@ -45,7 +44,7 @@ Practical read-set estimates:
 
 | Scenario | Files | KB | Estimated Tokens |
 | --- | ---: | ---: | ---: |
-| Standing root plus top-level owner guides | 15 | 80.9 | 20,719 |
+| Standing root plus top-level owner guides | 14 | 78.9 | 20,202 |
 | Planning minimum: `AGENTS.md` + `ai/PLAN.md` | 2 | 19.1 | 4,889 |
 | Implementation minimum: `AGENTS.md` + `ai/EXECUTION.md` | 2 | 21.0 | 5,380 |
 | Implementation broad conditional set | 5 | 35.3 | 9,030 |
@@ -53,7 +52,7 @@ Practical read-set estimates:
 | Verification: `AGENTS.md` + `ai/TESTING.md` + `ai/DOCUMENTATION.md` + `ai/REVIEWS.md` | 4 | 27.7 | 7,095 |
 | Release policy: `AGENTS.md` + `ai/RELEASES.md` | 2 | 16.9 | 4,327 |
 | Release policy plus on-demand refs | 4 | 22.6 | 5,793 |
-| Conditional descriptive docs only | 4 | 17.4 | 4,463 |
+| Conditional descriptive docs only | 3 | 15.8 | 4,032 |
 | Workflow fanout references now on demand | 2 | 7.3 | 1,861 |
 
 The total standing size is below the historical scratch estimate, and the practical phase read sets are smaller than the raw standing total. `AGENTS.md` still defines the default floor, while detailed workflow and release mechanics now sit behind explicit reference triggers.
@@ -70,8 +69,7 @@ The total standing size is below the historical scratch estimate, and the practi
 | File | Grade | Rationale |
 | --- | --- | --- |
 | `AGENTS.md` | A- | Excellent entry point and spec-priority owner. Change-type routing is now compact and delegates detail to `ai/DOCUMENTATION.md`, though the file remains the default context floor. |
-| `ai/ARCHITECTURE.md` | A- | Clear compact map with the detailed map on demand. Correctly descriptive rather than authoritative. |
-| `ai/BUSINESS_MODULES.md` | A- | Lean ownership guide for feature placement. Its trigger is clear for business-package changes. |
+| `ai/ARCHITECTURE.md` | A | Clear compact map with feature ownership folded in and the detailed map on demand. Correctly descriptive rather than authoritative. |
 | `ai/CODE_STYLE.md` | A | Short, focused edit-shaping guidance with clear cross-references. |
 | `ai/DESIGN.md` | B+ | Useful product-direction context, but relatively large for a descriptive guide and should remain conditional. |
 | `ai/DOCUMENTATION.md` | A | Strong artifact-routing owner. It now also owns detailed change-type routing that was previously duplicated in `AGENTS.md`. |
@@ -90,13 +88,14 @@ The total standing size is below the historical scratch estimate, and the practi
 - Active owner guides and prompt titles use `Linear Plan`, `Single-Plan Fanout`, and `Multi-Plan Fanout`; old names appear only in intentional migration notes in `ai/PLAN_workflow_on_demand_split.md`.
 - The prompt index remains lean, and raw prompt bodies are still on demand. The largest body, `context-report.md`, is a maintenance report prompt rather than standing policy.
 - Targeted relevance scanning, context-quality checkpoints, per-milestone scope checks, and post-validation review triggers are now in owner guides instead of external skill instructions.
+- Business-feature ownership moved from the separate `ai/BUSINESS_MODULES.md` guide into `ai/ARCHITECTURE.md`, removing one overlapping descriptive file from the standing guide set.
 - The evaluation report itself is correctly on demand under `ai/references/` rather than becoming another standing owner guide.
 
 ## Remaining Costs
 - `AGENTS.md` still dominates every read set. That is expected for the entry point, but it creates a hard floor of about 13.5 KB before any phase-specific guide is loaded.
 - `ai/DOCUMENTATION.md` grew because it now owns detailed change-type routing. That is a deliberate tradeoff: the routing detail moved out of default context and into the owning guide.
 - `ai/WORKFLOW.md` remains the largest phase-specific router because it owns branch, worktree, coordinator, and integration invariants.
-- Descriptive docs remain a meaningful optional load at about 17.4 KB combined, so agents should use the phase-to-guide trigger map instead of loading them by default.
+- Descriptive docs remain a meaningful optional load at about 15.8 KB combined, so agents should use the phase-to-guide trigger map instead of loading them by default.
 
 ## Scratch Comparison
 | Scratch Recommendation | Current Result |

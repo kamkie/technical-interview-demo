@@ -13,6 +13,7 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ### Changed
 
+- Folded business-feature ownership guidance from `ai/BUSINESS_MODULES.md` into `ai/ARCHITECTURE.md` and removed the overlapping standalone guide.
 - Implemented the post-compaction AI-guidance findings by tightening execution read triggers, moving change-type routing detail to `ai/DOCUMENTATION.md`, splitting release runbooks into on-demand references, slimming `ai/PLAN.md`, and clarifying phase-to-guide read sets.
 - Reordered `AGENTS.md` into a clearer spec-truth, onboarding, change-routing, and execution-support flow, while compacting branch and worktree expectations and keeping detailed remote-handoff mechanics in `ai/WORKFLOW.md`.
 - Refined AI onboarding and execution guidance with targeted relevance scanning, context-quality checkpoints, per-milestone scope checks, and post-validation review triggers.

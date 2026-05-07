@@ -6,7 +6,7 @@ This is the on-demand detailed architecture map for `technical-interview-demo`.
 Use this file only when the compact architecture guide is not enough to understand how the codebase is organized before structural changes.
 This file is descriptive, not authoritative. Behavioral truth still lives in the spec artifacts described in `AGENTS.md`.
 Use `ai/CODE_STYLE.md` for edit-shaping rules, `ai/TESTING.md` for validation scope, and `ai/DOCUMENTATION.md` for contract-artifact alignment.
-Use `ai/BUSINESS_MODULES.md` for the detailed business-feature package map.
+Use `ai/ARCHITECTURE.md` for the standing business-feature ownership map.
 
 ## System Purpose
 
@@ -95,9 +95,9 @@ Checked-in build-tool policy files live under `tooling/`:
 - `TechnicalInterviewDemoApplication`
   - Spring Boot entry point only
 
-### Business Modules
+### Business Feature Ownership
 
-See `ai/BUSINESS_MODULES.md` for the detailed feature-package map and ownership notes.
+See `ai/ARCHITECTURE.md` for the standing feature-package map and ownership notes.
 
 ### Technical Modules
 

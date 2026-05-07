@@ -65,7 +65,7 @@ Architecture and product direction:
 
 - [System Purpose](ai/ARCHITECTURE.md#system-purpose)
 - [API Shape](ai/ARCHITECTURE.md#api-shape)
-- [Feature Packages](ai/BUSINESS_MODULES.md#feature-packages)
+- [Business Feature Ownership](ai/ARCHITECTURE.md#business-feature-ownership)
 - [Product Intent](ai/DESIGN.md#product-intent)
 - [Non-Goals](ai/DESIGN.md#non-goals)
 
