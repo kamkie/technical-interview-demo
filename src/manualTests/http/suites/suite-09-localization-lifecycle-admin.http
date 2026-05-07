@@ -1,5 +1,12 @@
 @baseUrl = http://localhost:8080
 @csrfToken = not-captured-run-setup-request-first
+@report = no-report-available
+@report_file = report.md
+@test_idx = 1
+@runTag = no-tag
+@createdLocalizationKey = no-key
+@createdLocalizationId = 0
+@createdLocalizationVersion = 0
 
 ### Suite 09 — Localization Lifecycle Admin
 # @name suite_09_setup
@@ -36,7 +43,7 @@ Cookie: technical-interview-demo-session={{sessionCookie}}
 ### 09-1 Create Localization
 # @name create_localization
 POST {{baseUrl}}/api/localizations
-Cookie: technical-interview-demo-session={{sessionCookie}}
+Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{csrfToken}}
 X-XSRF-TOKEN: {{csrfToken}}
 Content-Type: application/json
 
@@ -48,8 +55,8 @@ Content-Type: application/json
 }
 
 > {%
-    var idx = client.global.get("test_idx");
-    var report = client.global.get("report");
+    var idx = client.global.get("test_idx") || 1;
+    var report = client.global.get("report") || "";
     var validStatuses = [200, 201];
     var result = validStatuses.includes(response.status) ? "PASS" : "FAIL";
     report += "| " + idx + " | createLocalization | POST | /api/localizations | " + response.status + " | " + result + " | create localization |\n";
@@ -60,7 +67,7 @@ Content-Type: application/json
         client.assert(validStatuses.includes(response.status), "Response status is not 200 or 201");
     });
 
-    if (response.body.id) {
+    if (response.body && response.body.id) {
         client.global.set("createdLocalizationId", response.body.id);
         client.global.set("createdLocalizationVersion", response.body.version || 0);
     }
@@ -88,7 +95,7 @@ Accept: application/json
 ### 09-3 Update Localization
 # @name update_localization
 PUT {{baseUrl}}/api/localizations/{{createdLocalizationId}}
-Cookie: technical-interview-demo-session={{sessionCookie}}
+Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{csrfToken}}
 X-XSRF-TOKEN: {{csrfToken}}
 Content-Type: application/json
 
@@ -117,7 +124,7 @@ Content-Type: application/json
 ### 09-4 Delete Localization
 # @name delete_localization
 DELETE {{baseUrl}}/api/localizations/{{createdLocalizationId}}
-Cookie: technical-interview-demo-session={{sessionCookie}}
+Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{csrfToken}}
 X-XSRF-TOKEN: {{csrfToken}}
 
 > {%

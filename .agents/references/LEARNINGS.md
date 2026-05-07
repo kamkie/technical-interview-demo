@@ -51,6 +51,8 @@ Do not accumulate per-incident history, one-off mistakes, or temporary workaroun
 ## Operational Lessons
 
 - **IntelliJ HTTP Client formatting requires an empty line.** Always include an empty line between the request line (or the last header) and a response handler script block (`> {%`). Without it, the client may fail to parse the script or the request correctly.
+- **Manual Cookie headers in IntelliJ HTTP Client override the cookie jar.** If you manually specify a `Cookie` header (e.g., to pass a session token from an environment variable), the automatic cookie management is bypassed. For requests requiring CSRF protection, you must manually include both the session cookie and the `XSRF-TOKEN` cookie in the `Cookie` header for the request to be valid.
+- **Initialize IntelliJ HTTP variables with file-level defaults.** To avoid "unsubstituted variable" errors when running scripts partially or when preceding handlers fail, use `@varname = default` at the top of the `.http` file for all variables used in `{{varname}}` placeholders.
 - **`ijhttp` CLI is preferred for CI/CD and automation.** It supports running directories (alphabetical order), automatic environment file discovery, and XML report generation (`--report`).
 - **Use Docker for zero-install HTTP testing.** The `jetbrains/intellij-http-client` image allows running `.http` suites in any environment with Docker.
 - **PostgreSQL behavior is the truth.**

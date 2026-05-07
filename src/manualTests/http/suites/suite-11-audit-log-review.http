@@ -1,5 +1,9 @@
 @baseUrl = http://localhost:8080
 @csrfToken = not-captured-run-setup-request-first
+@report = no-report-available
+@report_file = report.md
+@test_idx = 1
+@runTag = no-tag
 
 ### Suite 11 — Audit Log Review
 # @name suite_11_setup
@@ -35,8 +39,8 @@ Cookie: technical-interview-demo-session={{sessionCookie}}
 Accept: application/json
 
 > {%
-    var idx = client.global.get("test_idx");
-    var report = client.global.get("report");
+    var idx = client.global.get("test_idx") || 1;
+    var report = client.global.get("report") || "";
     var result = response.status === 200 ? "PASS" : "FAIL";
     report += "| " + idx + " | listAuditLogs_paginated_returns200 | GET | /api/admin/audit-logs | " + response.status + " | " + result + " | audit logs page 0 desc |\n";
     client.global.set("report", report);
@@ -54,8 +58,8 @@ Cookie: technical-interview-demo-session={{sessionCookie}}
 Accept: application/json
 
 > {%
-    var idx = client.global.get("test_idx");
-    var report = client.global.get("report");
+    var idx = client.global.get("test_idx") || 1;
+    var report = client.global.get("report") || "";
     var result = response.status === 200 ? "PASS" : "FAIL";
     report += "| " + idx + " | filterAuditLogs_byActorAndAction_returns200 | GET | /api/admin/audit-logs | " + response.status + " | " + result + " | audit logs filter authentication |\n";
     client.global.set("report", report);
@@ -73,8 +77,8 @@ Cookie: technical-interview-demo-session={{sessionCookie}}
 Accept: application/json
 
 > {%
-    var idx = client.global.get("test_idx");
-    var report = client.global.get("report");
+    var idx = client.global.get("test_idx") || 1;
+    var report = client.global.get("report") || "";
     var tag = client.global.get("runTag");
     var found = tag ? JSON.stringify(response.body).includes(tag) : false;
     var result = (response.status === 200 && (!tag || found)) ? "PASS" : "FAIL";

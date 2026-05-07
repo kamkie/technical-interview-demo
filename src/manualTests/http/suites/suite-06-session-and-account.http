@@ -1,5 +1,10 @@
 @baseUrl = http://localhost:8080
 @csrfToken = not-captured-run-setup-request-first
+@report = no-report-available
+@report_file = report.md
+@test_idx = 1
+@originalPreferredLanguageJson = "null"
+@temporaryPreferredLanguageJson = "en"
 
 ### Suite 06 — Session and Account
 # @name suite_06_setup
@@ -35,9 +40,9 @@ Cookie: technical-interview-demo-session={{sessionCookie}}
 Accept: application/json
 
 > {%
-    var idx = client.global.get("test_idx");
-    var report = client.global.get("report");
-    var isAuthenticated = response.body.authenticated === true;
+    var idx = client.global.get("test_idx") || 1;
+    var report = client.global.get("report") || "";
+    var isAuthenticated = response.body && response.body.authenticated === true;
     var result = (response.status === 200 && isAuthenticated) ? "PASS" : "FAIL";
     report += "| " + idx + " | session_isAuthenticated | GET | /api/session | " + response.status + " | " + result + " | admin /api/session |\n";
     client.global.set("report", report);
@@ -45,7 +50,7 @@ Accept: application/json
 
     client.test("Is authenticated", function() {
         client.assert(response.status === 200, "Response status is not 200");
-        client.assert(response.body.authenticated === true, "Not authenticated");
+        client.assert(response.body && response.body.authenticated === true, "Not authenticated");
     });
 %}
 
@@ -57,8 +62,8 @@ Cookie: technical-interview-demo-session={{sessionCookie}}
 Accept: application/json
 
 > {%
-    var idx = client.global.get("test_idx");
-    var report = client.global.get("report");
+    var idx = client.global.get("test_idx") || 1;
+    var report = client.global.get("report") || "";
     var result = response.status === 200 ? "PASS" : "FAIL";
     report += "| " + idx + " | account_returnsAdminIdentity | GET | /api/account | " + response.status + " | " + result + " | admin /api/account |\n";
     client.global.set("report", report);
@@ -81,7 +86,7 @@ Accept: application/json
 ### 06-3 Change Language
 # @name change_language
 PUT {{baseUrl}}/api/account/language
-Cookie: technical-interview-demo-session={{sessionCookie}}
+Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{csrfToken}}
 X-XSRF-TOKEN: {{csrfToken}}
 Content-Type: application/json
 
@@ -90,8 +95,8 @@ Content-Type: application/json
 }
 
 > {%
-    var idx = client.global.get("test_idx");
-    var report = client.global.get("report");
+    var idx = client.global.get("test_idx") || 1;
+    var report = client.global.get("report") || "";
     var validStatuses = [200, 204];
     var result = validStatuses.includes(response.status) ? "PASS" : "FAIL";
 
@@ -107,7 +112,7 @@ Content-Type: application/json
 ### 06-4 Restore Language
 # @name restore_language
 PUT {{baseUrl}}/api/account/language
-Cookie: technical-interview-demo-session={{sessionCookie}}
+Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{csrfToken}}
 X-XSRF-TOKEN: {{csrfToken}}
 Content-Type: application/json
 
@@ -116,8 +121,8 @@ Content-Type: application/json
 }
 
 > {%
-    var idx = client.global.get("test_idx");
-    var report = client.global.get("report");
+    var idx = client.global.get("test_idx") || 1;
+    var report = client.global.get("report") || "";
     var validStatuses = [200, 204];
     var result = validStatuses.includes(response.status) ? "PASS" : "FAIL";
     report += "| " + idx + " | restorePreferredLanguage | PUT | /api/account/language | " + response.status + " | " + result + " | restore original preferred language |\n";

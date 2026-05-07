@@ -1,4 +1,9 @@
 @baseUrl = http://localhost:8080
+@report = no-report-available
+@report_file = report.md
+@test_idx = 1
+@firstBookId = 0
+@firstCategoryId = 1
 
 ### Suite 03 — Public Book and Category Reads
 # @name suite_03_setup
@@ -24,8 +29,8 @@ GET {{baseUrl}}/api/books?page=0&size=5&sort=title,asc
 Accept: application/json
 
 > {%
-    var idx = client.global.get("test_idx");
-    var report = client.global.get("report");
+    var idx = client.global.get("test_idx") || 1;
+    var report = client.global.get("report") || "";
     var result = response.status === 200 ? "PASS" : "FAIL";
     report += "| " + idx + " | listBooksWithPagination | GET | /api/books | " + response.status + " | " + result + " | public book list |\n";
     client.global.set("report", report);
@@ -35,7 +40,7 @@ Accept: application/json
         client.assert(response.status === 200, "Response status is not 200");
     });
 
-    if (response.body.content && response.body.content.length > 0) {
+    if (response.body && response.body.content && response.body.content.length > 0) {
         client.global.set("firstBookId", response.body.content[0].id);
         client.log("Captured firstBookId: " + response.body.content[0].id);
     }
@@ -47,8 +52,8 @@ GET {{baseUrl}}/api/categories
 Accept: application/json
 
 > {%
-    var idx = client.global.get("test_idx");
-    var report = client.global.get("report");
+    var idx = client.global.get("test_idx") || 1;
+    var report = client.global.get("report") || "";
     var result = response.status === 200 ? "PASS" : "FAIL";
     report += "| " + idx + " | listCategories | GET | /api/categories | " + response.status + " | " + result + " | public category list |\n";
     client.global.set("report", report);
@@ -58,7 +63,7 @@ Accept: application/json
         client.assert(response.status === 200, "Response status is not 200");
     });
 
-    var items = response.body.content || response.body;
+    var items = response.body && (response.body.content || response.body);
     if (items && items.length > 0) {
         client.global.set("firstCategoryId", items[0].id);
         client.log("Captured firstCategoryId: " + items[0].id);

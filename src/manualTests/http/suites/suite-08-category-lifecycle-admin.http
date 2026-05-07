@@ -1,5 +1,11 @@
 @baseUrl = http://localhost:8080
 @csrfToken = not-captured-run-setup-request-first
+@report = no-report-available
+@report_file = report.md
+@test_idx = 1
+@runTag = no-tag
+@createdCategoryId = 0
+@createdCategoryVersion = 0
 
 ### Suite 08 — Category Lifecycle Admin
 # @name suite_08_setup
@@ -34,7 +40,7 @@ Cookie: technical-interview-demo-session={{sessionCookie}}
 ### 08-1 Create Category
 # @name create_category
 POST {{baseUrl}}/api/categories
-Cookie: technical-interview-demo-session={{sessionCookie}}
+Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{csrfToken}}
 X-XSRF-TOKEN: {{csrfToken}}
 Content-Type: application/json
 
@@ -43,8 +49,8 @@ Content-Type: application/json
 }
 
 > {%
-    var idx = client.global.get("test_idx");
-    var report = client.global.get("report");
+    var idx = client.global.get("test_idx") || 1;
+    var report = client.global.get("report") || "";
     var validStatuses = [200, 201];
     var result = validStatuses.includes(response.status) ? "PASS" : "FAIL";
     report += "| " + idx + " | createCategory | POST | /api/categories | " + response.status + " | " + result + " | create category |\n";
@@ -55,7 +61,7 @@ Content-Type: application/json
         client.assert(validStatuses.includes(response.status), "Response status is not 200 or 201");
     });
 
-    if (response.body.id) {
+    if (response.body && response.body.id) {
         client.global.set("createdCategoryId", response.body.id);
         client.global.set("createdCategoryVersion", response.body.version || 0);
     }
@@ -64,7 +70,7 @@ Content-Type: application/json
 ### 08-2 Update Category
 # @name update_category
 PUT {{baseUrl}}/api/categories/{{createdCategoryId}}
-Cookie: technical-interview-demo-session={{sessionCookie}}
+Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{csrfToken}}
 X-XSRF-TOKEN: {{csrfToken}}
 Content-Type: application/json
 
@@ -90,7 +96,7 @@ Content-Type: application/json
 ### 08-3 Delete Category
 # @name delete_category
 DELETE {{baseUrl}}/api/categories/{{createdCategoryId}}
-Cookie: technical-interview-demo-session={{sessionCookie}}
+Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{csrfToken}}
 X-XSRF-TOKEN: {{csrfToken}}
 
 > {%

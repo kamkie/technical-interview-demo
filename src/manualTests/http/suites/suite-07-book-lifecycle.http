@@ -1,5 +1,13 @@
 @baseUrl = http://localhost:8080
 @csrfToken = not-captured-run-setup-request-first
+@report = no-report-available
+@report_file = report.md
+@test_idx = 1
+@runTag = no-tag
+@createdBookIsbn = no-isbn
+@createdBookId = 0
+@createdBookVersion = 0
+@firstCategoryId = 1
 
 ### Suite 07 — Book Lifecycle
 # @name suite_07_setup
@@ -36,7 +44,7 @@ Cookie: technical-interview-demo-session={{sessionCookie}}
 ### 07-1 Create Book
 # @name create_book
 POST {{baseUrl}}/api/books
-Cookie: technical-interview-demo-session={{sessionCookie}}
+Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{csrfToken}}
 X-XSRF-TOKEN: {{csrfToken}}
 Content-Type: application/json
 
@@ -49,8 +57,8 @@ Content-Type: application/json
 }
 
 > {%
-    var idx = client.global.get("test_idx");
-    var report = client.global.get("report");
+    var idx = client.global.get("test_idx") || 1;
+    var report = client.global.get("report") || "";
     var validStatuses = [200, 201];
     var result = validStatuses.includes(response.status) ? "PASS" : "FAIL";
     report += "| " + idx + " | createBook_returnsLocationOrEntity | POST | /api/books | " + response.status + " | " + result + " | create book |\n";
@@ -61,7 +69,7 @@ Content-Type: application/json
         client.assert(validStatuses.includes(response.status), "Response status is not 200 or 201");
     });
 
-    if (response.body.id) {
+    if (response.body && response.body.id) {
         client.global.set("createdBookId", response.body.id);
         client.global.set("createdBookVersion", response.body.version || 0);
     }
@@ -89,7 +97,7 @@ Accept: application/json
 ### 07-3 Update Book
 # @name update_book
 PUT {{baseUrl}}/api/books/{{createdBookId}}
-Cookie: technical-interview-demo-session={{sessionCookie}}
+Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{csrfToken}}
 X-XSRF-TOKEN: {{csrfToken}}
 Content-Type: application/json
 
@@ -121,7 +129,7 @@ Content-Type: application/json
 ### 07-4 Delete Book
 # @name delete_book
 DELETE {{baseUrl}}/api/books/{{createdBookId}}
-Cookie: technical-interview-demo-session={{sessionCookie}}
+Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{csrfToken}}
 X-XSRF-TOKEN: {{csrfToken}}
 
 > {%

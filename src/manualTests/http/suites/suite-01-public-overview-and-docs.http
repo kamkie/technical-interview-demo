@@ -1,4 +1,7 @@
 @baseUrl = http://localhost:8080
+@report = no-report-available
+@report_file = report.md
+@test_idx = 1
 
 ### Suite 01 — Public Overview and Docs
 # @name suite_01_setup
@@ -24,8 +27,8 @@ GET {{baseUrl}}/
 Accept: application/json
 
 > {%
-    var idx = client.global.get("test_idx");
-    var report = client.global.get("report");
+    var idx = client.global.get("test_idx") || 1;
+    var report = client.global.get("report") || "";
     var result = response.status === 200 ? "PASS" : "FAIL";
     report += "| " + idx + " | rootOverview | GET | / | " + response.status + " | " + result + " | public root overview |\n";
     client.global.set("report", report);
@@ -42,8 +45,8 @@ GET {{baseUrl}}/hello
 Accept: text/plain
 
 > {%
-    var idx = client.global.get("test_idx");
-    var report = client.global.get("report");
+    var idx = client.global.get("test_idx") || 1;
+    var report = client.global.get("report") || "";
     var result = response.status === 200 ? "PASS" : "FAIL";
     report += "| " + idx + " | helloSmoke | GET | /hello | " + response.status + " | " + result + " | public hello smoke |\n";
     client.global.set("report", report);
@@ -60,8 +63,8 @@ GET {{baseUrl}}/docs
 Accept: text/html
 
 > {%
-    var idx = client.global.get("test_idx");
-    var report = client.global.get("report");
+    var idx = client.global.get("test_idx") || 1;
+    var report = client.global.get("report") || "";
     var validStatuses = [200, 301, 302, 303, 307, 308];
     var result = validStatuses.includes(response.status) ? "PASS" : "FAIL";
     report += "| " + idx + " | docsRedirect | GET | /docs | " + response.status + " | " + result + " | docs redirect |\n";
@@ -79,8 +82,8 @@ GET {{baseUrl}}/v3/api-docs
 Accept: application/json
 
 > {%
-    var idx = client.global.get("test_idx");
-    var report = client.global.get("report");
+    var idx = client.global.get("test_idx") || 1;
+    var report = client.global.get("report") || "";
     var result = response.status === 200 ? "PASS" : "FAIL";
     report += "| " + idx + " | openApiJson | GET | /v3/api-docs | " + response.status + " | " + result + " | OpenAPI JSON |\n";
     client.global.set("report", report);

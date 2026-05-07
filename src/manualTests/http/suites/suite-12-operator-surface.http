@@ -1,4 +1,7 @@
 @baseUrl = http://localhost:8080
+@report = no-report-available
+@report_file = report.md
+@test_idx = 1
 
 ### Suite 12 — Operator Surface
 # @name suite_12_setup
@@ -25,8 +28,8 @@ Cookie: technical-interview-demo-session={{sessionCookie}}
 Accept: application/json
 
 > {%
-    var idx = client.global.get("test_idx");
-    var report = client.global.get("report");
+    var idx = client.global.get("test_idx") || 1;
+    var report = client.global.get("report") || "";
     var result = response.status === 200 ? "PASS" : "FAIL";
     report += "| " + idx + " | operatorSurface_asAdmin_returns200 | GET | /api/admin/operator-surface | " + response.status + " | " + result + " | admin operator-surface |\n";
     client.global.set("report", report);
@@ -43,8 +46,8 @@ GET {{baseUrl}}/api/admin/operator-surface
 Accept: application/json
 
 > {%
-    var idx = client.global.get("test_idx");
-    var report = client.global.get("report");
+    var idx = client.global.get("test_idx") || 1;
+    var report = client.global.get("report") || "";
     var result = response.status === 401 ? "PASS" : "FAIL";
     report += "| " + idx + " | operatorSurface_anonymous | GET | /api/admin/operator-surface | " + response.status + " | " + result + " | anonymous operator surface |\n";
     client.global.set("report", report);
