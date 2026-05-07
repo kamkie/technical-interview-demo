@@ -7,11 +7,11 @@ Evaluation date: 2026-05-07
 - The standing AI guidance remains coherent, owner-routed, and mostly on-demand after the workflow, release, planning, prompt, and per-milestone context splits.
 - The default load is stable at `AGENTS.md` only: 13,637 characters, 13,637 bytes, 146 lines, 1,852 words, and 3,410 estimated tokens.
 - The full standing owner-guide set is 81,477 characters / 20,375 estimated tokens across 14 files. That is still acceptable because phase prompts load narrow subsets instead of the whole standing set.
-- The largest practical cost is no longer standing policy drift; it is active plan inventory. After `v2.0.0-RC6` release cleanup, one top-level `ai/PLAN_*.md` file remains active: 38,834 characters / 9,709 estimated tokens for the manual regression gate.
+- The largest practical cost is no longer standing policy drift; it is active plan inventory. After `v2.0.0-RC6` release cleanup, one top-level `ai/plans/active/PLAN_*.md` file remains active: 38,834 characters / 9,709 estimated tokens for the manual regression gate.
 - No blocking active-guidance contradiction was found. Old workflow terminology appears only in historical or migration context inside active plans, not in standing owner guides or prompt titles.
 
 ## Method
-- Read `AGENTS.md`, `ai/DOCUMENTATION.md`, `ai/PROMPTS.md`, and every top-level owner guide under `ai/` excluding active `ai/PLAN_*.md` files from the standing-guide baseline.
+- Read `AGENTS.md`, `ai/DOCUMENTATION.md`, `ai/PROMPTS.md`, and every top-level owner guide under `ai/` excluding active `ai/plans/active/PLAN_*.md` files from the standing-guide baseline.
 - Read `ai/prompts/index.json` and representative large prompt bodies: `context-report.md`, `evaluate-ai-guidelines.md`, `compact-ai-docs.md`, `run-all-ready-plans.md`, and `integrate-all-open-prs.md`.
 - Read key on-demand references that affect practical loads: workflow fanout references, release references, and the plan template.
 - Checked active plans for lifecycle and stale-reference relevance without treating them as standing guides.
@@ -32,7 +32,7 @@ Standing owner files are `AGENTS.md` plus top-level `ai/*.md` files other than a
 | `ai/ENVIRONMENT_QUICK_REF.md` | 2,146 | 2,146 | 45 | 275 | 537 | Phase-specific |
 | `ai/EXECUTION.md` | 7,844 | 7,844 | 94 | 1,160 | 1,961 | Phase-specific |
 | `ai/LEARNINGS.md` | 3,259 | 3,259 | 47 | 484 | 815 | Conditional descriptive |
-| `ai/PLAN.md` | 6,282 | 6,282 | 96 | 905 | 1,571 | Phase-specific |
+| `ai/PLANNING.md` | 6,282 | 6,282 | 96 | 905 | 1,571 | Phase-specific |
 | `ai/PROMPTS.md` | 4,330 | 4,330 | 88 | 581 | 1,083 | Conditional index |
 | `ai/RELEASES.md` | 3,526 | 3,526 | 43 | 507 | 882 | Phase-specific |
 | `ai/REVIEWS.md` | 2,650 | 2,650 | 45 | 381 | 663 | Phase-specific |
@@ -68,7 +68,7 @@ Largest prompt bodies remain procedural, not standing policy:
 | Scenario | Files | Chars | KB | Lines | Words | Est. Tokens |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | Standing root plus top-level owner guides | 14 | 81,477 | 79.6 | 1,141 | 11,385 | 20,375 |
-| Planning minimum: `AGENTS.md` + `ai/PLAN.md` | 2 | 19,919 | 19.5 | 242 | 2,757 | 4,981 |
+| Planning minimum: `AGENTS.md` + `ai/PLANNING.md` | 2 | 19,919 | 19.5 | 242 | 2,757 | 4,981 |
 | Implementation minimum: `AGENTS.md` + `ai/EXECUTION.md` | 2 | 21,481 | 21.0 | 240 | 3,012 | 5,371 |
 | Broad implementation conditional set | 5 | 36,822 | 36.0 | 422 | 5,086 | 9,207 |
 | Workflow selection: `AGENTS.md` + `ai/WORKFLOW.md` + `ai/EXECUTION.md` | 3 | 31,074 | 30.3 | 392 | 4,454 | 7,770 |
@@ -82,7 +82,7 @@ Largest prompt bodies remain procedural, not standing policy:
 - Owner clarity: **A**. `ai/DOCUMENTATION.md` cleanly owns artifact routing, most guides declare their scope in the first paragraph, and `AGENTS.md` stays the repo-level entry point.
 - Default-load necessity: **A-**. The default floor is still 13,637 characters, but it is stable and delegates details to owner guides instead of embedding runbooks.
 - On-demand trigger clarity: **A**. Workflow fanout, release mechanics, planning examples, troubleshooting, Gradle task graph, prompt bodies, templates, skills, archives, and descriptive docs all have explicit load triggers.
-- Duplication or policy drift: **A-**. No blocking duplication was found. `AGENTS.md` has compact high-level routing while `ai/DOCUMENTATION.md` owns the detailed routing; `ai/PLAN.md` repeats only planning-specific consequences.
+- Duplication or policy drift: **A-**. No blocking duplication was found. `AGENTS.md` has compact high-level routing while `ai/DOCUMENTATION.md` owns the detailed routing; `ai/PLANNING.md` repeats only planning-specific consequences.
 - Execution usefulness: **A**. Execution, workflow, validation, and review guides give concrete steps and stop conditions. The per-milestone context requirement is now actionable instead of aspirational.
 - Validation and review routing: **A**. `ai/TESTING.md`, `ai/DOCUMENTATION.md`, and `ai/REVIEWS.md` form a clear route for documentation-only, lightweight, implementation, contract, and security-sensitive changes.
 
@@ -97,7 +97,7 @@ Largest prompt bodies remain procedural, not standing policy:
 | `ai/ENVIRONMENT_QUICK_REF.md` | A | Small, concrete wrapper command guide with an explicit boundary from setup troubleshooting. |
 | `ai/EXECUTION.md` | A | The milestone loop, conditional read triggers, validation handoff, and commit discipline are clear and executable. |
 | `ai/LEARNINGS.md` | A- | Durable lessons are concise and scoped. Its relevance-scan trigger keeps it out of default context. |
-| `ai/PLAN.md` | A- | Good minimum planning policy with full skeleton moved to the template. It necessarily repeats a few planning consequences from documentation routing. |
+| `ai/PLANNING.md` | A- | Good minimum planning policy with full skeleton moved to the template. It necessarily repeats a few planning consequences from documentation routing. |
 | `ai/PROMPTS.md` | A | Lean prompt-title index with a compact default read-set table and raw bodies kept on demand. |
 | `ai/RELEASES.md` | A- | Release policy stays standing while checklist and artifact verification are on demand. Preconditions are appropriately strict. |
 | `ai/REVIEWS.md` | A | Short, practical review and security-review guidance with useful findings-first reporting rules. |
@@ -107,7 +107,7 @@ Largest prompt bodies remain procedural, not standing policy:
 ## Realized Gains Since The Previous Report
 - The previous **A** grade still holds; no newly discovered contradiction requires downgrading the guidance set.
 - The default load remained stable at `AGENTS.md` only, while the latest context-size reporting confirms new inventory is landing outside the default path.
-- Per-milestone context requirements are now part of `ai/PLAN.md`, `ai/templates/PLAN_TEMPLATE.md`, `ai/EXECUTION.md`, and active plans, giving implementers a concrete way to avoid broad just-in-case reads.
+- Per-milestone context requirements are now part of `ai/PLANNING.md`, `ai/templates/PLAN_TEMPLATE.md`, `ai/EXECUTION.md`, and active plans, giving implementers a concrete way to avoid broad just-in-case reads.
 - The prompt set added stronger maintenance tooling, especially `Context Report`, while keeping raw prompt bodies under `ai/prompts/bodies/` and out of standing guidance.
 - Workflow mode names remain current in standing guides and prompt titles: `Linear Plan`, `Single-Plan Fanout`, and `Multi-Plan Fanout`.
 - The report itself remains an on-demand reference rather than becoming a top-level AI guide.
@@ -124,7 +124,7 @@ Largest prompt bodies remain procedural, not standing policy:
 - Recreating pre-split workflow names or transitional workflow reference files is obsolete. The current names are `Linear Plan`, `Single-Plan Fanout`, and `Multi-Plan Fanout`.
 - Restoring a separate business-module guide is not recommended. Feature ownership belongs in `ai/ARCHITECTURE.md`.
 - Copying release checklist details back into `ai/RELEASES.md` is not recommended. The current release references are the right on-demand boundary.
-- Moving the plan skeleton back into `ai/PLAN.md` is not recommended. `ai/templates/PLAN_TEMPLATE.md` is the right home for full structure.
+- Moving the plan skeleton back into `ai/PLANNING.md` is not recommended. `ai/templates/PLAN_TEMPLATE.md` is the right home for full structure.
 - Bulk-loading `ai/archive/` for active guidance review is not recommended. Archived plans are historical and should be opened only for targeted investigation.
 - Treating old scratch-note grades or size targets as current authority is obsolete. Live repository measurements should drive future evaluations.
 

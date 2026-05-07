@@ -1,4 +1,4 @@
-Review `<plan_file>` against `ai/PLAN.md`.
+Review `<plan_file>` against `ai/PLANNING.md`.
 
 List concrete gaps or ambiguities first.
 Check whether the lifecycle phase and status are accurate.

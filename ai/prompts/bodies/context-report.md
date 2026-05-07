@@ -18,7 +18,7 @@ Count only repository AI instruction material:
 Categorize measurements into these broad buckets:
 
 - standing root and AI top-level files
-- active plan files, meaning top-level `ai/PLAN_*.md`
+- active plan files, meaning top-level `ai/plans/active/PLAN_*.md`
 - archived plans
 - on-demand prompts
 - on-demand references

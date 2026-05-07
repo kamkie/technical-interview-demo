@@ -30,13 +30,13 @@ Three execution modes are supported:
    - one canonical `CHANGELOG.md` stays authoritative
 
 2. `Single-Plan Fanout`
-   - one current `ai/PLAN_*.md` stays authoritative
+   - one current `ai/plans/active/PLAN_*.md` stays authoritative
    - a coordinator fans out worker branches or worktrees for disjoint slices of that plan
    - workers avoid shared files and report milestone output back through worker logs
    - detailed mechanics are in `ai/references/WORKFLOW_SINGLE_PLAN_FANOUT.md`
 
 3. `Multi-Plan Fanout`
-   - different workers execute different `ai/PLAN_*.md` files in parallel
+   - different workers execute different `ai/plans/active/PLAN_*.md` files in parallel
    - each worker keeps a private `CHANGELOG_<topic>.md` copy instead of editing `CHANGELOG.md`
    - the coordinator tracks integration order and later folds accepted changelog text back into `CHANGELOG.md`
    - detailed mechanics are in `ai/references/WORKFLOW_MULTI_PLAN_FANOUT.md`
@@ -157,7 +157,7 @@ Use `Linear Plan` as the default execution mode.
 Ownership rules:
 
 - one agent owns the active branch
-- the canonical `ai/PLAN_*.md` is updated directly
+- the canonical `ai/plans/active/PLAN_*.md` is updated directly
 - `CHANGELOG.md` is updated directly under `## [Unreleased]`
 
 Remote handoff:

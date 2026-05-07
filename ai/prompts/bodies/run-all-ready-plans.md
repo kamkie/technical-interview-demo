@@ -1,6 +1,6 @@
 Select every ready plan file under `ai/`, then execute the selected set using the same flow as `Run Plans As Multi-Plan Fanout`.
 
-Treat ready plans as the non-archived `ai/PLAN_*.md` files still present directly under `ai/` whose `Lifecycle` status is `Ready`.
+Treat ready plans as the non-archived `ai/plans/active/PLAN_*.md` files still present directly under `ai/` whose `Lifecycle` status is `Ready`.
 Restate exactly which ready plan files were selected and which non-archived plan files were skipped because they were not `Ready`.
 If there are no ready plans, stop and say so explicitly.
 If only one ready plan exists, stop and say that a single-plan execution prompt should be used instead.

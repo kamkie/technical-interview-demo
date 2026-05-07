@@ -3,7 +3,7 @@
 This on-demand reference owns detailed mechanics for `Single-Plan Fanout`.
 Load it only after `ai/WORKFLOW.md` selects that mode and the selected mode has been recorded in the plan's `Execution Mode Fit` section.
 
-Use `Single-Plan Fanout` when one current `ai/PLAN_*.md` can be split into disjoint worker-owned slices but should still land as one coordinated stream.
+Use `Single-Plan Fanout` when one current `ai/plans/active/PLAN_*.md` can be split into disjoint worker-owned slices but should still land as one coordinated stream.
 
 ## Topology
 
@@ -20,7 +20,7 @@ Normal outcome:
 ## Shared-File Rules
 
 - workers do not edit shared files directly
-- the minimum shared files are the canonical `ai/PLAN_*.md` and `CHANGELOG.md`
+- the minimum shared files are the canonical `ai/plans/active/PLAN_*.md` and `CHANGELOG.md`
 - the coordinator may reserve additional shared files when several workers would otherwise collide, such as common integration tests, REST Docs pages, the OpenAPI baseline, or `README.md`
 - workers record proposed shared-file edits in their worker log instead of applying those edits directly
 

@@ -1,6 +1,6 @@
 # Planning Guide For AI Agents
 
-`ai/PLAN.md` owns the minimum standing rules for creating executable `ai/PLAN_*.md` files.
+`ai/PLANNING.md` owns the minimum standing rules for creating executable `ai/plans/active/PLAN_*.md` files.
 Detailed examples and the previous full guide are on demand in `ai/references/PLAN_DETAILED_GUIDE.md`.
 Use `ai/templates/PLAN_TEMPLATE.md` when you need the full skeleton.
 
@@ -9,7 +9,7 @@ Use `ai/EXECUTION.md` after a plan is approved, `ai/WORKFLOW.md` for delegation 
 
 ## Lifecycle Metadata
 
-Every `ai/PLAN_*.md` starts with:
+Every `ai/plans/active/PLAN_*.md` starts with:
 
 ```md
 ## Lifecycle
@@ -60,7 +60,7 @@ Record requirement gaps, fallback assumptions, and locked decisions explicitly.
 
 ## Roadmap Synchronization
 
-Creating or materially revising a concrete `ai/PLAN_*.md` file must update `ROADMAP.md` in the same change.
+Creating or materially revising a concrete `ai/plans/active/PLAN_*.md` file must update `ROADMAP.md` in the same change.
 
 Use `ROADMAP.md` for active-work tracking only:
 

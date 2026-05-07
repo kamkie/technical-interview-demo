@@ -7,7 +7,7 @@ Use `pwsh ./scripts/ai/get-prompt.ps1 -Name "<prompt title>"` to load one prompt
 This file does not own standing policy.
 Use the owner guides instead:
 
-- planning: `ai/PLAN.md`
+- planning: `ai/PLANNING.md`
 - implementation: `ai/EXECUTION.md`
 - workflow modes and delegation: `ai/WORKFLOW.md`
 - validation: `ai/TESTING.md`

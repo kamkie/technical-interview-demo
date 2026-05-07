@@ -163,7 +163,7 @@
 - Recommended mode: `Linear Plan`.
 - This is a documentation/planning and manual validation activity. Worker fanout would add coordination overhead and make the human result log harder to interpret.
 - Coordinator-owned files:
-  - `ai/PLAN_manual_regression_execution.md`
+  - `ai/plans/active/PLAN_manual_regression_execution.md`
   - `ROADMAP.md`
   - optional execution result log under `ai/tmp/manual-regression/v2_0_0_rc6.md`
 - If delegation becomes necessary, use read-only reviewers only after the manual result log exists.
@@ -181,7 +181,7 @@
   - `.gitignore` (the `http-client.private.env.json` ignore rules)
   - `ai/DOCUMENTATION.md`
   - `ai/references/PLAN_DETAILED_GUIDE.md`
-  - any active `ai/PLAN_*.md` that still cites the old path
+  - any active `ai/plans/active/PLAN_*.md` that still cites the old path
 - New paths owned by the follow-up implementation plan:
   - `src/manualTests/java/team/jit/technicalinterviewdemo/manualregression/` for suite classes
   - `src/manualTests/resources/http/` for the moved IntelliJ HTTP Client examples
@@ -427,7 +427,7 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
 ## Validation Results
 - 2026-05-06 plan creation:
   - `git diff --check` passed.
-  - `./build.ps1 build` passed through the lightweight-file shortcut, reporting that only `ai/PLAN_manual_regression_execution.md` and `ROADMAP.md` changed and that the Gradle build was skipped.
+  - `./build.ps1 build` passed through the lightweight-file shortcut, reporting that only `ai/plans/active/PLAN_manual_regression_execution.md` and `ROADMAP.md` changed and that the Gradle build was skipped.
 - 2026-05-07 partial-automation proposal added:
   - introduced `Partial Automation Opportunities` section describing the scriptable vs. manual split and a proposed PowerShell harness under `scripts/manual-regression/`; harness implementation is intentionally deferred to a follow-up plan.
   - `./build.ps1 build` lightweight-file shortcut expected to skip the Gradle build because only this plan file changed.

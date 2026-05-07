@@ -64,8 +64,8 @@ If you are a new agent entering this repository, follow these steps to ground yo
 3. **Open `SETUP.md` only when needed** for setup, local tooling, Docker, or troubleshooting detail.
 4. **Identify the current task's lifecycle phase** (Discovery, Planning, Implementation, Testing, Review, Integration, Release).
 5. **Load the relevant owner guide** from the lifecycle owner map below.
-6. **Locate or create a task plan** (`ai/PLAN_*.md`) when the current workflow requires planned execution.
-7. **Run a targeted relevance scan** using task terms against `ai/LEARNINGS.md` and active `ai/PLAN_*.md` files, then open only matches that overlap the current task.
+6. **Locate or create a task plan** (`ai/plans/active/PLAN_*.md`) when the current workflow requires planned execution.
+7. **Run a targeted relevance scan** using task terms against `ai/LEARNINGS.md` and active `ai/plans/active/PLAN_*.md` files, then open only matches that overlap the current task.
 
 ## Lifecycle Owner Map
 
@@ -74,9 +74,9 @@ Prompt titles, skills, templates, and deep references stay on demand until direc
 
 | Lifecycle phase | Primary owner guides |
 | --- | --- |
-| Discovery or roadmap intake | `ROADMAP.md` and `ai/PLAN.md`; add `README.md` or conditional descriptive guides only when the request needs product, contract, design, or structure framing |
-| Planning | `ai/PLAN.md`, the relevant specs or source artifacts, and `ROADMAP.md` for active-work tracking |
-| Implementation | `ai/EXECUTION.md`, the target `ai/PLAN_*.md` when planned, and the owner guides for files being changed; keep descriptive guides conditional |
+| Discovery or roadmap intake | `ROADMAP.md` and `ai/PLANNING.md`; add `README.md` or conditional descriptive guides only when the request needs product, contract, design, or structure framing |
+| Planning | `ai/PLANNING.md`, the relevant specs or source artifacts, and `ROADMAP.md` for active-work tracking |
+| Implementation | `ai/EXECUTION.md`, the target `ai/plans/active/PLAN_*.md` when planned, and the owner guides for files being changed; keep descriptive guides conditional |
 | Workflow, delegation, or integration | `ai/WORKFLOW.md` and `ai/EXECUTION.md`; load fanout references only after a fanout mode is selected |
 | Testing or review | `ai/TESTING.md`, `ai/REVIEWS.md`, and `ai/DOCUMENTATION.md` when artifact routing or contract impact is part of the check; keep descriptive guides conditional |
 | Release | `ai/RELEASES.md` only after the implementation state is integrated and release work is explicitly in scope |
@@ -101,8 +101,8 @@ Use these files deliberately:
 - `ai/ENVIRONMENT_QUICK_REF.md`: AI-facing command wrapper reference for local Gradle execution
 - `ai/EXECUTION.md`: AI-facing implementation workflow for executing plan files, updating validation results, and handling unreleased work
 - `ai/LEARNINGS.md`: durable repo-wide engineering lessons that should survive refactors
-- `ai/PLAN.md`: compact instructions for producing execution plans
-- `ai/PLAN_*.md`: task-specific execution plans and milestone breakdowns
+- `ai/PLANNING.md`: compact instructions for producing execution plans
+- `ai/plans/active/PLAN_*.md`: task-specific execution plans and milestone breakdowns
 - `ai/PROMPTS.md`: lean reusable prompt-title index whose listed prompt names act as reusable commands
 - `ai/REVIEWS.md`: AI-facing code-review and security-review guidance
 - `ai/RELEASES.md`: AI-facing release workflow for intentional post-implementation releases
@@ -122,7 +122,7 @@ Load AI guidance on demand:
 
 - read `AGENTS.md` first
 - read only the owning AI guide for the current task
-- read active `ai/PLAN_*.md` files only when planning, executing, verifying, or releasing that plan
+- read active `ai/plans/active/PLAN_*.md` files only when planning, executing, verifying, or releasing that plan
 - use task-specific search terms for the onboarding relevance scan; do not read every active plan, archived plan, prompt body, reference, template, or skill as a pre-flight default
 - read prompt bodies, templates, detailed references, skill files, and archived plans only when the task specifically needs them
 - do not bulk-load `ai/archive/`, `ai/references/`, `ai/prompts/`, `ai/templates/`, or skill reference material as standing context

@@ -23,7 +23,7 @@ Update the artifact that owns the truth being changed:
 - contributor workflow and maintainer expectations: `CONTRIBUTING.md`
 - active planned work: `ROADMAP.md`
 - released history: `CHANGELOG.md`
-- planning process and plan-file shape: `ai/PLAN.md`
+- planning process and plan-file shape: `ai/PLANNING.md`
 - single-agent execution flow: `ai/EXECUTION.md`
 - workflow mode selection and common delegation rules: `ai/WORKFLOW.md`; detailed fanout mechanics: `ai/references/WORKFLOW_SINGLE_PLAN_FANOUT.md` and `ai/references/WORKFLOW_MULTI_PLAN_FANOUT.md`
 - release sequencing and tagging: `ai/RELEASES.md`; detailed release checklist and artifact verification: `ai/references/RELEASE_CHECKLIST.md` and `ai/references/RELEASE_ARTIFACT_VERIFICATION.md`
@@ -55,7 +55,7 @@ Rules for maintaining the `ai/` documents:
 - keep standing code-style, testing, review, and documentation guidance in their focused owning files instead of redistributing it across prompts or workflow docs
 - when a repo-local skill wraps a workflow owned by another guide, update the skill and the owning guide together if that workflow changes
 - when AI instruction files accumulate overlap, compact them by moving duplicated guidance into the single best owning file and updating cross-references in the same change
-- archive executed `ai/PLAN_*.md` files under `ai/archive/` as part of the release cleanup once that work has been released
+- archive executed `ai/plans/active/PLAN_*.md` files under `ai/archive/` as part of the release cleanup once that work has been released
 - treat `ai/ARCHITECTURE.md`, `ai/DESIGN.md`, and `ai/LEARNINGS.md` as descriptive guidance, not executable spec authority
 - if an interrupted tool or IDE run leaves an `ai/` document incomplete, finish it or clearly mark the gaps instead of leaving misleading partial content
 - when moving or renaming AI documents, update references in `AGENTS.md` and other `ai/` files in the same change
@@ -117,7 +117,7 @@ Update all affected artifacts in the same change:
 - repo-local skill change: update the skill plus the owning AI guide when the skill wraps a workflow whose rules changed
 - local command-wrapper guidance for AI agents: update `ai/ENVIRONMENT_QUICK_REF.md`, and update `SETUP.md` only when human setup or troubleshooting behavior changed
 - setup or tooling change: update `SETUP.md`, not `README.md`, `AGENTS.md`, or workflow guides unless their inventories or high-level rules changed
-- plan creation or material plan revision: update the concrete `ai/PLAN_*.md` file and `ROADMAP.md` together so active work points to the plan path and current status
+- plan creation or material plan revision: update the concrete `ai/plans/active/PLAN_*.md` file and `ROADMAP.md` together so active work points to the plan path and current status
 - roadmap reprioritization: update `ROADMAP.md`, and keep `## Current Project State` aligned when the active release phase, breaking-change policy, or next target version changes
 - released history: update `CHANGELOG.md`
 

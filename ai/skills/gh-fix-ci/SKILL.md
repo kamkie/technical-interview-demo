@@ -10,7 +10,7 @@ metadata:
 ## Overview
 
 Use `gh` to locate failing PR checks, fetch GitHub Actions logs for actionable failures, summarize the failure snippet, and move toward a fix without skipping the repository's normal planning and validation flow.
-Keep the skill narrow: it is for GitHub Actions PR-check triage and follow-up, not for replacing the standing rules in `AGENTS.md`, `ai/PLAN.md`, `ai/TESTING.md`, or `ai/REVIEWS.md`.
+Keep the skill narrow: it is for GitHub Actions PR-check triage and follow-up, not for replacing the standing rules in `AGENTS.md`, `ai/PLANNING.md`, `ai/TESTING.md`, or `ai/REVIEWS.md`.
 
 Prereq: ensure `gh` is installed and authenticated for the target repo host, then run `gh auth status` in the repository before trying to inspect PR checks.
 
@@ -23,7 +23,7 @@ Prereq: ensure `gh` is installed and authenticated for the target repo host, the
 ## Read Set
 
 - always: `AGENTS.md`, `ai/TESTING.md`, and `ai/REVIEWS.md`
-- if the fix is non-trivial or the user asks for a formal plan: `ai/PLAN.md`, `WORKING_WITH_AI.md`, and `ai/skills/repo-plan-author/SKILL.md`
+- if the fix is non-trivial or the user asks for a formal plan: `ai/PLANNING.md`, `WORKING_WITH_AI.md`, and `ai/skills/repo-plan-author/SKILL.md`
 - if the failure implies contract or documentation drift: `ai/DOCUMENTATION.md` plus the affected contract artifacts
 
 ## Quick start
@@ -59,7 +59,7 @@ Prereq: ensure `gh` is installed and authenticated for the target repo host, the
    - Call out missing logs explicitly.
 6. Decide planning depth.
    - For a small isolated fix, provide a concise implementation plan in the conversation and request approval.
-   - For a multi-step or higher-risk fix, use `repo-plan-author` to create or revise an `ai/PLAN_*.md` plan before implementation.
+   - For a multi-step or higher-risk fix, use `repo-plan-author` to create or revise an `ai/plans/active/PLAN_*.md` plan before implementation.
 7. Implement after approval.
    - Apply the approved fix or approved plan.
    - Use `ai/TESTING.md` to choose the minimum required validation.

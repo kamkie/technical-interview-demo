@@ -5,7 +5,7 @@ Use this as an evaluation and reporting task, not as an implementation prompt fo
 ## Scope
 
 - Read `AGENTS.md`, `ai/DOCUMENTATION.md`, `ai/PROMPTS.md`, and standing top-level owner guides under `ai/`.
-- Exclude active `ai/PLAN_*.md` files from the standing-guide baseline, but inspect active plans when they are relevant to lifecycle state, roadmap cleanup, or stale-reference checks.
+- Exclude active `ai/plans/active/PLAN_*.md` files from the standing-guide baseline, but inspect active plans when they are relevant to lifecycle state, roadmap cleanup, or stale-reference checks.
 - Read `ai/prompts/index.json` and representative large prompt bodies when checking prompt-policy drift.
 - Read on-demand references only when a standing guide points to them, when the previous evaluation report names them, or when a targeted search finds a likely stale reference.
 - Do not bulk-load `ai/archive/` unless the evaluation specifically needs historical context.
@@ -14,7 +14,7 @@ Use this as an evaluation and reporting task, not as an implementation prompt fo
 
 1. Recompute current standing guidance sizes:
    - `AGENTS.md`
-   - top-level `ai/*.md` owner guides excluding active `ai/PLAN_*.md`
+   - top-level `ai/*.md` owner guides excluding active `ai/plans/active/PLAN_*.md`
    - key on-demand references that affect practical load, such as workflow and release references
 2. Recompute practical read-set estimates:
    - standing root plus top-level owner guides

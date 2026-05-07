@@ -1,6 +1,6 @@
 Select every unfinished plan file under `ai/`, then execute the selected set using the same flow as `Run Plans As Multi-Plan Fanout`.
 
-Treat unfinished plans as the non-archived `ai/PLAN_*.md` files still present directly under `ai/`.
+Treat unfinished plans as the non-archived `ai/plans/active/PLAN_*.md` files still present directly under `ai/`.
 If there are no unfinished plans, stop and say so explicitly.
 If only one unfinished plan exists, stop and say that a single-plan execution prompt should be used instead.
 Do not silently skip an unfinished plan just to force a smaller parallel-safe set.

@@ -10,7 +10,7 @@ metadata:
 ## Overview
 
 Use `gh` to inspect the repository's open GitHub Security tab issues, summarize the actionable alerts, and move toward a fix without skipping the repository's normal planning and validation flow.
-Keep the skill narrow: it is for GitHub code-scanning and Dependabot alert triage and follow-up, not for replacing the standing rules in `AGENTS.md`, `ai/PLAN.md`, `ai/TESTING.md`, or `ai/REVIEWS.md`.
+Keep the skill narrow: it is for GitHub code-scanning and Dependabot alert triage and follow-up, not for replacing the standing rules in `AGENTS.md`, `ai/PLANNING.md`, `ai/TESTING.md`, or `ai/REVIEWS.md`.
 
 By default this skill targets the current repository and the issues visible from `https://github.com/kamkie/technical-interview-demo/security`.
 
@@ -25,7 +25,7 @@ Prereq: ensure `gh` is installed and authenticated for the target repo host, the
 ## Read Set
 
 - always: `AGENTS.md`, `ai/TESTING.md`, and `ai/REVIEWS.md`
-- if the fix is non-trivial or the user asks for a formal plan: `ai/PLAN.md`, `WORKING_WITH_AI.md`, and `ai/skills/repo-plan-author/SKILL.md`
+- if the fix is non-trivial or the user asks for a formal plan: `ai/PLANNING.md`, `WORKING_WITH_AI.md`, and `ai/skills/repo-plan-author/SKILL.md`
 - if the alert implies contract or documentation drift: `ai/DOCUMENTATION.md` plus the affected contract artifacts
 
 ## Quick Start
@@ -53,7 +53,7 @@ Prereq: ensure `gh` is installed and authenticated for the target repo host, the
    - Call out repeated alert families, such as multiple `actions/unpinned-tag` findings, so the user can approve a batch fix consciously.
 4. Decide planning depth.
    - For a small isolated fix, provide a concise implementation plan in the conversation and request approval.
-   - For a multi-step or higher-risk fix, use `repo-plan-author` to create or revise an `ai/PLAN_*.md` plan before implementation.
+   - For a multi-step or higher-risk fix, use `repo-plan-author` to create or revise an `ai/plans/active/PLAN_*.md` plan before implementation.
 5. Implement after approval.
    - Apply the approved fix or approved plan.
    - Do not dismiss alerts through GitHub APIs unless the user explicitly asks for that action.

@@ -24,7 +24,7 @@ Live sizes of standing owner files (`ceiling(chars / 4)` for tokens):
 | `ai/EXECUTION.md` | 7,170 | 1,793 | Phase-specific |
 | `ai/DOCUMENTATION.md` | 6,863 | 1,716 | Phase-specific |
 | `ai/DESIGN.md` | 6,569 | 1,643 | Conditional descriptive |
-| `ai/PLAN.md` | 6,416 | 1,604 | Phase-specific |
+| `ai/PLANNING.md` | 6,416 | 1,604 | Phase-specific |
 | `ai/ARCHITECTURE.md` | 6,300 | 1,575 | Conditional descriptive |
 | `ai/TESTING.md` | 4,942 | 1,236 | Phase-specific |
 | `ai/RELEASES.md` | 3,526 | 882 | Phase-specific |
@@ -63,7 +63,7 @@ Sections are mostly descriptive (Principles, Decisions, Non-Functional, Supporte
 
 The whole file is modification guidance — "Change Discipline", "Reuse First", "Edit Discipline", "Naming", "Cross-Refs". There is no reference content to split out. Remix feasibility: **none useful**.
 
-### `ai/EXECUTION.md`, `ai/PLAN.md`, `ai/WORKFLOW.md`, `ai/RELEASES.md`, `ai/TESTING.md`, `ai/REVIEWS.md`
+### `ai/EXECUTION.md`, `ai/PLANNING.md`, `ai/WORKFLOW.md`, `ai/RELEASES.md`, `ai/TESTING.md`, `ai/REVIEWS.md`
 
 These are by construction "imperative for the active lifecycle phase". They already follow the pattern "load only in that phase" and have already been compacted by routing deep mechanics into `ai/references/`. Re-splitting along reference/modification lines does not match their content shape.
 
@@ -151,7 +151,7 @@ Numbers are estimates rounded to the nearest 100 tokens; assumptions are stated 
 
 ## Risks Of Remixing
 
-- **Cross-reference drift**: every split or bundle re-points existing cross-references in `AGENTS.md`, `ai/DOCUMENTATION.md`, `ai/EXECUTION.md`, `ai/PLAN.md`, prompt bodies, and skill references. The post-compaction report already grades the current set "A-" on duplication; reshuffling raises that risk.
+- **Cross-reference drift**: every split or bundle re-points existing cross-references in `AGENTS.md`, `ai/DOCUMENTATION.md`, `ai/EXECUTION.md`, `ai/PLANNING.md`, prompt bodies, and skill references. The post-compaction report already grades the current set "A-" on duplication; reshuffling raises that risk.
 - **Dual-load regression**: most modification phases want the descriptive *and* the rule content together. Splitting forces agents to load both halves, paying the file-overhead twice.
 - **Bundling forfeits owner clarity**: today `ai/DOCUMENTATION.md` is the single owner of artifact routing. Bundling distributes that authority into per-lifecycle files, which contradicts the "owner clarity" principle that earned the current set its A grade.
 - **Marginal gains**: the largest realistic win (Option A on `ai/DOCUMENTATION.md`) is ~1,100 tokens per pure-lookup task. The default load is unchanged in every option because `AGENTS.md` is the only standing file.

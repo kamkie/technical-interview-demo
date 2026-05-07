@@ -33,7 +33,7 @@ Use this guide as a navigation aid, not as a second copy of the AI runbooks.
 | Local setup, tools, and troubleshooting | `SETUP.md` |
 | Repository-specific AI rules and lifecycle owner map | `AGENTS.md` |
 | Reusable prompt titles and prompt loader usage | `ai/PROMPTS.md` |
-| Creating or revising execution plans | `ai/PLAN.md` |
+| Creating or revising execution plans | `ai/PLANNING.md` |
 | Implementing an approved plan or milestone | `ai/EXECUTION.md` |
 | Choosing workflow mode, delegation, worktrees, or integration mechanics | `ai/WORKFLOW.md` |
 | Validation scope and review lens | `ai/TESTING.md` and `ai/REVIEWS.md` |
@@ -75,12 +75,12 @@ topic: add candidate search filtering
 
 ```text
 Implement Plan
-plan_file: ai/PLAN_CANDIDATE_SEARCH.md
+plan_file: ai/plans/active/PLAN_CANDIDATE_SEARCH.md
 ```
 
 ```text
 Run Required Validation
-plan_file: ai/PLAN_CANDIDATE_SEARCH.md
+plan_file: ai/plans/active/PLAN_CANDIDATE_SEARCH.md
 change: candidate search filtering API
 ```
 
@@ -107,7 +107,7 @@ Useful requests ask AI to inspect `ROADMAP.md`, clarify requirement gaps, or rec
 
 ### Planning
 
-Use AI to create or revise an execution plan under `ai/PLAN_*.md`.
+Use AI to create or revise an execution plan under `ai/plans/active/PLAN_*.md`.
 The plan should be decision-complete enough that implementation does not need to invent product behavior, and `ROADMAP.md` should point to active planned work without duplicating the plan.
 
 ### Plan Verification
@@ -145,7 +145,7 @@ Read a skill's `SKILL.md` only when that skill is invoked or clearly applies.
 
 Current focused skills include:
 
-- `repo-plan-author`: creating or revising `ai/PLAN_*.md`
+- `repo-plan-author`: creating or revising `ai/plans/active/PLAN_*.md`
 - `gh-fix-ci`: GitHub PR-check inspection and CI failure triage
 - `gh-fix-security-quality`: GitHub Security tab, code-scanning, and Dependabot alert triage
 

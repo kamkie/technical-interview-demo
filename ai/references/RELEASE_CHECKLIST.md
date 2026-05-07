@@ -13,7 +13,7 @@ From local `main`:
 6. Merge any accepted `CHANGELOG_<topic>.md` files into `CHANGELOG.md`, then delete the temporary files.
 7. Move the release-relevant `CHANGELOG.md` entries from `## [Unreleased]` into a new version section dated `YYYY-MM-DD`, and leave a fresh `## [Unreleased]` at the top.
 8. Update `ROADMAP.md` to remove work completed by the release.
-9. Move the executed `ai/PLAN_*.md` file to `ai/archive/` and update moved-path references in the same change.
+9. Move the executed `ai/plans/active/PLAN_*.md` file to `ai/archive/` and update moved-path references in the same change.
 10. Update the target plan `Lifecycle` section to `Phase=Closed` and `Status=Released`.
 11. Update `ai/LEARNINGS.md` if any durable engineering lessons were learned during the execution or release of this plan.
 12. Re-run `./build.ps1 build` only if the release-metadata edits made the earlier validation stale.

@@ -2,7 +2,7 @@ Compact the standing AI instruction files.
 
 ## Scope
 
-- Read `AGENTS.md`, `ai/DOCUMENTATION.md`, `ai/PROMPTS.md`, and standing top-level owner guides under `ai/` first; exclude active `ai/PLAN_*.md` files unless they are relevant to the compaction target.
+- Read `AGENTS.md`, `ai/DOCUMENTATION.md`, `ai/PROMPTS.md`, and standing top-level owner guides under `ai/` first; exclude active `ai/plans/active/PLAN_*.md` files unless they are relevant to the compaction target.
 - Do not bulk-load `ai/archive/`, `ai/references/`, `ai/prompts/bodies/`, `ai/templates/`, or `ai/skills/`; open them only when a cross-reference or overlapping policy points there.
 - Check `WORKING_WITH_AI.md` only when human-facing workflow wording overlaps with the AI guidance being changed.
 

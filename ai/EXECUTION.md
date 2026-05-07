@@ -2,7 +2,7 @@
 
 `ai/EXECUTION.md` owns the common milestone execution loop after a plan is approved.
 
-Use this file when the user asks to implement `ai/PLAN_*.md`, complete a named milestone, or carry out planned work without releasing it yet.
+Use this file when the user asks to implement `ai/plans/active/PLAN_*.md`, complete a named milestone, or carry out planned work without releasing it yet.
 Use `ai/WORKFLOW.md` to choose the execution mode and branch/worktree topology.
 Use `ai/RELEASES.md` only for explicit release work after implementation is integrated; release preconditions live there.
 
@@ -23,7 +23,7 @@ Start from the lifecycle owner map in `AGENTS.md` and keep the execution read se
 
 - `AGENTS.md`
 - `ai/EXECUTION.md`
-- the target `ai/PLAN_*.md`, when executing planned work
+- the target `ai/plans/active/PLAN_*.md`, when executing planned work
 - the user request or approved source artifact, when executing ad hoc documentation or maintenance work
 - the governing specs, docs, examples, and source files named by the task
 

@@ -1,7 +1,7 @@
 # Detailed Planning Guide For AI Agents
 
 This is the on-demand detailed reference for producing implementation plans in this repository.
-`ai/PLAN.md` owns the compact standing planning rules.
+`ai/PLANNING.md` owns the compact standing planning rules.
 
 Use this file only when the compact planning guide is not enough for a plan, milestone, execution document, milestone breakdown, or detailed change strategy.
 Do not use `ROADMAP.md` as a substitute for a real plan. `ROADMAP.md` is the roadmap. A plan is a self-contained handoff document for a concrete piece of work.
@@ -11,7 +11,7 @@ Use `ai/DOCUMENTATION.md` for artifact ownership and `ai/TESTING.md` for validat
 
 ## Lifecycle Metadata
 
-Every `ai/PLAN_*.md` file should start with a small `Lifecycle` section immediately below the title.
+Every `ai/plans/active/PLAN_*.md` file should start with a small `Lifecycle` section immediately below the title.
 Use a compact table so the current state is obvious at a glance:
 
 ```md
@@ -173,7 +173,7 @@ The plan must also state whether extra validation from `ai/TESTING.md` is requir
 
 If the work changes a cross-cutting architectural or product convention that should remain true after the task-specific plan is archived, the plan must name the owning AI guide update explicitly.
 Examples include persistence or serialization conventions, package ownership changes, and durable design or engineering lessons.
-Do not treat the temporary `ai/PLAN_*.md` file as a substitute for updating `ai/ARCHITECTURE.md`, `ai/DESIGN.md`, or `ai/LEARNINGS.md` when one of those guides is the durable owner.
+Do not treat the temporary `ai/plans/active/PLAN_*.md` file as a substitute for updating `ai/ARCHITECTURE.md`, `ai/DESIGN.md`, or `ai/LEARNINGS.md` when one of those guides is the durable owner.
 
 ### Internal refactors
 
@@ -181,7 +181,7 @@ If the work is a refactor with no contract change, the plan should preserve exis
 
 ### Setup or environment changes
 
-If the work changes onboarding, tools, Java, Docker, formatter setup, or local runbooks, update `SETUP.md`. Do not move setup detail into `AGENTS.md` or `ai/PLAN.md`.
+If the work changes onboarding, tools, Java, Docker, formatter setup, or local runbooks, update `SETUP.md`. Do not move setup detail into `AGENTS.md` or `ai/PLANNING.md`.
 
 ### Roadmap work
 
@@ -257,7 +257,7 @@ Request: refactor one subsystem using a single approved plan and several workers
 
 A good plan would:
 
-- keep one canonical `ai/PLAN_*.md` as the source of truth
+- keep one canonical `ai/plans/active/PLAN_*.md` as the source of truth
 - name which files stay coordinator-owned, at minimum the canonical plan file and `CHANGELOG.md`
 - split worker ownership by package, test class, or other defensible file boundary
 - make every worker milestone a standalone commit checkpoint with explicit validation
@@ -271,7 +271,7 @@ Once a plan is approved, execution belongs in:
 - `ai/WORKFLOW.md` for `Linear Plan`, `Single-Plan Fanout`, and `Multi-Plan Fanout` orchestration
 - `ai/RELEASES.md` for the release step after implementation is complete
 
-Keep `ai/PLAN.md` focused on plan quality and handoff completeness rather than repeating execution mechanics.
+Keep `ai/PLANNING.md` focused on plan quality and handoff completeness rather than repeating execution mechanics.
 
 ## Final Planning Check
 

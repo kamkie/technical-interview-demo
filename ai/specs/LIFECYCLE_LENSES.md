@@ -6,7 +6,7 @@ Owner guides under `ai/` may adopt these names to make context switches explicit
 
 Use this file when:
 
-- adding lens labels to an owner guide such as `ai/EXECUTION.md`, `ai/PLAN.md`, `ai/TESTING.md`, or `ai/REVIEWS.md`
+- adding lens labels to an owner guide such as `ai/EXECUTION.md`, `ai/PLANNING.md`, `ai/TESTING.md`, or `ai/REVIEWS.md`
 - discussing where a recurring activity belongs in the lifecycle
 - diagnosing wrong-lens-at-wrong-time failures during a task
 - proposing new owner guides for currently uncovered phases
@@ -20,7 +20,7 @@ Lens names here are descriptive shortcuts; the binding rules live in the owning 
 - **Switch**: an explicit transition between two lenses. A switch always implies dropping the previous lens's working set per the `Context Hygiene` rule in `AGENTS.md`.
 - **Trigger**: a signal that requires a switch. Triggers can be planned (the next step in a loop) or conditional (e.g. a security-relevant change, a discovered plan gap).
 - **Loop**: a sequence of lenses that iterates until an exit condition is met. Loops can nest.
-- **Phase**: a coarse lifecycle stage that contains one or more lenses, mapped to the `Phase` enum in `ai/PLAN.md`.
+- **Phase**: a coarse lifecycle stage that contains one or more lenses, mapped to the `Phase` enum in `ai/PLANNING.md`.
 
 ## Lens Catalogue
 
@@ -29,8 +29,8 @@ Each lens lists its question, primary owner guide, and typical exit condition.
 ### Discovery and Framing
 
 - `Scan` — what artifacts and code already define this area? owner: `AGENTS.md` onboarding map, `ai/ARCHITECTURE.md`. Exit: relevant artifacts identified.
-- `Frame` — what is the actual change being requested? owner: `AGENTS.md` Task Interpretation, `ai/PLAN.md`. Exit: scope and ambiguity surfaced.
-- `Clarify?` — does the user need to resolve a material ambiguity? owner: `ai/PLAN.md` planning rules. Exit: ambiguity resolved or recorded as a fallback assumption.
+- `Frame` — what is the actual change being requested? owner: `AGENTS.md` Task Interpretation, `ai/PLANNING.md`. Exit: scope and ambiguity surfaced.
+- `Clarify?` — does the user need to resolve a material ambiguity? owner: `ai/PLANNING.md` planning rules. Exit: ambiguity resolved or recorded as a fallback assumption.
 - `Capture` — does this surface a durable repo lesson? owner: `ai/LEARNINGS.md`. Conditional.
 
 ### Requirements And Roadmap
@@ -45,9 +45,9 @@ Each lens lists its question, primary owner guide, and typical exit condition.
 
 - `Design` — decide product or contract behavior. owner: `ai/DESIGN.md`, governing specs.
 - `Spec` — record the decided behavior in the governing spec artifact. owner: `ai/DOCUMENTATION.md` for routing, individual spec files for content.
-- `Decompose` — split into commit-sized milestone checkpoints; pick a workflow mode. owner: `ai/PLAN.md`, `ai/WORKFLOW.md`.
-- `Validate-Plan` — run the plan readiness checklist before approval. owner: `ai/PLAN.md` `Final Check`.
-- `Replan?` — revise an approved plan when execution reality disagrees with it. owner: `ai/PLAN.md`. Cross-cutting.
+- `Decompose` — split into commit-sized milestone checkpoints; pick a workflow mode. owner: `ai/PLANNING.md`, `ai/WORKFLOW.md`.
+- `Validate-Plan` — run the plan readiness checklist before approval. owner: `ai/PLANNING.md` `Final Check`.
+- `Replan?` — revise an approved plan when execution reality disagrees with it. owner: `ai/PLANNING.md`. Cross-cutting.
 
 ### Implementation
 
@@ -87,7 +87,7 @@ Each lens lists its question, primary owner guide, and typical exit condition.
 - `Tag` — produce the release artifact. owner: `ai/RELEASES.md`.
 - `Notes` — generate or update `CHANGELOG.md`. owner: `ai/RELEASES.md`.
 - `Publish` — execute the release. owner: `ai/RELEASES.md`.
-- `Post-Release-Cleanup` — archive plans, refresh `ROADMAP.md` active-work entries, close the loop into Continuous Improvement. owner: `ai/RELEASES.md`, `ai/PLAN.md`, `ROADMAP.md`.
+- `Post-Release-Cleanup` — archive plans, refresh `ROADMAP.md` active-work entries, close the loop into Continuous Improvement. owner: `ai/RELEASES.md`, `ai/PLANNING.md`, `ROADMAP.md`.
 
 ### Deployment And Operations
 
@@ -115,13 +115,13 @@ These lenses are listed for completeness; they currently have **no AI owner guid
 
 ## Phase To Lens Map
 
-The repository uses the `Phase` enum from `ai/PLAN.md`. This table maps each phase to its in-order lens sequence; `?` marks conditional lenses.
+The repository uses the `Phase` enum from `ai/PLANNING.md`. This table maps each phase to its in-order lens sequence; `?` marks conditional lenses.
 
 | Phase | In-order lenses | Primary owner guides |
 | --- | --- | --- |
 | Discovery | `Scan` → `Frame` → `Clarify?` → `Capture?` | `AGENTS.md`, `ai/ARCHITECTURE.md`, `ai/LEARNINGS.md` |
 | Roadmap intake | `Intake` → `Refine` → `Prioritize` → `Sequence` → `Sync` | `ROADMAP.md`, `ai/DESIGN.md` |
-| Planning | `Frame` → `Design` → `Spec` → `Decompose` → `Validate-Plan` → `Sync` → `Replan?` | `ai/PLAN.md`, `ai/DESIGN.md`, `ai/templates/PLAN_TEMPLATE.md` |
+| Planning | `Frame` → `Design` → `Spec` → `Decompose` → `Validate-Plan` → `Sync` → `Replan?` | `ai/PLANNING.md`, `ai/DESIGN.md`, `ai/templates/PLAN_TEMPLATE.md` |
 | Implementation | `Spec` → `Code` → `Docs` → `Run` → `Replan?` → `Self-Review` → `Code Review` → `Security Review?` → `Commit` → `Handoff` | `ai/EXECUTION.md`, `ai/DOCUMENTATION.md`, `ai/CODE_STYLE.md`, `ai/WORKFLOW.md` |
 | Testing | `Plan-Tests` → `Author-Tests` → `Run` → `Diagnose?` → `Fix?` → `Re-run` → `Record` | `ai/TESTING.md`, `ai/references/TROUBLESHOOTING.md` |
 | Review | `Self-Review` → `Code Review` → `Security Review?` → `Docs Review?` → `Decide` | `ai/REVIEWS.md` |
@@ -130,7 +130,7 @@ The repository uses the `Phase` enum from `ai/PLAN.md`. This table maps each pha
 | Deployment | `Stage` → `Smoke` → `Promote` → `Verify` → `Rollback?` | none yet (gap) |
 | Operations | `Observe` → `Triage` → `Hotfix?` → `Patch?` → `Backport?` → `Deprecate?` | partial: `CHANGELOG.md`, `ROADMAP.md` |
 | Continuous improvement | `Retrospect` → `Capture-Learning` → `Refactor?` → `Tech-Debt-Plan?` → `Sync` | `ai/LEARNINGS.md`, `ROADMAP.md` |
-| Closed | none | `ai/PLAN.md`, `ai/archive/` |
+| Closed | none | `ai/PLANNING.md`, `ai/archive/` |
 
 The `Implementation` row deliberately includes review and validation lenses because the existing milestone loop in `ai/EXECUTION.md` interleaves them. Do not split that loop apart on the basis of this table; the table is descriptive.
 
@@ -158,7 +158,7 @@ Outer Product Loop                              [per release]
 
 - Lenses: `Frame` → `Design` → `Spec` → `Decompose` → `Validate-Plan` → `Replan?` → `Validate-Plan`.
 - Cadence: per plan, until decision-complete.
-- Owner: `ai/PLAN.md`.
+- Owner: `ai/PLANNING.md`.
 - Exit: plan reaches `Status=Ready`.
 
 ### 3. Milestone Execution Loop
@@ -193,7 +193,7 @@ Outer Product Loop                              [per release]
 
 These triggers can fire from any phase and force a switch.
 
-- `Replan` — execution-time gap, contradicted locked decision, or scope drift. Owner: `ai/PLAN.md`.
+- `Replan` — execution-time gap, contradicted locked decision, or scope drift. Owner: `ai/PLANNING.md`.
 - `Security Review` — change touches an item in the `ai/REVIEWS.md` security triggers list.
 - `Sync` — any change that affects active-work tracking or contract artifacts. Owner: `ROADMAP.md`, `ai/DOCUMENTATION.md`.
 - `Capture-Learning` — recurring repo-wide lesson surfaces. Owner: `ai/LEARNINGS.md`.
@@ -231,12 +231,12 @@ Items the lens map exposes that this repository does not yet cover. None of thes
 - this file does not define new validation, review, or release rules
 - this file does not introduce a new `Phase` value
 - this file does not replace the workflow modes in `ai/WORKFLOW.md`
-- this file is not a plan and must not be moved under `ai/PLAN_*.md`
+- this file is not a plan and must not be moved under `ai/plans/active/PLAN_*.md`
 
 ## Cross-References
 
 - `AGENTS.md` for the lifecycle owner map and `Context Hygiene` rule
-- `ai/PLAN.md` and `ai/references/PLAN_DETAILED_GUIDE.md` for the `Phase` and `Status` enums
+- `ai/PLANNING.md` and `ai/references/PLAN_DETAILED_GUIDE.md` for the `Phase` and `Status` enums
 - `ai/EXECUTION.md` for the canonical milestone loop
 - `ai/TESTING.md` and `ai/references/TROUBLESHOOTING.md` for the validation and red-green details
 - `ai/REVIEWS.md` for review priorities and security triggers
