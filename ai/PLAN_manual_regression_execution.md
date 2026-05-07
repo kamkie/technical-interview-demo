@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Implementation |
+| Status | In Progress |
 
 ## Summary
 - Create and execute a manual regression pass against the final `2.0` release candidate, currently `v2.0.0-RC5`, that touches the app's supported user-facing functionality without trying to duplicate every automated edge-case test.
@@ -23,7 +23,7 @@
   - explicit suite execution order with declared prerequisites so the executor (or harness) cannot accidentally run a write suite before its dependencies are satisfied
   - concise expected results for each suite, with enough detail to execute without reading the automated tests first
   - a lightweight manual result log produced during execution
-  - a new `src/manualTests` Gradle source set that owns all manual-regression automation code and resources, including the moved `src/test/resources/http/` IntelliJ HTTP Client examples
+  - a new `src/manualTests` Gradle source set that owns all manual-regression automation code and resources, including the moved IntelliJ HTTP Client examples under `src/manualTests/resources/http/`
   - a partial-automation harness inside `src/manualTests` that drives the scriptable portions of the suites, generates its own test data through documented APIs, exposes interactive prompts for missing required values, and auto-produces a Markdown + JSON execution report the executor folds into the manual result log
 - Out of scope:
   - replacing automated tests, OpenAPI compatibility checks, REST Docs tests, Gatling benchmarks, security scans, or CI
@@ -37,7 +37,7 @@
 - `SETUP.md` documents the local flow with Docker-backed PostgreSQL, `./build.ps1 bootRun`, OAuth setup, first-admin bootstrap through `APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES`, CSRF handling through `GET /api/session`, and useful local endpoints.
 - `ai/ARCHITECTURE.md` lists the API families that need manual coverage: `/`, `/hello`, `/docs`, `/api/books`, `/api/categories`, `/api/localizations`, `/api/account`, `/api/admin/audit-logs`, `/api/admin/operator-surface`, `/api/admin/users`, actuator endpoints, and OpenAPI docs.
 - `ai/ARCHITECTURE.md` maps the functional owners: books, categories, localization, user accounts, and audit logs.
-- `src/test/resources/http/` already contains IntelliJ HTTP Client request collections for the relevant endpoint families and should be reused as the primary manual execution harness.
+- `src/manualTests/resources/http/` contains IntelliJ HTTP Client request collections for the relevant endpoint families and is reused as the primary manual execution harness input.
 - Manual execution needs at least one authenticated admin session. A second non-admin user session is strongly recommended to verify representative `403` paths without mutating the only admin account.
 
 ## Requirement Gaps And Open Questions
@@ -55,8 +55,7 @@
   Fallback: register a Gradle source set so the harness benefits from IDE test integration and the existing Java/Gradle toolchain; revisit if dependency footprint becomes a concern.
 - Is JUnit 5 + REST Assured the accepted technology, or should the harness be Karate, Postman/Newman, Bruno, or PowerShell + Pester instead?
   Fallback: proceed with JUnit 5 + REST Assured (see `Implementation Technology`); the follow-up implementation plan must re-confirm before adding dependencies.
-- Should the move of `src/test/resources/http/` happen as part of the follow-up implementation plan or be split into a standalone repo-wide rename plan?
-  Fallback: keep it bundled with the implementation plan so reviewers see the harness, the source-set wiring, and the doc updates together.
+- The HTTP client examples have moved from `src/test/resources/http/` to `src/manualTests/resources/http/` as part of the harness implementation.
 - Should generated execution reports be committed to the repo, kept in `ai/tmp/` only, or auto-pruned?
   Fallback: write reports to `ai/tmp/manual-regression/<rc>/run-<UTC-timestamp>/` (gitignored by `ai/tmp/` convention) and commit only the human result log if the executor wants durable evidence.
 - Where should the harness obtain the second non-admin OAuth identity for `403` checks?
@@ -70,7 +69,7 @@
 - If another RC is prepared for other plans before stable `v2.0.0`, this plan must be replanned for that next RC before execution; do not use stale RC5 manual results as stable-release evidence.
 - Use local PostgreSQL through `docker-compose up -d` and run the app with `SPRING_PROFILES_ACTIVE=local,oauth`.
 - Use demo data seeding for predictable book, category, and localization reads.
-- Use `src/test/resources/http/*.http` as the primary request source. IntelliJ HTTP Client is preferred because the checked-in examples already capture `XSRF-TOKEN` into `csrfToken`.
+- Use `src/manualTests/resources/http/*.http` as the primary request source. IntelliJ HTTP Client is preferred because the checked-in examples already capture `XSRF-TOKEN` into `csrfToken`.
 - Use a browser for the OAuth redirect/login flow and browser developer tools to copy the `technical-interview-demo-session` cookie into the HTTP client.
 - Use unique names and ISBN/message keys for write tests so repeat runs do not collide with previous manual data.
 - Keep manual regression focused on representative happy paths plus a few high-value access-control failures. Automated tests remain the authority for dense edge cases.
@@ -158,7 +157,7 @@
 - Exit code: `0` if no `Failed` entries; `1` otherwise. `Blocked` does not fail the run, but the JUnit listener marks the suite assumption-failed so IntelliJ shows it distinctly.
 
 ## Implementation Status
-- This plan defines the harness specification. Actual code under `src/manualTests/` is created by a follow-up implementation plan so this RC5 manual pass can still execute fully manually if the harness is not yet available.
+- The harness implementation under `src/manualTests/` has landed. The manual RC5 execution remains pending and can use `./build.ps1 manualTests` as a prefilled checklist before human judgement-heavy checks.
 
 ## Execution Mode Fit
 - Recommended mode: `Linear Plan`.
@@ -173,13 +172,13 @@
 - Planning/roadmap:
   - add this plan file
   - update `ROADMAP.md` to track the manual regression plan for the target release candidate
-- Existing manual execution inputs to be **moved** from `src/test/resources/http/` to `src/manualTests/resources/http/` by the follow-up implementation plan (paths listed for reviewer traceability):
+- Existing manual execution inputs moved from `src/test/resources/http/` to `src/manualTests/resources/http/` (paths listed for reviewer traceability):
   - `authentication.http`, `book-controller.http`, `category-controller.http`, `localization-controller.http`, `user-account-controller.http`, `admin-user-management-controller.http`, `audit-log-controller.http`, `operator-surface-controller.http`, `technical-overview-controller.http`, `documentation.http`, `technical-endpoints.http`
-- Downstream files that reference `src/test/resources/http/` and must be updated in the same change as the move:
+- Downstream files that referenced `src/test/resources/http/` and were updated in the same change as the move:
   - `AGENTS.md`
   - `CONTRIBUTING.md`
   - `SETUP.md`
-  - `.gitignore` (the `http-client.private.env.json` ignore rule)
+  - `.gitignore` (the `http-client.private.env.json` ignore rules)
   - `ai/DOCUMENTATION.md`
   - `ai/references/PLAN_DETAILED_GUIDE.md`
   - any active `ai/PLAN_*.md` that still cites the old path
@@ -207,7 +206,7 @@
 - shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
   - this plan and roadmap
 - context required before execution:
-  - `SETUP.md` local run and OAuth setup sections, `ai/ENVIRONMENT_QUICK_REF.md`, `src/test/resources/http/authentication.http`, and this milestone
+  - `SETUP.md` local run and OAuth setup sections, `ai/ENVIRONMENT_QUICK_REF.md`, `src/manualTests/resources/http/authentication.http`, and this milestone
 - behavior to preserve:
   - no application or contract changes
 - exact deliverables:
@@ -262,7 +261,7 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
 - shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
   - this plan and roadmap
 - context required before execution:
-  - `README.md` supported surface summary, `SETUP.md` local endpoint notes, `src/test/resources/http/technical-overview-controller.http`, `documentation.http`, `technical-endpoints.http`, `book-controller.http`, `category-controller.http`, `localization-controller.http`, and this milestone
+  - `README.md` supported surface summary, `SETUP.md` local endpoint notes, `src/manualTests/resources/http/technical-overview-controller.http`, `documentation.http`, `technical-endpoints.http`, `book-controller.http`, `category-controller.http`, `localization-controller.http`, and this milestone
 - behavior to preserve:
   - read-only requests should not mutate persisted business data
 - exact deliverables:
@@ -299,7 +298,7 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
 - shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
   - this plan and roadmap
 - context required before execution:
-  - `SETUP.md` CSRF/session guidance, `src/test/resources/http/authentication.http`, `user-account-controller.http`, `book-controller.http`, `category-controller.http`, `localization-controller.http`, and this milestone
+  - `SETUP.md` CSRF/session guidance, `src/manualTests/resources/http/authentication.http`, `user-account-controller.http`, `book-controller.http`, `category-controller.http`, `localization-controller.http`, and this milestone
 - behavior to preserve:
   - write tests use unique data and clean up created records when possible
   - do not rely on or mutate production data
@@ -342,7 +341,7 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
 - shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
   - this plan and roadmap
 - context required before execution:
-  - `src/test/resources/http/admin-user-management-controller.http`, `audit-log-controller.http`, `operator-surface-controller.http`, `authentication.http`, and this milestone
+  - `src/manualTests/resources/http/admin-user-management-controller.http`, `audit-log-controller.http`, `operator-surface-controller.http`, `authentication.http`, and this milestone
 - behavior to preserve:
   - do not remove the only admin grant
   - restore any test user role changes before ending the run
@@ -438,6 +437,14 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
   - added dedicated sections for `Implementation Technology`, `Test Data Generation`, `User Input And Configuration`, and `Execution Report Generation`; added the corresponding open questions to `Requirement Gaps And Open Questions`.
   - `./build.ps1 build` lightweight-file shortcut expected to skip the Gradle build because only this plan file changed.
 - Manual suite execution against `v2.0.0-RC5` is intentionally **not** part of this plan: this plan only designs and wires the manual-regression tooling/harness. Actual RC5 execution is performed by a human operator outside this plan and is recorded in `ai/tmp/manual-regression/<rc>.md` if durable evidence is wanted.
+- 2026-05-07 harness implementation:
+  - registered the `manualTests` Gradle source set in `build.gradle.kts` with REST Assured 5.5.6, AssertJ, JUnit 5, and Jackson; the new `manualTests` task is intentionally not wired into `tasks.build` and is excluded from the JaCoCo agent.
+  - moved `src/test/resources/http/` → `src/manualTests/resources/http/`; updated active references in `AGENTS.md`, `CONTRIBUTING.md`, `SETUP.md`, `ai/DOCUMENTATION.md`, `ai/references/PLAN_DETAILED_GUIDE.md`, the Spotless target list, and `.gitignore`; archived plans intentionally left untouched.
+  - added the harness core (`RunConfig`, `ConfigLoader` with 4-tier precedence, `SafetyRails`, `HarnessHttp`, `SuiteReport`/`SuiteResult`/`RequestRecord`, `ReportWriter` for `report.md`+`report.json`, `ManualRegressionExtension` with prerequisite/identity gating and a JVM-shutdown report flush, `SuiteBase`, `@SuiteName`).
+  - implemented the twelve ordered suite classes (`Suite01PublicOverviewAndDocs` … `Suite12OperatorSurface`) with declared prerequisites, lifecycle teardown that asserts `404` after delete, and `@AfterAll` cleanup that records leftover identifiers when teardown fails.
+  - added `src/manualTests/resources/run.properties.example`, `src/manualTests/resources/junit-platform.properties` (`ClassOrderer$ClassName`), and a harness-level `src/manualTests/resources/README.md`.
+  - `./build.ps1 compileManualTestsJava` passed clean (no errors, no warnings).
+  - `./build.ps1 build` re-run after Milestone E to confirm the wider project still builds.
 
 ## User Validation
 - Review this plan and answer the open questions if the fallback assumptions are not acceptable.

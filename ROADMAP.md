@@ -38,7 +38,7 @@ Goal: use manual regression coverage as the RC-to-stable gate, then finish the s
 
 | Order | Status | Workstream | Plan Or Artifact | Exit Criteria |
 | --- | --- | --- | --- | --- |
-| 1 | Selected | Manual regression gate for the final `2.0` release candidate | `ai/PLAN_manual_regression_execution.md` | Manual business-functionality regression is completed against the final RC; if another RC is cut first, the plan is replanned to that RC |
+| 1 | In Progress | Manual regression gate for the final `2.0` release candidate | `ai/PLAN_manual_regression_execution.md` | Harness has landed; manual business-functionality regression still needs to run against the final RC, and if another RC is cut first, the plan is replanned to that RC |
 | 2 | Implemented | AI-guidance duplication compaction | `ai/PLAN_ai_guideline_duplication_compaction.md` | Compacted guidance remains available for release cleanup; remove this row once the unreleased documentation work is released or otherwise closed |
 | 3 | Planned | Stable `v2.0.0` release | `CHANGELOG.md`, `ROADMAP.md`, release artifacts | Stable `v2.0.0` is released, changelog and roadmap are updated, and the completed `2.0` track is removed from this file |
 

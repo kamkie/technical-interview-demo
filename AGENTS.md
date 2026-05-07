@@ -48,7 +48,7 @@ Use these artifacts deliberately:
 - `src/test/java/`: executable behavior specs
 - `src/docs/asciidoc/`: published REST Docs structure
 - `src/test/resources/openapi/approved-openapi.json`: approved machine-readable public API contract
-- `src/test/resources/http/`: reviewer-facing runnable request examples
+- `src/manualTests/resources/http/`: reviewer-facing runnable request examples (also used as the manual-regression harness input source)
 - `README.md`: supported human-facing contract summary
 - `ROADMAP.md`: active release phase, roadmap sequencing, and current project state
 - `CHANGELOG.md`: release history only

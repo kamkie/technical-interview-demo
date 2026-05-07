@@ -105,7 +105,8 @@ val spotlessMiscTargets = arrayOf(
     "src/main/resources/**/*.json",
     "src/main/resources/**/*.sql",
     "src/main/resources/**/*.xml",
-    "src/test/resources/**/*.http",
+    "src/manualTests/resources/**/*.http",
+    "src/manualTests/resources/**/*.properties",
     "tooling/pmd/**/*.xml",
     "tooling/security/**/*.xml",
 )
@@ -188,6 +189,79 @@ dependencies {
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     testImplementation("org.testcontainers:testcontainers")
     testImplementation("org.testcontainers:testcontainers-postgresql")
+}
+
+val restAssuredVersion = "5.5.6"
+val assertjVersion = "3.27.6"
+
+sourceSets {
+    create("manualTests") {
+        java.setSrcDirs(listOf("src/manualTests/java"))
+        resources.setSrcDirs(listOf("src/manualTests/resources"))
+        compileClasspath += sourceSets.main.get().output + configurations.testCompileClasspath.get()
+        runtimeClasspath += output + compileClasspath + configurations.testRuntimeClasspath.get()
+    }
+}
+
+val manualTestsImplementation: Configuration by configurations.getting {
+    extendsFrom(configurations.testImplementation.get())
+}
+val manualTestsRuntimeOnly: Configuration by configurations.getting {
+    extendsFrom(configurations.testRuntimeOnly.get())
+}
+val manualTestsCompileOnly: Configuration by configurations.getting {
+    extendsFrom(configurations.testCompileOnly.get())
+}
+val manualTestsAnnotationProcessor: Configuration by configurations.getting {
+    extendsFrom(configurations.testAnnotationProcessor.get())
+}
+
+dependencies {
+    "manualTestsImplementation"("org.junit.jupiter:junit-jupiter")
+    "manualTestsImplementation"("io.rest-assured:rest-assured:$restAssuredVersion")
+    "manualTestsImplementation"("io.rest-assured:json-path:$restAssuredVersion")
+    "manualTestsImplementation"("org.assertj:assertj-core:$assertjVersion")
+    "manualTestsImplementation"("com.fasterxml.jackson.core:jackson-databind")
+    "manualTestsImplementation"("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+    "manualTestsRuntimeOnly"("org.junit.platform:junit-platform-launcher")
+}
+
+val manualTests = tasks.register<Test>("manualTests") {
+    group = "verification"
+    description =
+        "Runs the manual-regression harness against a locally running app. " +
+        "Not part of the default build; configure via -PmanualTests.* properties or environment variables."
+    val manualTestsSourceSet = sourceSets["manualTests"]
+    testClassesDirs = manualTestsSourceSet.output.classesDirs
+    classpath = manualTestsSourceSet.runtimeClasspath
+    useJUnitPlatform()
+    shouldRunAfter(tasks.named("test"))
+    outputs.upToDateWhen { false }
+    // Forward all -PmanualTests.* Gradle properties as system properties so the harness can read them.
+    doFirst {
+        @Suppress("UNCHECKED_CAST")
+        (project.properties as Map<String, Any?>).asSequence()
+            .filter { (key, _) -> key.startsWith("manualTests.") }
+            .forEach { (key, value) -> systemProperty(key, value?.toString().orEmpty()) }
+        systemProperty("manualTests.invokedFromGradle", "true")
+    }
+    testLogging {
+        events = mutableSetOf(
+            TestLogEvent.STARTED,
+            TestLogEvent.PASSED,
+            TestLogEvent.SKIPPED,
+            TestLogEvent.FAILED,
+            TestLogEvent.STANDARD_OUT,
+            TestLogEvent.STANDARD_ERROR,
+        )
+        showExceptions = true
+        exceptionFormat = TestExceptionFormat.FULL
+        showCauses = true
+        showStackTraces = true
+    }
+    extensions.configure(JacocoTaskExtension::class.java) {
+        isEnabled = false
+    }
 }
 
 springBoot {
