@@ -11,16 +11,34 @@ trim_trailing_whitespace = true
 max_line_length = 120
 
 [*.{md,adoc,asciidoc}]
+# Documentation uses prose-friendly wrapping.
 max_line_length = off
 
-[*.properties]
-# Set to true to preserve blank lines during reformatting
-ij_properties_keep_blank_lines = true
-
 [*.{json,jsonc,yml,yaml}]
+# Structured data uses conventional two-space indentation.
 indent_size = 2
 ij_yaml_spaces_within_braces = false
 ij_yaml_spaces_within_brackets = false
 
+[*.properties]
+# Preserve blank-line separators during reformatting.
+ij_properties_keep_blank_lines = true
+
 [*.csv]
 indent_style = tab
+
+# Generated or externally managed files should not be reformatted.
+[gradlew]
+ij_formatter_enabled = false
+
+[ai/**]
+ij_formatter_enabled = false
+
+[src/gatling/resources/gatling-benchmark-baseline.json]
+ij_formatter_enabled = false
+
+[src/main/resources/db/migration/*]
+ij_formatter_enabled = false
+
+[src/test/resources/openapi/approved-openapi.json]
+ij_formatter_enabled = false
