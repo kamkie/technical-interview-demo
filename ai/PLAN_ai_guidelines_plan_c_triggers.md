@@ -32,7 +32,7 @@
 - `ai/references/AI_GUIDELINES_REMIX_EVALUATION.md` recommends Option C because common lifecycle phases do not benefit materially from reference/edit file splits or lifecycle bundles.
 - `AGENTS.md` is the default AI entry point and already has a lifecycle owner map, but descriptive guide triggers can be sharper.
 - `ai/DOCUMENTATION.md` is already organized around artifact ownership, change-type routing, alignment, common routing, and cross-references.
-- `ai/ARCHITECTURE.md` contains both descriptive structure and architecture-sensitive change rules.
+- `ai/ARCHITECTURE.md` contains both descriptive structure and architecture-sensitive change rules. The evaluation report's `System Snapshot` and `Package Layout` wording maps to the current `## System Purpose` and `## Package Shape` headings.
 - `ai/DESIGN.md` and `ai/LEARNINGS.md` are already conditional descriptive guides and should remain on demand.
 - No application behavior or public contract is affected by this plan.
 
@@ -112,7 +112,7 @@
 - exact deliverables:
   - `ai/DOCUMENTATION.md` tells agents that pure artifact-location lookup can read only `## Artifact Ownership`
   - `ai/DOCUMENTATION.md` tells agents that AI-document edits should use its AI-document maintenance subsection before editing AI guidance files
-  - `ai/ARCHITECTURE.md` tells agents that structural-only reads can load only `## System Snapshot` and `## Package Layout`
+  - `ai/ARCHITECTURE.md` tells agents that structural-only reads can load only `## System Purpose` and `## Package Shape`
   - `ai/ARCHITECTURE.md` tells agents to continue into architecture rules only for architecture-sensitive edits
 - validation checkpoint:
   - `rg -n "^## |^### |lookup-only|structural" ai/DOCUMENTATION.md ai/ARCHITECTURE.md`
@@ -201,6 +201,12 @@
   - Created this plan under `ai/`.
   - Confirmed `ROADMAP.md` tracks `ai/PLAN_ai_guidelines_plan_c_triggers.md` in the active release track.
   - Ran `git diff --check -- ai/PLAN_ai_guidelines_plan_c_triggers.md ROADMAP.md`; passed.
+- 2026-05-07 Milestone 2:
+  - Added entry points to `ai/DOCUMENTATION.md` for artifact-location lookup, AI-document edits, and broader documentation changes.
+  - Added entry points to `ai/ARCHITECTURE.md` for structural-only reads and architecture-sensitive edits.
+  - Updated this plan to use the current `ai/ARCHITECTURE.md` headings: `## System Purpose` and `## Package Shape`.
+  - Ran `rg -n "^## |^### |Entry points|artifact-location|structural|architecture-sensitive" ai/DOCUMENTATION.md ai/ARCHITECTURE.md`; passed.
+  - Ran `git diff --check -- ai/DOCUMENTATION.md ai/ARCHITECTURE.md ai/PLAN_ai_guidelines_plan_c_triggers.md`; passed.
 
 ## User Validation
 - Verify that `AGENTS.md` no longer implies descriptive guides are part of routine implementation or review loads.

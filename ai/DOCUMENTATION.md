@@ -5,6 +5,12 @@
 Use this file to decide which artifact moves when behavior, setup, workflow, roadmap, release, or AI guidance changes.
 Other guides should link here instead of re-listing ownership rules.
 
+Entry points:
+
+- artifact-location lookup only: read `## Artifact Ownership`
+- AI-document edits: read `## Artifact Ownership` and `### AI Document Maintenance`
+- documentation changes: continue into change-type routing, alignment rules, and common routing as needed
+
 ## Artifact Ownership
 
 Update the artifact that owns the truth being changed:

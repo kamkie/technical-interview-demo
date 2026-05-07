@@ -7,6 +7,11 @@ This file owns package shape, feature ownership, and structural guidance.
 This file is descriptive, not authoritative.
 Behavioral truth lives in the spec artifacts described by `AGENTS.md`.
 
+Entry points:
+
+- structural code reading only: read `## System Purpose` and `## Package Shape`
+- architecture-sensitive edits: continue through the descriptive map, then use `## Change Guidance` and later rule sections
+
 ## System Purpose
 
 This repository is a small Spring Boot demo application for interview exercises.
