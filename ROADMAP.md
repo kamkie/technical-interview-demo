@@ -48,7 +48,7 @@ Rewrite an item into a concrete roadmap row before moving it into active or defe
 
 | Status | Candidate | Notes |
 | --- | --- | --- |
-| Candidate | AI guidance execution and reusable task library restructure | New plan: `ai/PLAN_ai_guidance_execution_prompt_library_restructure.md`; supersedes the three workflow-selection variant option plans by removing named mode vocabulary, moving active plans to a subdirectory, splitting whole-plan execution from ad hoc or milestone execution, and replacing prompt storage with a reusable task library |
+| Candidate | AI guidance execution and reusable task library restructure | Ready plan: `ai/PLAN_ai_guidance_execution_prompt_library_restructure.md`; supersedes the three workflow-selection variant option plans by archiving them, removing named mode vocabulary, moving active plans to a subdirectory, splitting whole-plan execution from ad hoc or milestone execution, and replacing prompt storage with `ai/task-library/` without a prompt-loader compatibility alias |
 
 ## Deferred Work
 
