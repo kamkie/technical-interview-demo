@@ -60,7 +60,6 @@ Use this file only to resolve ambiguous repo-task requests to one slug. Load the
 - `clean-worktrees-and-stale-local-branches` - Clean Worktrees And Stale Local Branches (Placeholders: none)
 - `compact-ai-docs` - Compact AI Docs (Placeholders: none)
 - `context-report` - Context Report (Placeholders: none)
-- `deep-ai-guidelines-assessment` - Deep AI Guidelines Assessment (Placeholders: none)
 - `evaluate-ai-guidelines` - Evaluate AI Guidelines (Placeholders: none)
 - `implement-then-release` - Implement Then Release (Placeholders: <plan_file>)
 - `summarize-lifecycle-state` - Summarize Lifecycle State (Placeholders: <plan_file>)
