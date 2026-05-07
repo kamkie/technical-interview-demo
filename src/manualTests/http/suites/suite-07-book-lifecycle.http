@@ -17,10 +17,11 @@ Cookie: technical-interview-demo-session={{sessionCookie}}
 > {%
     var date = new Date().toISOString().split('T')[0];
     client.global.set("report_file", "../reports/07-book-lifecycle_raport_" + date + ".md");
+    var baseUrl = client.variables.environment.get("baseUrl") || client.global.get("baseUrl") || client.variables.file.get("baseUrl");
     var report = "# Manual Regression Report - Suite 07\n\n";
     report += "- Suite: `07-book-lifecycle`\n";
     report += "- Run Date: " + new Date().toString() + "\n";
-    report += "- Base URL: " + client.global.get("baseUrl") + "\n\n";
+    report += "- Base URL: " + baseUrl + "\n\n";
     report += "## Test Results\n\n";
     report += "| # | Test | Method | Path | Status | Result | Note |\n";
     report += "|---|------|--------|------|--------|--------|------|\n";
@@ -174,6 +175,6 @@ Content-Type: text/plain
 >>! {{report_file}}
 
 > {%
-    client.log("Report saved to: " + client.global.get("report_file"));
-    client.log(client.global.get("report"));
+    client.log("Report saved to: " + (client.global.get("report_file") || client.variables.file.get("report_file")));
+    client.log(client.global.get("report") || client.variables.file.get("report"));
 %}
