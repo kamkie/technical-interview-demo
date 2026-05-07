@@ -7,6 +7,10 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Added
+
+- Added an on-demand post-compaction AI guideline evaluation report with a current grade, size baseline, realized workflow-compaction gains, and ranked follow-up backlog.
+
 ### Changed
 
 - Refined AI onboarding and execution guidance with targeted relevance scanning, context-quality checkpoints, per-milestone scope checks, and post-validation review triggers.

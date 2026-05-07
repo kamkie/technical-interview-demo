@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Implementation |
-| Status | In Progress |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Summary
 - Evaluate and grade this repository's AI guideline set after the two prerequisite AI-guidance plans landed:
@@ -247,6 +247,14 @@
   - Manual consistency review passed against `AGENTS.md`, `ai/DOCUMENTATION.md`, and `ai/REVIEWS.md`; the report is on demand and does not replace standing owner guidance.
   - Targeted stale-workflow search found old mode names only in intentional migration notes inside `ai/PLAN_workflow_on_demand_split.md`.
   - `git diff --check` passed.
+- 2026-05-07 milestone 2:
+  - Added the ranked follow-up backlog to `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md`, classifying scratch recommendations as already handled, high ROI, medium ROI, lower ROI, or obsolete/not recommended.
+  - Confirmed recommendations route standing policy to owning documents such as `AGENTS.md`, `ai/EXECUTION.md`, `ai/RELEASES.md`, `ai/PLAN.md`, `ai/PROMPTS.md`, and `ai/DOCUMENTATION.md`.
+  - Confirmed no follow-up compaction work is represented as completed by this evaluation.
+  - Updated this plan to `Phase=Integration` / `Status=Implemented`, updated `ROADMAP.md` to match, and added unreleased history to `CHANGELOG.md`.
+  - Targeted stale-workflow search found old mode names only in intentional migration notes inside `ai/PLAN_workflow_on_demand_split.md`.
+  - `git diff --check` passed.
+  - `./build.ps1 build` passed through the lightweight-file shortcut, reporting docs-only changes to this plan, the evaluation report, `CHANGELOG.md`, and `ROADMAP.md`, and skipping the Gradle build.
 
 ## User Validation
 - Review this replan and confirm the remaining scope is only the evaluation report plus ranked follow-up backlog.

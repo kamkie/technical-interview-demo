@@ -109,5 +109,49 @@ The total standing size is close to the historical scratch estimate, but the sha
 | Tighten `ai/EXECUTION.md` reading list | Still open. This is the most important remaining source of avoidable broad reads during implementation. |
 | Add context-drop markers in plans | Partly handled by `AGENTS.md` context hygiene and execution per-milestone checks, but not standardized as a plan-section requirement. |
 
+## Follow-Up Ranking
+These are backlog recommendations only. None should be treated as implemented by this evaluation.
+
+### Already Handled
+- Workflow fanout split: handled by the current `ai/WORKFLOW.md` router plus `ai/references/WORKFLOW_SINGLE_PLAN_FANOUT.md` and `ai/references/WORKFLOW_MULTI_PLAN_FANOUT.md`.
+- Current workflow terminology: handled in active prompt titles and owner guides. Remaining old terms are migration notes in the implemented workflow-split plan.
+- Prompt-body on-demand model: mostly handled. `ai/PROMPTS.md` is a lean index, and raw bodies remain under `ai/prompts/bodies/`.
+- Context-quality and relevance-scan adoption: handled by the pskoett-guidance adoption plan through `AGENTS.md`, `ai/EXECUTION.md`, `ai/REVIEWS.md`, and `ai/LEARNINGS.md`.
+
+### High ROI
+1. Tighten `ai/EXECUTION.md` conditional reads.
+   - Why: the broad "Before You Implement" list can inflate implementation tasks from about 21.4 KB to about 55.0 KB before the active plan is counted.
+   - Suggested owner: `ai/EXECUTION.md`, with cross-reference checks against `ai/PROMPTS.md` default read sets.
+2. Compact `AGENTS.md` without moving repo-level rules out of their owner.
+   - Why: every workflow starts with `AGENTS.md`; reducing duplicated artifact-routing and setup-adjacent detail lowers every default read.
+   - Suggested owner: `AGENTS.md`, with routing authority preserved in `ai/DOCUMENTATION.md`.
+3. Split release runbook mechanics from `ai/RELEASES.md`.
+   - Why: the release guide is phase-specific but still combines policy, checklist, push verification, and artifact-verification snippets.
+   - Suggested owner: keep policy in `ai/RELEASES.md`; move detailed commands to one or two `ai/references/RELEASE_*.md` files with explicit triggers.
+
+### Medium ROI
+4. Slim `ai/PLAN.md` by moving skeleton detail into `ai/templates/PLAN_TEMPLATE.md`.
+   - Why: the standing planning guide and template intentionally overlap on required sections and milestone fields.
+   - Suggested owner: keep lifecycle and readiness rules in `ai/PLAN.md`; move exhaustive skeleton wording to the template.
+5. Add a compact phase-to-guide read-set map.
+   - Why: `ai/PROMPTS.md` already has default read sets, but execution and onboarding would benefit from one conditional map that avoids becoming another policy duplicate.
+   - Suggested owner: likely `ai/PROMPTS.md` or `ai/EXECUTION.md`; avoid bloating `AGENTS.md`.
+6. Clarify triggers for descriptive docs.
+   - Why: `ai/ARCHITECTURE.md`, `ai/BUSINESS_MODULES.md`, `ai/DESIGN.md`, and `ai/LEARNINGS.md` are correctly descriptive, but the load triggers are spread across file introductions and onboarding notes.
+   - Suggested owner: `AGENTS.md` load policy or `ai/PROMPTS.md` default read sets, kept compact.
+
+### Lower ROI
+7. Add explicit per-milestone context requirements to every plan.
+   - Why: context-drop markers could help long plans, but they would add boilerplate to small plans and may duplicate milestone validation notes.
+   - Suggested approach: try only on large or fanout-prone plans first.
+8. Split more from `ai/WORKFLOW.md`.
+   - Why: the largest workflow win already landed. Further cuts may be possible, but the remaining router still owns branch/worktree and coordinator invariants that agents need before choosing a mode.
+   - Suggested approach: revisit only if workflow-selection reads remain too large in practice.
+
+### Obsolete Or Not Recommended
+- Recreate transitional workflow reference names from before the split: obsolete. The repo intentionally adopted `Single-Plan Fanout` and `Multi-Plan Fanout` reference names.
+- Copy the scratch `B+` grade or old size estimates into standing docs: obsolete. Current scoring should use live repository measurements.
+- Bulk-load archived plans to evaluate active guidance: not recommended. Active guidance can be checked with targeted searches, and archive content is historical.
+
 ## Conclusion
 The current AI guideline set deserves **A-**: it is coherent, owner-routed, and substantially more on-demand than the scratch baseline. The remaining improvements should be narrow compaction plans, not emergency repairs. The best next work is to reduce `AGENTS.md` and implementation-phase standing load while preserving the current owner model.
