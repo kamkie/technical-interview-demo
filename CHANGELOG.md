@@ -16,6 +16,7 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 - Folded business-feature ownership guidance from `ai/BUSINESS_MODULES.md` into `ai/ARCHITECTURE.md` and removed the overlapping standalone guide.
 - Treat all files under `ai/` as lightweight support-file changes in `scripts/classify-changed-files.ps1`.
+- Refreshed the on-demand AI guideline evaluation report with current size baselines, prompt-body drift checks, active-plan inventory risk, and ranked follow-up recommendations.
 - Standardized per-milestone context requirements across the plan guide, plan template, execution loop, active plans, and AI-guideline evaluation report.
 - Implemented the post-compaction AI-guidance findings by tightening execution read triggers, moving change-type routing detail to `ai/DOCUMENTATION.md`, splitting release runbooks into on-demand references, slimming `ai/PLAN.md`, and clarifying phase-to-guide read sets.
 - Reordered `AGENTS.md` into a clearer spec-truth, onboarding, change-routing, and execution-support flow, while compacting branch and worktree expectations and keeping detailed remote-handoff mechanics in `ai/WORKFLOW.md`.
