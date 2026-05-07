@@ -293,6 +293,7 @@ If `PyYAML` is unavailable, install it into a temporary directory outside the re
 
 ## Validation Results
 - 2026-05-07 Milestone 1 started: initialized `.agents/skills/repo-task` with the `skill-creator` scaffold, created `.agents/skills/repo-task/references/spec.md` from this plan's inline spec, deleted `temp/spec.md`, and moved lifecycle and roadmap status to in progress.
+- 2026-05-07 Milestone 2 completed: replaced the generated dispatcher template with the compact `repo-task` resolver, regenerated `agents/openai.yaml` with a valid `$repo-task` default prompt, installed `PyYAML` into `%TEMP%\codex-pyyaml-skill-validate` for skill tooling only, and ran `python C:\Users\kamki\AppData\Local\JetBrains\IntelliJIdea2026.1\aia\codex\skills\.system\skill-creator\scripts\quick_validate.py .agents/skills/repo-task` with `PYTHONPATH` scoped to that temp directory; result: `Skill is valid!`. `git diff --check` passed.
 
 ## User Validation
 - Review `.agents/skills/repo-task/SKILL.md` and `.agents/skills/repo-task/references/spec.md` for the intended loading contract.

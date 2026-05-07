@@ -1,0 +1,4 @@
+interface:
+  display_name: "Repo Task"
+  short_description: "Dispatch repository task starters"
+  default_prompt: "Use $repo-task to run the create-plan task for <topic>."
