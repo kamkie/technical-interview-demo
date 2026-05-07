@@ -94,6 +94,13 @@
       ]
     },
     {
+      "title": "Evaluate AI Guidelines",
+      "slug": "evaluate-ai-guidelines",
+      "category": "Maintenance",
+      "path": "ai/prompts/bodies/evaluate-ai-guidelines.md",
+      "placeholders": []
+    },
+    {
       "title": "Implement Milestone",
       "slug": "implement-milestone",
       "category": "Implementation",

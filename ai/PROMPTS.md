@@ -91,6 +91,7 @@ Descriptive docs stay conditional:
 - Lifecycle and maintenance
   - `Implement Then Release`
   - `Clean Worktrees And Stale Local Branches`
+  - `Evaluate AI Guidelines`
   - `Summarize Lifecycle State`
   - `Triage Validation Failure`
   - `Upgrade Dependencies And Build Tools`
