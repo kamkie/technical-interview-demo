@@ -50,6 +50,10 @@ Goal: use manual regression coverage as the RC-to-stable gate, then finish the s
 - [x] Execute `ai/PLAN_manual_regression_execution.md` as the manual business-functionality regression gate for the final `2.0` release candidate, currently `v2.0.0-RC5`; replan it to the next RC if another RC is prepared first. Plan lifecycle: `Planning` / `Ready`.
 - [ ] Release stable `v2.0.0`, update `CHANGELOG.md`, and remove the completed `2.0` track from `ROADMAP.md`.
 
+#### AI Workflow Guidance
+
+- [x] Execute `ai/PLAN_ai_guideline_duplication_compaction.md` to compact duplicated AI-guidance wording while preserving the on-demand owner-guide model. Plan lifecycle: `Planning` / `Ready`.
+
 ## Deferred
 
 ### Post-`2.0` Frontend AI Contract
