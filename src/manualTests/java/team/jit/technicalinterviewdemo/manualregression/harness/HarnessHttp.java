@@ -6,6 +6,7 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -46,6 +47,7 @@ public final class HarnessHttp {
     private final RunConfig config;
     private final SuiteReport report;
     private final HttpClient client;
+    private final Map<String, String> csrfTokensBySessionCookie = new HashMap<>();
 
     public HarnessHttp(RunConfig config, SuiteReport report) {
         this.config = config;
@@ -66,9 +68,7 @@ public final class HarnessHttp {
         if (!config.hasAdminIdentity()) {
             throw new IllegalStateException("Admin identity is not configured");
         }
-        return authenticated(
-                config.adminSessionCookie().orElseThrow(),
-                config.adminCsrfToken().orElseThrow());
+        return authenticated(config.adminSessionCookie().orElseThrow());
     }
 
     /** Builds a regular-user-authenticated request. Throws if not configured. */
@@ -76,15 +76,62 @@ public final class HarnessHttp {
         if (!config.hasRegularIdentity()) {
             throw new IllegalStateException("Regular-user identity is not configured");
         }
-        return authenticated(
-                config.regularSessionCookie().orElseThrow(),
-                config.regularCsrfToken().orElseThrow());
+        return authenticated(config.regularSessionCookie().orElseThrow());
     }
 
-    private HarnessRequest authenticated(String sessionCookie, String csrfToken) {
+    private HarnessRequest authenticated(String sessionCookie) {
+        String csrfToken = csrfTokenForSession(sessionCookie);
         return anonymous()
                 .header("Cookie", SESSION_COOKIE_NAME + "=" + sessionCookie + "; " + CSRF_COOKIE_NAME + "=" + csrfToken)
                 .header(CSRF_HEADER_NAME, csrfToken);
+    }
+
+    private String csrfTokenForSession(String sessionCookie) {
+        return csrfTokensBySessionCookie.computeIfAbsent(sessionCookie, this::bootstrapCsrfToken);
+    }
+
+    private String bootstrapCsrfToken(String sessionCookie) {
+        HarnessResponse response = send(
+                "GET",
+                "/api/session",
+                anonymous().cookie(SESSION_COOKIE_NAME, sessionCookie),
+                200,
+                Optional.of("bootstrap csrf token"));
+        String token = csrfTokenFrom(response.headers());
+        if (token == null || token.isBlank()) {
+            throw new ManualRegressionConfigException(
+                    "Authenticated CSRF bootstrap did not return the " + CSRF_COOKIE_NAME + " cookie.");
+        }
+        return token;
+    }
+
+    private static String csrfTokenFrom(Map<String, List<String>> headers) {
+        for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
+            if (!"set-cookie".equals(entry.getKey().toLowerCase(Locale.ROOT))) {
+                continue;
+            }
+            for (String value : entry.getValue()) {
+                String token = csrfTokenFromSetCookie(value);
+                if (token != null) {
+                    return token;
+                }
+            }
+        }
+        return null;
+    }
+
+    private static String csrfTokenFromSetCookie(String setCookie) {
+        if (setCookie == null) {
+            return null;
+        }
+        for (String part : setCookie.split(";", -1)) {
+            String trimmed = part.trim();
+            String prefix = CSRF_COOKIE_NAME + "=";
+            if (trimmed.startsWith(prefix)) {
+                return trimmed.substring(prefix.length());
+            }
+        }
+        return null;
     }
 
     /**

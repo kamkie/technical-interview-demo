@@ -31,14 +31,14 @@ when the corresponding inputs are missing, so an anonymous-only run remains usef
 ## How to run
 
 1. Start the app locally (`./build.ps1 bootRun` or `docker-compose up`).
-2. Sign in once via the browser, capture the `technical-interview-demo-session` cookie value and
-   the CSRF token returned by `GET /api/session`.
-3. Either copy `run.properties.example` to `run.properties` and fill in `adminSessionCookie` /
-   `adminCsrfToken`, or pass them as Gradle properties:
+2. Sign in once via the browser and capture the `technical-interview-demo-session` cookie value.
+   The harness refreshes the readable `XSRF-TOKEN` cookie from `GET /api/session` and mirrors it
+   into `X-XSRF-TOKEN` for unsafe authenticated requests.
+3. Either copy `run.properties.example` to `run.properties` and fill in `adminSessionCookie`, or
+   pass it as a Gradle property:
    ```powershell
    ./build.ps1 manualTests `
-     "-PmanualTests.adminSessionCookie=<cookie>" `
-     "-PmanualTests.adminCsrfToken=<csrf>"
+     "-PmanualTests.adminSessionCookie=<cookie>"
    ```
 4. The harness prints the report path on completion. Reports default to
    `temp/manual-regression/<runTag>/run-<UTC-timestamp>/`.

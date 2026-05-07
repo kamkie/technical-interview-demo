@@ -37,12 +37,10 @@ public final class ConfigLoader {
     public static final String KEY_BASE_URL = "baseUrl";
 
     public static final String KEY_ADMIN_SESSION_COOKIE = "adminSessionCookie";
-    public static final String KEY_ADMIN_CSRF_TOKEN = "adminCsrfToken";
 
     /** Optional input keys. */
     public static final String KEY_REGULAR_SESSION_COOKIE = "regularSessionCookie";
 
-    public static final String KEY_REGULAR_CSRF_TOKEN = "regularCsrfToken";
     public static final String KEY_REGULAR_USER_ID = "regularUserId";
     public static final String KEY_RUN_TAG = "runTag";
     public static final String KEY_SUITES = "suites";
@@ -68,7 +66,7 @@ public final class ConfigLoader {
             DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss").withZone(java.time.ZoneOffset.UTC);
 
     private static final Set<String> SECRET_KEYS =
-            Set.of(KEY_ADMIN_SESSION_COOKIE, KEY_ADMIN_CSRF_TOKEN, KEY_REGULAR_SESSION_COOKIE, KEY_REGULAR_CSRF_TOKEN);
+            Set.of(KEY_ADMIN_SESSION_COOKIE, "adminCsrfToken", KEY_REGULAR_SESSION_COOKIE, "regularCsrfToken");
 
     private ConfigLoader() {}
 
@@ -93,18 +91,13 @@ public final class ConfigLoader {
                 selectedSuites.isEmpty() || selectedSuites.stream().anyMatch(SUITES_REQUIRING_ADMIN::contains);
 
         Optional<String> adminCookie = resolve(KEY_ADMIN_SESSION_COOKIE, propertiesFile, console, interactive, true);
-        Optional<String> adminCsrf = resolve(KEY_ADMIN_CSRF_TOKEN, propertiesFile, console, interactive, true);
         if (anyAdminSuiteSelected) {
             if (adminCookie.isEmpty()) {
                 missingRequired.add(KEY_ADMIN_SESSION_COOKIE);
             }
-            if (adminCsrf.isEmpty()) {
-                missingRequired.add(KEY_ADMIN_CSRF_TOKEN);
-            }
         }
 
         Optional<String> regularCookie = resolve(KEY_REGULAR_SESSION_COOKIE, propertiesFile, null, false, true);
-        Optional<String> regularCsrf = resolve(KEY_REGULAR_CSRF_TOKEN, propertiesFile, null, false, true);
         Optional<String> regularUserId = resolve(KEY_REGULAR_USER_ID, propertiesFile, null, false, false);
 
         String runTag =
@@ -146,9 +139,7 @@ public final class ConfigLoader {
         return new RunConfig(
                 baseUrl,
                 adminCookie,
-                adminCsrf,
                 regularCookie,
-                regularCsrf,
                 regularUserId,
                 runTag,
                 selectedSuites,

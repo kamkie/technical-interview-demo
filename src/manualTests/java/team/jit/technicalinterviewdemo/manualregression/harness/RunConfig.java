@@ -14,9 +14,7 @@ import java.util.Optional;
 public record RunConfig(
         String baseUrl,
         Optional<String> adminSessionCookie,
-        Optional<String> adminCsrfToken,
         Optional<String> regularSessionCookie,
-        Optional<String> regularCsrfToken,
         Optional<String> regularUserId,
         String runTag,
         List<String> selectedSuites,
@@ -25,11 +23,11 @@ public record RunConfig(
         Optional<String> activeProfileHint) {
 
     public boolean hasAdminIdentity() {
-        return adminSessionCookie.isPresent() && adminCsrfToken.isPresent();
+        return adminSessionCookie.isPresent();
     }
 
     public boolean hasRegularIdentity() {
-        return regularSessionCookie.isPresent() && regularCsrfToken.isPresent();
+        return regularSessionCookie.isPresent();
     }
 
     public boolean hasRegularUserId() {

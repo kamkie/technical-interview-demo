@@ -5,14 +5,13 @@
 # `./build.ps1 manualTests`. Values supplied via Gradle properties (-PmanualTests.<key>=<value>) or
 # environment variables (MANUAL_TESTS_<KEY>) take precedence over this file.
 #
-# Required when admin-only suites (06-12) are selected.
+# Required when admin-only suites (06-12) are selected. The harness derives CSRF tokens from
+# GET /api/session for the supplied browser session cookie.
 # baseUrl=http://localhost:8080
 # adminSessionCookie=PUT-THE-CAPTURED-SESSION-COOKIE-HERE
-# adminCsrfToken=PUT-THE-CAPTURED-CSRF-TOKEN-HERE
 #
 # Optional. Enables the regular-user 403 checks and the role-grant round trip.
 # regularSessionCookie=
-# regularCsrfToken=
 # regularUserId=
 #
 # Optional. Forces a stable run tag instead of the timestamp+random default.

@@ -63,8 +63,6 @@ public final class ReportWriter {
                 java.util.Optional.empty(),
                 java.util.Optional.empty(),
                 java.util.Optional.empty(),
-                java.util.Optional.empty(),
-                java.util.Optional.empty(),
                 "example",
                 List.of(),
                 outputDirectory,
