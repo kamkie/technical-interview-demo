@@ -3,9 +3,9 @@
 Evaluation date: 2026-05-07
 
 ## Summary
-- Overall grade: **A-**.
-- The current guidance set is materially stronger than the historical scratch-note `B+`: workflow fanout mechanics are now on demand, prompt titles use the current execution-mode names, and context-quality/relevance-scan rules are in the right owner files.
-- The remaining cost is no longer broad workflow drift. It is concentrated in `AGENTS.md` size, `ai/RELEASES.md` runbook density, `ai/PLAN.md` checklist density, and `ai/EXECUTION.md` reading-list breadth.
+- Overall grade after follow-up compaction: **A**.
+- The current guidance set is materially stronger than the historical scratch-note `B+`: workflow fanout mechanics, release runbooks, prompt bodies, detailed planning examples, and plan skeleton detail are now on demand.
+- The remaining cost is concentrated in the unavoidable `AGENTS.md` default floor, the workflow router, and descriptive docs that must stay easy to find without becoming default context.
 - No blocking contradiction was found in the active standing guidance. Old workflow names remain only as intentional migration notes inside the implemented workflow-split plan.
 
 ## Method
@@ -25,61 +25,62 @@ Standing owner files are `AGENTS.md` plus top-level `ai/*.md` files other than a
 
 | File | KB | Lines | Load Class |
 | --- | ---: | ---: | --- |
-| `AGENTS.md` | 14.7 | 168 | Default entry |
+| `AGENTS.md` | 13.5 | 147 | Default entry |
 | `ai/ARCHITECTURE.md` | 5.0 | 84 | Conditional descriptive |
 | `ai/BUSINESS_MODULES.md` | 2.8 | 55 | Conditional descriptive |
 | `ai/CODE_STYLE.md` | 3.4 | 40 | Phase-specific |
 | `ai/DESIGN.md` | 6.4 | 107 | Conditional descriptive |
-| `ai/DOCUMENTATION.md` | 4.8 | 53 | Phase-specific |
+| `ai/DOCUMENTATION.md` | 6.7 | 81 | Phase-specific |
 | `ai/ENVIRONMENT_QUICK_REF.md` | 2.1 | 45 | Phase-specific |
-| `ai/EXECUTION.md` | 6.7 | 87 | Phase-specific |
+| `ai/EXECUTION.md` | 7.6 | 94 | Phase-specific |
 | `ai/LEARNINGS.md` | 3.2 | 47 | Conditional descriptive |
-| `ai/PLAN.md` | 6.7 | 120 | Phase-specific |
-| `ai/PROMPTS.md` | 3.3 | 81 | Conditional index |
-| `ai/RELEASES.md` | 8.3 | 88 | Phase-specific |
+| `ai/PLAN.md` | 5.6 | 91 | Phase-specific |
+| `ai/PROMPTS.md` | 4.3 | 88 | Conditional index |
+| `ai/RELEASES.md` | 3.4 | 43 | Phase-specific |
 | `ai/REVIEWS.md` | 2.6 | 45 | Phase-specific |
 | `ai/TESTING.md` | 5.0 | 62 | Phase-specific |
-| `ai/WORKFLOW.md` | 9.1 | 151 | Phase-specific router |
+| `ai/WORKFLOW.md` | 9.4 | 152 | Phase-specific router |
 
 Practical read-set estimates:
 
 | Scenario | Files | KB | Estimated Tokens |
 | --- | ---: | ---: | ---: |
-| Standing root plus top-level owner guides | 15 | 84.0 | 21,508 |
-| Planning minimum: `AGENTS.md` + `ai/PLAN.md` | 2 | 21.4 | 5,477 |
-| Implementation minimum: `AGENTS.md` + `ai/EXECUTION.md` | 2 | 21.4 | 5,481 |
-| Implementation broad list from `ai/EXECUTION.md` | 9 | 55.0 | 14,084 |
-| Workflow selection: `AGENTS.md` + `ai/WORKFLOW.md` + `ai/EXECUTION.md` | 3 | 30.5 | 7,809 |
-| Verification: `AGENTS.md` + `ai/TESTING.md` + `ai/DOCUMENTATION.md` + `ai/REVIEWS.md` | 4 | 27.1 | 6,929 |
-| Release: `AGENTS.md` + `ai/RELEASES.md` | 2 | 23.0 | 5,886 |
+| Standing root plus top-level owner guides | 15 | 80.9 | 20,719 |
+| Planning minimum: `AGENTS.md` + `ai/PLAN.md` | 2 | 19.1 | 4,889 |
+| Implementation minimum: `AGENTS.md` + `ai/EXECUTION.md` | 2 | 21.0 | 5,380 |
+| Implementation broad conditional set | 5 | 35.3 | 9,030 |
+| Workflow selection: `AGENTS.md` + `ai/WORKFLOW.md` + `ai/EXECUTION.md` | 3 | 30.4 | 7,779 |
+| Verification: `AGENTS.md` + `ai/TESTING.md` + `ai/DOCUMENTATION.md` + `ai/REVIEWS.md` | 4 | 27.7 | 7,095 |
+| Release policy: `AGENTS.md` + `ai/RELEASES.md` | 2 | 16.9 | 4,327 |
+| Release policy plus on-demand refs | 4 | 22.6 | 5,793 |
 | Conditional descriptive docs only | 4 | 17.4 | 4,463 |
 | Workflow fanout references now on demand | 2 | 7.3 | 1,861 |
 
-The total standing size is close to the historical scratch estimate, but the shape has changed. `AGENTS.md` is much larger than the scratch assumed, while `ai/WORKFLOW.md` is smaller and detailed fanout mechanics now sit behind explicit reference triggers.
+The total standing size is below the historical scratch estimate, and the practical phase read sets are smaller than the raw standing total. `AGENTS.md` still defines the default floor, while detailed workflow and release mechanics now sit behind explicit reference triggers.
 
 ## Rubric Findings
 - Owner clarity: **A**. `ai/DOCUMENTATION.md` cleanly routes ownership, and most guides state their role in the first paragraph.
-- Default-load necessity: **B+**. The load policy is explicit, but `AGENTS.md` is now the largest standing default file and `ai/EXECUTION.md` still names a broad pre-edit reading list.
-- On-demand trigger clarity: **A-**. Workflow, planning, troubleshooting, Gradle task graph, prompt bodies, templates, skills, and references generally have clear load triggers. Descriptive docs are marked descriptive but could have a tighter phase-to-guide trigger map.
-- Duplication or policy drift: **B+**. No active stale workflow terminology was found outside intentional migration notes, but `AGENTS.md`, `ai/DOCUMENTATION.md`, `ai/PROMPTS.md`, and `ai/EXECUTION.md` repeat some read-set and artifact-routing concepts.
-- Execution usefulness: **A-**. The milestone loop, workflow modes, validation routing, and commit discipline are actionable. The main cost is that the broad reading list can inflate simple implementation tasks.
+- Default-load necessity: **A-**. The load policy is explicit and `AGENTS.md` is smaller, though it remains the default floor for every task.
+- On-demand trigger clarity: **A**. Workflow, release, planning detail, troubleshooting, Gradle task graph, prompt bodies, templates, skills, and references have explicit load triggers. Descriptive-doc triggers are now centralized in the prompt read-set map.
+- Duplication or policy drift: **A-**. No active stale workflow terminology was found outside intentional migration notes, and detailed change-type routing now lives in `ai/DOCUMENTATION.md`.
+- Execution usefulness: **A**. The milestone loop, workflow modes, validation routing, and commit discipline are actionable, and implementation reads are now conditional instead of broad by default.
 - Validation and review routing: **A**. `ai/TESTING.md`, `ai/DOCUMENTATION.md`, and `ai/REVIEWS.md` form a clear validation/review path, including documentation-only and lightweight-file handling.
 
 ## File Grades
 | File | Grade | Rationale |
 | --- | --- | --- |
-| `AGENTS.md` | B+ | Excellent entry point and spec-priority owner, but 14.7 KB is high for the default read. Some change-type routing overlaps with `ai/DOCUMENTATION.md`. |
+| `AGENTS.md` | A- | Excellent entry point and spec-priority owner. Change-type routing is now compact and delegates detail to `ai/DOCUMENTATION.md`, though the file remains the default context floor. |
 | `ai/ARCHITECTURE.md` | A- | Clear compact map with the detailed map on demand. Correctly descriptive rather than authoritative. |
 | `ai/BUSINESS_MODULES.md` | A- | Lean ownership guide for feature placement. Its trigger is clear for business-package changes. |
 | `ai/CODE_STYLE.md` | A | Short, focused edit-shaping guidance with clear cross-references. |
 | `ai/DESIGN.md` | B+ | Useful product-direction context, but relatively large for a descriptive guide and should remain conditional. |
-| `ai/DOCUMENTATION.md` | A | Strong artifact-routing owner; it reduces drift by keeping ownership decisions centralized. |
+| `ai/DOCUMENTATION.md` | A | Strong artifact-routing owner. It now also owns detailed change-type routing that was previously duplicated in `AGENTS.md`. |
 | `ai/ENVIRONMENT_QUICK_REF.md` | A | Small, concrete, and well-scoped to wrapper command usage. |
-| `ai/EXECUTION.md` | B+ | Strong milestone loop and tracking rules. The `Before You Implement` section still encourages loading more guides than many implementation tasks need. |
+| `ai/EXECUTION.md` | A- | Strong milestone loop and tracking rules. The `Before You Implement` section now uses a small base read set plus explicit conditional triggers. |
 | `ai/LEARNINGS.md` | A- | Durable lessons are concise and scoped. Relevance-scan and learning-trigger rules make it conditional instead of default. |
-| `ai/PLAN.md` | B+ | Solid standing planning rules, but required-content and output-format detail could move further into the template or detailed reference. |
-| `ai/PROMPTS.md` | A- | Lean command index with raw bodies on demand. The default read-set section is useful but slightly overlaps with onboarding and execution guides. |
-| `ai/RELEASES.md` | B | Correctly phase-specific, but release checklist and artifact-verification mechanics are still dense enough to justify a future reference split. |
+| `ai/PLAN.md` | A- | Solid standing planning rules with exhaustive skeleton/checklist detail moved to the on-demand template. |
+| `ai/PROMPTS.md` | A | Lean command index with raw bodies on demand and a compact phase-to-guide read-set map. |
+| `ai/RELEASES.md` | A- | Release policy, preconditions, version choice, and safety rules remain standing; checklist and artifact verification moved to on-demand references. |
 | `ai/REVIEWS.md` | A | Short, practical, and clearly owns review/security-review expectations. |
 | `ai/TESTING.md` | A | Focused validation guidance with good lightweight-change and on-demand troubleshooting rules. |
 | `ai/WORKFLOW.md` | A- | The workflow split landed successfully: fanout detail moved to on-demand references and active names are current. It remains a large router because shared branch/worktree and coordinator rules stay in the standing file. |
@@ -92,59 +93,41 @@ The total standing size is close to the historical scratch estimate, but the sha
 - The evaluation report itself is correctly on demand under `ai/references/` rather than becoming another standing owner guide.
 
 ## Remaining Costs
-- `AGENTS.md` now dominates every read set. That is expected for the entry point, but it creates a hard floor of about 14.7 KB before any phase-specific guide is loaded.
-- `ai/EXECUTION.md` still lists `ai/PLAN.md`, `ai/WORKFLOW.md`, and several focused guides under "Read these before editing." In practice, that can turn a small implementation into a 55.0 KB broad read set.
-- `ai/RELEASES.md` remains a combined policy, checklist, and artifact-verification runbook. Since it is release-only, the cost is phase-contained, but it is still a high-ROI split candidate.
-- `ai/PLAN.md` and `ai/templates/PLAN_TEMPLATE.md` intentionally overlap on required plan shape. The overlap is not contradictory, but it is still standing bytes that could move into the template.
-- Descriptive docs are correctly marked non-authoritative, but the exact phase triggers for loading `ai/ARCHITECTURE.md`, `ai/BUSINESS_MODULES.md`, `ai/DESIGN.md`, and `ai/LEARNINGS.md` are spread across several files.
+- `AGENTS.md` still dominates every read set. That is expected for the entry point, but it creates a hard floor of about 13.5 KB before any phase-specific guide is loaded.
+- `ai/DOCUMENTATION.md` grew because it now owns detailed change-type routing. That is a deliberate tradeoff: the routing detail moved out of default context and into the owning guide.
+- `ai/WORKFLOW.md` remains the largest phase-specific router because it owns branch, worktree, coordinator, and integration invariants.
+- Descriptive docs remain a meaningful optional load at about 17.4 KB combined, so agents should use the phase-to-guide trigger map instead of loading them by default.
 
 ## Scratch Comparison
 | Scratch Recommendation | Current Result |
 | --- | --- |
-| Split `ai/WORKFLOW.md` | Mostly handled. The final router is 9.1 KB, not the scratch's smaller target, but the highest-risk fanout mechanics are on demand. |
-| Make descriptive docs on demand | Partly handled. The docs are labeled descriptive and non-authoritative, but a compact phase-to-guide trigger map would reduce ambiguity. |
-| Split `ai/RELEASES.md` | Still open. Release work is phase-specific, but checklist and verification mechanics remain in the standing release guide. |
-| Slim `ai/PLAN.md` | Partly handled. A detailed reference and template exist, but required-content detail remains in the standing guide. |
-| Add phase-to-guide context map | Partly handled. `ai/PROMPTS.md` has default read sets, but `AGENTS.md` and `ai/EXECUTION.md` do not yet give a single compact conditional map. |
-| Tighten `ai/EXECUTION.md` reading list | Still open. This is the most important remaining source of avoidable broad reads during implementation. |
+| Split `ai/WORKFLOW.md` | Handled. The final router is larger than the scratch target, but the highest-risk fanout mechanics are on demand. |
+| Make descriptive docs on demand | Handled. The docs are labeled descriptive and non-authoritative, and `ai/PROMPTS.md` now has explicit trigger guidance. |
+| Split `ai/RELEASES.md` | Handled. Checklist and artifact-verification mechanics moved to on-demand release references. |
+| Slim `ai/PLAN.md` | Handled. Required-content checklist detail moved to `ai/templates/PLAN_TEMPLATE.md`. |
+| Add phase-to-guide context map | Handled. `ai/PROMPTS.md` now has a compact phase-to-guide read-set table and descriptive-doc triggers. |
+| Tighten `ai/EXECUTION.md` reading list | Handled. Implementation reads are now base-plus-conditional instead of a broad standing list. |
 | Add context-drop markers in plans | Partly handled by `AGENTS.md` context hygiene and execution per-milestone checks, but not standardized as a plan-section requirement. |
 
 ## Follow-Up Ranking
-These are backlog recommendations only. None should be treated as implemented by this evaluation.
+This section records the original ranking plus the current follow-up state.
 
 ### Already Handled
 - Workflow fanout split: handled by the current `ai/WORKFLOW.md` router plus `ai/references/WORKFLOW_SINGLE_PLAN_FANOUT.md` and `ai/references/WORKFLOW_MULTI_PLAN_FANOUT.md`.
 - Current workflow terminology: handled in active prompt titles and owner guides. Remaining old terms are migration notes in the implemented workflow-split plan.
 - Prompt-body on-demand model: mostly handled. `ai/PROMPTS.md` is a lean index, and raw bodies remain under `ai/prompts/bodies/`.
 - Context-quality and relevance-scan adoption: handled by the pskoett-guidance adoption plan through `AGENTS.md`, `ai/EXECUTION.md`, `ai/REVIEWS.md`, and `ai/LEARNINGS.md`.
+- `ai/EXECUTION.md` conditional reads: implemented in the follow-up compaction.
+- `AGENTS.md` default-load compaction: implemented by compacting change-type routing and keeping details in `ai/DOCUMENTATION.md`.
+- `ai/RELEASES.md` runbook split: implemented through `ai/references/RELEASE_CHECKLIST.md` and `ai/references/RELEASE_ARTIFACT_VERIFICATION.md`.
+- `ai/PLAN.md` slimming: implemented by moving exhaustive checklist detail to `ai/templates/PLAN_TEMPLATE.md`.
+- Phase-to-guide and descriptive-doc triggers: implemented in `ai/PROMPTS.md`.
 
-### High ROI
-1. Tighten `ai/EXECUTION.md` conditional reads.
-   - Why: the broad "Before You Implement" list can inflate implementation tasks from about 21.4 KB to about 55.0 KB before the active plan is counted.
-   - Suggested owner: `ai/EXECUTION.md`, with cross-reference checks against `ai/PROMPTS.md` default read sets.
-2. Compact `AGENTS.md` without moving repo-level rules out of their owner.
-   - Why: every workflow starts with `AGENTS.md`; reducing duplicated artifact-routing and setup-adjacent detail lowers every default read.
-   - Suggested owner: `AGENTS.md`, with routing authority preserved in `ai/DOCUMENTATION.md`.
-3. Split release runbook mechanics from `ai/RELEASES.md`.
-   - Why: the release guide is phase-specific but still combines policy, checklist, push verification, and artifact-verification snippets.
-   - Suggested owner: keep policy in `ai/RELEASES.md`; move detailed commands to one or two `ai/references/RELEASE_*.md` files with explicit triggers.
-
-### Medium ROI
-4. Slim `ai/PLAN.md` by moving skeleton detail into `ai/templates/PLAN_TEMPLATE.md`.
-   - Why: the standing planning guide and template intentionally overlap on required sections and milestone fields.
-   - Suggested owner: keep lifecycle and readiness rules in `ai/PLAN.md`; move exhaustive skeleton wording to the template.
-5. Add a compact phase-to-guide read-set map.
-   - Why: `ai/PROMPTS.md` already has default read sets, but execution and onboarding would benefit from one conditional map that avoids becoming another policy duplicate.
-   - Suggested owner: likely `ai/PROMPTS.md` or `ai/EXECUTION.md`; avoid bloating `AGENTS.md`.
-6. Clarify triggers for descriptive docs.
-   - Why: `ai/ARCHITECTURE.md`, `ai/BUSINESS_MODULES.md`, `ai/DESIGN.md`, and `ai/LEARNINGS.md` are correctly descriptive, but the load triggers are spread across file introductions and onboarding notes.
-   - Suggested owner: `AGENTS.md` load policy or `ai/PROMPTS.md` default read sets, kept compact.
-
-### Lower ROI
-7. Add explicit per-milestone context requirements to every plan.
+### Remaining Lower ROI
+1. Add explicit per-milestone context requirements to every plan.
    - Why: context-drop markers could help long plans, but they would add boilerplate to small plans and may duplicate milestone validation notes.
    - Suggested approach: try only on large or fanout-prone plans first.
-8. Split more from `ai/WORKFLOW.md`.
+2. Split more from `ai/WORKFLOW.md`.
    - Why: the largest workflow win already landed. Further cuts may be possible, but the remaining router still owns branch/worktree and coordinator invariants that agents need before choosing a mode.
    - Suggested approach: revisit only if workflow-selection reads remain too large in practice.
 
@@ -154,4 +137,4 @@ These are backlog recommendations only. None should be treated as implemented by
 - Bulk-load archived plans to evaluate active guidance: not recommended. Active guidance can be checked with targeted searches, and archive content is historical.
 
 ## Conclusion
-The current AI guideline set deserves **A-**: it is coherent, owner-routed, and substantially more on-demand than the scratch baseline. The remaining improvements should be narrow compaction plans, not emergency repairs. The best next work is to reduce `AGENTS.md` and implementation-phase standing load while preserving the current owner model.
+The current AI guideline set deserves **A**: it is coherent, owner-routed, and substantially more on-demand than the scratch baseline. Remaining improvements are optional narrow compaction work, not emergency repairs.

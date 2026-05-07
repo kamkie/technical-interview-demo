@@ -20,7 +20,7 @@ Update the artifact that owns the truth being changed:
 - planning process and plan-file shape: `ai/PLAN.md`
 - single-agent execution flow: `ai/EXECUTION.md`
 - workflow mode selection and common delegation rules: `ai/WORKFLOW.md`; detailed fanout mechanics: `ai/references/WORKFLOW_SINGLE_PLAN_FANOUT.md` and `ai/references/WORKFLOW_MULTI_PLAN_FANOUT.md`
-- release sequencing and tagging: `ai/RELEASES.md`
+- release sequencing and tagging: `ai/RELEASES.md`; detailed release checklist and artifact verification: `ai/references/RELEASE_CHECKLIST.md` and `ai/references/RELEASE_ARTIFACT_VERIFICATION.md`
 - prompt-title index: `ai/PROMPTS.md`; prompt metadata and raw bodies: `ai/prompts/`; prompt loader script: `scripts/ai/get-prompt.ps1`
 - repo-local reusable workflow wrappers: `ai/skills/`
 - compact codebase map and structural guidance: `ai/ARCHITECTURE.md`; deeper references: `ai/references/`
@@ -32,6 +32,46 @@ Update the artifact that owns the truth being changed:
 - review and security-review expectations: `ai/REVIEWS.md`
 
 If ownership is unclear, decide that before editing multiple docs.
+
+## Change-Type Routing
+
+### Architecture, design, or AI guidance change
+
+- update the relevant owner file under `ai/`
+- keep `AGENTS.md` aligned when the role or maintenance rules for `ai/` documents change
+- do not update `README.md` unless the human-facing contract or project description changed
+
+### Public API change
+
+Update all affected artifacts in the same change:
+
+- controller or service implementation
+- integration tests
+- REST Docs tests and Asciidoc pages when public behavior is documented there
+- approved OpenAPI baseline if the contract intentionally changed
+- HTTP example files under `src/test/resources/http/`
+- `README.md` if the supported contract changed
+- `CHANGELOG.md` only when the change is being released
+
+### Internal refactor with no contract change
+
+- keep existing specs green without unnecessary contract edits
+- avoid changing OpenAPI, README, or HTTP examples unless behavior actually changed
+- prefer renames and moves that reduce exceptions in naming and packaging
+
+### Setup or environment change
+
+- update `SETUP.md` for human setup, tool, and troubleshooting changes
+- update `ai/ENVIRONMENT_QUICK_REF.md` when AI-facing command-wrapper guidance changes
+- only touch `README.md` or `AGENTS.md` when the high-level contract or rules changed, not for walkthrough duplication
+
+### Roadmap change
+
+- update `ROADMAP.md`
+- keep `ROADMAP.md` `## Current Project State` aligned with the active release phase, breaking-change policy, and next target version whenever roadmap sequencing or release targeting changes
+- treat `[x]` items in `ROADMAP.md` as selected for active planning or development, not as completed history
+- remove completed items instead of archiving them elsewhere
+- do not recreate a second human history file; released history belongs in `CHANGELOG.md`
 
 ## Alignment Rules
 

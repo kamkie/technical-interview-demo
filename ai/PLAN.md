@@ -73,24 +73,10 @@ When a plan is later released or no longer active, follow the execution and rele
 
 ## Required Plan Content
 
-Every concrete plan must answer:
+Every concrete plan must be decision-complete enough for another agent to execute without inventing missing behavior.
 
-- what behavior is changing and why
-- which `ROADMAP.md` entry tracks this plan, or which new roadmap entry this plan added
-- what is out of scope
-- which specs or contract artifacts define the behavior
-- which source files or packages are likely to change
-- what compatibility promises must be preserved
-- what edge cases, failure modes, migration, rollout, or benchmark risks matter
-- what requirement gaps still need input and whether they block planning
-- which execution mode fits: `Linear Plan`, `Single-Plan Fanout`, or `Multi-Plan Fanout`
-- which files stay coordinator-owned if worker fanout is realistic
-- which tests, docs, OpenAPI, HTTP examples, README, or AI guides must move
-- what testing strategy (unit, integration, contract, smoke) applies
-- what validation proves completion
-- how the user can verify the delivered behavior
-
-The testing strategy should name which layers apply and which do not. For docs-only or AI-guidance-only plans, explicitly say that unit, integration, contract, smoke, or benchmark tests are not applicable and name the manual consistency checks that replace them.
+At minimum, identify the behavior, governing specs or contract artifacts, scope and non-goals, affected files, compatibility promises, requirement gaps, execution mode, shared-file boundaries, milestone checkpoints, validation, and user verification.
+Use `ai/templates/PLAN_TEMPLATE.md` for the full skeleton and required-content checklist.
 
 ## Milestone Rules
 
@@ -121,24 +107,6 @@ Use `Multi-Plan Fanout` only when separate plan files can move independently wit
 
 Create concrete plans directly under `ai/` as `PLAN_<topic>.md` with lowercase underscore topic names.
 Use `ai/templates/PLAN_TEMPLATE.md` for the full structure.
-
-Required top-level sections:
-
-- `Lifecycle`
-- `Summary`
-- `Scope`
-- `Current State`
-- `Requirement Gaps And Open Questions`
-- `Locked Decisions And Assumptions`
-- `Execution Mode Fit`
-- `Affected Artifacts`
-- `Execution Milestones`
-- `Edge Cases And Failure Modes`
-- `Validation Plan`
-- `Testing Strategy`
-- `Better Engineering Notes`
-- `Validation Results`
-- `User Validation`
 
 ## Final Check
 

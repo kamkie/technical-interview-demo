@@ -138,43 +138,15 @@ Rules for maintaining the `ai/` documents:
 
 ## Required Updates By Change Type
 
-### Architecture, design, or AI guidance change
+Detailed artifact routing lives in `ai/DOCUMENTATION.md`.
 
-- update the relevant file under `ai/`
-- keep `AGENTS.md` aligned when the role or maintenance rules for `ai/` documents change
-- do not update `README.md` unless the human-facing contract or project description changed
+High-level rules:
 
-### Public API change
-
-Update all affected artifacts in the same change:
-
-- controller or service implementation
-- integration tests
-- REST Docs tests and Asciidoc pages when public behavior is documented there
-- approved OpenAPI baseline if the contract intentionally changed
-- HTTP example files under `src/test/resources/http/`
-- `README.md` if the supported contract changed
-- `CHANGELOG.md` only when the change is being released
-
-### Internal refactor with no contract change
-
-- keep existing specs green without unnecessary contract edits
-- avoid changing OpenAPI, README, or HTTP examples unless behavior actually changed
-- prefer renames and moves that reduce exceptions in naming and packaging
-
-### Setup or environment change
-
-- update `SETUP.md` for human setup, tool, and troubleshooting changes
-- update `ai/ENVIRONMENT_QUICK_REF.md` when AI-facing command-wrapper guidance changes
-- only touch `README.md` or `AGENTS.md` when the high-level contract or rules changed, not for walkthrough duplication
-
-### Roadmap change
-
-- update `ROADMAP.md`
-- keep `ROADMAP.md` `## Current Project State` aligned with the active release phase, breaking-change policy, and next target version whenever roadmap sequencing or release targeting changes
-- treat `[x]` items in `ROADMAP.md` as selected for active planning or development, not as completed history
-- remove completed items instead of archiving them elsewhere
-- do not recreate a second human history file; released history belongs in `CHANGELOG.md`
+- public behavior changes must update the governing specs, implementation, and published contract artifacts together
+- internal refactors should preserve existing specs without contract churn
+- setup and environment changes route to `SETUP.md` and, when AI command guidance changes, `ai/ENVIRONMENT_QUICK_REF.md`
+- roadmap changes route to `ROADMAP.md`; released history belongs in `CHANGELOG.md`
+- durable AI guidance changes route to the owning `ai/` guide; update `AGENTS.md` only when repo-level AI rules or document ownership changes
 
 ## Architecture Constraints
 

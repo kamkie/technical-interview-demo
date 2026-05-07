@@ -19,15 +19,24 @@ Execution in this repository means:
 
 ## Before You Implement
 
-Read these before editing:
+Start with the smallest useful read set:
 
 - `AGENTS.md`
-- `ai/PLAN.md`
-- the target `ai/PLAN_*.md`
-- `ai/WORKFLOW.md` to confirm the execution mode
-- the focused guides the change needs, usually `ai/CODE_STYLE.md`, `ai/DOCUMENTATION.md`, `ai/TESTING.md`, and `ai/REVIEWS.md`
-- `ai/ENVIRONMENT_QUICK_REF.md` before writing local Gradle commands
-- the governing specs, docs, examples, and source files named by the plan
+- `ai/EXECUTION.md`
+- the target `ai/PLAN_*.md`, when executing planned work
+- the user request or approved source artifact, when executing ad hoc documentation or maintenance work
+- the governing specs, docs, examples, and source files named by the task
+
+Load additional guides only when their trigger applies:
+
+- `ai/PLAN.md`: creating, materially revising, or readiness-reviewing a plan
+- `ai/WORKFLOW.md`: choosing an execution mode, using worktrees or branches, delegating, integrating worker output, pushing, or opening a PR
+- `ai/DOCUMENTATION.md`: moving docs, public contract artifacts, roadmap entries, changelog text, AI guidance, or other repository documentation
+- `ai/TESTING.md`: choosing validation scope or recording validation results
+- `ai/REVIEWS.md`: final diff review, user-requested review, or security-sensitive change
+- `ai/CODE_STYLE.md`: changing source code, tests, Gradle/build logic, workflow YAML, or other implementation files
+- `ai/ENVIRONMENT_QUICK_REF.md`: writing or running local Gradle wrapper commands
+- `ai/ARCHITECTURE.md`, `ai/BUSINESS_MODULES.md`, `ai/DESIGN.md`, or `ai/LEARNINGS.md`: only when their descriptive triggers match the task or a targeted relevance scan finds a task-overlapping hit
 
 Before writing code or docs:
 
