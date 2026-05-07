@@ -192,7 +192,7 @@ dependencies {
 }
 
 val restAssuredVersion = "5.5.6"
-val assertjVersion = "3.27.6"
+val assertjVersion = "3.27.7"
 
 sourceSets {
     create("manualTests") {
