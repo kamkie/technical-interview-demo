@@ -41,7 +41,7 @@ Use this guide as a navigation aid, not as a second copy of the AI runbooks.
 | Documentation and artifact routing | `.agents/references/documentation.md` |
 | Intentional release preparation after integration | `.agents/references/releases.md` |
 
-Detailed task files, templates, deep references, skill references, and archived plans are on-demand material.
+Detailed task files, templates, deep references, generated reports, skill references, and archived plans are on-demand material.
 Load them only when the task title, owner guide, or active work calls for them.
 
 ## A Good Request To AI

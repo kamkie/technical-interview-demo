@@ -118,6 +118,7 @@ Use these files deliberately:
 - `.agents/skills/`: on-demand repo-local workflow skills; read a skill's `SKILL.md` only when that skill is invoked or clearly applies
 - `.agents/references/repository-knowledge-spec.md`: repository knowledge layout and file ownership spec; read before adding or moving repository knowledge files
 - `.agents/plugins/marketplace.json`: Codex repo-scoped plugin marketplace configuration, only if this repository later promotes a reusable workflow to an installable Codex plugin
+- `.agents/reports/`: generated AI analysis reports; read only when a task explicitly asks for report history or evaluation evidence
 - `.agents/archive/`: archived AI execution plans and historical report-like analysis artifacts; read only for historical investigation
 
 ## AI Instruction Load Policy
@@ -129,7 +130,7 @@ Load AI guidance on demand:
 - read active `.agents/plans/PLAN_*.md` files only when planning, executing, verifying, or releasing that plan
 - use task-specific search terms for the onboarding relevance scan; do not read every active plan, archived plan or report, task section, reference, template, or skill as a pre-flight default
 - read task files under `.agents/skills/repo-task/references/tasks/`, templates, detailed references, skill files, and archived plans or reports only when the task specifically needs them
-- do not bulk-load `.agents/archive/`, `.agents/references/`, `.agents/templates/`, or skill reference material as standing context
+- do not bulk-load `.agents/archive/`, `.agents/reports/`, `.agents/references/`, `.agents/templates/`, or skill reference material as standing context
 
 ### Context Hygiene
 
