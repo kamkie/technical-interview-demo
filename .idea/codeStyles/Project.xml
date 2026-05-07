@@ -8,9 +8,10 @@
     <option name="FORMATTER_OFF_TAG" value="@formatter:off" />
     <option name="DO_NOT_FORMAT">
       <list>
+        <fileSet type="globPattern" pattern="/gradlew" />
+        <fileSet type="globPattern" pattern="ai/*" />
         <fileSet type="globPattern" pattern="src/gatling/resources/gatling-benchmark-baseline.json" />
-        <fileSet type="globPattern" pattern="src/main/resources/db/migration/**/*.sql" />
-        <fileSet type="globPattern" pattern="src/main/resources/db/migration/*.sql" />
+        <fileSet type="globPattern" pattern="src/main/resources/db/migration/*" />
         <fileSet type="globPattern" pattern="src/test/resources/openapi/approved-openapi.json" />
       </list>
     </option>
