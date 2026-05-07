@@ -3,13 +3,14 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Implementation |
-| Status | In Progress |
+| Phase | Closed |
+| Status | Implemented |
 
 ## Summary
 - Create and execute a manual regression pass against the final `2.0` release candidate, expected `v2.0.0-RC7` after finished AI-guidance and repository-knowledge changes were integrated after `v2.0.0-RC6`, that touches the app's supported user-facing functionality without trying to duplicate every automated edge-case test.
 - The manual pass focuses on business functionality, session behavior, admin flows, and deployment-visible health/docs surfaces.
 - This plan is required to move from the `v2.0.0-RC*` phase to stable `v2.0.0`; it is not merely another RC-preparation checklist.
+- Manual verification completed on 2026-05-07 with no release blockers observed. Durable evidence is summarized in `Validation Results`; generated local artifacts remain gitignored under `temp/manual-regression/...` and `src/manualTests/http/reports/`.
 - Roadmap tracking: `ROADMAP.md` tracks this under `Active Release Track` / `Moving To 2.0` as selected stable-transition confidence work for the current final release candidate.
 - Success means a human can set up the app locally, run the grouped suites below, capture pass/fail notes, and identify any release-blocking functional regressions before stable `v2.0.0` is prepared.
 - Execution is hybrid: a partial-automation harness under a new `src/manualTests` Gradle source set drives anonymous read suites and the scriptable portions of authenticated/admin suites once the executor supplies a session cookie and CSRF token, while OAuth login, browser-driven docs checks, and judgement-heavy verification stay manual.
@@ -182,7 +183,7 @@
 - The initial harness implementation under `src/manualTests/` has landed.
 - Milestone 0 has landed: generated output now defaults to `temp/manual-regression/...`, every recorded HTTP exchange is written to `execution-log.ndjson` with request/response detail and redaction, and `./build.ps1 manualRegressionExampleReport` generates deterministic example artifacts under `temp/manual-regression/example/`.
 - Checklist enhancement has landed: manual-regression output now includes `checklist.md` with suite and test checkboxes, observed outcomes, and links back to `report.md` and `execution-log.ndjson`.
-- Manual RC7 execution remains pending and can use `./build.ps1 manualTests` as a prefilled checklist after `v2.0.0-RC7` is prepared.
+- Manual RC7 execution is complete. The Java harness evidence is under `temp/manual-regression/manual-20260507-211736-ujltc7/run-20260507-211736/`, and the IntelliJ HTTP Client markdown evidence is under `src/manualTests/http/reports/`.
 
 ## Execution Shape And Shared Files
 - Recommended shape: one local branch.
@@ -521,7 +522,7 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
   - renamed all suites from single letters to ordered descriptive names (`01-public-overview-and-docs` through `12-operator-surface`) with declared prerequisites and added a `Suite Catalog And Order` table.
   - added dedicated sections for `Implementation Technology`, `Test Data Generation`, `User Input And Configuration`, and `Execution Report Generation`; added the corresponding open questions to `Requirement Gaps And Open Questions`.
   - `./build.ps1 build` lightweight-file shortcut expected to skip the Gradle build because only this plan file changed.
-- Manual suite execution against expected `v2.0.0-RC7` is intentionally **not** complete yet. Actual RC7 execution is performed by a human operator after Milestone 0 is implemented and can be recorded under `temp/manual-regression/<rc>.md` for local scratch evidence; durable release evidence should be summarized in this plan or release artifacts.
+- Manual suite execution against expected `v2.0.0-RC7` is complete as of 2026-05-07. Durable release evidence is summarized below; local generated artifacts remain untracked.
 - 2026-05-07 harness implementation:
   - registered the `manualTests` Gradle source set in `build.gradle.kts` with REST Assured 5.5.6, AssertJ, JUnit 5, and Jackson; the new `manualTests` task is intentionally not wired into `tasks.build` and is excluded from the JaCoCo agent.
   - moved the IntelliJ HTTP Client examples out of the test-resource classpath into the manual-test area; updated active references in `AGENTS.md`, `CONTRIBUTING.md`, `SETUP.md`, `.agents/references/documentation.md`, `.agents/references/plan-detailed-guide.md`, the Spotless target list, and `.gitignore`; archived plans intentionally left untouched.
@@ -569,8 +570,20 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
   - `./build.ps1 checkFormat` passed.
   - `./build.ps1 -SkipTests build` passed after fixing an existing manual-regression PMD finding in `HarnessJsonPath`.
   - `./build.ps1 build` remains blocked by `ProductionConfigurationTests > prodProfileFailsFastWhenRequiredDatabaseVariablesAreMissing() > DATABASE_PASSWORD`, where the app starts instead of raising the expected password-authentication failure.
+- 2026-05-07 manual verification completed:
+  - Java manual-regression harness evidence path: `temp/manual-regression/manual-20260507-211736-ujltc7/run-20260507-211736/`.
+  - Harness artifacts present: `report.md`, `report.json`, `execution-log.ndjson`, and `checklist.md`.
+  - Harness summary: all 12 suites completed with no failed suites and no release blockers. Suite results were 9 `PASSED` and 3 `PASSED_WITH_NOTE`.
+  - Harness notes: `06-session-and-account` skipped language mutation because `/api/account` did not report `preferredLanguage`; `10-admin-user-management` and `12-operator-surface` recorded notes because no regular-user identity was supplied. These are not release blockers for this local RC7 pass.
+  - Harness cleanup summary: no leftover identifiers required manual cleanup.
+  - IntelliJ HTTP Client evidence path: `src/manualTests/http/reports/`.
+  - HTTP Client artifacts present: dated markdown reports for suites 01 through 12, named `*_raport_2026-05-07.md`.
+  - HTTP Client verification command: `ijhttp -e dev -p src/manualTests/http/suites/http-client.private.env.json @files`, where `$files` was the sorted `src/manualTests/http/suites/suite-*.http` list.
+  - HTTP Client summary: 69 requests completed, 0 failed tests.
+  - `git diff --check -- src/manualTests/http/suites` passed after the HTTP suite compatibility updates.
+  - Plan closure validation: `git diff --check -- .agents/plans/PLAN_manual_regression_execution.md ROADMAP.md` passed, and `./build.ps1 build` took the documented lightweight-file shortcut because only this plan and `ROADMAP.md` changed.
 
 ## User Validation
-- Review this plan and answer the open questions if the fallback assumptions are not acceptable.
-- During execution, follow Milestones 0 through 5 and use the descriptive suite names (`01-public-overview-and-docs` … `12-operator-surface`) as the manual regression checklist; run `./build.ps1 manualTests` first and treat `checklist.md`, `report.md`, and `execution-log.ndjson` as the generated execution evidence.
-- A release-ready manual pass has no failed suites, no unresolved release blockers, and clear notes for any blocked non-admin or provider-specific checks.
+- Manual verification is accepted for this local expected `v2.0.0-RC7` pass.
+- Release-ready criteria are met for this plan: no failed suites, no unresolved release blockers, and clear notes for optional regular-user/provider-specific checks.
+- Next release-track work is stable `v2.0.0` preparation.
