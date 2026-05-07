@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Implementation |
-| Status | In Progress |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Summary
 - Add repeatable tooling that measures repository AI-instruction context size the same way each time instead of relying on one-off generated reports.
@@ -191,6 +191,15 @@
 - 2026-05-07 Milestone 1 implementation validation:
   - `./scripts/ai/context-report.ps1 -Range HEAD~1..HEAD -Mode endpoint` - passed; wrote `temp/context-report-2026-05-07-182739-790-bc515da7.md`
   - `./scripts/ai/context-report.ps1 -Range HEAD~3..HEAD -Mode stepwise` - passed; wrote `temp/context-report-2026-05-07-182739-790-2a492e12.md`
+  - `git worktree list` - passed; no temporary context-report worktree remained
+  - `git diff --check` - passed
+  - `./build.ps1 build` - passed; full Gradle build ran because `scripts/ai/context-report.ps1` is not a lightweight-only file
+- 2026-05-07 Milestone 2 implementation validation:
+  - `./scripts/ai/context-report.ps1 -SelfTest` - passed
+  - `./scripts/ai/context-report.ps1 -Range HEAD~1..HEAD -Mode endpoint` - passed; wrote `temp/context-report-2026-05-07-183725-172-4f7ae54a.md` with no false guardrail warning
+  - `./scripts/ai/context-report.ps1 -Range HEAD~4..HEAD -Mode endpoint -TotalInventoryWarningPercent 0.01` - passed; wrote `temp/context-report-2026-05-07-183725-171-08d1e557.md` and emitted the expected warning
+  - `./scripts/ai/context-report.ps1 -Range HEAD~4..HEAD -Mode stepwise` - passed; wrote `temp/context-report-2026-05-07-183725-170-1ae92f7d.md` with adjacent guardrail status
+  - invalid comparison mode check - passed; `-Mode invalid` was rejected
   - `git worktree list` - passed; no temporary context-report worktree remained
   - `git diff --check` - passed
   - `./build.ps1 build` - passed; full Gradle build ran because `scripts/ai/context-report.ps1` is not a lightweight-only file

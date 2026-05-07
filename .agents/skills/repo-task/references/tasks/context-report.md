@@ -17,7 +17,8 @@ Use `-Range START..END` when the user provides a range. Otherwise let the script
 Use `-Mode endpoint` for compact oldest-to-newest range summaries. This is the default.
 Use `-Mode stepwise` when the user asks for commit-by-commit or per-commit movement.
 
-The script owns the measurement details, scenario file sets, table shape, temporary worktree handling, and report format.
+The script owns the measurement details, scenario file sets, table shape, temporary worktree handling, report format, and warning-only guardrail status.
+Use `-DefaultLoadWarningPercent`, `-TotalInventoryWarningPercent`, and `-GrowthRationale` only when the user asks to tune or explain guardrail thresholds.
 
 Do not run the build, tests, or validation checks.
 

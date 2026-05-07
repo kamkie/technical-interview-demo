@@ -4,7 +4,15 @@ param(
     [ValidateSet("endpoint", "beginning-to-end", "range-summary", "stepwise", "commit-by-commit", "per-commit")]
     [string]$Mode = "endpoint",
 
-    [string]$OutputPath
+    [string]$OutputPath,
+
+    [double]$DefaultLoadWarningPercent = 5.0,
+
+    [double]$TotalInventoryWarningPercent = 10.0,
+
+    [string]$GrowthRationale,
+
+    [switch]$SelfTest
 )
 
 Set-StrictMode -Version Latest
@@ -607,6 +615,168 @@ function Get-AdjacentDeltas
     return $deltas
 }
 
+function Get-ThresholdStatus
+{
+    param(
+        [long]$OldChars,
+
+        [long]$NewChars,
+
+        [double]$ThresholdPercent,
+
+        [bool]$AllowRationale = $false,
+
+        [bool]$HasRationale = $false
+    )
+
+    $deltaChars = $NewChars - $OldChars
+    $deltaPercent = Get-PercentDelta -OldValue $OldChars -NewValue $NewChars
+    $crossedThreshold = $deltaChars -gt 0 -and $deltaPercent -gt $ThresholdPercent
+    $status = "Passed"
+
+    if ($crossedThreshold)
+    {
+        if ($AllowRationale -and $HasRationale)
+        {
+            $status = "Rationalized"
+        }
+        else
+        {
+            $status = "Warning"
+        }
+    }
+
+    return [pscustomobject]@{
+        Status = $status
+        DeltaChars = $deltaChars
+        DeltaPercent = $deltaPercent
+        ThresholdPercent = $ThresholdPercent
+        CrossedThreshold = $crossedThreshold
+    }
+}
+
+function Get-RangeChangedFiles
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$OldCommit,
+
+        [Parameter(Mandatory = $true)]
+        [string]$NewCommit,
+
+        [Parameter(Mandatory = $true)]
+        [string]$WorkingDirectory
+    )
+
+    $raw = Invoke-GitText -Arguments @("diff", "--name-only", $OldCommit, $NewCommit, "--", "AGENTS.md", ".agents") -WorkingDirectory $WorkingDirectory
+    if ([string]::IsNullOrWhiteSpace($raw))
+    {
+        return @()
+    }
+
+    return @($raw -split "`n" | ForEach-Object { $_.Trim().Replace("\", "/") } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+}
+
+function Get-GuardrailEvaluation
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [pscustomobject[]]$CommitData,
+
+        [Parameter(Mandatory = $true)]
+        [string[]]$ChangedFiles,
+
+        [Parameter(Mandatory = $true)]
+        [double]$DefaultThresholdPercent,
+
+        [Parameter(Mandatory = $true)]
+        [double]$TotalThresholdPercent,
+
+        [string]$Rationale
+    )
+
+    $oldest = $CommitData[0]
+    $newest = $CommitData[-1]
+    $archiveOrReportFiles = @($ChangedFiles | Where-Object { $_.StartsWith(".agents/archive/") -or $_.StartsWith(".agents/reports/") })
+    $hasTextRationale = -not [string]::IsNullOrWhiteSpace($Rationale)
+    $hasInventoryRationale = $archiveOrReportFiles.Count -gt 0 -or $hasTextRationale
+
+    $defaultStatus = Get-ThresholdStatus `
+        -OldChars $oldest.ScenarioMetrics.default.Chars `
+        -NewChars $newest.ScenarioMetrics.default.Chars `
+        -ThresholdPercent $DefaultThresholdPercent
+
+    $totalStatus = Get-ThresholdStatus `
+        -OldChars $oldest.Total.Chars `
+        -NewChars $newest.Total.Chars `
+        -ThresholdPercent $TotalThresholdPercent `
+        -AllowRationale $true `
+        -HasRationale $hasInventoryRationale
+
+    $adjacentCrossings = @()
+    foreach ($delta in Get-AdjacentDeltas -CommitData $CommitData)
+    {
+        $defaultDeltaPercent = Get-PercentDelta -OldValue $delta.Previous.ScenarioMetrics.default.Chars -NewValue $delta.Current.ScenarioMetrics.default.Chars
+        $totalDeltaPercent = Get-PercentDelta -OldValue $delta.Previous.Total.Chars -NewValue $delta.Current.Total.Chars
+        $defaultCrossed = $delta.DefaultCharsDelta -gt 0 -and $defaultDeltaPercent -gt $DefaultThresholdPercent
+        $totalCrossed = $delta.TotalCharsDelta -gt 0 -and $totalDeltaPercent -gt $TotalThresholdPercent
+
+        if ($defaultCrossed -or $totalCrossed)
+        {
+            $adjacentCrossings += [pscustomobject]@{
+                Previous = $delta.Previous
+                Current = $delta.Current
+                DefaultCharsDelta = $delta.DefaultCharsDelta
+                DefaultTokensDelta = $delta.DefaultTokensDelta
+                DefaultPercentDelta = $defaultDeltaPercent
+                TotalCharsDelta = $delta.TotalCharsDelta
+                TotalTokensDelta = $delta.TotalTokensDelta
+                TotalPercentDelta = $totalDeltaPercent
+                DefaultCrossed = $defaultCrossed
+                TotalCrossed = $totalCrossed
+            }
+        }
+    }
+
+    return [pscustomobject]@{
+        Default = $defaultStatus
+        Total = $totalStatus
+        ArchiveOrReportFiles = $archiveOrReportFiles
+        TextRationale = $Rationale
+        HasInventoryRationale = $hasInventoryRationale
+        AdjacentCrossings = $adjacentCrossings
+    }
+}
+
+function Invoke-GuardrailSelfTest
+{
+    $defaultWarning = Get-ThresholdStatus -OldChars 1000 -NewChars 1060 -ThresholdPercent 5.0
+    if ($defaultWarning.Status -ne "Warning")
+    {
+        throw "Expected default threshold crossing to warn."
+    }
+
+    $totalWarning = Get-ThresholdStatus -OldChars 1000 -NewChars 1110 -ThresholdPercent 10.0 -AllowRationale $true -HasRationale $false
+    if ($totalWarning.Status -ne "Warning")
+    {
+        throw "Expected unrationalized total threshold crossing to warn."
+    }
+
+    $totalRationalized = Get-ThresholdStatus -OldChars 1000 -NewChars 1110 -ThresholdPercent 10.0 -AllowRationale $true -HasRationale $true
+    if ($totalRationalized.Status -ne "Rationalized")
+    {
+        throw "Expected rationalized total threshold crossing to be marked rationalized."
+    }
+
+    $passed = Get-ThresholdStatus -OldChars 1000 -NewChars 1040 -ThresholdPercent 5.0
+    if ($passed.Status -ne "Passed")
+    {
+        throw "Expected below-threshold growth to pass."
+    }
+
+    Write-Output "Context report guardrail self-test passed."
+}
+
 function Escape-MarkdownCell
 {
     param(
@@ -654,7 +824,10 @@ function Build-Report
         [int]$SelectedCommitCount,
 
         [Parameter(Mandatory = $true)]
-        [string]$ComparisonMode
+        [string]$ComparisonMode,
+
+        [Parameter(Mandatory = $true)]
+        [pscustomobject]$GuardrailEvaluation
     )
 
     $oldest = $CommitData[0]
@@ -768,6 +941,55 @@ function Build-Report
             $defaultPercent = Get-PercentDelta -OldValue $delta.Previous.ScenarioMetrics.default.Chars -NewValue $delta.Current.ScenarioMetrics.default.Chars
             $totalPercent = Get-PercentDelta -OldValue $delta.Previous.Total.Chars -NewValue $delta.Current.Total.Chars
             $lines.Add("- ``$($delta.Previous.Meta.Short)`` -> ``$($delta.Current.Meta.Short)``: default $(Format-Delta -CharsDelta $delta.DefaultCharsDelta -TokensDelta $delta.DefaultTokensDelta -PercentDelta $defaultPercent); total $(Format-Delta -CharsDelta $delta.TotalCharsDelta -TokensDelta $delta.TotalTokensDelta -PercentDelta $totalPercent).")
+        }
+    }
+
+    $lines.Add("")
+    $lines.Add("### Guardrail Status")
+    $lines.Add("")
+    $lines.Add(([string]::Format($invariantCulture, "- Default load threshold: {0:0.##}% growth. Status: **{1}**. Endpoint delta: {2}.", $GuardrailEvaluation.Default.ThresholdPercent, $GuardrailEvaluation.Default.Status, (Format-Delta -CharsDelta $GuardrailEvaluation.Default.DeltaChars -TokensDelta ($newest.ScenarioMetrics.default.Tokens - $oldest.ScenarioMetrics.default.Tokens) -PercentDelta $GuardrailEvaluation.Default.DeltaPercent))))
+    $lines.Add(([string]::Format($invariantCulture, "- Total inventory threshold: {0:0.##}% growth. Status: **{1}**. Endpoint delta: {2}.", $GuardrailEvaluation.Total.ThresholdPercent, $GuardrailEvaluation.Total.Status, (Format-Delta -CharsDelta $GuardrailEvaluation.Total.DeltaChars -TokensDelta ($newest.Total.Tokens - $oldest.Total.Tokens) -PercentDelta $GuardrailEvaluation.Total.DeltaPercent))))
+
+    if ($GuardrailEvaluation.HasInventoryRationale)
+    {
+        if ($GuardrailEvaluation.ArchiveOrReportFiles.Count -gt 0)
+        {
+            $lines.Add("- Inventory-growth rationale detected from archive/report changes: " + (@($GuardrailEvaluation.ArchiveOrReportFiles | ForEach-Object { "``$_``" }) -join ", ") + ".")
+        }
+        if (-not [string]::IsNullOrWhiteSpace($GuardrailEvaluation.TextRationale))
+        {
+            $lines.Add("- Inventory-growth rationale note: $($GuardrailEvaluation.TextRationale)")
+        }
+    }
+    else
+    {
+        $lines.Add("- No archive/report rationale or explicit growth-rationale note was detected.")
+    }
+
+    if ($ComparisonMode -eq "stepwise")
+    {
+        $lines.Add("")
+        $lines.Add("#### Adjacent Guardrail Crossings")
+        $lines.Add("")
+        if ($GuardrailEvaluation.AdjacentCrossings.Count -eq 0)
+        {
+            $lines.Add("- None.")
+        }
+        else
+        {
+            foreach ($crossing in $GuardrailEvaluation.AdjacentCrossings)
+            {
+                $triggerParts = @()
+                if ($crossing.DefaultCrossed)
+                {
+                    $triggerParts += "default"
+                }
+                if ($crossing.TotalCrossed)
+                {
+                    $triggerParts += "total"
+                }
+                $lines.Add("- ``$($crossing.Previous.Meta.Short)`` -> ``$($crossing.Current.Meta.Short)`` crossed " + ($triggerParts -join " and ") + " threshold(s): default $(Format-Delta -CharsDelta $crossing.DefaultCharsDelta -TokensDelta $crossing.DefaultTokensDelta -PercentDelta $crossing.DefaultPercentDelta); total $(Format-Delta -CharsDelta $crossing.TotalCharsDelta -TokensDelta $crossing.TotalTokensDelta -PercentDelta $crossing.TotalPercentDelta).")
+            }
         }
     }
 
@@ -932,6 +1154,22 @@ function Build-Report
     return ($lines -join [Environment]::NewLine) + [Environment]::NewLine
 }
 
+if ($SelfTest)
+{
+    Invoke-GuardrailSelfTest
+    return
+}
+
+if ($DefaultLoadWarningPercent -lt 0)
+{
+    throw "DefaultLoadWarningPercent must be zero or greater."
+}
+
+if ($TotalInventoryWarningPercent -lt 0)
+{
+    throw "TotalInventoryWarningPercent must be zero or greater."
+}
+
 $comparisonMode = Normalize-ComparisonMode -Mode $Mode
 $repoRoot = Invoke-GitText -Arguments @("rev-parse", "--show-toplevel") -WorkingDirectory (Get-Location).Path
 $repoName = Split-Path -Path $repoRoot -Leaf
@@ -987,9 +1225,33 @@ try
         $commitData += Measure-Commit -Commit $commit -WorkingDirectory $worktreePath
     }
 
-    $report = Build-Report -CommitData $commitData -SelectedCommitCount $selectedCommits.Count -ComparisonMode $comparisonMode
+    $changedFiles = @(Get-RangeChangedFiles -OldCommit $selectedCommits[0] -NewCommit $selectedCommits[-1] -WorkingDirectory $worktreePath)
+    $guardrailEvaluation = Get-GuardrailEvaluation `
+        -CommitData $commitData `
+        -ChangedFiles $changedFiles `
+        -DefaultThresholdPercent $DefaultLoadWarningPercent `
+        -TotalThresholdPercent $TotalInventoryWarningPercent `
+        -Rationale $GrowthRationale
+
+    $report = Build-Report -CommitData $commitData -SelectedCommitCount $selectedCommits.Count -ComparisonMode $comparisonMode -GuardrailEvaluation $guardrailEvaluation
     Set-Content -LiteralPath $OutputPath -Value $report -Encoding utf8
     Write-Output "Context report written to $OutputPath"
+
+    if ($guardrailEvaluation.Default.Status -eq "Warning")
+    {
+        Write-Warning "Default load grew by $([string]::Format($invariantCulture, '{0:N1}', $guardrailEvaluation.Default.DeltaPercent))%, above the $DefaultLoadWarningPercent% warning threshold."
+    }
+    if ($guardrailEvaluation.Total.Status -eq "Warning")
+    {
+        Write-Warning "Total AI inventory grew by $([string]::Format($invariantCulture, '{0:N1}', $guardrailEvaluation.Total.DeltaPercent))%, above the $TotalInventoryWarningPercent% warning threshold without an archive/report rationale."
+    }
+    if ($comparisonMode -eq "stepwise")
+    {
+        foreach ($crossing in $guardrailEvaluation.AdjacentCrossings)
+        {
+            Write-Warning "Adjacent context guardrail crossing: $($crossing.Previous.Meta.Short) -> $($crossing.Current.Meta.Short)."
+        }
+    }
 }
 finally
 {
