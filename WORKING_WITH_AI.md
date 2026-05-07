@@ -120,8 +120,9 @@ The useful output is a readiness judgment: lifecycle state, requirement gaps, mi
 
 Once the plan is ready, use AI to implement either the whole plan or one milestone.
 The repository expects milestone-sized checkpoints: implementation, validation evidence, tracking artifacts, and a commit before the milestone is treated as done.
-Ask AI to write commit messages in the Conventional Commits style described by `CONTRIBUTING.md`, such as `feat(scope): summary`, `fix(scope): summary`, or `docs(scope): summary`.
-Ask AI to include the project metadata footers from `CONTRIBUTING.md`, including `Project-Source`, the relevant `Project-*` provenance footer, and `Validation`.
+Ask AI to write commit messages in Conventional Commits style, such as `feat(scope): summary`, `fix(scope): summary`, or `docs(scope): summary`.
+For AI-created commits, `.agents/references/execution.md` owns the required commit-message rules.
+Ask AI to include the project metadata footers from `.agents/references/execution.md`, including `Project-Source`, the relevant `Project-*` provenance footer, and `Validation`.
 For a direct prompt, use `Project-Source: prompt` and `Project-Prompt`; for a milestone, use `Project-Source: milestone`, `Project-Plan`, and `Project-Milestone`; for a reusable task, use `Project-Source: task` and `Project-Task`.
 
 #### AI Commit Message Guidance

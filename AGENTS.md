@@ -187,7 +187,7 @@ Repo-level invariants:
 - keep worktree or side-branch implementation isolated until the planned scope is complete and locally validated
 - prefer merging accepted branches or pull requests; use cherry-pick only when the user asks for it, when accepting less than the full branch or pull request, or when a normal merge is not viable, and record the reason
 - do not cut releases from unintegrated side branches, worktrees, detached tips, or changes that have not landed on `main`
-- when creating a commit, use the Conventional Commits style from `CONTRIBUTING.md`: `<type>[optional scope][!]: <description>`, and include the repository project metadata footers required there, including `Project-Source`, the applicable `Project-*` provenance footer, and `Validation`
+- when creating a commit, follow the AI commit-message rules in `.agents/references/execution.md`; every completed task or milestone that changed tracked files must be committed before handoff or unrelated work starts
 
 ## Delegated Agents And Skill Wrappers
 

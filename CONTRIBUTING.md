@@ -148,6 +148,7 @@ Validation: <command/result>
 Footer rules:
 
 - `Project-Source` is required for AI-created commits.
+- AI can generate the full commit message for you. When asking AI to commit or draft a message, tell it to follow `.agents/references/execution.md`, which owns AI-created commit-message rules.
 - Use `Project-Source: plan` for whole-plan execution or plan/spec-only commits; include `Project-Plan` when a concrete plan is involved.
 - Use `Project-Source: milestone` for one named plan milestone; include `Project-Plan` and `Project-Milestone`.
 - Use `Project-Source: task` for a reusable `$repo-task` starter; include `Project-Task`.

@@ -1,11 +1,12 @@
 # Task And Milestone Execution Guide For AI Agents
 
-`.agents/references/execution.md` owns ad hoc task execution and individual plan-milestone execution.
+`.agents/references/execution.md` owns ad hoc task execution, individual plan-milestone execution, and AI-created commit-message rules.
 Use this file when the user asks for one bounded change, one named milestone from an active plan, or unplanned maintenance work that does not yet need a full plan.
 
 Use `.agents/references/plan-execution.md` when the user asks to execute a whole active plan across milestones.
 Use `.agents/references/workflow.md` only when branch, worktree, delegation, worker-log, or integration mechanics are needed.
 Use `.agents/references/planning.md` when the task is not clear enough to execute without first creating or revising a plan.
+Direct prompts and ad hoc user requests still use this guide unless they are read-only questions or are promoted into a concrete plan.
 
 ## Task Gate
 
@@ -51,7 +52,68 @@ For ad hoc tasks and single milestones:
 7. If validation fails, load `.agents/references/troubleshooting.md` before choosing the recovery path.
 8. Review the diff using `.agents/references/reviews.md`; apply the security review activity when its triggers match.
 9. Record validation evidence in the plan, worker log, or final response as appropriate.
-10. Commit when the task or milestone is complete and the active workflow expects a checkpoint commit. Use the Conventional Commits style and project metadata footers from `CONTRIBUTING.md`; for ad hoc requests use `Project-Source: prompt` plus `Project-Prompt`, and for reusable task starters use `Project-Source: task` plus `Project-Task`.
+10. Commit every completed task or milestone that changed tracked files before handing off or starting unrelated work. Use `## AI Commit Message Rules` below.
+
+## AI Commit Message Rules
+
+AI-created commits use Conventional Commits 1.0.0 style plus repository project metadata footers.
+
+Subject shape:
+
+```text
+<type>[optional scope][!]: <description>
+```
+
+Subject rules:
+
+- use a lowercase type, optional lowercase scope in parentheses, colon, space, and concise imperative description
+- use `feat` for new user-facing or API behavior and `fix` for bug fixes
+- use one of the repository-supported maintenance types when it fits better: `docs`, `test`, `refactor`, `chore`, `build`, `ci`, `perf`, `style`, or `revert`
+- do not use `!` or a `BREAKING CHANGE:` footer while `ROADMAP.md` says breaking changes are disallowed
+
+Project metadata footers:
+
+```text
+Project-Source: <plan|milestone|task|prompt|manual>
+Project-Plan: <.agents/plans/PLAN_*.md>
+Project-Milestone: <milestone name or number>
+Project-Task: <repo-task slug or task title>
+Project-Prompt: <short direct-request summary>
+Refs: <paths/issues/PRs>
+Validation: <command/result>
+```
+
+Footer rules:
+
+- `Project-Source` is required for AI-created commits.
+- Use `Project-Source: plan` for whole-plan execution or plan/spec-only commits; include `Project-Plan` when a concrete plan is involved.
+- Use `Project-Source: milestone` for one named plan milestone; include `Project-Plan` and `Project-Milestone`.
+- Use `Project-Source: task` for a reusable `$repo-task` starter; include `Project-Task`.
+- Use `Project-Source: prompt` for a direct ad hoc user request; include `Project-Prompt`.
+- Use `Project-Source: manual` only when the user explicitly asks the AI to create a commit for human-authored changes outside the AI workflow.
+- Include only the `Project-*` footers that apply.
+- `Validation` is required for AI-created commits; write the exact command/result or `not run - <reason>`.
+- Use `Refs` for additional paths, issue ids, or PRs that are useful but not the primary source.
+
+Examples:
+
+```text
+docs(plan): update manual regression workflow
+
+Project-Source: milestone
+Project-Plan: .agents/plans/PLAN_manual_regression_execution.md
+Project-Milestone: Milestone 0 - Align Harness Output, Logging, And Example Report
+Validation: ./build.ps1 build - lightweight shortcut
+```
+
+```text
+chore(guidance): refresh commit message template
+
+Project-Source: prompt
+Project-Prompt: Add project metadata footers to commit message format
+Refs: .gitmessage
+Validation: git diff --check - passed; ./build.ps1 build - lightweight shortcut
+```
 
 ## Context Switching
 
@@ -93,4 +155,5 @@ A task or single milestone is complete when:
 - validation evidence is recorded
 - review found no unresolved blocking risk
 - any active plan or roadmap tracking that needed to move has been updated
+- tracked file changes are committed with the required AI commit-message format
 - release work remains undone unless explicitly requested
