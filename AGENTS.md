@@ -187,7 +187,7 @@ Repo-level invariants:
 - keep worktree or side-branch implementation isolated until the planned scope is complete and locally validated
 - prefer merging accepted branches or pull requests; use cherry-pick only when the user asks for it, when accepting less than the full branch or pull request, or when a normal merge is not viable, and record the reason
 - do not cut releases from unintegrated side branches, worktrees, detached tips, or changes that have not landed on `main`
-- when creating a commit, keep the subject concise and include a `Trigger: <category> - <source>` body line using one of these categories: `plan or spec work`, `whole-plan implementation`, `plan milestone`, `ad hoc task`, or `task-library starter`
+- when creating a commit, use the Conventional Commits style from `CONTRIBUTING.md`: `<type>[optional scope][!]: <description>`, with an optional body or `Refs:` footer for plan paths, milestone names, task titles, validation context, or user-request context
 
 ## Delegated Agents And Skill Wrappers
 

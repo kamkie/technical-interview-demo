@@ -52,7 +52,7 @@ For each milestone:
 7. Review the validated diff using `.agents/references/reviews.md`.
 8. Re-check the plan's scope, locked decisions, non-goals, and milestone deliverables.
 9. Record validation evidence, blockers, pivots, or follow-up notes in the plan or worker log owned by the current work shape.
-10. Commit the completed milestone before starting the next one. Include a `Trigger: <category> - <source>` body line, normally `Trigger: plan milestone - <plan path> <milestone name>`; use `whole-plan implementation` only for a commit that intentionally covers a whole active plan checkpoint rather than one milestone.
+10. Commit the completed milestone before starting the next one. Use the Conventional Commits style from `CONTRIBUTING.md`; put the plan path and milestone name in the optional body or a `Refs:` footer so milestone provenance remains reviewable.
 
 Do not defer milestone commits until the end of the plan.
 If a milestone is blocked or only partially implemented, record the blocker but do not mark it complete.

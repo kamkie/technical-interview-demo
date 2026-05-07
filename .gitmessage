@@ -1,16 +1,32 @@
-<type>: <short imperative summary>
+<type>[optional scope][!]: <description>
 
-Trigger: <category> - <source>
+[optional body: explain what changed and why]
 
-Context:
-- <why this change exists>
+[optional footer(s)]
 
-Validation:
-- <command/result>
-
-# Trigger categories:
-# - plan or spec work
-# - whole-plan implementation
-# - plan milestone
-# - ad hoc task
-# - task-library starter
+# Conventional Commits 1.0.0 shape:
+#   <type>[optional scope][optional !]: <description>
+#   [optional body]
+#   [optional footer(s)]
+#
+# Repository types:
+#   feat      new user-facing or API behavior
+#   fix       bug fix
+#   docs      documentation-only change
+#   test      test, benchmark, or manual-regression harness change
+#   refactor  internal code change with no behavior change
+#   chore     repository maintenance
+#   build     build, dependency, or tooling change
+#   ci        CI or release automation change
+#   perf      performance improvement
+#   style     formatting-only change
+#   revert    revert a previous commit
+#
+# Breaking changes are disallowed while ROADMAP.md says so.
+# Use ! or a BREAKING CHANGE: footer only when the repo's breaking-change policy permits it.
+#
+# Examples:
+#   feat(books): add publication-year search filter
+#   fix(security): reject forged csrf headers
+#   docs: update manual regression workflow
+#   test(manual-regression): add execution log example report

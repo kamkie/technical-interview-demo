@@ -80,7 +80,7 @@ Variables you are most likely to need:
 
 ## Optional Git Commit Template
 
-The repository includes `.gitmessage` with the expected commit subject, `Trigger:` body line, context, and validation sections.
+The repository includes `.gitmessage` with a Conventional Commits style subject, optional body, optional footers, and repo-supported type guidance.
 Enable it for this repository if you want Git to prefill commit messages:
 
 ```powershell

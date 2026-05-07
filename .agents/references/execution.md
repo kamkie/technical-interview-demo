@@ -51,7 +51,7 @@ For ad hoc tasks and single milestones:
 7. If validation fails, load `.agents/references/troubleshooting.md` before choosing the recovery path.
 8. Review the diff using `.agents/references/reviews.md`; apply the security review activity when its triggers match.
 9. Record validation evidence in the plan, worker log, or final response as appropriate.
-10. Commit when the task or milestone is complete and the active workflow expects a checkpoint commit. Include a `Trigger: <category> - <source>` body line using `plan milestone` for one named plan milestone, `ad hoc task` for a direct user request, or `task-library starter` for a reusable task loaded through `$repo-task`.
+10. Commit when the task or milestone is complete and the active workflow expects a checkpoint commit. Use the Conventional Commits style from `CONTRIBUTING.md`, and put plan paths, milestone names, task titles, validation context, or user-request context in the optional body or a `Refs:` footer when that context matters.
 
 ## Context Switching
 

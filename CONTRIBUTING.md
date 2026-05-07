@@ -112,29 +112,32 @@ Suggested branch types:
 - `refactor`
 - `test`
 
-Use concise, imperative commit subjects that describe one logical change.
-Each commit message should also record what triggered the commit in the body:
+Use Conventional Commits 1.0.0 style:
 
 ```text
-Trigger: <category> - <source>
+<type>[optional scope][!]: <description>
+
+[optional body]
+
+[optional footer(s)]
 ```
 
-Use these categories:
+Rules:
 
-- `plan or spec work`: planning, spec preparation, or contract/documentation setup before implementation
-- `whole-plan implementation`: executing a whole active plan
-- `plan milestone`: executing one named plan milestone
-- `ad hoc task`: a direct user request
-- `task-library starter`: a reusable task loaded through `$repo-task`
+- use a lowercase type, optional lowercase scope in parentheses, colon, space, and concise imperative description
+- use `feat` for new user-facing or API behavior and `fix` for bug fixes
+- use one of the repo-supported maintenance types when it fits better: `docs`, `test`, `refactor`, `chore`, `build`, `ci`, `perf`, `style`, or `revert`
+- add a body when the motivation, plan path, milestone, or validation context would help reviewers
+- put references such as plan paths, issue ids, or task titles in the body or in git-trailer-style footers such as `Refs: .agents/plans/PLAN_example.md`
+- do not use `!` or a `BREAKING CHANGE:` footer while `ROADMAP.md` says breaking changes are disallowed
 
-Name the concrete source after the dash, such as the plan path, milestone name, spec artifact, task-library title, or short user-request summary.
 The repository includes an optional `.gitmessage` template with this structure; enable it locally with `git config commit.template .gitmessage`.
 
 Good examples:
 
-- `Add admin user management examples`
-- `Document post-deploy smoke expectations`
-- `Refresh contributor workflow guide`
+- `feat(admin): add user management examples`
+- `docs(release): document post-deploy smoke expectations`
+- `chore(guidance): refresh contributor workflow guide`
 
 ## Pull Request Expectations
 

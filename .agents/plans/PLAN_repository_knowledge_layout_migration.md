@@ -90,7 +90,7 @@
 - `README.md`, `SETUP.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, `ROADMAP.md`, and `WORKING_WITH_AI.md` stay at the repository root.
 - `WORKING_WITH_AI.md` remains human-facing. It is not added to default agent read sets.
 - The `repo-task` skill stays at `.agents/skills/repo-task/`; only its references and task-file paths are updated.
-- The commit trigger categories stay unchanged unless the user separately asks to rename `task-library starter`.
+- Commit-message conventions are now owned by `CONTRIBUTING.md` and use Conventional Commits; the earlier custom body-line taxonomy is superseded.
 - Active release mechanics stay owned by release guidance; this plan only targets the next RC when implementation is selected.
 - Historical archives are not rewritten for wording churn.
 
