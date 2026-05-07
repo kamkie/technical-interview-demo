@@ -64,7 +64,6 @@ $standingOwnerGuides = @{
     ".agents/references/releases.md" = $true
     ".agents/references/testing.md" = $true
     ".agents/references/workflow.md" = $true
-    ".agents/references/repository-knowledge-spec.md" = $true
 }
 
 function Invoke-GitBytes

@@ -52,7 +52,7 @@ Use these artifacts deliberately:
 - `ROADMAP.md`: active release phase, roadmap sequencing, and current project state
 - `CHANGELOG.md`: release history only
 - `SETUP.md`: local environment, tooling, onboarding, and troubleshooting
-- `.agents/references/repository-knowledge-spec.md`: repository knowledge layout and file ownership
+- `.agents/references/documentation.md`: artifact routing, AI document maintenance, and repository knowledge layout ownership
 
 The `docs/` and `.agents/` guidance files are planning aids. They are not higher-priority truth than executable specs, published contract docs, or the human-facing artifact that owns the topic.
 
@@ -99,7 +99,7 @@ Use these files deliberately:
 - `docs/ARCHITECTURE.md`: compact descriptive repository snapshot, codebase map, package responsibilities, and structural guidance
 - `.agents/references/code-style.md`: AI-facing code-style and change-shaping guidance for repo edits
 - `docs/DESIGN.md`: intended design direction, product tradeoffs, and open design decisions
-- `.agents/references/documentation.md`: AI-facing documentation ownership and update guidance
+- `.agents/references/documentation.md`: AI-facing documentation ownership, repository knowledge layout, and update guidance
 - `.agents/references/environment-quick-ref.md`: AI-facing command wrapper reference for local Gradle execution
 - `.agents/references/plan-execution.md`: AI-facing workflow for executing a whole active plan across milestones
 - `.agents/references/execution.md`: AI-facing workflow for ad hoc tasks and individual plan milestones
@@ -116,10 +116,9 @@ Use these files deliberately:
 - `.agents/references/`: other on-demand detailed references that should not be part of the default read set
 - `.agents/templates/`: on-demand templates for creating new AI artifacts
 - `.agents/skills/`: on-demand repo-local workflow skills; read a skill's `SKILL.md` only when that skill is invoked or clearly applies
-- `.agents/references/repository-knowledge-spec.md`: repository knowledge layout and file ownership spec; read before adding or moving repository knowledge files
 - `.agents/plugins/marketplace.json`: Codex repo-scoped plugin marketplace configuration, only if this repository later promotes a reusable workflow to an installable Codex plugin
-- `.agents/reports/`: generated AI analysis reports; read only when a task explicitly asks for report history or evaluation evidence
-- `.agents/archive/`: archived AI execution plans and historical report-like analysis artifacts; read only for historical investigation
+- `.agents/reports/`: generated AI analysis reports only when a task explicitly creates a tracked report; prefer gitignored `temp/` for ordinary generated assessment output
+- `.agents/archive/`: archived AI execution plans, retired specs, and historical report-like analysis artifacts; read only for historical investigation
 
 ## AI Instruction Load Policy
 

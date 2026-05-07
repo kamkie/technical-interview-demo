@@ -22,11 +22,13 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 - Compacted human-facing AI workflow and contributor guidance so AI commit-message details point to `.agents/references/execution.md` instead of being restated.
 - Updated the `context-report` task and AI context guardrail plan to support endpoint range summaries and stepwise commit-by-commit comparisons.
 - Integrated completed AI-guidance and repository-knowledge plans by archiving their plan files, removing their active roadmap rows, and retargeting the remaining manual-regression gate to expected `v2.0.0-RC7`.
+- Archived the repository knowledge spec and historical AI-guideline/research reports, then made `.agents/references/documentation.md` the live repository-knowledge ownership guide.
+- Simplified the AI-guideline assessment task starters so ordinary generated evaluation output goes to gitignored `temp/` instead of tracked report artifacts.
 - Treated `.gitmessage` as a lightweight support file for local and CI validation classification.
-- Restructured repository knowledge ownership so shared project knowledge lives under `docs/`, live Codex owner guides and references live under `.agents/references/`, active plans under `.agents/plans/`, templates under `.agents/templates/`, generated reports under `.agents/reports/`, historical AI artifacts under `.agents/archive/`, and reusable task starters under `.agents/skills/repo-task/`.
+- Restructured repository knowledge ownership so shared project knowledge lives under `docs/`, live Codex owner guides and references live under `.agents/references/`, active plans under `.agents/plans/`, templates under `.agents/templates/`, ordinary generated AI assessment output under gitignored `temp/`, historical AI artifacts under `.agents/archive/`, and reusable task starters under `.agents/skills/repo-task/`.
 - Treated `docs/` and `.agents/` markdown/support files as lightweight support-file changes for local and CI validation classification.
 - Refreshed the on-demand post-compaction AI guideline evaluation report for the new owner-guide and reusable-task structure.
-- Archived AI-guideline evaluation and workflow-selection comparison report artifacts under `.agents/reports/`, keeping `.agents/references/` for operative references.
+- Archived AI-guideline evaluation and workflow-selection comparison report artifacts under `.agents/archive/`, keeping `.agents/references/` for operative references.
 - Shortened the active-plan path to `.agents/plans/` across live AI guidance and roadmap references.
 - Replaced the custom commit-message body-line taxonomy with Conventional Commits subject rules and project metadata footer provenance.
 - Renamed lifecycle vocabulary to phase activities across active AI guidance and lifecycle specs.

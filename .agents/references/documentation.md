@@ -18,7 +18,7 @@ Update the artifact that owns the truth being changed:
 - runtime behavior and public API contract: executable tests, `src/docs/asciidoc/`, `src/manualTests/resources/http/`, `src/test/resources/openapi/approved-openapi.json`, and `README.md`
 - human-facing guide for developers using AI through the application lifecycle: `WORKING_WITH_AI.md`
 - AI repository rules and AI-document inventory: `AGENTS.md`
-- repository knowledge layout and file ownership: `.agents/references/repository-knowledge-spec.md`
+- repository knowledge layout and file ownership: this guide, especially `## Artifact Ownership` and `### AI Document Maintenance`
 - AI local command wrapper shortcut: `.agents/references/environment-quick-ref.md`
 - local setup, tools, troubleshooting, and onboarding: `SETUP.md`
 - contributor workflow and maintainer expectations: `CONTRIBUTING.md`
@@ -32,7 +32,7 @@ Update the artifact that owns the truth being changed:
 - reusable task starter skill: `.agents/skills/repo-task/`; `references/spec.md` owns the dispatcher, index, and task schema, and each task file owns its title, placeholders, and task text
 - repo-local reusable workflow wrappers: `.agents/skills/`; Codex plugin marketplace configuration: `.agents/plugins/marketplace.json` when intentionally introducing a repo-scoped plugin
 - compact codebase map, structural guidance, and business feature ownership: `docs/ARCHITECTURE.md`; deeper references: `.agents/references/`
-- historical AI-analysis reports, evaluations, and comparisons: `.agents/reports/`
+- historical AI-analysis reports, evaluations, comparisons, and retired specs: `.agents/archive/`
 - product and contract direction: `docs/DESIGN.md`
 - durable repo-wide lessons: `.agents/references/LEARNINGS.md`
 - edit-shaping rules: `.agents/references/code-style.md`
@@ -53,7 +53,7 @@ Rules for maintaining the `.agents/` documents:
 - keep `.agents/skills/repo-task/` as a task dispatcher and task-reference store, not standing policy; task files may include procedural starters, but durable rules belong in the best owning AI document
 - treat the task files listed in `.agents/skills/repo-task/references/index.md` as reusable commands, following `.agents/skills/repo-task/references/spec.md` for exact-slug, ambiguous-request, placeholder, index, and task-schema rules
 - keep current detailed examples, templates, and deep references in `.agents/templates/` or `.agents/references/` instead of the standing top-level AI files
-- keep retired report-like AI analysis artifacts under `.agents/reports/` instead of `.agents/references/`
+- keep retired report-like AI analysis artifacts under `.agents/archive/` instead of `.agents/references/`
 - write AI-guidance changes as current-state rules; route any still-useful historical context using this guide
 - keep repo-local skills narrow and workflow-oriented; use them to accelerate repeated entry tasks or focused triage, not to replace the owner guides
 - create `.agents/plugins/marketplace.json` and a plugin bundle only when a workflow needs Codex plugin distribution or install-time discovery; keep ordinary reusable starters in `.agents/skills/repo-task/`
@@ -61,11 +61,11 @@ Rules for maintaining the `.agents/` documents:
 - when a repo-local skill wraps a workflow owned by another guide, update the skill and the owning guide together if that workflow changes
 - when AI instruction files accumulate overlap, compact them by moving duplicated guidance into the single best owning file and updating cross-references in the same change
 - archive executed `.agents/plans/PLAN_*.md` files under `.agents/archive/` as part of the release cleanup once that work has been released
-- archive retired AI-guidance reports, evaluations, comparisons, and similar analysis artifacts under `.agents/reports/`
+- archive retired AI-guidance reports, evaluations, comparisons, and similar analysis artifacts under `.agents/archive/`
 - treat `docs/ARCHITECTURE.md`, `docs/DESIGN.md`, and `.agents/references/LEARNINGS.md` as descriptive guidance, not executable spec authority
 - if an interrupted tool or IDE run leaves an `.agents/` document incomplete, finish it or clearly mark the gaps instead of leaving misleading partial content
 - when moving or renaming AI documents, update references in `AGENTS.md` and other `.agents/` files in the same change
-- when adding or moving repository knowledge files, apply `.agents/references/repository-knowledge-spec.md` first and update it when no existing owner fits
+- when adding or moving repository knowledge files, use this guide's artifact ownership rules first and update this guide when no existing owner fits
 
 ## Change-Type Routing
 

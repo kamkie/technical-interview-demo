@@ -4,77 +4,50 @@ Category: Lifecycle And Maintenance
 Slug: `evaluate-ai-guidelines`
 Placeholders: none
 
-Evaluate and grade the current repository AI guideline set, then write a timestamped archived evaluation snapshot under `.agents/reports/`.
+Evaluate and grade the current repository AI guideline set, then write a timestamped report under gitignored `temp/`.
+Use this as an evaluation/reporting task, not as permission to implement follow-up recommendations.
 
-Use this as an evaluation and reporting task, not as an implementation request for the recommendations it discovers.
+## Scope
 
-#### Scope
+- Read `AGENTS.md`, `.agents/references/documentation.md`, this task file, and the repo-task spec/index.
+- Read the standing owner guides under `.agents/references/`.
+- Exclude active `.agents/plans/PLAN_*.md` files from the standing-guide baseline; inspect them only for lifecycle hygiene, roadmap cleanup, and stale-reference checks.
+- Inspect large task files, templates, on-demand references, repo-local skills, or archived reports only when targeted searches or current measurements show likely drift.
+- Do not bulk-load `.agents/archive/`.
 
-- Read `AGENTS.md`, `.agents/references/documentation.md`, `.agents/skills/repo-task/references/spec.md`, `.agents/skills/repo-task/references/index.md`, and standing owner guides under `.agents/references/`.
-- Exclude active `.agents/plans/PLAN_*.md` files from the standing-guide baseline, but inspect active plans when they are relevant to lifecycle state, roadmap cleanup, or stale-reference checks.
-- Read representative large task files under `.agents/skills/repo-task/references/tasks/` when checking task-policy drift.
-- Read on-demand references only when a standing guide points to them, when the latest archived evaluation report names them, or when a targeted search finds a likely stale reference.
-- Do not bulk-load `.agents/archive/` unless the evaluation specifically needs historical context.
+## Evaluation
 
-#### Evaluation Tasks
+Recompute or estimate:
 
-1. Recompute current standing guidance sizes:
-   - `AGENTS.md`
-   - standing `.agents/references/*.md` owner guides excluding active `.agents/plans/PLAN_*.md`
-   - key on-demand references that affect practical load, such as workflow and release references
-2. Recompute practical read-set estimates:
-   - standing root plus top-level owner guides
-   - planning minimum
-   - implementation minimum
-   - broad implementation conditional set, if still relevant
-   - workflow selection
-   - verification
-   - release policy
-   - release policy plus release references
-   - descriptive docs only
-3. Grade each standing guide using a consistent rubric:
-   - owner clarity
-   - default-load necessity
-   - trigger clarity for on-demand material
-   - duplication or policy drift
-   - execution usefulness
-   - validation and review routing
-4. Check for stale or duplicated guidance:
-   - retired file names or moved guide references
-   - old workflow terminology outside intentional historical notes
-   - task files growing into standing policy dumps
-   - repeated artifact-routing rules outside `.agents/references/documentation.md`
-   - release, workflow, validation, and planning mechanics duplicated across owners
-5. Compare the current state to the latest matching archived AI-guideline evaluation under `.agents/reports/`, when one exists.
-6. Write the report so it describes current repository truth, not the state at the previous evaluation.
+- default load and standing owner-guide size
+- practical read sets for planning, implementation, verification, workflow, and release
+- active-plan inventory and largest on-demand contributors
+- stale references, duplicated policy, and task-policy drift
 
-#### Report Requirements
+Grade the live guide set for owner clarity, default-load necessity, trigger clarity, duplication risk, execution usefulness, and validation/review routing.
+Use archived evaluations only as historical comparison when they are specifically useful.
 
-Create or refresh a same-day report at `.agents/reports/AI_GUIDELINES_EVALUATION_<YYYY-MM-DD>.md` with:
+## Report
 
-- evaluation date
+Write `temp/evaluate-ai-guidelines-<timestamp>.md` with:
+
+- evaluation date and commit boundary
 - overall grade
-- method
-- current size baseline
-- practical read-set estimates
-- rubric findings
-- file-by-file grades with short rationale
-- realized gains since the previous report
-- remaining costs and risks
-- obsolete recommendations that should not be repeated
-- ranked follow-up recommendations
+- method and evidence sources
+- current size baseline and practical read-set estimates
+- rubric findings and file-by-file grades
+- realized gains, remaining costs, obsolete recommendations, and ranked follow-ups
 
-Keep the report on demand. Do not move the report into `.agents/references/` or a standing top-level guide.
+If the user explicitly asks for a durable tracked snapshot, place it under `.agents/archive/` and update `CHANGELOG.md`.
 
-#### Guardrails
+## Guardrails
 
-- Do not implement follow-up compaction recommendations unless the user explicitly asks for implementation.
-- If a concrete active-guidance contradiction makes the report inaccurate, fix only the narrow contradiction needed for report accuracy or stop and explain the blocker.
-- Keep standing policy in the owning guide named by `.agents/references/documentation.md`; do not copy full policy into the report.
-- Keep archived content historical. Do not rewrite `.agents/archive/` just to remove old terminology.
-- Update `CHANGELOG.md` under `## [Unreleased]` when a tracked archived report is created or refreshed.
+- Do not implement recommendations unless explicitly asked.
+- Keep standing policy in the owning guide named by `.agents/references/documentation.md`.
+- Keep archived content historical; do not rewrite `.agents/archive/` only to remove old terminology.
+- Prefer `temp/` for generated evaluation output.
 
-#### Validation
+## Validation
 
 Run:
 
@@ -83,12 +56,6 @@ git diff --check
 ./build.ps1 build
 ```
 
-If the wrapper takes the lightweight-file shortcut, record that the Gradle build was skipped and manual consistency review was the relevant validation.
+If the wrapper takes the lightweight-file shortcut, record that Gradle execution was skipped and manual consistency review was the relevant validation.
 
-In the final response, summarize:
-
-- overall grade
-- most important size or load-set change
-- top follow-up recommendation
-- files changed
-- validation commands and results
+Final response: overall grade, most important size/load change, top follow-up recommendation, report path, files changed, and validation results.
