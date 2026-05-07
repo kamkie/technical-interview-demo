@@ -194,96 +194,11 @@ Do not write a fake execution plan when the work is not ready to implement.
 When the user asks for a concrete execution plan, create a new file under `ai/` named `PLAN_<topic>.md`.
 Use short lowercase topic names with underscores, for example `PLAN_book_api_error_shape.md`.
 
-Use this structure:
+Use `ai/templates/PLAN_TEMPLATE.md` as the canonical skeleton.
+This guide explains how to fill that skeleton in, how to design milestones, and how to keep plan content aligned with repo-specific ownership and validation rules.
 
-```md
-# Plan: <title>
-
-## Lifecycle
-| Status | Current |
-| --- | --- |
-| Phase | Planning |
-| Status | Draft |
-
-## Summary
-- What will change
-- Why it matters
-- How success will be measured
-
-## Scope
-- In scope
-- Out of scope
-
-## Current State
-- Current behavior
-- Current constraints
-- Relevant existing specs and code
-
-## Requirement Gaps And Open Questions
-- Material questions still requiring user input
-- Why each gap matters
-- Whether planning is blocked or what fallback applies if the user does not answer
-
-## Locked Decisions And Assumptions
-- User decisions
-- Requirement gaps resolved from repo truth
-- Fallback assumptions that the executor should not revisit
-
-## Execution Mode Fit
-- Recommended default mode: `Linear Plan`, `Single-Plan Fanout`, or `Multi-Plan Fanout`
-- Why that mode fits best
-- Coordinator-owned or otherwise shared files if the work fans out
-- Candidate worker boundaries or plan splits if later delegation becomes necessary
-
-## Affected Artifacts
-- Tests
-- Docs
-- OpenAPI
-- HTTP examples
-- Source files
-- Owning AI guide updates when durable repo guidance changes
-- Build or benchmark checks
-
-## Execution Milestones
-### Milestone 1: <name>
-- goal
-- owned files or packages
-- shared files that a `Single-Plan Fanout` worker must leave to the coordinator
-- behavior to preserve
-- exact deliverables
-- validation checkpoint
-- commit checkpoint
-
-### Milestone 2: <name>
-- goal
-- owned files or packages
-- shared files if any
-- exact deliverables
-- validation checkpoint
-- commit checkpoint
-
-## Edge Cases And Failure Modes
-- important error cases
-- compatibility risks
-- migration or rollout concerns
-
-## Validation Plan
-- commands to run
-- tests to add or update
-- docs or contract checks
-- manual verification steps
-
-## Better Engineering Notes
-- prerequisite cleanup included in the plan
-- deferred follow-up work that should not be hidden
-
-## Validation Results
-- To be filled in during execution
-- Worker logs may hold temporary per-milestone detail until the coordinator integrates it when `ai/WORKFLOW.md` says so
-
-## User Validation
-- Short walkthrough for the user to verify the delivered behavior
-```
+Repeat the milestone section from the template for every commit-sized checkpoint.
+Each repeated milestone should use the same field set as the template milestone and name its own goal, owned files or packages, shared-file boundaries, context required before execution, behavior to preserve, exact deliverables, validation checkpoint, and commit checkpoint.
 
 ## What Good Planning Looks Like In This Repo
 
