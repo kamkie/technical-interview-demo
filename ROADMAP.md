@@ -12,7 +12,7 @@ Released history belongs in `CHANGELOG.md`.
 | Breaking Change Policy | Disallowed on the stable `2.x` line unless a later major-version plan explicitly changes it |
 | Next Target Version | Not selected; default to `v2.0.1` for maintenance fixes or `v2.1.0` for backward-compatible feature work |
 | Latest Stable Release | `v2.0.0` released on 2026-05-08 from accepted `v2.0.0-RC7`; manual-regression evidence is archived in `.agents/archive/PLAN_manual_regression_execution.md` |
-| Immediate Next Action | Select and plan the next post-`2.0` workstream |
+| Immediate Next Action | Decide whether to execute `.agents/plans/PLAN_code_review_issue_fixes.md` for `v2.0.1` maintenance or select another post-`2.0` workstream |
 
 ## Roadmap Rules
 
@@ -40,6 +40,7 @@ Use this section for plan-backed work that is ready but not selected as the imme
 
 | Status | Workstream | Plan Or Artifact | Notes |
 | --- | --- | --- | --- |
+| Planned | Code review issue fixes | `.agents/plans/PLAN_code_review_issue_fixes.md` | Maintenance plan for the whole-application review findings: role grants, book validation, category uniqueness, generic integrity-error wording, and auth-failure alert coverage |
 | Planned | Frontend AI contract | To be planned | Generate a frontend-contract AI instruction file in this repository using Anthropic's `frontend-design` skill as source guidance, then copy it into the frontend repository as source input for that repo's AI instructions |
 
 ## Intake
