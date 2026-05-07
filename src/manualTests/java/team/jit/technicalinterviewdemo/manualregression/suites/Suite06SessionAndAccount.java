@@ -2,6 +2,7 @@ package team.jit.technicalinterviewdemo.manualregression.suites;
 
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import team.jit.technicalinterviewdemo.manualregression.harness.SuiteBase;
@@ -69,7 +70,7 @@ public class Suite06SessionAndAccount extends SuiteBase {
         recordIdentifier("temporaryPreferredLanguage", target);
     }
 
-    @org.junit.jupiter.api.AfterAll
+    @AfterAll
     void restorePreferredLanguage() {
         if (!preferredLanguageChanged || originalPreferredLanguage == null) {
             return;
