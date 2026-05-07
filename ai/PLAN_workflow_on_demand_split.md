@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Implementation |
-| Status | In Progress |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Summary
 - Shrink `ai/WORKFLOW.md` into a concise workflow router that keeps default execution rules, mode selection, and common delegation invariants in the standing read set.
@@ -278,6 +278,12 @@ rg -n "Single Branch|Shared Plan|Parallel Plans|WORKFLOW_SHARED_PLAN|WORKFLOW_PA
   - Prompt loader smoke checks passed for `Run Linear Plan`, `Run Plan As Single-Plan Fanout`, `Run Plans As Multi-Plan Fanout`, `Integrate Single-Plan Fanout Output`, and `Integrate Multi-Plan Fanout Output`.
   - Targeted `rg` search across active docs and scripts, excluding this plan's migration notes and `ai/archive/`, found no old mode names, old prompt titles, old prompt body slugs, or old workflow reference filenames.
   - Manual consistency review confirmed `AGENTS.md`, `README.md`, `WORKING_WITH_AI.md`, `ai/PLAN.md`, `ai/EXECUTION.md`, `ai/PROMPTS.md`, `ai/prompts/index.json`, prompt bodies, active plans, and the repo-local planning skill use the new mode vocabulary.
+- 2026-05-07 final consistency and validation:
+  - `git diff --check` passed.
+  - `./build.ps1 build` passed through the lightweight-file shortcut because the uncommitted validation set was documentation and AI-guidance only.
+  - Prompt loader smoke checks passed again for the five renamed workflow and integration prompt titles.
+  - Targeted `rg` search excluding `ai/archive/` and this plan's migration notes found no stale old mode names, old prompt titles, old prompt body slugs, or old workflow reference filenames in active guidance, prompts, scripts, roadmap, or human-facing AI workflow docs.
+  - Manual consistency review confirmed `ROADMAP.md` lifecycle text matches this plan and that old-name references left in this plan are intentional migration/history notes.
 
 ## User Validation
 - Review `ai/WORKFLOW.md` after implementation and confirm the first screen is enough to choose a mode without reading the fanout references.
