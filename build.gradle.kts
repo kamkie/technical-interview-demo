@@ -228,9 +228,11 @@ dependencies {
 
 val manualTests = tasks.register<Test>("manualTests") {
     group = "verification"
-    description =
-        "Runs the manual-regression harness against a locally running app. " +
-        "Not part of the default build; configure via -PmanualTests.* properties or environment variables."
+    description = """
+            |Runs the manual-regression harness against a locally running app.
+            |Not part of the default build; configure via -PmanualTests.* properties or environment variables.
+            |
+    """.trimMargin()
     val manualTestsSourceSet = sourceSets["manualTests"]
     testClassesDirs = manualTestsSourceSet.output.classesDirs
     classpath = manualTestsSourceSet.runtimeClasspath

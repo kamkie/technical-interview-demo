@@ -468,9 +468,9 @@ Backup and retention expectations for versioned upgrades:
 
 1. Take a database backup snapshot before each migration-bearing rollout.
 2. Keep at least:
-   - the latest 7 daily backups
-   - the latest 4 weekly backups
-   - one known-good pre-release snapshot for each migration-bearing rollout that is still in your rollback window
+    - the latest 7 daily backups
+    - the latest 4 weekly backups
+    - one known-good pre-release snapshot for each migration-bearing rollout that is still in your rollback window
 3. Verify backup restoration periodically; backup success without restore validation is not sufficient.
 
 Upgrade flow:
@@ -479,11 +479,11 @@ Upgrade flow:
 2. Update the Kubernetes manifest image tag or Helm values to the target release.
 3. Apply the rollout and watch `GET /actuator/health/readiness` or `kubectl rollout status` until the app reaches `UP`.
 4. Run the manual `Post-Deploy Smoke` workflow against the deployed base URL with:
-   - `expected_build_version=<semantic-tag-or-prerelease-tag>`
-   - `expected_short_commit_id=<12-char-commit>`
-   - `expected_active_profile=prod`
-   - `expected_session_store_type=jdbc`
-   - `expected_session_timeout=15m`
+    - `expected_build_version=<semantic-tag-or-prerelease-tag>`
+    - `expected_short_commit_id=<12-char-commit>`
+    - `expected_active_profile=prod`
+    - `expected_session_store_type=jdbc`
+    - `expected_session_timeout=15m`
 5. Confirm the deployed `GET /` overview reports the expected `build.version`, `git.shortCommitId`, `runtime.activeProfiles`, `configuration.session.storeType`, `configuration.session.timeout`, `configuration.security.csrfEnabled=true`, `configuration.security.csrfCookieName=XSRF-TOKEN`, `configuration.security.csrfHeaderName=X-XSRF-TOKEN`, and `configuration.security.abuseProtection.owner=edge-or-gateway`.
 6. When the JDBC secret set is configured for that workflow, also confirm the deployed smoke run proves `GET /api/session`, readable `XSRF-TOKEN` bootstrap, authenticated `PUT /api/account/language`, and persisted authenticated account access.
 7. Confirm trusted Prometheus scraping still works and that authenticated browser-session flows can create rows in `SPRING_SESSION`.
@@ -494,9 +494,9 @@ Rollback expectations:
 - If the migration impact is `rolling-compatible`, image rollback remains the normal first response, but keep the release metadata and migration sidecars with the incident record.
 - If the migration impact is `restore-sensitive`, do not assume image-only rollback is safe. The repo does not provide Flyway undo migrations.
 - For `restore-sensitive` releases, rollback may require:
-   - restoring the database from backup
-   - manual database repair
-   - or shipping a forward-fix release that restores application compatibility with the migrated schema
+    - restoring the database from backup
+    - manual database repair
+    - or shipping a forward-fix release that restores application compatibility with the migrated schema
 - After rollback or forward-fix recovery, re-check readiness, operational metadata, metrics scraping, and any affected authenticated session or write flows.
 
 Restore drill (recommended each release cycle):
