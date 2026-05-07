@@ -1,7 +1,7 @@
 @baseUrl = http://localhost:8080
 @csrfToken = not-captured-run-setup-request-first
 @report = no-report-available
-@report_file = report.md
+@report_file = ../reports/fake_report.md
 @test_idx = 1
 @runTag = no-tag
 

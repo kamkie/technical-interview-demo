@@ -1,6 +1,6 @@
 @baseUrl = http://localhost:8080
 @report = no-report-available
-@report_file = report.md
+@report_file = ../reports/fake_report.md
 @test_idx = 1
 @firstBookId = 0
 @firstCategoryId = 1
