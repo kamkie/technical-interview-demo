@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Implementation |
+| Status | In Progress |
 
 ## Summary
 - Evaluate and grade this repository's AI guideline set after the two prerequisite AI-guidance plans landed:
@@ -241,6 +241,12 @@
   - Manual consistency check passed against `AGENTS.md`, `ai/PLAN.md`, `ai/DOCUMENTATION.md`, and prerequisite plan lifecycle states.
   - `git diff --check` passed.
   - `./build.ps1 build` passed through the lightweight-file shortcut, reporting docs-only changes to this plan and `ROADMAP.md` and skipping the Gradle build.
+- 2026-05-07 milestone 1:
+  - Created `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md` with the current post-compaction grade, size baseline, practical read-set estimates, file-by-file grades, realized gains, remaining costs, and scratch-recommendation comparison.
+  - Re-read the standing guidance set, checked on-demand workflow references and the plan template, and inspected representative prompt bodies for policy-dump risk.
+  - Manual consistency review passed against `AGENTS.md`, `ai/DOCUMENTATION.md`, and `ai/REVIEWS.md`; the report is on demand and does not replace standing owner guidance.
+  - Targeted stale-workflow search found old mode names only in intentional migration notes inside `ai/PLAN_workflow_on_demand_split.md`.
+  - `git diff --check` passed.
 
 ## User Validation
 - Review this replan and confirm the remaining scope is only the evaluation report plus ranked follow-up backlog.

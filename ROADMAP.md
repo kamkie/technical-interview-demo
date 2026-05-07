@@ -54,7 +54,7 @@ Goal: use manual regression coverage as the RC-to-stable gate, then finish the s
 
 - [x] Execute `ai/PLAN_pskoett_ai_skill_guidance_adoption.md` to selectively adopt search-first session-start, context-quality, scope-drift, and post-validation review guidance from `pskoett/pskoett-ai-skills` without importing its external skill framework. Plan lifecycle: `Integration` / `Implemented`; implemented 2026-05-07.
 - [x] Execute `ai/PLAN_workflow_on_demand_split.md` to shrink `ai/WORKFLOW.md` into a compact mode router, move fanout mechanics into on-demand references, and rename execution modes by plan topology. Plan lifecycle: `Integration` / `Implemented`.
-- [x] Execute `ai/PLAN_ai_guidelines_post_compaction_evaluation.md` to produce a current post-compaction AI-guidance grade and rank any remaining compaction opportunities. Plan lifecycle: `Planning` / `Ready`; replanned 2026-05-07 after prerequisites landed.
+- [x] Execute `ai/PLAN_ai_guidelines_post_compaction_evaluation.md` to produce a current post-compaction AI-guidance grade and rank any remaining compaction opportunities. Plan lifecycle: `Implementation` / `In Progress`; evaluation report drafted 2026-05-07.
 
 ## Deferred
 
