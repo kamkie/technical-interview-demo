@@ -7,6 +7,10 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Changed
+
+- Refined AI onboarding and execution guidance with targeted relevance scanning, context-quality checkpoints, per-milestone scope checks, and post-validation review triggers.
+
 ## [v2.0.0-RC5] - 2026-05-07
 
 ### Added

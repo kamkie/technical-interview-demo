@@ -44,14 +44,16 @@ Do not add manual `JAVA_HOME` or dotenv setup steps to plans, prompts, or worker
 Every execution mode follows the same milestone loop.
 A milestone is not done until the implementation, validation, tracking artifacts, and commit are all in place.
 
-1. Re-read the target scope, locked decisions, non-goals, and the current milestone checkpoint.
+1. Re-read the target scope, in-scope outcome, locked decisions, non-goals, and the current milestone checkpoint.
 2. Update the governing spec first when behavior is intentionally changing.
 3. Implement the smallest coherent code or documentation change that satisfies that milestone.
 4. Keep artifact routing aligned through `ai/DOCUMENTATION.md`.
 5. Run the milestone validation named by the plan, then any broader validation required by `ai/TESTING.md`; if validation fails, load `ai/references/TROUBLESHOOTING.md` before choosing the recovery path.
-6. Update the tracking artifacts required by the active mode in `ai/WORKFLOW.md`.
-7. Create a normal non-interactive commit for the completed milestone.
-8. Repeat for the next milestone or stop and report status if the requested scope is complete.
+6. Review the validated diff using the priority order in `ai/REVIEWS.md`; apply the security review lens only when that guide's security triggers apply.
+7. Re-check the plan's in-scope outcome, locked decisions, and non-goals before claiming the checkpoint is done or moving to the next milestone. Record meaningful pivots as plan amendments, worker-log updates, or validation notes before continuing.
+8. Update the tracking artifacts required by the active mode in `ai/WORKFLOW.md`.
+9. Create a normal non-interactive commit for the completed milestone.
+10. Repeat for the next milestone or stop and report status if the requested scope is complete.
 
 ## Milestone Commit Rules
 
