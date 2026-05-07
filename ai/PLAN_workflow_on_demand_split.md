@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Implementation |
+| Status | In Progress |
 
 ## Summary
 - Shrink `ai/WORKFLOW.md` into a concise workflow router that keeps default execution rules, mode selection, and common delegation invariants in the standing read set.
@@ -269,7 +269,11 @@ rg -n "Single Branch|Shared Plan|Parallel Plans|WORKFLOW_SHARED_PLAN|WORKFLOW_PA
   - `git diff --check` passed.
   - `./build.ps1 build` passed through the lightweight-file shortcut, reporting that only `ai/PLAN_workflow_on_demand_split.md` and `ROADMAP.md` changed and that the Gradle build was skipped.
   - Manual plan-shape review confirmed all required sections from `ai/PLAN.md` are present.
-- Workflow split implementation has not started.
+- 2026-05-07 Milestone 2 workflow split:
+  - Targeted `rg` search over `ai/WORKFLOW.md`, `ai/references/WORKFLOW_SINGLE_PLAN_FANOUT.md`, and `ai/references/WORKFLOW_MULTI_PLAN_FANOUT.md` found no old mode names or old workflow reference filenames.
+  - Targeted `rg` search confirmed `ai/WORKFLOW.md` points to the two new fanout reference files and contains the `Mode Selection Gate`.
+  - `git diff --check` passed.
+  - Manual consistency review confirmed the common worker-log schema is present once in `ai/WORKFLOW.md`, with mode-specific mechanics in the two on-demand references.
 
 ## User Validation
 - Review `ai/WORKFLOW.md` after implementation and confirm the first screen is enough to choose a mode without reading the fanout references.
