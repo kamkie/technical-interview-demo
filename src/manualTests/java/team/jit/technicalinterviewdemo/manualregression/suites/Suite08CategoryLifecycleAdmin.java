@@ -1,10 +1,9 @@
 package team.jit.technicalinterviewdemo.manualregression.suites;
 
-import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import team.jit.technicalinterviewdemo.manualregression.harness.HarnessResponse;
 import team.jit.technicalinterviewdemo.manualregression.harness.SuiteBase;
 import team.jit.technicalinterviewdemo.manualregression.harness.SuiteName;
 
@@ -30,10 +29,10 @@ public class Suite08CategoryLifecycleAdmin extends SuiteBase {
     @Order(1)
     void createCategory() {
         String name = "manual-regression-" + runTag();
-        Response response = http().send(
+        HarnessResponse response = http().send(
                         "POST",
                         "/api/categories",
-                        http().asAdmin().contentType(ContentType.JSON).body("{\"name\":\"" + name + "\"}"),
+                        http().asAdmin().contentType("application/json").body("{\"name\":\"" + name + "\"}"),
                         null,
                         Optional.of("create category"));
         assertThat(response.statusCode()).as("create category status").isIn(200, 201);
@@ -57,7 +56,7 @@ public class Suite08CategoryLifecycleAdmin extends SuiteBase {
         int status = http().send(
                         "PUT",
                         "/api/categories/" + createdCategoryId,
-                        http().asAdmin().contentType(ContentType.JSON).body(body),
+                        http().asAdmin().contentType("application/json").body(body),
                         null,
                         Optional.of("update category"))
                 .statusCode();
@@ -82,7 +81,7 @@ public class Suite08CategoryLifecycleAdmin extends SuiteBase {
 
         // The category-by-id read endpoint isn't part of the public contract, so verify deletion via
         // the list endpoint by filtering for the created name and asserting no match is returned.
-        Response response = http().send(
+        HarnessResponse response = http().send(
                         "GET",
                         "/api/categories",
                         http().asAdmin(),

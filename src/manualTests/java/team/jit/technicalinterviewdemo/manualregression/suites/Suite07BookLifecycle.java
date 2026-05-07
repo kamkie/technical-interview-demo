@@ -1,10 +1,9 @@
 package team.jit.technicalinterviewdemo.manualregression.suites;
 
-import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import team.jit.technicalinterviewdemo.manualregression.harness.HarnessResponse;
 import team.jit.technicalinterviewdemo.manualregression.harness.ManualRegressionExtension;
 import team.jit.technicalinterviewdemo.manualregression.harness.SuiteBase;
 import team.jit.technicalinterviewdemo.manualregression.harness.SuiteName;
@@ -49,10 +48,10 @@ public class Suite07BookLifecycle extends SuiteBase {
                 + "\"publicationYear\":2025,"
                 + "\"categories\":[" + categoryId + "]}";
 
-        Response response = http().send(
+        HarnessResponse response = http().send(
                         "POST",
                         "/api/books",
-                        http().asAdmin().contentType(ContentType.JSON).body(body),
+                        http().asAdmin().contentType("application/json").body(body),
                         null,
                         Optional.of("create book"));
         assertThat(response.statusCode()).as("create book status").isIn(200, 201);
@@ -89,10 +88,10 @@ public class Suite07BookLifecycle extends SuiteBase {
                 + "\"author\":\"Manual Regression\","
                 + "\"version\":" + createdBookVersion + ","
                 + "\"publicationYear\":2026}";
-        Response response = http().send(
+        HarnessResponse response = http().send(
                         "PUT",
                         "/api/books/" + createdBookId,
-                        http().asAdmin().contentType(ContentType.JSON).body(body),
+                        http().asAdmin().contentType("application/json").body(body),
                         null,
                         Optional.of("update created book"));
         assertThat(response.statusCode()).isIn(200, 204);

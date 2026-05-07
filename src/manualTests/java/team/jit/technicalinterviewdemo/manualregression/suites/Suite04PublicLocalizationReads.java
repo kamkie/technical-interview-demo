@@ -1,8 +1,8 @@
 package team.jit.technicalinterviewdemo.manualregression.suites;
 
-import io.restassured.response.Response;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import team.jit.technicalinterviewdemo.manualregression.harness.HarnessResponse;
 import team.jit.technicalinterviewdemo.manualregression.harness.SuiteBase;
 import team.jit.technicalinterviewdemo.manualregression.harness.SuiteName;
 
@@ -26,7 +26,7 @@ public class Suite04PublicLocalizationReads extends SuiteBase {
     @Test
     @Order(1)
     void listLocalizationsWithPagination_returns200() {
-        Response response = http().send(
+        HarnessResponse response = http().send(
                         "GET",
                         "/api/localizations?page=0&size=5&sort=messageKey,asc&sort=language,asc",
                         http().anonymous(),
@@ -41,7 +41,7 @@ public class Suite04PublicLocalizationReads extends SuiteBase {
     @Test
     @Order(2)
     void filterByKnownKey_returnsMatchAndCapturesId() {
-        Response response = http().send(
+        HarnessResponse response = http().send(
                         "GET",
                         "/api/localizations?messageKey=error.book.not_found&language=en",
                         http().anonymous(),

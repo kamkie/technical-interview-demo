@@ -1,9 +1,9 @@
 package team.jit.technicalinterviewdemo.manualregression.suites;
 
-import io.restassured.path.json.JsonPath;
-import io.restassured.response.Response;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import team.jit.technicalinterviewdemo.manualregression.harness.HarnessJsonPath;
+import team.jit.technicalinterviewdemo.manualregression.harness.HarnessResponse;
 import team.jit.technicalinterviewdemo.manualregression.harness.SuiteBase;
 import team.jit.technicalinterviewdemo.manualregression.harness.SuiteName;
 
@@ -29,7 +29,7 @@ public class Suite03PublicBookAndCategoryReads extends SuiteBase {
     @Test
     @Order(1)
     void listBooksWithPagination_returnsContent() {
-        Response response = http().send(
+        HarnessResponse response = http().send(
                         "GET",
                         "/api/books?page=0&size=5&sort=title,asc",
                         http().anonymous(),
@@ -48,9 +48,9 @@ public class Suite03PublicBookAndCategoryReads extends SuiteBase {
     @Test
     @Order(2)
     void listCategories_returnsContent() {
-        Response response =
+        HarnessResponse response =
                 http().send("GET", "/api/categories", http().anonymous(), 200, Optional.of("public category list"));
-        JsonPath body = response.jsonPath();
+        HarnessJsonPath body = response.jsonPath();
         // Categories endpoint returns either a list or a paginated wrapper depending on the contract;
         // try paginated first, fall back to a flat list.
         Object pageContent = body.get("content");

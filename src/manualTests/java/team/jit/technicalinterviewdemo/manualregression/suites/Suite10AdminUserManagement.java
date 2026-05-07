@@ -1,10 +1,9 @@
 package team.jit.technicalinterviewdemo.manualregression.suites;
 
-import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import team.jit.technicalinterviewdemo.manualregression.harness.HarnessResponse;
 import team.jit.technicalinterviewdemo.manualregression.harness.SuiteBase;
 import team.jit.technicalinterviewdemo.manualregression.harness.SuiteName;
 
@@ -41,7 +40,7 @@ public class Suite10AdminUserManagement extends SuiteBase {
     @Test
     @Order(1)
     void listUsersAsAdmin_returnsContent() {
-        Response response =
+        HarnessResponse response =
                 http().send("GET", "/api/admin/users", http().asAdmin(), 200, Optional.of("admin /api/admin/users"));
         assertThat(response.statusCode()).isEqualTo(200);
     }
@@ -73,7 +72,7 @@ public class Suite10AdminUserManagement extends SuiteBase {
         String userId = config().regularUserId().orElseThrow();
 
         // Capture original roles by listing all users and finding this id.
-        Response listing = http().send(
+        HarnessResponse listing = http().send(
                         "GET",
                         "/api/admin/users?page=0&size=200",
                         http().asAdmin(),
@@ -101,7 +100,7 @@ public class Suite10AdminUserManagement extends SuiteBase {
         int grantStatus = http().send(
                         "PUT",
                         "/api/admin/users/" + userId + "/roles",
-                        http().asAdmin().contentType(ContentType.JSON).body(body),
+                        http().asAdmin().contentType("application/json").body(body),
                         null,
                         Optional.of("grant roles round-trip"))
                 .statusCode();
@@ -123,7 +122,7 @@ public class Suite10AdminUserManagement extends SuiteBase {
         int status = http().send(
                         "PUT",
                         "/api/admin/users/" + userId + "/roles",
-                        http().asAdmin().contentType(ContentType.JSON).body(body),
+                        http().asAdmin().contentType("application/json").body(body),
                         null,
                         Optional.of("restore original roles"))
                 .statusCode();

@@ -1,10 +1,9 @@
 package team.jit.technicalinterviewdemo.manualregression.suites;
 
-import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import team.jit.technicalinterviewdemo.manualregression.harness.HarnessResponse;
 import team.jit.technicalinterviewdemo.manualregression.harness.SuiteBase;
 import team.jit.technicalinterviewdemo.manualregression.harness.SuiteName;
 
@@ -34,10 +33,10 @@ public class Suite09LocalizationLifecycleAdmin extends SuiteBase {
                 + "\"language\":\"en\","
                 + "\"messageText\":\"Manual regression marker for " + runTag() + "\","
                 + "\"description\":\"Created by the manual regression harness\"}";
-        Response response = http().send(
+        HarnessResponse response = http().send(
                         "POST",
                         "/api/localizations",
-                        http().asAdmin().contentType(ContentType.JSON).body(body),
+                        http().asAdmin().contentType("application/json").body(body),
                         null,
                         Optional.of("create localization"));
         assertThat(response.statusCode()).isIn(200, 201);
@@ -81,7 +80,7 @@ public class Suite09LocalizationLifecycleAdmin extends SuiteBase {
         int status = http().send(
                         "PUT",
                         "/api/localizations/" + createdLocalizationId,
-                        http().asAdmin().contentType(ContentType.JSON).body(body),
+                        http().asAdmin().contentType("application/json").body(body),
                         null,
                         Optional.of("update created localization"))
                 .statusCode();

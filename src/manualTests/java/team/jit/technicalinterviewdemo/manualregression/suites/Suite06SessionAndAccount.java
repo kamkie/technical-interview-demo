@@ -1,10 +1,9 @@
 package team.jit.technicalinterviewdemo.manualregression.suites;
 
-import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import team.jit.technicalinterviewdemo.manualregression.harness.HarnessResponse;
 import team.jit.technicalinterviewdemo.manualregression.harness.SuiteBase;
 import team.jit.technicalinterviewdemo.manualregression.harness.SuiteName;
 
@@ -32,7 +31,7 @@ public class Suite06SessionAndAccount extends SuiteBase {
     @Test
     @Order(1)
     void session_isAuthenticated() {
-        Response response =
+        HarnessResponse response =
                 http().send("GET", "/api/session", http().asAdmin(), 200, Optional.of("admin /api/session"));
         Boolean authenticated = response.jsonPath().getObject("authenticated", Boolean.class);
         assertThat(authenticated).isTrue();
@@ -41,7 +40,7 @@ public class Suite06SessionAndAccount extends SuiteBase {
     @Test
     @Order(2)
     void account_returnsAdminIdentity() {
-        Response response =
+        HarnessResponse response =
                 http().send("GET", "/api/account", http().asAdmin(), 200, Optional.of("admin /api/account"));
         originalPreferredLanguage = response.jsonPath().getString("preferredLanguage");
         recordIdentifier("originalPreferredLanguage", String.valueOf(originalPreferredLanguage));
@@ -60,7 +59,7 @@ public class Suite06SessionAndAccount extends SuiteBase {
                         "PUT",
                         "/api/account/language",
                         http().asAdmin()
-                                .contentType(ContentType.JSON)
+                                .contentType("application/json")
                                 .body("{\"preferredLanguage\":\"" + target + "\"}"),
                         null,
                         Optional.of("change preferred language to " + target))
@@ -75,11 +74,11 @@ public class Suite06SessionAndAccount extends SuiteBase {
         if (!preferredLanguageChanged || originalPreferredLanguage == null) {
             return;
         }
-        Response response = http().send(
+        HarnessResponse response = http().send(
                         "PUT",
                         "/api/account/language",
                         http().asAdmin()
-                                .contentType(ContentType.JSON)
+                                .contentType("application/json")
                                 .body("{\"preferredLanguage\":\"" + originalPreferredLanguage + "\"}"),
                         null,
                         Optional.of("restore original preferred language"));

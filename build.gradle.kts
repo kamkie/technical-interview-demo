@@ -191,7 +191,6 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers-postgresql")
 }
 
-val restAssuredVersion = "5.5.6"
 val assertjVersion = "3.27.7"
 
 sourceSets {
@@ -218,8 +217,6 @@ val manualTestsAnnotationProcessor: Configuration by configurations.getting {
 
 dependencies {
     "manualTestsImplementation"("org.junit.jupiter:junit-jupiter")
-    "manualTestsImplementation"("io.rest-assured:rest-assured:$restAssuredVersion")
-    "manualTestsImplementation"("io.rest-assured:json-path:$restAssuredVersion")
     "manualTestsImplementation"("org.assertj:assertj-core:$assertjVersion")
     "manualTestsImplementation"("com.fasterxml.jackson.core:jackson-databind")
     "manualTestsImplementation"("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")

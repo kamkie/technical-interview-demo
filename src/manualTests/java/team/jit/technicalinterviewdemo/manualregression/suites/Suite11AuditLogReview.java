@@ -1,8 +1,8 @@
 package team.jit.technicalinterviewdemo.manualregression.suites;
 
-import io.restassured.response.Response;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import team.jit.technicalinterviewdemo.manualregression.harness.HarnessResponse;
 import team.jit.technicalinterviewdemo.manualregression.harness.SuiteBase;
 import team.jit.technicalinterviewdemo.manualregression.harness.SuiteName;
 
@@ -31,7 +31,7 @@ public class Suite11AuditLogReview extends SuiteBase {
     @Test
     @Order(1)
     void listAuditLogs_paginated_returns200() {
-        Response response = http().send(
+        HarnessResponse response = http().send(
                         "GET",
                         "/api/admin/audit-logs?page=0&size=20&sort=id,desc",
                         http().asAdmin(),
@@ -43,7 +43,7 @@ public class Suite11AuditLogReview extends SuiteBase {
     @Test
     @Order(2)
     void filterAuditLogs_byActorAndAction_returns200() {
-        Response response = http().send(
+        HarnessResponse response = http().send(
                         "GET",
                         "/api/admin/audit-logs?targetType=AUTHENTICATION&action=LOGIN_SUCCESS",
                         http().asAdmin(),
@@ -55,7 +55,7 @@ public class Suite11AuditLogReview extends SuiteBase {
     @Test
     @Order(3)
     void recentEntriesIncludeManualRegressionWrites() {
-        Response response = http().send(
+        HarnessResponse response = http().send(
                         "GET",
                         "/api/admin/audit-logs?page=0&size=50&sort=id,desc",
                         http().asAdmin(),
