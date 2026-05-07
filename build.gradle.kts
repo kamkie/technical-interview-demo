@@ -112,7 +112,7 @@ val spotlessMiscTargets = arrayOf(
 )
 val ktlintEditorConfigOverride = mapOf(
     "ktlint_code_style" to "intellij_idea",
-    "ij_kotlin_imports_layout" to "*,javax.**,java.**,kotlin.**,^",
+    "ij_kotlin_imports_layout" to "*,java.**,javax.**,kotlin.**,^",
     "ktlint_standard_no-unused-imports" to "enabled",
 )
 
