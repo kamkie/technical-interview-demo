@@ -27,7 +27,7 @@
   - introducing `.agents/plugins/marketplace.json` unless a later explicit plugin-distribution requirement appears
 
 ## Current State
-- `ai/TASK_LIBRARY.md` is the current repository-local catalog and contains 44 task definitions grouped by category.
+- `ai/TASK_LIBRARY.md` was expected to contain 44 task definitions during planning, but execution found 45 schema-valid task definitions; the migration preserves the repository truth.
 - The inline `## Repo Task Skill Spec` section defines the target `repo-task` skill layout, dispatcher behavior, index contract, task file schema, maintenance rules, validation command, and non-goals.
 - `AGENTS.md`, `ai/DOCUMENTATION.md`, `ai/PLANNING.md`, and `ai/skills/repo-plan-author/SKILL.md` currently mention `ai/TASK_LIBRARY.md` as the reusable task catalog or task-title source.
 - `ai/plans/PLAN_ai_guidance_execution_prompt_library_restructure.md` records the earlier implemented decision to keep reusable starters in `ai/TASK_LIBRARY.md`; this plan intentionally supersedes that storage decision for live guidance.
@@ -202,7 +202,7 @@ If `PyYAML` is unavailable, install it into a temporary directory outside the re
 - commit checkpoint: commit-ready skill dispatcher shell
 
 ### Milestone 3: Migrate Task Bodies And Index
-- goal: convert the 44 task definitions from the monolithic task library into schema-valid task files and a compact index
+- goal: convert the current task definitions from the monolithic task library into schema-valid task files and a compact index
 - owned files or packages: `.agents/skills/repo-task/references/tasks/*.md`, `.agents/skills/repo-task/references/index.md`, `ai/TASK_LIBRARY.md`
 - shared files reserved to the coordinator: `.agents/skills/repo-task/SKILL.md`
 - context required before execution: `AGENTS.md`, `ai/EXECUTION.md`, this plan, `.agents/skills/repo-task/references/spec.md`, and `ai/TASK_LIBRARY.md`
@@ -286,7 +286,7 @@ If `PyYAML` is unavailable, install it into a temporary directory outside the re
 - Documentation and skill checks: required, using quick validation, schema/index checks, stale-reference searches, `git diff --check`, and the standard wrapper build.
 
 ## Better Engineering Notes
-- Prefer a deterministic mechanical split of `ai/TASK_LIBRARY.md` over hand-copying 44 task bodies, but do not retain one-off migration tooling unless it is intentionally useful after the migration.
+- Prefer a deterministic mechanical split of `ai/TASK_LIBRARY.md` over hand-copying task bodies, but do not retain one-off migration tooling unless it is intentionally useful after the migration.
 - Keep task bodies self-contained for their starter while routing shared rules back to owner guides.
 - Keep `SKILL.md` small enough that normal triggering does not erase the context savings from removing the monolithic task library.
 - Record any intentionally retained historical `TASK_LIBRARY` references during validation so future agents do not treat them as missed live guidance.
@@ -294,6 +294,7 @@ If `PyYAML` is unavailable, install it into a temporary directory outside the re
 ## Validation Results
 - 2026-05-07 Milestone 1 started: initialized `.agents/skills/repo-task` with the `skill-creator` scaffold, created `.agents/skills/repo-task/references/spec.md` from this plan's inline spec, deleted `temp/spec.md`, and moved lifecycle and roadmap status to in progress.
 - 2026-05-07 Milestone 2 completed: replaced the generated dispatcher template with the compact `repo-task` resolver, regenerated `agents/openai.yaml` with a valid `$repo-task` default prompt, installed `PyYAML` into `%TEMP%\codex-pyyaml-skill-validate` for skill tooling only, and ran `python C:\Users\kamki\AppData\Local\JetBrains\IntelliJIdea2026.1\aia\codex\skills\.system\skill-creator\scripts\quick_validate.py .agents/skills/repo-task` with `PYTHONPATH` scoped to that temp directory; result: `Skill is valid!`. `git diff --check` passed.
+- 2026-05-07 Milestone 3 completed: mechanically split the current `ai/TASK_LIBRARY.md` task definitions into 45 files under `.agents/skills/repo-task/references/tasks/` and generated `.agents/skills/repo-task/references/index.md`. The expected planning count was 44, but the source catalog contained 45 schema-valid tasks; execution preserved all 45. Custom schema/index validation passed: every task file has `Category`, `Slug`, and `Placeholders` near the top, every filename stem matches its slug, every slug appears exactly once in the index, and the index count matches the task-file count.
 
 ## User Validation
 - Review `.agents/skills/repo-task/SKILL.md` and `.agents/skills/repo-task/references/spec.md` for the intended loading contract.
