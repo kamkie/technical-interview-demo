@@ -1,4 +1,4 @@
-Execute these plan files in `Parallel Plans` mode using git worktrees:
+Execute these plan files in `Multi-Plan Fanout` mode using git worktrees:
 - <plan_file_1>
 - <plan_file_2>
 - <plan_file_3>

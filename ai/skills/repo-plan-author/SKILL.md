@@ -35,7 +35,7 @@ Read only what the request needs:
 - use the lifecycle vocabulary from `ai/PLAN.md`; do not invent a parallel scheme
 - keep the plan spec-driven and narrow enough to preserve the repo's demo character
 - do not convert roadmap bullets directly into implementation prose without checking current repo truth
-- do not force `Shared Plan` or `Parallel Plans` when ownership boundaries are not explicit
+- do not force `Single-Plan Fanout` or `Multi-Plan Fanout` when ownership boundaries are not explicit
 - route standing policy back to `ai/PLAN.md`, `ai/WORKFLOW.md`, `ai/DOCUMENTATION.md`, and `ai/TESTING.md` instead of copying them into the plan
 
 ## Useful Prompt Titles

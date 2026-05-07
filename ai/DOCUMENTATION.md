@@ -19,7 +19,7 @@ Update the artifact that owns the truth being changed:
 - released history: `CHANGELOG.md`
 - planning process and plan-file shape: `ai/PLAN.md`
 - single-agent execution flow: `ai/EXECUTION.md`
-- delegation and worktree deviations: `ai/WORKFLOW.md`
+- workflow mode selection and common delegation rules: `ai/WORKFLOW.md`; detailed fanout mechanics: `ai/references/WORKFLOW_SINGLE_PLAN_FANOUT.md` and `ai/references/WORKFLOW_MULTI_PLAN_FANOUT.md`
 - release sequencing and tagging: `ai/RELEASES.md`
 - prompt-title index: `ai/PROMPTS.md`; prompt metadata and raw bodies: `ai/prompts/`; prompt loader script: `scripts/ai/get-prompt.ps1`
 - repo-local reusable workflow wrappers: `ai/skills/`

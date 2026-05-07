@@ -31,7 +31,7 @@
 - Fallback assumptions that the executor should not revisit
 
 ## Execution Mode Fit
-- Recommended default mode: `Single Branch`, `Shared Plan`, or `Parallel Plans`
+- Recommended default mode: `Linear Plan`, `Single-Plan Fanout`, or `Multi-Plan Fanout`
 - Why that mode fits best
 - Coordinator-owned or otherwise shared files if the work fans out
 - Candidate worker boundaries or plan splits if later delegation becomes necessary
@@ -49,7 +49,7 @@
 ### Milestone 1: <name>
 - goal
 - owned files or packages
-- shared files that a `Shared Plan` worker must leave to the coordinator
+- shared files that a `Single-Plan Fanout` worker must leave to the coordinator
 - behavior to preserve
 - exact deliverables
 - validation checkpoint

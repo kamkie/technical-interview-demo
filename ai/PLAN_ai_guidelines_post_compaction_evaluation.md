@@ -70,7 +70,7 @@
 - Do not implement follow-up compaction in this plan. Separate implementation plans are required for accepted follow-up changes such as a release-guide split or `PLAN.md` slimming.
 
 ## Execution Mode Fit
-- Recommended execution mode: current `Single Branch`, expected to be renamed to `Linear Plan` after `ai/PLAN_workflow_on_demand_split.md`.
+- Recommended execution mode: `Linear Plan`.
 - This is a documentation-only evaluation with shared ownership across AI guidance files; worker fanout would create terminology and scoring drift.
 - Coordinator-owned files:
   - `ai/PLAN_ai_guidelines_post_compaction_evaluation.md`

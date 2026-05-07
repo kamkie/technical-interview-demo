@@ -62,7 +62,7 @@
 - Exclude `ai/archive/` from terminology rewrites unless a non-archived reference points into an archived plan and must be fixed.
 
 ## Execution Mode Fit
-- Recommended mode for executing this plan: current `Single Branch`, which this plan will rename to `Linear Plan`.
+- Selected execution mode: `Linear Plan`.
 - This is a documentation-only AI-guidance change with many shared files and cross-references; worker fanout would add coordination cost and raise the risk of inconsistent terminology.
 - Coordinator-owned files:
   - `ai/PLAN_workflow_on_demand_split.md`
@@ -99,13 +99,13 @@
   - `ai/prompts/index.json`
   - `ai/prompts/bodies/choose-execution-mode.md`
   - `ai/prompts/bodies/run-plan-with-inferred-mode.md`
-  - `ai/prompts/bodies/run-plan-on-single-branch.md`
-  - `ai/prompts/bodies/run-plan-as-shared-plan.md`
-  - `ai/prompts/bodies/run-plans-in-parallel.md`
+  - `ai/prompts/bodies/run-linear-plan.md`
+  - `ai/prompts/bodies/run-plan-as-single-plan-fanout.md`
+  - `ai/prompts/bodies/run-plans-as-multi-plan-fanout.md`
   - `ai/prompts/bodies/run-all-ready-plans.md`
   - `ai/prompts/bodies/run-all-unfinished-plans.md`
-  - `ai/prompts/bodies/integrate-shared-plan-output.md`
-  - `ai/prompts/bodies/integrate-parallel-plan-output.md`
+  - `ai/prompts/bodies/integrate-single-plan-fanout-output.md`
+  - `ai/prompts/bodies/integrate-multi-plan-fanout-output.md`
   - `ai/prompts/bodies/check-active-workers.md`
   - `ai/prompts/bodies/check-worker-status.md`
   - `ai/prompts/bodies/compact-ai-docs.md`
@@ -123,7 +123,7 @@
   - `ai/PLAN_workflow_on_demand_split.md`
   - `ROADMAP.md`
 - shared files that a fanout worker must leave to the coordinator:
-  - not applicable in current `Single Branch` execution
+  - not applicable in current `Linear Plan` execution
 - behavior to preserve:
   - no application behavior or public contract changes
   - no implementation of the workflow split yet
@@ -209,7 +209,7 @@
   - all files touched by Milestones 2 and 3
   - this plan's `Validation Results`
 - shared files that a fanout worker must leave to the coordinator:
-  - not applicable in current `Single Branch` execution
+  - not applicable in current `Linear Plan` execution
 - behavior to preserve:
   - no application build, runtime, API, or release behavior changes
   - no permanent duplicate mode guidance in standing docs
@@ -274,6 +274,10 @@ rg -n "Single Branch|Shared Plan|Parallel Plans|WORKFLOW_SHARED_PLAN|WORKFLOW_PA
   - Targeted `rg` search confirmed `ai/WORKFLOW.md` points to the two new fanout reference files and contains the `Mode Selection Gate`.
   - `git diff --check` passed.
   - Manual consistency review confirmed the common worker-log schema is present once in `ai/WORKFLOW.md`, with mode-specific mechanics in the two on-demand references.
+- 2026-05-07 Milestone 3 terminology migration:
+  - Prompt loader smoke checks passed for `Run Linear Plan`, `Run Plan As Single-Plan Fanout`, `Run Plans As Multi-Plan Fanout`, `Integrate Single-Plan Fanout Output`, and `Integrate Multi-Plan Fanout Output`.
+  - Targeted `rg` search across active docs and scripts, excluding this plan's migration notes and `ai/archive/`, found no old mode names, old prompt titles, old prompt body slugs, or old workflow reference filenames.
+  - Manual consistency review confirmed `AGENTS.md`, `README.md`, `WORKING_WITH_AI.md`, `ai/PLAN.md`, `ai/EXECUTION.md`, `ai/PROMPTS.md`, `ai/prompts/index.json`, prompt bodies, active plans, and the repo-local planning skill use the new mode vocabulary.
 
 ## User Validation
 - Review `ai/WORKFLOW.md` after implementation and confirm the first screen is enough to choose a mode without reading the fanout references.

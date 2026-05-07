@@ -45,7 +45,7 @@
 - Keep the guidance current-state and concise; do not add historical rationale about the external skill evaluation to standing files.
 
 ## Execution Mode Fit
-- Recommended default mode: `Single Branch`.
+- Recommended default mode: `Linear Plan`.
 - The work is a small documentation-only AI-guidance update with overlapping ownership in `AGENTS.md` and `ai/EXECUTION.md`; worker fanout would add coordination cost.
 - Coordinator-owned files:
   - `ai/PLAN_pskoett_ai_skill_guidance_adoption.md`
@@ -68,8 +68,8 @@
 - owned files or packages:
   - `ai/PLAN_pskoett_ai_skill_guidance_adoption.md`
   - `ROADMAP.md`
-- shared files that a `Shared Plan` worker must leave to the coordinator:
-  - not applicable in `Single Branch`
+- shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
+  - not applicable in `Linear Plan`
 - behavior to preserve:
   - no application or public-contract changes
   - no external skill import
@@ -86,7 +86,7 @@
 - goal: make agents surface relevant existing guidance before work and stop when context quality visibly degrades.
 - owned files or packages:
   - `AGENTS.md`
-- shared files that a `Shared Plan` worker must leave to the coordinator:
+- shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
   - this plan and `ROADMAP.md`
 - behavior to preserve:
   - the load policy remains on-demand and does not require bulk-loading plans or references
@@ -103,7 +103,7 @@
 - goal: make milestone transitions more explicit about scope drift and post-validation review.
 - owned files or packages:
   - `ai/EXECUTION.md`
-- shared files that a `Shared Plan` worker must leave to the coordinator:
+- shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
   - this plan and `ROADMAP.md`
 - behavior to preserve:
   - milestone validation and commit discipline remain as currently defined

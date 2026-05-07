@@ -1,4 +1,4 @@
-Execute `<plan_file>` in `Shared Plan` mode.
+Execute `<plan_file>` in `Single-Plan Fanout` mode.
 
 Use `ai/WORKFLOW.md` and `ai/EXECUTION.md`.
 Act as orchestrator, fan out worker branches or worktrees only for disjoint slices, keep shared files coordinator-owned, and require committed worker logs at `ai/tmp/workflow/<plan_stem_or_topic>__<worker_name>.md`.

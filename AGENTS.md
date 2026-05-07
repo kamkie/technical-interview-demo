@@ -47,9 +47,11 @@ Use these files deliberately:
 - `ai/REVIEWS.md`: AI-facing code-review and security-review guidance
 - `ai/RELEASES.md`: AI-facing release workflow for intentional post-implementation releases
 - `ai/TESTING.md`: AI-facing testing and validation guidance
-- `ai/WORKFLOW.md`: AI-facing execution workflow for single-branch, delegation, worktree usage, integration, and release handoff
+- `ai/WORKFLOW.md`: compact AI-facing workflow router for `Linear Plan`, `Single-Plan Fanout`, `Multi-Plan Fanout`, delegation, common worktree rules, integration, and release handoff
 - `ai/prompts/`: machine-readable prompt index and on-demand raw prompt bodies used only after a prompt title is invoked
-- `ai/references/`: on-demand detailed references that should not be part of the default read set
+- `ai/references/WORKFLOW_SINGLE_PLAN_FANOUT.md`: on-demand detailed mechanics for `Single-Plan Fanout`
+- `ai/references/WORKFLOW_MULTI_PLAN_FANOUT.md`: on-demand detailed mechanics for `Multi-Plan Fanout`
+- `ai/references/`: other on-demand detailed references that should not be part of the default read set
 - `ai/templates/`: on-demand templates for creating new AI artifacts
 - `ai/skills/`: on-demand repo-local workflow skills; read a skill's `SKILL.md` only when that skill is invoked or clearly applies
 - `ai/archive/`: archived AI execution plans that have already been released or otherwise completed; read only for historical investigation
@@ -184,7 +186,7 @@ When making architecture-sensitive changes:
 
 ## Branch And Worktree Expectations
 
-`ai/WORKFLOW.md` owns detailed branch, worktree, coordinator, worker, and integration mechanics.
+`ai/WORKFLOW.md` owns mode selection and common branch, worktree, coordinator, worker, and integration rules; the on-demand workflow references own detailed fanout mechanics.
 
 Repo-level rules:
 
@@ -204,7 +206,7 @@ It auto-loads a root `.env` file when present, so plans and prompts should not a
 
 ## Delegated Agents And Skill Wrappers
 
-`ai/WORKFLOW.md` owns delegation mechanics, worker capability expectations, and integration rules.
+`ai/WORKFLOW.md` owns delegation mechanics, worker capability expectations, and integration rules; load the matching workflow reference only when a fanout mode is selected.
 
 Specialized agents and repo-local skills may accelerate repeatable tasks when available and when the task clearly matches their scope.
 Treat skills as workflow helpers that point back to the owner guides, not as higher-priority policy.

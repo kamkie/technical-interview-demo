@@ -250,23 +250,23 @@ Use the smallest mode that keeps ownership clear.
 When you pass one plan file, there are three useful ways to work:
 
 - let AI infer the right mode from the plan: `Run Plan With Inferred Mode`
-- force direct execution on one branch: `Run Plan On Single Branch`
-- force fanout with an orchestrator and workers: `Run Plan As Shared Plan`
+- force direct execution on one branch: `Run Linear Plan`
+- force fanout with a coordinator and workers: `Run Plan As Single-Plan Fanout`
 
 #### Multiple plan files
 
-When you pass multiple plan files, use `Parallel Plans`.
-Use `Run Plans In Parallel` when you already know the exact plan-file set.
+When you pass multiple plan files, use `Multi-Plan Fanout`.
+Use `Run Plans As Multi-Plan Fanout` when you already know the exact plan-file set.
 Use `Run All Ready Plans` when you want AI to discover every non-archived ready plan first and then run the same parallel execution flow.
 Use `Run All Unfinished Plans` when you want AI to discover every non-archived unfinished plan first and then run the same parallel execution flow.
 
 #### Workflow mode guide
 
-- `Single Branch`: default for one plan and one execution stream
-- `Shared Plan`: one current plan file, one coordinator, several worker branches or worktrees, shared files stay coordinator-owned
-- `Parallel Plans`: multiple plan files executing in parallel, each worker keeps a private `CHANGELOG_<topic>.md`
+- `Linear Plan`: default for one plan and one execution stream
+- `Single-Plan Fanout`: one current plan file, one coordinator, several worker branches or worktrees, shared files stay coordinator-owned
+- `Multi-Plan Fanout`: multiple plan files executing in parallel, each worker keeps a private `CHANGELOG_<topic>.md`
 
-For `Shared Plan` and `Parallel Plans`, the coordinator run is complete only when every worker has reached a terminal state.
+For `Single-Plan Fanout` and `Multi-Plan Fanout`, the coordinator run is complete only when every worker has reached a terminal state.
 That means the first finished worker is only progress, not the end of the coordinated run.
 If you want an interim snapshot while work is still running, use the worker-status prompts and treat that output as progress reporting rather than completion.
 
@@ -277,9 +277,9 @@ Shared-plan and parallel-plan work also use committed worker logs at:
 Useful prompt titles:
 
 - `Run Plan With Inferred Mode`
-- `Run Plan On Single Branch`
-- `Run Plan As Shared Plan`
-- `Run Plans In Parallel`
+- `Run Linear Plan`
+- `Run Plan As Single-Plan Fanout`
+- `Run Plans As Multi-Plan Fanout`
 - `Run All Ready Plans`
 - `Run All Unfinished Plans`
 - `Check Worker Status`
@@ -291,8 +291,8 @@ Use this after worker implementation is already complete and the next task is to
 
 Useful prompt titles:
 
-- `Integrate Shared Plan Output`
-- `Integrate Parallel Plan Output`
+- `Integrate Single-Plan Fanout Output`
+- `Integrate Multi-Plan Fanout Output`
 - `Integrate All Open PRs`
 
 ### 7. Implementation Verification
@@ -349,9 +349,9 @@ Useful prompt titles:
 
 Use this quick rule set:
 
-- one plan file and no strong reason to split: `Single Branch`
-- one plan file with disjoint worker-owned slices and one coordinator: `Shared Plan`
-- multiple plan files: `Parallel Plans`
+- one plan file and no strong reason to split: `Linear Plan`
+- one plan file with disjoint worker-owned slices and one coordinator: `Single-Plan Fanout`
+- multiple plan files: `Multi-Plan Fanout`
 
 If you are unsure, ask AI to review the plan first with `Choose Execution Mode`.
 
@@ -381,7 +381,7 @@ For coordinated multi-branch work:
 
 1. create or refine the relevant plan files
 2. if there is one plan file, use one of the single-plan workflow prompts
-3. if there are multiple plan files and you already know the exact set, use `Run Plans In Parallel`
+3. if there are multiple plan files and you already know the exact set, use `Run Plans As Multi-Plan Fanout`
 4. if you want AI to discover every ready plan under `ai/`, use `Run All Ready Plans`
 5. if you want AI to pick up every unfinished plan under `ai/`, use `Run All Unfinished Plans`
 6. use the worker-status prompts while the work is running

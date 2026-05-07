@@ -66,9 +66,9 @@ The application goals matter when planning:
 
 Plans in this repository must be executable in one of the three modes defined by `ai/WORKFLOW.md`:
 
-- `Single Branch`
-- `Shared Plan`
-- `Parallel Plans`
+- `Linear Plan`
+- `Single-Plan Fanout`
+- `Multi-Plan Fanout`
 
 That means every plan must be milestone-driven enough for one milestone to become one reviewable execution checkpoint.
 When a plan might fan out, it must also make worker-safe ownership and shared-file boundaries explicit.
@@ -101,9 +101,9 @@ Use these rules:
 - keep milestone scope coherent: one user-visible behavior slice, one refactor checkpoint, or one documentation/contract checkpoint
 - include the spec, implementation, documentation, and validation work needed for that checkpoint instead of scattering one behavior across many vague milestones
 - name exact files or packages when possible
-- mark which files remain coordinator-owned if the plan is later executed as `Shared Plan`
+- mark which files remain coordinator-owned if the plan is later executed as `Single-Plan Fanout`
 - avoid milestones that require multiple workers to touch the same file set at the same time
-- choose stable topic names when a plan might later become a standalone `Parallel Plans` branch with its own temporary changelog file
+- choose stable topic names when a plan might later become a standalone `Multi-Plan Fanout` branch with its own temporary changelog file
 
 ## How To Plan
 
@@ -132,7 +132,7 @@ Use these rules:
    Favor direct Spring MVC, Spring Data, and `@Service`-level changes over new abstraction layers unless the user explicitly wants broader architecture work.
 
 9. Choose the default execution mode.
-   Default to `Single Branch`. Upgrade to `Shared Plan` only when one plan can be split into disjoint worker-owned slices. Upgrade to `Parallel Plans` only when separate plan files can move independently with their own validation and temporary changelog copies.
+   Default to `Linear Plan`. Upgrade to `Single-Plan Fanout` only when one plan can be split into disjoint worker-owned slices. Upgrade to `Multi-Plan Fanout` only when separate plan files can move independently with their own validation and temporary changelog copies.
 
 10. Mark shared and private artifacts.
     If the work could fan out, state which files stay coordinator-owned, which files can be worker-owned, and which artifacts must stay private to a worker branch until integration.
@@ -230,7 +230,7 @@ Use this structure:
 - Fallback assumptions that the executor should not revisit
 
 ## Execution Mode Fit
-- Recommended default mode: `Single Branch`, `Shared Plan`, or `Parallel Plans`
+- Recommended default mode: `Linear Plan`, `Single-Plan Fanout`, or `Multi-Plan Fanout`
 - Why that mode fits best
 - Coordinator-owned or otherwise shared files if the work fans out
 - Candidate worker boundaries or plan splits if later delegation becomes necessary
@@ -248,7 +248,7 @@ Use this structure:
 ### Milestone 1: <name>
 - goal
 - owned files or packages
-- shared files that a `Shared Plan` worker must leave to the coordinator
+- shared files that a `Single-Plan Fanout` worker must leave to the coordinator
 - behavior to preserve
 - exact deliverables
 - validation checkpoint
@@ -334,9 +334,9 @@ A good plan would:
 - keep OpenAPI, REST Docs, and HTTP examples unchanged unless behavior really changes
 - list the exact classes to refactor
 - validate with the existing test suite and standard repository checks
-- stay small enough that `Single Branch` remains the obvious execution mode
+- stay small enough that `Linear Plan` remains the obvious execution mode
 
-### Example 3: Shared-plan refactor
+### Example 3: Single-plan fanout refactor
 
 Request: refactor one subsystem using a single approved plan and several workers.
 
@@ -353,7 +353,7 @@ A good plan would:
 Once a plan is approved, execution belongs in:
 
 - `ai/EXECUTION.md` for the common milestone execution loop
-- `ai/WORKFLOW.md` for `Single Branch`, `Shared Plan`, and `Parallel Plans` orchestration
+- `ai/WORKFLOW.md` for `Linear Plan`, `Single-Plan Fanout`, and `Multi-Plan Fanout` orchestration
 - `ai/RELEASES.md` for the release step after implementation is complete
 
 Keep `ai/PLAN.md` focused on plan quality and handoff completeness rather than repeating execution mechanics.

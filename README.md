@@ -55,7 +55,7 @@ Use these files when you want to work with AI in this repository or understand w
 - [ai/REVIEWS.md](ai/REVIEWS.md): code-review and security-review guidance
 - [ai/RELEASES.md](ai/RELEASES.md): release-preparation and release workflow guidance
 - [ai/TESTING.md](ai/TESTING.md): validation rules and change-sensitive checks
-- [ai/WORKFLOW.md](ai/WORKFLOW.md): single-branch, shared-plan, and parallel execution guidance
+- [ai/WORKFLOW.md](ai/WORKFLOW.md): compact workflow router for linear execution and on-demand fanout references
 - `ai/PLAN_*.md` when present: task-specific execution plans for active work
 - `ai/prompts/`, `ai/references/`, and `ai/templates/`: machine-readable prompt metadata, on-demand raw prompt bodies, detailed references, and templates
 - `ai/archive/`: archived plan files for completed or released work

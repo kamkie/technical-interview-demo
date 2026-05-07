@@ -131,19 +131,19 @@
       ]
     },
     {
-      "title": "Integrate Parallel Plan Output",
-      "slug": "integrate-parallel-plan-output",
+      "title": "Integrate Multi-Plan Fanout Output",
+      "slug": "integrate-multi-plan-fanout-output",
       "category": "Implementation Integration",
-      "path": "ai/prompts/bodies/integrate-parallel-plan-output.md",
+      "path": "ai/prompts/bodies/integrate-multi-plan-fanout-output.md",
       "placeholders": [
         "topic"
       ]
     },
     {
-      "title": "Integrate Shared Plan Output",
-      "slug": "integrate-shared-plan-output",
+      "title": "Integrate Single-Plan Fanout Output",
+      "slug": "integrate-single-plan-fanout-output",
       "category": "Implementation Integration",
-      "path": "ai/prompts/bodies/integrate-shared-plan-output.md",
+      "path": "ai/prompts/bodies/integrate-single-plan-fanout-output.md",
       "placeholders": [
         "plan_file"
       ]
@@ -284,10 +284,10 @@
       ]
     },
     {
-      "title": "Run Plan As Shared Plan",
-      "slug": "run-plan-as-shared-plan",
+      "title": "Run Plan As Single-Plan Fanout",
+      "slug": "run-plan-as-single-plan-fanout",
       "category": "Workflow Execution",
-      "path": "ai/prompts/bodies/run-plan-as-shared-plan.md",
+      "path": "ai/prompts/bodies/run-plan-as-single-plan-fanout.md",
       "placeholders": [
         "plan_file",
         "plan_stem_or_topic",
@@ -295,10 +295,10 @@
       ]
     },
     {
-      "title": "Run Plan On Single Branch",
-      "slug": "run-plan-on-single-branch",
+      "title": "Run Linear Plan",
+      "slug": "run-linear-plan",
       "category": "Workflow Execution",
-      "path": "ai/prompts/bodies/run-plan-on-single-branch.md",
+      "path": "ai/prompts/bodies/run-linear-plan.md",
       "placeholders": [
         "plan_file"
       ]
@@ -313,10 +313,10 @@
       ]
     },
     {
-      "title": "Run Plans In Parallel",
-      "slug": "run-plans-in-parallel",
+      "title": "Run Plans As Multi-Plan Fanout",
+      "slug": "run-plans-as-multi-plan-fanout",
       "category": "Workflow Execution",
-      "path": "ai/prompts/bodies/run-plans-in-parallel.md",
+      "path": "ai/prompts/bodies/run-plans-as-multi-plan-fanout.md",
       "placeholders": [
         "plan_file_1",
         "plan_file_2",

@@ -57,16 +57,16 @@ Use the owner guides instead:
   - `Implement Milestone`
 - Workflow execution
   - `Run Plan With Inferred Mode`
-  - `Run Plan On Single Branch`
-  - `Run Plan As Shared Plan`
-  - `Run Plans In Parallel`
+  - `Run Linear Plan`
+  - `Run Plan As Single-Plan Fanout`
+  - `Run Plans As Multi-Plan Fanout`
   - `Run All Ready Plans`
   - `Run All Unfinished Plans`
   - `Check Worker Status`
   - `Check Active Workers`
 - Implementation integration
-  - `Integrate Shared Plan Output`
-  - `Integrate Parallel Plan Output`
+  - `Integrate Single-Plan Fanout Output`
+  - `Integrate Multi-Plan Fanout Output`
   - `Integrate All Open PRs`
 - Implementation verification
   - `Run Required Validation`

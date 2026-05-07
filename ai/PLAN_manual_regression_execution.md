@@ -59,7 +59,7 @@
 - Keep manual regression focused on representative happy paths plus a few high-value access-control failures. Automated tests remain the authority for dense edge cases.
 
 ## Execution Mode Fit
-- Recommended mode: `Single Branch`.
+- Recommended mode: `Linear Plan`.
 - This is a documentation/planning and manual validation activity. Worker fanout would add coordination overhead and make the human result log harder to interpret.
 - Coordinator-owned files:
   - `ai/PLAN_manual_regression_execution.md`
@@ -95,7 +95,7 @@
 - goal: start the app in a predictable local state with OAuth and admin access
 - owned files or packages:
   - optional `ai/tmp/manual-regression/v2_0_0_rc5.md`
-- shared files that a `Shared Plan` worker must leave to the coordinator:
+- shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
   - this plan and roadmap
 - behavior to preserve:
   - no application or contract changes
@@ -148,7 +148,7 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
 - goal: verify anonymous public reads and trusted internal/devops surfaces
 - owned files or packages:
   - optional `ai/tmp/manual-regression/v2_0_0_rc5.md`
-- shared files that a `Shared Plan` worker must leave to the coordinator:
+- shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
   - this plan and roadmap
 - behavior to preserve:
   - read-only requests should not mutate persisted business data
@@ -183,7 +183,7 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
 - goal: verify normal authenticated user behavior and core business write workflows
 - owned files or packages:
   - optional `ai/tmp/manual-regression/v2_0_0_rc5.md`
-- shared files that a `Shared Plan` worker must leave to the coordinator:
+- shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
   - this plan and roadmap
 - behavior to preserve:
   - write tests use unique data and clean up created records when possible
@@ -224,7 +224,7 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
 - goal: verify admin-only operational and governance functionality
 - owned files or packages:
   - optional `ai/tmp/manual-regression/v2_0_0_rc5.md`
-- shared files that a `Shared Plan` worker must leave to the coordinator:
+- shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
   - this plan and roadmap
 - behavior to preserve:
   - do not remove the only admin grant
@@ -255,7 +255,7 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
 - owned files or packages:
   - optional `ai/tmp/manual-regression/v2_0_0_rc5.md`
   - this plan's `Validation Results` if the manual run is executed in this branch
-- shared files that a `Shared Plan` worker must leave to the coordinator:
+- shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
   - `CHANGELOG.md` unless release work is explicitly requested
 - behavior to preserve:
   - release history is not updated by this manual planning pass

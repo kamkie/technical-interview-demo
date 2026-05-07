@@ -33,7 +33,7 @@ Before writing code or docs:
 
 - confirm the plan is decision-complete enough to execute without inventing product behavior
 - confirm whether you are executing the whole plan or only one milestone
-- confirm which mode you are in: `Single Branch`, `Shared Plan`, or `Parallel Plans`
+- confirm which mode you are in: `Linear Plan`, `Single-Plan Fanout`, or `Multi-Plan Fanout`
 - if execution uncovered a real plan gap, revise the plan before coding instead of filling the gap ad hoc
 
 When local Gradle commands are needed, use the wrappers from `ai/ENVIRONMENT_QUICK_REF.md`.

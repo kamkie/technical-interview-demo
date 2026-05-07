@@ -83,7 +83,7 @@ Every concrete plan must answer:
 - what compatibility promises must be preserved
 - what edge cases, failure modes, migration, rollout, or benchmark risks matter
 - what requirement gaps still need input and whether they block planning
-- which execution mode fits: `Single Branch`, `Shared Plan`, or `Parallel Plans`
+- which execution mode fits: `Linear Plan`, `Single-Plan Fanout`, or `Multi-Plan Fanout`
 - which files stay coordinator-owned if worker fanout is realistic
 - which tests, docs, OpenAPI, HTTP examples, README, or AI guides must move
 - what testing strategy (unit, integration, contract, smoke) applies
@@ -105,9 +105,9 @@ Each milestone should name:
 - validation checkpoint
 - commit checkpoint
 
-Prefer `Single Branch`.
-Use `Shared Plan` only when one plan can be split into disjoint worker-owned slices.
-Use `Parallel Plans` only when separate plan files can move independently with their own validation and temporary changelog copies.
+Prefer `Linear Plan`.
+Use `Single-Plan Fanout` only when one plan can be split into disjoint worker-owned slices.
+Use `Multi-Plan Fanout` only when separate plan files can move independently with their own validation and temporary changelog copies.
 
 ## Repo-Specific Rules
 
