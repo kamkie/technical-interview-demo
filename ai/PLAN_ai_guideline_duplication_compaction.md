@@ -259,6 +259,13 @@
 - If implementation finds a separate high-risk contradiction, stop and record it before continuing with cosmetic compaction.
 
 ## Validation Results
+- 2026-05-07 milestone 3:
+  - Reduced artifact-routing duplication in `ai/PLAN.md` by pointing plans to `ai/DOCUMENTATION.md` and `ai/TESTING.md` instead of repeating public-contract artifact lists.
+  - Reduced release-boundary repetition in `ai/EXECUTION.md` and `ai/WORKFLOW.md` by leaving release preconditions and tagging rules to `ai/RELEASES.md` and repo-level invariants to `AGENTS.md`.
+  - Reduced wrapper-mechanics repetition in `ai/TESTING.md`; wrapper behavior now points to `ai/ENVIRONMENT_QUICK_REF.md` while validation proof remains in `ai/TESTING.md`.
+  - Targeted searches for repeated public-artifact lists, wrapper classifier details, and release-main gates found only `ai/ENVIRONMENT_QUICK_REF.md` owning wrapper behavior and intentionally retained human-facing contributor guidance in `CONTRIBUTING.md`.
+  - Manual documentation/process review passed against `ai/DOCUMENTATION.md` and `ai/REVIEWS.md`; no contradictory routing, validation, or release guidance was found in the touched AI owner guides.
+  - `git diff --check` passed.
 - 2026-05-07 milestone 2:
   - Rewrote `WORKING_WITH_AI.md` as a shorter human-facing navigation guide that keeps request examples, lifecycle usage advice, prompt-loader commands, and skill pointers while linking detailed prompt, workflow, validation, and release mechanics to their owners.
   - Targeted prompt-title and workflow-mode duplicate searches in `WORKING_WITH_AI.md` found no remaining full prompt catalog, fanout prompt list, integration prompt list, or release prompt list.

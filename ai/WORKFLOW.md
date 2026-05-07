@@ -81,7 +81,7 @@ This file only changes branch layout, artifact ownership, worker coordination, a
 - follow `ai/TESTING.md` for Gradle validation batching; do not run shared-output validation tasks concurrently
 - in fanout modes, keep the coordinator active until every worker reaches a terminal state; do not treat the overall run as complete while any worker is still implementing, validating, pushing, or opening a PR
 - prefer merging accepted branches or pull requests into the integration branch; use cherry-pick only when the user asks for it, when accepting less than the full branch or pull request, or when a normal merge is not viable, and record the reason
-- keep release work out of scope until the approved PR has been merged onto `main`
+- keep release sequencing out of workflow execution; use `ai/RELEASES.md` only after the implementation work is integrated and release is in scope
 
 ## Worker Log Schema
 
@@ -186,9 +186,9 @@ Do not split work when workers would overlap on:
 
 ## Worktree And Branch Rules
 
-- `main` remains the only integration and release target
+- `main` remains the integration target for completed work
 - worktree branches are temporary execution branches, not release branches
-- do not cut a release from a worktree branch, detached `HEAD`, or any change set that has not landed on `main`
+- release-target and tagging preconditions live in `AGENTS.md` and `ai/RELEASES.md`
 - when fanout begins, start from a committed or stashed state so the new branches or worktrees are comparable and reviewable
 - use unique worker branches for forked work; do not try to check out the same branch in multiple worktrees
 

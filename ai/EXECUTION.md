@@ -4,7 +4,7 @@
 
 Use this file when the user asks to implement `ai/PLAN_*.md`, complete a named milestone, or carry out planned work without releasing it yet.
 Use `ai/WORKFLOW.md` to choose the execution mode and branch/worktree topology.
-Use `ai/RELEASES.md` only after the approved implementation PR has been merged onto `main`.
+Use `ai/RELEASES.md` only for explicit release work after implementation is integrated; release preconditions live there.
 
 ## Execution Goal
 
@@ -15,7 +15,7 @@ Execution in this repository means:
 - keep specs, docs, validation, and mode-specific tracking artifacts aligned as work lands
 - complete work as milestone checkpoints that can each be reviewed and committed
 - finish local implementation and validation before any push or PR handoff
-- stop before release unless the user explicitly asked for release work
+- leave release sequencing to `ai/RELEASES.md` unless explicit release work is in scope after integration
 
 ## Before You Implement
 
