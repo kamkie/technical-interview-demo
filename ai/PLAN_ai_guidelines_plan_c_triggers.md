@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Implementation |
-| Status | In Progress |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Summary
 - Implement Option C from `ai/references/AI_GUIDELINES_REMIX_EVALUATION.md`: keep the current AI owner-file set and tighten section-level load triggers instead of splitting or bundling files.
@@ -212,6 +212,14 @@
   - Added explicit conditional triggers for `ai/ARCHITECTURE.md`, `ai/DESIGN.md`, and `ai/LEARNINGS.md`.
   - Ran `rg -n "ARCHITECTURE|DESIGN|LEARNINGS|routine|conditional|Lifecycle Owner Map|Conditional descriptive" AGENTS.md`; passed.
   - Ran `git diff --check -- AGENTS.md`; passed.
+- 2026-05-07 Milestone 4:
+  - Marked this plan `Phase=Integration` / `Status=Implemented`.
+  - Marked the roadmap row for this plan `Implemented`.
+  - Recorded the unreleased AI-guidance change in `CHANGELOG.md`.
+  - Ran `rg -n "^## |^### |Entry points|artifact-location|structural|Lifecycle Owner Map|Conditional descriptive" AGENTS.md ai/DOCUMENTATION.md ai/ARCHITECTURE.md`; passed.
+  - Ran a refined no-split-file check excluding the pre-existing `ai/ENVIRONMENT_QUICK_REF.md`; no new `_REF.md`, `_EDIT.md`, or `CONTEXT.md` files were found.
+  - Ran `git diff --check -- AGENTS.md ai/DOCUMENTATION.md ai/ARCHITECTURE.md ai/PLAN_ai_guidelines_plan_c_triggers.md ROADMAP.md CHANGELOG.md`; passed.
+  - Ran `./build.ps1 build`; passed via the lightweight-only shortcut with message `Only lightweight files changed; skipping Gradle build.`
 
 ## User Validation
 - Verify that `AGENTS.md` no longer implies descriptive guides are part of routine implementation or review loads.

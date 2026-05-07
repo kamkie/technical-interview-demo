@@ -22,6 +22,7 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 - Standardized per-milestone context requirements across the plan guide, plan template, execution loop, active plans, and AI-guideline evaluation report.
 - Moved the IntelliJ HTTP Client request collection from `src/test/resources/http/` to `src/manualTests/resources/http/` and updated active references in `AGENTS.md`, `CONTRIBUTING.md`, `SETUP.md`, `ai/DOCUMENTATION.md`, `ai/references/PLAN_DETAILED_GUIDE.md`, the Spotless target list, and `.gitignore`.
 - Implemented the post-compaction AI-guidance findings by tightening execution read triggers, moving change-type routing detail to `ai/DOCUMENTATION.md`, splitting release runbooks into on-demand references, slimming `ai/PLAN.md`, and clarifying phase-to-guide read sets.
+- Implemented Plan C from the AI guideline remix evaluation by adding section-level load triggers for documentation and architecture lookups while keeping descriptive owner guides conditional.
 - Reordered `AGENTS.md` into a clearer spec-truth, onboarding, change-routing, and execution-support flow, while compacting branch and worktree expectations and keeping detailed remote-handoff mechanics in `ai/WORKFLOW.md`.
 - Refined AI onboarding and execution guidance with targeted relevance scanning, context-quality checkpoints, per-milestone scope checks, and post-validation review triggers.
 - Removed implemented AI workflow guidance plan entries from `ROADMAP.md` so the roadmap lists only active or planned work.
