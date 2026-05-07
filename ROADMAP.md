@@ -1,89 +1,69 @@
-# Project TODO & Roadmap
+# Project Roadmap
 
 This file tracks active and upcoming work for the technical-interview-demo Spring Boot application.
-Keep this file focused on work that is still planned or in progress.
+Keep it focused on work that is still planned, selected, in progress, or intentionally deferred.
+Released history belongs in `CHANGELOG.md`.
 
 ## Current Project State
 
-| Status | Current |
+| Field | Current |
 | --- | --- |
 | Release Phase | Prerelease |
 | Breaking Change Policy | Disallowed |
 | Next Target Version | `v2.0.0` |
+| Stable Release Gate | Manual regression pass on the final release candidate, currently `v2.0.0-RC5` |
+| Immediate Next Action | Execute `ai/PLAN_manual_regression_execution.md`, or replan it if another RC is prepared first |
 
-## How To Use This File
+## Roadmap Rules
 
-- Keep only active or planned work here.
-- Use `[ ]` for planned work that is not yet selected.
-- Use `[x]` for work explicitly selected for current planning or development.
-- Do not use `[x]` to mean completed; remove an item once it is no longer active roadmap work.
-- Keep items short so they are easy to reorder and edit.
-- Remove completed items instead of turning this file into a historical archive.
-- Use `CHANGELOG.md` for released history, not `ROADMAP.md`.
+- Keep only active, planned, selected, or intentionally deferred work here.
+- Use `Status` values instead of checkbox semantics.
+- Remove work once it is released, intentionally dropped, or no longer active.
+- Keep detailed milestones, validation notes, and implementation history in `ai/PLAN_*.md`, not in this file.
 
-## Current Priorities
+| Status | Meaning |
+| --- | --- |
+| Selected | Approved for current planning or development |
+| Planned | Known upcoming work, not yet selected for execution |
+| In Progress | Execution or validation is underway |
+| Implemented | Execution is done but integration, release, or cleanup still keeps the item active |
+| Deferred | Intentionally postponed until the named trigger |
+| Candidate | Rough work that needs refinement before planning |
 
-- Use the manual regression pass as the gate from the final RC, currently `v2.0.0-RC5`, to stable `v2.0.0`; if another RC is cut for other plans, replan the manual regression pass to that next RC.
+## Active Release Track
 
-## Not Yet Refined
-
-Keep rough candidate tasks here for manual editing before they are promoted into real roadmap entries.
-
-- Use this section as an intake list for ideas that are not yet specific enough for `Current Priorities` or `Ordered Plan`.
-- Rewrite an item into a concrete roadmap entry before moving it below.
-- Remove an item from this section once it is promoted, merged into another entry, or intentionally dropped.
-
-### Rough Tasks
-
-Add new rough tasks below.
-
-## Ordered Plan
-
-### Moving to `2.0`
-
-Status: Planned
+### Moving To `2.0`
 
 Goal: use manual regression coverage as the RC-to-stable gate, then finish the stable `2.0` line after the final release candidate is accepted.
 
-#### Release Confidence
+| Order | Status | Workstream | Plan Or Artifact | Exit Criteria |
+| --- | --- | --- | --- | --- |
+| 1 | Selected | Manual regression gate for the final `2.0` release candidate | `ai/PLAN_manual_regression_execution.md` | Manual business-functionality regression is completed against the final RC; if another RC is cut first, the plan is replanned to that RC |
+| 2 | Implemented | AI-guidance duplication compaction | `ai/PLAN_ai_guideline_duplication_compaction.md` | Compacted guidance remains available for release cleanup; remove this row once the unreleased documentation work is released or otherwise closed |
+| 3 | Planned | Stable `v2.0.0` release | `CHANGELOG.md`, `ROADMAP.md`, release artifacts | Stable `v2.0.0` is released, changelog and roadmap are updated, and the completed `2.0` track is removed from this file |
 
-- [x] Execute `ai/PLAN_manual_regression_execution.md` as the manual business-functionality regression gate for the final `2.0` release candidate, currently `v2.0.0-RC5`; replan it to the next RC if another RC is prepared first. Plan lifecycle: `Planning` / `Ready`.
-- [ ] Release stable `v2.0.0`, update `CHANGELOG.md`, and remove the completed `2.0` track from `ROADMAP.md`.
+## Intake
 
-#### AI Workflow Guidance
+Use this section for rough candidate tasks that are not specific enough for the active release track or deferred backlog.
+Rewrite an item into a concrete roadmap row before moving it into active or deferred work.
 
-- [x] Execute `ai/PLAN_ai_guideline_duplication_compaction.md` to compact duplicated AI-guidance wording while preserving the on-demand owner-guide model. Plan lifecycle: `Integration` / `Implemented`.
+| Status | Candidate | Notes |
+| --- | --- | --- |
+| Candidate | Add new rough tasks here | Replace this placeholder when a real candidate appears |
 
-## Deferred
+## Deferred Work
 
-### Post-`2.0` Frontend AI Contract
+### Post-`2.0`
 
-Status: Deferred until stable `2.0` is released
-
-- [ ] Generate a frontend-contract AI instruction file in this repository using the `frontend-design` skill from Anthropic's `skills` repository as source guidance, then copy it into the frontend repository as source input for the AI agent there to generate that repo's AI instructions.
+| Status | Workstream | Trigger | Notes |
+| --- | --- | --- | --- |
+| Deferred | Frontend AI contract | Stable `v2.0.0` is released | Generate a frontend-contract AI instruction file in this repository using Anthropic's `frontend-design` skill as source guidance, then copy it into the frontend repository as source input for that repo's AI instructions |
 
 ### Optional Future Enhancements
 
-Status: Deferred until the core roadmap is complete
-
-#### Batch Processing
-
-- [ ] Add Spring Batch if bulk import/export becomes necessary
-- [ ] Add jobs for book import or audit cleanup
-
-#### Async Message Processing
-
-- [ ] Add RabbitMQ or Kafka if event-driven flows become necessary
-- [ ] Move notifications or audit fan-out to async processing
-
-#### Full-Text Search
-
-- [ ] Add Elasticsearch if search requirements outgrow the relational model
-- [ ] Index books and localization messages
-- [ ] Expose advanced search endpoints
-
-#### GraphQL API
-
-- [ ] Add Spring GraphQL only if there is a real client need
-- [ ] Define schema for books, users, and localization data
-- [ ] Implement queries and mutations
+| Status | Area | Candidate Work | Trigger |
+| --- | --- | --- | --- |
+| Deferred | Batch processing | Add Spring Batch and jobs for book import, export, or audit cleanup | Bulk import, export, or scheduled cleanup becomes a real requirement |
+| Deferred | Async message processing | Add RabbitMQ or Kafka and move suitable notification or audit fan-out flows async | Event-driven processing becomes necessary |
+| Deferred | Full-text search | Add Elasticsearch, index books and localization messages, and expose advanced search endpoints | Relational search no longer satisfies product needs |
+| Deferred | GraphQL API | Add Spring GraphQL with schemas for books, users, and localization data | A real client needs GraphQL queries or mutations |

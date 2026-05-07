@@ -68,7 +68,7 @@ Update all affected artifacts in the same change:
 
 - update `ROADMAP.md`
 - keep `ROADMAP.md` `## Current Project State` aligned with the active release phase, breaking-change policy, and next target version whenever roadmap sequencing or release targeting changes
-- treat `[x]` items in `ROADMAP.md` as selected for active planning or development, not as completed history
+- use `ROADMAP.md` status values for active-work state; if checkbox items appear, treat `[x]` as selected for active planning or development, not as completed history
 - remove completed items instead of archiving them elsewhere
 - do not recreate a second human history file; released history belongs in `CHANGELOG.md`
 
