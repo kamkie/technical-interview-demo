@@ -1,9 +1,9 @@
 # Design Guide
 
-`ai/DESIGN.md` captures intended product and contract direction for `technical-interview-demo`.
+`docs/DESIGN.md` captures intended product and contract direction for `technical-interview-demo`.
 
 Use this file when the task changes user-visible behavior, supported scope, security posture, operational defaults, or roadmap tradeoffs.
-Use `ai/ARCHITECTURE.md` for structural placement and `ai/DOCUMENTATION.md` for artifact routing. This file explains intent behind the contract; it is not the contract itself.
+Use `docs/ARCHITECTURE.md` for structural placement and `ai/DOCUMENTATION.md` for artifact routing. This file explains intent behind the contract; it is not the contract itself.
 
 ## Product Intent
 

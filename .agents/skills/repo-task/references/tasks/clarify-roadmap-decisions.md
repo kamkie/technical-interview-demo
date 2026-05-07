@@ -6,7 +6,7 @@ Placeholders: none
 
 Review `ROADMAP.md` for project-framing decisions that must be made before roadmap items can be planned or sequenced confidently.
 
-Read `AGENTS.md`, `README.md`, `ROADMAP.md`, `ai/PLANNING.md`, and `ai/DESIGN.md` first.
+Read `AGENTS.md`, `README.md`, `ROADMAP.md`, `ai/PLANNING.md`, and `docs/DESIGN.md` first.
 Use repo truth to resolve what you can before asking anything.
 Focus on decisions that shape product direction, client/auth posture, compatibility promises, rollout model, release posture, or other roadmap-defining project choices.
 Ask the user only the remaining high-value framing questions, with concrete options and a recommended option for each one.

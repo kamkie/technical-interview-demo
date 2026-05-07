@@ -1,6 +1,6 @@
 # Application Development Lifecycle Diagrams
 
-This document accompanies `ai/specs/APPLICATION_LIFECYCLE_SPEC.md` and visualizes its three layered models (Phases, Phase Activities, Loops) plus cross-cutting triggers.
+This document accompanies `docs/specs/application-lifecycle-spec.md` and visualizes its three layered models (Phases, Phase Activities, Loops) plus cross-cutting triggers.
 
 All diagrams use [Mermaid](https://mermaid.js.org/) syntax so they render natively on GitHub, IntelliJ Markdown preview, and most static-site renderers. The diagrams are descriptive, not normative; the spec text remains authoritative when text and diagrams disagree.
 
@@ -206,5 +206,5 @@ flowchart LR
 
 ## Cross-References
 
-- `ai/specs/APPLICATION_LIFECYCLE_SPEC.md` — the normative spec these diagrams accompany
-- `ai/specs/LIFECYCLE_PHASE_ACTIVITIES.md` — the repo-specific instantiation of the activity vocabulary
+- `docs/specs/application-lifecycle-spec.md` — the normative spec these diagrams accompany
+- `docs/specs/lifecycle-phase-activities.md` — the repo-specific instantiation of the activity vocabulary

@@ -28,7 +28,7 @@ Each activity lists its question, primary owner guide, and typical exit conditio
 
 ### Discovery and Framing
 
-- `Scan` — what artifacts and code already define this area? owner: `AGENTS.md` onboarding map, `ai/ARCHITECTURE.md`. Exit: relevant artifacts identified.
+- `Scan` — what artifacts and code already define this area? owner: `AGENTS.md` onboarding map, `docs/ARCHITECTURE.md`. Exit: relevant artifacts identified.
 - `Frame` — what is the actual change being requested? owner: `AGENTS.md` Task Interpretation, `ai/PLANNING.md`. Exit: scope and ambiguity surfaced.
 - `Clarify?` — does the user need to resolve a material ambiguity? owner: `ai/PLANNING.md` planning rules. Exit: ambiguity resolved or recorded as a fallback assumption.
 - `Capture` — does this surface a durable repo lesson? owner: `ai/LEARNINGS.md`. Conditional.
@@ -36,14 +36,14 @@ Each activity lists its question, primary owner guide, and typical exit conditio
 ### Requirements And Roadmap
 
 - `Intake` — capture the requested work. owner: `ROADMAP.md`. Exit: roadmap entry exists or the request is rejected as not ready.
-- `Refine` — is the request specific enough to plan? owner: `ROADMAP.md`, `ai/DESIGN.md`. Exit: an actionable description.
+- `Refine` — is the request specific enough to plan? owner: `ROADMAP.md`, `docs/DESIGN.md`. Exit: an actionable description.
 - `Prioritize` — does this work belong in the current phase? owner: `ROADMAP.md` `## Current Project State`.
 - `Sequence` — what active work does this depend on or block? owner: `ROADMAP.md`.
 - `Sync` — is the active-work tracking aligned with reality? owner: `ROADMAP.md`. Cross-cutting.
 
 ### Design, Spec, And Planning
 
-- `Design` — decide product or contract behavior. owner: `ai/DESIGN.md`, governing specs.
+- `Design` — decide product or contract behavior. owner: `docs/DESIGN.md`, governing specs.
 - `Spec` — record the decided behavior in the governing spec artifact. owner: `ai/DOCUMENTATION.md` for routing, individual spec files for content.
 - `Decompose` — split into commit-sized milestone checkpoints; pick a workflow shape. owner: `ai/PLANNING.md`, `ai/WORKFLOW.md`.
 - `Validate-Plan` — run the plan readiness checklist before approval. owner: `ai/PLANNING.md` `Final Check`.
@@ -119,9 +119,9 @@ The repository uses the `Phase` enum from `ai/PLANNING.md`. This table maps each
 
 | Phase | In-order phase activities | Primary owner guides |
 | --- | --- | --- |
-| Discovery | `Scan` → `Frame` → `Clarify?` → `Capture?` | `AGENTS.md`, `ai/ARCHITECTURE.md`, `ai/LEARNINGS.md` |
-| Roadmap intake | `Intake` → `Refine` → `Prioritize` → `Sequence` → `Sync` | `ROADMAP.md`, `ai/DESIGN.md` |
-| Planning | `Frame` → `Design` → `Spec` → `Decompose` → `Validate-Plan` → `Sync` → `Replan?` | `ai/PLANNING.md`, `ai/DESIGN.md`, `ai/templates/PLAN_TEMPLATE.md` |
+| Discovery | `Scan` → `Frame` → `Clarify?` → `Capture?` | `AGENTS.md`, `docs/ARCHITECTURE.md`, `ai/LEARNINGS.md` |
+| Roadmap intake | `Intake` → `Refine` → `Prioritize` → `Sequence` → `Sync` | `ROADMAP.md`, `docs/DESIGN.md` |
+| Planning | `Frame` → `Design` → `Spec` → `Decompose` → `Validate-Plan` → `Sync` → `Replan?` | `ai/PLANNING.md`, `docs/DESIGN.md`, `ai/templates/PLAN_TEMPLATE.md` |
 | Implementation | `Spec` → `Code` → `Docs` → `Run` → `Replan?` → `Self-Review` → `Code Review` → `Security Review?` → `Commit` → `Handoff` | `ai/EXECUTION.md`, `ai/DOCUMENTATION.md`, `ai/CODE_STYLE.md`, `ai/WORKFLOW.md` |
 | Testing | `Plan-Tests` → `Author-Tests` → `Run` → `Diagnose?` → `Fix?` → `Re-run` → `Record` | `ai/TESTING.md`, `ai/references/TROUBLESHOOTING.md` |
 | Review | `Self-Review` → `Code Review` → `Security Review?` → `Docs Review?` → `Decide` | `ai/REVIEWS.md` |

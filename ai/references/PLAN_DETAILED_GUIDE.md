@@ -80,7 +80,7 @@ At minimum, inspect:
 
 - `AGENTS.md`
 - `README.md`
-- the owning AI guide when the work changes durable repo guidance, usually `ai/ARCHITECTURE.md`, `ai/DESIGN.md`, or `ai/LEARNINGS.md`
+- the owning AI guide when the work changes durable repo guidance, usually `docs/ARCHITECTURE.md`, `docs/DESIGN.md`, or `ai/LEARNINGS.md`
 - `ROADMAP.md` if the work touches roadmap sequencing
 - relevant tests under `src/test/java/`
 - relevant docs under `src/docs/asciidoc/`
@@ -173,7 +173,7 @@ The plan must also state whether extra validation from `ai/TESTING.md` is requir
 
 If the work changes a cross-cutting architectural or product convention that should remain true after the task-specific plan is archived, the plan must name the owning AI guide update explicitly.
 Examples include persistence or serialization conventions, package ownership changes, and durable design or engineering lessons.
-Do not treat the temporary `ai/plans/PLAN_*.md` file as a substitute for updating `ai/ARCHITECTURE.md`, `ai/DESIGN.md`, or `ai/LEARNINGS.md` when one of those guides is the durable owner.
+Do not treat the temporary `ai/plans/PLAN_*.md` file as a substitute for updating `docs/ARCHITECTURE.md`, `docs/DESIGN.md`, or `ai/LEARNINGS.md` when one of those guides is the durable owner.
 
 ### Internal refactors
 

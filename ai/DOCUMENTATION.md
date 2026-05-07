@@ -31,9 +31,9 @@ Update the artifact that owns the truth being changed:
 - release sequencing and tagging: `ai/RELEASES.md`; detailed release checklist and artifact verification: `ai/references/RELEASE_CHECKLIST.md` and `ai/references/RELEASE_ARTIFACT_VERIFICATION.md`
 - reusable task starter skill: `.agents/skills/repo-task/`; `references/spec.md` owns the dispatcher, index, and task schema, and each task file owns its title, placeholders, and task text
 - repo-local reusable workflow wrappers: `ai/skills/`; Codex plugin marketplace configuration: `.agents/plugins/marketplace.json` when intentionally introducing a repo-scoped plugin
-- compact codebase map, structural guidance, and business feature ownership: `ai/ARCHITECTURE.md`; deeper references: `ai/references/`
+- compact codebase map, structural guidance, and business feature ownership: `docs/ARCHITECTURE.md`; deeper references: `ai/references/`
 - historical AI-analysis reports, evaluations, and comparisons: `ai/archive/reports/`
-- product and contract direction: `ai/DESIGN.md`
+- product and contract direction: `docs/DESIGN.md`
 - durable repo-wide lessons: `ai/LEARNINGS.md`
 - edit-shaping rules: `ai/CODE_STYLE.md`
 - validation scope and commands: `ai/TESTING.md`
@@ -62,7 +62,7 @@ Rules for maintaining the `ai/` documents:
 - when AI instruction files accumulate overlap, compact them by moving duplicated guidance into the single best owning file and updating cross-references in the same change
 - archive executed `ai/plans/PLAN_*.md` files under `ai/archive/` as part of the release cleanup once that work has been released
 - archive retired AI-guidance reports, evaluations, comparisons, and similar analysis artifacts under `ai/archive/reports/`
-- treat `ai/ARCHITECTURE.md`, `ai/DESIGN.md`, and `ai/LEARNINGS.md` as descriptive guidance, not executable spec authority
+- treat `docs/ARCHITECTURE.md`, `docs/DESIGN.md`, and `ai/LEARNINGS.md` as descriptive guidance, not executable spec authority
 - if an interrupted tool or IDE run leaves an `ai/` document incomplete, finish it or clearly mark the gaps instead of leaving misleading partial content
 - when moving or renaming AI documents, update references in `AGENTS.md` and other `ai/` files in the same change
 - when adding or moving repository knowledge files, apply `.agents/references/repository-knowledge-spec.md` first and update it when no existing owner fits

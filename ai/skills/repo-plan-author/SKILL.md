@@ -18,7 +18,7 @@ Read only what the request needs:
 - roadmap-driven work: `ROADMAP.md`
 - plan revision or readiness review: the target `ai/plans/PLAN_*.md`
 - behavior-sensitive work: the governing specs and contract docs named by the task
-- add `README.md`, `ai/DESIGN.md`, or `ai/ARCHITECTURE.md` only when product direction, public contract framing, or package ownership matters
+- add `README.md`, `docs/DESIGN.md`, or `docs/ARCHITECTURE.md` only when product direction, public contract framing, or package ownership matters
 
 ## Workflow
 

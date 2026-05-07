@@ -86,8 +86,8 @@ Task titles, skills, templates, and deep references stay on demand until directl
 
 Conditional descriptive guide triggers:
 
-- load `ai/ARCHITECTURE.md` only for structural code reading, architecture-sensitive changes, or package ownership questions
-- load `ai/DESIGN.md` only when user-visible behavior, supported scope, security posture, or roadmap tradeoffs are touched
+- load `docs/ARCHITECTURE.md` only for structural code reading, architecture-sensitive changes, or package ownership questions
+- load `docs/DESIGN.md` only when user-visible behavior, supported scope, security posture, or roadmap tradeoffs are touched
 - load `ai/LEARNINGS.md` only from the targeted relevance scan or a known recurring repo lesson
 
 ## AI Document Set
@@ -96,9 +96,9 @@ The `ai/` directory is the AI-facing working set for non-contract repository kno
 
 Use these files deliberately:
 
-- `ai/ARCHITECTURE.md`: compact descriptive repository snapshot, codebase map, package responsibilities, and structural guidance
+- `docs/ARCHITECTURE.md`: compact descriptive repository snapshot, codebase map, package responsibilities, and structural guidance
 - `ai/CODE_STYLE.md`: AI-facing code-style and change-shaping guidance for repo edits
-- `ai/DESIGN.md`: intended design direction, product tradeoffs, and open design decisions
+- `docs/DESIGN.md`: intended design direction, product tradeoffs, and open design decisions
 - `ai/DOCUMENTATION.md`: AI-facing documentation ownership and update guidance
 - `ai/ENVIRONMENT_QUICK_REF.md`: AI-facing command wrapper reference for local Gradle execution
 - `ai/PLAN_EXECUTION.md`: AI-facing workflow for executing a whole active plan across milestones
@@ -159,12 +159,12 @@ High-level rules:
 
 ## Architecture Constraints
 
-`ai/ARCHITECTURE.md` owns the compact descriptive repository snapshot, codebase map, current API shape, and structural guidance for this repository.
+`docs/ARCHITECTURE.md` owns the compact descriptive repository snapshot, codebase map, current API shape, and structural guidance for this repository.
 Use `ai/references/ARCHITECTURE_DETAILED_MAP.md` only when the compact map is not enough.
 
 When making architecture-sensitive changes:
 
-- follow `ai/ARCHITECTURE.md`
+- follow `docs/ARCHITECTURE.md`
 - preserve the demo nature of the project and prefer direct code over abstraction
 - keep `AGENTS.md` aligned only when repo-level architectural rules or AI-document ownership changed
 

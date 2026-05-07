@@ -41,11 +41,11 @@
 | Current path | Target path | Notes |
 | --- | --- | --- |
 | repository knowledge spec | `.agents/references/repository-knowledge-spec.md` | Promoted before moving other knowledge files; update it with repo-specific owners for `.agents/plans/` and `.agents/templates/`. |
-| `ai/ARCHITECTURE.md` | `docs/ARCHITECTURE.md` | Human-and-agent architecture summary. |
-| `ai/DESIGN.md` | `docs/DESIGN.md` | Human-and-agent product and contract direction. |
-| `ai/specs/APPLICATION_LIFECYCLE_SPEC.md` | `docs/specs/application-lifecycle-spec.md` | Durable project spec; normalize to lowercase hyphenated filename under `docs/specs/`. |
-| `ai/specs/APPLICATION_LIFECYCLE_DIAGRAMS.md` | `docs/specs/application-lifecycle-diagrams.md` | Durable project diagrams/spec support. |
-| `ai/specs/LIFECYCLE_PHASE_ACTIVITIES.md` | `docs/specs/lifecycle-phase-activities.md` | Durable lifecycle phase reference. |
+| project architecture summary | `docs/ARCHITECTURE.md` | Human-and-agent architecture summary. |
+| product and contract direction | `docs/DESIGN.md` | Human-and-agent product and contract direction. |
+| application lifecycle spec | `docs/specs/application-lifecycle-spec.md` | Durable project spec; normalized to lowercase hyphenated filename under `docs/specs/`. |
+| application lifecycle diagrams | `docs/specs/application-lifecycle-diagrams.md` | Durable project diagrams/spec support. |
+| lifecycle phase activities | `docs/specs/lifecycle-phase-activities.md` | Durable lifecycle phase reference. |
 | `ai/CODE_STYLE.md` | `.agents/references/code-style.md` | AI edit-shaping guidance. |
 | `ai/DOCUMENTATION.md` | `.agents/references/documentation.md` | AI artifact-routing owner. |
 | `ai/ENVIRONMENT_QUICK_REF.md` | `.agents/references/environment-quick-ref.md` | AI command-wrapper quick reference. |
@@ -135,7 +135,7 @@
   - `ROADMAP.md`
 - Moved knowledge files:
   - `ai/*.md`
-  - `ai/specs/**`
+  - `docs/specs/**`
   - `ai/references/**`
   - `ai/templates/**`
   - `ai/plans/**`
@@ -171,7 +171,7 @@
 
 ### Milestone 2: Move Human-And-Agent Project Knowledge
 - goal: move durable project knowledge into `docs/`
-- owned files or packages: `docs/**`, `ai/ARCHITECTURE.md`, `ai/DESIGN.md`, `ai/specs/**`, affected references
+- owned files or packages: `docs/**`, affected references
 - shared files reserved to the coordinator: `AGENTS.md`, repository knowledge spec
 - context required before execution: `AGENTS.md`, this plan, `.agents/references/repository-knowledge-spec.md`, current architecture/design/spec files
 - behavior to preserve: architecture, design, and lifecycle content stays current-state and does not become executable spec authority beyond its current role
@@ -283,6 +283,10 @@
 - Milestone 1:
   - `git diff --check` passed.
   - `rg -n "temp/repository-knowledge-spec[.]md" AGENTS.md ai .agents README.md SETUP.md CONTRIBUTING.md CHANGELOG.md ROADMAP.md WORKING_WITH_AI.md` returned no matches.
+- Milestone 2:
+  - Moved the architecture, design, and lifecycle spec files into `docs/`.
+  - `rg -n "ai/(ARCHITECTURE|DESIGN|specs/)|ai\\(ARCHITECTURE|DESIGN|specs\\)" AGENTS.md ai docs .agents README.md SETUP.md CONTRIBUTING.md ROADMAP.md WORKING_WITH_AI.md --glob "!ai/archive/**"` returned no matches.
+  - `git diff --check` passed.
 
 ## User Validation
 - Review `.agents/references/repository-knowledge-spec.md` for the final ownership rules.

@@ -5,8 +5,8 @@
 Use this scope ladder when deciding where a new insight belongs:
 
 - **Repo-wide and durable:** put it in `ai/LEARNINGS.md`.
-- **Current structure or ownership:** put it in `ai/ARCHITECTURE.md`.
-- **Product or contract direction:** put it in `ai/DESIGN.md`.
+- **Current structure or ownership:** put it in `docs/ARCHITECTURE.md`.
+- **Product or contract direction:** put it in `docs/DESIGN.md`.
 - **Public behavior or payload shape:** put it in the governing specs, published docs, HTTP examples, and approved OpenAPI.
 - **Symbol-local behavior:** put it in code near the symbol.
 - **Naming or API confusion:** prefer renaming or reshaping the API over adding more prose.

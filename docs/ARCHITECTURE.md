@@ -1,6 +1,6 @@
 # Architecture Guide
 
-`ai/ARCHITECTURE.md` is the compact AI-facing architecture map for `technical-interview-demo`.
+`docs/ARCHITECTURE.md` is the compact shared architecture map for `technical-interview-demo`.
 The detailed architecture reference lives on demand in `ai/references/ARCHITECTURE_DETAILED_MAP.md`.
 This file owns package shape, feature ownership, and structural guidance.
 

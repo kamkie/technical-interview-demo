@@ -41,9 +41,9 @@ Use these files when you want to work with AI in this repository or understand w
 
 - [WORKING_WITH_AI.md](WORKING_WITH_AI.md): human-facing guide for using AI across discovery, planning, implementation, verification, and release
 - [AGENTS.md](AGENTS.md): repository-local AI rules, spec priority, required contract updates, and definition of done
-- [ai/ARCHITECTURE.md](ai/ARCHITECTURE.md): compact codebase map, package boundaries, feature ownership, and current API shape
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): compact codebase map, package boundaries, feature ownership, and current API shape
 - [ai/CODE_STYLE.md](ai/CODE_STYLE.md): repo-local code style and change-shaping guidance
-- [ai/DESIGN.md](ai/DESIGN.md): product intent, tradeoffs, and non-goals
+- [docs/DESIGN.md](docs/DESIGN.md): product intent, tradeoffs, and non-goals
 - [ai/DOCUMENTATION.md](ai/DOCUMENTATION.md): documentation ownership and when to update which docs
 - [ai/ENVIRONMENT_QUICK_REF.md](ai/ENVIRONMENT_QUICK_REF.md): AI shortcut for local Gradle wrapper commands
 - [ai/PLAN_EXECUTION.md](ai/PLAN_EXECUTION.md): how AI should execute a whole active plan across milestones

@@ -35,8 +35,8 @@
 ## Current State
 - `README.md` defines the included app scope as public read APIs for books, categories, and localization data; authenticated account and session endpoints; admin-only audit, operator-surface, and user-management APIs; PostgreSQL runtime profiles; REST Docs; OpenAPI compatibility checks; and Gatling benchmark coverage.
 - `SETUP.md` documents the local flow with Docker-backed PostgreSQL, `./build.ps1 bootRun`, OAuth setup, first-admin bootstrap through `APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES`, CSRF handling through `GET /api/session`, and useful local endpoints.
-- `ai/ARCHITECTURE.md` lists the API families that need manual coverage: `/`, `/hello`, `/docs`, `/api/books`, `/api/categories`, `/api/localizations`, `/api/account`, `/api/admin/audit-logs`, `/api/admin/operator-surface`, `/api/admin/users`, actuator endpoints, and OpenAPI docs.
-- `ai/ARCHITECTURE.md` maps the functional owners: books, categories, localization, user accounts, and audit logs.
+- `docs/ARCHITECTURE.md` lists the API families that need manual coverage: `/`, `/hello`, `/docs`, `/api/books`, `/api/categories`, `/api/localizations`, `/api/account`, `/api/admin/audit-logs`, `/api/admin/operator-surface`, `/api/admin/users`, actuator endpoints, and OpenAPI docs.
+- `docs/ARCHITECTURE.md` maps the functional owners: books, categories, localization, user accounts, and audit logs.
 - `src/manualTests/resources/http/` contains IntelliJ HTTP Client request collections for the relevant endpoint families and is reused as the primary manual execution harness input.
 - Manual execution needs at least one authenticated admin session. A second non-admin user session is strongly recommended to verify representative `403` paths without mutating the only admin account.
 

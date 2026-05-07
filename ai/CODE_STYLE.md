@@ -3,7 +3,7 @@
 `ai/CODE_STYLE.md` owns how repository edits should be shaped.
 
 Use this file when the task changes source code, tests, Gradle/build logic, workflow YAML, or other repo-owned implementation files.
-Use `ai/ARCHITECTURE.md` for placement and ownership. This file is about edit shape and repo-local coding conventions, not behavior authority.
+Use `docs/ARCHITECTURE.md` for placement and ownership. This file is about edit shape and repo-local coding conventions, not behavior authority.
 
 ## Change-Shaping Goals
 
@@ -44,7 +44,7 @@ Keep changes:
 - prefer names that describe business meaning or technical role directly
 - keep new types close to the feature or technical slice that owns them
 - avoid generic `helper`, `util`, `base`, or `shared` layers unless a repeated problem clearly justifies them
-- if placement or boundary questions appear, resolve them through `ai/ARCHITECTURE.md` instead of encoding architecture rules here
+- if placement or boundary questions appear, resolve them through `docs/ARCHITECTURE.md` instead of encoding architecture rules here
 
 ## Cross-References
 
