@@ -32,7 +32,7 @@ Use this guide as a navigation aid, not as a second copy of the AI runbooks.
 | Project overview and implemented scope | `README.md` |
 | Local setup, tools, and troubleshooting | `SETUP.md` |
 | Repository-specific AI rules and lifecycle owner map | `AGENTS.md` |
-| Reusable prompt titles and prompt loader usage | `ai/PROMPTS.md` |
+| Reusable task titles and task loader usage | `ai/TASK_LIBRARY.md` |
 | Creating or revising execution plans | `ai/PLANNING.md` |
 | Executing a whole approved plan | `ai/PLAN_EXECUTION.md` |
 | Implementing an ad hoc task or one milestone | `ai/EXECUTION.md` |
@@ -41,15 +41,15 @@ Use this guide as a navigation aid, not as a second copy of the AI runbooks.
 | Documentation and artifact routing | `ai/DOCUMENTATION.md` |
 | Intentional release preparation after integration | `ai/RELEASES.md` |
 
-Detailed prompt bodies, templates, deep references, skill references, and archived plans are on-demand material.
-Load them only when the prompt, owner guide, or task calls for them.
+Detailed task bodies, templates, deep references, skill references, and archived plans are on-demand material.
+Load them only when the task title, owner guide, or active work calls for them.
 
 ## A Good Request To AI
 
 Good requests in this repository are concrete.
 At minimum, give AI:
 
-- the reusable prompt title, when using one
+- the reusable task title, when using one
 - the goal
 - the lifecycle phase
 - the target files or plan file
@@ -59,7 +59,7 @@ At minimum, give AI:
 This simple structure works well:
 
 ```text
-Prompt:
+Task:
 Goal:
 Phase:
 Target artifacts:
@@ -85,16 +85,16 @@ plan_file: ai/plans/active/PLAN_CANDIDATE_SEARCH.md
 change: candidate search filtering API
 ```
 
-To inspect prompt titles locally:
+To inspect task titles locally:
 
 ```powershell
-pwsh ./scripts/ai/get-prompt.ps1 -List
+pwsh ./scripts/ai/get-task.ps1 -List
 ```
 
-To load one raw prompt body:
+To load one raw task body:
 
 ```powershell
-pwsh ./scripts/ai/get-prompt.ps1 -Name "Create Plan"
+pwsh ./scripts/ai/get-task.ps1 -Name "Create Plan"
 ```
 
 If the title, placeholder, or target artifact is ambiguous, expect AI to ask a targeted clarification question before it proceeds.
@@ -140,7 +140,7 @@ Use `ai/RELEASES.md` for release preconditions, versioning, tagging, roadmap cle
 
 Repo-local skills live under `ai/skills/`.
 
-Use them when you want a narrower workflow wrapper than the general prompt library.
+Use them when you want a narrower workflow wrapper than the general task library.
 Treat them as helpers that point back to owner guides, not as higher-priority policy.
 Read a skill's `SKILL.md` only when that skill is invoked or clearly applies.
 
@@ -158,7 +158,7 @@ Current focused skills include:
 - prefer milestone-sized requests over long open-ended requests
 - ask for validation and contract impact before approving the result
 - keep release work separate from implementation work
-- use the prompt titles in `ai/PROMPTS.md` as reusable commands when you want a consistent repository-local workflow
+- use the task titles in `ai/TASK_LIBRARY.md` as reusable commands when you want a consistent repository-local workflow
 
 ## When To Slow Down AI
 

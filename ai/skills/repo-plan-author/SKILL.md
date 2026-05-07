@@ -38,7 +38,7 @@ Read only what the request needs:
 - do not force delegated one-plan work or coordinated multi-plan work when ownership boundaries are not explicit
 - route standing policy back to `ai/PLANNING.md`, `ai/WORKFLOW.md`, `ai/DOCUMENTATION.md`, and `ai/TESTING.md` instead of copying them into the plan
 
-## Useful Prompt Titles
+## Useful Task Titles
 
 - `Create Plan`
 - `Plan From Roadmap`
@@ -48,4 +48,4 @@ Read only what the request needs:
 - `Review Plan Readiness`
 - `Choose Execution Shape`
 
-Use prompt titles from `ai/PROMPTS.md` when the user wants a reusable starter.
+Use task titles from `ai/TASK_LIBRARY.md` when the user wants a reusable starter.

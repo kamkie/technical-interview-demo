@@ -1,12 +1,12 @@
 Evaluate and grade the current repository AI guideline set, then refresh `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md`.
 
-Use this as an evaluation and reporting task, not as an implementation prompt for the recommendations it discovers.
+Use this as an evaluation and reporting task, not as an implementation request for the recommendations it discovers.
 
 ## Scope
 
-- Read `AGENTS.md`, `ai/DOCUMENTATION.md`, `ai/PROMPTS.md`, and standing top-level owner guides under `ai/`.
+- Read `AGENTS.md`, `ai/DOCUMENTATION.md`, `ai/TASK_LIBRARY.md`, and standing top-level owner guides under `ai/`.
 - Exclude active `ai/plans/active/PLAN_*.md` files from the standing-guide baseline, but inspect active plans when they are relevant to lifecycle state, roadmap cleanup, or stale-reference checks.
-- Read `ai/prompts/index.json` and representative large prompt bodies when checking prompt-policy drift.
+- Read `ai/task-library/index.json` and representative large task bodies when checking task-policy drift.
 - Read on-demand references only when a standing guide points to them, when the previous evaluation report names them, or when a targeted search finds a likely stale reference.
 - Do not bulk-load `ai/archive/` unless the evaluation specifically needs historical context.
 
@@ -36,7 +36,7 @@ Use this as an evaluation and reporting task, not as an implementation prompt fo
 4. Check for stale or duplicated guidance:
    - retired file names or moved guide references
    - old workflow terminology outside intentional historical notes
-   - prompt bodies growing into standing policy dumps
+   - task bodies growing into standing policy dumps
    - repeated artifact-routing rules outside `ai/DOCUMENTATION.md`
    - release, workflow, validation, and planning mechanics duplicated across owners
 5. Compare the current state to the previous contents of `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md`.

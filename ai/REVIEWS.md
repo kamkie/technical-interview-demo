@@ -49,7 +49,7 @@ Check for:
 For documentation-heavy changes, review for:
 
 - contradictory instructions across README, CONTRIBUTING, AGENTS, and `ai/` docs
-- prompt files growing into policy dumps instead of linking to owning guidance
+- task bodies growing into policy dumps instead of linking to owning guidance
 - release, PR, and validation instructions drifting away from the checked-in automation
 
 ## Reporting Expectations

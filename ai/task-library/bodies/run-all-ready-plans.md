@@ -3,7 +3,7 @@ Select every ready plan file under `ai/plans/active/`, then execute the selected
 Treat ready plans as the non-archived `ai/plans/active/PLAN_*.md` files still present directly under `ai/` whose `Lifecycle` status is `Ready`.
 Restate exactly which ready plan files were selected and which non-archived plan files were skipped because they were not `Ready`.
 If there are no ready plans, stop and say so explicitly.
-If only one ready plan exists, stop and say that a single-plan execution prompt should be used instead.
+If only one ready plan exists, stop and say that a single-plan execution task should be used instead.
 Do not silently skip a `Ready` plan just to force a smaller parallel-safe set.
 If any ready plans are too coupled for safe parallel execution, stop and explain why instead of forcing a split.
 Then execute the selected plan files using coordinated multi-plan worktrees.

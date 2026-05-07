@@ -47,7 +47,7 @@ Use this section for plan-backed work that is ready but not selected as the imme
 
 | Status | Workstream | Plan Or Artifact | Notes |
 | --- | --- | --- | --- |
-| Planned | AI guidance execution and reusable task library restructure | `ai/plans/active/PLAN_ai_guidance_execution_prompt_library_restructure.md` | Supersedes the three workflow-selection variant option plans by archiving them, removing named mode vocabulary, moving active plans to a subdirectory, splitting whole-plan execution from ad hoc or milestone execution, and replacing prompt storage with `ai/task-library/` without a prompt-loader compatibility alias |
+| Planned | AI guidance execution and reusable task library restructure | `ai/plans/active/PLAN_ai_guidance_execution_prompt_library_restructure.md` | Supersedes the three workflow-selection variant option plans by archiving them, removing named mode vocabulary, moving active plans to a subdirectory, splitting whole-plan execution from ad hoc or milestone execution, and replacing the old reusable-starter storage with `ai/task-library/` without a legacy loader alias |
 
 ## Intake
 

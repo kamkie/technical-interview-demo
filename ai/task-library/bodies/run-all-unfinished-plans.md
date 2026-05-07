@@ -2,7 +2,7 @@ Select every unfinished plan file under `ai/plans/active/`, then execute the sel
 
 Treat unfinished plans as the non-archived `ai/plans/active/PLAN_*.md` files still present directly under `ai/`.
 If there are no unfinished plans, stop and say so explicitly.
-If only one unfinished plan exists, stop and say that a single-plan execution prompt should be used instead.
+If only one unfinished plan exists, stop and say that a single-plan execution task should be used instead.
 Do not silently skip an unfinished plan just to force a smaller parallel-safe set.
 If any unfinished plans are too coupled for safe parallel execution, stop and explain why instead of forcing a split.
 Then execute the selected plan files using coordinated multi-plan worktrees.

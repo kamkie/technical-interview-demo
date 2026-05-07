@@ -22,7 +22,7 @@
   - update `AGENTS.md`, `WORKING_WITH_AI.md`, `ROADMAP.md`, `ai/DOCUMENTATION.md`, templates, references, skills, and scripts for the new paths and owners
   - replace the prompt index/body layout with a reusable task library while keeping loader behavior deterministic and without any backward-compatible prompt-loader alias
   - evaluate a narrow repo-local skill for ad hoc task execution, but defer creation unless it can wrap the new `ai/EXECUTION.md` without copying policy and passes the acceptance criteria in this plan
-  - run the `Compact AI Docs` maintenance prompt after the structure lands
+  - run the `Compact AI Docs` maintenance task after the structure lands
   - regenerate `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md`
   - record the implemented AI-guidance change in `CHANGELOG.md`
 - Out of scope:
@@ -241,7 +241,7 @@
   - standing top-level AI guides changed by compaction
   - `CHANGELOG.md`
 - context required before execution:
-  - new `ai/EXECUTION.md`, `ai/DOCUMENTATION.md`, `ai/TESTING.md`, existing repo-local skill entrypoints, `ai/prompts/bodies/compact-ai-docs.md`, and this milestone
+  - new `ai/EXECUTION.md`, `ai/DOCUMENTATION.md`, `ai/TESTING.md`, existing repo-local skill entrypoints, `ai/task-library/bodies/compact-ai-docs.md`, and this milestone
 - behavior to preserve:
   - skills remain narrow wrappers and do not replace owner guides
   - compaction moves guidance to the single best owner rather than deleting unclear rules
@@ -249,11 +249,11 @@
   - ad hoc task skill is deferred by default unless post-split usage shows repeated entry friction that `ai/EXECUTION.md` and the task library do not already solve
   - if created, the skill stays under one screen, links to `ai/EXECUTION.md`, `ai/DOCUMENTATION.md`, and `ai/TESTING.md`, avoids copied policy, and has a narrower trigger than normal task execution
   - if deferred, the plan records the rationale and no placeholder skill directory is created
-  - `Compact AI Docs` prompt is loaded and applied to the changed standing AI documents
+  - `Compact AI Docs` task is loaded and applied to the changed standing AI documents
   - duplicated or stale guidance is removed or routed to the correct owner
   - `CHANGELOG.md` records the implemented AI-guidance restructure under `## [Unreleased]`
 - validation checkpoint:
-  - targeted duplicate/stale-reference searches from the compaction prompt pass or have recorded exceptions
+  - targeted duplicate/stale-reference searches from the compaction task pass or have recorded exceptions
   - `git diff --check`
 - commit checkpoint:
   - `docs: compact restructured ai guidance`
@@ -265,7 +265,7 @@
   - this plan
   - `ROADMAP.md`
 - context required before execution:
-  - `ai/prompts/bodies/evaluate-ai-guidelines.md` or its task-library successor, changed standing guides, task-library inventory, active-plan inventory, `ai/TESTING.md`, `ai/REVIEWS.md`, `ai/DOCUMENTATION.md`, and this milestone
+  - `ai/task-library/bodies/evaluate-ai-guidelines.md`, changed standing guides, task-library inventory, active-plan inventory, `ai/TESTING.md`, `ai/REVIEWS.md`, `ai/DOCUMENTATION.md`, and this milestone
 - behavior to preserve:
   - the evaluation report remains on demand
   - roadmap status changes only after implementation state actually changes
@@ -324,6 +324,19 @@
 - The highest-risk areas are path migration and the non-compatible task-library loader cutover; both have early inventory, nonexistence checks, and positive and negative smoke-check milestones.
 
 ## Validation Results
+- 2026-05-07 implementation Milestone 4 task-library migration:
+  - Renamed `ai/PROMPTS.md` to `ai/TASK_LIBRARY.md`.
+  - Moved `ai/prompts/` to `ai/task-library/` and rewrote `ai/task-library/index.json` to expose a `tasks` array with `ai/task-library/bodies/*.md` paths.
+  - Renamed `scripts/ai/get-prompt.ps1` to `scripts/ai/get-task.ps1` and rewrote loader messages, list output, exact/slug matching, ambiguity errors, and unknown-name errors around tasks instead of prompts.
+  - Updated `AGENTS.md`, `WORKING_WITH_AI.md`, `ai/DOCUMENTATION.md`, `ai/ENVIRONMENT_QUICK_REF.md`, `ai/REVIEWS.md`, `ai/TASK_LIBRARY.md`, task bodies, and the repo plan-author skill to use task-library ownership.
+  - `pwsh ./scripts/ai/get-task.ps1 -List` passed.
+  - `pwsh ./scripts/ai/get-task.ps1 -Name "Create Plan"` passed.
+  - `pwsh ./scripts/ai/get-task.ps1 -Name "definitely not a task"` failed deterministically with `No task matched`.
+  - `Test-Path -LiteralPath scripts/ai/get-prompt.ps1` returned `False`.
+  - `Test-Path -LiteralPath ai/prompts` returned `False`.
+  - `Test-Path -LiteralPath ai/PROMPTS.md` returned `False`.
+  - Targeted stale-reference searches found no active non-archived docs or scripts still invoking the old loader path, old task-storage path, or old prompt-owned library wording; the plan's historical/current-state notes and stale evaluation report remain known exceptions until later milestones.
+  - `git diff --check` passed, with Git warning that `ai/task-library/index.json` line endings will normalize on the next touch.
 - 2026-05-07 implementation Milestone 3 owner split:
   - Added `ai/PLAN_EXECUTION.md` as the whole active-plan execution owner.
   - Regenerated `ai/EXECUTION.md` around ad hoc task and individual milestone execution, including task-promotion and context-switching rules.

@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "prompts": [
+  "tasks": [
     {
       "title": "Check Active Workers",
       "slug": "check-active-workers",
       "category": "Workflow Execution",
-      "path": "ai/prompts/bodies/check-active-workers.md",
+      "path": "ai/task-library/bodies/check-active-workers.md",
       "placeholders": [
         "topic"
       ]
@@ -14,7 +14,7 @@
       "title": "Check Contract Impact",
       "slug": "check-contract-impact",
       "category": "Implementation Verification",
-      "path": "ai/prompts/bodies/check-contract-impact.md",
+      "path": "ai/task-library/bodies/check-contract-impact.md",
       "placeholders": [
         "change"
       ]
@@ -23,7 +23,7 @@
       "title": "Check Published Release",
       "slug": "check-published-release",
       "category": "Releasing",
-      "path": "ai/prompts/bodies/check-published-release.md",
+      "path": "ai/task-library/bodies/check-published-release.md",
       "placeholders": [
         "plan_file"
       ]
@@ -32,7 +32,7 @@
       "title": "Check Release Readiness",
       "slug": "check-release-readiness",
       "category": "Preparing Release",
-      "path": "ai/prompts/bodies/check-release-readiness.md",
+      "path": "ai/task-library/bodies/check-release-readiness.md",
       "placeholders": [
         "plan_file"
       ]
@@ -41,7 +41,7 @@
       "title": "Check Worker Status",
       "slug": "check-worker-status",
       "category": "Workflow Execution",
-      "path": "ai/prompts/bodies/check-worker-status.md",
+      "path": "ai/task-library/bodies/check-worker-status.md",
       "placeholders": [
         "topic",
         "worker name or agent id"
@@ -51,7 +51,7 @@
       "title": "Choose Execution Shape",
       "slug": "choose-execution-shape",
       "category": "Plan Verification",
-      "path": "ai/prompts/bodies/choose-execution-shape.md",
+      "path": "ai/task-library/bodies/choose-execution-shape.md",
       "placeholders": [
         "plan_file"
       ]
@@ -60,35 +60,35 @@
       "title": "Clarify Roadmap Decisions",
       "slug": "clarify-roadmap-decisions",
       "category": "Discovery And Roadmap",
-      "path": "ai/prompts/bodies/clarify-roadmap-decisions.md",
+      "path": "ai/task-library/bodies/clarify-roadmap-decisions.md",
       "placeholders": []
     },
     {
       "title": "Clean Worktrees And Stale Local Branches",
       "slug": "clean-worktrees-and-stale-local-branches",
-      "category": "Other Useful Lifecycle Prompts",
-      "path": "ai/prompts/bodies/clean-worktrees-and-stale-local-branches.md",
+      "category": "Other Useful Lifecycle Tasks",
+      "path": "ai/task-library/bodies/clean-worktrees-and-stale-local-branches.md",
       "placeholders": []
     },
     {
       "title": "Compact AI Docs",
       "slug": "compact-ai-docs",
       "category": "Maintenance",
-      "path": "ai/prompts/bodies/compact-ai-docs.md",
+      "path": "ai/task-library/bodies/compact-ai-docs.md",
       "placeholders": []
     },
     {
       "title": "Context Report",
       "slug": "context-report",
       "category": "Maintenance",
-      "path": "ai/prompts/bodies/context-report.md",
+      "path": "ai/task-library/bodies/context-report.md",
       "placeholders": []
     },
     {
       "title": "Create Plan",
       "slug": "create-plan",
       "category": "Planning",
-      "path": "ai/prompts/bodies/create-plan.md",
+      "path": "ai/task-library/bodies/create-plan.md",
       "placeholders": [
         "topic"
       ]
@@ -97,14 +97,14 @@
       "title": "Evaluate AI Guidelines",
       "slug": "evaluate-ai-guidelines",
       "category": "Maintenance",
-      "path": "ai/prompts/bodies/evaluate-ai-guidelines.md",
+      "path": "ai/task-library/bodies/evaluate-ai-guidelines.md",
       "placeholders": []
     },
     {
       "title": "Implement Milestone",
       "slug": "implement-milestone",
       "category": "Implementation",
-      "path": "ai/prompts/bodies/implement-milestone.md",
+      "path": "ai/task-library/bodies/implement-milestone.md",
       "placeholders": [
         "milestone_name",
         "plan_file"
@@ -114,7 +114,7 @@
       "title": "Implement Plan",
       "slug": "implement-plan",
       "category": "Implementation",
-      "path": "ai/prompts/bodies/implement-plan.md",
+      "path": "ai/task-library/bodies/implement-plan.md",
       "placeholders": [
         "plan_file"
       ]
@@ -122,8 +122,8 @@
     {
       "title": "Implement Then Release",
       "slug": "implement-then-release",
-      "category": "Other Useful Lifecycle Prompts",
-      "path": "ai/prompts/bodies/implement-then-release.md",
+      "category": "Other Useful Lifecycle Tasks",
+      "path": "ai/task-library/bodies/implement-then-release.md",
       "placeholders": [
         "plan_file"
       ]
@@ -132,7 +132,7 @@
       "title": "Integrate All Open PRs",
       "slug": "integrate-all-open-prs",
       "category": "Implementation Integration",
-      "path": "ai/prompts/bodies/integrate-all-open-prs.md",
+      "path": "ai/task-library/bodies/integrate-all-open-prs.md",
       "placeholders": [
         "topic"
       ]
@@ -141,7 +141,7 @@
       "title": "Integrate Multiple Plan Workstreams",
       "slug": "integrate-multiple-plan-workstreams",
       "category": "Implementation Integration",
-      "path": "ai/prompts/bodies/integrate-multiple-plan-workstreams.md",
+      "path": "ai/task-library/bodies/integrate-multiple-plan-workstreams.md",
       "placeholders": [
         "topic"
       ]
@@ -150,7 +150,7 @@
       "title": "Integrate Delegated Plan Work",
       "slug": "integrate-delegated-plan-work",
       "category": "Implementation Integration",
-      "path": "ai/prompts/bodies/integrate-delegated-plan-work.md",
+      "path": "ai/task-library/bodies/integrate-delegated-plan-work.md",
       "placeholders": [
         "plan_file"
       ]
@@ -159,14 +159,14 @@
       "title": "Pick Next Roadmap Workstream",
       "slug": "pick-next-roadmap-workstream",
       "category": "Discovery And Roadmap",
-      "path": "ai/prompts/bodies/pick-next-roadmap-workstream.md",
+      "path": "ai/task-library/bodies/pick-next-roadmap-workstream.md",
       "placeholders": []
     },
     {
       "title": "Plan Checked Roadmap Items",
       "slug": "plan-checked-roadmap-items",
       "category": "Planning",
-      "path": "ai/prompts/bodies/plan-checked-roadmap-items.md",
+      "path": "ai/task-library/bodies/plan-checked-roadmap-items.md",
       "placeholders": [
         "topic"
       ]
@@ -175,7 +175,7 @@
       "title": "Plan Dependency And Build Tool Upgrade",
       "slug": "plan-dependency-and-build-tool-upgrade",
       "category": "Planning",
-      "path": "ai/prompts/bodies/plan-dependency-and-build-tool-upgrade.md",
+      "path": "ai/task-library/bodies/plan-dependency-and-build-tool-upgrade.md",
       "placeholders": [
         "item 1",
         "item 2",
@@ -186,7 +186,7 @@
       "title": "Plan From Roadmap",
       "slug": "plan-from-roadmap",
       "category": "Planning",
-      "path": "ai/prompts/bodies/plan-from-roadmap.md",
+      "path": "ai/task-library/bodies/plan-from-roadmap.md",
       "placeholders": [
         "task 1",
         "task 2",
@@ -197,7 +197,7 @@
       "title": "Plan Repository-Wide Dependency And Toolchain Upgrade Sweep",
       "slug": "plan-repository-wide-dependency-and-toolchain-upgrade-sweep",
       "category": "Planning",
-      "path": "ai/prompts/bodies/plan-repository-wide-dependency-and-toolchain-upgrade-sweep.md",
+      "path": "ai/task-library/bodies/plan-repository-wide-dependency-and-toolchain-upgrade-sweep.md",
       "placeholders": [
         "topic"
       ]
@@ -206,49 +206,49 @@
       "title": "Prepare Release",
       "slug": "prepare-release",
       "category": "Preparing Release",
-      "path": "ai/prompts/bodies/prepare-release.md",
+      "path": "ai/task-library/bodies/prepare-release.md",
       "placeholders": []
     },
     {
       "title": "Prioritize Open Security And Quality Issues In Roadmap",
       "slug": "prioritize-open-security-and-quality-issues-in-roadmap",
       "category": "Discovery And Roadmap",
-      "path": "ai/prompts/bodies/prioritize-open-security-and-quality-issues-in-roadmap.md",
+      "path": "ai/task-library/bodies/prioritize-open-security-and-quality-issues-in-roadmap.md",
       "placeholders": []
     },
     {
       "title": "Push Prepared Release",
       "slug": "push-prepared-release",
       "category": "Releasing",
-      "path": "ai/prompts/bodies/push-prepared-release.md",
+      "path": "ai/task-library/bodies/push-prepared-release.md",
       "placeholders": []
     },
     {
       "title": "Refine Roadmap Intake",
       "slug": "refine-roadmap-intake",
       "category": "Discovery And Roadmap",
-      "path": "ai/prompts/bodies/refine-roadmap-intake.md",
+      "path": "ai/task-library/bodies/refine-roadmap-intake.md",
       "placeholders": []
     },
     {
       "title": "Release All Merged Work",
       "slug": "release-all-merged-work",
       "category": "Releasing",
-      "path": "ai/prompts/bodies/release-all-merged-work.md",
+      "path": "ai/task-library/bodies/release-all-merged-work.md",
       "placeholders": []
     },
     {
       "title": "Review Diff Risks",
       "slug": "review-diff-risks",
       "category": "Implementation Verification",
-      "path": "ai/prompts/bodies/review-diff-risks.md",
+      "path": "ai/task-library/bodies/review-diff-risks.md",
       "placeholders": []
     },
     {
       "title": "Review Plan Readiness",
       "slug": "review-plan-readiness",
       "category": "Plan Verification",
-      "path": "ai/prompts/bodies/review-plan-readiness.md",
+      "path": "ai/task-library/bodies/review-plan-readiness.md",
       "placeholders": [
         "plan_file"
       ]
@@ -257,7 +257,7 @@
       "title": "Review Roadmap Item",
       "slug": "review-roadmap-item",
       "category": "Discovery And Roadmap",
-      "path": "ai/prompts/bodies/review-roadmap-item.md",
+      "path": "ai/task-library/bodies/review-roadmap-item.md",
       "placeholders": [
         "task"
       ]
@@ -266,7 +266,7 @@
       "title": "Revise Plan",
       "slug": "revise-plan",
       "category": "Planning",
-      "path": "ai/prompts/bodies/revise-plan.md",
+      "path": "ai/task-library/bodies/revise-plan.md",
       "placeholders": [
         "constraint",
         "plan_file"
@@ -276,7 +276,7 @@
       "title": "Run All Ready Plans",
       "slug": "run-all-ready-plans",
       "category": "Workflow Execution",
-      "path": "ai/prompts/bodies/run-all-ready-plans.md",
+      "path": "ai/task-library/bodies/run-all-ready-plans.md",
       "placeholders": [
         "topic"
       ]
@@ -285,7 +285,7 @@
       "title": "Run All Unfinished Plans",
       "slug": "run-all-unfinished-plans",
       "category": "Workflow Execution",
-      "path": "ai/prompts/bodies/run-all-unfinished-plans.md",
+      "path": "ai/task-library/bodies/run-all-unfinished-plans.md",
       "placeholders": [
         "topic"
       ]
@@ -294,7 +294,7 @@
       "title": "Delegate Plan Slices",
       "slug": "delegate-plan-slices",
       "category": "Workflow Execution",
-      "path": "ai/prompts/bodies/delegate-plan-slices.md",
+      "path": "ai/task-library/bodies/delegate-plan-slices.md",
       "placeholders": [
         "plan_file",
         "plan_stem_or_topic",
@@ -305,7 +305,7 @@
       "title": "Execute Plan Locally",
       "slug": "execute-plan-locally",
       "category": "Workflow Execution",
-      "path": "ai/prompts/bodies/execute-plan-locally.md",
+      "path": "ai/task-library/bodies/execute-plan-locally.md",
       "placeholders": [
         "plan_file"
       ]
@@ -314,7 +314,7 @@
       "title": "Run Plan With Chosen Shape",
       "slug": "run-plan-with-chosen-shape",
       "category": "Workflow Execution",
-      "path": "ai/prompts/bodies/run-plan-with-chosen-shape.md",
+      "path": "ai/task-library/bodies/run-plan-with-chosen-shape.md",
       "placeholders": [
         "plan_file"
       ]
@@ -323,7 +323,7 @@
       "title": "Coordinate Multiple Plans",
       "slug": "coordinate-multiple-plans",
       "category": "Workflow Execution",
-      "path": "ai/prompts/bodies/coordinate-multiple-plans.md",
+      "path": "ai/task-library/bodies/coordinate-multiple-plans.md",
       "placeholders": [
         "plan_file_1",
         "plan_file_2",
@@ -335,7 +335,7 @@
       "title": "Run Required Validation",
       "slug": "run-required-validation",
       "category": "Implementation Verification",
-      "path": "ai/prompts/bodies/run-required-validation.md",
+      "path": "ai/task-library/bodies/run-required-validation.md",
       "placeholders": [
         "change",
         "plan_file"
@@ -345,7 +345,7 @@
       "title": "Split Checked Roadmap Items Into Plans",
       "slug": "split-checked-roadmap-items-into-plans",
       "category": "Planning",
-      "path": "ai/prompts/bodies/split-checked-roadmap-items-into-plans.md",
+      "path": "ai/task-library/bodies/split-checked-roadmap-items-into-plans.md",
       "placeholders": [
         "topic"
       ]
@@ -353,8 +353,8 @@
     {
       "title": "Summarize Lifecycle State",
       "slug": "summarize-lifecycle-state",
-      "category": "Other Useful Lifecycle Prompts",
-      "path": "ai/prompts/bodies/summarize-lifecycle-state.md",
+      "category": "Other Useful Lifecycle Tasks",
+      "path": "ai/task-library/bodies/summarize-lifecycle-state.md",
       "placeholders": [
         "plan_file"
       ]
@@ -362,8 +362,8 @@
     {
       "title": "Triage Validation Failure",
       "slug": "triage-validation-failure",
-      "category": "Other Useful Lifecycle Prompts",
-      "path": "ai/prompts/bodies/triage-validation-failure.md",
+      "category": "Other Useful Lifecycle Tasks",
+      "path": "ai/task-library/bodies/triage-validation-failure.md",
       "placeholders": [
         "change",
         "plan_file"
@@ -373,7 +373,7 @@
       "title": "Upgrade Dependencies And Build Tools",
       "slug": "upgrade-dependencies-and-build-tools",
       "category": "Maintenance",
-      "path": "ai/prompts/bodies/upgrade-dependencies-and-build-tools.md",
+      "path": "ai/task-library/bodies/upgrade-dependencies-and-build-tools.md",
       "placeholders": [
         "item 1",
         "item 2"
@@ -383,7 +383,7 @@
       "title": "Verify Milestone",
       "slug": "verify-milestone",
       "category": "Implementation Verification",
-      "path": "ai/prompts/bodies/verify-milestone.md",
+      "path": "ai/task-library/bodies/verify-milestone.md",
       "placeholders": [
         "milestone_name",
         "plan_file"

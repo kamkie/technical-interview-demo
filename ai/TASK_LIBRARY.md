@@ -1,14 +1,15 @@
-# Prompt Index For This Repository
+# Task Library For This Repository
 
-`ai/PROMPTS.md` is the lean command index for reusable prompt starters.
-The machine-readable prompt index lives in `ai/prompts/index.json`, and raw prompt bodies live under `ai/prompts/bodies/`.
-Use `pwsh ./scripts/ai/get-prompt.ps1 -Name "<prompt title>"` to load one prompt body.
+`ai/TASK_LIBRARY.md` is the lean command index for reusable task starters.
+The machine-readable task index lives in `ai/task-library/index.json`, and raw task bodies live under `ai/task-library/bodies/`.
+Use `pwsh ./scripts/ai/get-task.ps1 -Name "<task title>"` to load one task body.
 
 This file does not own standing policy.
 Use the owner guides instead:
 
 - planning: `ai/PLANNING.md`
-- implementation: `ai/EXECUTION.md`
+- whole-plan execution: `ai/PLAN_EXECUTION.md`
+- ad hoc task or one-milestone execution: `ai/EXECUTION.md`
 - workflow delegation and integration: `ai/WORKFLOW.md`
 - validation: `ai/TESTING.md`
 - artifact routing: `ai/DOCUMENTATION.md`
@@ -18,24 +19,24 @@ Use the owner guides instead:
 
 ## Title Shorthand Rules
 
-- the prompt names listed below are reusable commands
+- the task names listed below are reusable commands
 - use the exact title or an unmistakably close reference
 - include required placeholders such as `<topic>`, `<plan_file>`, `<milestone_name>`, `<task>`, or `<constraint>`
 - if the title or required context is ambiguous, ask a targeted clarification question
-- when a prompt name is invoked, load only the matching raw prompt body with `scripts/ai/get-prompt.ps1`
+- when a task name is invoked, load only the matching raw task body with `scripts/ai/get-task.ps1`
 
-## Prompt Context Selection
+## Task Context Selection
 
-Prompt titles do not own read sets.
-Use the lifecycle owner map in `AGENTS.md` to choose the minimum guide set, then load only the matching raw prompt body after a title is invoked.
+Task titles do not own read sets.
+Use the lifecycle owner map in `AGENTS.md` to choose the minimum guide set, then load only the matching raw task body after a title is invoked.
 
-Add prompt-specific files only when the prompt system itself is being used or changed:
+Add task-specific files only when the task library itself is being used or changed:
 
-- `ai/prompts/index.json` and `ai/prompts/bodies/` for prompt metadata or body maintenance
-- `scripts/ai/get-prompt.ps1` for prompt-loader behavior
-- `ai/templates/` or `ai/references/` only when the selected prompt or owner guide requires that on-demand material
+- `ai/task-library/index.json` and `ai/task-library/bodies/` for task metadata or body maintenance
+- `scripts/ai/get-task.ps1` for task-loader behavior
+- `ai/templates/` or `ai/references/` only when the selected task or owner guide requires that on-demand material
 
-## Prompt List
+## Task List
 
 - Discovery and roadmap
   - `Clarify Roadmap Decisions`

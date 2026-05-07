@@ -20,19 +20,19 @@ Categorize measurements into these broad buckets:
 - standing root and AI top-level files
 - active plan files, meaning top-level `ai/plans/active/PLAN_*.md`
 - archived plans
-- on-demand prompts
+- on-demand tasks
 - on-demand references
 - on-demand templates
 - repo skill entrypoints
 - repo skill references
 
-Exclude archived material under `ai/archive/` from default and generic prompt loads unless explicitly loaded by a prompt. Still include archive size in total AI instruction inventory reporting.
+Exclude archived material under `ai/archive/` from default and generic task loads unless explicitly loaded by a task. Still include archive size in total AI instruction inventory reporting.
 
 For each commit, measure these scenarios:
 
 1. Default load: `AGENTS.md` only.
-2. Short prompt: use this exact prompt text: `Briefly summarize the current project state from AGENTS.md`.
-3. Generic lifecycle prompts: measure these exact prompts for each phase:
+2. Short request: use this exact request text: `Briefly summarize the current project state from AGENTS.md`.
+3. Generic lifecycle tasks: measure these exact task starters for each phase:
    - discovery: `[DISCOVERY]: Research the current implementation of business logic and identify governing specs.`
    - planning: `[PLAN]: Create a detailed execution plan for a new business feature following AGENTS.md rules.`
    - implementation: `[EXECUTE]: Implement the core logic and tests for the feature defined in an active PLAN_*.md file.`
@@ -41,7 +41,7 @@ For each commit, measure these scenarios:
    - integration: `[INTEGRATE]: Merge the completed implementation, update the roadmap, and perform final validation.`
    - release: `[RELEASE]: Prepare the release artifacts and update the roadmap and changelog per RELEASES.md.`
 
-Use the relevant loader rules from the repo docs when deciding which AI files each prompt would load.
+Use the relevant loader rules from the repo docs when deciding which AI files each task would load.
 
 Create two markdown tables.
 
@@ -53,14 +53,14 @@ Columns:
 - commit date
 - subject
 - default load size
-- short prompt size
-- discovery prompt size
-- planning prompt size
-- implementation prompt size
-- testing prompt size
-- review prompt size
-- integration prompt size
-- release prompt size
+- short request size
+- discovery task size
+- planning task size
+- implementation task size
+- testing task size
+- review task size
+- integration task size
+- release task size
 - total AI instruction size
 
 Include both character and estimated-token values. Use compact formatting if the table would otherwise become too wide.
@@ -94,7 +94,7 @@ The statistics section should include:
 - **Improvement Trend**: Oldest-to-newest improvement for each scenario and total inventory, reported as absolute character delta, absolute estimated-token delta, and percentage change.
 - **Context Density**: Ratio of Standing Context (`AGENTS.md` + top-level `ai/*.md`) to Total AI Inventory.
 - **Growth Velocity**: Average character and token change per analyzed commit.
-- **Bloat Factor**: The percentage overhead added by active plans and on-demand prompts relative to the default load.
+- **Bloat Factor**: The percentage overhead added by active plans and on-demand tasks relative to the default load.
 
 When reporting smallest and biggest context use, include the commit hash, commit date, subject, character count, and estimated-token count.
 
@@ -106,7 +106,7 @@ The interpretation section should explain:
 - which files or directories are the largest contributors to context use
 - which commits caused the largest context increases or reductions
 - whether the repo is moving toward better on-demand loading or toward larger default context
-- any caveats in the measurement method, especially the approximate token estimate and inferred prompt-load behavior
+- any caveats in the measurement method, especially the approximate token estimate and inferred task-load behavior
 
 Add a recommendations section after the interpretation section.
 
@@ -114,7 +114,7 @@ The recommendations section should provide concrete next actions, such as:
 
 - files that should be compacted, split, archived, or moved to on-demand references
 - loader-policy changes that would reduce default context
-- prompt or AI-documentation changes that would make future context use easier to measure
+- task-library or AI-documentation changes that would make future context use easier to measure
 - thresholds or guardrails worth adding for future AI instruction size growth
 
 Do not run the build, tests, or validation checks.

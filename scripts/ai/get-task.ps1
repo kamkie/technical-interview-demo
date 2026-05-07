@@ -8,17 +8,17 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 $repoRoot = Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "../..")
-$indexPath = Join-Path $repoRoot "ai/prompts/index.json"
+$indexPath = Join-Path $repoRoot "ai/task-library/index.json"
 
 if (-not (Test-Path -LiteralPath $indexPath))
 {
-    throw "Prompt index '$indexPath' was not found."
+    throw "Task-library index '$indexPath' was not found."
 }
 
 $index = Get-Content -Raw -LiteralPath $indexPath | ConvertFrom-Json
-$prompts = @($index.prompts)
+$tasks = @($index.tasks)
 
-function Normalize-PromptName
+function Normalize-TaskName
 {
     param([Parameter(Mandatory = $true)][string]$Value)
 
@@ -31,8 +31,8 @@ if ($List)
     {
         [pscustomobject]@{
             schemaVersion = $index.schemaVersion
-            prompts = @(
-            $prompts |
+            tasks = @(
+            $tasks |
                 Sort-Object category, title |
                 ForEach-Object {
                     [pscustomobject]@{
@@ -48,7 +48,7 @@ if ($List)
     }
     else
     {
-        $rows = $prompts |
+        $rows = $tasks |
             Sort-Object category, title |
             Select-Object category, title, slug, path, @{ Name = "placeholders"; Expression = { ($_.placeholders -join ", ") } }
 
@@ -59,12 +59,12 @@ if ($List)
 
 if ( [string]::IsNullOrWhiteSpace($Name))
 {
-    throw "Provide -Name '<prompt title>' or use -List."
+    throw "Provide -Name '<task title>' or use -List."
 }
 
-$normalizedName = Normalize-PromptName -Value $Name
+$normalizedName = Normalize-TaskName -Value $Name
 $exactMatches = @(
-$prompts | Where-Object {
+$tasks | Where-Object {
     $_.title.Equals($Name, [System.StringComparison]::OrdinalIgnoreCase) -or
         $_.slug.Equals($normalizedName, [System.StringComparison]::OrdinalIgnoreCase)
 }
@@ -79,21 +79,21 @@ else
     $term = [Regex]::Escape($Name.Trim())
     $slugTerm = [Regex]::Escape($normalizedName)
     $candidates = @(
-    $prompts | Where-Object {
+    $tasks | Where-Object {
         $_.title -match $term -or $_.slug -match $slugTerm
     }
     )
 
     if ($candidates.Count -eq 0)
     {
-        $available = ($prompts | Sort-Object title | Select-Object -ExpandProperty title) -join "', '"
-        throw "No prompt matched '$Name'. Available prompts: '$available'."
+        $available = ($tasks | Sort-Object title | Select-Object -ExpandProperty title) -join "', '"
+        throw "No task matched '$Name'. Available tasks: '$available'."
     }
 
     if ($candidates.Count -gt 1)
     {
         $candidateTitles = ($candidates | Sort-Object title | Select-Object -ExpandProperty title) -join "', '"
-        throw "Prompt name '$Name' is ambiguous. Matches: '$candidateTitles'."
+        throw "Task name '$Name' is ambiguous. Matches: '$candidateTitles'."
     }
 
     $selected = $candidates[0]
@@ -102,7 +102,7 @@ else
 $bodyPath = Join-Path $repoRoot $selected.path
 if (-not (Test-Path -LiteralPath $bodyPath))
 {
-    throw "Prompt body '$bodyPath' for '$( $selected.title )' was not found."
+    throw "Task body '$bodyPath' for '$( $selected.title )' was not found."
 }
 
 $body = Get-Content -Raw -LiteralPath $bodyPath

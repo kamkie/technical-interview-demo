@@ -2,8 +2,8 @@ Compact the standing AI instruction files.
 
 ## Scope
 
-- Read `AGENTS.md`, `ai/DOCUMENTATION.md`, `ai/PROMPTS.md`, and standing top-level owner guides under `ai/` first; exclude active `ai/plans/active/PLAN_*.md` files unless they are relevant to the compaction target.
-- Do not bulk-load `ai/archive/`, `ai/references/`, `ai/prompts/bodies/`, `ai/templates/`, or `ai/skills/`; open them only when a cross-reference or overlapping policy points there.
+- Read `AGENTS.md`, `ai/DOCUMENTATION.md`, `ai/TASK_LIBRARY.md`, and standing top-level owner guides under `ai/` first; exclude active `ai/plans/active/PLAN_*.md` files unless they are relevant to the compaction target.
+- Do not bulk-load `ai/archive/`, `ai/references/`, `ai/task-library/bodies/`, `ai/templates/`, or `ai/skills/`; open them only when a cross-reference or overlapping policy points there.
 - Check `WORKING_WITH_AI.md` only when human-facing workflow wording overlaps with the AI guidance being changed.
 
 ## Compaction Targets
@@ -13,7 +13,7 @@ Look for any of the following, not only verbatim duplicates:
 - exact or near-duplicate sentences across standing files
 - overlapping or restated policies (same intent, different wording)
 - guidance placed outside its owning file (per `ai/DOCUMENTATION.md` ownership rules)
-- stale references (renamed/moved files, archived plans, retired prompts)
+- stale references (renamed/moved files, archived plans, retired tasks)
 - verbose phrasing, redundant lists, or examples that belong in `ai/references/` or `ai/templates/`
 - orphaned cross-references and broken anchors
 - stale workflow references and anchors after delegated-work mechanics move between `ai/WORKFLOW.md` and `ai/references/`, checked with targeted `rg` searches rather than bulk-loading all references
