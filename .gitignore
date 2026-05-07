@@ -50,7 +50,7 @@ out/
 /src/manualTests/resources/http/http-client.private.env.json
 /src/manualTests/resources/run.properties
 ### Manual-regression harness output ###
-/ai/tmp/
+/.agents/tmp/
 
 ### Local temp files ###
 /temp

@@ -290,6 +290,12 @@
   - `rg -n "(?:ai)/(plans|templates|references|skills|archive)|(?:ai)/(PLANNING|EXECUTION|PLAN_EXECUTION)[.]md" AGENTS.md README.md SETUP.md CONTRIBUTING.md ROADMAP.md WORKING_WITH_AI.md docs .agents --glob "!.agents/archive/**" --glob "!.agents/reports/**"` returned no matches.
   - `python "C:/Users/kamki/AppData/Local/JetBrains/IntelliJIdea2026.1/aia/codex/skills/.system/skill-creator/scripts/quick_validate.py" .agents/skills/repo-task` initially failed because `PyYAML` was unavailable; reran with `PyYAML` installed to a temporary directory outside the repository and `PYTHONPATH` set for that process, and it passed with `Skill is valid!`.
   - `git diff --check` passed.
+- Milestone 4:
+  - Updated root docs, AI owner-guide routing, `.gitignore`, changelog wording, repository knowledge spec, and lightweight classifier patterns for the `docs/` plus `.agents/` layout.
+  - `rg -n "(?:ai)/" AGENTS.md README.md SETUP.md CONTRIBUTING.md ROADMAP.md WORKING_WITH_AI.md docs .agents/references .agents/skills --glob "!.agents/references/LEARNINGS.md"` returned no matches.
+  - `rg -n "(?:ai)/" .github build.ps1 scripts .gitignore` returned no matches.
+  - `./scripts/classify-changed-files.ps1 -BaseRef HEAD~2 -HeadRef HEAD` reported `nonLightweightFiles = {}` and `skipHeavyValidation = True` for the moved docs/support-file migration diff.
+  - `git diff --check` passed.
 
 ## User Validation
 - Review `.agents/references/repository-knowledge-spec.md` for the final ownership rules.

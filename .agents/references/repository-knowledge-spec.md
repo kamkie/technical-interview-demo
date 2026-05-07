@@ -58,6 +58,7 @@ Recommended files and folders:
 - `.agents/templates/`: AI templates used to create new plans, reviews, tasks, or other agent artifacts.
 - `.agents/reports/`: generated AI analysis reports that may be useful later but are not standing policy.
 - `.agents/archive/`: historical AI artifacts that should not be loaded unless explicitly requested.
+- `.agents/tmp/`: local generated AI work logs and scratch output that should not be committed unless a specific workflow says otherwise.
 
 ### `.agents/references/`
 
@@ -91,6 +92,12 @@ Each skill owns its own `SKILL.md`, optional `agents/openai.yaml`, and optional 
 
 Skill references should describe how to run that skill, not broad repository policy. Broad policy belongs in `AGENTS.md`, `docs/`, or `.agents/references/`.
 
+### `.agents/tmp/`
+
+Use `.agents/tmp/` for local AI scratch output such as worker logs, manual-regression run logs, and temporary workflow evidence.
+
+Do not commit `.agents/tmp/` content by default. If temporary evidence must become durable, summarize it in the owning plan, report, or release artifact and keep the scratch file ignored.
+
 ## Placement Rules
 
 - If humans should read it, prefer `docs/`.
@@ -101,6 +108,7 @@ Skill references should describe how to run that skill, not broad repository pol
 - If it is a reusable task workflow, put it in `.agents/skills/`.
 - If it records generated analysis, put it in `.agents/reports/`.
 - If it is historical and not normally active, put it in `.agents/archive/`.
+- If it is local scratch output, put it in `.agents/tmp/` and keep it out of commits by default.
 - If it explains a durable architectural decision, put it in `docs/adr/` and summarize current state in `docs/ARCHITECTURE.md`.
 
 ## Naming Rules
