@@ -24,22 +24,16 @@ Use the owner guides instead:
 - if the title or required context is ambiguous, ask a targeted clarification question
 - when a prompt name is invoked, load only the matching raw prompt body with `scripts/ai/get-prompt.ps1`
 
-## Default Read Sets
+## Prompt Context Selection
 
-| Task | Minimum AI Guides | Add When Needed |
-| --- | --- | --- |
-| Discovery and roadmap | `AGENTS.md`, `ROADMAP.md`, `ai/PLAN.md` | `README.md`, `ai/DESIGN.md`, or `ai/ARCHITECTURE.md` only when product, contract, or structure framing matters |
-| Planning | `AGENTS.md`, `ai/PLAN.md`, governing specs, matching prompt body if a title is used | `ai/templates/PLAN_TEMPLATE.md` for a new plan skeleton; `ai/references/PLAN_DETAILED_GUIDE.md` for complex planning |
-| Implementation | `AGENTS.md`, `ai/EXECUTION.md`, target `ai/PLAN_*.md` when planned | Owner guides required by the changed files |
-| Workflow execution or integration | `AGENTS.md`, `ai/WORKFLOW.md`, `ai/EXECUTION.md`, relevant plans or worker logs | matching workflow reference only after a fanout mode is selected |
-| Verification | `AGENTS.md`, `ai/TESTING.md`, `ai/DOCUMENTATION.md`, `ai/REVIEWS.md` | `ai/references/GRADLE_TASK_GRAPH.md` for non-standard Gradle task selection; `ai/references/TROUBLESHOOTING.md` after validation failure |
-| Release | `AGENTS.md`, `ai/RELEASES.md`, executed plans, changed release artifacts | release checklist or artifact-verification references only when preparing or verifying a release |
+Prompt titles do not own read sets.
+Use the lifecycle owner map in `AGENTS.md` to choose the minimum guide set, then load only the matching raw prompt body after a title is invoked.
 
-Descriptive docs stay conditional:
+Add prompt-specific files only when the prompt system itself is being used or changed:
 
-- `ai/ARCHITECTURE.md`: package layout, module boundaries, cross-cutting infrastructure, or structural placement
-- `ai/DESIGN.md`: user-visible behavior, supported scope, security posture, operational defaults, or roadmap tradeoffs
-- `ai/LEARNINGS.md`: task-overlapping relevance-scan hits or a new durable learning trigger
+- `ai/prompts/index.json` and `ai/prompts/bodies/` for prompt metadata or body maintenance
+- `scripts/ai/get-prompt.ps1` for prompt-loader behavior
+- `ai/templates/` or `ai/references/` only when the selected prompt or owner guide requires that on-demand material
 
 ## Prompt List
 

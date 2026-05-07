@@ -19,7 +19,7 @@ Execution in this repository means:
 
 ## Before You Implement
 
-Start with the smallest useful read set:
+Start from the lifecycle owner map in `AGENTS.md` and keep the execution read set small:
 
 - `AGENTS.md`
 - `ai/EXECUTION.md`
@@ -27,16 +27,8 @@ Start with the smallest useful read set:
 - the user request or approved source artifact, when executing ad hoc documentation or maintenance work
 - the governing specs, docs, examples, and source files named by the task
 
-Load additional guides only when their trigger applies:
-
-- `ai/PLAN.md`: creating, materially revising, or readiness-reviewing a plan
-- `ai/WORKFLOW.md`: choosing an execution mode, using worktrees or branches, delegating, integrating worker output, pushing, or opening a PR
-- `ai/DOCUMENTATION.md`: moving docs, public contract artifacts, roadmap entries, changelog text, AI guidance, or other repository documentation
-- `ai/TESTING.md`: choosing validation scope or recording validation results
-- `ai/REVIEWS.md`: final diff review, user-requested review, or security-sensitive change
-- `ai/CODE_STYLE.md`: changing source code, tests, Gradle/build logic, workflow YAML, or other implementation files
-- `ai/ENVIRONMENT_QUICK_REF.md`: writing or running local Gradle wrapper commands
-- `ai/ARCHITECTURE.md`, `ai/DESIGN.md`, or `ai/LEARNINGS.md`: only when their descriptive triggers match the task or a targeted relevance scan finds a task-overlapping hit
+Load additional owner guides only when the selected mode, changed files, validation scope, review lens, or documentation routing requires them.
+`ai/DOCUMENTATION.md` owns artifact routing, `ai/TESTING.md` owns validation scope, and `ai/WORKFLOW.md` owns branch, worktree, delegation, and integration mechanics.
 
 Before writing code or docs:
 
@@ -45,8 +37,7 @@ Before writing code or docs:
 - confirm which mode you are in: `Linear Plan`, `Single-Plan Fanout`, or `Multi-Plan Fanout`
 - if execution uncovered a real plan gap, revise the plan before coding instead of filling the gap ad hoc
 
-When local Gradle commands are needed, use the wrappers from `ai/ENVIRONMENT_QUICK_REF.md`.
-Do not add manual `JAVA_HOME` or dotenv setup steps to plans, prompts, or worker logs unless a wrapper command fails and troubleshooting is now in scope.
+When local Gradle commands are needed, use `ai/ENVIRONMENT_QUICK_REF.md` for wrapper syntax and behavior.
 
 ## Common Milestone Loop
 

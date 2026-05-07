@@ -64,9 +64,24 @@ If you are a new agent entering this repository, follow these steps to ground yo
 2. **Use `README.md` only when needed** for the human-facing project overview or supported contract summary.
 3. **Open `SETUP.md` only when needed** for setup, local tooling, Docker, or troubleshooting detail.
 4. **Identify the current task's lifecycle phase** (Discovery, Planning, Implementation, Testing, Review, Integration, Release).
-5. **Load the relevant owner guide** from the `ai/` directory (e.g., `ai/PLAN.md` for planning).
+5. **Load the relevant owner guide** from the lifecycle owner map below.
 6. **Locate or create a task plan** (`ai/PLAN_*.md`) when the current workflow requires planned execution.
 7. **Run a targeted relevance scan** using task terms against `ai/LEARNINGS.md` and active `ai/PLAN_*.md` files, then open only matches that overlap the current task.
+
+## Lifecycle Owner Map
+
+Start with `AGENTS.md`, then add only the owner guides that match the current lifecycle phase and changed artifacts.
+Prompt titles, skills, templates, and deep references stay on demand until directly invoked or required by the selected workflow.
+
+| Lifecycle phase | Primary owner guides |
+| --- | --- |
+| Discovery or roadmap intake | `ROADMAP.md` and `ai/PLAN.md`; add `README.md`, `ai/DESIGN.md`, or `ai/ARCHITECTURE.md` only when product, contract, or structure framing matters |
+| Planning | `ai/PLAN.md`, the relevant specs or source artifacts, and `ROADMAP.md` for active-work tracking |
+| Implementation | `ai/EXECUTION.md`, the target `ai/PLAN_*.md` when planned, and the owner guides for files being changed |
+| Workflow, delegation, or integration | `ai/WORKFLOW.md` and `ai/EXECUTION.md`; load fanout references only after a fanout mode is selected |
+| Testing or review | `ai/TESTING.md`, `ai/REVIEWS.md`, and `ai/DOCUMENTATION.md` when artifact routing or contract impact is part of the check |
+| Release | `ai/RELEASES.md` only after the implementation state is integrated and release work is explicitly in scope |
+| Prompt, skill, or template maintenance | `ai/PROMPTS.md`, the relevant `ai/skills/` guide, or the specific template or prompt metadata being changed |
 
 ## AI Document Set
 
@@ -164,7 +179,7 @@ Use `SETUP.md` for setup walkthroughs and troubleshooting.
 Use `ai/ENVIRONMENT_QUICK_REF.md` for the AI-facing Gradle wrapper reference.
 
 Prefer `./build.ps1` through PowerShell for local and CI Gradle commands.
-It auto-loads a root `.env` file when present, so plans and prompts should not add upfront `JAVA_HOME` discovery or dotenv boilerplate.
+Use `ai/ENVIRONMENT_QUICK_REF.md` for wrapper behavior and avoid adding setup boilerplate to plans or prompts unless wrapper troubleshooting is in scope.
 
 ## Branch And Worktree Expectations
 
@@ -201,4 +216,4 @@ A change is complete when:
 - implementation and specs agree
 - public contract artifacts are updated when behavior changed
 - if the work was done in a git worktree or non-`main` branch, the finished branch has been pushed and a pull request is open or already merged onto `main`
-- the required validation from `ai/TESTING.md` passes, normally `./build.ps1 build`; the wrapper handles the lightweight-only uncommitted-change shortcut, and `./build.ps1 -FullBuild build` forces the full Gradle build when required
+- the required validation from `ai/TESTING.md` passes, normally `./build.ps1 build`

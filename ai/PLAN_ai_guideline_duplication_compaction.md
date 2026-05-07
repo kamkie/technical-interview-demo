@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Implementation |
+| Status | In Progress |
 
 ## Summary
 - Compact repeated AI-guidance policy found across `AGENTS.md`, `WORKING_WITH_AI.md`, and the top-level `ai/*.md` owner guides.
@@ -259,6 +259,11 @@
 - If implementation finds a separate high-risk contradiction, stop and record it before continuing with cosmetic compaction.
 
 ## Validation Results
+- 2026-05-07 milestone 1:
+  - Added a compact lifecycle owner map to `AGENTS.md` and reduced repeated read-set guidance in `ai/PROMPTS.md` and `ai/EXECUTION.md` to owner links and narrow triggers.
+  - Targeted read-set search found the expected remaining `WORKING_WITH_AI.md` duplication for milestone 2 and no stale `Default Read Sets` table in `ai/PROMPTS.md`.
+  - Manual owner-alignment review passed against `ai/DOCUMENTATION.md`; prompt policy remains in `ai/PROMPTS.md`, execution policy remains in `ai/EXECUTION.md`, and artifact routing remains in `ai/DOCUMENTATION.md`.
+  - `git diff --check` passed.
 - 2026-05-07 plan creation:
   - Created this plan and added the matching selected active-work entry to `ROADMAP.md`.
   - Manual plan-shape review passed against `ai/PLAN.md`.
