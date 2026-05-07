@@ -324,6 +324,14 @@
 - The highest-risk areas are path migration and the non-compatible task-library loader cutover; both have early inventory, nonexistence checks, and positive and negative smoke-check milestones.
 
 ## Validation Results
+- 2026-05-07 implementation Milestone 1 inventory:
+  - Loaded the active execution plan, `AGENTS.md`, `ROADMAP.md`, `ai/DOCUMENTATION.md`, `ai/PLAN.md`, `ai/EXECUTION.md`, `ai/WORKFLOW.md`, `ai/PROMPTS.md`, `ai/TESTING.md`, `ai/REVIEWS.md`, `ai/templates/PLAN_TEMPLATE.md`, `scripts/ai/get-prompt.ps1`, and the untracked workflow-selection variant comparison.
+  - Completed the owner map for the target structure: `ai/PLANNING.md` owns plan creation and plan shape; `ai/PLAN_EXECUTION.md` owns whole active-plan execution; `ai/EXECUTION.md` owns ad hoc tasks and individual milestone execution; `ai/WORKFLOW.md` owns branch, worktree, delegation, worker-log, and integration coordination; `ai/TASK_LIBRARY.md` and `ai/task-library/` own reusable task starters; `ai/TESTING.md`, `ai/REVIEWS.md`, and `ai/DOCUMENTATION.md` keep validation, review, and artifact routing ownership.
+  - Inventoried current top-level plan files: the restructure plan and manual regression plan remain active, while the three workflow-selection candidate plans are superseded and should be archived during path migration.
+  - Inventoried the current reusable starter set: 44 entries in `ai/prompts/index.json` with bodies under `ai/prompts/bodies/`; target migration is `ai/task-library/index.json`, `ai/task-library/bodies/*.md`, and `scripts/ai/get-task.ps1`.
+  - Inventoried stale wording to remove from live standing guides, task starters, templates, skills, and active plans: the three named plan-mode labels, mode-fit section wording, prompt-owned library wording, top-level active-plan glob wording, and old prompt-loader path references.
+  - Ran targeted reference searches for active-plan path assumptions, planning-guide references, prompt-loader references, and the stale mode vocabulary across live files, excluding archived history by default.
+  - Ran `git diff --check`; passed before this validation entry was added.
 - 2026-05-07 plan creation:
   - Loaded `AGENTS.md`, `ai/DOCUMENTATION.md`, `ai/PLAN.md`, `ai/EXECUTION.md`, `ai/WORKFLOW.md`, `ai/PROMPTS.md`, `ai/TESTING.md`, `ai/REVIEWS.md`, `ROADMAP.md`, `ai/templates/PLAN_TEMPLATE.md`, `ai/prompts/bodies/compact-ai-docs.md`, `ai/prompts/bodies/evaluate-ai-guidelines.md`, `ai/prompts/bodies/create-plan.md`, `ai/prompts/bodies/review-plan-readiness.md`, the active workflow-selection option plans, and the current post-compaction evaluation report.
   - Read the repo-local `repo-plan-author` skill and applied it to this plan creation task.
