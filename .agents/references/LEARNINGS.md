@@ -51,6 +51,8 @@ Do not accumulate per-incident history, one-off mistakes, or temporary workaroun
 ## Operational Lessons
 
 - **IntelliJ HTTP Client formatting requires an empty line.** Always include an empty line between the request line (or the last header) and a response handler script block (`> {%`). Without it, the client may fail to parse the script or the request correctly.
+- **`ijhttp` CLI is preferred for CI/CD and automation.** It supports running directories (alphabetical order), automatic environment file discovery, and XML report generation (`--report`).
+- **Use Docker for zero-install HTTP testing.** The `jetbrains/intellij-http-client` image allows running `.http` suites in any environment with Docker.
 - **PostgreSQL behavior is the truth.**
 - **Cached reads need an eviction story.**
 - **State-changing operations need auditable evidence.**

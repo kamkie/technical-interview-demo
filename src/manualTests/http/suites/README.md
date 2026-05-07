@@ -42,13 +42,31 @@ Each script builds a markdown report.
 
 ### Option C: Command Line (ijhttp)
 
-If you have the `ijhttp` CLI installed:
+If you have the `ijhttp` CLI installed, you can run a single suite or all of them at once. The tool automatically discovers environment files in the same directory.
 
+**Run a single suite:**
 ```powershell
-ijhttp --env dev src/manualTests/http/suites/suite-01-public-overview-and-docs.http
+ijhttp -e dev src/manualTests/http/suites/suite-01-public-overview-and-docs.http
 ```
 
-The report will be automatically saved to `src/manualTests/http/reports/` as defined in the script.
+**Run all suites in order:**
+```powershell
+ijhttp -e dev src/manualTests/http/suites/
+```
+
+**Generate XML report (for CI):**
+```powershell
+ijhttp -e dev --report src/manualTests/http/suites/
+```
+The XML report will be saved to `reports/report.xml` relative to the execution directory.
+
+### Option D: Docker (No Installation)
+
+If you don't have `ijhttp` installed, use the official Docker image:
+
+```powershell
+docker run --rm -it -v ${PWD}:/workdir jetbrains/intellij-http-client -e dev src/manualTests/http/suites/
+```
 
 ## Suite Dependencies
 

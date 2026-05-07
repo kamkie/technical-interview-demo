@@ -63,6 +63,7 @@ Use `.agents/references/gradle-task-graph.md` when command choice depends on Gra
 
 Use `SETUP.md` for environment prerequisites such as Java, Docker, and formatter configuration.
 Use `.agents/references/environment-quick-ref.md` for wrapper behavior.
+Use `src/manualTests/http/suites/README.md` for manual regression suites and `ijhttp` CLI usage.
 
 Record the wrapper result exactly.
 Use `.agents/references/environment-quick-ref.md` for wrapper behavior, including the lightweight-only shortcut and `-FullBuild`.
