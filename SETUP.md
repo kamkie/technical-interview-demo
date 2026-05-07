@@ -665,10 +665,10 @@ Create a GitHub OAuth App with:
 Then export credentials and start the app:
 
 ```powershell
-$env:GITHUB_CLIENT_ID='your-github-client-id'
-$env:GITHUB_CLIENT_SECRET='your-github-client-secret'
-$env:APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES='github:your-login'
-$env:SPRING_PROFILES_ACTIVE='local,oauth'
+$env:GITHUB_CLIENT_ID = 'your-github-client-id'
+$env:GITHUB_CLIENT_SECRET = 'your-github-client-secret'
+$env:APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES = 'github:your-login'
+$env:SPRING_PROFILES_ACTIVE = 'local,oauth'
 
 docker-compose up -d
 ./build.ps1 bootRun
@@ -683,11 +683,11 @@ Start the login flow at:
 Provide OIDC issuer metadata plus credentials, then start the app:
 
 ```powershell
-$env:OIDC_CLIENT_ID='your-oidc-client-id'
-$env:OIDC_CLIENT_SECRET='your-oidc-client-secret'
-$env:OIDC_ISSUER_URI='https://your-issuer.example.com/realms/demo'
-$env:APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES='oidc:your-login'
-$env:SPRING_PROFILES_ACTIVE='local,oauth'
+$env:OIDC_CLIENT_ID = 'your-oidc-client-id'
+$env:OIDC_CLIENT_SECRET = 'your-oidc-client-secret'
+$env:OIDC_ISSUER_URI = 'https://your-issuer.example.com/realms/demo'
+$env:APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES = 'oidc:your-login'
+$env:SPRING_PROFILES_ACTIVE = 'local,oauth'
 
 docker-compose up -d
 ./build.ps1 bootRun
@@ -733,8 +733,8 @@ Symptom:
 Fix:
 
 ```powershell
-$env:JAVA_HOME='<path-to-jdk-25>'
-$env:Path="$env:JAVA_HOME\bin;$env:Path"
+$env:JAVA_HOME = '<path-to-jdk-25>'
+$env:Path = "$env:JAVA_HOME\bin;$env:Path"
 java -version
 ```
 
