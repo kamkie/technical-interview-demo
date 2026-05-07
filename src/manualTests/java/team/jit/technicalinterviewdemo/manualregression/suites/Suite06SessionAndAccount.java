@@ -34,7 +34,9 @@ public class Suite06SessionAndAccount extends SuiteBase {
         HarnessResponse response =
                 http().send("GET", "/api/session", http().asAdmin(), 200, Optional.of("admin /api/session"));
         Boolean authenticated = response.jsonPath().getObject("authenticated", Boolean.class);
-        assertThat(authenticated).isTrue();
+        assertThat(authenticated)
+                .as("captured admin session cookie must authenticate; sign in again and recapture the cookie if false")
+                .isTrue();
     }
 
     @Test

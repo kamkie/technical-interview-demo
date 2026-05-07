@@ -25,11 +25,11 @@ public final class HarnessRequest {
     }
 
     public HarnessRequest accept(String mediaType) {
-        return header("Accept", mediaType);
+        return setHeader("Accept", mediaType);
     }
 
     public HarnessRequest contentType(String mediaType) {
-        return header("Content-Type", mediaType);
+        return setHeader("Content-Type", mediaType);
     }
 
     public HarnessRequest header(String name, String value) {
@@ -39,6 +39,11 @@ public final class HarnessRequest {
 
     public HarnessRequest cookie(String name, String value) {
         return header("Cookie", name + "=" + value);
+    }
+
+    private HarnessRequest setHeader(String name, String value) {
+        headers.put(name, new ArrayList<>(List.of(value)));
+        return this;
     }
 
     public HarnessRequest body(String body) {

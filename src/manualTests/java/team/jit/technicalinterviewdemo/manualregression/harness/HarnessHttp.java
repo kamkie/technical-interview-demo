@@ -124,6 +124,7 @@ public final class HarnessHttp {
                     latency,
                     expectedStatus == null || expectedStatus == harnessResponse.statusCode() ? "matched" : "mismatched",
                     note));
+            assertExpectedStatus(normalizedMethod, url, expectedStatus, harnessResponse);
             return harnessResponse;
         } catch (IOException ex) {
             throw recordException(
@@ -192,6 +193,14 @@ public final class HarnessHttp {
                 note));
         return new IllegalStateException(
                 "HTTP " + method + " " + url + " failed before receiving a response: " + failure, ex);
+    }
+
+    private static void assertExpectedStatus(
+            String method, String url, Integer expectedStatus, HarnessResponse response) {
+        if (expectedStatus != null && expectedStatus != response.statusCode()) {
+            throw new AssertionError("Expected HTTP " + method + " " + url + " to return " + expectedStatus
+                    + " but got " + response.statusCode());
+        }
     }
 
     private static Map<String, List<String>> redactHeaders(Map<String, List<String>> rawHeaders) {

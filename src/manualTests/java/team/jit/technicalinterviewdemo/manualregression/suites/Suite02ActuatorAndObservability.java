@@ -57,7 +57,11 @@ public class Suite02ActuatorAndObservability extends SuiteBase {
     @Order(4)
     void prometheusScrape_servesNonEmptyBody() {
         String body = http().send(
-                        "GET", "/actuator/prometheus", http().anonymous(), 200, Optional.of("prometheus scrape"))
+                        "GET",
+                        "/actuator/prometheus",
+                        http().anonymous().accept("text/plain"),
+                        200,
+                        Optional.of("prometheus scrape"))
                 .asString();
         assertThat(body).isNotBlank();
     }
