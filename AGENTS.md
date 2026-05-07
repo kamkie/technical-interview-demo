@@ -74,13 +74,19 @@ Prompt titles, skills, templates, and deep references stay on demand until direc
 
 | Lifecycle phase | Primary owner guides |
 | --- | --- |
-| Discovery or roadmap intake | `ROADMAP.md` and `ai/PLAN.md`; add `README.md`, `ai/DESIGN.md`, or `ai/ARCHITECTURE.md` only when product, contract, or structure framing matters |
+| Discovery or roadmap intake | `ROADMAP.md` and `ai/PLAN.md`; add `README.md` or conditional descriptive guides only when the request needs product, contract, design, or structure framing |
 | Planning | `ai/PLAN.md`, the relevant specs or source artifacts, and `ROADMAP.md` for active-work tracking |
-| Implementation | `ai/EXECUTION.md`, the target `ai/PLAN_*.md` when planned, and the owner guides for files being changed |
+| Implementation | `ai/EXECUTION.md`, the target `ai/PLAN_*.md` when planned, and the owner guides for files being changed; keep descriptive guides conditional |
 | Workflow, delegation, or integration | `ai/WORKFLOW.md` and `ai/EXECUTION.md`; load fanout references only after a fanout mode is selected |
-| Testing or review | `ai/TESTING.md`, `ai/REVIEWS.md`, and `ai/DOCUMENTATION.md` when artifact routing or contract impact is part of the check |
+| Testing or review | `ai/TESTING.md`, `ai/REVIEWS.md`, and `ai/DOCUMENTATION.md` when artifact routing or contract impact is part of the check; keep descriptive guides conditional |
 | Release | `ai/RELEASES.md` only after the implementation state is integrated and release work is explicitly in scope |
 | Prompt, skill, or template maintenance | `ai/PROMPTS.md`, the relevant `ai/skills/` guide, or the specific template or prompt metadata being changed |
+
+Conditional descriptive guide triggers:
+
+- load `ai/ARCHITECTURE.md` only for structural code reading, architecture-sensitive changes, or package ownership questions
+- load `ai/DESIGN.md` only when user-visible behavior, supported scope, security posture, or roadmap tradeoffs are touched
+- load `ai/LEARNINGS.md` only from the targeted relevance scan or a known recurring repo lesson
 
 ## AI Document Set
 

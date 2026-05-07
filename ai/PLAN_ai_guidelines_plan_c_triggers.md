@@ -207,6 +207,11 @@
   - Updated this plan to use the current `ai/ARCHITECTURE.md` headings: `## System Purpose` and `## Package Shape`.
   - Ran `rg -n "^## |^### |Entry points|artifact-location|structural|architecture-sensitive" ai/DOCUMENTATION.md ai/ARCHITECTURE.md`; passed.
   - Ran `git diff --check -- ai/DOCUMENTATION.md ai/ARCHITECTURE.md ai/PLAN_ai_guidelines_plan_c_triggers.md`; passed.
+- 2026-05-07 Milestone 3:
+  - Tightened `AGENTS.md` lifecycle owner map wording so descriptive guides remain conditional during routine implementation and review.
+  - Added explicit conditional triggers for `ai/ARCHITECTURE.md`, `ai/DESIGN.md`, and `ai/LEARNINGS.md`.
+  - Ran `rg -n "ARCHITECTURE|DESIGN|LEARNINGS|routine|conditional|Lifecycle Owner Map|Conditional descriptive" AGENTS.md`; passed.
+  - Ran `git diff --check -- AGENTS.md`; passed.
 
 ## User Validation
 - Verify that `AGENTS.md` no longer implies descriptive guides are part of routine implementation or review loads.
