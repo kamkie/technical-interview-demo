@@ -11,8 +11,8 @@ Released history belongs in `CHANGELOG.md`.
 | Release Phase | Prerelease |
 | Breaking Change Policy | Disallowed |
 | Next Target Version | `v2.0.0-RC7`, then stable `v2.0.0` after acceptance |
-| Stable Release Gate | Manual regression pass on the next final release candidate, expected `v2.0.0-RC7` because finished AI-guidance and repository-knowledge changes are now integrated after `v2.0.0-RC6`, after the harness-output logging requirements are implemented |
-| Immediate Next Action | Implement Milestone 0 in `.agents/plans/PLAN_manual_regression_execution.md`, then execute the plan against the next release candidate, expected `v2.0.0-RC7` |
+| Stable Release Gate | Manual regression pass on the next final release candidate, expected `v2.0.0-RC7` because finished AI-guidance, repository-knowledge, and harness-output logging changes are now integrated after `v2.0.0-RC6` |
+| Immediate Next Action | Prepare `v2.0.0-RC7`, then execute `.agents/plans/PLAN_manual_regression_execution.md` manual regression against that release candidate before stable `v2.0.0` |
 
 ## Roadmap Rules
 
@@ -38,7 +38,7 @@ Goal: use manual regression coverage as the RC-to-stable gate, then finish the s
 
 | Order | Status | Workstream | Plan Or Artifact | Exit Criteria |
 | --- | --- | --- | --- | --- |
-| 1 | In Progress | Manual regression gate for the final `2.0` release candidate | `.agents/plans/PLAN_manual_regression_execution.md` | Harness has landed, but new `/temp` output, heavy request/response logging, execution-log, and example-report requirements must land before manual business-functionality regression runs against the next final RC, expected `v2.0.0-RC7`; if another RC is cut first, the plan is replanned to that RC |
+| 1 | In Progress | Manual regression gate for the final `2.0` release candidate | `.agents/plans/PLAN_manual_regression_execution.md` | Harness and `/temp` output, heavy request/response logging, execution-log, and example-report requirements have landed; manual business-functionality regression must run against the next final RC, expected `v2.0.0-RC7`; if another RC is cut first, the plan is replanned to that RC |
 | 2 | Planned | Stable `v2.0.0` release | `CHANGELOG.md`, `ROADMAP.md`, release artifacts | Stable `v2.0.0` is released after the final accepted RC, changelog and roadmap are updated, and the completed `2.0` track is removed from this file |
 
 ## Planned Work

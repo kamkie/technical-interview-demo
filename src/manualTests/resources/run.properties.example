@@ -21,7 +21,7 @@
 # Optional. Comma-separated suite names to limit a run; default is the full ordered profile.
 # suites=01-public-overview-and-docs,02-actuator-and-observability
 #
-# Optional. Override report output directory (default ai/tmp/manual-regression/run-<runTag>/).
+# Optional. Override report output directory (default temp/manual-regression/<runTag>/run-<UTC-timestamp>/).
 # outDir=
 #
 # Optional. Comma-separated host names that should bypass the localhost/private safety check.

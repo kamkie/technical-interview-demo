@@ -44,6 +44,7 @@ public final class ManualRegressionExtension
     private static volatile RunConfig runConfig;
     private static final Map<String, SuiteReport> COMPLETED = Collections.synchronizedMap(new LinkedHashMap<>());
     private static final List<String> EXECUTION_ORDER = Collections.synchronizedList(new ArrayList<>());
+    private static final ThreadLocal<String> CURRENT_TEST_NAME = new ThreadLocal<>();
     private static volatile boolean shutdownHookInstalled = false;
 
     @Override
@@ -147,6 +148,14 @@ public final class ManualRegressionExtension
 
     public static RunConfig runConfig() {
         return ensureConfig();
+    }
+
+    public static java.util.Optional<String> currentTestName() {
+        return java.util.Optional.ofNullable(CURRENT_TEST_NAME.get());
+    }
+
+    public static void setCurrentTestName(String displayName) {
+        CURRENT_TEST_NAME.set(displayName);
     }
 
     /** Returns a generated identifier captured by an earlier suite, if available. */

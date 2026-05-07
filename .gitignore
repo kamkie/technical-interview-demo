@@ -49,7 +49,7 @@ out/
 /src/test/resources/http/http-client.private.env.json
 /src/manualTests/resources/http/http-client.private.env.json
 /src/manualTests/resources/run.properties
-### Manual-regression harness output ###
+### AI workflow scratch ###
 /.agents/tmp/
 
 ### Local temp files ###

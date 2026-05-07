@@ -175,8 +175,8 @@
 
 ## Implementation Status
 - The initial harness implementation under `src/manualTests/` has landed.
-- The new `/temp` output, heavy request/response execution logging, timestamped execution-log file, and example-report generation requirements are pending implementation before the manual RC7 execution should be treated as release-gate evidence.
-- Manual RC7 execution remains pending and can use `./build.ps1 manualTests` as a prefilled checklist only after the pending harness-output requirements are implemented and validated.
+- Milestone 0 has landed: generated output now defaults to `temp/manual-regression/...`, every recorded HTTP exchange is written to `execution-log.ndjson` with request/response detail and redaction, and `./build.ps1 manualRegressionExampleReport` generates deterministic example artifacts under `temp/manual-regression/example/`.
+- Manual RC7 execution remains pending and can use `./build.ps1 manualTests` as a prefilled checklist after `v2.0.0-RC7` is prepared.
 
 ## Execution Shape And Shared Files
 - Recommended shape: one local branch.
@@ -538,6 +538,14 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
   - `git diff --check` passed.
   - `git diff --cached --check` passed.
   - `./build.ps1 build` passed through the lightweight-file shortcut, reporting that only `.agents/archive/`, `.agents/plans/PLAN_manual_regression_execution.md`, `CHANGELOG.md`, and `ROADMAP.md` changed and that Gradle build execution was skipped.
+- 2026-05-07 Milestone 0 harness-output implementation:
+  - changed the default manual-regression output path to `temp/manual-regression/<runTag>/run-<UTC-timestamp>/`.
+  - added `execution-log.ndjson` generation with one JSON record per HTTP exchange, including timestamp, suite, test/display name, correlation id, method, URL, redacted request headers, request body, expected status, actual status, redacted response headers, response body, latency, matched flag, outcome, and note.
+  - added `./build.ps1 manualRegressionExampleReport`, which writes synthetic all-failure example `report.md`, `report.json`, and `execution-log.ndjson` artifacts under `temp/manual-regression/example/run-<UTC-timestamp>/`.
+  - updated `src/manualTests/resources/README.md`, `run.properties.example`, and `.gitignore` comments for the new output location.
+  - `./build.ps1 compileManualTestsJava` passed.
+  - `./build.ps1 manualRegressionExampleReport` passed and generated example artifacts under `temp/manual-regression/example/run-20260507-180042/`.
+  - inspected the generated `execution-log.ndjson`; it includes timestamp, request, response, status, latency, suite, and redaction fields.
 
 ## User Validation
 - Review this plan and answer the open questions if the fallback assumptions are not acceptable.

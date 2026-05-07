@@ -266,6 +266,15 @@ val manualTests = tasks.register<Test>("manualTests") {
     }
 }
 
+tasks.register<JavaExec>("manualRegressionExampleReport") {
+    group = "verification"
+    description = "Generates a synthetic manual-regression example report under temp/manual-regression/example/."
+    val manualTestsSourceSet = sourceSets["manualTests"]
+    dependsOn(tasks.named("manualTestsClasses"))
+    classpath = manualTestsSourceSet.runtimeClasspath
+    mainClass.set("team.jit.technicalinterviewdemo.manualregression.harness.ExampleReportGenerator")
+}
+
 springBoot {
     buildInfo()
 }

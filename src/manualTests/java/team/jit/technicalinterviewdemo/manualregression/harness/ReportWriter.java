@@ -33,6 +33,7 @@ public final class ReportWriter {
             .setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL)
             .enable(SerializationFeature.INDENT_OUTPUT)
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    private static final ObjectMapper NDJSON = JSON.copy().disable(SerializationFeature.INDENT_OUTPUT);
 
     private ReportWriter() {}
 
@@ -41,17 +42,61 @@ public final class ReportWriter {
             Files.createDirectories(config.outputDirectory());
             Path markdown = config.outputDirectory().resolve("report.md");
             Path json = config.outputDirectory().resolve("report.json");
+            Path executionLog = config.outputDirectory().resolve("execution-log.ndjson");
             Files.writeString(markdown, renderMarkdown(config, reports), StandardCharsets.UTF_8);
-            Files.writeString(json, renderJson(config, reports), StandardCharsets.UTF_8);
+            Files.writeString(json, renderJson(config, reports, executionLog), StandardCharsets.UTF_8);
+            Files.writeString(executionLog, renderExecutionLog(reports), StandardCharsets.UTF_8);
         } catch (IOException ex) {
             throw new UncheckedIOException("Failed to write manual-regression report", ex);
         }
     }
 
-    private static String renderJson(RunConfig config, List<SuiteReport> reports) throws IOException {
+    public static Path writeExample(Path rootDirectory) {
+        String timestamp = DateTimeFormatterHolder.timestamp();
+        Path outputDirectory =
+                rootDirectory.resolve("manual-regression").resolve("example").resolve("run-" + timestamp);
+        RunConfig config = new RunConfig(
+                "http://localhost:8080",
+                java.util.Optional.empty(),
+                java.util.Optional.empty(),
+                java.util.Optional.empty(),
+                java.util.Optional.empty(),
+                java.util.Optional.empty(),
+                "example",
+                List.of(),
+                outputDirectory,
+                List.of(),
+                java.util.Optional.of("example"));
+        SuiteReport report = new SuiteReport("01-public-overview-and-docs", Instant.now());
+        report.recordRequest(new RequestRecord(
+                Instant.now(),
+                "01-public-overview-and-docs",
+                "example failure",
+                "example-correlation-id",
+                "GET",
+                "http://localhost:8080/",
+                Map.of("Accept", List.of("application/json"), "Cookie", List.of("***"), "X-XSRF-TOKEN", List.of("***")),
+                "{}",
+                200,
+                500,
+                Map.of("Content-Type", List.of("application/problem+json"), "Set-Cookie", List.of("***")),
+                "{\"status\":500,\"message\":\"synthetic example failure\"}",
+                42,
+                "mismatched",
+                java.util.Optional.of("synthetic example report entry")));
+        report.markFailed(Instant.now(), "Synthetic all-failure example report");
+        write(config, List.of(report));
+        return outputDirectory;
+    }
+
+    private static String renderJson(RunConfig config, List<SuiteReport> reports, Path executionLog)
+            throws IOException {
         Map<String, Object> root = new LinkedHashMap<>();
         root.put("runTag", config.runTag());
         root.put("baseUrl", config.baseUrl());
+        root.put(
+                "executionLog",
+                config.outputDirectory().relativize(executionLog).toString().replace('\\', '/'));
         root.put(
                 "startedAt",
                 reports.stream()
@@ -81,6 +126,7 @@ public final class ReportWriter {
                         .map(req -> {
                             Map<String, Object> n = new LinkedHashMap<>();
                             n.put("startedAt", req.startedAt());
+                            n.put("correlationId", req.correlationId());
                             n.put("method", req.method());
                             n.put("url", req.url());
                             n.put("expectedStatus", req.expectedStatus());
@@ -92,6 +138,39 @@ public final class ReportWriter {
                         })
                         .toList());
         return node;
+    }
+
+    private static String renderExecutionLog(List<SuiteReport> reports) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        List<RequestRecord> records = reports.stream()
+                .flatMap(r -> r.requests().stream())
+                .sorted(java.util.Comparator.comparing(RequestRecord::startedAt))
+                .toList();
+        for (RequestRecord record : records) {
+            sb.append(NDJSON.writeValueAsString(toExecutionLogNode(record))).append('\n');
+        }
+        return sb.toString();
+    }
+
+    private static Map<String, Object> toExecutionLogNode(RequestRecord req) {
+        Map<String, Object> n = new LinkedHashMap<>();
+        n.put("timestamp", req.startedAt());
+        n.put("suite", req.suiteName());
+        n.put("test", req.testName());
+        n.put("correlationId", req.correlationId());
+        n.put("method", req.method());
+        n.put("url", req.url());
+        n.put("requestHeaders", req.requestHeaders());
+        n.put("requestBody", req.requestBody());
+        n.put("expectedStatus", req.expectedStatus());
+        n.put("actualStatus", req.actualStatus());
+        n.put("responseHeaders", req.responseHeaders());
+        n.put("responseBody", req.responseBody());
+        n.put("latencyMillis", req.latencyMillis());
+        n.put("matched", req.matchedExpectation());
+        n.put("outcome", req.outcome());
+        req.note().ifPresent(note -> n.put("note", note));
+        return n;
     }
 
     private static String renderMarkdown(RunConfig config, List<SuiteReport> reports) {
@@ -111,6 +190,7 @@ public final class ReportWriter {
                                 ? "(default ordered profile)"
                                 : String.join(", ", config.selectedSuites()))
                 .append('\n');
+        sb.append("- Execution log: `execution-log.ndjson`\n");
         config.activeProfileHint()
                 .ifPresent(
                         p -> sb.append("- SPRING_PROFILES_ACTIVE: `").append(p).append("`\n"));
@@ -201,5 +281,14 @@ public final class ReportWriter {
             return "";
         }
         return value.replace("|", "\\|").replace("\n", " ");
+    }
+
+    private static final class DateTimeFormatterHolder {
+
+        private static String timestamp() {
+            return java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")
+                    .withZone(java.time.ZoneOffset.UTC)
+                    .format(Instant.now());
+        }
     }
 }

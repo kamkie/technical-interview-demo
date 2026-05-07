@@ -36,6 +36,7 @@ public abstract class SuiteBase {
     @BeforeEach
     void captureContext(ExtensionContext context) {
         this.currentContext = context;
+        ManualRegressionExtension.setCurrentTestName(context.getDisplayName());
         String reason = ManualRegressionExtension.blockedReason(context);
         if (reason != null) {
             Assumptions.abort("Suite blocked: " + reason);

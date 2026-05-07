@@ -1,10 +1,10 @@
 # Manual Regression Harness
 
 This source set hosts the manual-regression harness referenced by
-`ai/PLAN_manual_regression_execution.md`. It runs through the documented public and admin REST
-contract against a locally running app, captures every request/response into a per-run report,
-and is **not** wired into the default `./build.ps1 build` pipeline. Invoke it explicitly when you
-want to validate a release candidate end-to-end.
+`.agents/plans/PLAN_manual_regression_execution.md`. It runs through the documented public and
+admin REST contract against a locally running app, captures every request/response into a per-run
+report and execution log, and is **not** wired into the default `./build.ps1 build` pipeline. Invoke
+it explicitly when you want to validate a release candidate end-to-end.
 
 ## What it covers
 
@@ -41,7 +41,25 @@ when the corresponding inputs are missing, so an anonymous-only run remains usef
      "-PmanualTests.adminCsrfToken=<csrf>"
    ```
 4. The harness prints the report path on completion. Reports default to
-   `ai/tmp/manual-regression/run-<runTag>/`.
+   `temp/manual-regression/<runTag>/run-<UTC-timestamp>/`.
+
+Each run directory contains:
+
+- `report.md`
+- `report.json`
+- `execution-log.ndjson`
+
+`execution-log.ndjson` is the authoritative per-exchange debug artifact. It records request and
+response headers and bodies, expected and actual status, latency, suite/test context, and redacted
+secret-bearing values.
+
+Generate a deterministic synthetic report without a running app:
+
+```powershell
+./build.ps1 manualRegressionExampleReport
+```
+
+The example output is written under `temp/manual-regression/example/run-<UTC-timestamp>/`.
 
 ## Configuration precedence
 

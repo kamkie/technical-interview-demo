@@ -4,13 +4,27 @@ import io.restassured.RestAssured;
 import io.restassured.config.HttpClientConfig;
 import io.restassured.config.RedirectConfig;
 import io.restassured.config.RestAssuredConfig;
+import io.restassured.filter.Filter;
+import io.restassured.filter.FilterContext;
 import io.restassured.http.ContentType;
+import io.restassured.http.Cookie;
+import io.restassured.http.Header;
 import io.restassured.response.Response;
+import io.restassured.specification.FilterableRequestSpecification;
+import io.restassured.specification.FilterableResponseSpecification;
 import io.restassured.specification.RequestSpecification;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+import java.util.regex.Pattern;
 
 /**
  * Thin wrapper over REST Assured that records every exchange into the active {@link SuiteReport}
@@ -90,27 +104,119 @@ public final class HarnessHttp {
      */
     public Response send(
             String method, String pathOrUrl, RequestSpecification spec, Integer expectedStatus, Optional<String> note) {
-        Instant start = Instant.now();
-        Response response =
-                switch (method.toUpperCase(java.util.Locale.ROOT)) {
-                    case "GET" -> spec.get(pathOrUrl);
-                    case "POST" -> spec.post(pathOrUrl);
-                    case "PUT" -> spec.put(pathOrUrl);
-                    case "PATCH" -> spec.patch(pathOrUrl);
-                    case "DELETE" -> spec.delete(pathOrUrl);
-                    case "HEAD" -> spec.head(pathOrUrl);
-                    case "OPTIONS" -> spec.options(pathOrUrl);
-                    default -> throw new IllegalArgumentException("Unsupported HTTP method: " + method);
-                };
-        long latency = java.time.Duration.between(start, Instant.now()).toMillis();
-        report.recordRequest(new RequestRecord(
-                start,
-                method.toUpperCase(java.util.Locale.ROOT),
-                pathOrUrl,
-                expectedStatus,
-                response.statusCode(),
-                latency,
-                note));
-        return response;
+        RequestSpecification recordingSpec =
+                spec.filter(new ExchangeRecorder(method.toUpperCase(Locale.ROOT), pathOrUrl, expectedStatus, note));
+        return switch (method.toUpperCase(Locale.ROOT)) {
+            case "GET" -> recordingSpec.get(pathOrUrl);
+            case "POST" -> recordingSpec.post(pathOrUrl);
+            case "PUT" -> recordingSpec.put(pathOrUrl);
+            case "PATCH" -> recordingSpec.patch(pathOrUrl);
+            case "DELETE" -> recordingSpec.delete(pathOrUrl);
+            case "HEAD" -> recordingSpec.head(pathOrUrl);
+            case "OPTIONS" -> recordingSpec.options(pathOrUrl);
+            default -> throw new IllegalArgumentException("Unsupported HTTP method: " + method);
+        };
+    }
+
+    private final class ExchangeRecorder implements Filter {
+
+        private static final Set<String> SECRET_HEADER_NAMES = Set.of(
+                "authorization",
+                "cookie",
+                "set-cookie",
+                CSRF_HEADER_NAME.toLowerCase(Locale.ROOT),
+                "x-xsrf-token",
+                "x-csrf-token");
+        private static final Pattern SENSITIVE_JSON_FIELD = Pattern.compile(
+                "(?i)(\"(?:csrfToken|xsrfToken|token|secret|password|session|sessionCookie|adminSessionCookie|adminCsrfToken|regularSessionCookie|regularCsrfToken)\"\\s*:\\s*\")([^\"]*)(\")");
+
+        private final String method;
+        private final String pathOrUrl;
+        private final Integer expectedStatus;
+        private final Optional<String> note;
+
+        private ExchangeRecorder(String method, String pathOrUrl, Integer expectedStatus, Optional<String> note) {
+            this.method = method;
+            this.pathOrUrl = pathOrUrl;
+            this.expectedStatus = expectedStatus;
+            this.note = note;
+        }
+
+        @Override
+        public Response filter(
+                FilterableRequestSpecification requestSpec,
+                FilterableResponseSpecification responseSpec,
+                FilterContext context) {
+            Instant start = Instant.now();
+            String correlationId = UUID.randomUUID().toString();
+            Response response = context.next(requestSpec, responseSpec);
+            long latency = Duration.between(start, Instant.now()).toMillis();
+            RequestRecord record = new RequestRecord(
+                    start,
+                    report.suiteName(),
+                    ManualRegressionExtension.currentTestName().orElse("(unknown test)"),
+                    correlationId,
+                    method,
+                    resolveUrl(requestSpec),
+                    requestHeaders(requestSpec),
+                    bodyToString(requestSpec.getBody()),
+                    expectedStatus,
+                    response.statusCode(),
+                    responseHeaders(response),
+                    redactBody(response.getBody().asString()),
+                    latency,
+                    expectedStatus == null || expectedStatus == response.statusCode() ? "matched" : "mismatched",
+                    note);
+            report.recordRequest(record);
+            return response;
+        }
+
+        private String resolveUrl(FilterableRequestSpecification requestSpec) {
+            String uri = requestSpec.getURI();
+            return uri == null || uri.isBlank() ? pathOrUrl : uri;
+        }
+
+        private Map<String, List<String>> requestHeaders(FilterableRequestSpecification requestSpec) {
+            Map<String, List<String>> headers = new LinkedHashMap<>();
+            for (Header header : requestSpec.getHeaders()) {
+                headers.computeIfAbsent(header.getName(), ignored -> new ArrayList<>())
+                        .add(redactHeader(header.getName(), header.getValue()));
+            }
+            for (Cookie cookie : requestSpec.getCookies().asList()) {
+                headers.computeIfAbsent("Cookie", ignored -> new ArrayList<>())
+                        .add(cookie.getName() + "=" + redactHeader("Cookie", cookie.getValue()));
+            }
+            return headers;
+        }
+
+        private Map<String, List<String>> responseHeaders(Response response) {
+            Map<String, List<String>> headers = new LinkedHashMap<>();
+            for (Header header : response.getHeaders()) {
+                headers.computeIfAbsent(header.getName(), ignored -> new ArrayList<>())
+                        .add(redactHeader(header.getName(), header.getValue()));
+            }
+            return headers;
+        }
+
+        private String redactHeader(String name, String value) {
+            if (name != null && SECRET_HEADER_NAMES.contains(name.toLowerCase(Locale.ROOT))) {
+                return "***";
+            }
+            return value;
+        }
+
+        private String bodyToString(Object body) {
+            if (body == null) {
+                return null;
+            }
+            return redactBody(String.valueOf(body));
+        }
+
+        private String redactBody(String body) {
+            if (body == null || body.isBlank()) {
+                return body;
+            }
+            return SENSITIVE_JSON_FIELD.matcher(body).replaceAll("$1***$3");
+        }
     }
 }

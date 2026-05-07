@@ -64,6 +64,8 @@ public final class ConfigLoader {
     private static final String CLASSPATH_PROPERTIES = "/run.properties";
     private static final String SECRET_PLACEHOLDER = "***";
     private static final char[] RUN_TAG_ALPHABET = "abcdefghijklmnopqrstuvwxyz0123456789".toCharArray();
+    private static final DateTimeFormatter OUTPUT_TIMESTAMP_FORMAT =
+            DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss").withZone(java.time.ZoneOffset.UTC);
 
     private static final Set<String> SECRET_KEYS =
             Set.of(KEY_ADMIN_SESSION_COOKIE, KEY_ADMIN_CSRF_TOKEN, KEY_REGULAR_SESSION_COOKIE, KEY_REGULAR_CSRF_TOKEN);
@@ -242,9 +244,10 @@ public final class ConfigLoader {
     }
 
     private static Path defaultOutputDirectory(String runTag) {
-        // Reports default to ai/tmp/manual-regression/run-<runTag>/ relative to the project root,
+        // Reports default to temp/manual-regression/<runTag>/run-<UTC-timestamp>/ relative to the project root,
         // which is the working directory when Gradle launches the task.
-        Path base = Paths.get("ai", "tmp", "manual-regression", "run-" + runTag);
+        String timestamp = OUTPUT_TIMESTAMP_FORMAT.format(Instant.now().truncatedTo(ChronoUnit.SECONDS));
+        Path base = Paths.get("temp", "manual-regression", runTag, "run-" + timestamp);
         try {
             Files.createDirectories(base);
         } catch (IOException ex) {
