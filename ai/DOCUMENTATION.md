@@ -9,7 +9,7 @@ Other guides should link here instead of re-listing ownership rules.
 
 Update the artifact that owns the truth being changed:
 
-- runtime behavior and public API contract: executable tests, `src/docs/asciidoc/`, `src/test/resources/http/`, `src/test/resources/openapi/approved-openapi.json`, and `README.md`
+- runtime behavior and public API contract: executable tests, `src/docs/asciidoc/`, `src/manualTests/resources/http/`, `src/test/resources/openapi/approved-openapi.json`, and `README.md`
 - human-facing guide for developers using AI through the application lifecycle: `WORKING_WITH_AI.md`
 - AI repository rules and AI-document inventory: `AGENTS.md`
 - AI local command wrapper shortcut: `ai/ENVIRONMENT_QUICK_REF.md`
@@ -48,7 +48,7 @@ Update all affected artifacts in the same change:
 - integration tests
 - REST Docs tests and Asciidoc pages when public behavior is documented there
 - approved OpenAPI baseline if the contract intentionally changed
-- HTTP example files under `src/test/resources/http/`
+- HTTP example files under `src/manualTests/resources/http/`
 - `README.md` if the supported contract changed
 - `CHANGELOG.md` only when the change is being released
 

@@ -46,7 +46,10 @@ out/
 
 ### Local environment files ###
 .env
-/src/test/resources/http/http-client.private.env.json
+/src/manualTests/resources/http/http-client.private.env.json
+/src/manualTests/resources/run.properties
+### Manual-regression harness output ###
+/ai/tmp/
 
 ### Local temp files ###
 /temp

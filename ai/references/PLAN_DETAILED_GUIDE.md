@@ -85,7 +85,7 @@ At minimum, inspect:
 - relevant tests under `src/test/java/`
 - relevant docs under `src/docs/asciidoc/`
 - `src/test/resources/openapi/approved-openapi.json` if API behavior may change
-- relevant HTTP examples under `src/test/resources/http/`
+- relevant HTTP examples under `src/manualTests/resources/http/`
 - implementation code in `src/main/java/`
 
 If the user referenced another document, ticket, PR, issue, API example, or web page, read it before planning.

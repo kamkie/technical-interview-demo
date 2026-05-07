@@ -438,6 +438,14 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
   - added dedicated sections for `Implementation Technology`, `Test Data Generation`, `User Input And Configuration`, and `Execution Report Generation`; added the corresponding open questions to `Requirement Gaps And Open Questions`.
   - `./build.ps1 build` lightweight-file shortcut expected to skip the Gradle build because only this plan file changed.
 - Manual suite execution against `v2.0.0-RC5` is intentionally **not** part of this plan: this plan only designs and wires the manual-regression tooling/harness. Actual RC5 execution is performed by a human operator outside this plan and is recorded in `ai/tmp/manual-regression/<rc>.md` if durable evidence is wanted.
+- 2026-05-07 harness implementation:
+  - registered the `manualTests` Gradle source set in `build.gradle.kts` with REST Assured 5.5.6, AssertJ, JUnit 5, and Jackson; the new `manualTests` task is intentionally not wired into `tasks.build` and is excluded from the JaCoCo agent.
+  - moved `src/test/resources/http/` → `src/manualTests/resources/http/`; updated active references in `AGENTS.md`, `CONTRIBUTING.md`, `SETUP.md`, `ai/DOCUMENTATION.md`, `ai/references/PLAN_DETAILED_GUIDE.md`, the Spotless target list, and `.gitignore`; archived plans intentionally left untouched.
+  - added the harness core (`RunConfig`, `ConfigLoader` with 4-tier precedence, `SafetyRails`, `HarnessHttp`, `SuiteReport`/`SuiteResult`/`RequestRecord`, `ReportWriter` for `report.md`+`report.json`, `ManualRegressionExtension` with prerequisite/identity gating and a JVM-shutdown report flush, `SuiteBase`, `@SuiteName`).
+  - implemented the twelve ordered suite classes (`Suite01PublicOverviewAndDocs` … `Suite12OperatorSurface`) with declared prerequisites, lifecycle teardown that asserts `404` after delete, and `@AfterAll` cleanup that records leftover identifiers when teardown fails.
+  - added `src/manualTests/resources/run.properties.example`, `src/manualTests/resources/junit-platform.properties` (`ClassOrderer$ClassName`), and a harness-level `src/manualTests/resources/README.md`.
+  - `./build.ps1 compileManualTestsJava` passed clean (no errors, no warnings).
+  - `./build.ps1 build` re-run after Milestone E to confirm the wider project still builds.
 
 ## User Validation
 - Review this plan and answer the open questions if the fallback assumptions are not acceptable.

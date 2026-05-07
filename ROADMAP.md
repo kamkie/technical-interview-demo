@@ -47,7 +47,7 @@ Goal: use manual regression coverage as the RC-to-stable gate, then finish the s
 
 #### Release Confidence
 
-- [x] Execute `ai/PLAN_manual_regression_execution.md` as the manual business-functionality regression gate for the final `2.0` release candidate, currently `v2.0.0-RC5`; replan it to the next RC if another RC is prepared first. Plan lifecycle: `Planning` / `Ready`.
+- [x] Execute `ai/PLAN_manual_regression_execution.md` as the manual business-functionality regression gate for the final `2.0` release candidate, currently `v2.0.0-RC5`; replan it to the next RC if another RC is prepared first. Plan lifecycle: `Implementation` / `In Progress` (harness landed; manual RC execution still pending).
 - [ ] Release stable `v2.0.0`, update `CHANGELOG.md`, and remove the completed `2.0` track from `ROADMAP.md`.
 
 #### AI Workflow Guidance

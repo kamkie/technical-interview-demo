@@ -1,0 +1,28 @@
+# Manual-regression harness configuration template.
+#
+# Copy this file to `run.properties` (same directory) and fill in the values you want to keep
+# locally. The file is on the classpath, so values here are picked up automatically when running
+# `./build.ps1 manualTests`. Values supplied via Gradle properties (-PmanualTests.<key>=<value>) or
+# environment variables (MANUAL_TESTS_<KEY>) take precedence over this file.
+#
+# Required when admin-only suites (06-12) are selected.
+# baseUrl=http://localhost:8080
+# adminSessionCookie=PUT-THE-CAPTURED-SESSION-COOKIE-HERE
+# adminCsrfToken=PUT-THE-CAPTURED-CSRF-TOKEN-HERE
+#
+# Optional. Enables the regular-user 403 checks and the role-grant round trip.
+# regularSessionCookie=
+# regularCsrfToken=
+# regularUserId=
+#
+# Optional. Forces a stable run tag instead of the timestamp+random default.
+# runTag=manual-rerun-1
+#
+# Optional. Comma-separated suite names to limit a run; default is the full ordered profile.
+# suites=01-public-overview-and-docs,02-actuator-and-observability
+#
+# Optional. Override report output directory (default ai/tmp/manual-regression/run-<runTag>/).
+# outDir=
+#
+# Optional. Comma-separated host names that should bypass the localhost/private safety check.
+# allowedHosts=

@@ -109,8 +109,8 @@ The deployment story is standardized around these artifacts:
 Use these checked-in artifacts together when wiring or reviewing the separate first-party UI:
 
 - `src/docs/asciidoc/upgrade-1x-to-2-0.adoc` is the owning `1.x` to `2.0` migration guide and is served by the packaged app at `/docs/upgrade-1x-to-2-0.html`
-- `src/test/resources/http/authentication.http` shows the bootstrap, provider-login, authenticated-session refresh, and logout flow
-- `src/test/resources/http/user-account-controller.http` shows one authenticated unsafe write using the documented `XSRF-TOKEN` cookie plus `X-XSRF-TOKEN` header handshake
+- `src/manualTests/resources/http/authentication.http` shows the bootstrap, provider-login, authenticated-session refresh, and logout flow
+- `src/manualTests/resources/http/user-account-controller.http` shows one authenticated unsafe write using the documented `XSRF-TOKEN` cookie plus `X-XSRF-TOKEN` header handshake
 - `infra/k8s/edge/public-api-ingress.yaml` and `infra/k8s/edge/README.md` are the checked-in `/api/**` public-edge reference assets for the one-public-origin deployment model
 
 Required runtime environment variables for deployed environments:
@@ -819,7 +819,7 @@ Fix:
 2. Query `SPRING_SESSION` and `SPRING_SESSION_ATTRIBUTES` and confirm rows are being created.
 3. If the tables are missing, confirm Flyway ran successfully and that `V4__create_spring_session_tables.sql` is present in the target build.
 4. If the tables exist but stay empty, confirm the app can still reach PostgreSQL with the configured datasource settings.
-5. Repeat the login flow and verify `GET /api/account` with the captured `technical-interview-demo-session` cookie from `src/test/resources/http/authentication.http`.
+5. Repeat the login flow and verify `GET /api/account` with the captured `technical-interview-demo-session` cookie from `src/manualTests/resources/http/authentication.http`.
 
 ### Unsafe write returns `Invalid CSRF Token`
 
