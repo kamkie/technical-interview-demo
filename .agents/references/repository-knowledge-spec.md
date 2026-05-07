@@ -94,7 +94,7 @@ Skill references should describe how to run that skill, not broad repository pol
 
 ### `.agents/tmp/`
 
-Use `.agents/tmp/` for local AI scratch output such as worker logs, manual-regression run logs, and temporary workflow evidence.
+Use `.agents/tmp/` for local AI scratch output such as worker logs, and temporary workflow evidence.
 
 Do not commit `.agents/tmp/` content by default. If temporary evidence must become durable, summarize it in the owning plan, report, or release artifact and keep the scratch file ignored.
 
