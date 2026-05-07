@@ -15,6 +15,7 @@ public final class SuiteReport {
     private Instant finishedAt;
     private SuiteResult result = SuiteResult.NOT_RUN;
     private String reason;
+    private final Map<String, TestRecord> tests = new LinkedHashMap<>();
     private final List<RequestRecord> requests = new ArrayList<>();
     private final Map<String, String> generatedIdentifiers = new LinkedHashMap<>();
     private final List<String> notes = new ArrayList<>();
@@ -45,6 +46,10 @@ public final class SuiteReport {
         return Optional.ofNullable(reason);
     }
 
+    public List<TestRecord> tests() {
+        return List.copyOf(tests.values());
+    }
+
     public List<RequestRecord> requests() {
         return List.copyOf(requests);
     }
@@ -63,6 +68,18 @@ public final class SuiteReport {
 
     public void recordRequest(RequestRecord record) {
         requests.add(record);
+    }
+
+    public void recordTestStarted(String uniqueId, String displayName, Instant startedAt) {
+        tests.putIfAbsent(
+                uniqueId, new TestRecord(uniqueId, displayName, startedAt, Optional.empty(), "RUNNING", Optional.empty()));
+    }
+
+    public void recordTestFinished(
+            String uniqueId, String displayName, Instant finishedAt, String outcome, Optional<String> reason) {
+        TestRecord started = tests.get(uniqueId);
+        Instant startedAt = started == null ? finishedAt : started.startedAt();
+        tests.put(uniqueId, new TestRecord(uniqueId, displayName, startedAt, Optional.of(finishedAt), outcome, reason));
     }
 
     public void recordIdentifier(String key, String value) {

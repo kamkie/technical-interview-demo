@@ -24,6 +24,7 @@ import java.util.Map;
  *       generated identifiers, leftover identifiers (for manual cleanup), and a release-blocker
  *       section the executor pastes into the manual result log.
  *   <li>{@code report.json} — machine-readable structure of every recorded request and outcome.
+ *   <li>{@code checklist.md} — Markdown suite/test checklist for manual execution signoff.
  * </ul>
  */
 public final class ReportWriter {
@@ -43,9 +44,11 @@ public final class ReportWriter {
             Path markdown = config.outputDirectory().resolve("report.md");
             Path json = config.outputDirectory().resolve("report.json");
             Path executionLog = config.outputDirectory().resolve("execution-log.ndjson");
+            Path checklist = config.outputDirectory().resolve("checklist.md");
             Files.writeString(markdown, renderMarkdown(config, reports), StandardCharsets.UTF_8);
-            Files.writeString(json, renderJson(config, reports, executionLog), StandardCharsets.UTF_8);
+            Files.writeString(json, renderJson(config, reports, executionLog, checklist), StandardCharsets.UTF_8);
             Files.writeString(executionLog, renderExecutionLog(reports), StandardCharsets.UTF_8);
+            Files.writeString(checklist, renderChecklist(config, reports), StandardCharsets.UTF_8);
         } catch (IOException ex) {
             throw new UncheckedIOException("Failed to write manual-regression report", ex);
         }
@@ -68,8 +71,10 @@ public final class ReportWriter {
                 List.of(),
                 java.util.Optional.of("example"));
         SuiteReport report = new SuiteReport("01-public-overview-and-docs", Instant.now());
+        Instant testStart = Instant.now();
+        report.recordTestStarted("example-failure", "example failure", testStart);
         report.recordRequest(new RequestRecord(
-                Instant.now(),
+                testStart,
                 "01-public-overview-and-docs",
                 "example failure",
                 "example-correlation-id",
@@ -84,12 +89,18 @@ public final class ReportWriter {
                 42,
                 "mismatched",
                 java.util.Optional.of("synthetic example report entry")));
+        report.recordTestFinished(
+                "example-failure",
+                "example failure",
+                Instant.now(),
+                "FAILED",
+                java.util.Optional.of("Synthetic all-failure example report"));
         report.markFailed(Instant.now(), "Synthetic all-failure example report");
         write(config, List.of(report));
         return outputDirectory;
     }
 
-    private static String renderJson(RunConfig config, List<SuiteReport> reports, Path executionLog)
+    private static String renderJson(RunConfig config, List<SuiteReport> reports, Path executionLog, Path checklist)
             throws IOException {
         Map<String, Object> root = new LinkedHashMap<>();
         root.put("runTag", config.runTag());
@@ -97,6 +108,9 @@ public final class ReportWriter {
         root.put(
                 "executionLog",
                 config.outputDirectory().relativize(executionLog).toString().replace('\\', '/'));
+        root.put(
+                "checklist",
+                config.outputDirectory().relativize(checklist).toString().replace('\\', '/'));
         root.put(
                 "startedAt",
                 reports.stream()
@@ -120,6 +134,7 @@ public final class ReportWriter {
         node.put("generatedIdentifiers", r.generatedIdentifiers());
         node.put("notes", r.notes());
         node.put("leftoverIdentifiers", r.leftoverIdentifiers());
+        node.put("tests", r.tests().stream().map(ReportWriter::toTestNode).toList());
         node.put(
                 "requests",
                 r.requests().stream()
@@ -138,6 +153,16 @@ public final class ReportWriter {
                         })
                         .toList());
         return node;
+    }
+
+    private static Map<String, Object> toTestNode(TestRecord test) {
+        Map<String, Object> n = new LinkedHashMap<>();
+        n.put("displayName", test.displayName());
+        n.put("startedAt", test.startedAt());
+        test.finishedAt().ifPresent(finishedAt -> n.put("finishedAt", finishedAt));
+        n.put("outcome", test.outcome());
+        test.reason().ifPresent(reason -> n.put("reason", reason));
+        return n;
     }
 
     private static String renderExecutionLog(List<SuiteReport> reports) throws IOException {
@@ -191,6 +216,7 @@ public final class ReportWriter {
                                 : String.join(", ", config.selectedSuites()))
                 .append('\n');
         sb.append("- Execution log: `execution-log.ndjson`\n");
+        sb.append("- Execution checklist: `checklist.md`\n");
         config.activeProfileHint()
                 .ifPresent(
                         p -> sb.append("- SPRING_PROFILES_ACTIVE: `").append(p).append("`\n"));
@@ -276,11 +302,61 @@ public final class ReportWriter {
         return sb.toString();
     }
 
+    private static String renderChecklist(RunConfig config, List<SuiteReport> reports) {
+        StringBuilder sb = new StringBuilder(4096);
+        sb.append("# Manual Regression Checklist\n\n");
+        sb.append("- Run tag: `").append(config.runTag()).append("`\n");
+        sb.append("- Base URL: `").append(config.baseUrl()).append("`\n");
+        sb.append("- Report: `report.md`\n");
+        sb.append("- Execution log: `execution-log.ndjson`\n\n");
+        sb.append("Use this file to review or fill in completion as each suite and test is executed.\n");
+        sb.append("Generated checkboxes are checked when the harness observed a terminal outcome.\n\n");
+
+        for (SuiteReport report : reports) {
+            sb.append("- ")
+                    .append(checkbox(report.result() != SuiteResult.NOT_RUN))
+                    .append(" `")
+                    .append(escapeInline(report.suiteName()))
+                    .append("` - ")
+                    .append(report.result().name());
+            report.reason().ifPresent(reason -> sb.append(" - ").append(escapeInline(reason)));
+            sb.append('\n');
+            if (report.tests().isEmpty()) {
+                sb.append("  - [ ] No test outcome was observed for this suite.\n");
+            } else {
+                for (TestRecord test : report.tests()) {
+                    sb.append("  - ")
+                            .append(checkbox(test.finishedAt().isPresent()))
+                            .append(" `")
+                            .append(escapeInline(test.displayName()))
+                            .append("` - ")
+                            .append(test.outcome());
+                    test.reason().ifPresent(reason -> sb.append(" - ").append(escapeInline(reason)));
+                    sb.append('\n');
+                }
+            }
+            sb.append('\n');
+        }
+
+        return sb.toString();
+    }
+
+    private static String checkbox(boolean checked) {
+        return checked ? "[x]" : "[ ]";
+    }
+
     private static String escapeTable(String value) {
         if (value == null) {
             return "";
         }
         return value.replace("|", "\\|").replace("\n", " ");
+    }
+
+    private static String escapeInline(String value) {
+        if (value == null) {
+            return "";
+        }
+        return value.replace("`", "'").replace("\r", " ").replace("\n", " ");
     }
 
     private static final class DateTimeFormatterHolder {

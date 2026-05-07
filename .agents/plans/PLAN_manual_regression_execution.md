@@ -16,6 +16,7 @@
 - The harness auto-generates an execution report (Markdown + JSON) per run, supports interactive user input for missing required values, and seeds its own test data through documented APIs so reruns are isolated and repeatable.
 - New harness-output requirement: all generated manual-regression tooling output must go under the repo-root `/temp` directory (`temp/` path, already gitignored), including normal reports, timestamped execution logs, and example report output.
 - New observability requirement: every suite must heavily log every HTTP request and response into a timestamped execution log file with enough request, response, timing, suite, and assertion context to debug failures without relying on console history.
+- New execution-checklist requirement: each manual-regression run must write a Markdown checklist file with checkboxes for every observed suite and test so the executor can mark or review completion as suites execute.
 
 ## Scope
 - In scope:
@@ -29,6 +30,7 @@
   - a partial-automation harness inside `src/manualTests` that drives the scriptable portions of the suites, generates its own test data through documented APIs, exposes interactive prompts for missing required values, and auto-produces a Markdown + JSON execution report the executor folds into the manual result log
   - a default generated-output root under repo-root `/temp` (`temp/manual-regression/...`), with no manual-regression generated files written to `.agents/tmp/`, `ai/tmp/`, source folders, or build-script working directories unless the executor explicitly overrides `OUT_DIR`
   - full per-exchange execution logging for every harness HTTP request and response, with timestamp, suite, test, method, URL, redacted request headers, request body, expected status, actual response status, redacted response headers, response body, latency, and outcome context
+  - a generated Markdown execution checklist under the run directory, with suite-level and test-level checkboxes and observed outcome details
   - a deterministic example-report generation path that writes example `report.md`, `report.json`, and execution-log output under `/temp`; the example may use all-failure synthetic suite results as long as it exercises the report shape
 - Out of scope:
   - replacing automated tests, OpenAPI compatibility checks, REST Docs tests, Gatling benchmarks, security scans, or CI
@@ -81,6 +83,7 @@
 - All manual-regression tooling output defaults to repo-root `/temp` (`temp/manual-regression/...`), which is gitignored by `.gitignore`; no generated reports or execution logs are committed by default.
 - Replace the current lightweight request recorder with heavy request/response logging for every suite. Secret-bearing values such as cookies, CSRF tokens, authorization headers, and configured secret inputs must be redacted before writing logs or reports.
 - Generate an example report as part of the harness-output update. The example report may be synthetic and all-failure, but it must prove that `report.md`, `report.json`, and the execution-log format are created under `/temp`.
+- Generate a `checklist.md` file as part of every run and example report. It must include checkbox rows for each suite and each JUnit test observed by the harness, with the observed outcome next to each item.
 
 ## Implementation Technology
 - Decision: implement the harness as a new `src/manualTests` Gradle source set written in Java 25 (matching the rest of the repo) using **JUnit 5** as the runner and **REST Assured** as the HTTP client. Reports are emitted by a small custom JUnit `TestExecutionListener` that writes Markdown + JSON.
@@ -158,6 +161,7 @@
   - `report.md`: human-readable summary with per-suite status table, environment block, run tag, generated identifiers, and a release-blocker section the executor pastes into the manual result log
   - `report.json`: machine-readable structure with per-suite status, generated identifier mapping, pass/fail/block reason, and links or relative paths to the execution log entries for that suite
   - `execution-log.ndjson`: chronological newline-delimited JSON of every HTTP exchange, one record per request/response, with UTC timestamp, suite name, test/display name when available, correlation id, method, URL, redacted request headers, request body, expected status, actual status, redacted response headers, response body, latency, matched expectation flag, and note/outcome context
+  - `checklist.md`: Markdown execution checklist with checkboxes for each observed suite and test, plus the observed result/reason so the executor can fill in or review completion while preserving the generated evidence
 - The execution log is the authoritative failure-debug artifact. Reports may summarize requests, but they must not be the only place where request/response detail exists.
 - Heavy logging means no suite is allowed to bypass the harness recorder for HTTP calls. If a request cannot be logged safely, the suite must redact secret fields explicitly and still record the method, target, status, timing, and reason for omitted body content.
 - Secret redaction is mandatory for cookies, CSRF tokens, authorization headers, session identifiers, OAuth values, and configured secret inputs before writing `report.md`, `report.json`, or `execution-log.ndjson`.
@@ -165,6 +169,7 @@
   - `report.md`
   - `report.json`
   - `execution-log.ndjson`
+  - `checklist.md`
   - the example can mark every suite `Failed` if that keeps generation deterministic, but it must include representative request and response log records so reviewers can inspect the final artifact shape without a running app
 - Status taxonomy used uniformly in both report files:
   - `Passed` — all assertions held
@@ -176,6 +181,7 @@
 ## Implementation Status
 - The initial harness implementation under `src/manualTests/` has landed.
 - Milestone 0 has landed: generated output now defaults to `temp/manual-regression/...`, every recorded HTTP exchange is written to `execution-log.ndjson` with request/response detail and redaction, and `./build.ps1 manualRegressionExampleReport` generates deterministic example artifacts under `temp/manual-regression/example/`.
+- Checklist enhancement has landed: manual-regression output now includes `checklist.md` with suite and test checkboxes, observed outcomes, and links back to `report.md` and `execution-log.ndjson`.
 - Manual RC7 execution remains pending and can use `./build.ps1 manualTests` as a prefilled checklist after `v2.0.0-RC7` is prepared.
 
 ## Execution Shape And Shared Files
@@ -221,9 +227,11 @@
   - `temp/manual-regression/v2_0_0_rc7/run-<UTC-timestamp>/report.md`
   - `temp/manual-regression/v2_0_0_rc7/run-<UTC-timestamp>/report.json`
   - `temp/manual-regression/v2_0_0_rc7/run-<UTC-timestamp>/execution-log.ndjson`
+  - `temp/manual-regression/v2_0_0_rc7/run-<UTC-timestamp>/checklist.md`
   - `temp/manual-regression/example/run-<UTC-timestamp>/report.md`
   - `temp/manual-regression/example/run-<UTC-timestamp>/report.json`
   - `temp/manual-regression/example/run-<UTC-timestamp>/execution-log.ndjson`
+  - `temp/manual-regression/example/run-<UTC-timestamp>/checklist.md`
 - Contract docs/OpenAPI/HTTP examples:
   - no contract artifact changes expected
 - Tests:
@@ -486,6 +494,7 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
   - run the example-report generation command, expected target `./build.ps1 manualRegressionExampleReport` unless implementation chooses and documents a different entry point
   - confirm generated example artifacts exist only under `temp/manual-regression/example/`
   - inspect `execution-log.ndjson` for timestamp, request, response, status, latency, suite, and redaction fields
+  - inspect `checklist.md` for suite and test checkboxes plus observed outcome details
   - `./build.ps1 build`
 - Manual execution validation:
   - complete Milestones 0 through 5
@@ -546,8 +555,12 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
   - `./build.ps1 compileManualTestsJava` passed.
   - `./build.ps1 manualRegressionExampleReport` passed and generated example artifacts under `temp/manual-regression/example/run-20260507-180042/`.
   - inspected the generated `execution-log.ndjson`; it includes timestamp, request, response, status, latency, suite, and redaction fields.
+- 2026-05-07 checklist artifact implementation:
+  - added `checklist.md` as a generated manual-regression artifact with checkboxes for every observed suite and test, including observed outcome and reason text.
+  - updated the synthetic example report generation path so `./build.ps1 manualRegressionExampleReport` also writes example checklist output under `temp/manual-regression/example/run-<UTC-timestamp>/`.
+  - validation is recorded in the implementing commit.
 
 ## User Validation
 - Review this plan and answer the open questions if the fallback assumptions are not acceptable.
-- During execution, follow Milestones 0 through 5 and use the descriptive suite names (`01-public-overview-and-docs` … `12-operator-surface`) as the manual regression checklist; after Milestone 0 lands, run `./build.ps1 manualTests` first and treat its report plus `execution-log.ndjson` as the prefilled checklist.
+- During execution, follow Milestones 0 through 5 and use the descriptive suite names (`01-public-overview-and-docs` … `12-operator-surface`) as the manual regression checklist; run `./build.ps1 manualTests` first and treat `checklist.md`, `report.md`, and `execution-log.ndjson` as the generated execution evidence.
 - A release-ready manual pass has no failed suites, no unresolved release blockers, and clear notes for any blocked non-admin or provider-specific checks.

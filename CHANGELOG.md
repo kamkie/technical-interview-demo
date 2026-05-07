@@ -7,6 +7,10 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Added
+
+- Added a generated manual-regression `checklist.md` artifact with suite and test checkboxes beside each `manualTests` report.
+
 ### Changed
 
 - Removed `imageVulnerabilityScan` from the Gradle `build`/`check` lifecycle; CI and release workflows now request the container image vulnerability scan explicitly when they need that evidence.

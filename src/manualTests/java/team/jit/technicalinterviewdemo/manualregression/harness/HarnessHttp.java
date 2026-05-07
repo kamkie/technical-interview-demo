@@ -125,7 +125,6 @@ public final class HarnessHttp {
                 "cookie",
                 "set-cookie",
                 CSRF_HEADER_NAME.toLowerCase(Locale.ROOT),
-                "x-xsrf-token",
                 "x-csrf-token");
         private static final Pattern SENSITIVE_JSON_FIELD = Pattern.compile(
                 "(?i)(\"(?:csrfToken|xsrfToken|token|secret|password|session|sessionCookie|adminSessionCookie|adminCsrfToken|regularSessionCookie|regularCsrfToken)\"\\s*:\\s*\")([^\"]*)(\")");

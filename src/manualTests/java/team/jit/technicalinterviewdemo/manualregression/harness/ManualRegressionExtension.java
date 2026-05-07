@@ -2,10 +2,12 @@ package team.jit.technicalinterviewdemo.manualregression.harness;
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
+import org.junit.jupiter.api.extension.TestWatcher;
 import org.opentest4j.TestAbortedException;
 
 import java.time.Instant;
@@ -14,6 +16,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * JUnit 5 extension that gives every suite class:
@@ -32,7 +35,7 @@ import java.util.Map;
  * {@code skipped} rather than {@code failed}, which matches the plan's "Blocked" semantics.
  */
 public final class ManualRegressionExtension
-        implements BeforeAllCallback, AfterAllCallback, TestExecutionExceptionHandler {
+        implements BeforeAllCallback, BeforeEachCallback, AfterAllCallback, TestExecutionExceptionHandler, TestWatcher {
 
     private static final Namespace NAMESPACE = Namespace.create(ManualRegressionExtension.class);
     private static final String KEY_SUITE_REPORT = "suiteReport";
@@ -44,6 +47,11 @@ public final class ManualRegressionExtension
     private static volatile RunConfig runConfig;
     private static final Map<String, SuiteReport> COMPLETED = Collections.synchronizedMap(new LinkedHashMap<>());
     private static final List<String> EXECUTION_ORDER = Collections.synchronizedList(new ArrayList<>());
+    private static final Map<Class<?>, SuiteReport> ACTIVE_REPORTS = Collections.synchronizedMap(new LinkedHashMap<>());
+    private static final Map<Class<?>, HarnessHttp> ACTIVE_HTTP = Collections.synchronizedMap(new LinkedHashMap<>());
+    private static final Map<Class<?>, String> BLOCKED_REASONS = Collections.synchronizedMap(new LinkedHashMap<>());
+    private static final Map<Class<?>, String> FAILURE_REASONS = Collections.synchronizedMap(new LinkedHashMap<>());
+    private static final ThreadLocal<Class<?>> CURRENT_SUITE_CLASS = new ThreadLocal<>();
     private static final ThreadLocal<String> CURRENT_TEST_NAME = new ThreadLocal<>();
     private static volatile boolean shutdownHookInstalled = false;
 
@@ -57,28 +65,30 @@ public final class ManualRegressionExtension
         }
         String suiteName = suiteAnnotation.value();
         SuiteReport report = new SuiteReport(suiteName, Instant.now());
+        HarnessHttp http = new HarnessHttp(config, report);
+        ACTIVE_REPORTS.put(suiteClass, report);
+        ACTIVE_HTTP.put(suiteClass, http);
         Store store = context.getStore(NAMESPACE);
         store.put(KEY_SUITE_REPORT, report);
-        store.put(KEY_HTTP, new HarnessHttp(config, report));
+        store.put(KEY_HTTP, http);
 
         // Selection check.
         if (!config.isSuiteSelected(suiteName)) {
-            String reason = "Suite not in selected suites: " + String.join(",", config.selectedSuites());
-            store.put(KEY_BLOCKED, reason);
+            blockSuite(suiteClass, store, "Suite not in selected suites: " + String.join(",", config.selectedSuites()));
             return;
         }
 
         // Identity gating.
         if (suiteAnnotation.requiresAdminIdentity() && !config.hasAdminIdentity()) {
-            store.put(KEY_BLOCKED, "Admin identity not configured");
+            blockSuite(suiteClass, store, "Admin identity not configured");
             return;
         }
         if (suiteAnnotation.requiresRegularIdentity() && !config.hasRegularIdentity()) {
-            store.put(KEY_BLOCKED, "Regular-user identity not configured");
+            blockSuite(suiteClass, store, "Regular-user identity not configured");
             return;
         }
         if (suiteAnnotation.requiresRegularUserId() && !config.hasRegularUserId()) {
-            store.put(KEY_BLOCKED, "Regular-user id not configured");
+            blockSuite(suiteClass, store, "Regular-user id not configured");
             return;
         }
 
@@ -86,25 +96,43 @@ public final class ManualRegressionExtension
         for (String required : suiteAnnotation.requires()) {
             SuiteReport prior = COMPLETED.get(required);
             if (prior == null) {
-                store.put(KEY_BLOCKED, "Required suite did not run: " + required);
+                blockSuite(suiteClass, store, "Required suite did not run: " + required);
                 return;
             }
             if (prior.result() == SuiteResult.FAILED || prior.result() == SuiteResult.BLOCKED) {
-                store.put(KEY_BLOCKED, "Required suite did not pass: " + required + " (" + prior.result() + ")");
+                blockSuite(
+                        suiteClass, store, "Required suite did not pass: " + required + " (" + prior.result() + ")");
                 return;
             }
         }
     }
 
+    private static void blockSuite(Class<?> suiteClass, Store store, String reason) {
+        store.put(KEY_BLOCKED, reason);
+        BLOCKED_REASONS.put(suiteClass, reason);
+    }
+
+    @Override
+    public void beforeEach(ExtensionContext context) {
+        Class<?> suiteClass = context.getRequiredTestClass();
+        CURRENT_SUITE_CLASS.set(suiteClass);
+        CURRENT_TEST_NAME.set(context.getDisplayName());
+        SuiteReport report = suiteReport(suiteClass);
+        if (report != null && context.getTestMethod().isPresent()) {
+            report.recordTestStarted(context.getUniqueId(), context.getDisplayName(), Instant.now());
+        }
+    }
+
     @Override
     public void afterAll(ExtensionContext context) {
+        Class<?> suiteClass = context.getRequiredTestClass();
         Store store = context.getStore(NAMESPACE);
-        SuiteReport report = store.get(KEY_SUITE_REPORT, SuiteReport.class);
+        SuiteReport report = suiteReport(suiteClass);
         if (report == null) {
             return;
         }
-        String blocked = store.get(KEY_BLOCKED, String.class);
-        String failure = store.get(KEY_FAILURE_REASON, String.class);
+        String blocked = BLOCKED_REASONS.getOrDefault(suiteClass, store.get(KEY_BLOCKED, String.class));
+        String failure = FAILURE_REASONS.getOrDefault(suiteClass, store.get(KEY_FAILURE_REASON, String.class));
         Instant now = Instant.now();
         if (blocked != null) {
             report.markBlocked(now, blocked);
@@ -115,6 +143,10 @@ public final class ManualRegressionExtension
         }
         COMPLETED.put(report.suiteName(), report);
         EXECUTION_ORDER.add(report.suiteName());
+        ACTIVE_REPORTS.remove(suiteClass);
+        ACTIVE_HTTP.remove(suiteClass);
+        BLOCKED_REASONS.remove(suiteClass);
+        FAILURE_REASONS.remove(suiteClass);
     }
 
     @Override
@@ -126,24 +158,67 @@ public final class ManualRegressionExtension
         Store store = context.getStore(NAMESPACE);
         String existing = store.get(KEY_FAILURE_REASON, String.class);
         if (existing == null) {
-            store.put(KEY_FAILURE_REASON, throwable.getClass().getSimpleName() + ": " + throwable.getMessage());
+            String reason = throwable.getClass().getSimpleName() + ": " + throwable.getMessage();
+            store.put(KEY_FAILURE_REASON, reason);
+            FAILURE_REASONS.put(context.getRequiredTestClass(), reason);
         }
         throw throwable;
     }
 
+    @Override
+    public void testSuccessful(ExtensionContext context) {
+        recordTestOutcome(context, "PASSED", Optional.empty());
+    }
+
+    @Override
+    public void testAborted(ExtensionContext context, Throwable cause) {
+        recordTestOutcome(context, "BLOCKED", Optional.ofNullable(cause.getMessage()));
+    }
+
+    @Override
+    public void testFailed(ExtensionContext context, Throwable cause) {
+        recordTestOutcome(
+                context,
+                "FAILED",
+                Optional.of(cause.getClass().getSimpleName() + ": " + cause.getMessage()));
+    }
+
+    @Override
+    public void testDisabled(ExtensionContext context, Optional<String> reason) {
+        recordTestOutcome(context, "NOT_RUN", reason);
+    }
+
+    private void recordTestOutcome(ExtensionContext context, String outcome, Optional<String> reason) {
+        SuiteReport report = suiteReport(context.getRequiredTestClass());
+        if (report != null && context.getTestMethod().isPresent()) {
+            report.recordTestFinished(context.getUniqueId(), context.getDisplayName(), Instant.now(), outcome, reason);
+        }
+    }
+
     /** Helper used by {@link SuiteBase} to fetch the suite report attached to the test class. */
-    public static SuiteReport suiteReport(ExtensionContext context) {
-        return context.getStore(NAMESPACE).get(KEY_SUITE_REPORT, SuiteReport.class);
+    public static SuiteReport suiteReport() {
+        Class<?> suiteClass = CURRENT_SUITE_CLASS.get();
+        return suiteClass == null ? null : suiteReport(suiteClass);
+    }
+
+    private static SuiteReport suiteReport(Class<?> suiteClass) {
+        return ACTIVE_REPORTS.get(suiteClass);
     }
 
     /** Helper used by {@link SuiteBase} to fetch the HTTP client attached to the test class. */
-    public static HarnessHttp http(ExtensionContext context) {
-        return context.getStore(NAMESPACE).get(KEY_HTTP, HarnessHttp.class);
+    public static HarnessHttp http() {
+        Class<?> suiteClass = CURRENT_SUITE_CLASS.get();
+        return suiteClass == null ? null : ACTIVE_HTTP.get(suiteClass);
     }
 
     /** Helper used by {@code SuiteBase} to skip remaining tests in a blocked suite. */
-    public static String blockedReason(ExtensionContext context) {
-        return context.getStore(NAMESPACE).get(KEY_BLOCKED, String.class);
+    public static String blockedReason() {
+        Class<?> suiteClass = CURRENT_SUITE_CLASS.get();
+        return suiteClass == null ? null : BLOCKED_REASONS.get(suiteClass);
+    }
+
+    public static void setCurrentSuiteClass(Class<?> suiteClass) {
+        CURRENT_SUITE_CLASS.set(suiteClass);
     }
 
     public static RunConfig runConfig() {

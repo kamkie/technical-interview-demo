@@ -45,9 +45,14 @@ when the corresponding inputs are missing, so an anonymous-only run remains usef
 
 Each run directory contains:
 
+- `checklist.md`
 - `report.md`
 - `report.json`
 - `execution-log.ndjson`
+
+`checklist.md` is the suite/test execution checklist. It contains Markdown checkboxes for each
+observed suite and JUnit test, with the generated outcome next to each item so the executor can
+review or fill in completion while the run evidence stays beside the report.
 
 `execution-log.ndjson` is the authoritative per-exchange debug artifact. It records request and
 response headers and bodies, expected and actual status, latency, suite/test context, and redacted

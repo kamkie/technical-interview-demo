@@ -7,7 +7,6 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.ExtensionContext;
 
 /**
  * Base class for every manual-regression suite.
@@ -25,26 +24,18 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public abstract class SuiteBase {
 
-    private ExtensionContext currentContext;
-    private ExtensionContext classContext;
-
     @BeforeAll
-    void captureClassContext(ExtensionContext context) {
-        this.classContext = context;
+    void captureClassContext() {
+        ManualRegressionExtension.setCurrentSuiteClass(getClass());
     }
 
     @BeforeEach
-    void captureContext(ExtensionContext context) {
-        this.currentContext = context;
-        ManualRegressionExtension.setCurrentTestName(context.getDisplayName());
-        String reason = ManualRegressionExtension.blockedReason(context);
+    void captureContext() {
+        ManualRegressionExtension.setCurrentSuiteClass(getClass());
+        String reason = ManualRegressionExtension.blockedReason();
         if (reason != null) {
             Assumptions.abort("Suite blocked: " + reason);
         }
-    }
-
-    private ExtensionContext effectiveContext() {
-        return currentContext != null ? currentContext : classContext;
     }
 
     protected RunConfig config() {
@@ -52,11 +43,11 @@ public abstract class SuiteBase {
     }
 
     protected SuiteReport report() {
-        return ManualRegressionExtension.suiteReport(effectiveContext());
+        return ManualRegressionExtension.suiteReport();
     }
 
     protected HarnessHttp http() {
-        return ManualRegressionExtension.http(effectiveContext());
+        return ManualRegressionExtension.http();
     }
 
     protected String runTag() {
