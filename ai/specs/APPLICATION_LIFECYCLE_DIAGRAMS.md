@@ -14,7 +14,7 @@ All diagrams use [Mermaid](https://mermaid.js.org/) syntax so they render native
 
 ## 1. Phase Flow
 
-The eleven phases and their normal forward transitions, with re-entry edges for failed gates.
+The eleven phases and their normal forward transitions, with re-entry edges for failed gates and roadmap-feedback edges for scope changes discovered mid-cycle.
 
 ```mermaid
 flowchart TD
@@ -40,6 +40,11 @@ flowchart TD
     %% Cross-cutting Replan
     I -. replan .-> P
     T -. replan .-> P
+
+    %% Roadmap-feedback edges (localized Sync trigger; see diagram 6)
+    P -. sync new/changed scope .-> RI
+    I -. defer item to next cycle .-> RI
+    OP -. backport / patch / deprecate backlog .-> RI
 
     classDef terminal fill:#eef,stroke:#446,stroke-width:1px;
     class CI terminal;
