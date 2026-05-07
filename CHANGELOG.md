@@ -7,10 +7,15 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Added
+
+- Added a reusable `Deep AI Guidelines Assessment` task for evidence-based grading and improvement recommendations.
+
 ### Changed
 
 - Restructured AI guidance ownership by moving active plans under `ai/plans/active/`, renaming the planning guide to `ai/PLANNING.md`, adding `ai/PLAN_EXECUTION.md` for whole-plan execution, narrowing `ai/EXECUTION.md` to ad hoc and single-milestone work, and replacing reusable starter storage with a self-contained `ai/TASK_LIBRARY.md` catalog.
 - Refreshed the on-demand post-compaction AI guideline evaluation report for the new owner-guide and task-library structure.
+- Archived AI-guideline evaluation and workflow-selection comparison report artifacts under `ai/archive/reports/`, keeping `ai/references/` for operative references.
 - Documented the commit-message `Trigger:` body line for plan or spec work, plan implementation, milestone execution, and ad hoc task commits.
 - Renamed lifecycle vocabulary to phase activities across active AI guidance and lifecycle specs.
 

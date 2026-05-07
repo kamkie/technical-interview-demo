@@ -116,7 +116,7 @@ Use these files deliberately:
 - `ai/templates/`: on-demand templates for creating new AI artifacts
 - `ai/skills/`: on-demand repo-local workflow skills; read a skill's `SKILL.md` only when that skill is invoked or clearly applies
 - `.agents/plugins/marketplace.json`: Codex repo-scoped plugin marketplace configuration, only if this repository later promotes a reusable workflow to an installable Codex plugin
-- `ai/archive/`: archived AI execution plans that have already been released or otherwise completed; read only for historical investigation
+- `ai/archive/`: archived AI execution plans and historical report-like analysis artifacts; read only for historical investigation
 
 ## AI Instruction Load Policy
 
@@ -125,8 +125,8 @@ Load AI guidance on demand:
 - read `AGENTS.md` first
 - read only the owning AI guide for the current task
 - read active `ai/plans/active/PLAN_*.md` files only when planning, executing, verifying, or releasing that plan
-- use task-specific search terms for the onboarding relevance scan; do not read every active plan, archived plan, task section, reference, template, or skill as a pre-flight default
-- read task sections in `ai/TASK_LIBRARY.md`, templates, detailed references, skill files, and archived plans only when the task specifically needs them
+- use task-specific search terms for the onboarding relevance scan; do not read every active plan, archived plan or report, task section, reference, template, or skill as a pre-flight default
+- read task sections in `ai/TASK_LIBRARY.md`, templates, detailed references, skill files, and archived plans or reports only when the task specifically needs them
 - do not bulk-load `ai/archive/`, `ai/references/`, `ai/templates/`, or skill reference material as standing context
 
 ### Context Hygiene
@@ -141,7 +141,7 @@ Maintain a clean working context to optimize performance and prevent hallucinati
 
 ### AI Document Maintenance
 
-Detailed AI-document maintenance rules live in `ai/DOCUMENTATION.md`. Load that guide before changing `AGENTS.md`, top-level `ai/*.md`, task-library files, templates, skills, references, or archived plans.
+Detailed AI-document maintenance rules live in `ai/DOCUMENTATION.md`. Load that guide before changing `AGENTS.md`, top-level `ai/*.md`, task-library files, templates, skills, references, or archived plans or reports.
 
 ## Required Updates By Change Type
 

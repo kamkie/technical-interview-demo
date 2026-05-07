@@ -99,6 +99,7 @@ rg -n "^### Create Plan$" ai/TASK_LIBRARY.md
 - `Clean Worktrees And Stale Local Branches`
 - `Compact AI Docs`
 - `Context Report`
+- `Deep AI Guidelines Assessment`
 - `Evaluate AI Guidelines`
 - `Implement Then Release` (<plan_file>)
 - `Summarize Lifecycle State` (<plan_file>)
@@ -680,6 +681,7 @@ Categorize measurements into these broad buckets:
 - standing root and AI top-level files
 - active plan files, meaning top-level `ai/plans/active/PLAN_*.md`
 - archived plans
+- archived report artifacts
 - on-demand tasks
 - on-demand references
 - on-demand templates
@@ -785,13 +787,103 @@ Write the final report under a temporary directory outside the worktree, for exa
 
 After the report is written, delete the temporary git worktree. Leave the report file in place.
 
+### Deep AI Guidelines Assessment
+
+Category: Lifecycle And Maintenance
+Slug: `deep-ai-guidelines-assessment`
+Placeholders: none
+
+Deeply analyze, evaluate, and grade the current repository AI guideline set, then provide prioritized recommendations for improvement.
+
+Use this as an evidence-based assessment task, not as an implementation request for the recommendations it discovers.
+Base the assessment on the current `Context Report` measurement method and the latest archived AI-guideline evaluation under `ai/archive/reports/`, when one exists.
+
+#### Scope
+
+- Read `AGENTS.md`, `ai/DOCUMENTATION.md`, `ai/TASK_LIBRARY.md`, and, if present, the latest matching archived AI-guideline evaluation under `ai/archive/reports/` first.
+- Generate a fresh context report using the `Context Report` task method, or reuse a same-session context report only if it clearly covers the current HEAD and uncommitted AI-guidance changes.
+- Read top-level owner guides under `ai/` because the task grades the current guideline set as a whole.
+- Inspect active plans only for lifecycle state, context-load impact, stale references, and active-read-set hygiene.
+- Inspect on-demand references, templates, task sections, and repo-local skills only when the context report, archived evaluation report, or targeted searches identify them as important load, drift, duplication, or stale-reference contributors.
+- Do not bulk-load `ai/archive/`; read only matching report artifacts under `ai/archive/reports/`, and sample archived plans only when the assessment has a specific historical or stale-reference question.
+
+#### Assessment Tasks
+
+1. Recompute or verify the context-load evidence from the context report:
+   - default load
+   - phase-specific practical read sets
+   - task-catalog load
+   - active-plan inventory
+   - archived inventory
+   - on-demand references, templates, and skills
+   - total tracked AI instruction inventory
+2. Compare the current evidence with the latest archived AI-guideline evaluation report, when one exists.
+3. Grade the guideline set using a consistent rubric:
+   - owner clarity and single-source ownership
+   - context efficiency and default-load discipline
+   - on-demand trigger clarity
+   - task-library quality and heading-search safety
+   - active-plan lifecycle hygiene
+   - skill, reference, template, and archive containment
+   - duplication, contradiction, and stale-reference risk
+   - execution, testing, review, documentation, workflow, and release usefulness
+   - recommendation actionability
+4. Identify concrete improvement opportunities, including:
+   - guidance to compact, split, relocate, archive, or turn into an on-demand reference
+   - task sections that are growing into policy dumps
+   - owner-map or task-index changes that would reduce accidental loading
+   - thresholds or guardrails for future context growth
+   - reusable measurement or validation helpers worth adding
+   - obsolete recommendations that should be retired
+5. Distinguish true blockers from optional cleanup and preference-only edits.
+
+#### Report Requirements
+
+Write a standalone markdown report under a temporary directory outside the worktree, for example:
+
+`temp/deep-ai-guidelines-assessment-<date>.md`
+
+The report must include:
+
+- assessment date, commit range or working-tree boundary, and whether uncommitted changes were included
+- executive summary with overall grade
+- evidence sources, including the context report path and the evaluation report path
+- current size and load-set findings
+- scorecard with category grades and concise rationale
+- top risks and contradictions, with file references
+- comparison with the previous evaluation report
+- ranked recommendations with owner file, expected benefit, estimated context impact, implementation risk, and validation needed
+- "do now", "defer", and "do not do" sections
+- caveats about approximate token estimates and inferred load behavior
+
+#### Guardrails
+
+- Do not implement recommendations unless I explicitly ask.
+- Do not move archived reports back into `ai/references/`; use `Evaluate AI Guidelines` only when a fresh evaluation snapshot is explicitly needed.
+- Do not edit `CHANGELOG.md` unless a tracked report or AI-guidance file is intentionally updated.
+- Keep standing policy in the owning guide named by `ai/DOCUMENTATION.md`; do not copy full policy into the assessment report.
+- If a live contradiction makes grading unreliable, list it as a blocker before recommendations instead of smoothing over it.
+
+#### Validation
+
+Do not run the build, tests, or heavyweight validation checks for the assessment itself.
+Run `git diff --check` only if the task edits tracked repository files.
+
+In the final response, summarize:
+
+- overall grade
+- highest-risk context or guideline issue
+- top three recommendations
+- report path
+- validation commands and results
+
 ### Evaluate AI Guidelines
 
 Category: Lifecycle And Maintenance
 Slug: `evaluate-ai-guidelines`
 Placeholders: none
 
-Evaluate and grade the current repository AI guideline set, then refresh `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md`.
+Evaluate and grade the current repository AI guideline set, then write a timestamped archived evaluation snapshot under `ai/archive/reports/`.
 
 Use this as an evaluation and reporting task, not as an implementation request for the recommendations it discovers.
 
@@ -800,7 +892,7 @@ Use this as an evaluation and reporting task, not as an implementation request f
 - Read `AGENTS.md`, `ai/DOCUMENTATION.md`, `ai/TASK_LIBRARY.md`, and standing top-level owner guides under `ai/`.
 - Exclude active `ai/plans/active/PLAN_*.md` files from the standing-guide baseline, but inspect active plans when they are relevant to lifecycle state, roadmap cleanup, or stale-reference checks.
 - Read representative large task sections in this file when checking task-policy drift.
-- Read on-demand references only when a standing guide points to them, when the previous evaluation report names them, or when a targeted search finds a likely stale reference.
+- Read on-demand references only when a standing guide points to them, when the latest archived evaluation report names them, or when a targeted search finds a likely stale reference.
 - Do not bulk-load `ai/archive/` unless the evaluation specifically needs historical context.
 
 #### Evaluation Tasks
@@ -832,12 +924,12 @@ Use this as an evaluation and reporting task, not as an implementation request f
    - task sections growing into standing policy dumps
    - repeated artifact-routing rules outside `ai/DOCUMENTATION.md`
    - release, workflow, validation, and planning mechanics duplicated across owners
-5. Compare the current state to the previous contents of `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md`.
-6. Refresh the report so it describes current repository truth, not the state at the previous evaluation.
+5. Compare the current state to the latest matching archived AI-guideline evaluation under `ai/archive/reports/`, when one exists.
+6. Write the report so it describes current repository truth, not the state at the previous evaluation.
 
 #### Report Requirements
 
-Update `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md` with:
+Create or refresh a same-day report at `ai/archive/reports/AI_GUIDELINES_EVALUATION_<YYYY-MM-DD>.md` with:
 
 - evaluation date
 - overall grade
@@ -851,15 +943,15 @@ Update `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md` with:
 - obsolete recommendations that should not be repeated
 - ranked follow-up recommendations
 
-Keep the report on demand. Do not move the report into a standing top-level guide.
+Keep the report on demand. Do not move the report into `ai/references/` or a standing top-level guide.
 
 #### Guardrails
 
 - Do not implement follow-up compaction recommendations unless the user explicitly asks for implementation.
 - If a concrete active-guidance contradiction makes the report inaccurate, fix only the narrow contradiction needed for report accuracy or stop and explain the blocker.
 - Keep standing policy in the owning guide named by `ai/DOCUMENTATION.md`; do not copy full policy into the report.
-- Keep archived-plan wording historical. Do not rewrite `ai/archive/` just to remove old terminology.
-- Update `CHANGELOG.md` under `## [Unreleased]` when the report is refreshed.
+- Keep archived content historical. Do not rewrite `ai/archive/` just to remove old terminology.
+- Update `CHANGELOG.md` under `## [Unreleased]` when a tracked archived report is created or refreshed.
 
 #### Validation
 

@@ -13,7 +13,7 @@ It is an on-demand decision aid, not standing workflow policy.
 | Variant 2: Hard split | `plan/workflow-selection-hard-split-impl` | `fcd3004` | `D:\Projects\Jit\technical-interview-demo-workflow-hard-split` | clean |
 | Variant 3: Hard split with multi-plan template | `plan/workflow-selection-multi-plan-template-impl` | `015401e` | `D:\Projects\Jit\technical-interview-demo-workflow-multi-plan-template` | clean |
 
-All three branches refreshed `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md` after implementation.
+All three branches refreshed `ai/archive/reports/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md` after implementation.
 
 ## Executive Recommendation
 

@@ -31,6 +31,7 @@ Update the artifact that owns the truth being changed:
 - reusable task catalog: `ai/TASK_LIBRARY.md`; each task section owns its title, placeholders, and task text
 - repo-local reusable workflow wrappers: `ai/skills/`; Codex plugin marketplace configuration: `.agents/plugins/marketplace.json` when intentionally introducing a repo-scoped plugin
 - compact codebase map, structural guidance, and business feature ownership: `ai/ARCHITECTURE.md`; deeper references: `ai/references/`
+- historical AI-analysis reports, evaluations, and comparisons: `ai/archive/reports/`
 - product and contract direction: `ai/DESIGN.md`
 - durable repo-wide lessons: `ai/LEARNINGS.md`
 - edit-shaping rules: `ai/CODE_STYLE.md`
@@ -41,7 +42,7 @@ If ownership is unclear, decide that before editing multiple docs.
 
 ### AI Document Maintenance
 
-Load this section on demand before changing `AGENTS.md`, top-level `ai/*.md`, task-library files, templates, skills, references, or archived plans.
+Load this section on demand before changing `AGENTS.md`, top-level `ai/*.md`, task-library files, templates, skills, references, or archived plans or reports.
 
 Rules for maintaining the `ai/` documents:
 
@@ -50,7 +51,8 @@ Rules for maintaining the `ai/` documents:
 - update the relevant `ai/` file in the same change when architecture, code-style expectations, design intent, documentation ownership, durable engineering guidance, release workflow, review/security review guidance, testing/validation guidance, workflow guidance, or an execution plan materially changes
 - keep `ai/TASK_LIBRARY.md` as a catalog, not standing policy; task sections may include procedural starters, but durable rules belong in the best owning AI document
 - treat the listed task names in `ai/TASK_LIBRARY.md` as reusable commands, following `ai/TASK_LIBRARY.md` for exact-match, placeholder, heading-search, and ambiguity rules
-- keep detailed examples, templates, historical explanations, and deep references in `ai/templates/` or `ai/references/` instead of the standing top-level AI files
+- keep current detailed examples, templates, and deep references in `ai/templates/` or `ai/references/` instead of the standing top-level AI files
+- keep retired report-like AI analysis artifacts under `ai/archive/reports/` instead of `ai/references/`
 - write AI-guidance changes as current-state rules; route any still-useful historical context using this guide
 - keep repo-local skills narrow and workflow-oriented; use them to accelerate repeated entry tasks or focused triage, not to replace the owner guides
 - create `.agents/plugins/marketplace.json` and a plugin bundle only when a workflow needs Codex plugin distribution or install-time discovery; keep ordinary reusable starters in `ai/TASK_LIBRARY.md`
@@ -58,6 +60,7 @@ Rules for maintaining the `ai/` documents:
 - when a repo-local skill wraps a workflow owned by another guide, update the skill and the owning guide together if that workflow changes
 - when AI instruction files accumulate overlap, compact them by moving duplicated guidance into the single best owning file and updating cross-references in the same change
 - archive executed `ai/plans/active/PLAN_*.md` files under `ai/archive/` as part of the release cleanup once that work has been released
+- archive retired AI-guidance reports, evaluations, comparisons, and similar analysis artifacts under `ai/archive/reports/`
 - treat `ai/ARCHITECTURE.md`, `ai/DESIGN.md`, and `ai/LEARNINGS.md` as descriptive guidance, not executable spec authority
 - if an interrupted tool or IDE run leaves an `ai/` document incomplete, finish it or clearly mark the gaps instead of leaving misleading partial content
 - when moving or renaming AI documents, update references in `AGENTS.md` and other `ai/` files in the same change

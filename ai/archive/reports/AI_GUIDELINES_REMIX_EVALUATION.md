@@ -11,7 +11,7 @@ Evaluate whether the AI owner files under `ai/` can be remixed to lower context 
 - the same question for `ai/CODE_STYLE.md` and the other owner files;
 - mixing `ai/DOCUMENTATION.md`, `ai/ARCHITECTURE.md`, and `ai/DESIGN.md` into different lifecycle-bundled files.
 
-The estimation method, token formula, and load-class language follow `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md`.
+The estimation method, token formula, and load-class language follow `ai/archive/reports/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md`.
 
 ## Current Baseline
 

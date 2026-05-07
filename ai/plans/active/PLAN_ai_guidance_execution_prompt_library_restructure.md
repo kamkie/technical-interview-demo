@@ -23,7 +23,7 @@
   - replace the prompt index/body/loader layout with a self-contained reusable task library catalog and without any backward-compatible prompt-loader alias
   - evaluate a narrow repo-local skill for ad hoc task execution, but defer creation unless it can wrap the new `ai/EXECUTION.md` without copying policy and passes the acceptance criteria in this plan
   - run the `Compact AI Docs` maintenance task after the structure lands
-  - regenerate `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md`
+  - regenerate the AI-guideline evaluation snapshot, now archived under `ai/archive/reports/`
   - record the implemented AI-guidance change in `CHANGELOG.md`
 - Out of scope:
   - changing application runtime behavior, public API contracts, tests, REST Docs, OpenAPI, HTTP examples, deployment assets, or setup behavior
@@ -38,7 +38,7 @@
 - Live docs, task starters, templates, references, and repo-local skills contain current mode-oriented wording that will be stale after this redesign.
 - `ROADMAP.md` now points at this plan instead of the three narrower workflow-selection candidate rows.
 - The repository still contains those three former option plan files; implementation must archive them as superseded historical plans under `ai/archive/`, not move them to the new active-plan subdirectory and not delete them.
-- The untracked `ai/references/WORKFLOW_SELECTION_VARIANT_COMPARISON.md` is a useful decision aid, but it is not standing policy and should not be edited unless the user wants to keep it.
+- The workflow-selection variant comparison is archived at `ai/archive/reports/WORKFLOW_SELECTION_VARIANT_COMPARISON.md`; it is a historical decision aid, not standing policy.
 
 ## Resolved Requirement Decisions And Evaluations
 - Prompt loader compatibility:
@@ -109,7 +109,7 @@
   - `ai/skills/**/SKILL.md`
   - optional new ad hoc task execution skill
 - Measurement and release notes:
-  - `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md`
+  - `ai/archive/reports/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md`
   - `CHANGELOG.md`
 - Not affected:
   - application source
@@ -259,7 +259,7 @@
 ### Milestone 6: Regenerate Evaluation Report And Final Validation
 - goal: prove the new guidance set is coherent, measured, and ready for handoff.
 - owned files or packages:
-  - `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md`
+  - `ai/archive/reports/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md`
   - this plan
   - `ROADMAP.md`
 - context required before execution:
@@ -337,7 +337,7 @@
   - Final `./build.ps1 build` passed the full Gradle build, including 264 tests, JaCoCo line coverage at 93.3%, dependency and image vulnerability scans, Docker image build, SBOM tasks, PMD, Spotless, and static security scan.
 - 2026-05-07 implementation Milestone 6 evaluation refresh and final validation:
   - Loaded the `Evaluate AI Guidelines` task with `pwsh ./scripts/ai/get-task.ps1 -Name "Evaluate AI Guidelines"`.
-  - Regenerated `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md` for the new owner-guide and task-library structure, including `ai/PLAN_EXECUTION.md`, current active-plan inventory, task-library inventory, practical read-set estimates, file grades, realized gains, remaining risks, obsolete recommendations, and ranked follow-ups.
+  - Regenerated the AI-guideline evaluation snapshot now archived at `ai/archive/reports/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md` for the new owner-guide and task-library structure, including `ai/PLAN_EXECUTION.md`, current active-plan inventory, task-library inventory, practical read-set estimates, file grades, realized gains, remaining risks, obsolete recommendations, and ranked follow-ups.
   - Recomputed the main measurement baselines: `AGENTS.md` is 13,251 characters / 3,313 estimated tokens; the 15-file standing owner-guide set is 80,900 characters / 20,230 estimated tokens; the two tracked active plans total 76,373 characters / 19,094 estimated tokens.
   - Added a focused `CHANGELOG.md` unreleased entry for the refreshed post-compaction AI guideline evaluation report.
   - Updated `ROADMAP.md` so the AI guidance restructure row is `Implemented`.
@@ -399,11 +399,11 @@
 - 2026-05-07 plan creation:
   - Loaded `AGENTS.md`, `ai/DOCUMENTATION.md`, `ai/PLANNING.md`, `ai/EXECUTION.md`, `ai/WORKFLOW.md`, `ai/PROMPTS.md`, `ai/TESTING.md`, `ai/REVIEWS.md`, `ROADMAP.md`, `ai/templates/PLAN_TEMPLATE.md`, `ai/prompts/bodies/compact-ai-docs.md`, `ai/prompts/bodies/evaluate-ai-guidelines.md`, `ai/prompts/bodies/create-plan.md`, `ai/prompts/bodies/review-plan-readiness.md`, the active workflow-selection option plans, and the current post-compaction evaluation report.
   - Read the repo-local `repo-plan-author` skill and applied it to this plan creation task.
-  - Reviewed the untracked `ai/references/WORKFLOW_SELECTION_VARIANT_COMPARISON.md` as relevant context without editing it.
+  - Reviewed the workflow-selection variant comparison report as relevant context without editing it.
   - Updated `ROADMAP.md` Intake to point at this new plan and replace the older workflow-selection variant candidate rows.
   - Ran a targeted search for the retired mode-name vocabulary against this plan and `ROADMAP.md`; no matches before this validation note.
   - Ran `git diff --check`; passed.
-  - Ran `./build.ps1 build`; passed through the lightweight-file shortcut and skipped Gradle. The wrapper reported changed files as this new plan, `ROADMAP.md`, and the pre-existing untracked `ai/references/WORKFLOW_SELECTION_VARIANT_COMPARISON.md`.
+  - Ran `./build.ps1 build`; passed through the lightweight-file shortcut and skipped Gradle. The wrapper reported changed files as this new plan, `ROADMAP.md`, and the then-pre-existing untracked workflow-selection variant comparison report.
 - 2026-05-07 plan refinement:
   - Loaded `AGENTS.md`, `ai/PLANNING.md`, `ai/DOCUMENTATION.md`, `ROADMAP.md`, `ai/PROMPTS.md`, `ai/EXECUTION.md`, `ai/WORKFLOW.md`, `ai/TESTING.md`, `ai/REVIEWS.md`, `ai/LEARNINGS.md`, the repo-local `repo-plan-author` skill, and the three active workflow-selection option plans.
   - Reviewed official current documentation for Claude Code, GitHub Copilot, and JetBrains Junie to evaluate task-library and planning-guide naming conventions.
