@@ -133,23 +133,7 @@ Maintain a clean working context to optimize performance and prevent hallucinati
 
 ### AI Document Maintenance
 
-Rules for maintaining the `ai/` documents:
-
-- keep the role of each file distinct; do not collapse architecture, code style, design, documentation ownership, execution, planning, release workflow, review guidance, testing guidance, workflow guidance, and learnings into one document
-- keep AI instruction markdown files under `ai/` by default; `AGENTS.md` is the only standing exception
-- update the relevant `ai/` file in the same change when architecture, code-style expectations, design intent, documentation ownership, durable engineering guidance, release workflow, review/security review guidance, testing/validation guidance, workflow guidance, or an execution plan materially changes
-- keep `ai/PROMPTS.md` lean; put reusable prompt metadata in `ai/prompts/index.json`, raw prompt bodies under `ai/prompts/bodies/`, and standing workflow rules in the best owning AI document
-- treat the listed prompt names in `ai/PROMPTS.md` as reusable commands for matching full starters loaded from `ai/prompts/`, following `ai/PROMPTS.md` for exact-match, placeholder, loader, and ambiguity rules
-- keep detailed examples, templates, historical explanations, and deep references in `ai/templates/` or `ai/references/` instead of the standing top-level AI files
-- write AI-guidance changes as current-state rules; route any still-useful historical context using `ai/DOCUMENTATION.md`
-- keep repo-local skills narrow and workflow-oriented; use them to accelerate repeated entry tasks or focused triage, not to replace the owner guides
-- keep standing code-style, testing, review, and documentation guidance in their focused owning files instead of redistributing it across prompts or workflow docs
-- when a repo-local skill wraps a workflow owned by another guide, update the skill and the owning guide together if that workflow changes
-- when AI instruction files accumulate overlap, compact them by moving duplicated guidance into the single best owning file and updating cross-references in the same change
-- archive executed `ai/PLAN_*.md` files under `ai/archive/` as part of the release cleanup once that work has been released
-- treat `ai/ARCHITECTURE.md`, `ai/DESIGN.md`, and `ai/LEARNINGS.md` as descriptive guidance, not executable spec authority
-- if an interrupted tool or IDE run leaves an `ai/` document incomplete, finish it or clearly mark the gaps instead of leaving misleading partial content
-- when moving or renaming AI documents, update references in `AGENTS.md` and other `ai/` files in the same change
+Detailed AI-document maintenance rules live in `ai/DOCUMENTATION.md`. Load that guide before changing `AGENTS.md`, top-level `ai/*.md`, prompts, templates, skills, references, or archived plans.
 
 ## Required Updates By Change Type
 
