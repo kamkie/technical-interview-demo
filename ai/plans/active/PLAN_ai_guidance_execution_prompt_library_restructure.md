@@ -9,7 +9,7 @@
 ## Summary
 - Restructure the AI guidance set so planning, whole-plan execution, task or milestone execution, workflow coordination, and reusable task starters have distinct owners.
 - Remove the current named mode vocabulary from live standing guides, prompt/task starters, templates, skills, and active plan guidance.
-- Rename the planning guide to `ai/PLANNING.md`, move active execution plans under `ai/plans/active/`, and redesign the current prompt storage into a reusable task library.
+- Rename the planning guide to `ai/PLANNING.md`, move active execution plans under `ai/plans/active/`, and redesign the current prompt storage into a reusable task library catalog.
 - Success means an agent can create a plan, execute a whole plan, execute an ad hoc task or one plan milestone, delegate or integrate work, and load reusable task starters without opening stale or overlapping guidance.
 
 ## Scope
@@ -20,7 +20,7 @@
   - rename the former planning guide to `ai/PLANNING.md`
   - move active plans from the former top-level plan locations to `ai/plans/active/PLAN_*.md`
   - update `AGENTS.md`, `WORKING_WITH_AI.md`, `ROADMAP.md`, `ai/DOCUMENTATION.md`, templates, references, skills, and scripts for the new paths and owners
-  - replace the prompt index/body layout with a reusable task library while keeping loader behavior deterministic and without any backward-compatible prompt-loader alias
+  - replace the prompt index/body/loader layout with a self-contained reusable task library catalog and without any backward-compatible prompt-loader alias
   - evaluate a narrow repo-local skill for ad hoc task execution, but defer creation unless it can wrap the new `ai/EXECUTION.md` without copying policy and passes the acceptance criteria in this plan
   - run the `Compact AI Docs` maintenance task after the structure lands
   - regenerate `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md`
@@ -34,7 +34,7 @@
 ## Current State
 - `ai/PLANNING.md`, `ai/EXECUTION.md`, and `ai/WORKFLOW.md` currently share responsibilities for plan creation, plan execution, milestone execution, branch/worktree rules, delegation, and integration.
 - The former active plan locations used the same `PLAN_*.md` prefix family that proposed new guide names such as `PLAN_EXECUTION.md` would also match.
-- `ai/PROMPTS.md`, `ai/prompts/index.json`, `ai/prompts/bodies/`, and `scripts/ai/get-prompt.ps1` currently describe reusable starters as prompts rather than reusable task definitions.
+- Reusable starters have been moved out of the old prompt-owned storage and are now represented as task definitions in `ai/TASK_LIBRARY.md`; historical validation notes below preserve the intermediate path details from the migration.
 - Live docs, task starters, templates, references, and repo-local skills contain current mode-oriented wording that will be stale after this redesign.
 - `ROADMAP.md` now points at this plan instead of the three narrower workflow-selection candidate rows.
 - The repository still contains those three former option plan files; implementation must archive them as superseded historical plans under `ai/archive/`, not move them to the new active-plan subdirectory and not delete them.
@@ -42,13 +42,13 @@
 
 ## Resolved Requirement Decisions And Evaluations
 - Prompt loader compatibility:
-  Decision: no backward-compatible prompt loader alias remains after the task-library migration. Active docs and scripts move to the new task loader, and `scripts/ai/get-prompt.ps1` is removed rather than retained as a wrapper or alias.
+  Decision: no backward-compatible prompt loader alias remains after the task-library migration. Active docs move to task-library heading search, and `scripts/ai/get-prompt.ps1` is removed rather than retained as a wrapper or alias.
 - Superseded workflow-selection candidate plans:
   Decision: archive `ai/archive/PLAN_workflow_selection_soft_consolidation.md`, `ai/archive/PLAN_workflow_selection_hard_split.md`, and `ai/archive/PLAN_workflow_selection_multi_plan_template.md` under `ai/archive/` during the plan-location migration. Do not move them into `ai/plans/active/` and do not delete their historical content.
 - Ad hoc task execution skill:
   Evaluation: immediate creation would give users a short reusable entry point for unplanned tasks and single-milestone work, and it could reduce repeated prompt-body wording after the task-library migration. The drawbacks are stronger: a generic ad hoc executor can duplicate `ai/EXECUTION.md`, add another maintenance surface, increase loaded context, and encourage bypassing the plan-promotion decision for work that should be planned. Decision: defer by default. Create `ai/skills/repo-ad-hoc-task-executor/SKILL.md` only if post-split usage still needs a reusable wrapper, the skill stays under one screen, it links to owner guides instead of restating policy, and its trigger is narrower than normal task execution.
-- Task library directory name:
-  Evaluation: current agent ecosystems do not define one shared repo-local directory for reusable task starters. Claude Code uses `.claude/skills/<skill-name>/SKILL.md` for reusable procedures; GitHub Copilot uses `.github/prompts/*.prompt.md` for reusable prompt files and `.github/instructions/*.instructions.md` for scoped instructions; Junie prefers `.junie/AGENTS.md` for guidelines and supports root `AGENTS.md`. That means `ai/tasks/` and `ai/task-library/` are both repo-local choices, not industry-standard names. Decision: use `ai/task-library/` because it is explicit, matches this plan's "reusable task library" concept, and avoids confusion with Gradle tasks, roadmap tasks, and plan milestones.
+- Task library storage:
+  Evaluation: the separate body directory, JSON index, and custom PowerShell task loader were computationally efficient but added maintenance surfaces that are not needed for a 44-entry repository-local catalog. Decision: keep reusable starters in `ai/TASK_LIBRARY.md` as one self-contained Markdown catalog, and reserve `.agents/plugins/marketplace.json` plus a plugin bundle for Codex-native reusable workflows that need installable discovery, scripts, references, or reliable implicit invocation.
 - `ai/PLANNING.md` naming:
   Evaluation: `PLANNING.md` is not a cross-agent industry-standard filename; external agent conventions center on root instruction files and tool-specific folders. In this repository, top-level `ai/*.md` owner guides use uppercase process or responsibility names such as `DOCUMENTATION.md`, `EXECUTION.md`, `WORKFLOW.md`, `TESTING.md`, and `REVIEWS.md`. Decision: keep the planned `ai/PLANNING.md` rename because it is consistent with the repo's owner-guide convention and avoids confusion with concrete `PLAN_*.md` execution plan files.
 
@@ -59,9 +59,9 @@
 - `ai/PLAN_EXECUTION.md` owns whole-plan execution: readiness, plan scope, milestone sequencing, plan-level context switching, compaction checkpoints, validation rollup, roadmap status, and completion handoff.
 - `ai/EXECUTION.md` owns ad hoc tasks and individual plan milestones: smallest useful read set, context switching for efficiency, spec-first changes, validation at the checkpoint, review, and when to promote ad hoc work into a plan.
 - `ai/WORKFLOW.md` remains, but only for collaboration mechanics: branch/worktree hygiene, delegation boundaries, worker logs, integration, and remote handoff.
-- The prompt system becomes a reusable task library, with standing policy kept in owner guides and task bodies kept procedural.
+- The prompt system becomes a reusable task library, with standing policy kept in owner guides and task sections kept procedural.
 - `ai/TASK_LIBRARY.md` replaces `ai/PROMPTS.md` as the task-library index and usage guide.
-- The task library lives under `ai/task-library/`.
+- The task library lives in `ai/TASK_LIBRARY.md`.
 - No old prompt-loader alias or compatibility wrapper remains after migration.
 - The ad hoc task execution skill is deferred by default and can be created only if it meets the narrow-wrapper acceptance criteria in this plan.
 - Public application behavior remains unchanged.
@@ -75,8 +75,8 @@
   - top-level `ai/*.md`
   - active plans under `ai/plans/active/`
   - `ai/templates/**`, `ai/references/**`, `ai/skills/**`
-  - task-library metadata and bodies under `ai/task-library/**`
-  - task-loader scripts under `scripts/ai/**`
+  - the task catalog in `ai/TASK_LIBRARY.md`
+  - prompt or task loader scripts under `scripts/ai/**` only when removing stale loader behavior
 - If delegation is later requested, use only read-only review or explicitly non-overlapping file ownership after the coordinator has updated the central owner map.
 
 ## Affected Artifacts
@@ -100,11 +100,8 @@
   - release cleanup references under `ai/references/`
 - Reusable task library:
   - `ai/TASK_LIBRARY.md` as the replacement for `ai/PROMPTS.md`
-  - replacement for `ai/prompts/index.json`
-  - replacement for `ai/prompts/bodies/`
-  - `ai/task-library/index.json`
-  - `ai/task-library/bodies/*.md`
-  - new deterministic task loader, expected `scripts/ai/get-task.ps1`
+  - replacement for `ai/prompts/index.json` and `ai/prompts/bodies/`
+  - removal of `ai/task-library/index.json`, `ai/task-library/bodies/*.md`, and `scripts/ai/get-task.ps1`
   - removal of `scripts/ai/get-prompt.ps1`; no compatibility alias or wrapper remains
 - Templates, references, and skills:
   - `ai/templates/PLAN_TEMPLATE.md`
@@ -206,28 +203,29 @@
 - goal: make reusable starters task-shaped, discoverable, and clearly separate from standing policy.
 - owned files or packages:
   - `ai/TASK_LIBRARY.md`
-  - `ai/task-library/index.json`
-  - `ai/task-library/bodies/*.md`
-  - `scripts/ai/get-task.ps1`
+  - removal of `ai/task-library/index.json`
+  - removal of `ai/task-library/bodies/*.md`
+  - removal of `scripts/ai/get-task.ps1`
   - removal of `scripts/ai/get-prompt.ps1`
   - task starter references in `AGENTS.md`, `WORKING_WITH_AI.md`, and owner guides
 - context required before execution:
   - Milestone 1 task inventory, `ai/PROMPTS.md`, `ai/prompts/index.json`, representative touched prompt bodies, `scripts/ai/get-prompt.ps1`, `ai/DOCUMENTATION.md`, and this milestone
 - behavior to preserve:
-  - reusable starters remain listable and loadable by title or slug
-  - task bodies remain procedural and do not become policy dumps
-  - placeholder metadata remains machine-readable
+  - reusable starters remain discoverable by title, placeholder, and heading search
+  - task sections remain procedural and do not become policy dumps
+  - placeholder metadata remains visible next to each task definition
 - exact deliverables:
-  - prompt index and body paths are migrated or replaced by the task-library layout
+  - prompt index and body paths are migrated into the self-contained task-library catalog
   - stale prompt names that encode removed mode vocabulary are renamed to task-oriented names
-  - loader smoke checks cover the new task-library behavior
+  - heading-search checks cover the task-library index and exact task headings
   - old prompt invocations are not kept as aliases
   - `ai/DOCUMENTATION.md` owns the new task-library artifact routing
 - validation checkpoint:
-  - task loader list and single-task load smoke checks pass
-  - task loader unknown-name check fails with a deterministic non-alias error
+  - task-library heading search finds the index and a representative exact task heading
   - `Test-Path -LiteralPath scripts/ai/get-prompt.ps1` returns false
+  - `Test-Path -LiteralPath scripts/ai/get-task.ps1` returns false
   - targeted search confirms no active docs or scripts still invoke `scripts/ai/get-prompt.ps1`
+  - targeted search confirms no active docs or scripts still require `scripts/ai/get-task.ps1`
   - targeted search confirms active docs no longer describe the library as prompt-owned policy
   - `git diff --check`
 - commit checkpoint:
@@ -241,7 +239,7 @@
   - standing top-level AI guides changed by compaction
   - `CHANGELOG.md`
 - context required before execution:
-  - new `ai/EXECUTION.md`, `ai/DOCUMENTATION.md`, `ai/TESTING.md`, existing repo-local skill entrypoints, `ai/task-library/bodies/compact-ai-docs.md`, and this milestone
+  - new `ai/EXECUTION.md`, `ai/DOCUMENTATION.md`, `ai/TESTING.md`, existing repo-local skill entrypoints, the `Compact AI Docs` section in `ai/TASK_LIBRARY.md`, and this milestone
 - behavior to preserve:
   - skills remain narrow wrappers and do not replace owner guides
   - compaction moves guidance to the single best owner rather than deleting unclear rules
@@ -265,7 +263,7 @@
   - this plan
   - `ROADMAP.md`
 - context required before execution:
-  - `ai/task-library/bodies/evaluate-ai-guidelines.md`, changed standing guides, task-library inventory, active-plan inventory, `ai/TESTING.md`, `ai/REVIEWS.md`, `ai/DOCUMENTATION.md`, and this milestone
+  - the `Evaluate AI Guidelines` section in `ai/TASK_LIBRARY.md`, changed standing guides, task-library inventory, active-plan inventory, `ai/TESTING.md`, `ai/REVIEWS.md`, `ai/DOCUMENTATION.md`, and this milestone
 - behavior to preserve:
   - the evaluation report remains on demand
   - roadmap status changes only after implementation state actually changes
@@ -274,8 +272,7 @@
   - final plan `Validation Results` updated with actual commands and outcomes
   - `ROADMAP.md` reflects the final active-work state
 - validation checkpoint:
-  - task loader smoke checks
-  - task loader unknown-name check
+  - task-library heading-search checks
   - old prompt-loader script nonexistence check
   - targeted stale-reference searches
   - `git diff --check`
@@ -285,45 +282,59 @@
   - `docs: refresh ai guidance evaluation`
 
 ## Edge Cases And Failure Modes
-- Removing prompt-loader compatibility can break user muscle memory. Make active docs, task names, loader errors, and validation output point clearly to the new task loader instead of silently preserving old prompt names.
+- Removing prompt-loader compatibility can break user muscle memory. Make active docs, task names, and validation output point clearly to the task-library heading-search flow instead of silently preserving old prompt names.
 - Moving active plans can break scripts or prompt/task starters that glob the former top-level active-plan paths. Update those before adding new `PLAN_*.md` guide names.
 - Renaming the planning guide can leave stale references in human-facing docs, templates, skills, and release references. Use targeted searches across live files.
-- Task-library migration can break established prompt names. Use deterministic loader errors and updated active docs instead of compatibility aliases.
+- Task-library migration can break established prompt names. Use updated active docs and exact task headings instead of compatibility aliases.
 - A skill for ad hoc tasks can duplicate `ai/EXECUTION.md`. Defer it unless it clearly improves repeated entry workflow without becoming a second owner.
 - The evaluation report can become stale if generated before compaction. Run compaction first, then regenerate the report.
 
 ## Validation Plan
 - Run targeted reference searches over live files, excluding `ai/archive/**` except when checking release cleanup instructions.
-- Run task loader smoke checks for list and single-task load paths.
-- Run a task loader unknown-name check and confirm it fails deterministically instead of falling back to old prompt names.
+- Run task-library heading-search checks for the index and a representative exact task heading.
 - Confirm `scripts/ai/get-prompt.ps1` no longer exists.
-- Confirm no active live file still invokes `scripts/ai/get-prompt.ps1`, `ai/prompts/`, or `ai/PROMPTS.md` after migration; only archived history and this plan's current-state or validation history may retain those strings.
+- Confirm `scripts/ai/get-task.ps1` no longer exists.
+- Confirm no active live file still invokes `scripts/ai/get-prompt.ps1`, `scripts/ai/get-task.ps1`, `ai/prompts/`, or `ai/PROMPTS.md` after migration; only archived history and this plan's historical validation notes may retain those strings.
 - Run `git diff --check`.
 - Run `./build.ps1 build`; for documentation-only AI-guidance changes, record whether the wrapper takes the lightweight-file shortcut or performs Gradle validation.
 - Manually review changed docs with `ai/DOCUMENTATION.md` and `ai/REVIEWS.md`.
 
 ## Testing Strategy
-- Unit tests: not applicable unless a new loader or guard script has testable logic; if added, run controlled positive and negative smoke checks.
+- Unit tests: not applicable unless a new guard script has testable logic; if added, run controlled positive and negative smoke checks.
 - Integration tests: not applicable because runtime app behavior does not change.
 - Contract tests: not applicable because REST Docs, OpenAPI, HTTP examples, and public API behavior do not change.
 - Smoke or benchmark tests: not applicable because performance and deployment behavior do not change.
-- Documentation verification: required through task loader positive and negative smoke checks, old-loader nonexistence check, targeted stale-reference searches, `git diff --check`, wrapper build, and manual owner-alignment review.
+- Documentation verification: required through task-library heading-search checks, old-loader nonexistence check, targeted stale-reference searches, `git diff --check`, wrapper build, and manual owner-alignment review.
 
 ## Better Engineering Notes
 - The prior workflow-selection variants are useful evidence but too narrow for this request. This plan should replace them rather than blend them.
 - `ai/PLAN_EXECUTION.md` would have collided with broad active-plan globs; moving active plans first removes that concrete risk.
 - Prefer the reusable task-library language because these artifacts are operational starters, not just prompts.
-- External agent tooling does not provide a single standard `ai/tasks/`-style directory. Use the repository's `ai/task-library/` convention and route external tool discovery through `AGENTS.md` or tool-specific adapters only if that becomes a real need.
+- External agent tooling does not provide a single standard `ai/tasks/`-style directory. Use the repository's `ai/TASK_LIBRARY.md` convention for ordinary reusable starters, and introduce `.agents/plugins/marketplace.json` only if a workflow becomes a Codex plugin.
 - `ai/PLANNING.md` is a repo-owner-guide name, not an external agent discovery file. Keep external compatibility in `AGENTS.md`; keep planning ownership under `ai/PLANNING.md`.
 - Do not optimize only for total character count. Measure practical read sets for planning, whole-plan execution, ad hoc or milestone execution, workflow coordination, task library use, verification, and release.
 
 ## Plan Readiness Evaluation
-- No blocking requirement gap remains. The plan locks no prompt-loader compatibility alias, archives old candidate plans, uses `ai/task-library/`, keeps `ai/PLANNING.md`, and defers the ad hoc execution skill unless acceptance criteria are met.
+- No blocking requirement gap remains. The plan locks no prompt-loader compatibility alias, archives old candidate plans, uses `ai/TASK_LIBRARY.md`, keeps `ai/PLANNING.md`, and defers the ad hoc execution skill unless acceptance criteria are met.
 - Lifecycle is accurate: `Phase=Planning`, `Status=Ready`.
 - The plan is ready for implementation after user selection, with one caveat: implementation should not interrupt the active `v2.0.0-RC6` manual regression gate unless the user intentionally reprioritizes roadmap work.
-- The highest-risk areas are path migration and the non-compatible task-library loader cutover; both have early inventory, nonexistence checks, and positive and negative smoke-check milestones.
+- The highest-risk areas are path migration and the non-compatible task-library storage cutover; both have early inventory, nonexistence checks, and heading-search validation milestones.
 
 ## Validation Results
+- 2026-05-07 ad hoc TASK_LIBRARY reengineering:
+  - Reworked `ai/TASK_LIBRARY.md` into the single source of truth for all 44 reusable starters; removed `ai/task-library/index.json`, `ai/task-library/bodies/*.md`, and `scripts/ai/get-task.ps1`.
+  - Updated `AGENTS.md`, `README.md`, `WORKING_WITH_AI.md`, `ai/DOCUMENTATION.md`, `ai/REVIEWS.md`, this plan, `CHANGELOG.md`, and the post-compaction evaluation report so live guidance no longer depends on the removed body directory, JSON index, or custom task loader.
+  - Checked official Codex documentation and corrected `.agents` guidance: ordinary repository starters stay in `ai/TASK_LIBRARY.md`; `.agents/plugins/marketplace.json` is reserved for a future repo-scoped Codex plugin marketplace, with plugin-packaged skills inside the plugin bundle.
+  - Recomputed the main measurement baselines: `AGENTS.md` is 13,807 characters / 3,452 estimated tokens; the 15-file standing owner-guide set is 123,553 characters / 30,892 estimated tokens; the two tracked active plans total 78,652 characters / 19,663 estimated tokens; `ai/TASK_LIBRARY.md` is 44,811 characters / 11,203 estimated tokens.
+  - Targeted stale-reference searches found no live standing-guide references to `scripts/ai/get-task.ps1`, `ai/task-library/`, or `.agents/skills`; remaining old task-library paths are limited to the task catalog's design-decision note and this plan's removal or historical validation notes.
+  - Targeted lifecycle-vocabulary search found no live non-archived references to the old owner-map and lens vocabulary.
+  - `rg -n "^## Task Index|^## Task Definitions|^### Create Plan|^### Compact AI Docs|^### Evaluate AI Guidelines" ai/TASK_LIBRARY.md` passed.
+  - `Test-Path -LiteralPath .agents`, `Test-Path -LiteralPath scripts/ai/get-prompt.ps1`, `Test-Path -LiteralPath scripts/ai/get-task.ps1`, and `Test-Path -LiteralPath ai/task-library` all returned `False`.
+  - Initial `git diff --check` failed on one extra blank line at EOF in `ai/TASK_LIBRARY.md`; trimming the file fixed it, and the final `git diff --check` passed.
+  - First `./build.ps1 build` attempt timed out after 120 seconds and was not counted as validation evidence.
+  - Second `./build.ps1 build` ran Gradle and failed at `spotlessCheck` because `ai/TASK_LIBRARY.md` needed line-ending normalization.
+  - `./build.ps1 spotlessApply` passed and normalized the task catalog.
+  - Final `./build.ps1 build` passed the full Gradle build, including 264 tests, JaCoCo line coverage at 93.3%, dependency and image vulnerability scans, Docker image build, SBOM tasks, PMD, Spotless, and static security scan.
 - 2026-05-07 implementation Milestone 6 evaluation refresh and final validation:
   - Loaded the `Evaluate AI Guidelines` task with `pwsh ./scripts/ai/get-task.ps1 -Name "Evaluate AI Guidelines"`.
   - Regenerated `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md` for the new owner-guide and task-library structure, including `ai/PLAN_EXECUTION.md`, current active-plan inventory, task-library inventory, practical read-set estimates, file grades, realized gains, remaining risks, obsolete recommendations, and ranked follow-ups.
@@ -413,7 +424,7 @@
   - Ran `./build.ps1 build`; passed through the lightweight-file shortcut and skipped Gradle. The wrapper reported changed files as this plan, `ROADMAP.md`, and a pre-existing untracked lifecycle vocabulary reference.
 
 ## User Validation
-- Review this plan's owner split and the locked names: `ai/PLANNING.md`, `ai/PLAN_EXECUTION.md`, `ai/EXECUTION.md`, `ai/WORKFLOW.md`, and `ai/task-library/`.
+- Review this plan's owner split and the locked names: `ai/PLANNING.md`, `ai/PLAN_EXECUTION.md`, `ai/EXECUTION.md`, `ai/WORKFLOW.md`, and `ai/TASK_LIBRARY.md`.
 - Review the ad hoc skill defer-by-default acceptance criteria.
 - Confirm implementation may wait until the active `v2.0.0-RC6` manual regression gate no longer owns the immediate next action.
 
@@ -423,11 +434,11 @@
 - Out of scope: application runtime, public API, setup behavior, deployment behavior, release cutting, and archived-plan history rewrites.
 - Governing artifacts: `AGENTS.md`, `ai/DOCUMENTATION.md`, current planning/execution/workflow/prompt guides, task starters, templates, skills, roadmap, changelog, and evaluation report.
 - Likely files: named in `Affected Artifacts`.
-- Compatibility promises: public app contract unchanged; reusable starter loading remains deterministic; no legacy prompt-loader alias remains; historical archive wording remains historical.
+- Compatibility promises: public app contract unchanged; reusable starter discovery remains deterministic; no legacy prompt-loader alias remains; historical archive wording remains historical.
 - Risks: path migration breaks globs, task-library rename churn, removed prompt-loader muscle memory, duplicated skill policy, stale evaluation timing.
 - Requirement gaps: resolved; ad hoc skill creation remains a conditional acceptance gate, not an open product decision.
 - Execution shape: one coordinated documentation-maintenance run with coordinator-owned shared files, optional read-only review, or explicit non-overlapping delegation after the central owner map lands.
 - Per-milestone context: named explicitly in each milestone.
 - Specs and docs: AI guidance, human-facing AI workflow docs, task library artifacts, templates, skills, references, roadmap, changelog, and evaluation report.
-- Validation: targeted searches, task loader positive and negative smoke checks, old-loader nonexistence check, `git diff --check`, `./build.ps1 build`, and manual owner-alignment review.
+- Validation: targeted searches, task-library heading-search checks, old-loader nonexistence check, `git diff --check`, `./build.ps1 build`, and manual owner-alignment review.
 - User verification: inspect owner names, supersession of old variants, and roadmap priority.

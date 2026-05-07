@@ -72,7 +72,7 @@ If you are a new agent entering this repository, follow these steps to ground yo
 Start with `AGENTS.md`, then add only the owner guides that match the current lifecycle phase and changed artifacts.
 Task titles, skills, templates, and deep references stay on demand until directly invoked or required by the selected workflow.
 
-| Lifecycle phase | Primary owner guides |
+| Phase | Primary owner guides |
 | --- | --- |
 | Discovery or roadmap intake | `ROADMAP.md` and `ai/PLANNING.md`; add `README.md` or conditional descriptive guides only when the request needs product, contract, design, or structure framing |
 | Planning | `ai/PLANNING.md`, the relevant specs or source artifacts, and `ROADMAP.md` for active-work tracking |
@@ -81,7 +81,7 @@ Task titles, skills, templates, and deep references stay on demand until directl
 | Workflow, delegation, or integration | `ai/WORKFLOW.md`; load detailed workflow references only after the work shape requires delegation, worktrees, or multi-plan coordination |
 | Testing or review | `ai/TESTING.md`, `ai/REVIEWS.md`, and `ai/DOCUMENTATION.md` when artifact routing or contract impact is part of the check; keep descriptive guides conditional |
 | Release | `ai/RELEASES.md` only after the implementation state is integrated and release work is explicitly in scope |
-| Task-library, skill, or template maintenance | `ai/TASK_LIBRARY.md`, the relevant `ai/skills/` guide, or the specific template or task metadata being changed |
+| Task-library, skill, or template maintenance | `ai/TASK_LIBRARY.md`, the relevant `ai/skills/` guide, or the specific template or task section being changed |
 
 Conditional descriptive guide triggers:
 
@@ -105,17 +105,17 @@ Use these files deliberately:
 - `ai/LEARNINGS.md`: durable repo-wide engineering lessons that should survive refactors
 - `ai/PLANNING.md`: compact instructions for producing execution plans
 - `ai/plans/active/PLAN_*.md`: task-specific execution plans and milestone breakdowns
-- `ai/TASK_LIBRARY.md`: lean reusable task-title index whose listed task names act as reusable commands
+- `ai/TASK_LIBRARY.md`: repository-local reusable task catalog whose task sections act as reusable commands
 - `ai/REVIEWS.md`: AI-facing code-review and security-review guidance
 - `ai/RELEASES.md`: AI-facing release workflow for intentional post-implementation releases
 - `ai/TESTING.md`: AI-facing testing and validation guidance
 - `ai/WORKFLOW.md`: compact AI-facing owner for branch, worktree, delegation, worker-log, integration, and remote-handoff mechanics
-- `ai/task-library/`: machine-readable task index and on-demand raw task bodies used only after a task title is invoked
 - `ai/references/WORKFLOW_DELEGATED_PLAN.md`: on-demand detailed mechanics for splitting one active plan into worker-owned slices
 - `ai/references/WORKFLOW_COORDINATED_PLANS.md`: on-demand detailed mechanics for coordinating multiple active plans
 - `ai/references/`: other on-demand detailed references that should not be part of the default read set
 - `ai/templates/`: on-demand templates for creating new AI artifacts
 - `ai/skills/`: on-demand repo-local workflow skills; read a skill's `SKILL.md` only when that skill is invoked or clearly applies
+- `.agents/plugins/marketplace.json`: Codex repo-scoped plugin marketplace configuration, only if this repository later promotes a reusable workflow to an installable Codex plugin
 - `ai/archive/`: archived AI execution plans that have already been released or otherwise completed; read only for historical investigation
 
 ## AI Instruction Load Policy
@@ -125,9 +125,9 @@ Load AI guidance on demand:
 - read `AGENTS.md` first
 - read only the owning AI guide for the current task
 - read active `ai/plans/active/PLAN_*.md` files only when planning, executing, verifying, or releasing that plan
-- use task-specific search terms for the onboarding relevance scan; do not read every active plan, archived plan, task body, reference, template, or skill as a pre-flight default
-- read task bodies, templates, detailed references, skill files, and archived plans only when the task specifically needs them
-- do not bulk-load `ai/archive/`, `ai/references/`, `ai/task-library/`, `ai/templates/`, or skill reference material as standing context
+- use task-specific search terms for the onboarding relevance scan; do not read every active plan, archived plan, task section, reference, template, or skill as a pre-flight default
+- read task sections in `ai/TASK_LIBRARY.md`, templates, detailed references, skill files, and archived plans only when the task specifically needs them
+- do not bulk-load `ai/archive/`, `ai/references/`, `ai/templates/`, or skill reference material as standing context
 
 ### Context Hygiene
 
@@ -193,6 +193,7 @@ Repo-level invariants:
 Specialized agents and repo-local skills may accelerate repeatable tasks when available and when the task clearly matches their scope.
 Treat skills as workflow helpers that point back to the owner guides, not as higher-priority policy.
 Read `ai/skills/<skill>/SKILL.md` only when that skill is invoked or clearly applies.
+Use `.agents/` only for Codex plugin marketplace configuration; do not create it for ordinary task-library entries. Codex skills that need distribution belong inside a plugin bundle, for example `plugins/<plugin-name>/skills/<skill-name>/SKILL.md`.
 
 ## Verification Rules
 

@@ -50,14 +50,14 @@ Use these files when you want to work with AI in this repository or understand w
 - [ai/EXECUTION.md](ai/EXECUTION.md): how AI should execute ad hoc tasks or one plan milestone
 - [ai/LEARNINGS.md](ai/LEARNINGS.md): durable engineering lessons worth carrying through refactors
 - [ai/PLANNING.md](ai/PLANNING.md): compact guide for creating or revising execution plans
-- [ai/TASK_LIBRARY.md](ai/TASK_LIBRARY.md): reusable task-title index backed by machine-readable task metadata and loader
+- [ai/TASK_LIBRARY.md](ai/TASK_LIBRARY.md): reusable task catalog with task titles, placeholders, and task text
 - `ai/skills/`: repo-local skills
 - [ai/REVIEWS.md](ai/REVIEWS.md): code-review and security-review guidance
 - [ai/RELEASES.md](ai/RELEASES.md): release-preparation and release workflow guidance
 - [ai/TESTING.md](ai/TESTING.md): validation rules and change-sensitive checks
 - [ai/WORKFLOW.md](ai/WORKFLOW.md): branch, worktree, delegation, worker-log, integration, and remote-handoff mechanics
 - `ai/plans/active/PLAN_*.md`: task-specific execution plans for active work
-- `ai/task-library/`, `ai/references/`, and `ai/templates/`: machine-readable task metadata, on-demand raw task bodies, detailed references, and templates
+- `ai/references/` and `ai/templates/`: on-demand detailed references and templates
 - `ai/archive/`: archived plan files for completed or released work
 
 ## Notes

@@ -28,8 +28,8 @@ Update the artifact that owns the truth being changed:
 - ad hoc task and single-milestone execution: `ai/EXECUTION.md`
 - branch, worktree, delegation, worker-log, integration, and remote-handoff mechanics: `ai/WORKFLOW.md`; detailed delegated-work mechanics: `ai/references/WORKFLOW_DELEGATED_PLAN.md` and `ai/references/WORKFLOW_COORDINATED_PLANS.md`
 - release sequencing and tagging: `ai/RELEASES.md`; detailed release checklist and artifact verification: `ai/references/RELEASE_CHECKLIST.md` and `ai/references/RELEASE_ARTIFACT_VERIFICATION.md`
-- task-title index: `ai/TASK_LIBRARY.md`; task metadata and raw bodies: `ai/task-library/`; task loader script: `scripts/ai/get-task.ps1`
-- repo-local reusable workflow wrappers: `ai/skills/`
+- reusable task catalog: `ai/TASK_LIBRARY.md`; each task section owns its title, placeholders, and task text
+- repo-local reusable workflow wrappers: `ai/skills/`; Codex plugin marketplace configuration: `.agents/plugins/marketplace.json` when intentionally introducing a repo-scoped plugin
 - compact codebase map, structural guidance, and business feature ownership: `ai/ARCHITECTURE.md`; deeper references: `ai/references/`
 - product and contract direction: `ai/DESIGN.md`
 - durable repo-wide lessons: `ai/LEARNINGS.md`
@@ -48,11 +48,12 @@ Rules for maintaining the `ai/` documents:
 - keep the role of each file distinct; do not collapse architecture, code style, design, documentation ownership, execution, planning, release workflow, review guidance, testing guidance, workflow guidance, and learnings into one document
 - keep AI instruction markdown files under `ai/` by default; `AGENTS.md` is the only standing exception
 - update the relevant `ai/` file in the same change when architecture, code-style expectations, design intent, documentation ownership, durable engineering guidance, release workflow, review/security review guidance, testing/validation guidance, workflow guidance, or an execution plan materially changes
-- keep `ai/TASK_LIBRARY.md` lean; put reusable task metadata in `ai/task-library/index.json`, raw task bodies under `ai/task-library/bodies/`, and standing workflow rules in the best owning AI document
-- treat the listed task names in `ai/TASK_LIBRARY.md` as reusable commands for matching full starters loaded from `ai/task-library/`, following `ai/TASK_LIBRARY.md` for exact-match, placeholder, loader, and ambiguity rules
+- keep `ai/TASK_LIBRARY.md` as a catalog, not standing policy; task sections may include procedural starters, but durable rules belong in the best owning AI document
+- treat the listed task names in `ai/TASK_LIBRARY.md` as reusable commands, following `ai/TASK_LIBRARY.md` for exact-match, placeholder, heading-search, and ambiguity rules
 - keep detailed examples, templates, historical explanations, and deep references in `ai/templates/` or `ai/references/` instead of the standing top-level AI files
 - write AI-guidance changes as current-state rules; route any still-useful historical context using this guide
 - keep repo-local skills narrow and workflow-oriented; use them to accelerate repeated entry tasks or focused triage, not to replace the owner guides
+- create `.agents/plugins/marketplace.json` and a plugin bundle only when a workflow needs Codex plugin distribution or install-time discovery; keep ordinary reusable starters in `ai/TASK_LIBRARY.md`
 - keep standing code-style, testing, review, and documentation guidance in their focused owning files instead of redistributing it across task starters or workflow docs
 - when a repo-local skill wraps a workflow owned by another guide, update the skill and the owning guide together if that workflow changes
 - when AI instruction files accumulate overlap, compact them by moving duplicated guidance into the single best owning file and updating cross-references in the same change

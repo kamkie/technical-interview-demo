@@ -32,7 +32,7 @@ Use this guide as a navigation aid, not as a second copy of the AI runbooks.
 | Project overview and implemented scope | `README.md` |
 | Local setup, tools, and troubleshooting | `SETUP.md` |
 | Repository-specific AI rules and phase owner map | `AGENTS.md` |
-| Reusable task titles and task loader usage | `ai/TASK_LIBRARY.md` |
+| Reusable task starters | `ai/TASK_LIBRARY.md` |
 | Creating or revising execution plans | `ai/PLANNING.md` |
 | Executing a whole approved plan | `ai/PLAN_EXECUTION.md` |
 | Implementing an ad hoc task or one milestone | `ai/EXECUTION.md` |
@@ -41,7 +41,7 @@ Use this guide as a navigation aid, not as a second copy of the AI runbooks.
 | Documentation and artifact routing | `ai/DOCUMENTATION.md` |
 | Intentional release preparation after integration | `ai/RELEASES.md` |
 
-Detailed task bodies, templates, deep references, skill references, and archived plans are on-demand material.
+Detailed task sections, templates, deep references, skill references, and archived plans are on-demand material.
 Load them only when the task title, owner guide, or active work calls for them.
 
 ## A Good Request To AI
@@ -88,13 +88,13 @@ change: candidate search filtering API
 To inspect task titles locally:
 
 ```powershell
-pwsh ./scripts/ai/get-task.ps1 -List
+rg -n "^## Task Index|^### " ai/TASK_LIBRARY.md
 ```
 
-To load one raw task body:
+To load one task section:
 
 ```powershell
-pwsh ./scripts/ai/get-task.ps1 -Name "Create Plan"
+rg -n "^### Create Plan$" ai/TASK_LIBRARY.md
 ```
 
 If the title, placeholder, or target artifact is ambiguous, expect AI to ask a targeted clarification question before it proceeds.
@@ -140,6 +140,7 @@ Use `ai/RELEASES.md` for release preconditions, versioning, tagging, roadmap cle
 ## Repo-Local Skills
 
 Repo-local skills live under `ai/skills/`.
+Codex-native reusable workflows can be packaged as plugins; `.agents/plugins/marketplace.json` registers a repo-scoped plugin marketplace, and the plugin bundle can contain `skills/<skill-name>/SKILL.md`. Introduce `.agents/` only for a real Codex plugin marketplace, not for ordinary repository guidance.
 
 Use them when you want a narrower workflow wrapper than the general task library.
 Treat them as helpers that point back to owner guides, not as higher-priority policy.
