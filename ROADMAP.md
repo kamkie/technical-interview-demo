@@ -48,7 +48,9 @@ Rewrite an item into a concrete roadmap row before moving it into active or defe
 
 | Status | Candidate | Notes |
 | --- | --- | --- |
-| Candidate | Add new rough tasks here | Replace this placeholder when a real candidate appears |
+| Candidate | Workflow-selection soft consolidation | Variant 1 option plan: `ai/PLAN_workflow_selection_soft_consolidation.md`; execute only if selected over the hard-split alternatives |
+| Candidate | Workflow-selection hard split | Variant 2 option plan: `ai/PLAN_workflow_selection_hard_split.md`; scratch recommendation's preferred tradeoff, execute only if selected |
+| Candidate | Workflow-selection hard split with multi-plan template | Variant 3 option plan: `ai/PLAN_workflow_selection_multi_plan_template.md`; execute only if multi-plan coordinator templates are worth the vocabulary churn |
 
 ## Deferred Work
 
