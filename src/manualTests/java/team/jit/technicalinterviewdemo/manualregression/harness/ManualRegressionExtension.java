@@ -100,8 +100,7 @@ public final class ManualRegressionExtension
                 return;
             }
             if (prior.result() == SuiteResult.FAILED || prior.result() == SuiteResult.BLOCKED) {
-                blockSuite(
-                        suiteClass, store, "Required suite did not pass: " + required + " (" + prior.result() + ")");
+                blockSuite(suiteClass, store, "Required suite did not pass: " + required + " (" + prior.result() + ")");
                 return;
             }
         }
@@ -177,10 +176,7 @@ public final class ManualRegressionExtension
 
     @Override
     public void testFailed(ExtensionContext context, Throwable cause) {
-        recordTestOutcome(
-                context,
-                "FAILED",
-                Optional.of(cause.getClass().getSimpleName() + ": " + cause.getMessage()));
+        recordTestOutcome(context, "FAILED", Optional.of(cause.getClass().getSimpleName() + ": " + cause.getMessage()));
     }
 
     @Override

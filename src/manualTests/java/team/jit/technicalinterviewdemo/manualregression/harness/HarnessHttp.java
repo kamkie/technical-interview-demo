@@ -121,11 +121,7 @@ public final class HarnessHttp {
     private final class ExchangeRecorder implements Filter {
 
         private static final Set<String> SECRET_HEADER_NAMES = Set.of(
-                "authorization",
-                "cookie",
-                "set-cookie",
-                CSRF_HEADER_NAME.toLowerCase(Locale.ROOT),
-                "x-csrf-token");
+                "authorization", "cookie", "set-cookie", CSRF_HEADER_NAME.toLowerCase(Locale.ROOT), "x-csrf-token");
         private static final Pattern SENSITIVE_JSON_FIELD = Pattern.compile(
                 "(?i)(\"(?:csrfToken|xsrfToken|token|secret|password|session|sessionCookie|adminSessionCookie|adminCsrfToken|regularSessionCookie|regularCsrfToken)\"\\s*:\\s*\")([^\"]*)(\")");
 
@@ -148,26 +144,52 @@ public final class HarnessHttp {
                 FilterContext context) {
             Instant start = Instant.now();
             String correlationId = UUID.randomUUID().toString();
-            Response response = context.next(requestSpec, responseSpec);
-            long latency = Duration.between(start, Instant.now()).toMillis();
-            RequestRecord record = new RequestRecord(
-                    start,
-                    report.suiteName(),
-                    ManualRegressionExtension.currentTestName().orElse("(unknown test)"),
-                    correlationId,
-                    method,
-                    resolveUrl(requestSpec),
-                    requestHeaders(requestSpec),
-                    bodyToString(requestSpec.getBody()),
-                    expectedStatus,
-                    response.statusCode(),
-                    responseHeaders(response),
-                    redactBody(response.getBody().asString()),
-                    latency,
-                    expectedStatus == null || expectedStatus == response.statusCode() ? "matched" : "mismatched",
-                    note);
-            report.recordRequest(record);
-            return response;
+            String url = resolveUrl(requestSpec);
+            Map<String, List<String>> sentRequestHeaders = requestHeaders(requestSpec);
+            String sentRequestBody = bodyToString(requestSpec.getBody());
+            try {
+                Response response = context.next(requestSpec, responseSpec);
+                long latency = Duration.between(start, Instant.now()).toMillis();
+                RequestRecord record = new RequestRecord(
+                        start,
+                        report.suiteName(),
+                        ManualRegressionExtension.currentTestName().orElse("(unknown test)"),
+                        correlationId,
+                        method,
+                        url,
+                        sentRequestHeaders,
+                        sentRequestBody,
+                        expectedStatus,
+                        response.statusCode(),
+                        responseHeaders(response),
+                        redactBody(response.getBody().asString()),
+                        latency,
+                        expectedStatus == null || expectedStatus == response.statusCode() ? "matched" : "mismatched",
+                        note);
+                report.recordRequest(record);
+                return response;
+            } catch (RuntimeException ex) {
+                long latency = Duration.between(start, Instant.now()).toMillis();
+                String failure = exceptionSummary(ex);
+                report.recordRequest(new RequestRecord(
+                        start,
+                        report.suiteName(),
+                        ManualRegressionExtension.currentTestName().orElse("(unknown test)"),
+                        correlationId,
+                        method,
+                        url,
+                        sentRequestHeaders,
+                        sentRequestBody,
+                        expectedStatus,
+                        null,
+                        Map.of(),
+                        failure,
+                        latency,
+                        "exception",
+                        note));
+                throw new IllegalStateException(
+                        "HTTP " + method + " " + url + " failed before receiving a response: " + failure, ex);
+            }
         }
 
         private String resolveUrl(FilterableRequestSpecification requestSpec) {
@@ -209,6 +231,14 @@ public final class HarnessHttp {
                 return null;
             }
             return redactBody(String.valueOf(body));
+        }
+
+        private String exceptionSummary(RuntimeException ex) {
+            String message = ex.getMessage();
+            if (message == null || message.isBlank()) {
+                return ex.getClass().getSimpleName();
+            }
+            return ex.getClass().getSimpleName() + ": " + message;
         }
 
         private String redactBody(String body) {

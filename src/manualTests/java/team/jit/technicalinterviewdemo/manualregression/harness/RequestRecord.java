@@ -19,7 +19,7 @@ public record RequestRecord(
         Map<String, List<String>> requestHeaders,
         String requestBody,
         Integer expectedStatus,
-        int actualStatus,
+        Integer actualStatus,
         Map<String, List<String>> responseHeaders,
         String responseBody,
         long latencyMillis,
@@ -27,6 +27,6 @@ public record RequestRecord(
         Optional<String> note) {
 
     public boolean matchedExpectation() {
-        return expectedStatus == null || expectedStatus == actualStatus;
+        return actualStatus != null && (expectedStatus == null || expectedStatus.equals(actualStatus));
     }
 }

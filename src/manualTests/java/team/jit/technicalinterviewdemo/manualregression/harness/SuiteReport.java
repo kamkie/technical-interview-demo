@@ -72,7 +72,8 @@ public final class SuiteReport {
 
     public void recordTestStarted(String uniqueId, String displayName, Instant startedAt) {
         tests.putIfAbsent(
-                uniqueId, new TestRecord(uniqueId, displayName, startedAt, Optional.empty(), "RUNNING", Optional.empty()));
+                uniqueId,
+                new TestRecord(uniqueId, displayName, startedAt, Optional.empty(), "RUNNING", Optional.empty()));
     }
 
     public void recordTestFinished(
