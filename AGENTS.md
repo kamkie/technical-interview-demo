@@ -191,13 +191,12 @@ When making architecture-sensitive changes:
 
 `ai/WORKFLOW.md` owns mode selection and common branch, worktree, coordinator, worker, and integration rules; the on-demand workflow references own detailed fanout mechanics.
 
-Repo-level rules:
+Repo-level invariants:
 
 - treat `main` as the integration branch for completed work
 - keep worktree or side-branch implementation isolated until the planned scope is complete and locally validated
-- consider worktree or side-branch execution complete only when the finished branch has been pushed and a pull request is open or already merged onto `main`
 - prefer merging accepted branches or pull requests; use cherry-pick only when the user asks for it, when accepting less than the full branch or pull request, or when a normal merge is not viable, and record the reason
-- do not cut a release from a worktree-only branch tip or from changes that have not landed on `main`
+- do not cut releases from unintegrated side branches, worktrees, detached tips, or changes that have not landed on `main`
 
 ## Local Environment And Command Execution
 
