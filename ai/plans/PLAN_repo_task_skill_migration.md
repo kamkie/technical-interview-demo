@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Implementation |
-| Status | In Progress |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Summary
 - Replace `ai/TASK_LIBRARY.md` with the low-context `repo-task` skill described by the inline `## Repo Task Skill Spec` section in this plan.
@@ -296,6 +296,15 @@ If `PyYAML` is unavailable, install it into a temporary directory outside the re
 - 2026-05-07 Milestone 2 completed: replaced the generated dispatcher template with the compact `repo-task` resolver, regenerated `agents/openai.yaml` with a valid `$repo-task` default prompt, installed `PyYAML` into `%TEMP%\codex-pyyaml-skill-validate` for skill tooling only, and ran `python C:\Users\kamki\AppData\Local\JetBrains\IntelliJIdea2026.1\aia\codex\skills\.system\skill-creator\scripts\quick_validate.py .agents/skills/repo-task` with `PYTHONPATH` scoped to that temp directory; result: `Skill is valid!`. `git diff --check` passed.
 - 2026-05-07 Milestone 3 completed: mechanically split the current `ai/TASK_LIBRARY.md` task definitions into 45 files under `.agents/skills/repo-task/references/tasks/` and generated `.agents/skills/repo-task/references/index.md`. The expected planning count was 44, but the source catalog contained 45 schema-valid tasks; execution preserved all 45. Custom schema/index validation passed: every task file has `Category`, `Slug`, and `Placeholders` near the top, every filename stem matches its slug, every slug appears exactly once in the index, and the index count matches the task-file count.
 - 2026-05-07 Milestone 4 completed: updated live human-facing and AI-facing guidance to use `$repo-task` and `.agents/skills/repo-task/`, updated the migrated task files that named the old catalog, added an Unreleased changelog entry through the existing AI-guidance restructure wording, added a supersession note to `PLAN_ai_guidance_execution_prompt_library_restructure.md`, and deleted `ai/TASK_LIBRARY.md`. Targeted live-file search excluding active plan history and archives found only the roadmap migration row and `.agents/plugins/marketplace.json` plugin-marketplace references.
+- 2026-05-07 Milestone 5 completed:
+  - `python C:\Users\kamki\AppData\Local\JetBrains\IntelliJIdea2026.1\aia\codex\skills\.system\skill-creator\scripts\quick_validate.py .agents/skills/repo-task` with `PYTHONPATH=%TEMP%\codex-pyyaml-skill-validate`: passed with `Skill is valid!`.
+  - custom schema/index validation: passed for 45 task files.
+  - targeted live-file stale-reference search excluding active plan history and archives: remaining hits were the roadmap migration row and intentional `.agents/plugins/marketplace.json` plugin-marketplace references.
+  - `pwsh -NoProfile -Command '$result = & ./scripts/classify-changed-files.ps1 -BaseRef HEAD~3 -HeadRef HEAD; $result | ConvertTo-Json -Depth 5'`: reported all repo-task migration files as lightweight with `nonLightweightFiles: []` and `skipHeavyValidation: true`.
+  - manual progressive-disclosure review: exact slug loads `SKILL.md` plus `references/tasks/create-plan.md`; ambiguous task lookup loads `SKILL.md`, `references/index.md`, then one chosen task file; maintenance flow points to `references/spec.md`.
+  - `git diff --check`: passed.
+  - `./build.ps1 build`: reran after final plan and roadmap updates; ran the full Gradle build because the final change set includes `scripts/classify-changed-files.ps1`; result `BUILD SUCCESSFUL in 2m 21s`, with 264 tests executed and 45 actionable Gradle tasks.
+  - final documentation/process review found no blocking drift.
 
 ## User Validation
 - Review `.agents/skills/repo-task/SKILL.md` and `.agents/skills/repo-task/references/spec.md` for the intended loading contract.

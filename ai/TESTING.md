@@ -51,7 +51,7 @@ Use `ai/references/GRADLE_TASK_GRAPH.md` when command choice depends on Gradle t
 ### Documentation-only or lightweight support-file work
 
 - run the standard wrapper build and record whether it performed heavy Gradle validation or took the lightweight-only shortcut
-- repo-local skills under `ai/skills/` count as lightweight support-file work for classifier purposes unless they accompany a non-lightweight change
+- repo-local skills under `ai/skills/` and `.agents/skills/` count as lightweight support-file work for classifier purposes unless they accompany a non-lightweight change
 - skip benchmarks, external smoke, vulnerability scans, and other heavyweight validation unless the user explicitly asks for more
 - if lightweight edits accompany any non-lightweight change, validate based on the non-lightweight artifacts and repo rules
 

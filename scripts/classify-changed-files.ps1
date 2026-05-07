@@ -30,6 +30,7 @@ $lightweightPatterns = @(
     ".githooks/*.sample",
     ".env.example",
     "*/.env.example",
+    ".agents/skills/*",
     "ai/*",
     ".idea/codeStyles/*.xml"
 )
