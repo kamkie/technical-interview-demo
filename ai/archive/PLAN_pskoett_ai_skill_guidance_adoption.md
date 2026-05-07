@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Integration |
-| Status | Implemented |
+| Phase | Closed |
+| Status | Released |
 
 ## Summary
 - Selectively fold the useful guidance patterns from `pskoett/pskoett-ai-skills` into this repository's existing AI workflow documents.

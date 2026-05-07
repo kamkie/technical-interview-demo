@@ -7,7 +7,7 @@ Evaluation date: 2026-05-07
 - The standing AI guidance remains coherent, owner-routed, and mostly on-demand after the workflow, release, planning, prompt, and per-milestone context splits.
 - The default load is stable at `AGENTS.md` only: 13,637 characters, 13,637 bytes, 146 lines, 1,852 words, and 3,410 estimated tokens.
 - The full standing owner-guide set is 81,477 characters / 20,375 estimated tokens across 14 files. That is still acceptable because phase prompts load narrow subsets instead of the whole standing set.
-- The largest practical cost is no longer standing policy drift; it is active plan inventory. Four top-level `ai/PLAN_*.md` files total 92,836 characters / 23,211 estimated tokens, and three of those are implemented plans awaiting release cleanup.
+- The largest practical cost is no longer standing policy drift; it is active plan inventory. After `v2.0.0-RC6` release cleanup, one top-level `ai/PLAN_*.md` file remains active: 38,834 characters / 9,709 estimated tokens for the manual regression gate.
 - No blocking active-guidance contradiction was found. Old workflow terminology appears only in historical or migration context inside active plans, not in standing owner guides or prompt titles.
 
 ## Method
@@ -43,7 +43,7 @@ Additional inventory that must stay on demand:
 
 | Inventory | Files | Chars | Bytes | Lines | Words | Est. Tokens |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Active plans | 4 | 92,836 | 92,848 | 1,129 | 12,291 | 23,211 |
+| Active plans | 1 | 38,834 | 38,850 | 457 | 5,128 | 9,709 |
 | Archived plans | 37 | 741,910 | 741,980 | 8,047 | 85,801 | 185,491 |
 | Prompt inventory | 45 | 44,770 | 44,780 | 800 | 5,558 | 11,214 |
 | Prompt bodies only | 44 | 33,572 | 33,582 | 407 | 4,777 | 8,414 |
@@ -113,7 +113,7 @@ Largest prompt bodies remain procedural, not standing policy:
 - The report itself remains an on-demand reference rather than becoming a top-level AI guide.
 
 ## Remaining Costs And Risks
-- Active plans are now larger than the standing owner-guide set for many practical execution paths. That is acceptable while work is unreleased, but it becomes context waste if implemented plans stay active after release cleanup.
+- Active plans are now smaller after `v2.0.0-RC6` release cleanup, but the remaining manual regression plan is intentionally detailed because it is the stable-release gate.
 - `ai/WORKFLOW.md` is still the largest phase-specific guide. Further splitting is possible, but the remaining content is mostly shared invariant and mode-selection policy.
 - `ai/DESIGN.md` is useful but descriptive. Agents should load it only for user-visible behavior, supported scope, security posture, operational defaults, or roadmap tradeoffs.
 - Prompt bodies are healthy today, but `context-report.md` and `evaluate-ai-guidelines.md` are large enough that future maintenance prompts should keep reports procedural instead of embedding full policy.
@@ -129,21 +129,18 @@ Largest prompt bodies remain procedural, not standing policy:
 - Treating old scratch-note grades or size targets as current authority is obsolete. Live repository measurements should drive future evaluations.
 
 ## Ranked Follow-Up Recommendations
-1. Close implemented active plans during the next release cleanup.
-   - Why: `ai/PLAN_ai_guidelines_post_compaction_evaluation.md`, `ai/PLAN_pskoett_ai_skill_guidance_adoption.md`, and `ai/PLAN_workflow_on_demand_split.md` are `Phase=Integration` / `Status=Implemented` and still contribute to top-level active-plan load until they are released and archived.
-   - Route: `ai/RELEASES.md` and `CHANGELOG.md` during intentional release preparation.
-2. Add a tiny context-metrics helper or guard.
+1. Add a tiny context-metrics helper or guard.
    - Why: repeated manual measurement is error-prone, and `AGENTS.md` plus top-level `ai/*.md` should not grow silently.
    - Suggested guard: warn when standing owner-guide context grows by more than 5% in one commit, or when `AGENTS.md` exceeds 15,000 characters.
-3. Keep prompt bodies under review during maintenance work.
+2. Keep prompt bodies under review during maintenance work.
    - Why: the largest prompt bodies are still procedural, but maintenance prompts can easily turn into policy dumps.
    - Route: `ai/PROMPTS.md`, `ai/prompts/index.json`, and the owning guide named by `ai/DOCUMENTATION.md`.
-4. Revisit `ai/WORKFLOW.md` only if workflow-selection loads prove costly in practice.
+3. Revisit `ai/WORKFLOW.md` only if workflow-selection loads prove costly in practice.
    - Why: the high-value fanout split already landed; further splitting risks hiding invariants that are needed before mode selection.
    - Route: a new focused compaction plan only after concrete evidence of workflow-load friction.
-5. Keep skill references strictly on demand.
+4. Keep skill references strictly on demand.
    - Why: repo-local skill references account for 444,605 characters / 111,158 estimated tokens.
    - Route: skill entrypoints should stay narrow and point to references only after the skill is invoked and the reference matches the task.
 
 ## Conclusion
-The current AI guideline set remains an **A**. The repo has moved the highest-cost mechanics behind explicit triggers, kept default context stable, and made practical phase read sets measurable. Future efficiency work should focus on release cleanup of implemented plans and lightweight measurement automation, not broad manual compaction of standing guides.
+The current AI guideline set remains an **A**. The repo has moved the highest-cost mechanics behind explicit triggers, kept default context stable, and made practical phase read sets measurable. Future efficiency work should focus on lightweight measurement automation and keeping prompt and skill references on demand, not broad manual compaction of standing guides.

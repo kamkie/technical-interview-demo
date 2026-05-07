@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Integration |
-| Status | Implemented |
+| Phase | Closed |
+| Status | Released |
 
 ## Summary
 - Compact repeated AI-guidance policy found across `AGENTS.md`, `WORKING_WITH_AI.md`, and the top-level `ai/*.md` owner guides.

@@ -7,7 +7,7 @@
 | Status | In Progress |
 
 ## Summary
-- Create and execute a manual regression pass against the final `2.0` release candidate, currently `v2.0.0-RC5`, that touches the app's supported user-facing functionality without trying to duplicate every automated edge-case test.
+- Create and execute a manual regression pass against the final `2.0` release candidate, currently `v2.0.0-RC6`, that touches the app's supported user-facing functionality without trying to duplicate every automated edge-case test.
 - The manual pass focuses on business functionality, session behavior, admin flows, and deployment-visible health/docs surfaces.
 - This plan is required to move from the `v2.0.0-RC*` phase to stable `v2.0.0`; it is not merely another RC-preparation checklist.
 - Roadmap tracking: `ROADMAP.md` tracks this under `Ordered Plan` / `Moving to 2.0` as selected stable-transition confidence work for the current final release candidate.
@@ -47,10 +47,10 @@
   Fallback: execute all admin and authenticated-user happy paths with the admin identity, and record non-admin `403` checks as blocked or covered by automated tests.
 - Should this manual pass be local-only, or should it also be repeated against the target RC container/deployment candidate?
   Fallback: local-only, because deployment smoke and release workflows already own production-like validation.
-- Is `v2.0.0-RC5` still the final release candidate, or did another plan require a later RC before stable `v2.0.0`?
+- Is `v2.0.0-RC6` still the final release candidate, or did another plan require a later RC before stable `v2.0.0`?
   Fallback: if another RC is prepared before stable release, revise this plan to target that next RC and rerun readiness review before executing the manual suites.
 - Preferred result artifact location is not specified.
-  Fallback: create an uncommitted or committed run log under `ai/tmp/manual-regression/v2_0_0_rc5.md` during execution, then summarize blockers in the plan's `Validation Results`.
+  Fallback: create an uncommitted or committed run log under `ai/tmp/manual-regression/v2_0_0_rc6.md` during execution, then summarize blockers in the plan's `Validation Results`.
 - Should `src/manualTests` be wired as a real Gradle source set (this plan's choice) or stay a plain folder driven by an external script?
   Fallback: register a Gradle source set so the harness benefits from IDE test integration and the existing Java/Gradle toolchain; revisit if dependency footprint becomes a concern.
 - Is JUnit 5 + REST Assured the accepted technology, or should the harness be Karate, Postman/Newman, Bruno, or PowerShell + Pester instead?
@@ -64,9 +64,9 @@
   Fallback: assume the existing controller validators accept the documented `runTag` patterns; the follow-up implementation plan must validate with a smoke run before committing the harness.
 
 ## Locked Decisions And Assumptions
-- Target release candidate is `v2.0.0-RC5`.
+- Target release candidate is `v2.0.0-RC6`.
 - This manual regression pass is the gate for transitioning from the RC phase to stable `v2.0.0`.
-- If another RC is prepared for other plans before stable `v2.0.0`, this plan must be replanned for that next RC before execution; do not use stale RC5 manual results as stable-release evidence.
+- If another RC is prepared for other plans before stable `v2.0.0`, this plan must be replanned for that next RC before execution; do not use stale earlier-RC manual results as stable-release evidence.
 - Use local PostgreSQL through `docker-compose up -d` and run the app with `SPRING_PROFILES_ACTIVE=local,oauth`.
 - Use demo data seeding for predictable book, category, and localization reads.
 - Use `src/manualTests/resources/http/*.http` as the primary request source. IntelliJ HTTP Client is preferred because the checked-in examples already capture `XSRF-TOKEN` into `csrfToken`.
@@ -157,7 +157,7 @@
 - Exit code: `0` if no `Failed` entries; `1` otherwise. `Blocked` does not fail the run, but the JUnit listener marks the suite assumption-failed so IntelliJ shows it distinctly.
 
 ## Implementation Status
-- The harness implementation under `src/manualTests/` has landed. The manual RC5 execution remains pending and can use `./build.ps1 manualTests` as a prefilled checklist before human judgement-heavy checks.
+- The harness implementation under `src/manualTests/` has landed. The manual RC6 execution remains pending and can use `./build.ps1 manualTests` as a prefilled checklist before human judgement-heavy checks.
 
 ## Execution Mode Fit
 - Recommended mode: `Linear Plan`.
@@ -165,7 +165,7 @@
 - Coordinator-owned files:
   - `ai/PLAN_manual_regression_execution.md`
   - `ROADMAP.md`
-  - optional execution result log under `ai/tmp/manual-regression/v2_0_0_rc5.md`
+  - optional execution result log under `ai/tmp/manual-regression/v2_0_0_rc6.md`
 - If delegation becomes necessary, use read-only reviewers only after the manual result log exists.
 
 ## Affected Artifacts
@@ -189,10 +189,10 @@
   - `src/manualTests/resources/report-templates/` for Markdown report fragments
   - `build.gradle.kts` (registers the `manualTests` source set, dependencies, and Gradle task)
 - Optional execution evidence:
-  - `ai/tmp/manual-regression/v2_0_0_rc5.md`
-  - `ai/tmp/manual-regression/v2_0_0_rc5/run-<UTC-timestamp>/report.md`
-  - `ai/tmp/manual-regression/v2_0_0_rc5/run-<UTC-timestamp>/report.json`
-  - `ai/tmp/manual-regression/v2_0_0_rc5/run-<UTC-timestamp>/requests.log`
+  - `ai/tmp/manual-regression/v2_0_0_rc6.md`
+  - `ai/tmp/manual-regression/v2_0_0_rc6/run-<UTC-timestamp>/report.md`
+  - `ai/tmp/manual-regression/v2_0_0_rc6/run-<UTC-timestamp>/report.json`
+  - `ai/tmp/manual-regression/v2_0_0_rc6/run-<UTC-timestamp>/requests.log`
 - Contract docs/OpenAPI/HTTP examples:
   - no contract artifact changes expected
 - Tests:
@@ -202,7 +202,7 @@
 ### Milestone 1: Prepare Manual Environment
 - goal: start the app in a predictable local state with OAuth and admin access
 - owned files or packages:
-  - optional `ai/tmp/manual-regression/v2_0_0_rc5.md`
+  - optional `ai/tmp/manual-regression/v2_0_0_rc6.md`
 - shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
   - this plan and roadmap
 - context required before execution:
@@ -257,7 +257,7 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
 ### Milestone 2: Execute Public And Technical Read Suites
 - goal: verify anonymous public reads and trusted internal/devops surfaces
 - owned files or packages:
-  - optional `ai/tmp/manual-regression/v2_0_0_rc5.md`
+  - optional `ai/tmp/manual-regression/v2_0_0_rc6.md`
 - shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
   - this plan and roadmap
 - context required before execution:
@@ -294,7 +294,7 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
 ### Milestone 3: Execute Authenticated Business Suites
 - goal: verify normal authenticated user behavior and core business write workflows
 - owned files or packages:
-  - optional `ai/tmp/manual-regression/v2_0_0_rc5.md`
+  - optional `ai/tmp/manual-regression/v2_0_0_rc6.md`
 - shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
   - this plan and roadmap
 - context required before execution:
@@ -337,7 +337,7 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
 ### Milestone 4: Execute Admin And Audit Suites
 - goal: verify admin-only operational and governance functionality
 - owned files or packages:
-  - optional `ai/tmp/manual-regression/v2_0_0_rc5.md`
+  - optional `ai/tmp/manual-regression/v2_0_0_rc6.md`
 - shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
   - this plan and roadmap
 - context required before execution:
@@ -369,7 +369,7 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
 ### Milestone 5: Close Out Regression Evidence
 - goal: produce a concise release-confidence summary and identify any blocking questions or defects
 - owned files or packages:
-  - optional `ai/tmp/manual-regression/v2_0_0_rc5.md`
+  - optional `ai/tmp/manual-regression/v2_0_0_rc6.md`
   - this plan's `Validation Results` if the manual run is executed in this branch
 - shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
   - `CHANGELOG.md` unless release work is explicitly requested
@@ -397,7 +397,7 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
   - result log exists and is understandable without reading console history
   - release-blocking failures are captured with endpoint, request file, expected result, actual result, and repro notes
 - commit checkpoint:
-  - `test: record rc5 manual regression results` if the user wants the evidence committed
+  - `test: record rc6 manual regression results` if the user wants the evidence committed
 
 ## Edge Cases And Failure Modes
 - OAuth setup may block manual execution if provider credentials or callback URLs are missing. Resolve through `SETUP.md` OAuth setup before marking suites failed.
@@ -436,7 +436,7 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
   - renamed all suites from single letters to ordered descriptive names (`01-public-overview-and-docs` through `12-operator-surface`) with declared prerequisites and added a `Suite Catalog And Order` table.
   - added dedicated sections for `Implementation Technology`, `Test Data Generation`, `User Input And Configuration`, and `Execution Report Generation`; added the corresponding open questions to `Requirement Gaps And Open Questions`.
   - `./build.ps1 build` lightweight-file shortcut expected to skip the Gradle build because only this plan file changed.
-- Manual suite execution against `v2.0.0-RC5` is intentionally **not** part of this plan: this plan only designs and wires the manual-regression tooling/harness. Actual RC5 execution is performed by a human operator outside this plan and is recorded in `ai/tmp/manual-regression/<rc>.md` if durable evidence is wanted.
+- Manual suite execution against `v2.0.0-RC6` is intentionally **not** part of this plan: this plan only designs and wires the manual-regression tooling/harness. Actual RC6 execution is performed by a human operator outside this plan and is recorded in `ai/tmp/manual-regression/<rc>.md` if durable evidence is wanted.
 - 2026-05-07 harness implementation:
   - registered the `manualTests` Gradle source set in `build.gradle.kts` with REST Assured 5.5.6, AssertJ, JUnit 5, and Jackson; the new `manualTests` task is intentionally not wired into `tasks.build` and is excluded from the JaCoCo agent.
   - moved `src/test/resources/http/` → `src/manualTests/resources/http/`; updated active references in `AGENTS.md`, `CONTRIBUTING.md`, `SETUP.md`, `ai/DOCUMENTATION.md`, `ai/references/PLAN_DETAILED_GUIDE.md`, the Spotless target list, and `.gitignore`; archived plans intentionally left untouched.
@@ -445,6 +445,10 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
   - added `src/manualTests/resources/run.properties.example`, `src/manualTests/resources/junit-platform.properties` (`ClassOrderer$ClassName`), and a harness-level `src/manualTests/resources/README.md`.
   - `./build.ps1 compileManualTestsJava` passed clean (no errors, no warnings).
   - `./build.ps1 build` re-run after Milestone E to confirm the wider project still builds.
+- 2026-05-07 RC6 release replan:
+  - Retargeted this active stable-release gate from `v2.0.0-RC5` to `v2.0.0-RC6` because another RC is being prepared before stable `v2.0.0`.
+  - Updated result-log paths and `ROADMAP.md` stable-gate wording for `v2.0.0-RC6`.
+  - Manual suite execution remains pending and must still be completed before stable `v2.0.0` release preparation.
 
 ## User Validation
 - Review this plan and answer the open questions if the fallback assumptions are not acceptable.

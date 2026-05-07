@@ -7,6 +7,8 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+## [v2.0.0-RC6] - 2026-05-07
+
 ### Added
 
 - Added an on-demand post-compaction AI guideline evaluation report with a current grade, size baseline, realized workflow-compaction gains, and ranked follow-up backlog.

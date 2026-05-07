@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Integration |
-| Status | Implemented |
+| Phase | Closed |
+| Status | Released |
 
 ## Summary
 - Shrink `ai/WORKFLOW.md` into a concise workflow router that keeps default execution rules, mode selection, and common delegation invariants in the standing read set.
