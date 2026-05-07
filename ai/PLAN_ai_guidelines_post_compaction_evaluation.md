@@ -4,22 +4,22 @@
 | Status | Current |
 | --- | --- |
 | Phase | Planning |
-| Status | Blocked |
+| Status | Ready |
 
 ## Summary
-- Evaluate and grade this repository's AI guideline set after two prerequisite plans have been implemented:
+- Evaluate and grade this repository's AI guideline set after the two prerequisite AI-guidance plans landed:
   - `ai/PLAN_workflow_on_demand_split.md`
   - `ai/PLAN_pskoett_ai_skill_guidance_adoption.md`
-- Use `C:\Users\kamki\AppData\Roaming\JetBrains\IntelliJIdea2026.1\scratches\evaluate_and_grade_ai_guidelines_in_this.md` as source input, but rebaseline against the actual post-prerequisite repository state instead of copying its current grades forward.
-- Produce a concise post-compaction evaluation that scores each standing AI guidance file, measures practical context-load impact, and ranks any remaining follow-up opportunities.
-- Roadmap tracking: `ROADMAP.md` tracks this under `Ordered Plan` / `Moving to 2.0` / `AI Workflow Guidance` as a blocked follow-up after the workflow split and pskoett guidance adoption.
-- Success means maintainers can see which gains were actually realized, which recommendations are now obsolete, and which remaining compaction ideas deserve separate execution plans.
+- Use `C:\Users\kamki\AppData\Roaming\JetBrains\IntelliJIdea2026.1\scratches\evaluate_and_grade_ai_guidelines_in_this.md` as historical source input, but score against current repository truth instead of copying its old `B+` grade or size estimates.
+- Replan result: the prerequisite gate has passed, the plan is no longer blocked, and the remaining work is a focused documentation-only evaluation report plus ranked follow-up backlog.
+- Roadmap tracking: `ROADMAP.md` tracks this under `Ordered Plan` / `Moving to 2.0` / `AI Workflow Guidance` as selected AI-guideline evaluation work.
+- Success means maintainers can see which compaction gains were actually realized, which scratch recommendations are obsolete, and which remaining opportunities deserve separate implementation plans.
 
 ## Scope
 ### In scope
-- Wait until both prerequisite plans are implemented or otherwise closed with a clear final state.
-- Re-read the final post-prerequisite versions of the standing AI guidance set before grading.
-- Recompute or estimate standing-file size and default-read-set impact after the workflow split and pskoett guidance changes.
+- Re-read the current standing AI guidance set before grading.
+- Create a reusable on-demand report at `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md`.
+- Measure standing-file size and practical default-read-set impact after the workflow split and pskoett guidance changes.
 - Grade the standing AI guidance files using a consistent rubric:
   - owner clarity
   - default-load necessity
@@ -35,196 +35,177 @@
   - phase-to-guide context map
   - execution reading-list tightening
   - context-drop markers in plans
-- Produce one on-demand evaluation report if the findings need to survive beyond this active plan, preferably `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md`.
-- Recommend follow-up work ordering, but create new implementation plans only if the user explicitly asks or the evaluation itself reveals a concrete must-fix doc contradiction.
+- Rank follow-up work, but stop before implementation-plan creation unless the user explicitly asks or the evaluation reveals a blocking contradiction.
+- Keep this plan, `ROADMAP.md`, and unreleased history aligned during execution.
 
 ### Out of scope
-- Executing before `ai/PLAN_workflow_on_demand_split.md` and `ai/PLAN_pskoett_ai_skill_guidance_adoption.md` have landed.
-- Implementing the remaining compaction opportunities during this evaluation.
+- Implementing any remaining compaction opportunities during this evaluation.
+- Creating new `ai/PLAN_*.md` implementation plans unless explicitly requested after the evaluation.
 - Changing application source code, public API behavior, tests, REST Docs, OpenAPI, HTTP examples, README contract wording, setup instructions, build scripts, or release versioning.
 - Rewriting archived plans just to update old workflow terminology.
-- Treating the scratch note's `B+` grade or KB estimates as authoritative after the prerequisite plans change the docs.
+- Treating the scratch note's `B+` grade, default-context target, or KB estimates as authoritative after the prerequisite plans changed the docs.
 
 ## Current State
-- The scratch file grades the pre-compaction AI guidance set as `B+` and identifies `ai/WORKFLOW.md` as the highest-ROI split candidate.
-- `ai/PLAN_workflow_on_demand_split.md` is already planned to address the highest-ROI workflow recommendation by shrinking `ai/WORKFLOW.md`, moving fanout mechanics into on-demand references, adding a mode-selection gate, and renaming modes by plan topology.
-- `ai/PLAN_pskoett_ai_skill_guidance_adoption.md` is already planned to add execution-quality checkpoints in `AGENTS.md` and `ai/EXECUTION.md`.
-- Those prerequisite changes will materially affect the grading baseline, the default-read-set estimate, and the remaining opportunity list.
-- The evaluation source file is outside the repository in the IntelliJ scratches directory. It should be treated as input material, not as a tracked repository artifact.
+- `ai/PLAN_workflow_on_demand_split.md` is `Phase=Integration` / `Status=Implemented`; it moved fanout mechanics into `ai/references/WORKFLOW_SINGLE_PLAN_FANOUT.md` and `ai/references/WORKFLOW_MULTI_PLAN_FANOUT.md`, and active docs now use `Linear Plan`, `Single-Plan Fanout`, and `Multi-Plan Fanout`.
+- `ai/PLAN_pskoett_ai_skill_guidance_adoption.md` is `Phase=Integration` / `Status=Implemented`; it added targeted relevance scanning, context-quality degradation checkpoints, per-milestone scope checks, and post-validation review triggers.
+- The scratch recommendation to split `ai/WORKFLOW.md` is now handled in repo-native form, though the final router is about 9.1 KB / 151 lines rather than the scratch's smaller target.
+- A rebaseline size check on 2026-05-07 measured current standing guidance files at roughly:
+  - `AGENTS.md`: 14.7 KB / 168 lines
+  - `ai/WORKFLOW.md`: 9.1 KB / 151 lines
+  - `ai/RELEASES.md`: 8.3 KB / 88 lines
+  - `ai/PLAN.md`: 6.7 KB / 120 lines
+  - `ai/EXECUTION.md`: 6.7 KB / 87 lines
+  - `ai/DESIGN.md`: 6.4 KB / 107 lines
+  - remaining standing owner guides: each about 2.1 KB to 5.0 KB
+- Practical minimum read-set estimates are now more useful than the scratch's old total standing-payload estimate:
+  - planning minimum: `AGENTS.md` + `ai/PLAN.md`, about 21.4 KB
+  - implementation minimum: `AGENTS.md` + `ai/EXECUTION.md`, about 21.4 KB
+  - workflow selection: `AGENTS.md` + `ai/WORKFLOW.md` + `ai/EXECUTION.md`, about 30.5 KB
+  - verification: `AGENTS.md` + `ai/TESTING.md` + `ai/DOCUMENTATION.md` + `ai/REVIEWS.md`, about 27.1 KB
+  - release: `AGENTS.md` + `ai/RELEASES.md`, about 23.0 KB
+- Targeted stale-terminology search found old workflow names only in intentional migration notes inside `ai/PLAN_workflow_on_demand_split.md`, not in active owner guides or prompt titles.
+- The scratch file remains useful for comparison, but the final report must evaluate current artifacts directly.
 
 ## Requirement Gaps And Open Questions
-- Execution is blocked until both prerequisite plans have been implemented or intentionally closed.
-- The exact post-prerequisite mode names and file layout must be read from repo truth at execution time.
-- The user has not specified whether the final evaluation report should be committed as an on-demand reference or only summarized in this plan.
-  Fallback: create `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md` when the evaluation contains reusable grading detail; otherwise keep the final summary in this plan's `Validation Results`.
-- The user has not requested implementation of any remaining recommendations.
-  Fallback: rank follow-up opportunities and stop before implementation-plan creation unless a contradiction must be fixed to make the evaluation accurate.
+- No blocker remains: both prerequisite plans are implemented.
+- The final evaluation report should be committed as an on-demand reference because the grading detail and size baseline are reusable but should not become standing policy.
+- The user has not requested implementation of any follow-up recommendations.
+  Fallback: rank follow-up opportunities and stop; create new plans only after explicit user direction.
+- If evaluation finds a concrete contradiction in standing guidance, record it as a finding and recommend a follow-up plan unless the contradiction makes the report itself inaccurate.
 
 ## Locked Decisions And Assumptions
-- Execute this plan only after:
-  - `ai/PLAN_workflow_on_demand_split.md` reaches `Phase=Integration` / `Status=Implemented`, `Closed`, or an equivalent final state recorded in its validation results.
-  - `ai/PLAN_pskoett_ai_skill_guidance_adoption.md` reaches `Phase=Integration` / `Status=Implemented`, `Closed`, or an equivalent final state recorded in its validation results.
-- If either prerequisite changes scope substantially, revise this plan before grading.
-- Treat `AGENTS.md`, owner guides under `ai/`, prompt indexes, prompt bodies, and on-demand references as the evaluation surface.
-- Keep the final grading report on demand; do not add a new standing top-level AI guide for evaluation history.
-- Do not implement follow-up compaction in this plan. Separate implementation plans are required for accepted follow-up changes such as a release-guide split or `PLAN.md` slimming.
+- Execute in `Linear Plan`; worker fanout would create scoring drift for a small documentation evaluation.
+- Treat `AGENTS.md`, standing owner guides under `ai/*.md`, prompt indexes, prompt bodies, and on-demand references as the evaluation surface.
+- Keep the final grading report on demand at `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md`; do not add a new top-level AI guide for evaluation history.
+- Do not implement follow-up compaction in this plan. Separate implementation plans are required for accepted follow-up changes such as a release-guide split, `PLAN.md` slimming, or AGENTS load-policy compaction.
+- Exclude `ai/archive/` from routine terminology and duplication searches unless historical context is intentionally being inspected.
 
 ## Execution Mode Fit
-- Recommended execution mode: `Linear Plan`.
-- This is a documentation-only evaluation with shared ownership across AI guidance files; worker fanout would create terminology and scoring drift.
+- Selected execution mode: `Linear Plan`.
+- This is a documentation-only evaluation with shared ownership across AI guidance files; worker fanout would add coordination cost and inconsistent scoring risk.
 - Coordinator-owned files:
   - `ai/PLAN_ai_guidelines_post_compaction_evaluation.md`
   - `ROADMAP.md`
-  - optional `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md`
-- Candidate worker boundaries: none recommended. If the final evaluation is delegated for review, keep the scoring rubric, report, roadmap, and plan updates coordinator-owned.
-
-## Affected Artifacts
-- Planning and roadmap:
-  - `ai/PLAN_ai_guidelines_post_compaction_evaluation.md`
-  - `ROADMAP.md`
-- Source input outside the repository:
-  - `C:\Users\kamki\AppData\Roaming\JetBrains\IntelliJIdea2026.1\scratches\evaluate_and_grade_ai_guidelines_in_this.md`
-- Likely evaluation output during execution:
+  - `CHANGELOG.md`
   - `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md`
-- AI guidance reviewed during execution, without assuming edits:
+- Read-only evaluation inputs unless a contradiction is discovered:
   - `AGENTS.md`
   - standing owner guides under `ai/*.md` excluding active and archived `ai/PLAN_*.md`
   - `ai/prompts/index.json`
   - relevant prompt bodies under `ai/prompts/bodies/`
   - relevant references under `ai/references/`
+- Candidate worker boundaries: none recommended. If delegated review is later requested, keep scoring rubric, report, roadmap, changelog, and plan updates coordinator-owned.
+
+## Affected Artifacts
+- Planning and roadmap:
+  - `ai/PLAN_ai_guidelines_post_compaction_evaluation.md`
+  - `ROADMAP.md`
+- Evaluation report:
+  - `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md`
+- Unreleased history during execution:
+  - `CHANGELOG.md`
+- Source input outside the repository:
+  - `C:\Users\kamki\AppData\Roaming\JetBrains\IntelliJIdea2026.1\scratches\evaluate_and_grade_ai_guidelines_in_this.md`
 - Application specs and contracts:
   - no tests, REST Docs, OpenAPI, HTTP examples, README, SETUP, source files, or build scripts should change.
 
 ## Execution Milestones
-### Milestone 1: Plan And Roadmap
-- goal: record the post-prerequisite evaluation as a concrete blocked follow-up plan.
+### Milestone 0: Plan Creation And Replan Baseline
+- status: complete after this replan is validated and committed.
+- goal: unblock the evaluation after the two prerequisite plans landed and revise the remaining work against current repo truth.
 - owned files or packages:
   - `ai/PLAN_ai_guidelines_post_compaction_evaluation.md`
   - `ROADMAP.md`
-- shared files that a fanout worker must leave to the coordinator:
-  - not applicable in the default single-agent mode
+- shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
+  - not applicable in `Linear Plan`
 - behavior to preserve:
-  - no AI guidance implementation changes
+  - no AI-guidance implementation changes
   - no application or public-contract changes
 - exact deliverables:
-  - blocked plan with dependency gates, scope, milestones, validation, and user validation
-  - roadmap entry after the two prerequisite AI workflow plans
+  - lifecycle moved from `Planning` / `Blocked` to `Planning` / `Ready`
+  - current-state rebaseline records prerequisite completion, current size measurements, and stale-terminology scan result
+  - roadmap entry points to this plan as ready selected work
 - validation checkpoint:
+  - manual consistency check against `AGENTS.md`, `ai/PLAN.md`, `ai/DOCUMENTATION.md`, and prerequisite plan lifecycle states
   - `git diff --check`
   - `./build.ps1 build` lightweight-file shortcut or full build if the wrapper requires it
 - commit checkpoint:
-  - `docs: plan post-compaction ai guideline evaluation`
+  - `docs: replan post-compaction ai guideline evaluation`
 
-### Milestone 2: Prerequisite Gate And Rebaseline
-- goal: confirm the two prerequisite plans are complete enough for this evaluation to be meaningful.
+### Milestone 1: Current-State Evaluation Report
+- goal: produce the evidence-backed post-compaction grade and file-by-file assessment.
 - owned files or packages:
-  - this plan's `Lifecycle`, `Current State`, and `Validation Results`
-- shared files that a fanout worker must leave to the coordinator:
-  - this plan and `ROADMAP.md`
-- behavior to preserve:
-  - do not grade stale pre-compaction docs
-  - do not force prerequisite implementation inside this plan
-- exact deliverables:
-  - verify final states and validation results for:
-    - `ai/PLAN_workflow_on_demand_split.md`
-    - `ai/PLAN_pskoett_ai_skill_guidance_adoption.md`
-  - update this plan from `Planning` / `Blocked` to `Planning` / `Ready` or `Implementation` / `In Progress` only after the gate passes
-  - revise terminology in this plan if workflow mode names changed differently than expected
-  - list the final AI guidance files and references to grade
-- validation checkpoint:
-  - targeted roadmap and plan-state review
-  - `rg` search for prerequisite plan lifecycle/status lines
-- commit checkpoint:
-  - `docs: unblock ai guideline evaluation`
-
-### Milestone 3: Score The Post-Prerequisite AI Guidance Set
-- goal: produce a current-state grade and evidence-backed file-by-file assessment.
-- owned files or packages:
-  - optional `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md`
+  - `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md`
   - this plan's `Validation Results`
-- shared files that a fanout worker must leave to the coordinator:
-  - this plan and `ROADMAP.md`
+- shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
+  - this plan, `ROADMAP.md`, and `CHANGELOG.md`
 - behavior to preserve:
   - active owner docs remain role-distinct
-  - on-demand references are not bulk-loaded unless needed for cross-reference checks
+  - on-demand references are opened only when needed for cross-reference checks
+  - the report is evaluation history, not standing policy
 - exact deliverables:
-  - measure standing guidance sizes and note which files belong to the default read set, phase-specific read set, or on-demand-only set
+  - measure standing guidance sizes and classify each file as default read, phase-specific read, or on-demand-only
   - grade each standing guidance file with short rationale
   - identify realized gains from the workflow split and pskoett adoption
-  - identify any regressions, such as `AGENTS.md` bloat, duplicated mode policy, prompt bodies growing into policy dumps, or missing load triggers
+  - identify regressions or remaining costs, especially `AGENTS.md` size, duplicated policy, prompt bodies growing into policy dumps, stale triggers, or unclear default read sets
   - compare current grades against the scratch file's pre-compaction expectations
 - validation checkpoint:
   - manual consistency review against `AGENTS.md`, `ai/DOCUMENTATION.md`, and `ai/REVIEWS.md`
   - targeted searches for duplicate or stale workflow terminology, excluding `ai/archive/` unless historical context is intentionally inspected
+  - `git diff --check`
 - commit checkpoint:
   - `docs: grade post-compaction ai guidelines`
 
-### Milestone 4: Rank Follow-Up Opportunities
-- goal: turn evaluation findings into a short, actionable backlog without implementing it.
+### Milestone 2: Follow-Up Ranking And Closeout
+- goal: turn the evaluation into a short, actionable backlog and leave execution status clear.
 - owned files or packages:
-  - optional `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md`
-  - this plan's `Validation Results`
-- shared files that a fanout worker must leave to the coordinator:
-  - `ROADMAP.md` unless the user approves adding selected follow-up roadmap entries
+  - `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md`
+  - this plan's `Lifecycle` and `Validation Results`
+  - `ROADMAP.md`
+  - `CHANGELOG.md`
+- shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
+  - not applicable in `Linear Plan`
 - behavior to preserve:
   - no hidden implementation work
-  - no new active plans unless explicitly requested or needed to fix a blocking contradiction
+  - no new active implementation plans unless explicitly requested
+  - release work remains out of scope
 - exact deliverables:
-  - classify scratch recommendations as:
-    - already handled by prerequisites
-    - still high ROI
-    - lower ROI or not worth doing now
-    - obsolete after implementation
-  - likely candidates to evaluate include:
+  - classify scratch recommendations as already handled, still high ROI, lower ROI, or obsolete
+  - likely candidates to rank include:
+    - reducing `AGENTS.md` standing load without moving repo-level rules out of their owner
     - splitting release runbook details from `ai/RELEASES.md`
     - slimming `ai/PLAN.md` by pushing skeleton detail to `ai/templates/PLAN_TEMPLATE.md`
-    - adding a phase-to-guide-set map without bloating `AGENTS.md`
+    - clarifying phase-to-guide read sets without bloating `AGENTS.md`
     - tightening `ai/EXECUTION.md` conditional read triggers
     - clarifying when descriptive docs such as `ai/ARCHITECTURE.md`, `ai/BUSINESS_MODULES.md`, `ai/DESIGN.md`, and `ai/LEARNINGS.md` should be loaded
     - adding per-milestone context requirements only if they reduce real execution noise
-  - recommend execution order for any accepted follow-up plans
+  - update `CHANGELOG.md` under `## [Unreleased]`
+  - update this plan to the final non-release execution state, normally `Phase=Integration` / `Status=Implemented`
+  - update `ROADMAP.md` to match the plan state
 - validation checkpoint:
   - confirm recommendations route standing policy to the correct owning documents
   - confirm no follow-up is represented as completed work
-- commit checkpoint:
-  - `docs: rank ai guideline follow-up opportunities`
-
-### Milestone 5: Final Validation And Closeout
-- goal: validate the documentation-only evaluation and leave a clear handoff.
-- owned files or packages:
-  - all files touched during execution
-  - this plan's `Lifecycle` and `Validation Results`
-- shared files that a fanout worker must leave to the coordinator:
-  - not applicable in the default single-agent mode
-- behavior to preserve:
-  - release work remains out of scope
-  - no application behavior changes
-- exact deliverables:
-  - update this plan to the appropriate final non-release state
-  - update `ROADMAP.md` if the plan moves from blocked to active or is completed
-  - summarize final grade, realized gains, and top follow-up recommendations
-- validation checkpoint:
   - `git diff --check`
   - `./build.ps1 build`
-  - manual documentation-owner and cross-reference review
 - commit checkpoint:
   - `docs: close post-compaction ai guideline evaluation`
 
 ## Edge Cases And Failure Modes
-- Running this plan before the prerequisites land would double-count stale recommendations and misgrade `ai/WORKFLOW.md`.
-- The workflow split may rename mode terminology differently than expected. Rebaseline from actual files before any search or grading.
-- The pskoett plan may add helpful safeguards but also grow `AGENTS.md` or `ai/EXECUTION.md`; grade both benefit and context cost.
+- Reusing the scratch grade would double-count stale recommendations and misgrade the current `ai/WORKFLOW.md`.
 - Measuring raw file size can overstate or understate practical context savings. Pair size data with load-trigger analysis.
-- A grading report can become stale quickly. Keep it on demand and current-state oriented; do not turn it into a new standing policy file.
-- Follow-up recommendations can accidentally become hidden scope. Stop at ranking unless the user explicitly asks for new implementation plans.
+- A grading report can become stale quickly. Keep it on demand and current-state oriented; do not turn it into a standing policy file.
+- Follow-up recommendations can accidentally become hidden implementation scope. Stop at ranking unless the user explicitly asks for new implementation plans.
+- Adding a phase-to-guide map can bloat `AGENTS.md`; evaluate whether the better owner is `ai/PROMPTS.md`, `ai/DOCUMENTATION.md`, or a reference before recommending implementation.
+- Shrinking `AGENTS.md` must not hide repo-level rules that all agents need before selecting a phase-specific guide.
 
 ## Validation Plan
-- Plan creation validation:
-  - `git diff --check`
-  - `./build.ps1 build`
-- Execution validation after prerequisites:
+- Replan validation:
   - confirm prerequisite plan states and validation results
-  - measure current standing guidance sizes, for example with PowerShell `Get-ChildItem` and `Measure-Object`
+  - confirm `ROADMAP.md` reflects the unblocked plan path and current status
+  - run `git diff --check`
+  - run `./build.ps1 build`
+- Execution validation:
+  - measure current standing guidance sizes with PowerShell `Get-ChildItem` and line counts
   - run targeted `rg` searches for stale workflow names, duplicated policy, and moved-reference mentions, excluding `ai/archive/` by default
   - run prompt-loader smoke checks only if the evaluation touches prompt titles or prompt metadata
   - run `git diff --check`
@@ -244,17 +225,24 @@
 
 ## Better Engineering Notes
 - This is an evaluation plan, not a compaction implementation plan. It should convert a broad scratch critique into a measured post-change report and a small ranked backlog.
-- The strongest likely value is preventing the first two AI-guidance plans from being treated as enough without measuring whether the default context load actually improved.
-- If the evaluation finds one obvious next implementation target, create one narrow follow-up plan instead of bundling several compactions into a single large edit.
+- The strongest remaining value is evaluating whether `AGENTS.md`, `ai/RELEASES.md`, and `ai/PLAN.md` now dominate the standing read set after the workflow split.
+- If the evaluation finds one obvious next implementation target, create one narrow follow-up plan only after the user approves that follow-up.
 
 ## Validation Results
 - 2026-05-07 plan creation:
   - `git diff --check` passed.
   - `./build.ps1 build` passed through the lightweight-file shortcut, reporting that only `ai/PLAN_ai_guidelines_post_compaction_evaluation.md` and `ROADMAP.md` changed and that the Gradle build was skipped.
   - Manual plan-shape review confirmed all required sections from `ai/PLAN.md` are present.
-- Execution is blocked until `ai/PLAN_workflow_on_demand_split.md` and `ai/PLAN_pskoett_ai_skill_guidance_adoption.md` are implemented or otherwise closed.
+- 2026-05-07 replan:
+  - Prerequisite gate passed: `ai/PLAN_workflow_on_demand_split.md` and `ai/PLAN_pskoett_ai_skill_guidance_adoption.md` are both `Phase=Integration` / `Status=Implemented`.
+  - Source scratch input was read from `C:\Users\kamki\AppData\Roaming\JetBrains\IntelliJIdea2026.1\scratches\evaluate_and_grade_ai_guidelines_in_this.md` and treated as historical input, not authority.
+  - Standing-guide size and practical read-set estimates were recomputed for the current repository state and recorded in `Current State`.
+  - Targeted stale-terminology search found old workflow names only in intentional migration notes inside `ai/PLAN_workflow_on_demand_split.md`.
+  - Manual consistency check passed against `AGENTS.md`, `ai/PLAN.md`, `ai/DOCUMENTATION.md`, and prerequisite plan lifecycle states.
+  - `git diff --check` passed.
+  - `./build.ps1 build` passed through the lightweight-file shortcut, reporting docs-only changes to this plan and `ROADMAP.md` and skipping the Gradle build.
 
 ## User Validation
-- Before execution, confirm both prerequisite plans have landed and their final states are reflected in `ROADMAP.md`.
+- Review this replan and confirm the remaining scope is only the evaluation report plus ranked follow-up backlog.
 - After execution, review the final grade, realized-gains summary, and ranked follow-up list.
 - Confirm whether any recommended follow-up should become a new concrete `ai/PLAN_*.md`.
