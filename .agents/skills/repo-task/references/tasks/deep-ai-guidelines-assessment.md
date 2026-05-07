@@ -11,11 +11,11 @@ Base the assessment on the current `Context Report` measurement method and the l
 
 #### Scope
 
-- Read `AGENTS.md`, `ai/DOCUMENTATION.md`, `ai/TASK_LIBRARY.md`, and, if present, the latest matching archived AI-guideline evaluation under `ai/archive/reports/` first.
+- Read `AGENTS.md`, `ai/DOCUMENTATION.md`, `.agents/skills/repo-task/references/spec.md`, `.agents/skills/repo-task/references/index.md`, and, if present, the latest matching archived AI-guideline evaluation under `ai/archive/reports/` first.
 - Generate a fresh context report using the `Context Report` task method, or reuse a same-session context report only if it clearly covers the current HEAD and uncommitted AI-guidance changes.
 - Read top-level owner guides under `ai/` because the task grades the current guideline set as a whole.
 - Inspect active plans only for lifecycle state, context-load impact, stale references, and active-read-set hygiene.
-- Inspect on-demand references, templates, task sections, and repo-local skills only when the context report, archived evaluation report, or targeted searches identify them as important load, drift, duplication, or stale-reference contributors.
+- Inspect on-demand references, templates, repo-task files, and repo-local skills only when the context report, archived evaluation report, or targeted searches identify them as important load, drift, duplication, or stale-reference contributors.
 - Do not bulk-load `ai/archive/`; read only matching report artifacts under `ai/archive/reports/`, and sample archived plans only when the assessment has a specific historical or stale-reference question.
 
 #### Assessment Tasks
@@ -33,7 +33,7 @@ Base the assessment on the current `Context Report` measurement method and the l
    - owner clarity and single-source ownership
    - context efficiency and default-load discipline
    - on-demand trigger clarity
-   - task-library quality and heading-search safety
+   - repo-task index and task-file quality
    - active-plan lifecycle hygiene
    - skill, reference, template, and archive containment
    - duplication, contradiction, and stale-reference risk
@@ -41,7 +41,7 @@ Base the assessment on the current `Context Report` measurement method and the l
    - recommendation actionability
 4. Identify concrete improvement opportunities, including:
    - guidance to compact, split, relocate, archive, or turn into an on-demand reference
-   - task sections that are growing into policy dumps
+   - task files that are growing into policy dumps
    - owner-map or task-index changes that would reduce accidental loading
    - thresholds or guardrails for future context growth
    - reusable measurement or validation helpers worth adding

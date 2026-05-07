@@ -48,4 +48,4 @@ Read only what the request needs:
 - `Review Plan Readiness`
 - `Choose Execution Shape`
 
-Use task titles from `ai/TASK_LIBRARY.md` when the user wants a reusable starter.
+Use `$repo-task` task titles or slugs when the user wants a reusable starter.

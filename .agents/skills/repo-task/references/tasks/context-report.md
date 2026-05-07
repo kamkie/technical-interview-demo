@@ -121,7 +121,7 @@ The recommendations section should provide concrete next actions, such as:
 
 - files that should be compacted, split, archived, or moved to on-demand references
 - task-catalog or owner-map changes that would reduce default context
-- task-library or AI-documentation changes that would make future context use easier to measure
+- repo-task or AI-documentation changes that would make future context use easier to measure
 - thresholds or guardrails worth adding for future AI instruction size growth
 
 Do not run the build, tests, or validation checks.

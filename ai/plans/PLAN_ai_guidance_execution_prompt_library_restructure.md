@@ -7,6 +7,8 @@
 | Status | Implemented |
 
 ## Summary
+- Supersession note: `ai/plans/PLAN_repo_task_skill_migration.md` replaced the live reusable-task source from `ai/TASK_LIBRARY.md` with `.agents/skills/repo-task/`. Remaining `ai/TASK_LIBRARY.md` references in this implemented plan are historical notes for the earlier restructure unless a later note says otherwise.
+
 - Restructure the AI guidance set so planning, whole-plan execution, task or milestone execution, workflow coordination, and reusable task starters have distinct owners.
 - Remove the current named mode vocabulary from live standing guides, prompt/task starters, templates, skills, and active plan guidance.
 - Rename the planning guide to `ai/PLANNING.md`, move active execution plans under `ai/plans/`, and redesign the current prompt storage into a reusable task library catalog.

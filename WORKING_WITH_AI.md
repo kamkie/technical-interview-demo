@@ -32,7 +32,7 @@ Use this guide as a navigation aid, not as a second copy of the AI runbooks.
 | Project overview and implemented scope | `README.md` |
 | Local setup, tools, and troubleshooting | `SETUP.md` |
 | Repository-specific AI rules and phase owner map | `AGENTS.md` |
-| Reusable task starters | `ai/TASK_LIBRARY.md` |
+| Reusable task starters | `.agents/skills/repo-task/` |
 | Creating or revising execution plans | `ai/PLANNING.md` |
 | Executing a whole approved plan | `ai/PLAN_EXECUTION.md` |
 | Implementing an ad hoc task or one milestone | `ai/EXECUTION.md` |
@@ -41,7 +41,7 @@ Use this guide as a navigation aid, not as a second copy of the AI runbooks.
 | Documentation and artifact routing | `ai/DOCUMENTATION.md` |
 | Intentional release preparation after integration | `ai/RELEASES.md` |
 
-Detailed task sections, templates, deep references, skill references, and archived plans are on-demand material.
+Detailed task files, templates, deep references, skill references, and archived plans are on-demand material.
 Load them only when the task title, owner guide, or active work calls for them.
 
 ## A Good Request To AI
@@ -88,13 +88,13 @@ change: candidate search filtering API
 To inspect task titles locally:
 
 ```powershell
-rg -n "^## Task Index|^### " ai/TASK_LIBRARY.md
+Get-Content .agents/skills/repo-task/references/index.md
 ```
 
-To load one task section:
+To load one task file:
 
 ```powershell
-rg -n "^### Create Plan$" ai/TASK_LIBRARY.md
+Get-Content .agents/skills/repo-task/references/tasks/create-plan.md
 ```
 
 If the title, placeholder, or target artifact is ambiguous, expect AI to ask a targeted clarification question before it proceeds.
@@ -140,15 +140,17 @@ Use `ai/RELEASES.md` for release preconditions, versioning, tagging, roadmap cle
 
 ## Repo-Local Skills
 
-Repo-local skills live under `ai/skills/`.
-Codex-native reusable workflows can be packaged as plugins; `.agents/plugins/marketplace.json` registers a repo-scoped plugin marketplace, and the plugin bundle can contain `skills/<skill-name>/SKILL.md`. Introduce `.agents/` only for a real Codex plugin marketplace, not for ordinary repository guidance.
+Repo-local workflow skills live under `ai/skills/`.
+The reusable task starter dispatcher lives under `.agents/skills/repo-task/`; use its compact index to resolve task names and then load only the matching task file.
+Codex-native reusable workflows can be packaged as plugins; `.agents/plugins/marketplace.json` registers a repo-scoped plugin marketplace, and the plugin bundle can contain `skills/<skill-name>/SKILL.md`.
 
-Use them when you want a narrower workflow wrapper than the general task library.
+Use skills when you want a narrower workflow wrapper than the owner guides.
 Treat them as helpers that point back to owner guides, not as higher-priority policy.
 Read a skill's `SKILL.md` only when that skill is invoked or clearly applies.
 
 Current focused skills include:
 
+- `repo-task`: repository reusable task starter dispatch
 - `repo-plan-author`: creating or revising `ai/plans/PLAN_*.md`
 - `gh-fix-ci`: GitHub PR-check inspection and CI failure triage
 - `gh-fix-security-quality`: GitHub Security tab, code-scanning, and Dependabot alert triage
@@ -161,7 +163,7 @@ Current focused skills include:
 - prefer milestone-sized requests over long open-ended requests
 - ask for validation and contract impact before approving the result
 - keep release work separate from implementation work
-- use the task titles in `ai/TASK_LIBRARY.md` as reusable commands when you want a consistent repository-local workflow
+- use `$repo-task` task slugs or titles as reusable commands when you want a consistent repository-local workflow
 
 ## When To Slow Down AI
 

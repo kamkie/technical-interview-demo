@@ -141,7 +141,7 @@ Maintain a clean working context to optimize performance and prevent hallucinati
 
 ### AI Document Maintenance
 
-Detailed AI-document maintenance rules live in `ai/DOCUMENTATION.md`. Load that guide before changing `AGENTS.md`, top-level `ai/*.md`, task-library files, templates, skills, references, or archived plans or reports.
+Detailed AI-document maintenance rules live in `ai/DOCUMENTATION.md`. Load that guide before changing `AGENTS.md`, top-level `ai/*.md`, task-skill files, templates, skills, references, or archived plans or reports.
 
 ## Required Updates By Change Type
 

@@ -42,7 +42,7 @@ If ownership is unclear, decide that before editing multiple docs.
 
 ### AI Document Maintenance
 
-Load this section on demand before changing `AGENTS.md`, top-level `ai/*.md`, task-library files, templates, skills, references, or archived plans or reports.
+Load this section on demand before changing `AGENTS.md`, top-level `ai/*.md`, task-skill files, templates, skills, references, or archived plans or reports.
 
 Rules for maintaining the `ai/` documents:
 
@@ -108,7 +108,7 @@ Update all affected artifacts in the same change:
 ## Alignment Rules
 
 - update overlapping human-facing and AI-facing docs in the same change
-- use `### AI Document Maintenance` in this guide for task-library files, skills, templates, references, top-level AI guides, and archived plans
+- use `### AI Document Maintenance` in this guide for task-skill files, skills, templates, references, top-level AI guides, and archived plans
 - keep setup detail out of planning, workflow, and release guides
 - keep active or selected work in `ROADMAP.md` and released history in `CHANGELOG.md`
 - keep REST Docs AsciiDoc files formatter-managed; write unordered lists with explicit AsciiDoc marker depth (`*`, `**`) so IntelliJ formatting cannot flatten indentation-only nesting

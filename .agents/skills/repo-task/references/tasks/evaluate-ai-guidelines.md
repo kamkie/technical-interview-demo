@@ -10,9 +10,9 @@ Use this as an evaluation and reporting task, not as an implementation request f
 
 #### Scope
 
-- Read `AGENTS.md`, `ai/DOCUMENTATION.md`, `ai/TASK_LIBRARY.md`, and standing top-level owner guides under `ai/`.
+- Read `AGENTS.md`, `ai/DOCUMENTATION.md`, `.agents/skills/repo-task/references/spec.md`, `.agents/skills/repo-task/references/index.md`, and standing top-level owner guides under `ai/`.
 - Exclude active `ai/plans/PLAN_*.md` files from the standing-guide baseline, but inspect active plans when they are relevant to lifecycle state, roadmap cleanup, or stale-reference checks.
-- Read representative large task sections in this file when checking task-policy drift.
+- Read representative large task files under `.agents/skills/repo-task/references/tasks/` when checking task-policy drift.
 - Read on-demand references only when a standing guide points to them, when the latest archived evaluation report names them, or when a targeted search finds a likely stale reference.
 - Do not bulk-load `ai/archive/` unless the evaluation specifically needs historical context.
 
@@ -42,7 +42,7 @@ Use this as an evaluation and reporting task, not as an implementation request f
 4. Check for stale or duplicated guidance:
    - retired file names or moved guide references
    - old workflow terminology outside intentional historical notes
-   - task sections growing into standing policy dumps
+   - task files growing into standing policy dumps
    - repeated artifact-routing rules outside `ai/DOCUMENTATION.md`
    - release, workflow, validation, and planning mechanics duplicated across owners
 5. Compare the current state to the latest matching archived AI-guideline evaluation under `ai/archive/reports/`, when one exists.
