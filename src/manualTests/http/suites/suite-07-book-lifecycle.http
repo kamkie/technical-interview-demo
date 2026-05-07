@@ -8,6 +8,7 @@
 @createdBookId = 0
 @createdBookVersion = 0
 @firstCategoryId = 1
+@firstCategoryName = Java
 
 ### Suite 07 — Book Lifecycle
 # @name suite_07_setup
@@ -28,9 +29,38 @@ Cookie: technical-interview-demo-session={{sessionCookie}}
     client.global.set("report", report);
     client.global.set("test_idx", 1);
 
-    const csrfCookie = response.cookiesByName("XSRF-TOKEN")[0];
-    if (csrfCookie) {
-        client.global.set("csrfToken", csrfCookie.value);
+    function getCookieValue(name) {
+        if (typeof response.cookiesByName === "function") {
+            var cookies = response.cookiesByName(name);
+            if (cookies && cookies.length > 0) {
+                return cookies[0].value;
+            }
+        }
+
+        var setCookieHeaders = [];
+        if (response.headers && typeof response.headers.valuesOf === "function") {
+            setCookieHeaders = response.headers.valuesOf("Set-Cookie") || [];
+        } else if (response.headers && typeof response.headers.valueOf === "function") {
+            var setCookieHeader = response.headers.valueOf("Set-Cookie");
+            if (setCookieHeader) {
+                setCookieHeaders = [setCookieHeader];
+            }
+        }
+
+        for (var i = 0; i < setCookieHeaders.length; i++) {
+            var parts = String(setCookieHeaders[i]).split(";");
+            var nameAndValue = parts[0].split("=");
+            if (nameAndValue[0] === name) {
+                return nameAndValue.slice(1).join("=");
+            }
+        }
+
+        return null;
+    }
+
+    var csrfToken = getCookieValue("XSRF-TOKEN");
+    if (csrfToken) {
+        client.global.set("csrfToken", csrfToken);
         client.log("Captured XSRF-TOKEN from response.");
     } else {
         client.log("XSRF-TOKEN cookie not found in response. Using existing global csrfToken if available.");
@@ -42,19 +72,43 @@ Cookie: technical-interview-demo-session={{sessionCookie}}
     client.global.set("createdBookIsbn", isbn);
 %}
 
+### 07-0 Resolve Category
+# @name resolve_category
+GET {{baseUrl}}/api/categories
+Accept: application/json
+
+> {%
+    client.test("Status is 200", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+
+    var items = response.body && (response.body.content || response.body);
+    if (items && items.length > 0) {
+        client.global.set("firstCategoryId", items[0].id);
+        client.global.set("firstCategoryName", items[0].name);
+        client.log("Captured firstCategoryName: " + items[0].name);
+    }
+%}
+
 ### 07-1 Create Book
 # @name create_book
+< {%
+    request.variables.set("requestCsrfToken", client.global.get("csrfToken"));
+    request.variables.set("requestRunTag", client.global.get("runTag") || client.variables.file.get("runTag"));
+    request.variables.set("requestCreatedBookIsbn", client.global.get("createdBookIsbn") || client.variables.file.get("createdBookIsbn"));
+    request.variables.set("requestFirstCategoryName", client.global.get("firstCategoryName") || client.variables.file.get("firstCategoryName"));
+%}
 POST {{baseUrl}}/api/books
-Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{csrfToken}}
-X-XSRF-TOKEN: {{csrfToken}}
+Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{requestCsrfToken}}
+X-XSRF-TOKEN: {{requestCsrfToken}}
 Content-Type: application/json
 
 {
-  "title": "Manual Regression Book {{runTag}}",
+  "title": "Manual Regression Book {{requestRunTag}}",
   "author": "Manual Regression",
-  "isbn": "{{createdBookIsbn}}",
+  "isbn": "{{requestCreatedBookIsbn}}",
   "publicationYear": 2025,
-  "categories": [{{firstCategoryId}}]
+  "categories": ["{{requestFirstCategoryName}}"]
 }
 
 > {%
@@ -70,15 +124,27 @@ Content-Type: application/json
         client.assert(validStatuses.includes(response.status), "Response status is not 200 or 201");
     });
 
-    if (response.body && response.body.id) {
-        client.global.set("createdBookId", response.body.id);
-        client.global.set("createdBookVersion", response.body.version || 0);
+    var createdBookId = response.body && response.body.id;
+    if (!createdBookId && response.headers && typeof response.headers.valueOf === "function") {
+        var location = response.headers.valueOf("Location");
+        var locationMatch = location && String(location).match(/\/api\/books\/(\d+)$/);
+        if (locationMatch) {
+            createdBookId = Number(locationMatch[1]);
+        }
+    }
+
+    if (createdBookId) {
+        client.global.set("createdBookId", createdBookId);
+        client.global.set("createdBookVersion", response.body && response.body.version || 0);
     }
 %}
 
 ### 07-2 Read Book
 # @name read_book
-GET {{baseUrl}}/api/books/{{createdBookId}}
+< {%
+    request.variables.set("requestCreatedBookId", client.global.get("createdBookId") || client.variables.file.get("createdBookId"));
+%}
+GET {{baseUrl}}/api/books/{{requestCreatedBookId}}
 Cookie: technical-interview-demo-session={{sessionCookie}}
 Accept: application/json
 
@@ -97,15 +163,21 @@ Accept: application/json
 
 ### 07-3 Update Book
 # @name update_book
-PUT {{baseUrl}}/api/books/{{createdBookId}}
-Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{csrfToken}}
-X-XSRF-TOKEN: {{csrfToken}}
+< {%
+    request.variables.set("requestCsrfToken", client.global.get("csrfToken"));
+    request.variables.set("requestCreatedBookId", client.global.get("createdBookId") || client.variables.file.get("createdBookId"));
+    request.variables.set("requestCreatedBookVersion", client.global.get("createdBookVersion") || client.variables.file.get("createdBookVersion"));
+    request.variables.set("requestRunTag", client.global.get("runTag") || client.variables.file.get("runTag"));
+%}
+PUT {{baseUrl}}/api/books/{{requestCreatedBookId}}
+Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{requestCsrfToken}}
+X-XSRF-TOKEN: {{requestCsrfToken}}
 Content-Type: application/json
 
 {
-  "title": "Manual Regression Book {{runTag}} (updated)",
+  "title": "Manual Regression Book {{requestRunTag}} (updated)",
   "author": "Manual Regression",
-  "version": {{createdBookVersion}},
+  "version": {{requestCreatedBookVersion}},
   "publicationYear": 2026
 }
 
@@ -129,9 +201,13 @@ Content-Type: application/json
 
 ### 07-4 Delete Book
 # @name delete_book
-DELETE {{baseUrl}}/api/books/{{createdBookId}}
-Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{csrfToken}}
-X-XSRF-TOKEN: {{csrfToken}}
+< {%
+    request.variables.set("requestCsrfToken", client.global.get("csrfToken"));
+    request.variables.set("requestCreatedBookId", client.global.get("createdBookId") || client.variables.file.get("createdBookId"));
+%}
+DELETE {{baseUrl}}/api/books/{{requestCreatedBookId}}
+Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{requestCsrfToken}}
+X-XSRF-TOKEN: {{requestCsrfToken}}
 
 > {%
     var idx = client.global.get("test_idx");
@@ -149,7 +225,10 @@ X-XSRF-TOKEN: {{csrfToken}}
 
 ### 07-5 Verify Deleted
 # @name verify_deleted
-GET {{baseUrl}}/api/books/{{createdBookId}}
+< {%
+    request.variables.set("requestCreatedBookId", client.global.get("createdBookId") || client.variables.file.get("createdBookId"));
+%}
+GET {{baseUrl}}/api/books/{{requestCreatedBookId}}
 Cookie: technical-interview-demo-session={{sessionCookie}}
 Accept: application/json
 
@@ -167,12 +246,16 @@ Accept: application/json
 %}
 
 ### Finalize Report
+< {%
+    request.variables.set("reportBody", client.global.get("report") || client.variables.file.get("report"));
+    request.variables.set("reportFile", client.global.get("report_file") || client.variables.file.get("report_file"));
+%}
 POST {{baseUrl}}/debug/echo
 Content-Type: text/plain
 
-{{report}}
+{{reportBody}}
 
->>! {{report_file}}
+>>! {{reportFile}}
 
 > {%
     client.log("Report saved to: " + (client.global.get("report_file") || client.variables.file.get("report_file")));
