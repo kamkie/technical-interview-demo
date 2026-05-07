@@ -48,7 +48,7 @@ Use this section for plan-backed work that is ready but not selected as the imme
 
 | Status | Workstream | Plan Or Artifact | Notes |
 | --- | --- | --- | --- |
-| Planned | AI context measurement guardrails | `.agents/plans/PLAN_ai_context_measurement_guardrails.md` | Add a reusable context-report script and warning thresholds for default-load and total `.agents/` inventory growth |
+| In Progress | AI context measurement guardrails | `.agents/plans/PLAN_ai_context_measurement_guardrails.md` | Reusable context-report script is underway; warning thresholds for default-load and total `.agents/` inventory growth remain |
 | Implemented | Repo task skill migration | `.agents/plans/PLAN_repo_task_skill_migration.md` | Replaced the former reusable-task catalog with the low-context `repo-task` skill; release cleanup can remove this active roadmap row when the AI-guidance changes are released |
 | Implemented | AI guidance execution and reusable task library restructure | `.agents/plans/PLAN_ai_guidance_execution_prompt_library_restructure.md` | Implementation and final validation are complete; release cleanup can remove this active roadmap row when the AI-guidance changes are released |
 

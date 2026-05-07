@@ -11,6 +11,7 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 - Added a `.gitmessage` commit template based on Conventional Commits with repository-supported type guidance.
 - Added a reusable `Deep AI Guidelines Assessment` task for evidence-based grading and improvement recommendations.
+- Added a repeatable `scripts/ai/context-report.ps1` generator for AI-instruction context reports under gitignored `temp/`.
 
 ### Changed
 

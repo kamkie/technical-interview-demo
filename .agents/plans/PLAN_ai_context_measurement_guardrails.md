@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Implementation |
+| Status | In Progress |
 
 ## Summary
 - Add repeatable tooling that measures repository AI-instruction context size the same way each time instead of relying on one-off generated reports.
@@ -188,6 +188,12 @@
 - 2026-05-07 comparison-mode revision validation:
   - `git diff --check` - passed
   - `./build.ps1 build` - lightweight shortcut; Gradle build skipped because only `.agents/plans/PLAN_ai_context_measurement_guardrails.md`, `.agents/skills/repo-task/references/tasks/context-report.md`, and `CHANGELOG.md` changed
+- 2026-05-07 Milestone 1 implementation validation:
+  - `./scripts/ai/context-report.ps1 -Range HEAD~1..HEAD -Mode endpoint` - passed; wrote `temp/context-report-2026-05-07-182739-790-bc515da7.md`
+  - `./scripts/ai/context-report.ps1 -Range HEAD~3..HEAD -Mode stepwise` - passed; wrote `temp/context-report-2026-05-07-182739-790-2a492e12.md`
+  - `git worktree list` - passed; no temporary context-report worktree remained
+  - `git diff --check` - passed
+  - `./build.ps1 build` - passed; full Gradle build ran because `scripts/ai/context-report.ps1` is not a lightweight-only file
 
 ## User Validation
 - Run the implemented command and confirm it creates a report under `temp/`.
