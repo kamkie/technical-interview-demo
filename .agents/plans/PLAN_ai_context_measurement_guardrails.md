@@ -9,6 +9,7 @@
 ## Summary
 - Add repeatable tooling that measures repository AI-instruction context size the same way each time instead of relying on one-off generated reports.
 - Add a recurring guardrail that warns when default AI load or total `.agents/` inventory grows past configured thresholds without an explicit archive/report rationale.
+- Support both endpoint comparison for oldest-to-newest range summaries and stepwise comparison for commit-by-commit movement.
 - Success means maintainers and AI agents can run one command to generate the context report under gitignored `temp/`, compare a commit range, and see actionable warnings for context bloat.
 - Roadmap tracking: `ROADMAP.md` tracks this under Planned Work as AI context measurement guardrails.
 
@@ -16,6 +17,7 @@
 - In scope:
   - a committed script for AI-instruction context measurement and report generation
   - deterministic scenario definitions for default load, short request, generic lifecycle task loads, and total AI inventory
+  - a comparison-mode option for endpoint range summaries versus stepwise commit-by-commit analysis
   - guardrail thresholds for `AGENTS.md` default-load growth and total `.agents/` inventory growth
   - warning output when growth crosses thresholds without a clear archive/report rationale
   - updates to the `context-report` repo-task starter so it delegates measurement to the script instead of restating report mechanics
@@ -52,6 +54,8 @@
 - The second guardrail threshold is a warning when total AI inventory grows by more than 10% over the selected comparison base without a rationale from archive/report movement or an explicit report note.
 - Generated context reports and temporary worktree material must stay out of commits.
 - The reusable script should default to comparing the previous first-parent commit with `HEAD`, while accepting an explicit commit range.
+- Comparison mode defaults to `endpoint`, meaning tables and improvement statistics compare only the oldest and newest commits in the selected range.
+- `stepwise` comparison mode measures every selected commit and reports adjacent commit-to-commit deltas, including largest increases and reductions.
 - Context report generation must keep using a temporary git worktree or Git object reads so dirty working-tree files do not corrupt historical measurements.
 
 ## Execution Shape And Shared Files
@@ -91,12 +95,16 @@
   - no build, tests, or validation commands are run by the report task itself
 - Exact deliverables:
   - script accepts an optional commit range and output path
+  - script accepts an optional comparison mode with at least `endpoint` and `stepwise` values
   - script writes the same report sections as the current task: summary, statistics, interpretation, recommendations, summary-by-commit table, and file/directory table
   - script reports characters, bytes, lines, words, and estimated tokens
   - script uses stable scenario file sets that match `AGENTS.md` owner-map behavior
+  - endpoint mode includes only oldest and newest commit columns while noting omitted interior commits
+  - stepwise mode includes every selected commit and adjacent-delta reporting
   - `context-report` task starter calls the script instead of embedding implementation details
 - Validation checkpoint:
-  - run the script for `HEAD~1..HEAD` and confirm it writes a report under `temp/`
+  - run the script for `HEAD~1..HEAD` in endpoint mode and confirm it writes a report under `temp/`
+  - run the script for a multi-commit range in stepwise mode and confirm commit-by-commit deltas appear
   - confirm the temporary worktree is removed
   - run `git diff --check`
   - run `./build.ps1 build` and record whether it takes the lightweight shortcut
@@ -120,7 +128,8 @@
   - this plan
 - Behavior to preserve:
   - guardrails warn by default; they do not fail CI or block commits unless a later task explicitly asks for enforcement
-  - threshold checks compare oldest-to-newest commits in the selected range
+  - endpoint threshold checks compare oldest-to-newest commits in the selected range
+  - stepwise threshold checks report both endpoint threshold status and adjacent commits that cross thresholds
   - reports remain deterministic for the same commit range
 - Exact deliverables:
   - warning when default load grows by more than 5%
@@ -151,7 +160,8 @@
   - run `git diff --check`
   - run `./build.ps1 build` and record the wrapper result
 - For future implementation:
-  - run the context report script against `HEAD~1..HEAD`
+  - run the context report script against `HEAD~1..HEAD` in endpoint mode
+  - run the context report script against a multi-commit range in stepwise mode
   - inspect the generated `temp/context-report-*.md`
   - verify temporary worktree cleanup with `git worktree list`
   - verify guardrail warning behavior with a deterministic threshold-crossing check
@@ -163,11 +173,11 @@
 - Integration tests: not applicable to application behavior.
 - Contract tests: not applicable; no public API or OpenAPI behavior changes.
 - Smoke checks: run the script on a real commit range and inspect report creation plus cleanup.
-- Negative scenarios: invalid range, missing output directory, threshold crossing, and rationalized archive/report growth.
+- Negative scenarios: invalid range, invalid comparison mode, missing output directory, threshold crossing, and rationalized archive/report growth.
 
 ## Better Engineering Notes
 - Prefer Git object reads over copying entire worktrees when possible; use temporary worktrees only for paths or commands that require a checkout.
-- Keep scenario definitions in one data structure so `context-report` task wording, report generation, and guardrail calculations cannot drift.
+- Keep scenario definitions and comparison-mode definitions in one data structure so `context-report` task wording, report generation, and guardrail calculations cannot drift.
 - The guardrail should make bloat visible without blocking legitimate archival or report-generation work.
 - If this script proves useful in CI, add enforcement in a later milestone or plan rather than silently changing this plan's warning-only boundary.
 
@@ -175,6 +185,9 @@
 - 2026-05-07 planning-spec validation:
   - `git diff --check` - passed
   - `./build.ps1 build` - lightweight shortcut; Gradle build skipped because only `.agents/plans/PLAN_ai_context_measurement_guardrails.md` and `ROADMAP.md` changed
+- 2026-05-07 comparison-mode revision validation:
+  - `git diff --check` - passed
+  - `./build.ps1 build` - lightweight shortcut; Gradle build skipped because only `.agents/plans/PLAN_ai_context_measurement_guardrails.md`, `.agents/skills/repo-task/references/tasks/context-report.md`, and `CHANGELOG.md` changed
 
 ## User Validation
 - Run the implemented command and confirm it creates a report under `temp/`.

@@ -18,6 +18,7 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 - Added project metadata footers for AI-created Conventional Commit messages so plan, milestone, task, prompt, and validation provenance stay machine-readable.
 - Moved AI-created commit-message authority into `.agents/references/execution.md`, including the requirement that every file-changing task commits its changes.
 - Compacted human-facing AI workflow and contributor guidance so AI commit-message details point to `.agents/references/execution.md` instead of being restated.
+- Updated the `context-report` task and AI context guardrail plan to support endpoint range summaries and stepwise commit-by-commit comparisons.
 - Treated `.gitmessage` as a lightweight support file for local and CI validation classification.
 - Restructured repository knowledge ownership so shared project knowledge lives under `docs/`, live Codex owner guides and references live under `.agents/references/`, active plans under `.agents/plans/`, templates under `.agents/templates/`, generated reports under `.agents/reports/`, historical AI artifacts under `.agents/archive/`, and reusable task starters under `.agents/skills/repo-task/`.
 - Treated `docs/` and `.agents/` markdown/support files as lightweight support-file changes for local and CI validation classification.
