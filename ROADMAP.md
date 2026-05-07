@@ -8,18 +8,18 @@ Released history belongs in `CHANGELOG.md`.
 
 | Field | Current |
 | --- | --- |
-| Release Phase | Prerelease |
-| Breaking Change Policy | Disallowed |
-| Next Target Version | Stable `v2.0.0` after `v2.0.0-RC7` acceptance |
-| Stable Release Gate | Manual regression pass on `v2.0.0-RC7` accepted on 2026-05-07; evidence is summarized in `.agents/plans/PLAN_manual_regression_execution.md` |
-| Immediate Next Action | Prepare stable `v2.0.0` release from the accepted final release candidate |
+| Release Phase | Stable `v2.0.0` |
+| Breaking Change Policy | Disallowed on the stable `2.x` line unless a later major-version plan explicitly changes it |
+| Next Target Version | Not selected; default to `v2.0.1` for maintenance fixes or `v2.1.0` for backward-compatible feature work |
+| Latest Stable Release | `v2.0.0` released on 2026-05-08 from accepted `v2.0.0-RC7`; manual-regression evidence is archived in `.agents/archive/PLAN_manual_regression_execution.md` |
+| Immediate Next Action | Select and plan the next post-`2.0` workstream |
 
 ## Roadmap Rules
 
 - Keep only active, planned, selected, or intentionally deferred work here.
 - Use `Status` values instead of checkbox semantics.
 - Remove work once it is released, intentionally dropped, or no longer active.
-- Keep detailed milestones, validation notes, and implementation history in `.agents/plans/PLAN_*.md`, not in this file.
+- Keep detailed active milestones, validation notes, and implementation history in `.agents/plans/PLAN_*.md`, not in this file; released plan history belongs under `.agents/archive/`.
 
 | Status | Meaning |
 | --- | --- |
@@ -32,14 +32,7 @@ Released history belongs in `CHANGELOG.md`.
 
 ## Active Release Track
 
-### Moving To `2.0`
-
-Goal: use manual regression coverage as the RC-to-stable gate, then finish the stable `2.0` line after the final release candidate is accepted.
-
-| Order | Status | Workstream | Plan Or Artifact | Exit Criteria |
-| --- | --- | --- | --- | --- |
-| 1 | Implemented | Manual regression gate for the final `2.0` release candidate | `.agents/plans/PLAN_manual_regression_execution.md` | Manual regression completed on 2026-05-07 with Java harness evidence under `temp/manual-regression/manual-20260507-211736-ujltc7/run-20260507-211736/`, HTTP Client reports under `src/manualTests/http/reports/`, and no release blockers observed |
-| 2 | Selected | Stable `v2.0.0` release | `CHANGELOG.md`, `ROADMAP.md`, release artifacts | Stable `v2.0.0` is released after the final accepted RC, changelog and roadmap are updated, and the completed `2.0` track is removed from this file |
+No active release-track work is selected.
 
 ## Planned Work
 
@@ -47,6 +40,7 @@ Use this section for plan-backed work that is ready but not selected as the imme
 
 | Status | Workstream | Plan Or Artifact | Notes |
 | --- | --- | --- | --- |
+| Planned | Frontend AI contract | To be planned | Generate a frontend-contract AI instruction file in this repository using Anthropic's `frontend-design` skill as source guidance, then copy it into the frontend repository as source input for that repo's AI instructions |
 
 ## Intake
 
@@ -57,12 +51,6 @@ Rewrite an item into a concrete roadmap row before moving it into active or defe
 | --- | --- | --- |
 
 ## Deferred Work
-
-### Post-`2.0`
-
-| Status | Workstream | Trigger | Notes |
-| --- | --- | --- | --- |
-| Deferred | Frontend AI contract | Stable `v2.0.0` is released | Generate a frontend-contract AI instruction file in this repository using Anthropic's `frontend-design` skill as source guidance, then copy it into the frontend repository as source input for that repo's AI instructions |
 
 ### Optional Future Enhancements
 

@@ -1,7 +1,7 @@
 # Manual Regression Harness
 
 This source set hosts the manual-regression harness referenced by
-`.agents/plans/PLAN_manual_regression_execution.md`. It runs through the documented public and
+`.agents/archive/PLAN_manual_regression_execution.md`. It runs through the documented public and
 admin REST contract against a locally running app, captures every request/response into a per-run
 report and execution log, and is **not** wired into the default `./build.ps1 build` pipeline. Invoke
 it explicitly when you want to validate a release candidate end-to-end.

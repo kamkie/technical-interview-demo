@@ -4,14 +4,14 @@
 | Status | Current |
 | --- | --- |
 | Phase | Closed |
-| Status | Implemented |
+| Status | Released |
 
 ## Summary
 - Create and execute a manual regression pass against the final `2.0` release candidate, expected `v2.0.0-RC7` after finished AI-guidance and repository-knowledge changes were integrated after `v2.0.0-RC6`, that touches the app's supported user-facing functionality without trying to duplicate every automated edge-case test.
 - The manual pass focuses on business functionality, session behavior, admin flows, and deployment-visible health/docs surfaces.
 - This plan is required to move from the `v2.0.0-RC*` phase to stable `v2.0.0`; it is not merely another RC-preparation checklist.
 - Manual verification completed on 2026-05-07 with no release blockers observed. Durable evidence is summarized in `Validation Results`; generated local artifacts remain gitignored under `temp/manual-regression/...` and `src/manualTests/http/reports/`.
-- Roadmap tracking: `ROADMAP.md` tracks this under `Active Release Track` / `Moving To 2.0` as selected stable-transition confidence work for the current final release candidate.
+- Roadmap tracking: this stable-transition gate is released and archived; active follow-up work now belongs in `ROADMAP.md`.
 - Success means a human can set up the app locally, run the grouped suites below, capture pass/fail notes, and identify any release-blocking functional regressions before stable `v2.0.0` is prepared.
 - Execution is hybrid: a partial-automation harness under a new `src/manualTests` Gradle source set drives anonymous read suites and the scriptable portions of authenticated/admin suites once the executor supplies a session cookie and CSRF token, while OAuth login, browser-driven docs checks, and judgement-heavy verification stay manual.
 - The harness auto-generates an execution report (Markdown + JSON) per run, supports interactive user input for missing required values, and seeds its own test data through documented APIs so reruns are isolated and repeatable.
@@ -582,8 +582,12 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
   - HTTP Client summary: 69 requests completed, 0 failed tests.
   - `git diff --check -- src/manualTests/http/suites` passed after the HTTP suite compatibility updates.
   - Plan closure validation: `git diff --check -- .agents/plans/PLAN_manual_regression_execution.md ROADMAP.md` passed, and `./build.ps1 build` took the documented lightweight-file shortcut because only this plan and `ROADMAP.md` changed.
+- 2026-05-08 stable release preparation:
+  - archived this plan under `.agents/archive/PLAN_manual_regression_execution.md` as part of the `v2.0.0` release metadata update.
+  - migration impact from `v2.0.0-RC7` to the release candidate was `none`.
+  - `./build.ps1 -FullBuild build` passed before and after the release metadata update, including 265 tests, OpenAPI compatibility, coverage, static/security checks, SBOM tasks, and Docker image build.
 
 ## User Validation
 - Manual verification is accepted for this local expected `v2.0.0-RC7` pass.
 - Release-ready criteria are met for this plan: no failed suites, no unresolved release blockers, and clear notes for optional regular-user/provider-specific checks.
-- Next release-track work is stable `v2.0.0` preparation.
+- Stable `v2.0.0` release preparation is complete for this plan.
