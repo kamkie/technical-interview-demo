@@ -1,11 +1,10 @@
 # Working With AI
 
-`WORKING_WITH_AI.md` is the human-facing guide for using AI in this repository across the full application-development lifecycle.
+`WORKING_WITH_AI.md` is the human-facing guide for using AI in this repository across the application-development lifecycle.
 
 Use this file when you want to direct AI effectively as a developer.
 Use `AGENTS.md` and the files under `ai/` as the repository-local instructions that the AI should follow.
-Use `README.md` for the short project overview and the AI-document map.
-Use `SETUP.md` for local environment setup and `CONTRIBUTING.md` for contributor workflow expectations.
+Use `README.md` for the short project overview, `SETUP.md` for local environment setup, and `CONTRIBUTING.md` for contributor workflow expectations.
 
 ## Core Working Model
 
@@ -24,65 +23,25 @@ The normal loop is:
 Human responsibilities do not disappear when AI is involved.
 The developer still owns scope, product intent, approval of tradeoffs, review of the output, and release decisions.
 
-## What To Read First
+## Where Rules Live
 
-Before asking AI to do real work, make sure the session is grounded in these repository files:
+Use this guide as a navigation aid, not as a second copy of the AI runbooks.
 
-- `README.md` for the project overview, implemented scope, and AI document map
-- `AGENTS.md` for repository-specific AI rules, spec priority, and required artifact updates
-- `SETUP.md` for local tooling, environment, and verification prerequisites
-- `ai/ENVIRONMENT_QUICK_REF.md` for AI-friendly local Gradle wrapper commands
-- `ai/PROMPTS.md` for reusable prompt titles; load one raw prompt body with `scripts/ai/get-prompt.ps1` only after a title is invoked
-- `ai/skills/<skill>/SKILL.md` only when you want a narrower repo-local workflow wrapper
+| Need | Start With |
+| --- | --- |
+| Project overview and implemented scope | `README.md` |
+| Local setup, tools, and troubleshooting | `SETUP.md` |
+| Repository-specific AI rules and lifecycle owner map | `AGENTS.md` |
+| Reusable prompt titles and prompt loader usage | `ai/PROMPTS.md` |
+| Creating or revising execution plans | `ai/PLAN.md` |
+| Implementing an approved plan or milestone | `ai/EXECUTION.md` |
+| Choosing workflow mode, delegation, worktrees, or integration mechanics | `ai/WORKFLOW.md` |
+| Validation scope and review lens | `ai/TESTING.md` and `ai/REVIEWS.md` |
+| Documentation and artifact routing | `ai/DOCUMENTATION.md` |
+| Intentional release preparation after integration | `ai/RELEASES.md` |
 
-Then add the phase-specific owner guide:
-
-- discovery and roadmap work: `ROADMAP.md` and `ai/PLAN.md`
-- planning: `ai/PLAN.md`
-- implementation: `ai/EXECUTION.md`
-- delegated or worktree execution: `ai/WORKFLOW.md`
-- verification: `ai/TESTING.md` and `ai/REVIEWS.md`
-- release preparation and release: `ai/RELEASES.md`
-
-## Repo-Local Skills
-
-Repo-local skills live under `ai/skills/`:
-
-- `repo-plan-author`: focused entry point for creating or revising `ai/PLAN_*.md`
-- `gh-fix-ci`: focused entry point for GitHub PR-check inspection, GitHub Actions log triage, and approval-first CI fix planning
-- `gh-fix-security-quality`: focused entry point for GitHub Security tab inspection, code-scanning and Dependabot alert triage, and approval-first security fix planning
-
-Use them when you want a narrower workflow wrapper than the general prompt library.
-Treat them as helpers that point back to the owner guides, not as higher-priority policy.
-
-## Useful Shared Reference Sections
-
-Some AI-facing docs are also readable by human maintainers when you want a short codebase map or workflow summary.
-Use these as focused entry points instead of reading every AI guide end to end.
 Detailed prompt bodies, templates, deep references, skill references, and archived plans are on-demand material.
-
-Architecture and product direction:
-
-- [System Purpose](ai/ARCHITECTURE.md#system-purpose)
-- [API Shape](ai/ARCHITECTURE.md#api-shape)
-- [Business Feature Ownership](ai/ARCHITECTURE.md#business-feature-ownership)
-- [Product Intent](ai/DESIGN.md#product-intent)
-- [Non-Goals](ai/DESIGN.md#non-goals)
-
-Planning and execution:
-
-- [Lifecycle Metadata](ai/PLAN.md#lifecycle-metadata)
-- [Plan Output Format](ai/PLAN.md#plan-output-format)
-- [Common Milestone Loop](ai/EXECUTION.md#common-milestone-loop)
-- [Supported Modes](ai/WORKFLOW.md#supported-modes)
-- [Preferred Commands](ai/ENVIRONMENT_QUICK_REF.md#preferred-commands)
-
-Validation and release:
-
-- [Change-Type Expectations](ai/TESTING.md#change-type-expectations)
-- [Standard Command](ai/TESTING.md#standard-command)
-- [Release Preconditions](ai/RELEASES.md#release-preconditions)
-- [Release Checklist](ai/RELEASES.md#release-checklist)
+Load them only when the prompt, owner guide, or task calls for them.
 
 ## A Good Request To AI
 
@@ -107,11 +66,6 @@ Constraints:
 Definition of done:
 ```
 
-## Triggering Reusable Prompts
-
-Use the exact prompt title from `ai/PROMPTS.md` as the first line of the request, then provide required placeholders as simple `name: value` lines.
-Exact titles are safest; close references should only be used when the intended title is unmistakable.
-
 Examples:
 
 ```text
@@ -125,24 +79,12 @@ plan_file: ai/PLAN_CANDIDATE_SEARCH.md
 ```
 
 ```text
-Implement Milestone
-plan_file: ai/PLAN_CANDIDATE_SEARCH.md
-milestone_name: REST Docs and OpenAPI coverage
-```
-
-```text
 Run Required Validation
 plan_file: ai/PLAN_CANDIDATE_SEARCH.md
 change: candidate search filtering API
 ```
 
-Prompts without placeholders can be invoked by title alone, for example:
-
-```text
-Pick Next Roadmap Workstream
-```
-
-To inspect the prompt catalog locally:
+To inspect prompt titles locally:
 
 ```powershell
 pwsh ./scripts/ai/get-prompt.ps1 -List
@@ -154,208 +96,60 @@ To load one raw prompt body:
 pwsh ./scripts/ai/get-prompt.ps1 -Name "Create Plan"
 ```
 
-If the title or placeholders are ambiguous, the AI should ask a targeted clarification question before loading or executing the prompt.
+If the title, placeholder, or target artifact is ambiguous, expect AI to ask a targeted clarification question before it proceeds.
 
-## Recommended Lifecycle
+## Lifecycle Guide
 
-### 1. Discovery
+### Discovery
 
 Use AI to turn rough ideas into concrete candidate work without jumping into implementation too early.
+Useful requests ask AI to inspect `ROADMAP.md`, clarify requirement gaps, or recommend the next workstream while keeping product and contract decisions explicit.
 
-Typical inputs:
+### Planning
 
-- `ROADMAP.md`
-- `README.md`
-- `ai/PLAN.md`
-- `ai/DESIGN.md` when product direction matters
+Use AI to create or revise an execution plan under `ai/PLAN_*.md`.
+The plan should be decision-complete enough that implementation does not need to invent product behavior, and `ROADMAP.md` should point to active planned work without duplicating the plan.
 
-Good outcomes:
+### Plan Verification
 
-- clarified roadmap wording
-- identified requirement gaps
-- a recommendation that work should stay in `Discovery`
-- a clear workstream that is ready to move into planning
+Before implementing large or multi-step work, ask AI to review the plan itself.
+The useful output is a readiness judgment: lifecycle state, requirement gaps, milestone boundaries, execution-mode fit, validation scope, and unresolved decisions.
 
-Useful prompt titles from `ai/PROMPTS.md`:
-
-- `Clarify Roadmap Decisions`
-- `Refine Roadmap Intake`
-- `Pick Next Roadmap Workstream`
-- `Review Roadmap Item`
-
-### 2. Planning
-
-Use AI to create or revise a real execution plan under `ai/PLAN_*.md`.
-
-The plan should be decision-complete enough that implementation does not need to improvise product behavior.
-Milestones should be small enough to implement, validate, and commit one checkpoint at a time.
-Creating or materially revising a plan should update `ROADMAP.md` in the same change so active work points to the plan path and current status.
-
-Good outcomes:
-
-- one coherent `ai/PLAN_<topic>.md`
-- multiple plan files only when the work is genuinely disjoint
-- explicit scope, non-goals, validation, and execution-mode fit
-- a matching `ROADMAP.md` entry that tracks the plan without duplicating its details
-
-Useful prompt titles:
-
-- `Create Plan`
-- `Plan From Roadmap`
-- `Plan Checked Roadmap Items`
-- `Split Checked Roadmap Items Into Plans`
-- `Revise Plan`
-
-### 3. Plan Verification
-
-Before implementing, have AI review the plan as a plan.
-
-The review should answer:
-
-- is the lifecycle state accurate?
-- are the requirement gaps explicit?
-- are the milestones clean checkpoint boundaries?
-- is the execution mode obvious?
-
-Useful prompt titles:
-
-- `Review Plan Readiness`
-- `Choose Execution Mode`
-
-Do not skip this step for large or multi-step work.
-It is much cheaper to fix the plan than to unwind a bad implementation stream later.
-
-### 4. Implementation
+### Implementation
 
 Once the plan is ready, use AI to implement either the whole plan or one milestone.
+The repository expects milestone-sized checkpoints: implementation, validation evidence, tracking artifacts, and a commit before the milestone is treated as done.
 
-Important repo rule:
+### Workflow Execution And Integration
 
-- commit after each completed milestone
+Most work should stay in the default linear workflow.
+When you want delegation, worktrees, fanout, or later integration of worker output, ask AI to use `ai/WORKFLOW.md`; it owns mode selection, shared-file boundaries, worker logs, and integration mechanics.
 
-That means the milestone should not be treated as done until implementation, validation, tracking artifacts, and the commit checkpoint are all in place.
+### Verification
 
-Useful prompt titles:
-
-- `Implement Plan`
-- `Implement Milestone`
-
-### 5. Workflow Execution
-
-This is where workflow mode matters during active execution.
-Use the smallest mode that keeps ownership clear.
-
-#### Single plan file
-
-When you pass one plan file, there are three useful ways to work:
-
-- let AI infer the right mode from the plan: `Run Plan With Inferred Mode`
-- force direct execution on one branch: `Run Linear Plan`
-- force fanout with a coordinator and workers: `Run Plan As Single-Plan Fanout`
-
-#### Multiple plan files
-
-When you pass multiple plan files, use `Multi-Plan Fanout`.
-Use `Run Plans As Multi-Plan Fanout` when you already know the exact plan-file set.
-Use `Run All Ready Plans` when you want AI to discover every non-archived ready plan first and then run the same parallel execution flow.
-Use `Run All Unfinished Plans` when you want AI to discover every non-archived unfinished plan first and then run the same parallel execution flow.
-
-#### Workflow mode guide
-
-- `Linear Plan`: default for one plan and one execution stream
-- `Single-Plan Fanout`: one current plan file, one coordinator, several worker branches or worktrees, shared files stay coordinator-owned
-- `Multi-Plan Fanout`: multiple plan files executing in parallel, each worker keeps a private `CHANGELOG_<topic>.md`
-
-For `Single-Plan Fanout` and `Multi-Plan Fanout`, the coordinator run is complete only when every worker has reached a terminal state.
-That means the first finished worker is only progress, not the end of the coordinated run.
-If you want an interim snapshot while work is still running, use the worker-status prompts and treat that output as progress reporting rather than completion.
-
-Shared-plan and parallel-plan work also use committed worker logs at:
-
-`ai/tmp/workflow/<plan_stem_or_topic>__<worker_name>.md`
-
-Useful prompt titles:
-
-- `Run Plan With Inferred Mode`
-- `Run Linear Plan`
-- `Run Plan As Single-Plan Fanout`
-- `Run Plans As Multi-Plan Fanout`
-- `Run All Ready Plans`
-- `Run All Unfinished Plans`
-- `Check Worker Status`
-- `Check Active Workers`
-
-### 6. Implementation Integration
-
-Use this after worker implementation is already complete and the next task is to fold ready output from worker branches or open PRs back into the canonical plan or accepted plan branches, `CHANGELOG.md`, and the integration branch, then clean any temporary worker branches or worktrees that are no longer needed.
-
-Useful prompt titles:
-
-- `Integrate Single-Plan Fanout Output`
-- `Integrate Multi-Plan Fanout Output`
-- `Integrate All Open PRs`
-
-### 7. Implementation Verification
-
-Verification is a separate phase, not an afterthought.
 Use AI to run validation, inspect contract impact, and review the change with a code-review mindset.
+`ai/TESTING.md` owns which command or manual check is sufficient, and `ai/REVIEWS.md` owns how findings should be prioritized.
 
-Typical outcomes:
+### Release
 
-- confirmation that the required checks passed
-- identification of missing contract or documentation updates
-- findings ordered by severity
+Release preparation is a maintainer step after the intended implementation has landed on `main`.
+Use `ai/RELEASES.md` for release preconditions, versioning, tagging, roadmap cleanup, changelog movement, and published-artifact verification.
 
-Useful prompt titles:
+## Repo-Local Skills
 
-- `Run Required Validation`
-- `Check Contract Impact`
-- `Verify Milestone`
-- `Review Diff Risks`
-- `Triage Validation Failure`
+Repo-local skills live under `ai/skills/`.
 
-Repository rule:
+Use them when you want a narrower workflow wrapper than the general prompt library.
+Treat them as helpers that point back to owner guides, not as higher-priority policy.
+Read a skill's `SKILL.md` only when that skill is invoked or clearly applies.
 
-- use `./build.ps1 compileJava` or a similarly focused wrapper task for quick implementation-loop checks, then run the standard wrapper build from `ai/ENVIRONMENT_QUICK_REF.md` before finishing; `./build.ps1 -FullBuild build` forces the full Gradle build when required
-- do not run overlapping Gradle validation tasks in parallel, including `build` with `gatlingBenchmark`, `externalSmokeTest`, `externalDeploymentCheck`, or `scheduledExternalCheck`
+Current focused skills include:
 
-### 8. Preparing Release
+- `repo-plan-author`: creating or revising `ai/PLAN_*.md`
+- `gh-fix-ci`: GitHub PR-check inspection and CI failure triage
+- `gh-fix-security-quality`: GitHub Security tab, code-scanning, and Dependabot alert triage
 
-Release preparation starts only after the approved implementation PR has been merged onto `main`.
-
-Useful prompt titles:
-
-- `Check Release Readiness`
-- `Prepare Release`
-
-Typical preparation work includes:
-
-- verifying the merged work is actually release-ready
-- checking changelog, roadmap, and plan cleanup
-- preparing the release commit and tag inputs without pushing yet
-
-### 9. Releasing
-
-Releasing is a maintainer step.
-Do not ask AI to release unmerged branch work.
-
-Useful prompt titles:
-
-- `Push Prepared Release`
-- `Release All Merged Work`
-- `Check Published Release`
-
-## How To Choose A Workflow Mode
-
-Use this quick rule set:
-
-- one plan file and no strong reason to split: `Linear Plan`
-- one plan file with disjoint worker-owned slices and one coordinator: `Single-Plan Fanout`
-- multiple plan files: `Multi-Plan Fanout`
-
-If you are unsure, ask AI to review the plan first with `Choose Execution Mode`.
-
-## Suggested Developer Habits
+## Developer Habits
 
 - ask AI to name the spec artifacts before it edits code
 - ask AI to say what is in scope and out of scope
@@ -365,28 +159,6 @@ If you are unsure, ask AI to review the plan first with `Choose Execution Mode`.
 - keep release work separate from implementation work
 - use the prompt titles in `ai/PROMPTS.md` as reusable commands when you want a consistent repository-local workflow
 
-## A Practical End-To-End Example
-
-For a normal feature or cleanup, a good sequence is:
-
-1. use `Pick Next Roadmap Workstream`
-2. use `Create Plan`
-3. use `Review Plan Readiness`
-4. use `Implement Milestone` or `Implement Plan`
-5. use `Run Required Validation`
-6. use `Review Diff Risks`
-7. if the change is merged to `main`, use `Check Release Readiness` and then the release prompts when appropriate
-
-For coordinated multi-branch work:
-
-1. create or refine the relevant plan files
-2. if there is one plan file, use one of the single-plan workflow prompts
-3. if there are multiple plan files and you already know the exact set, use `Run Plans As Multi-Plan Fanout`
-4. if you want AI to discover every ready plan under `ai/`, use `Run All Ready Plans`
-5. if you want AI to pick up every unfinished plan under `ai/`, use `Run All Unfinished Plans`
-6. use the worker-status prompts while the work is running
-7. integrate, verify, and release only after the normal gates are satisfied
-
 ## When To Slow Down AI
 
 Ask AI to stop and clarify instead of continuing when:
@@ -395,6 +167,6 @@ Ask AI to stop and clarify instead of continuing when:
 - public API behavior is changing without clear contract updates
 - the plan hides unresolved scope or validation questions
 - multiple workers would need to edit the same shared files
-- the requested release work is not yet merged onto `main`
+- requested release work is not yet integrated onto `main`
 
 In this repository, speed is useful only when the spec, ownership, and validation path are still clear.

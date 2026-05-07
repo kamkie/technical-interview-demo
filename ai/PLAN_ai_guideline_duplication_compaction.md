@@ -259,6 +259,11 @@
 - If implementation finds a separate high-risk contradiction, stop and record it before continuing with cosmetic compaction.
 
 ## Validation Results
+- 2026-05-07 milestone 2:
+  - Rewrote `WORKING_WITH_AI.md` as a shorter human-facing navigation guide that keeps request examples, lifecycle usage advice, prompt-loader commands, and skill pointers while linking detailed prompt, workflow, validation, and release mechanics to their owners.
+  - Targeted prompt-title and workflow-mode duplicate searches in `WORKING_WITH_AI.md` found no remaining full prompt catalog, fanout prompt list, integration prompt list, or release prompt list.
+  - Manual human-facing readability check passed; `README.md` and `CONTRIBUTING.md` links still point to the same guide path and did not need updates.
+  - `git diff --check` passed.
 - 2026-05-07 milestone 1:
   - Added a compact lifecycle owner map to `AGENTS.md` and reduced repeated read-set guidance in `ai/PROMPTS.md` and `ai/EXECUTION.md` to owner links and narrow triggers.
   - Targeted read-set search found the expected remaining `WORKING_WITH_AI.md` duplication for milestone 2 and no stale `Default Read Sets` table in `ai/PROMPTS.md`.
