@@ -324,6 +324,14 @@
 - The highest-risk areas are path migration and the non-compatible task-library loader cutover; both have early inventory, nonexistence checks, and positive and negative smoke-check milestones.
 
 ## Validation Results
+- 2026-05-07 implementation Milestone 5 compaction and skill evaluation:
+  - Loaded and applied the `Compact AI Docs` task from `ai/task-library/bodies/compact-ai-docs.md`.
+  - Evaluated the optional `repo-ad-hoc-task-executor` skill and deferred creation because the new `ai/EXECUTION.md`, `ai/PLAN_EXECUTION.md`, and task library already cover the entry workflow without adding another policy surface.
+  - Confirmed `Test-Path -LiteralPath ai/skills/repo-ad-hoc-task-executor` returned `False`.
+  - Added an `## [Unreleased]` changelog entry for the AI guidance ownership and task-library restructure.
+  - Fixed remaining stale task-library references in active standing guidance and the on-demand remix evaluation reference.
+  - Targeted stale-reference searches found no live non-archived references to the old planning-guide path, old active-plan glob, misspelled planning-guide filename, old task-loader path, old task-storage path, prompt-owned library wording, or legacy workflow-name strings outside this plan's historical notes, archived plans, the non-policy workflow-selection comparison, and the stale post-compaction evaluation report scheduled for Milestone 6.
+  - `git diff --check` passed.
 - 2026-05-07 implementation Milestone 4 task-library migration:
   - Renamed `ai/PROMPTS.md` to `ai/TASK_LIBRARY.md`.
   - Moved `ai/prompts/` to `ai/task-library/` and rewrote `ai/task-library/index.json` to expose a `tasks` array with `ai/task-library/bodies/*.md` paths.

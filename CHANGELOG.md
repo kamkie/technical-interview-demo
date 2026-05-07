@@ -7,6 +7,10 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Changed
+
+- Restructured AI guidance ownership by moving active plans under `ai/plans/active/`, renaming the planning guide to `ai/PLANNING.md`, adding `ai/PLAN_EXECUTION.md` for whole-plan execution, narrowing `ai/EXECUTION.md` to ad hoc and single-milestone work, and replacing reusable starter storage with `ai/TASK_LIBRARY.md`, `ai/task-library/`, and `scripts/ai/get-task.ps1`.
+
 ## [v2.0.0-RC6] - 2026-05-07
 
 ### Added
