@@ -26,6 +26,7 @@ If you are a new agent entering this repository, follow these steps to ground yo
 4. **Identify the current task's lifecycle phase** (Discovery, Planning, Implementation, Testing, Review, Integration, Release).
 5. **Load the relevant owner guide** from the `ai/` directory (e.g., `ai/PLAN.md` for planning).
 6. **Locate or create a task plan** (`ai/PLAN_*.md`) when the current workflow requires planned execution.
+7. **Run a targeted relevance scan** using task terms against `ai/LEARNINGS.md` and active `ai/PLAN_*.md` files, then open only matches that overlap the current task.
 
 ## AI Document Set
 
@@ -63,6 +64,7 @@ Load AI guidance on demand:
 - read `AGENTS.md` first
 - read only the owning AI guide for the current task
 - read active `ai/PLAN_*.md` files only when planning, executing, verifying, or releasing that plan
+- use task-specific search terms for the onboarding relevance scan; do not read every active plan, archived plan, prompt body, reference, template, or skill as a pre-flight default
 - read prompt bodies, templates, detailed references, skill files, and archived plans only when the task specifically needs them
 - do not bulk-load `ai/archive/`, `ai/references/`, `ai/prompts/`, `ai/templates/`, or skill reference material as standing context
 
@@ -73,6 +75,7 @@ Maintain a clean working context to optimize performance and prevent hallucinati
 - **Drop stale context**: Once a milestone or sub-task is complete, stop referencing files that are no longer relevant to the next step.
 - **Avoid deep-file bulk loading**: Prefer targeted searches and structure checks over opening every file in a package.
 - **Summarize complex state**: If a long investigation concludes, summarize the findings and use that summary as the new grounding instead of re-reading the raw logs.
+- **Checkpoint degraded context quality**: If contradiction, unstable assumptions, unjustified hedging, or repeated re-derivation appears, write a short current-state summary before continuing. Put it in the active plan, worker log, or validation notes when such an artifact exists; otherwise use a concise user update or final note.
 - **Close completed plans**: When a task is done, the plan moves to `ai/archive/` and should be removed from the active read set.
 
 Rules for maintaining the `ai/` documents:
