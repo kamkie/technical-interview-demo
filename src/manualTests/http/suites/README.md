@@ -5,7 +5,7 @@ This directory contains `.http` scripts that cover the same requests as the Java
 ## Prerequisites
 
 1.  **IntelliJ IDEA** (with HTTP Client plugin enabled).
-2.  **Environment Configuration**: Ensure `src/manualTests/http/suites/http-client.private.env.json` contains a valid `sessionCookie`.
+2.  **Environment Configuration**: Ensure `src/manualTests/http/suites/http-client.private.env.json` contains a valid `baseUrl` and `sessionCookie`.
     ```json
     {
       "dev": {
@@ -14,7 +14,9 @@ This directory contains `.http` scripts that cover the same requests as the Java
       }
     }
     ```
+    Do not provide a `csrfToken`; authenticated suites capture the `XSRF-TOKEN` cookie during setup.
 3.  **Active Application**: The application should be running, usually on `http://localhost:8080`.
+4.  **CLI Java Runtime**: `ijhttp 2025.3` needs a Java 21 runtime on `PATH` or through `JAVA_HOME`.
 
 ## Running the Suites
 
@@ -42,21 +44,23 @@ Each script builds a markdown report.
 
 ### Option C: Command Line (ijhttp)
 
-If you have the `ijhttp` CLI installed, you can run a single suite or all of them at once. The tool automatically discovers environment files in the same directory.
+If you have the `ijhttp` CLI installed, you can run a single suite or all of them at once. Pass the private environment file explicitly when running from the repository root.
 
 **Run a single suite:**
 ```powershell
-ijhttp -e dev src/manualTests/http/suites/suite-01-public-overview-and-docs.http
+ijhttp -e dev -p src/manualTests/http/suites/http-client.private.env.json src/manualTests/http/suites/suite-01-public-overview-and-docs.http
 ```
 
 **Run all suites in order:**
 ```powershell
-ijhttp -e dev src/manualTests/http/suites/
+$files = Get-ChildItem src/manualTests/http/suites/suite-*.http | Sort-Object Name | ForEach-Object { $_.FullName }
+ijhttp -e dev -p src/manualTests/http/suites/http-client.private.env.json @files
 ```
 
 **Generate XML report (for CI):**
 ```powershell
-ijhttp -e dev --report src/manualTests/http/suites/
+$files = Get-ChildItem src/manualTests/http/suites/suite-*.http | Sort-Object Name | ForEach-Object { $_.FullName }
+ijhttp -e dev -p src/manualTests/http/suites/http-client.private.env.json --report @files
 ```
 The XML report will be saved to `reports/report.xml` relative to the execution directory.
 
@@ -65,14 +69,24 @@ The XML report will be saved to `reports/report.xml` relative to the execution d
 If you don't have `ijhttp` installed, use the official Docker image:
 
 ```powershell
-docker run --rm -it -v ${PWD}:/workdir jetbrains/intellij-http-client -e dev src/manualTests/http/suites/
+$files = Get-ChildItem src/manualTests/http/suites/suite-*.http | Sort-Object Name | ForEach-Object {
+    $_.FullName.Replace((Get-Location).Path + "\", "").Replace("\", "/")
+}
+docker run --rm -it -v ${PWD}:/workdir -w /workdir jetbrains/intellij-http-client -e dev -p src/manualTests/http/suites/http-client.private.env.json $files
 ```
+
+## Script Authoring Notes
+
+- File-level `@...` values are fallback defaults for partial runs. Response handlers should read them through `client.variables.file`.
+- Values captured in response handlers should be stored with `client.global.set(...)`.
+- Before using a captured value in a request URL, header, body, or `>>!` redirection, copy it into a request variable in a pre-request handler and reference that unique name, such as `{{requestCsrfToken}}` or `{{reportFile}}`.
+- Use `client.variables.environment.get("baseUrl") || client.global.get("baseUrl") || client.variables.file.get("baseUrl")` when writing report metadata.
+- For CSRF, setup requests capture `XSRF-TOKEN` from `Set-Cookie`; unsafe requests should use the captured token via `requestCsrfToken`.
 
 ## Suite Dependencies
 
 The suites are designed to be run in order (01 through 12). Some suites rely on global variables captured by previous suites:
 
-- Suite 07 relies on `firstCategoryId` from Suite 03.
-- Suite 11 relies on `runTag` from earlier lifecycle suites.
+- Suite 11 uses `runTag` from earlier lifecycle suites when it is available.
 
 If you run them out of order, some tests may be skipped or fail.

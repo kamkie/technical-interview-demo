@@ -17,10 +17,11 @@ Cookie: technical-interview-demo-session={{sessionCookie}}
 > {%
     var date = new Date().toISOString().split('T')[0];
     client.global.set("report_file", "../reports/10-admin-user-management_raport_" + date + ".md");
+    var baseUrl = client.variables.environment.get("baseUrl") || client.global.get("baseUrl") || client.variables.file.get("baseUrl");
     var report = "# Manual Regression Report - Suite 10\n\n";
     report += "- Suite: `10-admin-user-management`\n";
     report += "- Run Date: " + new Date().toString() + "\n";
-    report += "- Base URL: " + client.global.get("baseUrl") + "\n\n";
+    report += "- Base URL: " + baseUrl + "\n\n";
     report += "## Test Results\n\n";
     report += "| # | Test | Method | Path | Status | Result | Note |\n";
     report += "|---|------|--------|------|--------|--------|------|\n";
@@ -32,9 +33,38 @@ Cookie: technical-interview-demo-session={{sessionCookie}}
     client.global.set("roleRoundTripEnabled", "false");
     client.global.set("runTag", client.global.get("runTag") || ("HTTP-" + Math.floor(Math.random() * 10000)));
 
-    const csrfCookie = response.cookiesByName("XSRF-TOKEN")[0];
-    if (csrfCookie) {
-        client.global.set("csrfToken", csrfCookie.value);
+    function getCookieValue(name) {
+        if (typeof response.cookiesByName === "function") {
+            var cookies = response.cookiesByName(name);
+            if (cookies && cookies.length > 0) {
+                return cookies[0].value;
+            }
+        }
+
+        var setCookieHeaders = [];
+        if (response.headers && typeof response.headers.valuesOf === "function") {
+            setCookieHeaders = response.headers.valuesOf("Set-Cookie") || [];
+        } else if (response.headers && typeof response.headers.valueOf === "function") {
+            var setCookieHeader = response.headers.valueOf("Set-Cookie");
+            if (setCookieHeader) {
+                setCookieHeaders = [setCookieHeader];
+            }
+        }
+
+        for (var i = 0; i < setCookieHeaders.length; i++) {
+            var parts = String(setCookieHeaders[i]).split(";");
+            var nameAndValue = parts[0].split("=");
+            if (nameAndValue[0] === name) {
+                return nameAndValue.slice(1).join("=");
+            }
+        }
+
+        return null;
+    }
+
+    var csrfToken = getCookieValue("XSRF-TOKEN");
+    if (csrfToken) {
+        client.global.set("csrfToken", csrfToken);
         client.log("Captured XSRF-TOKEN from response.");
     } else {
         client.log("XSRF-TOKEN cookie not found in response. Using existing global csrfToken if available.");
@@ -79,14 +109,20 @@ Accept: application/json
 
 ### 10-2 Grant Roles
 # @name grant_roles
-PUT {{baseUrl}}/api/admin/users/{{targetUserId}}/roles
-Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{csrfToken}}
-X-XSRF-TOKEN: {{csrfToken}}
+< {%
+    request.variables.set("requestCsrfToken", client.global.get("csrfToken"));
+    request.variables.set("requestTargetUserId", client.global.get("targetUserId") || client.variables.file.get("targetUserId"));
+    request.variables.set("requestGrantedRoles", client.global.get("grantedRoles") || client.variables.file.get("grantedRoles"));
+    request.variables.set("requestRunTag", client.global.get("runTag") || client.variables.file.get("runTag"));
+%}
+PUT {{baseUrl}}/api/admin/users/{{requestTargetUserId}}/roles
+Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{requestCsrfToken}}
+X-XSRF-TOKEN: {{requestCsrfToken}}
 Content-Type: application/json
 
 {
-  "roles": {{grantedRoles}},
-  "reason": "Manual regression round-trip for {{runTag}}"
+  "roles": {{requestGrantedRoles}},
+  "reason": "Manual regression round-trip for {{requestRunTag}}"
 }
 
 > {%
@@ -112,14 +148,20 @@ Content-Type: application/json
 
 ### 10-3 Restore Roles
 # @name restore_roles
-PUT {{baseUrl}}/api/admin/users/{{targetUserId}}/roles
-Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{csrfToken}}
-X-XSRF-TOKEN: {{csrfToken}}
+< {%
+    request.variables.set("requestCsrfToken", client.global.get("csrfToken"));
+    request.variables.set("requestTargetUserId", client.global.get("targetUserId") || client.variables.file.get("targetUserId"));
+    request.variables.set("requestOriginalRoles", client.global.get("originalRoles") || client.variables.file.get("originalRoles"));
+    request.variables.set("requestRunTag", client.global.get("runTag") || client.variables.file.get("runTag"));
+%}
+PUT {{baseUrl}}/api/admin/users/{{requestTargetUserId}}/roles
+Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{requestCsrfToken}}
+X-XSRF-TOKEN: {{requestCsrfToken}}
 Content-Type: application/json
 
 {
-  "roles": {{originalRoles}},
-  "reason": "Manual regression round-trip restore for {{runTag}}"
+  "roles": {{requestOriginalRoles}},
+  "reason": "Manual regression round-trip restore for {{requestRunTag}}"
 }
 
 > {%
@@ -144,14 +186,18 @@ Content-Type: application/json
 %}
 
 ### Finalize Report
+< {%
+    request.variables.set("reportBody", client.global.get("report") || client.variables.file.get("report"));
+    request.variables.set("reportFile", client.global.get("report_file") || client.variables.file.get("report_file"));
+%}
 POST {{baseUrl}}/debug/echo
 Content-Type: text/plain
 
-{{report}}
+{{reportBody}}
 
->>! {{report_file}}
+>>! {{reportFile}}
 
 > {%
-    client.log("Report saved to: " + client.global.get("report_file"));
-    client.log(client.global.get("report"));
+    client.log("Report saved to: " + (client.global.get("report_file") || client.variables.file.get("report_file")));
+    client.log(client.global.get("report") || client.variables.file.get("report"));
 %}

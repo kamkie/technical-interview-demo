@@ -10,10 +10,11 @@ GET {{baseUrl}}/hello
 > {%
     var date = new Date().toISOString().split('T')[0];
     client.global.set("report_file", "../reports/05-anonymous-negative-access_raport_" + date + ".md");
+    var baseUrl = client.variables.environment.get("baseUrl") || client.global.get("baseUrl") || client.variables.file.get("baseUrl");
     var report = "# Manual Regression Report - Suite 05\n\n";
     report += "- Suite: `05-anonymous-negative-access`\n";
     report += "- Run Date: " + new Date().toString() + "\n";
-    report += "- Base URL: " + client.global.get("baseUrl") + "\n\n";
+    report += "- Base URL: " + baseUrl + "\n\n";
     report += "## Test Results\n\n";
     report += "| # | Test | Method | Path | Status | Result | Note |\n";
     report += "|---|------|--------|------|--------|--------|------|\n";
@@ -118,14 +119,18 @@ Accept: application/json
 %}
 
 ### Finalize Report
+< {%
+    request.variables.set("reportBody", client.global.get("report") || client.variables.file.get("report"));
+    request.variables.set("reportFile", client.global.get("report_file") || client.variables.file.get("report_file"));
+%}
 POST {{baseUrl}}/debug/echo
 Content-Type: text/plain
 
-{{report}}
+{{reportBody}}
 
->>! {{report_file}}
+>>! {{reportFile}}
 
 > {%
-    client.log("Report saved to: " + client.global.get("report_file"));
-    client.log(client.global.get("report"));
+    client.log("Report saved to: " + (client.global.get("report_file") || client.variables.file.get("report_file")));
+    client.log(client.global.get("report") || client.variables.file.get("report"));
 %}

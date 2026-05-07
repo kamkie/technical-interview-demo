@@ -14,19 +14,49 @@ Cookie: technical-interview-demo-session={{sessionCookie}}
 > {%
     var date = new Date().toISOString().split('T')[0];
     client.global.set("report_file", "../reports/06-session-and-account_raport_" + date + ".md");
+    var baseUrl = client.variables.environment.get("baseUrl") || client.global.get("baseUrl") || client.variables.file.get("baseUrl");
     var report = "# Manual Regression Report - Suite 06\n\n";
     report += "- Suite: `06-session-and-account`\n";
     report += "- Run Date: " + new Date().toString() + "\n";
-    report += "- Base URL: " + client.global.get("baseUrl") + "\n\n";
+    report += "- Base URL: " + baseUrl + "\n\n";
     report += "## Test Results\n\n";
     report += "| # | Test | Method | Path | Status | Result | Note |\n";
     report += "|---|------|--------|------|--------|--------|------|\n";
     client.global.set("report", report);
     client.global.set("test_idx", 1);
 
-    const csrfCookie = response.cookiesByName("XSRF-TOKEN")[0];
-    if (csrfCookie) {
-        client.global.set("csrfToken", csrfCookie.value);
+    function getCookieValue(name) {
+        if (typeof response.cookiesByName === "function") {
+            var cookies = response.cookiesByName(name);
+            if (cookies && cookies.length > 0) {
+                return cookies[0].value;
+            }
+        }
+
+        var setCookieHeaders = [];
+        if (response.headers && typeof response.headers.valuesOf === "function") {
+            setCookieHeaders = response.headers.valuesOf("Set-Cookie") || [];
+        } else if (response.headers && typeof response.headers.valueOf === "function") {
+            var setCookieHeader = response.headers.valueOf("Set-Cookie");
+            if (setCookieHeader) {
+                setCookieHeaders = [setCookieHeader];
+            }
+        }
+
+        for (var i = 0; i < setCookieHeaders.length; i++) {
+            var parts = String(setCookieHeaders[i]).split(";");
+            var nameAndValue = parts[0].split("=");
+            if (nameAndValue[0] === name) {
+                return nameAndValue.slice(1).join("=");
+            }
+        }
+
+        return null;
+    }
+
+    var csrfToken = getCookieValue("XSRF-TOKEN");
+    if (csrfToken) {
+        client.global.set("csrfToken", csrfToken);
         client.log("Captured XSRF-TOKEN from response.");
     } else {
         client.log("XSRF-TOKEN cookie not found in response. Using existing global csrfToken if available.");
@@ -80,13 +110,17 @@ Accept: application/json
 
 ### 06-3 Change Language
 # @name change_language
+< {%
+    request.variables.set("requestCsrfToken", client.global.get("csrfToken"));
+    request.variables.set("requestTemporaryPreferredLanguageJson", client.global.get("temporaryPreferredLanguageJson") || client.variables.file.get("temporaryPreferredLanguageJson"));
+%}
 PUT {{baseUrl}}/api/account/language
-Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{csrfToken}}
-X-XSRF-TOKEN: {{csrfToken}}
+Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{requestCsrfToken}}
+X-XSRF-TOKEN: {{requestCsrfToken}}
 Content-Type: application/json
 
 {
-  "preferredLanguage": {{temporaryPreferredLanguageJson}}
+  "preferredLanguage": {{requestTemporaryPreferredLanguageJson}}
 }
 
 > {%
@@ -106,13 +140,17 @@ Content-Type: application/json
 
 ### 06-4 Restore Language
 # @name restore_language
+< {%
+    request.variables.set("requestCsrfToken", client.global.get("csrfToken"));
+    request.variables.set("requestOriginalPreferredLanguageJson", client.global.get("originalPreferredLanguageJson") || client.variables.file.get("originalPreferredLanguageJson"));
+%}
 PUT {{baseUrl}}/api/account/language
-Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{csrfToken}}
-X-XSRF-TOKEN: {{csrfToken}}
+Cookie: technical-interview-demo-session={{sessionCookie}}; XSRF-TOKEN={{requestCsrfToken}}
+X-XSRF-TOKEN: {{requestCsrfToken}}
 Content-Type: application/json
 
 {
-  "preferredLanguage": {{originalPreferredLanguageJson}}
+  "preferredLanguage": {{requestOriginalPreferredLanguageJson}}
 }
 
 > {%
@@ -130,14 +168,18 @@ Content-Type: application/json
 %}
 
 ### Finalize Report
+< {%
+    request.variables.set("reportBody", client.global.get("report") || client.variables.file.get("report"));
+    request.variables.set("reportFile", client.global.get("report_file") || client.variables.file.get("report_file"));
+%}
 POST {{baseUrl}}/debug/echo
 Content-Type: text/plain
 
-{{report}}
+{{reportBody}}
 
->>! {{report_file}}
+>>! {{reportFile}}
 
 > {%
-    client.log("Report saved to: " + client.global.get("report_file"));
-    client.log(client.global.get("report"));
+    client.log("Report saved to: " + (client.global.get("report_file") || client.variables.file.get("report_file")));
+    client.log(client.global.get("report") || client.variables.file.get("report"));
 %}
