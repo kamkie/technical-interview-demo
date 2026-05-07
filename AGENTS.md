@@ -16,6 +16,46 @@ Use this file for:
 
 Do not use this file for detailed local setup, IDE walkthroughs, Docker onboarding, or troubleshooting steps that already belong in `SETUP.md`.
 
+## Core Approach: Spec-Driven Development
+
+This repository should be changed using Spec-Driven Development.
+
+Principle:
+
+1. Identify the behavior being changed.
+2. Identify the spec artifact that defines that behavior.
+3. Update or add the spec first.
+4. Implement the smallest code change that satisfies the updated spec.
+5. Verify the executable and published specs remain aligned.
+
+If the intended behavior is not clear enough to express as a spec, stop and clarify it before implementing.
+
+## Spec Priority
+
+When resolving truth, use this order:
+
+1. explicit user request in the current task
+2. executable specs: integration tests, REST Docs tests, OpenAPI compatibility tests, benchmark checks
+3. published contract docs: `README.md`, `src/docs/asciidoc/`, HTTP example collections
+4. `ROADMAP.md` `## Current Project State` for the active release phase, breaking-change policy, and next target version
+5. active planning in `ROADMAP.md` ordered plan sections
+6. historical release notes in `CHANGELOG.md`
+
+## Authoritative Repository Artifacts
+
+Use these artifacts deliberately:
+
+- `src/test/java/`: executable behavior specs
+- `src/docs/asciidoc/`: published REST Docs structure
+- `src/test/resources/openapi/approved-openapi.json`: approved machine-readable public API contract
+- `src/test/resources/http/`: reviewer-facing runnable request examples
+- `README.md`: supported human-facing contract summary
+- `ROADMAP.md`: active release phase, roadmap sequencing, and current project state
+- `CHANGELOG.md`: release history only
+- `SETUP.md`: local environment, tooling, onboarding, and troubleshooting
+
+The `ai/` documents are guidance and planning aids. They are not higher-priority truth than executable specs, published contract docs, or the human-facing artifact that owns the topic.
+
 ## Agent Onboarding Quick Start
 
 If you are a new agent entering this repository, follow these steps to ground yourself:
@@ -96,46 +136,6 @@ Rules for maintaining the `ai/` documents:
 - if an interrupted tool or IDE run leaves an `ai/` document incomplete, finish it or clearly mark the gaps instead of leaving misleading partial content
 - when moving or renaming AI documents, update references in `AGENTS.md` and other `ai/` files in the same change
 
-## Core Approach: Spec-Driven Development
-
-This repository should be changed using Spec-Driven Development.
-
-Principle:
-
-1. Identify the behavior being changed.
-2. Identify the spec artifact that defines that behavior.
-3. Update or add the spec first.
-4. Implement the smallest code change that satisfies the updated spec.
-5. Verify the executable and published specs remain aligned.
-
-If the intended behavior is not clear enough to express as a spec, stop and clarify it before implementing.
-
-## Spec Priority
-
-When resolving truth, use this order:
-
-1. explicit user request in the current task
-2. executable specs: integration tests, REST Docs tests, OpenAPI compatibility tests, benchmark checks
-3. published contract docs: `README.md`, `src/docs/asciidoc/`, HTTP example collections
-4. `ROADMAP.md` `## Current Project State` for the active release phase, breaking-change policy, and next target version
-5. active planning in `ROADMAP.md` ordered plan sections
-6. historical release notes in `CHANGELOG.md`
-
-## Authoritative Repository Artifacts
-
-Use these artifacts deliberately:
-
-- `src/test/java/`: executable behavior specs
-- `src/docs/asciidoc/`: published REST Docs structure
-- `src/test/resources/openapi/approved-openapi.json`: approved machine-readable public API contract
-- `src/test/resources/http/`: reviewer-facing runnable request examples
-- `README.md`: supported human-facing contract summary
-- `ROADMAP.md`: active release phase, roadmap sequencing, and current project state
-- `CHANGELOG.md`: release history only
-- `SETUP.md`: local environment, tooling, onboarding, and troubleshooting
-
-The `ai/` documents are guidance and planning aids. They are not higher-priority truth than executable specs, published contract docs, or the human-facing artifact that owns the topic.
-
 ## Required Updates By Change Type
 
 ### Architecture, design, or AI guidance change
@@ -187,6 +187,14 @@ When making architecture-sensitive changes:
 - preserve the demo nature of the project and prefer direct code over abstraction
 - keep `AGENTS.md` aligned only when repo-level architectural rules or AI-document ownership changed
 
+## Local Environment And Command Execution
+
+Use `SETUP.md` for setup walkthroughs and troubleshooting.
+Use `ai/ENVIRONMENT_QUICK_REF.md` for the AI-facing Gradle wrapper reference.
+
+Prefer `./build.ps1` through PowerShell for local and CI Gradle commands.
+It auto-loads a root `.env` file when present, so plans and prompts should not add upfront `JAVA_HOME` discovery or dotenv boilerplate.
+
 ## Branch And Worktree Expectations
 
 `ai/WORKFLOW.md` owns mode selection and common branch, worktree, coordinator, worker, and integration rules; the on-demand workflow references own detailed fanout mechanics.
@@ -197,14 +205,6 @@ Repo-level invariants:
 - keep worktree or side-branch implementation isolated until the planned scope is complete and locally validated
 - prefer merging accepted branches or pull requests; use cherry-pick only when the user asks for it, when accepting less than the full branch or pull request, or when a normal merge is not viable, and record the reason
 - do not cut releases from unintegrated side branches, worktrees, detached tips, or changes that have not landed on `main`
-
-## Local Environment And Command Execution
-
-Use `SETUP.md` for setup walkthroughs and troubleshooting.
-Use `ai/ENVIRONMENT_QUICK_REF.md` for the AI-facing Gradle wrapper reference.
-
-Prefer `./build.ps1` through PowerShell for local and CI Gradle commands.
-It auto-loads a root `.env` file when present, so plans and prompts should not add upfront `JAVA_HOME` discovery or dotenv boilerplate.
 
 ## Delegated Agents And Skill Wrappers
 

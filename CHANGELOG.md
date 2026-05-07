@@ -13,7 +13,7 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ### Changed
 
-- Compacted branch and worktree expectations in `AGENTS.md` while keeping detailed execution and remote-handoff mechanics in `ai/WORKFLOW.md`.
+- Reordered `AGENTS.md` into a clearer spec-truth, onboarding, change-routing, and execution-support flow, while compacting branch and worktree expectations and keeping detailed remote-handoff mechanics in `ai/WORKFLOW.md`.
 - Refined AI onboarding and execution guidance with targeted relevance scanning, context-quality checkpoints, per-milestone scope checks, and post-validation review triggers.
 
 ## [v2.0.0-RC5] - 2026-05-07
