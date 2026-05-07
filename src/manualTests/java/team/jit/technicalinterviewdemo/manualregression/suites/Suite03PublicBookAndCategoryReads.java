@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Suite 03 — public, anonymous reads of the seeded book and category catalog.
  *
- * <p>Captures the first seeded book id and the first seeded category id and stores them on the
+ * <p>Captures the first seeded book id and the first seeded category id/name and stores them on the
  * report as generated identifiers so downstream lifecycle suites can reuse them.
  */
 @SuiteName(
@@ -25,6 +25,7 @@ public class Suite03PublicBookAndCategoryReads extends SuiteBase {
 
     static final String IDENTIFIER_FIRST_BOOK_ID = "firstBookId";
     static final String IDENTIFIER_FIRST_CATEGORY_ID = "firstCategoryId";
+    static final String IDENTIFIER_FIRST_CATEGORY_NAME = "firstCategoryName";
 
     @Test
     @Order(1)
@@ -59,7 +60,9 @@ public class Suite03PublicBookAndCategoryReads extends SuiteBase {
             note("Categories list is empty; demo-data Flyway migrations may not be applied");
         } else {
             String idPath = pageContent != null ? "content[0].id" : "[0].id";
+            String namePath = pageContent != null ? "content[0].name" : "[0].name";
             recordIdentifier(IDENTIFIER_FIRST_CATEGORY_ID, String.valueOf(body.get(idPath)));
+            recordIdentifier(IDENTIFIER_FIRST_CATEGORY_NAME, String.valueOf(body.get(namePath)));
         }
         assertThat(response.statusCode()).isEqualTo(200);
     }

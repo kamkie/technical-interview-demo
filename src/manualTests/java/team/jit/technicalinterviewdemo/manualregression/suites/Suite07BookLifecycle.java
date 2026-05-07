@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Suite 07 — admin book CRUD lifecycle.
  *
- * <p>Creates exactly one book against the first seeded category id captured by Suite 03, performs
+ * <p>Creates exactly one book against the first seeded category name captured by Suite 03, performs
  * a read-by-id, an update, a delete, and asserts the follow-up read returns 404. Always cleans up
  * even if the lifecycle assertions failed mid-flight.
  */
@@ -32,12 +32,12 @@ public class Suite07BookLifecycle extends SuiteBase {
     @Test
     @Order(1)
     void createBook_returnsLocationOrEntity() {
-        String categoryId = ManualRegressionExtension.lookupIdentifier(
+        String categoryName = ManualRegressionExtension.lookupIdentifier(
                         "03-public-book-and-category-reads",
-                        Suite03PublicBookAndCategoryReads.IDENTIFIER_FIRST_CATEGORY_ID)
+                        Suite03PublicBookAndCategoryReads.IDENTIFIER_FIRST_CATEGORY_NAME)
                 .orElse(null);
-        if (categoryId == null) {
-            note("No seeded categoryId available; skipping book lifecycle");
+        if (categoryName == null) {
+            note("No seeded categoryName available; skipping book lifecycle");
             return;
         }
         String tag = runTag();
@@ -46,7 +46,7 @@ public class Suite07BookLifecycle extends SuiteBase {
                 + "\"author\":\"Manual Regression\","
                 + "\"isbn\":\"" + isbn + "\","
                 + "\"publicationYear\":2025,"
-                + "\"categories\":[" + categoryId + "]}";
+                + "\"categories\":[\"" + categoryName + "\"]}";
 
         HarnessResponse response = http().send(
                         "POST",

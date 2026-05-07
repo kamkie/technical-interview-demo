@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 
 /**
  * HTTP client wrapper that records every exchange into the active {@link SuiteReport} and
- * consistently injects the session cookie + CSRF header for authenticated calls.
+ * consistently injects the session cookie plus the CSRF cookie/header pair for authenticated calls.
  *
  * <p>Redirect following is disabled so the harness can assert status codes (e.g., 302 from
  * CSRF-rejected POSTs) explicitly. Timeouts are generous enough to tolerate a cold app start during
@@ -30,6 +30,9 @@ public final class HarnessHttp {
 
     /** CSRF header expected by Spring Security on unsafe methods. */
     public static final String CSRF_HEADER_NAME = "X-XSRF-TOKEN";
+
+    /** Readable CSRF cookie mirrored into {@link #CSRF_HEADER_NAME} on unsafe methods. */
+    public static final String CSRF_COOKIE_NAME = "XSRF-TOKEN";
 
     private static final Duration CONNECT_TIMEOUT = Duration.ofSeconds(15);
     private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(30);
@@ -79,7 +82,9 @@ public final class HarnessHttp {
     }
 
     private HarnessRequest authenticated(String sessionCookie, String csrfToken) {
-        return anonymous().cookie(SESSION_COOKIE_NAME, sessionCookie).header(CSRF_HEADER_NAME, csrfToken);
+        return anonymous()
+                .header("Cookie", SESSION_COOKIE_NAME + "=" + sessionCookie + "; " + CSRF_COOKIE_NAME + "=" + csrfToken)
+                .header(CSRF_HEADER_NAME, csrfToken);
     }
 
     /**
