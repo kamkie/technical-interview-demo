@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Implementation |
-| Status | In Progress |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Summary
 - Compact repeated AI-guidance policy found across `AGENTS.md`, `WORKING_WITH_AI.md`, and the top-level `ai/*.md` owner guides.
@@ -259,6 +259,13 @@
 - If implementation finds a separate high-risk contradiction, stop and record it before continuing with cosmetic compaction.
 
 ## Validation Results
+- 2026-05-07 milestone 4:
+  - Updated this plan to `Phase=Integration` / `Status=Implemented`, updated `ROADMAP.md` to the same active state, and added the AI-guidance compaction note to `CHANGELOG.md` under `## [Unreleased]`.
+  - Final targeted duplicate-policy searches found no remaining full prompt or workflow prompt lists in `WORKING_WITH_AI.md`, no stale default-read-set wording in the AI owner guides, and no duplicate wrapper-classifier mechanics outside `ai/ENVIRONMENT_QUICK_REF.md`.
+  - Final stale-reference searches found only expected on-demand workflow reference filenames and intentionally retained human-facing contributor guidance in `CONTRIBUTING.md`.
+  - Prompt loader smoke checks were skipped because prompt titles, prompt metadata, and prompt body filenames did not change.
+  - `git diff --check` passed.
+  - `./build.ps1 build` passed through the lightweight-file shortcut, reporting only this plan, `CHANGELOG.md`, and `ROADMAP.md` changed and skipping the Gradle build.
 - 2026-05-07 milestone 3:
   - Reduced artifact-routing duplication in `ai/PLAN.md` by pointing plans to `ai/DOCUMENTATION.md` and `ai/TESTING.md` instead of repeating public-contract artifact lists.
   - Reduced release-boundary repetition in `ai/EXECUTION.md` and `ai/WORKFLOW.md` by leaving release preconditions and tagging rules to `ai/RELEASES.md` and repo-level invariants to `AGENTS.md`.

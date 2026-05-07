@@ -52,7 +52,7 @@ Goal: use manual regression coverage as the RC-to-stable gate, then finish the s
 
 #### AI Workflow Guidance
 
-- [x] Execute `ai/PLAN_ai_guideline_duplication_compaction.md` to compact duplicated AI-guidance wording while preserving the on-demand owner-guide model. Plan lifecycle: `Planning` / `Ready`.
+- [x] Execute `ai/PLAN_ai_guideline_duplication_compaction.md` to compact duplicated AI-guidance wording while preserving the on-demand owner-guide model. Plan lifecycle: `Integration` / `Implemented`.
 
 ## Deferred
 
