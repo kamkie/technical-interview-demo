@@ -122,19 +122,18 @@ Once the plan is ready, use AI to implement either the whole plan or one milesto
 The repository expects milestone-sized checkpoints: implementation, validation evidence, tracking artifacts, and a commit before the milestone is treated as done.
 Ask AI to write commit messages in Conventional Commits style, such as `feat(scope): summary`, `fix(scope): summary`, or `docs(scope): summary`.
 For AI-created commits, `.agents/references/execution.md` owns the required commit-message rules.
-Ask AI to include the project metadata footers from `.agents/references/execution.md`, including `Project-Source`, the relevant `Project-*` provenance footer, and `Validation`.
-For a direct prompt, use `Project-Source: prompt` and `Project-Prompt`; for a milestone, use `Project-Source: milestone`, `Project-Plan`, and `Project-Milestone`; for a reusable task, use `Project-Source: task` and `Project-Task`.
+Ask AI to include the required project metadata and validation footers from that guide.
 
 #### AI Commit Message Guidance
 
-IntelliJ AI Assistant can be aligned with the repository's `.gitmessage` template:
+IntelliJ AI Assistant can be aligned with the repository's AI commit-message rules:
 
 1. Open **Settings** (`Ctrl+Alt+S`).
 2. Navigate to **Tools | AI Assistant | Prompt Library**.
 3. Select **Commit Message Generation**.
-4. Update the prompt to include the rules from `.gitmessage`, or instruct it to:
-   "Follow the Conventional Commits 1.0.0 format and use the repository-supported types (feat, fix, docs, test, refactor, chore, build, ci, perf, style, revert) as defined in .gitmessage. Include Project-Source, applicable Project-* provenance, and Validation footers."
-5. Alternatively, when asking the AI to commit, you can explicitly say: "Write a commit message following the rules in .gitmessage."
+4. Update the prompt to instruct it to:
+   "Follow the commit-message rules in `.agents/references/execution.md`; use `.gitmessage` only as the local template shape."
+5. Alternatively, when asking the AI to commit, you can explicitly say: "Write a commit message following `.agents/references/execution.md`."
 
 ### Workflow Execution And Integration
 

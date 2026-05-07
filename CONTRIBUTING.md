@@ -133,30 +133,11 @@ Rules:
 
 The repository includes an optional `.gitmessage` template with this structure; enable it locally with `git config commit.template .gitmessage`.
 
-Project metadata footers:
+AI-created commit metadata:
 
-```text
-Project-Source: <plan|milestone|task|prompt|manual>
-Project-Plan: <.agents/plans/PLAN_*.md>
-Project-Milestone: <milestone name or number>
-Project-Task: <repo-task slug or task title>
-Project-Prompt: <short direct-request summary>
-Refs: <paths/issues/PRs>
-Validation: <command/result>
-```
-
-Footer rules:
-
-- `Project-Source` is required for AI-created commits.
-- AI can generate the full commit message for you. When asking AI to commit or draft a message, tell it to follow `.agents/references/execution.md`, which owns AI-created commit-message rules.
-- Use `Project-Source: plan` for whole-plan execution or plan/spec-only commits; include `Project-Plan` when a concrete plan is involved.
-- Use `Project-Source: milestone` for one named plan milestone; include `Project-Plan` and `Project-Milestone`.
-- Use `Project-Source: task` for a reusable `$repo-task` starter; include `Project-Task`.
-- Use `Project-Source: prompt` for a direct ad hoc user request; include `Project-Prompt`.
-- Use `Project-Source: manual` only for human-authored commits outside the AI workflow.
-- Include only the `Project-*` footers that apply.
-- `Validation` is required for AI-created commits; write the exact command/result or `not run - <reason>`.
-- Use `Refs` for additional paths, issue ids, or PRs that are useful but not the primary source.
+- AI can generate the full commit message for you.
+- When asking AI to commit or draft a message, tell it to follow `.agents/references/execution.md`; that file owns the full AI-created commit-message rules, including project metadata footers and validation provenance.
+- The optional `.gitmessage` template mirrors the expected footer shape for local use.
 
 Good examples:
 
