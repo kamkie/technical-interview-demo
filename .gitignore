@@ -54,3 +54,4 @@ http-client.private.env.json
 ### Local temp files ###
 /temp
 /.output.txt
+src/manualTests/http/reports/
