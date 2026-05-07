@@ -64,8 +64,8 @@ If you are a new agent entering this repository, follow these steps to ground yo
 3. **Open `SETUP.md` only when needed** for setup, local tooling, Docker, or troubleshooting detail.
 4. **Identify the current task's lifecycle phase** (Discovery, Planning, Implementation, Testing, Review, Integration, Release).
 5. **Load the relevant owner guide** from the phase owner map below.
-6. **Locate or create a task plan** (`ai/plans/active/PLAN_*.md`) when the current workflow requires planned execution.
-7. **Run a targeted relevance scan** using task terms against `ai/LEARNINGS.md` and active `ai/plans/active/PLAN_*.md` files, then open only matches that overlap the current task.
+6. **Locate or create a task plan** (`ai/plans/PLAN_*.md`) when the current workflow requires planned execution.
+7. **Run a targeted relevance scan** using task terms against `ai/LEARNINGS.md` and active `ai/plans/PLAN_*.md` files, then open only matches that overlap the current task.
 
 ## Phase Owner Map
 
@@ -76,7 +76,7 @@ Task titles, skills, templates, and deep references stay on demand until directl
 | --- | --- |
 | Discovery or roadmap intake | `ROADMAP.md` and `ai/PLANNING.md`; add `README.md` or conditional descriptive guides only when the request needs product, contract, design, or structure framing |
 | Planning | `ai/PLANNING.md`, the relevant specs or source artifacts, and `ROADMAP.md` for active-work tracking |
-| Whole-plan implementation | `ai/PLAN_EXECUTION.md`, the target `ai/plans/active/PLAN_*.md`, and the owner guides for files being changed; keep descriptive guides conditional |
+| Whole-plan implementation | `ai/PLAN_EXECUTION.md`, the target `ai/plans/PLAN_*.md`, and the owner guides for files being changed; keep descriptive guides conditional |
 | Ad hoc task or one-milestone implementation | `ai/EXECUTION.md`, the user request or target milestone, and the owner guides for files being changed; keep descriptive guides conditional |
 | Workflow, delegation, or integration | `ai/WORKFLOW.md`; load detailed workflow references only after the work shape requires delegation, worktrees, or multi-plan coordination |
 | Testing or review | `ai/TESTING.md`, `ai/REVIEWS.md`, and `ai/DOCUMENTATION.md` when artifact routing or contract impact is part of the check; keep descriptive guides conditional |
@@ -104,7 +104,7 @@ Use these files deliberately:
 - `ai/EXECUTION.md`: AI-facing workflow for ad hoc tasks and individual plan milestones
 - `ai/LEARNINGS.md`: durable repo-wide engineering lessons that should survive refactors
 - `ai/PLANNING.md`: compact instructions for producing execution plans
-- `ai/plans/active/PLAN_*.md`: task-specific execution plans and milestone breakdowns
+- `ai/plans/PLAN_*.md`: task-specific execution plans and milestone breakdowns
 - `ai/TASK_LIBRARY.md`: repository-local reusable task catalog whose task sections act as reusable commands
 - `ai/REVIEWS.md`: AI-facing code-review and security-review guidance
 - `ai/RELEASES.md`: AI-facing release workflow for intentional post-implementation releases
@@ -124,7 +124,7 @@ Load AI guidance on demand:
 
 - read `AGENTS.md` first
 - read only the owning AI guide for the current task
-- read active `ai/plans/active/PLAN_*.md` files only when planning, executing, verifying, or releasing that plan
+- read active `ai/plans/PLAN_*.md` files only when planning, executing, verifying, or releasing that plan
 - use task-specific search terms for the onboarding relevance scan; do not read every active plan, archived plan or report, task section, reference, template, or skill as a pre-flight default
 - read task sections in `ai/TASK_LIBRARY.md`, templates, detailed references, skill files, and archived plans or reports only when the task specifically needs them
 - do not bulk-load `ai/archive/`, `ai/references/`, `ai/templates/`, or skill reference material as standing context

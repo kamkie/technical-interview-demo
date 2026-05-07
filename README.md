@@ -56,7 +56,7 @@ Use these files when you want to work with AI in this repository or understand w
 - [ai/RELEASES.md](ai/RELEASES.md): release-preparation and release workflow guidance
 - [ai/TESTING.md](ai/TESTING.md): validation rules and change-sensitive checks
 - [ai/WORKFLOW.md](ai/WORKFLOW.md): branch, worktree, delegation, worker-log, integration, and remote-handoff mechanics
-- `ai/plans/active/PLAN_*.md`: task-specific execution plans for active work
+- `ai/plans/PLAN_*.md`: task-specific execution plans for active work
 - `ai/references/` and `ai/templates/`: on-demand detailed references and templates
 - `ai/archive/`: archived plan files for completed or released work
 

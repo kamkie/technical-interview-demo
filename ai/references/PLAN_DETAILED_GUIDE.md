@@ -11,7 +11,7 @@ Use `ai/DOCUMENTATION.md` for artifact ownership and `ai/TESTING.md` for validat
 
 ## Lifecycle Metadata
 
-Every `ai/plans/active/PLAN_*.md` file should start with a small `Lifecycle` section immediately below the title.
+Every `ai/plans/PLAN_*.md` file should start with a small `Lifecycle` section immediately below the title.
 Use a compact table so the current state is obvious at a glance:
 
 ```md
@@ -173,7 +173,7 @@ The plan must also state whether extra validation from `ai/TESTING.md` is requir
 
 If the work changes a cross-cutting architectural or product convention that should remain true after the task-specific plan is archived, the plan must name the owning AI guide update explicitly.
 Examples include persistence or serialization conventions, package ownership changes, and durable design or engineering lessons.
-Do not treat the temporary `ai/plans/active/PLAN_*.md` file as a substitute for updating `ai/ARCHITECTURE.md`, `ai/DESIGN.md`, or `ai/LEARNINGS.md` when one of those guides is the durable owner.
+Do not treat the temporary `ai/plans/PLAN_*.md` file as a substitute for updating `ai/ARCHITECTURE.md`, `ai/DESIGN.md`, or `ai/LEARNINGS.md` when one of those guides is the durable owner.
 
 ### Internal refactors
 
@@ -257,7 +257,7 @@ Request: refactor one subsystem using a single approved plan and several workers
 
 A good plan would:
 
-- keep one canonical `ai/plans/active/PLAN_*.md` as the source of truth
+- keep one canonical `ai/plans/PLAN_*.md` as the source of truth
 - name which files stay coordinator-owned, at minimum the canonical plan file and `CHANGELOG.md`
 - split worker ownership by package, test class, or other defensible file boundary
 - make every worker milestone a standalone commit checkpoint with explicit validation

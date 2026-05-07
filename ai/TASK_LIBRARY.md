@@ -181,7 +181,7 @@ Category: Planning
 Slug: `create-plan`
 Placeholders: <topic>
 
-Create `ai/plans/active/PLAN_<topic>.md` for <topic>.
+Create `ai/plans/PLAN_<topic>.md` for <topic>.
 
 Follow `ai/PLANNING.md`.
 Set the plan lifecycle using `ai/PLANNING.md` instead of guessing.
@@ -193,7 +193,7 @@ Category: Planning
 Slug: `plan-checked-roadmap-items`
 Placeholders: <topic>
 
-Create one coherent `ai/plans/active/PLAN_<topic>.md` from every checklist item marked `[x]` in `ROADMAP.md`.
+Create one coherent `ai/plans/PLAN_<topic>.md` from every checklist item marked `[x]` in `ROADMAP.md`.
 
 Use only the checked items unless the roadmap text makes a dependency explicit.
 Restate exactly which checked items were included.
@@ -208,7 +208,7 @@ Category: Planning
 Slug: `plan-dependency-and-build-tool-upgrade`
 Placeholders: <item 1>, <item 2>, <topic>
 
-Create `ai/plans/active/PLAN_<topic>.md` for this dependency or build-tool upgrade batch:
+Create `ai/plans/PLAN_<topic>.md` for this dependency or build-tool upgrade batch:
 - <item 1>
 - <item 2>
 
@@ -222,7 +222,7 @@ Category: Planning
 Slug: `plan-from-roadmap`
 Placeholders: <task 1>, <task 2>, <topic>
 
-Create `ai/plans/active/PLAN_<topic>.md` from this roadmap input:
+Create `ai/plans/PLAN_<topic>.md` from this roadmap input:
 - <task 1>
 - <task 2>
 
@@ -236,11 +236,11 @@ Category: Planning
 Slug: `plan-repository-wide-dependency-and-toolchain-upgrade-sweep`
 Placeholders: <topic>
 
-Create `ai/plans/active/PLAN_<topic>.md` for a repository-wide dependency and toolchain upgrade sweep.
+Create `ai/plans/PLAN_<topic>.md` for a repository-wide dependency and toolchain upgrade sweep.
 
 Read `AGENTS.md`, `ai/PLANNING.md`, `ai/DOCUMENTATION.md`, `ai/TESTING.md`, the relevant build files, Dockerfiles, workflow files, and any current alert, scan, or dependency-report output first.
 Inventory all directly owned version surfaces before planning changes, including application dependencies, Gradle plugins, the Gradle wrapper, `buildSrc`, Docker base images, GitHub Actions, and other checked-in build or packaging tools.
-Propose the smallest reviewable execution shape that still upgrades the full owned surface, and say explicitly if the work is too broad for one plan and should be split into multiple `ai/plans/active/PLAN_*.md` files.
+Propose the smallest reviewable execution shape that still upgrades the full owned surface, and say explicitly if the work is too broad for one plan and should be split into multiple `ai/plans/PLAN_*.md` files.
 For each planned batch, call out compatibility risk, rollback or migration concerns, the exact resolved-version proof expected during execution, and the validation needed to keep the upgraded repo release-ready.
 
 ### Revise Plan
@@ -262,7 +262,7 @@ Category: Planning
 Slug: `split-checked-roadmap-items-into-plans`
 Placeholders: <topic>
 
-Create one or more `ai/plans/active/PLAN_<topic>.md` files from every checklist item marked `[x]` in `ROADMAP.md`.
+Create one or more `ai/plans/PLAN_<topic>.md` files from every checklist item marked `[x]` in `ROADMAP.md`.
 
 Split only genuinely disjoint workstreams that can later execute in parallel without overlapping source ownership, contract artifacts, rollout order, or validation.
 If the checked items form only one coherent plan, stop and say that the single-plan planning task should be used instead.
@@ -392,9 +392,9 @@ Category: Workflow Execution
 Slug: `run-all-ready-plans`
 Placeholders: <topic>
 
-Select every ready plan file under `ai/plans/active/`, then execute the selected set using the same flow as `Coordinate Multiple Plans`.
+Select every ready plan file under `ai/plans/`, then execute the selected set using the same flow as `Coordinate Multiple Plans`.
 
-Treat ready plans as the non-archived `ai/plans/active/PLAN_*.md` files still present directly under `ai/` whose `Lifecycle` status is `Ready`.
+Treat ready plans as the non-archived `ai/plans/PLAN_*.md` files whose `Lifecycle` status is `Ready`.
 Restate exactly which ready plan files were selected and which non-archived plan files were skipped because they were not `Ready`.
 If there are no ready plans, stop and say so explicitly.
 If only one ready plan exists, stop and say that a single-plan execution task should be used instead.
@@ -413,9 +413,9 @@ Category: Workflow Execution
 Slug: `run-all-unfinished-plans`
 Placeholders: <topic>
 
-Select every unfinished plan file under `ai/plans/active/`, then execute the selected set using the same flow as `Coordinate Multiple Plans`.
+Select every unfinished plan file under `ai/plans/`, then execute the selected set using the same flow as `Coordinate Multiple Plans`.
 
-Treat unfinished plans as the non-archived `ai/plans/active/PLAN_*.md` files still present directly under `ai/`.
+Treat unfinished plans as the non-archived `ai/plans/PLAN_*.md` files.
 If there are no unfinished plans, stop and say so explicitly.
 If only one unfinished plan exists, stop and say that a single-plan execution task should be used instead.
 Do not silently skip an unfinished plan just to force a smaller parallel-safe set.
@@ -554,7 +554,7 @@ Prepare the release candidate for all merged but unreleased work currently on `m
 
 Follow `ai/RELEASES.md` and `ai/DOCUMENTATION.md`.
 Only proceed if the approved implementation PR is already merged onto `main`.
-Include every merged and executed `ai/plans/active/PLAN_*.md` file that belongs to the unreleased change set.
+Include every merged and executed `ai/plans/PLAN_*.md` file that belongs to the unreleased change set.
 If any included work is not release-ready, stop and list blockers first instead of preparing a partial release.
 If the merged work is ready, prepare the release commit, archive every included executed plan under `ai/archive/`, create the annotated tag locally, and summarize exactly which merged PRs and executed plan files were included.
 Do not push unless I ask.
@@ -589,7 +589,7 @@ Placeholders: none
 Verify and release all merged but unreleased work currently on `main`.
 
 Use `ai/RELEASES.md`.
-Include every merged PR and executed `ai/plans/active/PLAN_*.md` file that belongs to the unreleased change set.
+Include every merged PR and executed `ai/plans/PLAN_*.md` file that belongs to the unreleased change set.
 If any included work is not release-ready, stop and list blockers first instead of preparing a partial release.
 If the merged work is ready, prepare the release commit, archive every included executed plan under `ai/archive/`, create the annotated tag, push the release commit and tag, and verify remote publication.
 Summarize exactly which merged PRs and executed plan files were included.
@@ -618,7 +618,7 @@ Compact the standing AI instruction files.
 
 #### Scope
 
-- Read `AGENTS.md`, `ai/DOCUMENTATION.md`, `ai/TASK_LIBRARY.md`, and standing top-level owner guides under `ai/` first; exclude active `ai/plans/active/PLAN_*.md` files unless they are relevant to the compaction target.
+- Read `AGENTS.md`, `ai/DOCUMENTATION.md`, `ai/TASK_LIBRARY.md`, and standing top-level owner guides under `ai/` first; exclude active `ai/plans/PLAN_*.md` files unless they are relevant to the compaction target.
 - Do not bulk-load `ai/archive/`, `ai/references/`, `ai/templates/`, or `ai/skills/`; open them only when a cross-reference or overlapping policy points there.
 - Check `WORKING_WITH_AI.md` only when human-facing workflow wording overlaps with the AI guidance being changed.
 
@@ -679,7 +679,7 @@ Count only repository AI instruction material:
 Categorize measurements into these broad buckets:
 
 - standing root and AI top-level files
-- active plan files, meaning top-level `ai/plans/active/PLAN_*.md`
+- active plan files, meaning `ai/plans/PLAN_*.md`
 - archived plans
 - archived report artifacts
 - on-demand tasks
@@ -890,7 +890,7 @@ Use this as an evaluation and reporting task, not as an implementation request f
 #### Scope
 
 - Read `AGENTS.md`, `ai/DOCUMENTATION.md`, `ai/TASK_LIBRARY.md`, and standing top-level owner guides under `ai/`.
-- Exclude active `ai/plans/active/PLAN_*.md` files from the standing-guide baseline, but inspect active plans when they are relevant to lifecycle state, roadmap cleanup, or stale-reference checks.
+- Exclude active `ai/plans/PLAN_*.md` files from the standing-guide baseline, but inspect active plans when they are relevant to lifecycle state, roadmap cleanup, or stale-reference checks.
 - Read representative large task sections in this file when checking task-policy drift.
 - Read on-demand references only when a standing guide points to them, when the latest archived evaluation report names them, or when a targeted search finds a likely stale reference.
 - Do not bulk-load `ai/archive/` unless the evaluation specifically needs historical context.
@@ -899,7 +899,7 @@ Use this as an evaluation and reporting task, not as an implementation request f
 
 1. Recompute current standing guidance sizes:
    - `AGENTS.md`
-   - top-level `ai/*.md` owner guides excluding active `ai/plans/active/PLAN_*.md`
+   - top-level `ai/*.md` owner guides excluding active `ai/plans/PLAN_*.md`
    - key on-demand references that affect practical load, such as workflow and release references
 2. Recompute practical read-set estimates:
    - standing root plus top-level owner guides

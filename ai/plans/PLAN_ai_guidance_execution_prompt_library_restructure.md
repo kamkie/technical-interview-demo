@@ -9,7 +9,7 @@
 ## Summary
 - Restructure the AI guidance set so planning, whole-plan execution, task or milestone execution, workflow coordination, and reusable task starters have distinct owners.
 - Remove the current named mode vocabulary from live standing guides, prompt/task starters, templates, skills, and active plan guidance.
-- Rename the planning guide to `ai/PLANNING.md`, move active execution plans under `ai/plans/active/`, and redesign the current prompt storage into a reusable task library catalog.
+- Rename the planning guide to `ai/PLANNING.md`, move active execution plans under `ai/plans/`, and redesign the current prompt storage into a reusable task library catalog.
 - Success means an agent can create a plan, execute a whole plan, execute an ad hoc task or one plan milestone, delegate or integrate work, and load reusable task starters without opening stale or overlapping guidance.
 
 ## Scope
@@ -18,7 +18,7 @@
   - regenerate `ai/EXECUTION.md` as the owner for ad hoc task execution and individual plan-milestone execution
   - create `ai/PLAN_EXECUTION.md` as the owner for executing a whole active plan across milestones
   - rename the former planning guide to `ai/PLANNING.md`
-  - move active plans from the former top-level plan locations to `ai/plans/active/PLAN_*.md`
+  - move active plans from the former top-level plan locations to `ai/plans/PLAN_*.md`
   - update `AGENTS.md`, `WORKING_WITH_AI.md`, `ROADMAP.md`, `ai/DOCUMENTATION.md`, templates, references, skills, and scripts for the new paths and owners
   - replace the prompt index/body/loader layout with a self-contained reusable task library catalog and without any backward-compatible prompt-loader alias
   - evaluate a narrow repo-local skill for ad hoc task execution, but defer creation unless it can wrap the new `ai/EXECUTION.md` without copying policy and passes the acceptance criteria in this plan
@@ -44,7 +44,7 @@
 - Prompt loader compatibility:
   Decision: no backward-compatible prompt loader alias remains after the task-library migration. Active docs move to task-library heading search, and `scripts/ai/get-prompt.ps1` is removed rather than retained as a wrapper or alias.
 - Superseded workflow-selection candidate plans:
-  Decision: archive `ai/archive/PLAN_workflow_selection_soft_consolidation.md`, `ai/archive/PLAN_workflow_selection_hard_split.md`, and `ai/archive/PLAN_workflow_selection_multi_plan_template.md` under `ai/archive/` during the plan-location migration. Do not move them into `ai/plans/active/` and do not delete their historical content.
+  Decision: archive `ai/archive/PLAN_workflow_selection_soft_consolidation.md`, `ai/archive/PLAN_workflow_selection_hard_split.md`, and `ai/archive/PLAN_workflow_selection_multi_plan_template.md` under `ai/archive/` during the plan-location migration. Do not move them into `ai/plans/` and do not delete their historical content.
 - Ad hoc task execution skill:
   Evaluation: immediate creation would give users a short reusable entry point for unplanned tasks and single-milestone work, and it could reduce repeated prompt-body wording after the task-library migration. The drawbacks are stronger: a generic ad hoc executor can duplicate `ai/EXECUTION.md`, add another maintenance surface, increase loaded context, and encourage bypassing the plan-promotion decision for work that should be planned. Decision: defer by default. Create `ai/skills/repo-ad-hoc-task-executor/SKILL.md` only if post-split usage still needs a reusable wrapper, the skill stays under one screen, it links to owner guides instead of restating policy, and its trigger is narrower than normal task execution.
 - Task library storage:
@@ -54,7 +54,7 @@
 
 ## Locked Decisions And Assumptions
 - The planning guide target name is `ai/PLANNING.md`; the common misspelling with one `n` is rejected as a typo.
-- Active plans move to `ai/plans/active/` before `ai/PLAN_EXECUTION.md` is introduced, so broad `PLAN_*.md` scans can be retired or narrowed safely.
+- Active plans move to `ai/plans/` before `ai/PLAN_EXECUTION.md` is introduced, so broad `PLAN_*.md` scans can be retired or narrowed safely.
 - Superseded workflow-selection candidate plans are archived under `ai/archive/` during the plan-location migration.
 - `ai/PLAN_EXECUTION.md` owns whole-plan execution: readiness, plan scope, milestone sequencing, plan-level context switching, compaction checkpoints, validation rollup, roadmap status, and completion handoff.
 - `ai/EXECUTION.md` owns ad hoc tasks and individual plan milestones: smallest useful read set, context switching for efficiency, spec-first changes, validation at the checkpoint, review, and when to promote ad hoc work into a plan.
@@ -73,7 +73,7 @@
 - Coordinator-owned shared files:
   - `AGENTS.md`, `WORKING_WITH_AI.md`, `ROADMAP.md`, `CHANGELOG.md`
   - top-level `ai/*.md`
-  - active plans under `ai/plans/active/`
+  - active plans under `ai/plans/`
   - `ai/templates/**`, `ai/references/**`, `ai/skills/**`
   - the task catalog in `ai/TASK_LIBRARY.md`
   - prompt or task loader scripts under `scripts/ai/**` only when removing stale loader behavior
@@ -93,7 +93,7 @@
   - `ai/RELEASES.md`
   - `ai/ENVIRONMENT_QUICK_REF.md` only if command references change
 - Plan inventory:
-  - `ai/plans/active/`
+  - `ai/plans/`
   - former top-level active plan files
   - superseded workflow-selection candidate plans archived under `ai/archive/`
   - `ROADMAP.md`
@@ -145,7 +145,7 @@
 ### Milestone 2: Move Active Plans And Rename Planning Owner
 - goal: eliminate former top-level plan-file naming collisions before adding new execution-guide names.
 - owned files or packages:
-  - `ai/plans/active/`
+  - `ai/plans/`
   - `ai/PLANNING.md`
   - removed or replaced `ai/PLANNING.md`
   - `AGENTS.md`
@@ -159,10 +159,10 @@
   - active release-gate plan status and roadmap ordering stay intact after the move
   - superseded workflow-selection candidate plans do not remain presented as current execution choices
 - exact deliverables:
-  - active plans live under `ai/plans/active/`
+  - active plans live under `ai/plans/`
   - planning guide is available as `ai/PLANNING.md`
   - superseded workflow-selection candidate plans are archived under `ai/archive/`
-  - live references use `ai/plans/active/PLAN_*.md` and `ai/PLANNING.md`
+  - live references use `ai/plans/PLAN_*.md` and `ai/PLANNING.md`
   - any compatibility pointer is short and temporary, or omitted if all live references are updated cleanly
 - validation checkpoint:
   - targeted search shows no active live reference still expects the former top-level active-plan glob
@@ -170,7 +170,7 @@
   - targeted search shows no live reference uses the misspelled planning-guide filename
   - `git diff --check`
 - commit checkpoint:
-  - `docs: move active plans under active directory`
+  - `docs: move active plans under plans directory`
 
 ### Milestone 3: Regenerate Execution And Workflow Owners
 - goal: create clear owner boundaries for whole-plan execution, task/milestone execution, and collaboration mechanics.
@@ -384,8 +384,8 @@
   - `git diff --check` passed, with Git warning that `ai/prompts/index.json` line endings will normalize on the next touch.
 - 2026-05-07 implementation Milestone 2 path migration:
   - Renamed `ai/PLAN.md` to `ai/PLANNING.md`.
-  - Moved active plans to `ai/plans/active/` and archived the three superseded workflow-selection candidate plans under `ai/archive/`.
-  - Updated live references in standing docs, active plans, templates, references, skills, task starters, and roadmap rows to use `ai/plans/active/PLAN_*.md` and `ai/PLANNING.md`.
+  - Moved active plans to `ai/plans/` and archived the three superseded workflow-selection candidate plans under `ai/archive/`.
+  - Updated live references in standing docs, active plans, templates, references, skills, task starters, and roadmap rows to use `ai/plans/PLAN_*.md` and `ai/PLANNING.md`.
   - Targeted searches found no live non-archived reference to the old planning-guide path, old active-plan glob, old active plan paths, superseded workflow-selection plan paths, or the misspelled planning-guide filename. The non-policy workflow-selection variant comparison remains excluded by plan decision.
   - `git diff --check` passed.
 - 2026-05-07 implementation Milestone 1 inventory:

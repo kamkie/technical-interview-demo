@@ -76,12 +76,12 @@ topic: add candidate search filtering
 
 ```text
 Implement Plan
-plan_file: ai/plans/active/PLAN_CANDIDATE_SEARCH.md
+plan_file: ai/plans/PLAN_CANDIDATE_SEARCH.md
 ```
 
 ```text
 Run Required Validation
-plan_file: ai/plans/active/PLAN_CANDIDATE_SEARCH.md
+plan_file: ai/plans/PLAN_CANDIDATE_SEARCH.md
 change: candidate search filtering API
 ```
 
@@ -108,7 +108,7 @@ Useful requests ask AI to inspect `ROADMAP.md`, clarify requirement gaps, or rec
 
 ### Planning
 
-Use AI to create or revise an execution plan under `ai/plans/active/PLAN_*.md`.
+Use AI to create or revise an execution plan under `ai/plans/PLAN_*.md`.
 The plan should be decision-complete enough that implementation does not need to invent product behavior, and `ROADMAP.md` should point to active planned work without duplicating the plan.
 
 ### Plan Verification
@@ -148,7 +148,7 @@ Read a skill's `SKILL.md` only when that skill is invoked or clearly applies.
 
 Current focused skills include:
 
-- `repo-plan-author`: creating or revising `ai/plans/active/PLAN_*.md`
+- `repo-plan-author`: creating or revising `ai/plans/PLAN_*.md`
 - `gh-fix-ci`: GitHub PR-check inspection and CI failure triage
 - `gh-fix-security-quality`: GitHub Security tab, code-scanning, and Dependabot alert triage
 

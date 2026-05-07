@@ -231,7 +231,7 @@ Items the phase activity sequence exposes that this repository does not yet cove
 - this file does not define new validation, review, or release rules
 - this file does not introduce a new `Phase` value
 - this file does not replace the workflow mechanics in `ai/WORKFLOW.md`
-- this file is not a plan and must not be moved under `ai/plans/active/PLAN_*.md`
+- this file is not a plan and must not be moved under `ai/plans/PLAN_*.md`
 
 ## Cross-References
 

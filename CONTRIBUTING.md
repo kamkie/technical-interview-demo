@@ -86,7 +86,7 @@ Human responsibilities do not move to the AI. The developer still owns:
 - validation choices and acceptance of the evidence
 - release decisions
 
-For multi-step work, planning should happen before implementation. When the work is large enough to justify a real plan, create or revise an `ai/plans/active/PLAN_*.md` file and follow the workflow described in `WORKING_WITH_AI.md` plus the owning `ai/` guides.
+For multi-step work, planning should happen before implementation. When the work is large enough to justify a real plan, create or revise an `ai/plans/PLAN_*.md` file and follow the workflow described in `WORKING_WITH_AI.md` plus the owning `ai/` guides.
 
 ## Branches And Commit Messages
 
@@ -246,7 +246,7 @@ At a minimum, release preparation should include:
 - confirming the exact release candidate passed `./build.ps1 -FullBuild build`
 - deciding whether `./build.ps1 gatlingBenchmark` is required for the scoped changes
 - running the manual `Post-Deploy Smoke` workflow with the expected build version and short commit id before promotion
-- updating `CHANGELOG.md`, `ROADMAP.md`, and any executed `ai/plans/active/PLAN_*.md` files before tagging
+- updating `CHANGELOG.md`, `ROADMAP.md`, and any executed `ai/plans/PLAN_*.md` files before tagging
 - verifying the remote `Release` workflow published the semantic tag, immutable short-SHA tag, and GitHub Release notes
 
 ## Formatting Expectations

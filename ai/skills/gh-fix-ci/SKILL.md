@@ -59,7 +59,7 @@ Prereq: ensure `gh` is installed and authenticated for the target repo host, the
    - Call out missing logs explicitly.
 6. Decide planning depth.
    - For a small isolated fix, provide a concise implementation plan in the conversation and request approval.
-   - For a multi-step or higher-risk fix, use `repo-plan-author` to create or revise an `ai/plans/active/PLAN_*.md` plan before implementation.
+   - For a multi-step or higher-risk fix, use `repo-plan-author` to create or revise an `ai/plans/PLAN_*.md` plan before implementation.
 7. Implement after approval.
    - Apply the approved fix or approved plan.
    - Use `ai/TESTING.md` to choose the minimum required validation.

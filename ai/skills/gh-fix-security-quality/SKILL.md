@@ -53,7 +53,7 @@ Prereq: ensure `gh` is installed and authenticated for the target repo host, the
    - Call out repeated alert families, such as multiple `actions/unpinned-tag` findings, so the user can approve a batch fix consciously.
 4. Decide planning depth.
    - For a small isolated fix, provide a concise implementation plan in the conversation and request approval.
-   - For a multi-step or higher-risk fix, use `repo-plan-author` to create or revise an `ai/plans/active/PLAN_*.md` plan before implementation.
+   - For a multi-step or higher-risk fix, use `repo-plan-author` to create or revise an `ai/plans/PLAN_*.md` plan before implementation.
 5. Implement after approval.
    - Apply the approved fix or approved plan.
    - Do not dismiss alerts through GitHub APIs unless the user explicitly asks for that action.

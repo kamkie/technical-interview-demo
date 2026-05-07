@@ -1,6 +1,6 @@
 # Planning Guide For AI Agents
 
-`ai/PLANNING.md` owns the minimum standing rules for creating executable plans under `ai/plans/active/`.
+`ai/PLANNING.md` owns the minimum standing rules for creating executable plans under `ai/plans/`.
 Detailed examples are on demand in `ai/references/PLAN_DETAILED_GUIDE.md`.
 Use `ai/templates/PLAN_TEMPLATE.md` when you need the full skeleton.
 
@@ -111,7 +111,7 @@ If multiple plans must move together, say which plan coordinates the work and ho
 
 ## Plan Output Format
 
-Create concrete plans under `ai/plans/active/` as `PLAN_<topic>.md` with lowercase underscore topic names.
+Create concrete plans under `ai/plans/` as `PLAN_<topic>.md` with lowercase underscore topic names.
 Use `ai/templates/PLAN_TEMPLATE.md` for the full structure.
 
 ## Final Check

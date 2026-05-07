@@ -1,7 +1,7 @@
 # Plan Execution Guide For AI Agents
 
 `ai/PLAN_EXECUTION.md` owns execution of a whole active plan across milestones.
-Use it when the user asks to implement an entire `ai/plans/active/PLAN_*.md` file, run all remaining milestones in a plan, or resume a partially implemented active plan.
+Use it when the user asks to implement an entire `ai/plans/PLAN_*.md` file, run all remaining milestones in a plan, or resume a partially implemented active plan.
 
 Use `ai/EXECUTION.md` for ad hoc tasks and one-milestone work.
 Use `ai/WORKFLOW.md` only when branch, worktree, delegation, worker-log, or integration mechanics are needed.

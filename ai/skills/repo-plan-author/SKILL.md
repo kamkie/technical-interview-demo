@@ -1,6 +1,6 @@
 ---
 name: repo-plan-author
-description: Create or revise repository-local `ai/plans/active/PLAN_*.md` execution plans, lifecycle metadata, milestone breakdowns, and readiness reviews for this repository. Use when asked to plan work, turn roadmap items into a plan, revise an existing plan, review whether a plan is ready, or decide whether work should remain in `Discovery`, move to `Planning`, or wait for more input.
+description: Create or revise repository-local `ai/plans/PLAN_*.md` execution plans, lifecycle metadata, milestone breakdowns, and readiness reviews for this repository. Use when asked to plan work, turn roadmap items into a plan, revise an existing plan, review whether a plan is ready, or decide whether work should remain in `Discovery`, move to `Planning`, or wait for more input.
 ---
 
 # Repo Plan Author
@@ -16,7 +16,7 @@ Read only what the request needs:
 
 - always: `AGENTS.md` and `ai/PLANNING.md`
 - roadmap-driven work: `ROADMAP.md`
-- plan revision or readiness review: the target `ai/plans/active/PLAN_*.md`
+- plan revision or readiness review: the target `ai/plans/PLAN_*.md`
 - behavior-sensitive work: the governing specs and contract docs named by the task
 - add `README.md`, `ai/DESIGN.md`, or `ai/ARCHITECTURE.md` only when product direction, public contract framing, or package ownership matters
 
@@ -24,7 +24,7 @@ Read only what the request needs:
 
 1. State the behavior being planned and the governing spec or contract artifact.
 2. Decide whether the work is still `Discovery`, ready for `Planning`, or blocked by missing input.
-3. If creating a new plan, prefer one coherent `ai/plans/active/PLAN_<topic>.md` unless the work is genuinely disjoint.
+3. If creating a new plan, prefer one coherent `ai/plans/PLAN_<topic>.md` unless the work is genuinely disjoint.
 4. If revising an existing plan, update only the sections affected by the new requirement or constraint and keep milestone history intact.
 5. Make every milestone a clean execution checkpoint that can be implemented, validated, and committed without inventing missing behavior.
 6. Record requirement gaps, fallback assumptions, non-goals, validation, and execution shape explicitly.
