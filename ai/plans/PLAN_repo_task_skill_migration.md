@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Planning |
-| Status | Draft |
+| Phase | Implementation |
+| Status | In Progress |
 
 ## Summary
 - Replace `ai/TASK_LIBRARY.md` with the low-context `repo-task` skill described by the inline `## Repo Task Skill Spec` section in this plan.
@@ -292,7 +292,7 @@ If `PyYAML` is unavailable, install it into a temporary directory outside the re
 - Record any intentionally retained historical `TASK_LIBRARY` references during validation so future agents do not treat them as missed live guidance.
 
 ## Validation Results
-- To be filled in during execution.
+- 2026-05-07 Milestone 1 started: initialized `.agents/skills/repo-task` with the `skill-creator` scaffold, created `.agents/skills/repo-task/references/spec.md` from this plan's inline spec, deleted `temp/spec.md`, and moved lifecycle and roadmap status to in progress.
 
 ## User Validation
 - Review `.agents/skills/repo-task/SKILL.md` and `.agents/skills/repo-task/references/spec.md` for the intended loading contract.

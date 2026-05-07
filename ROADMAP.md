@@ -47,7 +47,7 @@ Use this section for plan-backed work that is ready but not selected as the imme
 
 | Status | Workstream | Plan Or Artifact | Notes |
 | --- | --- | --- | --- |
-| Planned | Repo task skill migration | `ai/plans/PLAN_repo_task_skill_migration.md` | Replace `ai/TASK_LIBRARY.md` with the low-context `repo-task` skill described by the plan's inline spec; implementation must update live AI guidance so the skill is the single task-starter source of truth |
+| In Progress | Repo task skill migration | `ai/plans/PLAN_repo_task_skill_migration.md` | Replace `ai/TASK_LIBRARY.md` with the low-context `repo-task` skill described by the plan's inline spec; implementation must update live AI guidance so the skill is the single task-starter source of truth |
 | Implemented | AI guidance execution and reusable task library restructure | `ai/plans/PLAN_ai_guidance_execution_prompt_library_restructure.md` | Implementation and final validation are complete; release cleanup can remove this active roadmap row when the AI-guidance changes are released |
 
 ## Intake

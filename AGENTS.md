@@ -81,7 +81,7 @@ Task titles, skills, templates, and deep references stay on demand until directl
 | Workflow, delegation, or integration | `ai/WORKFLOW.md`; load detailed workflow references only after the work shape requires delegation, worktrees, or multi-plan coordination |
 | Testing or review | `ai/TESTING.md`, `ai/REVIEWS.md`, and `ai/DOCUMENTATION.md` when artifact routing or contract impact is part of the check; keep descriptive guides conditional |
 | Release | `ai/RELEASES.md` only after the implementation state is integrated and release work is explicitly in scope |
-| Task-library, skill, or template maintenance | `ai/TASK_LIBRARY.md`, the relevant `ai/skills/` guide, or the specific template or task section being changed |
+| Task-skill, skill, or template maintenance | `.agents/skills/repo-task/references/spec.md`, the relevant `ai/skills/` guide, or the specific template or task file being changed |
 
 Conditional descriptive guide triggers:
 
@@ -105,7 +105,7 @@ Use these files deliberately:
 - `ai/LEARNINGS.md`: durable repo-wide engineering lessons that should survive refactors
 - `ai/PLANNING.md`: compact instructions for producing execution plans
 - `ai/plans/PLAN_*.md`: task-specific execution plans and milestone breakdowns
-- `ai/TASK_LIBRARY.md`: repository-local reusable task catalog whose task sections act as reusable commands
+- `.agents/skills/repo-task/`: repository-local reusable task skill whose task reference files act as reusable commands; `references/spec.md` owns the dispatcher, index, and task schema
 - `ai/REVIEWS.md`: AI-facing code-review and security-review guidance
 - `ai/RELEASES.md`: AI-facing release workflow for intentional post-implementation releases
 - `ai/TESTING.md`: AI-facing testing and validation guidance
@@ -126,7 +126,7 @@ Load AI guidance on demand:
 - read only the owning AI guide for the current task
 - read active `ai/plans/PLAN_*.md` files only when planning, executing, verifying, or releasing that plan
 - use task-specific search terms for the onboarding relevance scan; do not read every active plan, archived plan or report, task section, reference, template, or skill as a pre-flight default
-- read task sections in `ai/TASK_LIBRARY.md`, templates, detailed references, skill files, and archived plans or reports only when the task specifically needs them
+- read task files under `.agents/skills/repo-task/references/tasks/`, templates, detailed references, skill files, and archived plans or reports only when the task specifically needs them
 - do not bulk-load `ai/archive/`, `ai/references/`, `ai/templates/`, or skill reference material as standing context
 
 ### Context Hygiene
@@ -193,7 +193,7 @@ Repo-level invariants:
 Specialized agents and repo-local skills may accelerate repeatable tasks when available and when the task clearly matches their scope.
 Treat skills as workflow helpers that point back to the owner guides, not as higher-priority policy.
 Read `ai/skills/<skill>/SKILL.md` only when that skill is invoked or clearly applies.
-Use `.agents/` only for Codex plugin marketplace configuration; do not create it for ordinary task-library entries. Codex skills that need distribution belong inside a plugin bundle, for example `plugins/<plugin-name>/skills/<skill-name>/SKILL.md`.
+Use `.agents/skills/repo-task/` for this repository's task starter dispatcher. Use `.agents/plugins/marketplace.json` only for Codex plugin marketplace configuration; Codex skills that need distribution belong inside a plugin bundle, for example `plugins/<plugin-name>/skills/<skill-name>/SKILL.md`.
 
 ## Verification Rules
 

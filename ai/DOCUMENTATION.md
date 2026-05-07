@@ -28,7 +28,7 @@ Update the artifact that owns the truth being changed:
 - ad hoc task and single-milestone execution: `ai/EXECUTION.md`
 - branch, worktree, delegation, worker-log, integration, and remote-handoff mechanics: `ai/WORKFLOW.md`; detailed delegated-work mechanics: `ai/references/WORKFLOW_DELEGATED_PLAN.md` and `ai/references/WORKFLOW_COORDINATED_PLANS.md`
 - release sequencing and tagging: `ai/RELEASES.md`; detailed release checklist and artifact verification: `ai/references/RELEASE_CHECKLIST.md` and `ai/references/RELEASE_ARTIFACT_VERIFICATION.md`
-- reusable task catalog: `ai/TASK_LIBRARY.md`; each task section owns its title, placeholders, and task text
+- reusable task starter skill: `.agents/skills/repo-task/`; `references/spec.md` owns the dispatcher, index, and task schema, and each task file owns its title, placeholders, and task text
 - repo-local reusable workflow wrappers: `ai/skills/`; Codex plugin marketplace configuration: `.agents/plugins/marketplace.json` when intentionally introducing a repo-scoped plugin
 - compact codebase map, structural guidance, and business feature ownership: `ai/ARCHITECTURE.md`; deeper references: `ai/references/`
 - historical AI-analysis reports, evaluations, and comparisons: `ai/archive/reports/`
@@ -49,13 +49,13 @@ Rules for maintaining the `ai/` documents:
 - keep the role of each file distinct; do not collapse architecture, code style, design, documentation ownership, execution, planning, release workflow, review guidance, testing guidance, workflow guidance, and learnings into one document
 - keep AI instruction markdown files under `ai/` by default; `AGENTS.md` is the only standing exception
 - update the relevant `ai/` file in the same change when architecture, code-style expectations, design intent, documentation ownership, durable engineering guidance, release workflow, review/security review guidance, testing/validation guidance, workflow guidance, or an execution plan materially changes
-- keep `ai/TASK_LIBRARY.md` as a catalog, not standing policy; task sections may include procedural starters, but durable rules belong in the best owning AI document
-- treat the listed task names in `ai/TASK_LIBRARY.md` as reusable commands, following `ai/TASK_LIBRARY.md` for exact-match, placeholder, heading-search, and ambiguity rules
+- keep `.agents/skills/repo-task/` as a task dispatcher and task-reference store, not standing policy; task files may include procedural starters, but durable rules belong in the best owning AI document
+- treat the task files listed in `.agents/skills/repo-task/references/index.md` as reusable commands, following `.agents/skills/repo-task/references/spec.md` for exact-slug, ambiguous-request, placeholder, index, and task-schema rules
 - keep current detailed examples, templates, and deep references in `ai/templates/` or `ai/references/` instead of the standing top-level AI files
 - keep retired report-like AI analysis artifacts under `ai/archive/reports/` instead of `ai/references/`
 - write AI-guidance changes as current-state rules; route any still-useful historical context using this guide
 - keep repo-local skills narrow and workflow-oriented; use them to accelerate repeated entry tasks or focused triage, not to replace the owner guides
-- create `.agents/plugins/marketplace.json` and a plugin bundle only when a workflow needs Codex plugin distribution or install-time discovery; keep ordinary reusable starters in `ai/TASK_LIBRARY.md`
+- create `.agents/plugins/marketplace.json` and a plugin bundle only when a workflow needs Codex plugin distribution or install-time discovery; keep ordinary reusable starters in `.agents/skills/repo-task/`
 - keep standing code-style, testing, review, and documentation guidance in their focused owning files instead of redistributing it across task starters or workflow docs
 - when a repo-local skill wraps a workflow owned by another guide, update the skill and the owning guide together if that workflow changes
 - when AI instruction files accumulate overlap, compact them by moving duplicated guidance into the single best owning file and updating cross-references in the same change
