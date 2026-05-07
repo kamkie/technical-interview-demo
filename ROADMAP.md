@@ -48,9 +48,7 @@ Rewrite an item into a concrete roadmap row before moving it into active or defe
 
 | Status | Candidate | Notes |
 | --- | --- | --- |
-| Candidate | Workflow-selection soft consolidation | Variant 1 option plan: `ai/PLAN_workflow_selection_soft_consolidation.md`; execute only if selected over the hard-split alternatives |
-| Candidate | Workflow-selection hard split | Variant 2 option plan: `ai/PLAN_workflow_selection_hard_split.md`; scratch recommendation's preferred tradeoff, execute only if selected |
-| Candidate | Workflow-selection hard split with multi-plan template | Variant 3 option plan: `ai/PLAN_workflow_selection_multi_plan_template.md`; execute only if multi-plan coordinator templates are worth the vocabulary churn |
+| Candidate | AI guidance execution and reusable task library restructure | New plan: `ai/PLAN_ai_guidance_execution_prompt_library_restructure.md`; supersedes the three workflow-selection variant option plans by removing named mode vocabulary, moving active plans to a subdirectory, splitting whole-plan execution from ad hoc or milestone execution, and replacing prompt storage with a reusable task library |
 
 ## Deferred Work
 
