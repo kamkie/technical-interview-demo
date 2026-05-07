@@ -22,6 +22,7 @@ $lightweightPatterns = @(
     ".editorconfig",
     ".gitattributes",
     ".gitignore",
+    ".gitmessage",
     "*/.gitignore",
     ".aiignore",
     "Default.xml",

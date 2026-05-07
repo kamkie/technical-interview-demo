@@ -9,15 +9,18 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ### Added
 
+- Added a `.gitmessage` commit template with the repository's required `Trigger:` line and validation sections.
 - Added a reusable `Deep AI Guidelines Assessment` task for evidence-based grading and improvement recommendations.
 
 ### Changed
 
+- Standardized commit-message trigger categories across contributor and AI execution guidance.
+- Treated `.gitmessage` as a lightweight support file for local and CI validation classification.
 - Restructured AI guidance ownership by moving active plans under `ai/plans/`, renaming the planning guide to `ai/PLANNING.md`, adding `ai/PLAN_EXECUTION.md` for whole-plan execution, narrowing `ai/EXECUTION.md` to ad hoc and single-milestone work, and replacing reusable starter storage with a self-contained `ai/TASK_LIBRARY.md` catalog.
 - Refreshed the on-demand post-compaction AI guideline evaluation report for the new owner-guide and task-library structure.
 - Archived AI-guideline evaluation and workflow-selection comparison report artifacts under `ai/archive/reports/`, keeping `ai/references/` for operative references.
 - Shortened the active-plan path to `ai/plans/` across live AI guidance and roadmap references.
-- Documented the commit-message `Trigger:` body line for plan or spec work, plan implementation, milestone execution, and ad hoc task commits.
+- Documented the commit-message `Trigger:` body line for plan or spec work, whole-plan implementation, plan milestone, ad hoc task, and task-library starter commits.
 - Renamed lifecycle vocabulary to phase activities across active AI guidance and lifecycle specs.
 
 ## [v2.0.0-RC6] - 2026-05-07

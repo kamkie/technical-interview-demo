@@ -121,6 +121,7 @@ The useful output is a readiness judgment: lifecycle state, requirement gaps, mi
 Once the plan is ready, use AI to implement either the whole plan or one milestone.
 The repository expects milestone-sized checkpoints: implementation, validation evidence, tracking artifacts, and a commit before the milestone is treated as done.
 Ask AI to include a commit-message `Trigger:` body line that identifies whether the commit came from plan or spec work, whole-plan implementation, a named milestone, or an ad hoc task or task-library starter.
+Use the repository categories from `CONTRIBUTING.md`: `plan or spec work`, `whole-plan implementation`, `plan milestone`, `ad hoc task`, or `task-library starter`.
 
 ### Workflow Execution And Integration
 

@@ -78,6 +78,15 @@ Variables you are most likely to need:
 - `APP_BOOTSTRAP_SEED_DEMO_DATA` when you want to override demo-data seeding for categories, books, and localization messages
 - `SESSION_COOKIE_SECURE` when you want to override the `prod` profile session-cookie default of `true` for local HTTP testing or a specific deployment environment
 
+## Optional Git Commit Template
+
+The repository includes `.gitmessage` with the expected commit subject, `Trigger:` body line, context, and validation sections.
+Enable it for this repository if you want Git to prefill commit messages:
+
+```powershell
+git config commit.template .gitmessage
+```
+
 ## Deployment Contract
 
 The checked-in deployment assets intentionally freeze this posture:

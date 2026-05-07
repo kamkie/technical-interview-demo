@@ -121,12 +121,14 @@ Trigger: <category> - <source>
 
 Use these categories:
 
-- `plan/spec work`: planning, spec preparation, or contract/documentation setup before implementation
-- `plan implementation`: executing a whole active plan
-- `milestone`: executing one named plan milestone
-- `ad hoc task`: a direct user request or reusable task-library starter
+- `plan or spec work`: planning, spec preparation, or contract/documentation setup before implementation
+- `whole-plan implementation`: executing a whole active plan
+- `plan milestone`: executing one named plan milestone
+- `ad hoc task`: a direct user request
+- `task-library starter`: a reusable task from `ai/TASK_LIBRARY.md`
 
 Name the concrete source after the dash, such as the plan path, milestone name, spec artifact, task-library title, or short user-request summary.
+The repository includes an optional `.gitmessage` template with this structure; enable it locally with `git config commit.template .gitmessage`.
 
 Good examples:
 

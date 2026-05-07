@@ -1,0 +1,16 @@
+<type>: <short imperative summary>
+
+Trigger: <category> - <source>
+
+Context:
+- <why this change exists>
+
+Validation:
+- <command/result>
+
+# Trigger categories:
+# - plan or spec work
+# - whole-plan implementation
+# - plan milestone
+# - ad hoc task
+# - task-library starter
