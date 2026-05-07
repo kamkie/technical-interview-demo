@@ -34,8 +34,9 @@ Use this guide as a navigation aid, not as a second copy of the AI runbooks.
 | Repository-specific AI rules and lifecycle owner map | `AGENTS.md` |
 | Reusable prompt titles and prompt loader usage | `ai/PROMPTS.md` |
 | Creating or revising execution plans | `ai/PLANNING.md` |
-| Implementing an approved plan or milestone | `ai/EXECUTION.md` |
-| Choosing workflow mode, delegation, worktrees, or integration mechanics | `ai/WORKFLOW.md` |
+| Executing a whole approved plan | `ai/PLAN_EXECUTION.md` |
+| Implementing an ad hoc task or one milestone | `ai/EXECUTION.md` |
+| Delegation, worktrees, worker logs, or integration mechanics | `ai/WORKFLOW.md` |
 | Validation scope and review lens | `ai/TESTING.md` and `ai/REVIEWS.md` |
 | Documentation and artifact routing | `ai/DOCUMENTATION.md` |
 | Intentional release preparation after integration | `ai/RELEASES.md` |
@@ -113,7 +114,7 @@ The plan should be decision-complete enough that implementation does not need to
 ### Plan Verification
 
 Before implementing large or multi-step work, ask AI to review the plan itself.
-The useful output is a readiness judgment: lifecycle state, requirement gaps, milestone boundaries, execution-mode fit, validation scope, and unresolved decisions.
+The useful output is a readiness judgment: lifecycle state, requirement gaps, milestone boundaries, execution shape, validation scope, and unresolved decisions.
 
 ### Implementation
 
@@ -123,7 +124,7 @@ The repository expects milestone-sized checkpoints: implementation, validation e
 ### Workflow Execution And Integration
 
 Most work should stay in the default linear workflow.
-When you want delegation, worktrees, fanout, or later integration of worker output, ask AI to use `ai/WORKFLOW.md`; it owns mode selection, shared-file boundaries, worker logs, and integration mechanics.
+When you want delegation, worktrees, or later integration of worker output, ask AI to use `ai/WORKFLOW.md`; it owns shared-file boundaries, worker logs, and integration mechanics.
 
 ### Verification
 

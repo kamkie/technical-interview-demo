@@ -1,15 +1,15 @@
 # Planning Guide For AI Agents
 
-`ai/PLANNING.md` owns the minimum standing rules for creating executable `ai/plans/active/PLAN_*.md` files.
-Detailed examples and the previous full guide are on demand in `ai/references/PLAN_DETAILED_GUIDE.md`.
+`ai/PLANNING.md` owns the minimum standing rules for creating executable plans under `ai/plans/active/`.
+Detailed examples are on demand in `ai/references/PLAN_DETAILED_GUIDE.md`.
 Use `ai/templates/PLAN_TEMPLATE.md` when you need the full skeleton.
 
-Use this file when the user asks for a plan, milestone, execution document, milestone breakdown, or detailed change strategy.
-Use `ai/EXECUTION.md` after a plan is approved, `ai/WORKFLOW.md` for delegation or worktree modes, `ai/DOCUMENTATION.md` for artifact routing, and `ai/TESTING.md` for validation scope.
+Use this file when the user asks for a plan, milestone breakdown, readiness review, or detailed change strategy.
+Use `ai/PLAN_EXECUTION.md` after the user asks to execute a whole active plan, `ai/EXECUTION.md` for ad hoc tasks or one plan milestone, `ai/WORKFLOW.md` for branch/worktree/delegation mechanics, `ai/DOCUMENTATION.md` for artifact routing, and `ai/TESTING.md` for validation scope.
 
 ## Lifecycle Metadata
 
-Every `ai/plans/active/PLAN_*.md` starts with:
+Every active plan starts with:
 
 ```md
 ## Lifecycle
@@ -60,7 +60,7 @@ Record requirement gaps, fallback assumptions, and locked decisions explicitly.
 
 ## Roadmap Synchronization
 
-Creating or materially revising a concrete `ai/plans/active/PLAN_*.md` file must update `ROADMAP.md` in the same change.
+Creating or materially revising a concrete active plan must update `ROADMAP.md` in the same change.
 
 Use `ROADMAP.md` for active-work tracking only:
 
@@ -75,7 +75,7 @@ When a plan is later released or no longer active, follow the execution and rele
 
 Every concrete plan must be decision-complete enough for another agent to execute without inventing missing behavior.
 
-At minimum, identify the behavior, governing specs or contract artifacts, scope and non-goals, affected files, compatibility promises, requirement gaps, execution mode, shared-file boundaries, per-milestone context requirements, milestone checkpoints, validation, and user verification.
+At minimum, identify the behavior, governing specs or contract artifacts, scope and non-goals, affected files, compatibility promises, requirement gaps, execution shape and shared-file boundaries, per-milestone context requirements, milestone checkpoints, validation, and user verification.
 Use `ai/templates/PLAN_TEMPLATE.md` for the full skeleton and required-content checklist.
 
 ## Milestone Rules
@@ -85,7 +85,7 @@ Each milestone should name:
 
 - goal
 - owned files or packages
-- shared files reserved to the coordinator, if any
+- files reserved to the coordinator, if any
 - context required before execution
 - behavior to preserve
 - exact deliverables
@@ -96,9 +96,9 @@ For context requirements, name the smallest useful read set for that milestone.
 Use `none beyond AGENTS.md, ai/EXECUTION.md, and this plan` when no extra context is needed; otherwise name the exact guide, reference, plan section, source package, or spec artifact to load before starting the milestone.
 Do not list broad descriptive docs as defensive context.
 
-Prefer `Linear Plan`.
-Use `Single-Plan Fanout` only when one plan can be split into disjoint worker-owned slices.
-Use `Multi-Plan Fanout` only when separate plan files can move independently with their own validation and temporary changelog copies.
+For execution shape, prefer a single local branch unless the work clearly benefits from explicitly owned worker slices.
+If delegation may be useful, state which files remain coordinator-owned and which files could be worker-owned.
+If multiple plans must move together, say which plan coordinates the work and how validation and changelog evidence will be rolled up.
 
 ## Repo-Specific Rules
 
@@ -111,7 +111,7 @@ Use `Multi-Plan Fanout` only when separate plan files can move independently wit
 
 ## Plan Output Format
 
-Create concrete plans directly under `ai/` as `PLAN_<topic>.md` with lowercase underscore topic names.
+Create concrete plans under `ai/plans/active/` as `PLAN_<topic>.md` with lowercase underscore topic names.
 Use `ai/templates/PLAN_TEMPLATE.md` for the full structure.
 
 ## Final Check
@@ -124,7 +124,7 @@ Before presenting a plan, verify that it:
 - separates scope from non-goals
 - records unresolved gaps and fallback assumptions explicitly
 - names likely files to change
-- identifies execution mode and shared-file boundaries
+- identifies execution shape and shared-file boundaries
 - defines per-milestone context requirements without broad just-in-case reads
 - defines specific, validatable milestones
 - includes repo-specific validation

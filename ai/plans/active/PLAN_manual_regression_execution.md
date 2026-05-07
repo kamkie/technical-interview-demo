@@ -159,9 +159,9 @@
 ## Implementation Status
 - The harness implementation under `src/manualTests/` has landed. The manual RC6 execution remains pending and can use `./build.ps1 manualTests` as a prefilled checklist before human judgement-heavy checks.
 
-## Execution Mode Fit
-- Recommended mode: `Linear Plan`.
-- This is a documentation/planning and manual validation activity. Worker fanout would add coordination overhead and make the human result log harder to interpret.
+## Execution Shape And Shared Files
+- Recommended shape: one local branch.
+- This is a documentation/planning and manual validation activity. Delegated work would add coordination overhead and make the human result log harder to interpret.
 - Coordinator-owned files:
   - `ai/plans/active/PLAN_manual_regression_execution.md`
   - `ROADMAP.md`
@@ -203,7 +203,7 @@
 - goal: start the app in a predictable local state with OAuth and admin access
 - owned files or packages:
   - optional `ai/tmp/manual-regression/v2_0_0_rc6.md`
-- shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
+- shared files reserved to the coordinator if delegated:
   - this plan and roadmap
 - context required before execution:
   - `SETUP.md` local run and OAuth setup sections, `ai/ENVIRONMENT_QUICK_REF.md`, `src/manualTests/resources/http/authentication.http`, and this milestone
@@ -258,7 +258,7 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
 - goal: verify anonymous public reads and trusted internal/devops surfaces
 - owned files or packages:
   - optional `ai/tmp/manual-regression/v2_0_0_rc6.md`
-- shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
+- shared files reserved to the coordinator if delegated:
   - this plan and roadmap
 - context required before execution:
   - `README.md` supported surface summary, `SETUP.md` local endpoint notes, `src/manualTests/resources/http/technical-overview-controller.http`, `documentation.http`, `technical-endpoints.http`, `book-controller.http`, `category-controller.http`, `localization-controller.http`, and this milestone
@@ -295,7 +295,7 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
 - goal: verify normal authenticated user behavior and core business write workflows
 - owned files or packages:
   - optional `ai/tmp/manual-regression/v2_0_0_rc6.md`
-- shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
+- shared files reserved to the coordinator if delegated:
   - this plan and roadmap
 - context required before execution:
   - `SETUP.md` CSRF/session guidance, `src/manualTests/resources/http/authentication.http`, `user-account-controller.http`, `book-controller.http`, `category-controller.http`, `localization-controller.http`, and this milestone
@@ -338,7 +338,7 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
 - goal: verify admin-only operational and governance functionality
 - owned files or packages:
   - optional `ai/tmp/manual-regression/v2_0_0_rc6.md`
-- shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
+- shared files reserved to the coordinator if delegated:
   - this plan and roadmap
 - context required before execution:
   - `src/manualTests/resources/http/admin-user-management-controller.http`, `audit-log-controller.http`, `operator-surface-controller.http`, `authentication.http`, and this milestone
@@ -371,7 +371,7 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
 - owned files or packages:
   - optional `ai/tmp/manual-regression/v2_0_0_rc6.md`
   - this plan's `Validation Results` if the manual run is executed in this branch
-- shared files that a `Single-Plan Fanout` worker must leave to the coordinator:
+- shared files reserved to the coordinator if delegated:
   - `CHANGELOG.md` unless release work is explicitly requested
 - context required before execution:
   - this plan's `Validation Results`, the manual result log under `ai/tmp/manual-regression/` if one exists, `ai/TESTING.md` for validation wording, and this milestone

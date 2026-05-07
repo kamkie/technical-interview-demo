@@ -3,9 +3,9 @@
 `ai/RELEASES.md` owns intentional release preparation after implementation is already complete on `main`.
 
 Use this file when the task is to prepare a release commit, tag it, push it, or verify a published release.
-Stay in `ai/EXECUTION.md` or `ai/WORKFLOW.md` while work is still local, on a side branch, or in an open PR.
+Stay in `ai/PLAN_EXECUTION.md`, `ai/EXECUTION.md`, or `ai/WORKFLOW.md` while work is still local, on a side branch, or in an open PR.
 
-When `ai/WORKFLOW.md` `Multi-Plan Fanout` mode was used, root-level `CHANGELOG_<topic>.md` files are release inputs. Merge accepted entries into `CHANGELOG.md` and delete the temporary files in the same release-preparation change.
+When a coordinated multi-plan workflow used root-level `CHANGELOG_<topic>.md` files, those files are release inputs. Merge accepted entries into `CHANGELOG.md` and delete the temporary files in the same release-preparation change.
 
 ## Versioning And Release Rules
 

@@ -30,10 +30,10 @@
 - Requirement gaps resolved from repo truth
 - Fallback assumptions that the executor should not revisit
 
-## Execution Mode Fit
-- Recommended default mode: `Linear Plan`, `Single-Plan Fanout`, or `Multi-Plan Fanout`
-- Why that mode fits best
-- Coordinator-owned or otherwise shared files if the work fans out
+## Execution Shape And Shared Files
+- Recommended shape: one local branch, delegated one-plan work, or coordinated multi-plan work
+- Why that shape fits best
+- Coordinator-owned or otherwise shared files if the work is delegated
 - Candidate worker boundaries or plan splits if later delegation becomes necessary
 
 ## Affected Artifacts
@@ -49,7 +49,7 @@
 ### Milestone 1: <name>
 - goal
 - owned files or packages
-- shared files that a `Single-Plan Fanout` worker must leave to the coordinator
+- shared files reserved to the coordinator, if any
 - context required before execution (`none beyond AGENTS.md, ai/EXECUTION.md, and this plan` for small milestones; otherwise name exact guides, references, plan sections, source packages, or spec artifacts)
 - behavior to preserve
 - exact deliverables
@@ -94,8 +94,8 @@
 - what compatibility promises must be preserved
 - what edge cases, failure modes, migration, rollout, or benchmark risks matter
 - what requirement gaps still need input and whether they block planning
-- which execution mode fits: `Linear Plan`, `Single-Plan Fanout`, or `Multi-Plan Fanout`
-- which files stay coordinator-owned if worker fanout is realistic
+- which execution shape fits and why
+- which files stay coordinator-owned if delegation is realistic
 - what context each milestone requires before execution, with no-extra-context milestones stated explicitly
 - which tests, docs, OpenAPI, HTTP examples, README, or AI guides must move
 - what testing strategy applies, including non-applicable layers for docs-only or AI-guidance-only plans

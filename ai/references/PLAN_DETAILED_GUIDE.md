@@ -5,8 +5,8 @@ This is the on-demand detailed reference for producing implementation plans in t
 
 Use this file only when the compact planning guide is not enough for a plan, milestone, execution document, milestone breakdown, or detailed change strategy.
 Do not use `ROADMAP.md` as a substitute for a real plan. `ROADMAP.md` is the roadmap. A plan is a self-contained handoff document for a concrete piece of work.
-Use `ai/EXECUTION.md` for the common execution loop once a plan is approved.
-Use `ai/WORKFLOW.md` for branch, worktree, coordinator, and worker execution modes.
+Use `ai/PLAN_EXECUTION.md` for whole-plan execution once a plan is approved.
+Use `ai/WORKFLOW.md` for branch, worktree, coordinator, and worker mechanics.
 Use `ai/DOCUMENTATION.md` for artifact ownership and `ai/TESTING.md` for validation scope instead of restating those rules in the plan.
 
 ## Lifecycle Metadata
@@ -64,14 +64,14 @@ The application goals matter when planning:
 - preserve the demo character of the project instead of over-engineering it
 - treat tests, REST Docs, OpenAPI compatibility, and benchmark gates as part of the product contract
 
-Plans in this repository must be executable in one of the three modes defined by `ai/WORKFLOW.md`:
+Plans in this repository must name a practical execution shape:
 
-- `Linear Plan`
-- `Single-Plan Fanout`
-- `Multi-Plan Fanout`
+- one local branch for ordinary work
+- delegated one-plan work when one plan has disjoint worker-owned slices
+- coordinated multi-plan work when separate active plans can move independently
 
 That means every plan must be milestone-driven enough for one milestone to become one reviewable execution checkpoint.
-When a plan might fan out, it must also make worker-safe ownership and shared-file boundaries explicit.
+When a plan might be delegated, it must also make worker-safe ownership and shared-file boundaries explicit.
 
 ## Before You Plan
 
@@ -94,16 +94,16 @@ If the request leaves material gaps in scope, compatibility, rollout, acceptance
 ## Milestone Design Rules
 
 Every execution milestone should be a commit-sized checkpoint.
-Design milestones so an executor can finish the milestone, run the planned validation, update the mode-specific tracking artifacts, and commit before moving on.
+Design milestones so an executor can finish the milestone, run the planned validation, update the workflow-specific tracking artifacts, and commit before moving on.
 
 Use these rules:
 
 - keep milestone scope coherent: one user-visible behavior slice, one refactor checkpoint, or one documentation/contract checkpoint
 - include the spec, implementation, documentation, and validation work needed for that checkpoint instead of scattering one behavior across many vague milestones
 - name exact files or packages when possible
-- mark which files remain coordinator-owned if the plan is later executed as `Single-Plan Fanout`
+- mark which files remain coordinator-owned if the plan is later delegated
 - avoid milestones that require multiple workers to touch the same file set at the same time
-- choose stable topic names when a plan might later become a standalone `Multi-Plan Fanout` branch with its own temporary changelog file
+- choose stable topic names when a plan might later participate in a coordinated multi-plan run with its own temporary changelog file
 
 ## How To Plan
 
@@ -131,8 +131,8 @@ Use these rules:
 8. Prefer the smallest coherent change.
    Favor direct Spring MVC, Spring Data, and `@Service`-level changes over new abstraction layers unless the user explicitly wants broader architecture work.
 
-9. Choose the default execution mode.
-   Default to `Linear Plan`. Upgrade to `Single-Plan Fanout` only when one plan can be split into disjoint worker-owned slices. Upgrade to `Multi-Plan Fanout` only when separate plan files can move independently with their own validation and temporary changelog copies.
+9. Choose the execution shape.
+   Default to one local branch. Use delegated one-plan work only when one plan can be split into disjoint worker-owned slices. Use coordinated multi-plan work only when separate plan files can move independently with their own validation and temporary changelog copies.
 
 10. Mark shared and private artifacts.
     If the work could fan out, state which files stay coordinator-owned, which files can be worker-owned, and which artifacts must stay private to a worker branch until integration.
@@ -155,7 +155,7 @@ A plan is not ready until it answers all of these:
 - What compatibility promises must be preserved?
 - What edge cases or failure modes matter?
 - What requirement gaps still need user input, and which of them block planning?
-- Which execution mode is the default, and why?
+- Which execution shape is the default, and why?
 - If the work fans out, which files stay coordinator-owned or otherwise shared?
 - Are the milestones small enough to be validated and committed one checkpoint at a time?
 - What validation proves the work is complete?
@@ -212,7 +212,7 @@ Good plans in this repository usually:
 - point to `ai/DOCUMENTATION.md` for artifact ownership instead of improvising file routing
 - point to `ai/TESTING.md` for required validation instead of hand-waving about tests
 - define milestone checkpoints that can be implemented and committed cleanly
-- call out shared-file boundaries early if worker fanout is realistic
+- call out shared-file boundaries early if delegation is realistic
 - include manual user verification for visible behavior
 
 Poor plans in this repository usually:
@@ -249,9 +249,9 @@ A good plan would:
 - keep OpenAPI, REST Docs, and HTTP examples unchanged unless behavior really changes
 - list the exact classes to refactor
 - validate with the existing test suite and standard repository checks
-- stay small enough that `Linear Plan` remains the obvious execution mode
+- stay small enough that one local branch remains the obvious execution shape
 
-### Example 3: Single-plan fanout refactor
+### Example 3: Delegated one-plan refactor
 
 Request: refactor one subsystem using a single approved plan and several workers.
 
@@ -267,8 +267,9 @@ A good plan would:
 
 Once a plan is approved, execution belongs in:
 
-- `ai/EXECUTION.md` for the common milestone execution loop
-- `ai/WORKFLOW.md` for `Linear Plan`, `Single-Plan Fanout`, and `Multi-Plan Fanout` orchestration
+- `ai/PLAN_EXECUTION.md` for executing the whole plan across milestones
+- `ai/EXECUTION.md` for one named milestone from the plan
+- `ai/WORKFLOW.md` for branch, worktree, delegation, worker-log, and integration mechanics
 - `ai/RELEASES.md` for the release step after implementation is complete
 
 Keep `ai/PLANNING.md` focused on plan quality and handoff completeness rather than repeating execution mechanics.
@@ -283,7 +284,7 @@ Before presenting a plan to the user, verify that:
 - the plan separates scope from non-goals
 - the plan names the likely files to change
 - the plan records any remaining requirement gaps and fallback assumptions explicitly
-- the plan identifies the default execution mode and any shared-file boundaries that matter
+- the plan identifies the execution shape and any shared-file boundaries that matter
 - the milestones are specific enough to validate and commit one checkpoint at a time
 - the plan includes repo-specific validation
 - the plan respects the demo scope of the application

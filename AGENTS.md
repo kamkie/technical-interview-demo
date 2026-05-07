@@ -76,8 +76,9 @@ Prompt titles, skills, templates, and deep references stay on demand until direc
 | --- | --- |
 | Discovery or roadmap intake | `ROADMAP.md` and `ai/PLANNING.md`; add `README.md` or conditional descriptive guides only when the request needs product, contract, design, or structure framing |
 | Planning | `ai/PLANNING.md`, the relevant specs or source artifacts, and `ROADMAP.md` for active-work tracking |
-| Implementation | `ai/EXECUTION.md`, the target `ai/plans/active/PLAN_*.md` when planned, and the owner guides for files being changed; keep descriptive guides conditional |
-| Workflow, delegation, or integration | `ai/WORKFLOW.md` and `ai/EXECUTION.md`; load fanout references only after a fanout mode is selected |
+| Whole-plan implementation | `ai/PLAN_EXECUTION.md`, the target `ai/plans/active/PLAN_*.md`, and the owner guides for files being changed; keep descriptive guides conditional |
+| Ad hoc task or one-milestone implementation | `ai/EXECUTION.md`, the user request or target milestone, and the owner guides for files being changed; keep descriptive guides conditional |
+| Workflow, delegation, or integration | `ai/WORKFLOW.md`; load detailed workflow references only after the work shape requires delegation, worktrees, or multi-plan coordination |
 | Testing or review | `ai/TESTING.md`, `ai/REVIEWS.md`, and `ai/DOCUMENTATION.md` when artifact routing or contract impact is part of the check; keep descriptive guides conditional |
 | Release | `ai/RELEASES.md` only after the implementation state is integrated and release work is explicitly in scope |
 | Prompt, skill, or template maintenance | `ai/PROMPTS.md`, the relevant `ai/skills/` guide, or the specific template or prompt metadata being changed |
@@ -99,7 +100,8 @@ Use these files deliberately:
 - `ai/DESIGN.md`: intended design direction, product tradeoffs, and open design decisions
 - `ai/DOCUMENTATION.md`: AI-facing documentation ownership and update guidance
 - `ai/ENVIRONMENT_QUICK_REF.md`: AI-facing command wrapper reference for local Gradle execution
-- `ai/EXECUTION.md`: AI-facing implementation workflow for executing plan files, updating validation results, and handling unreleased work
+- `ai/PLAN_EXECUTION.md`: AI-facing workflow for executing a whole active plan across milestones
+- `ai/EXECUTION.md`: AI-facing workflow for ad hoc tasks and individual plan milestones
 - `ai/LEARNINGS.md`: durable repo-wide engineering lessons that should survive refactors
 - `ai/PLANNING.md`: compact instructions for producing execution plans
 - `ai/plans/active/PLAN_*.md`: task-specific execution plans and milestone breakdowns
@@ -107,10 +109,10 @@ Use these files deliberately:
 - `ai/REVIEWS.md`: AI-facing code-review and security-review guidance
 - `ai/RELEASES.md`: AI-facing release workflow for intentional post-implementation releases
 - `ai/TESTING.md`: AI-facing testing and validation guidance
-- `ai/WORKFLOW.md`: compact AI-facing workflow router for `Linear Plan`, `Single-Plan Fanout`, `Multi-Plan Fanout`, delegation, common worktree rules, integration, and release handoff
+- `ai/WORKFLOW.md`: compact AI-facing owner for branch, worktree, delegation, worker-log, integration, and remote-handoff mechanics
 - `ai/prompts/`: machine-readable prompt index and on-demand raw prompt bodies used only after a prompt title is invoked
-- `ai/references/WORKFLOW_SINGLE_PLAN_FANOUT.md`: on-demand detailed mechanics for `Single-Plan Fanout`
-- `ai/references/WORKFLOW_MULTI_PLAN_FANOUT.md`: on-demand detailed mechanics for `Multi-Plan Fanout`
+- `ai/references/WORKFLOW_DELEGATED_PLAN.md`: on-demand detailed mechanics for splitting one active plan into worker-owned slices
+- `ai/references/WORKFLOW_COORDINATED_PLANS.md`: on-demand detailed mechanics for coordinating multiple active plans
 - `ai/references/`: other on-demand detailed references that should not be part of the default read set
 - `ai/templates/`: on-demand templates for creating new AI artifacts
 - `ai/skills/`: on-demand repo-local workflow skills; read a skill's `SKILL.md` only when that skill is invoked or clearly applies
@@ -174,7 +176,7 @@ Use `ai/ENVIRONMENT_QUICK_REF.md` for wrapper behavior and avoid adding setup bo
 
 ## Branch And Worktree Expectations
 
-`ai/WORKFLOW.md` owns mode selection and common branch, worktree, coordinator, worker, and integration rules; the on-demand workflow references own detailed fanout mechanics.
+`ai/WORKFLOW.md` owns common branch, worktree, coordinator, worker, and integration rules; the on-demand workflow references own detailed delegated-work mechanics.
 
 Repo-level invariants:
 
@@ -185,7 +187,7 @@ Repo-level invariants:
 
 ## Delegated Agents And Skill Wrappers
 
-`ai/WORKFLOW.md` owns delegation mechanics, worker capability expectations, and integration rules; load the matching workflow reference only when a fanout mode is selected.
+`ai/WORKFLOW.md` owns delegation mechanics, worker capability expectations, and integration rules; load the matching workflow reference only when the work shape requires it.
 
 Specialized agents and repo-local skills may accelerate repeatable tasks when available and when the task clearly matches their scope.
 Treat skills as workflow helpers that point back to the owner guides, not as higher-priority policy.

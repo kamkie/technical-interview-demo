@@ -24,8 +24,9 @@ Update the artifact that owns the truth being changed:
 - active planned work: `ROADMAP.md`
 - released history: `CHANGELOG.md`
 - planning process and plan-file shape: `ai/PLANNING.md`
-- single-agent execution flow: `ai/EXECUTION.md`
-- workflow mode selection and common delegation rules: `ai/WORKFLOW.md`; detailed fanout mechanics: `ai/references/WORKFLOW_SINGLE_PLAN_FANOUT.md` and `ai/references/WORKFLOW_MULTI_PLAN_FANOUT.md`
+- whole active-plan execution across milestones: `ai/PLAN_EXECUTION.md`
+- ad hoc task and single-milestone execution: `ai/EXECUTION.md`
+- branch, worktree, delegation, worker-log, integration, and remote-handoff mechanics: `ai/WORKFLOW.md`; detailed delegated-work mechanics: `ai/references/WORKFLOW_DELEGATED_PLAN.md` and `ai/references/WORKFLOW_COORDINATED_PLANS.md`
 - release sequencing and tagging: `ai/RELEASES.md`; detailed release checklist and artifact verification: `ai/references/RELEASE_CHECKLIST.md` and `ai/references/RELEASE_ARTIFACT_VERIFICATION.md`
 - prompt-title index: `ai/PROMPTS.md`; prompt metadata and raw bodies: `ai/prompts/`; prompt loader script: `scripts/ai/get-prompt.ps1`
 - repo-local reusable workflow wrappers: `ai/skills/`

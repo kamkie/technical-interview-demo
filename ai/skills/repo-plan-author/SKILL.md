@@ -27,7 +27,7 @@ Read only what the request needs:
 3. If creating a new plan, prefer one coherent `ai/plans/active/PLAN_<topic>.md` unless the work is genuinely disjoint.
 4. If revising an existing plan, update only the sections affected by the new requirement or constraint and keep milestone history intact.
 5. Make every milestone a clean execution checkpoint that can be implemented, validated, and committed without inventing missing behavior.
-6. Record requirement gaps, fallback assumptions, non-goals, validation, and execution-mode fit explicitly.
+6. Record requirement gaps, fallback assumptions, non-goals, validation, and execution shape explicitly.
 7. When reviewing plan readiness, list concrete gaps first, then say whether the lifecycle metadata is accurate and whether the plan is ready.
 
 ## Guardrails
@@ -35,7 +35,7 @@ Read only what the request needs:
 - use the lifecycle vocabulary from `ai/PLANNING.md`; do not invent a parallel scheme
 - keep the plan spec-driven and narrow enough to preserve the repo's demo character
 - do not convert roadmap bullets directly into implementation prose without checking current repo truth
-- do not force `Single-Plan Fanout` or `Multi-Plan Fanout` when ownership boundaries are not explicit
+- do not force delegated one-plan work or coordinated multi-plan work when ownership boundaries are not explicit
 - route standing policy back to `ai/PLANNING.md`, `ai/WORKFLOW.md`, `ai/DOCUMENTATION.md`, and `ai/TESTING.md` instead of copying them into the plan
 
 ## Useful Prompt Titles
@@ -46,6 +46,6 @@ Read only what the request needs:
 - `Split Checked Roadmap Items Into Plans`
 - `Revise Plan`
 - `Review Plan Readiness`
-- `Choose Execution Mode`
+- `Choose Execution Shape`
 
 Use prompt titles from `ai/PROMPTS.md` when the user wants a reusable starter.

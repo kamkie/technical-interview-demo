@@ -16,7 +16,7 @@ Look for any of the following, not only verbatim duplicates:
 - stale references (renamed/moved files, archived plans, retired prompts)
 - verbose phrasing, redundant lists, or examples that belong in `ai/references/` or `ai/templates/`
 - orphaned cross-references and broken anchors
-- stale workflow references and anchors after fanout mechanics move between `ai/WORKFLOW.md` and `ai/references/WORKFLOW_*_FANOUT.md`, checked with targeted `rg` searches rather than bulk-loading all references
+- stale workflow references and anchors after delegated-work mechanics move between `ai/WORKFLOW.md` and `ai/references/`, checked with targeted `rg` searches rather than bulk-loading all references
 - accumulated history inside standing guideline files: changelog notes, "previously…/now…" wording, migration narratives, dated decisions, deprecation traces, user-request history, prior directive wording, or rationale about past states rather than current rules
 - misplaced historical context: released history belongs in `CHANGELOG.md`, durable lessons in `ai/LEARNINGS.md`, completed plans in `ai/archive/`, and still-useful guideline history in an on-demand reference
 

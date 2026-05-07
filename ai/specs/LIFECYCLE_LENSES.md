@@ -45,7 +45,7 @@ Each lens lists its question, primary owner guide, and typical exit condition.
 
 - `Design` — decide product or contract behavior. owner: `ai/DESIGN.md`, governing specs.
 - `Spec` — record the decided behavior in the governing spec artifact. owner: `ai/DOCUMENTATION.md` for routing, individual spec files for content.
-- `Decompose` — split into commit-sized milestone checkpoints; pick a workflow mode. owner: `ai/PLANNING.md`, `ai/WORKFLOW.md`.
+- `Decompose` — split into commit-sized milestone checkpoints; pick a workflow shape. owner: `ai/PLANNING.md`, `ai/WORKFLOW.md`.
 - `Validate-Plan` — run the plan readiness checklist before approval. owner: `ai/PLANNING.md` `Final Check`.
 - `Replan?` — revise an approved plan when execution reality disagrees with it. owner: `ai/PLANNING.md`. Cross-cutting.
 
@@ -230,7 +230,7 @@ Items the lens map exposes that this repository does not yet cover. None of thes
 - this file does not change any policy
 - this file does not define new validation, review, or release rules
 - this file does not introduce a new `Phase` value
-- this file does not replace the workflow modes in `ai/WORKFLOW.md`
+- this file does not replace the workflow mechanics in `ai/WORKFLOW.md`
 - this file is not a plan and must not be moved under `ai/plans/active/PLAN_*.md`
 
 ## Cross-References
@@ -241,4 +241,4 @@ Items the lens map exposes that this repository does not yet cover. None of thes
 - `ai/TESTING.md` and `ai/references/TROUBLESHOOTING.md` for the validation and red-green details
 - `ai/REVIEWS.md` for review priorities and security triggers
 - `ai/RELEASES.md` for release lenses
-- `ai/WORKFLOW.md` for execution modes that constrain who owns which artifact during a loop
+- `ai/WORKFLOW.md` for execution shapes that constrain who owns which artifact during a loop

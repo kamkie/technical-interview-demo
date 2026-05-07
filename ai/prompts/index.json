@@ -48,10 +48,10 @@
       ]
     },
     {
-      "title": "Choose Execution Mode",
-      "slug": "choose-execution-mode",
+      "title": "Choose Execution Shape",
+      "slug": "choose-execution-shape",
       "category": "Plan Verification",
-      "path": "ai/prompts/bodies/choose-execution-mode.md",
+      "path": "ai/prompts/bodies/choose-execution-shape.md",
       "placeholders": [
         "plan_file"
       ]
@@ -138,19 +138,19 @@
       ]
     },
     {
-      "title": "Integrate Multi-Plan Fanout Output",
-      "slug": "integrate-multi-plan-fanout-output",
+      "title": "Integrate Multiple Plan Workstreams",
+      "slug": "integrate-multiple-plan-workstreams",
       "category": "Implementation Integration",
-      "path": "ai/prompts/bodies/integrate-multi-plan-fanout-output.md",
+      "path": "ai/prompts/bodies/integrate-multiple-plan-workstreams.md",
       "placeholders": [
         "topic"
       ]
     },
     {
-      "title": "Integrate Single-Plan Fanout Output",
-      "slug": "integrate-single-plan-fanout-output",
+      "title": "Integrate Delegated Plan Work",
+      "slug": "integrate-delegated-plan-work",
       "category": "Implementation Integration",
-      "path": "ai/prompts/bodies/integrate-single-plan-fanout-output.md",
+      "path": "ai/prompts/bodies/integrate-delegated-plan-work.md",
       "placeholders": [
         "plan_file"
       ]
@@ -291,10 +291,10 @@
       ]
     },
     {
-      "title": "Run Plan As Single-Plan Fanout",
-      "slug": "run-plan-as-single-plan-fanout",
+      "title": "Delegate Plan Slices",
+      "slug": "delegate-plan-slices",
       "category": "Workflow Execution",
-      "path": "ai/prompts/bodies/run-plan-as-single-plan-fanout.md",
+      "path": "ai/prompts/bodies/delegate-plan-slices.md",
       "placeholders": [
         "plan_file",
         "plan_stem_or_topic",
@@ -302,28 +302,28 @@
       ]
     },
     {
-      "title": "Run Linear Plan",
-      "slug": "run-linear-plan",
+      "title": "Execute Plan Locally",
+      "slug": "execute-plan-locally",
       "category": "Workflow Execution",
-      "path": "ai/prompts/bodies/run-linear-plan.md",
+      "path": "ai/prompts/bodies/execute-plan-locally.md",
       "placeholders": [
         "plan_file"
       ]
     },
     {
-      "title": "Run Plan With Inferred Mode",
-      "slug": "run-plan-with-inferred-mode",
+      "title": "Run Plan With Chosen Shape",
+      "slug": "run-plan-with-chosen-shape",
       "category": "Workflow Execution",
-      "path": "ai/prompts/bodies/run-plan-with-inferred-mode.md",
+      "path": "ai/prompts/bodies/run-plan-with-chosen-shape.md",
       "placeholders": [
         "plan_file"
       ]
     },
     {
-      "title": "Run Plans As Multi-Plan Fanout",
-      "slug": "run-plans-as-multi-plan-fanout",
+      "title": "Coordinate Multiple Plans",
+      "slug": "coordinate-multiple-plans",
       "category": "Workflow Execution",
-      "path": "ai/prompts/bodies/run-plans-as-multi-plan-fanout.md",
+      "path": "ai/prompts/bodies/coordinate-multiple-plans.md",
       "placeholders": [
         "plan_file_1",
         "plan_file_2",

@@ -69,7 +69,7 @@
 ## Execution Shape And Shared Files
 - Use one coordinated documentation-maintenance run because the same owner-guide paths, task-library names, and cross-references are shared across the repo.
 - Do not split implementation until the new owner map and path migration are complete.
-- Keep legacy execution-mode names out of this plan and the final live guidance. Describe the work shape in plain terms: coordinator-owned documentation run, optional read-only review, explicitly owned worker slice, or integration handoff.
+- Keep legacy workflow names out of this plan and the final live guidance. Describe the work shape in plain terms: coordinator-owned documentation run, optional read-only review, explicitly owned worker slice, or integration handoff.
 - Coordinator-owned shared files:
   - `AGENTS.md`, `WORKING_WITH_AI.md`, `ROADMAP.md`, `CHANGELOG.md`
   - top-level `ai/*.md`
@@ -197,7 +197,7 @@
   - `ai/WORKFLOW.md` contains no owner overlap with planning or execution guides
   - template sections match the new owner model and active-plan paths
 - validation checkpoint:
-  - targeted search confirms legacy execution-mode names are absent from this plan, live standing guides, task starters, templates, and active plans; archived superseded plans may keep historical wording
+  - targeted search confirms legacy workflow names are absent from this plan, live standing guides, task starters, templates, and active plans; archived superseded plans may keep historical wording
   - `git diff --check`
 - commit checkpoint:
   - `docs: split plan and task execution guidance`
@@ -324,6 +324,17 @@
 - The highest-risk areas are path migration and the non-compatible task-library loader cutover; both have early inventory, nonexistence checks, and positive and negative smoke-check milestones.
 
 ## Validation Results
+- 2026-05-07 implementation Milestone 3 owner split:
+  - Added `ai/PLAN_EXECUTION.md` as the whole active-plan execution owner.
+  - Regenerated `ai/EXECUTION.md` around ad hoc task and individual milestone execution, including task-promotion and context-switching rules.
+  - Regenerated `ai/WORKFLOW.md` around branch, worktree, delegation, worker-log, integration, and remote-handoff mechanics only.
+  - Updated `AGENTS.md`, `WORKING_WITH_AI.md`, `ai/DOCUMENTATION.md`, `ai/PLANNING.md`, `ai/templates/PLAN_TEMPLATE.md`, planning/workflow references, active plans, repo-local skill text, and reusable starter metadata/bodies for the new owner model.
+  - Renamed the two detailed workflow references to `ai/references/WORKFLOW_DELEGATED_PLAN.md` and `ai/references/WORKFLOW_COORDINATED_PLANS.md`.
+  - Renamed reusable starter titles that encoded retired workflow names to task-oriented names such as `Choose Execution Shape`, `Execute Plan Locally`, `Delegate Plan Slices`, and `Coordinate Multiple Plans`.
+  - Targeted search found no legacy workflow-name strings in live non-archived guides, active plans, templates, task starters, or scripts. Historical archives, the non-policy workflow-selection comparison, and the stale evaluation report were excluded as planned.
+  - `pwsh ./scripts/ai/get-prompt.ps1 -Name "Choose Execution Shape"` passed.
+  - `pwsh ./scripts/ai/get-prompt.ps1 -Name "Delegate Plan Slices"` passed.
+  - `git diff --check` passed, with Git warning that `ai/prompts/index.json` line endings will normalize on the next touch.
 - 2026-05-07 implementation Milestone 2 path migration:
   - Renamed `ai/PLAN.md` to `ai/PLANNING.md`.
   - Moved active plans to `ai/plans/active/` and archived the three superseded workflow-selection candidate plans under `ai/archive/`.
@@ -358,9 +369,9 @@
 - 2026-05-07 maturity hardening:
   - Moved the roadmap entry from Intake `Candidate` to `Planned Work` with status `Planned`.
   - Locked `ai/TASK_LIBRARY.md` as the replacement for `ai/PROMPTS.md`.
-  - Replaced the execution-mode-fit gap with `Execution Shape And Shared Files`, using coordinator-owned shared files and plain workflow-shape language instead of legacy execution-mode names.
+  - Replaced the execution-shape gap with `Execution Shape And Shared Files`, using coordinator-owned shared files and plain workflow-shape language instead of legacy execution-shape names.
   - Strengthened the no-alias validation with task-loader positive and negative checks, old-loader nonexistence checks, and stale-reference searches for old prompt-loader paths.
-  - Ran a targeted search for exact legacy execution-mode names, retained compatibility-loader wording, the old roadmap candidate row, and unresolved task-library filename ambiguity against this plan and `ROADMAP.md`; no matches.
+  - Ran a targeted search for exact legacy execution-shape names, retained compatibility-loader wording, the old roadmap candidate row, and unresolved task-library filename ambiguity against this plan and `ROADMAP.md`; no matches.
   - Ran a targeted decision-reference search for `Planned Work`, `ai/TASK_LIBRARY.md`, execution-shape ownership, task-loader unknown-name checks, and old-loader nonexistence checks; confirmed the hardened references.
   - Ran `git diff --check`; passed.
   - Ran `./build.ps1 build`; passed through the lightweight-file shortcut and skipped Gradle. The wrapper reported changed files as this plan, `ROADMAP.md`, and pre-existing untracked `ai/references/LIFECYCLE_LENSES.md`.

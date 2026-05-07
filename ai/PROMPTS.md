@@ -9,7 +9,7 @@ Use the owner guides instead:
 
 - planning: `ai/PLANNING.md`
 - implementation: `ai/EXECUTION.md`
-- workflow modes and delegation: `ai/WORKFLOW.md`
+- workflow delegation and integration: `ai/WORKFLOW.md`
 - validation: `ai/TESTING.md`
 - artifact routing: `ai/DOCUMENTATION.md`
 - review: `ai/REVIEWS.md`
@@ -53,22 +53,22 @@ Add prompt-specific files only when the prompt system itself is being used or ch
   - `Revise Plan`
 - Plan verification
   - `Review Plan Readiness`
-  - `Choose Execution Mode`
+  - `Choose Execution Shape`
 - Implementation
   - `Implement Plan`
   - `Implement Milestone`
 - Workflow execution
-  - `Run Plan With Inferred Mode`
-  - `Run Linear Plan`
-  - `Run Plan As Single-Plan Fanout`
-  - `Run Plans As Multi-Plan Fanout`
+  - `Run Plan With Chosen Shape`
+  - `Execute Plan Locally`
+  - `Delegate Plan Slices`
+  - `Coordinate Multiple Plans`
   - `Run All Ready Plans`
   - `Run All Unfinished Plans`
   - `Check Worker Status`
   - `Check Active Workers`
 - Implementation integration
-  - `Integrate Single-Plan Fanout Output`
-  - `Integrate Multi-Plan Fanout Output`
+  - `Integrate Delegated Plan Work`
+  - `Integrate Multiple Plan Workstreams`
   - `Integrate All Open PRs`
 - Implementation verification
   - `Run Required Validation`

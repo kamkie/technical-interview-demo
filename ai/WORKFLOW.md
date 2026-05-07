@@ -1,172 +1,27 @@
 # Workflow Guide For AI Agents
 
-`ai/WORKFLOW.md` owns execution-mode selection, branch/worktree topology, and coordinator or worker integration rules.
-Anything not overridden here should follow `ai/EXECUTION.md`.
+`ai/WORKFLOW.md` owns branch, worktree, delegation, worker-log, integration, and remote-handoff mechanics.
+It does not own plan creation, whole-plan execution loops, ad hoc task execution, validation scope, or release sequencing.
 
-Use this file to choose the workflow mode before implementation starts.
-Load a fanout reference only after the Mode Selection Gate selects that non-default mode:
+Use this file only when the work needs collaboration mechanics beyond one local agent editing one working tree.
+Use `ai/PLAN_EXECUTION.md` for whole-plan execution and `ai/EXECUTION.md` for ad hoc or one-milestone work.
 
-- `ai/references/WORKFLOW_SINGLE_PLAN_FANOUT.md`
-- `ai/references/WORKFLOW_MULTI_PLAN_FANOUT.md`
+## Defaults
 
-## Codex-Aligned Defaults
+Use the smallest workflow that keeps ownership clear:
 
-Use these defaults unless the user explicitly wants another workflow:
-
-- plan first, then execute against named milestones
-- keep current work committed or at least stashed before branching or worktree fanout
-- use isolated branches or worktrees for background or delegated work
+- one local agent on the current branch is enough for ordinary work
+- keep current work committed or stashed before creating side branches or worktrees
+- use unique worker branches for delegated work
 - never rely on the same checked-out branch in more than one worktree at a time
-- use `ai/EXECUTION.md` for milestone checkpoints and commit discipline
-- prefer the smallest mode that preserves clear ownership and low coordination cost
+- finish local validation before push or pull-request handoff unless the user explicitly asks for a remote-first diagnostic flow
+- keep release sequencing out of workflow execution; use `ai/RELEASES.md` only after implementation is integrated and release is in scope
 
-## Supported Modes
+## When To Split Work
 
-Three execution modes are supported:
+Split work only when the benefit is concrete and the user has approved delegation, parallelism, or a worktree-backed handoff.
 
-1. `Linear Plan`
-   - one agent works on one branch
-   - one canonical plan file stays authoritative
-   - one canonical `CHANGELOG.md` stays authoritative
-
-2. `Single-Plan Fanout`
-   - one current `ai/plans/active/PLAN_*.md` stays authoritative
-   - a coordinator fans out worker branches or worktrees for disjoint slices of that plan
-   - workers avoid shared files and report milestone output back through worker logs
-   - detailed mechanics are in `ai/references/WORKFLOW_SINGLE_PLAN_FANOUT.md`
-
-3. `Multi-Plan Fanout`
-   - different workers execute different `ai/plans/active/PLAN_*.md` files in parallel
-   - each worker keeps a private `CHANGELOG_<topic>.md` copy instead of editing `CHANGELOG.md`
-   - the coordinator tracks integration order and later folds accepted changelog text back into `CHANGELOG.md`
-   - detailed mechanics are in `ai/references/WORKFLOW_MULTI_PLAN_FANOUT.md`
-
-Do not mix modes inside one plan unless the boundary is explicit and documented in the relevant plan files.
-
-## Mode Selection Gate
-
-Default to `Linear Plan`.
-Choose a non-default mode only when the benefit is clear and the user has approved the fanout.
-
-Use this gate before execution starts:
-
-- user-requested fanout, parallelism, sub-agents, or worktree splitting is a candidate for `Single-Plan Fanout` or `Multi-Plan Fanout`, but still requires explicit user approval before the mode is used
-- one active plan with at least two disjoint worker-safe slices is a candidate for `Single-Plan Fanout`
-- two or more approved disjoint plan files are a candidate for `Multi-Plan Fanout`
-- shared controller, service, test, REST Docs, OpenAPI, README, or tightly coupled milestone edits stay in `Linear Plan`
-- non-default modes require recording the selected mode in the plan's `Execution Mode Fit` section and loading the matching reference file before proceeding
-- if the selected mode changes during execution, stop and amend the plan or plans before continuing
-
-## When To Stay Linear
-
-Prefer `Linear Plan` when:
-
-- the change is small
-- workers would touch the same files or public contract artifacts
-- the next step is tightly blocked on one coupled change
-- coordination cost is higher than the parallelism benefit
-- the review, testing, or documentation slice is too small to justify handoff
-
-Use fanout only when the split is defensible in file ownership, validation scope, and integration order.
-
-## Common Mode Rules
-
-All modes use the milestone loop, commit rules, and completion criteria from `ai/EXECUTION.md`.
-This file only changes branch layout, artifact ownership, worker coordination, and remote handoff.
-
-- choose the mode before execution starts
-- keep mode-specific tracking artifacts current as milestones land
-- finish local validation before any push or PR handoff unless the user explicitly chose a remote-first diagnostic flow
-- treat worktree or side-branch execution as incomplete until the finished branch has been pushed and a pull request is open or already merged onto `main`, when the selected workflow or repository handoff requires remote completion
-- follow `ai/TESTING.md` for Gradle validation batching; do not run shared-output validation tasks concurrently
-- in fanout modes, keep the coordinator active until every worker reaches a terminal state; do not treat the overall run as complete while any worker is still implementing, validating, pushing, or opening a PR
-- prefer merging accepted branches or pull requests into the integration branch; use cherry-pick only when the user asks for it, when accepting less than the full branch or pull request, or when a normal merge is not viable, and record the reason
-- keep release sequencing out of workflow execution; use `ai/RELEASES.md` only after the implementation work is integrated and release is in scope
-
-## Worker Log Schema
-
-For any forked worker, create and maintain a committed temporary worker log, updating it after each completed milestone, at:
-
-`ai/tmp/workflow/<plan_stem_or_topic>__<worker_name>.md`
-
-Create the directory if it does not exist.
-
-Each worker log records:
-
-- execution mode
-- target plan file or topic token
-- worker branch and worktree
-- exact owned scope or milestones
-- files intentionally left shared
-- changed files
-- validation commands run and their pass or fail result
-- proposed changelog text
-- commit SHA(s)
-- blockers, risks, and coordinator decisions still needed
-- whether the current milestone or slice is ready for integration
-
-## Delegation Quality Bar
-
-Delegated workers must meet the same repository standards as the coordinator.
-Do not lower validation, review, documentation, artifact-update, or security expectations because work was delegated.
-
-Workers inherit the coordinator capability by default.
-Use an explicit model or reasoning override only when the user requests it or the task has a clear documented reason.
-Do not delegate implementation, review, security, release, or ambiguous design work to a lower-capability worker.
-
-Skills provide task-specific workflow instructions.
-Using a skill does not reduce the required repository quality bar.
-
-## Coordinator Ownership
-
-The coordinator or orchestrator always owns:
-
-- reading the governing docs, specs, and target plans
-- deciding whether the work is worth splitting
-- choosing the mode
-- assigning explicit non-overlapping ownership
-- deciding integration order
-- final validation from `ai/TESTING.md`
-- final review and documentation alignment using `ai/REVIEWS.md` and `ai/DOCUMENTATION.md`
-- waiting for every worker to reach a terminal state before declaring a fanout run complete
-
-## Coordinator Completion Gate
-
-For fanout modes, the coordinator run is not complete when the first worker finishes.
-It is complete only when every worker is in a terminal state and that terminal state has been reported.
-
-Treat these as terminal states:
-
-- completed under the mode-specific rules
-- blocked with the blocker recorded clearly
-- failed with the failure recorded clearly
-- cancelled because the user explicitly stopped that worker
-
-Workers are still active while they are implementing, validating, pushing, opening a PR, or waiting on follow-up work that has not been recorded as blocked.
-
-Reporting rules:
-
-- interim progress updates must say they are interim
-- do not give a final success summary while any worker is still active
-- if any worker ends blocked or failed, keep that in the final coordinator summary instead of quietly dropping it
-
-## Linear Plan
-
-Use `Linear Plan` as the default execution mode.
-
-Ownership rules:
-
-- one agent owns the active branch
-- the canonical `ai/plans/active/PLAN_*.md` is updated directly
-- `CHANGELOG.md` is updated directly under `## [Unreleased]`
-
-Remote handoff:
-
-- push or open a PR only when the user explicitly asks for it or the active repository workflow requires it
-
-## Task Slicing Rules
-
-Good fanout boundaries in this codebase usually follow package, contract, or artifact ownership boundaries, for example:
+Good split boundaries usually follow package, contract, or artifact ownership boundaries, for example:
 
 - `business.book`
 - `business.category`
@@ -184,28 +39,102 @@ Do not split work when workers would overlap on:
 - the same unresolved product or rollout decision
 - one milestone that cannot be expressed as disjoint file ownership
 
-## Worktree And Branch Rules
+## Delegated One-Plan Work
+
+Use `ai/references/WORKFLOW_DELEGATED_PLAN.md` when one active plan has disjoint worker-safe slices but one coordinator still owns the plan, changelog, final validation, and integration order.
+
+Coordinator-owned files usually include:
+
+- the active plan file
+- `CHANGELOG.md`
+- roadmap entries
+- shared contract artifacts unless the worker owns the entire contract slice
+- worker-log integration notes
+
+Workers should edit only their assigned files and report results through worker logs.
+
+## Coordinated Multi-Plan Work
+
+Use `ai/references/WORKFLOW_COORDINATED_PLANS.md` when separate approved active plans move in parallel and later need one integration pass.
+
+Each worker owns one plan or one explicitly bounded plan slice.
+The coordinator owns integration order, final validation, and folding accepted changelog text back into `CHANGELOG.md`.
+
+## Worker Log Schema
+
+For any delegated worker, create and maintain a committed temporary worker log at:
+
+`ai/tmp/workflow/<plan_stem_or_topic>__<worker_name>.md`
+
+Create the directory if it does not exist.
+
+Each worker log records:
+
+- target plan file or topic token
+- worker branch and worktree
+- exact owned scope or milestones
+- files intentionally left shared
+- changed files
+- validation commands run and their pass or fail result
+- proposed changelog text
+- commit SHA(s)
+- blockers, risks, and coordinator decisions still needed
+- whether the current milestone or slice is ready for integration
+
+Optional local-only progress notes can live at:
+
+`ai/tmp/workflow-local/<plan_stem_or_topic>__<worker_name>.local.md`
+
+Local notes may stay uncommitted and do not replace the committed worker log when one is required.
+
+## Delegation Quality Bar
+
+Delegated workers must meet the same repository standards as the coordinator.
+Do not lower validation, review, documentation, artifact-update, or security expectations because work was delegated.
+
+Workers inherit the coordinator capability by default.
+Use an explicit model or reasoning override only when the user requests it or the task has a clear documented reason.
+Do not delegate implementation, review, security, release, or ambiguous design work to a lower-capability worker.
+
+Skills provide task-specific workflow instructions.
+Using a skill does not reduce the required repository quality bar.
+
+## Coordinator Ownership
+
+The coordinator always owns:
+
+- reading the governing docs, specs, and target plans
+- deciding whether the work is worth splitting
+- assigning explicit non-overlapping ownership
+- deciding integration order
+- final validation from `ai/TESTING.md`
+- final review and documentation alignment using `ai/REVIEWS.md` and `ai/DOCUMENTATION.md`
+- waiting for every worker to reach a terminal state before declaring delegated work complete
+
+Treat these as terminal states:
+
+- completed under the assigned workflow
+- blocked with the blocker recorded clearly
+- failed with the failure recorded clearly
+- cancelled because the user explicitly stopped that worker
+
+Workers are still active while they are implementing, validating, pushing, opening a pull request, or waiting on follow-up work that has not been recorded as blocked.
+
+## Branch And Worktree Rules
 
 - `main` remains the integration target for completed work
 - worktree branches are temporary execution branches, not release branches
 - release-target and tagging preconditions live in `AGENTS.md` and `ai/RELEASES.md`
-- when fanout begins, start from a committed or stashed state so the new branches or worktrees are comparable and reviewable
-- use unique worker branches for forked work; do not try to check out the same branch in multiple worktrees
+- start delegated work from a committed or stashed state so branches or worktrees are comparable and reviewable
+- use unique branch names for forked work
+- prefer merging accepted branches or pull requests into the integration branch
+- use cherry-pick only when the user asks for it, when accepting less than the full branch or pull request, or when a normal merge is not viable, and record the reason
 
-For `Linear Plan`, one branch is enough unless the user explicitly asks for a worktree-backed thread.
+## Reporting
 
-Optional local-only progress log for any worktree worker:
+For delegated or integrated work, report:
 
-`ai/tmp/workflow-local/<plan_stem_or_topic>__<worker_name>.local.md`
-
-Use it for concise in-progress notes for the user.
-It may stay local-only and does not replace any required committed worker log.
-
-## Reporting Expectations
-
-In all modes, report:
-
-- mode used
+- workflow shape used
 - owned plan or slice
 - changed files
 - validation run
@@ -213,4 +142,5 @@ In all modes, report:
 - blockers
 - final status or ready-for-integration status
 
-Fanout modes also report the mode-specific fields named by their reference files.
+Interim progress updates must say they are interim.
+Do not give a final success summary while any worker is still active.

@@ -1,4 +1,4 @@
 Implement `<plan_file>`.
 
-Follow `ai/EXECUTION.md`.
+Follow `ai/PLAN_EXECUTION.md`.
 Do not push, open a PR, or release unless I ask.
