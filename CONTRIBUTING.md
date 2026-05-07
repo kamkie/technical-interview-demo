@@ -14,7 +14,7 @@ Use the human-facing docs deliberately:
 Use the AI-facing docs only when they are the owner for the workflow or rule you are changing:
 
 - `AGENTS.md` for repository-local AI rules, spec priority, required artifact updates, and definition of done
-- `ai/PLAN.md`, `ai/EXECUTION.md`, `ai/WORKFLOW.md`, `ai/TESTING.md`, `ai/REVIEWS.md`, and `ai/RELEASES.md` for the AI-side planning, execution, validation, and release workflow
+- `ai/PLANNING.md`, `ai/PLAN_EXECUTION.md`, `ai/EXECUTION.md`, `ai/WORKFLOW.md`, `ai/TESTING.md`, `ai/REVIEWS.md`, and `ai/RELEASES.md` for the AI-side planning, execution, coordination, validation, and release workflow
 
 ## Project Ground Rules
 
@@ -86,7 +86,7 @@ Human responsibilities do not move to the AI. The developer still owns:
 - validation choices and acceptance of the evidence
 - release decisions
 
-For multi-step work, planning should happen before implementation. When the work is large enough to justify a real plan, create or revise an `ai/PLAN_*.md` file and follow the workflow described in `WORKING_WITH_AI.md` plus the owning `ai/` guides.
+For multi-step work, planning should happen before implementation. When the work is large enough to justify a real plan, create or revise an `ai/plans/active/PLAN_*.md` file and follow the workflow described in `WORKING_WITH_AI.md` plus the owning `ai/` guides.
 
 ## Branches And Commit Messages
 
@@ -232,7 +232,7 @@ At a minimum, release preparation should include:
 - confirming the exact release candidate passed `./build.ps1 -FullBuild build`
 - deciding whether `./build.ps1 gatlingBenchmark` is required for the scoped changes
 - running the manual `Post-Deploy Smoke` workflow with the expected build version and short commit id before promotion
-- updating `CHANGELOG.md`, `ROADMAP.md`, and any executed `ai/PLAN_*.md` files before tagging
+- updating `CHANGELOG.md`, `ROADMAP.md`, and any executed `ai/plans/active/PLAN_*.md` files before tagging
 - verifying the remote `Release` workflow published the semantic tag, immutable short-SHA tag, and GitHub Release notes
 
 ## Formatting Expectations

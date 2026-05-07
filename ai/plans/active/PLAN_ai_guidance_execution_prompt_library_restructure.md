@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Implementation |
-| Status | In Progress |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Summary
 - Restructure the AI guidance set so planning, whole-plan execution, task or milestone execution, workflow coordination, and reusable task starters have distinct owners.
@@ -324,6 +324,21 @@
 - The highest-risk areas are path migration and the non-compatible task-library loader cutover; both have early inventory, nonexistence checks, and positive and negative smoke-check milestones.
 
 ## Validation Results
+- 2026-05-07 implementation Milestone 6 evaluation refresh and final validation:
+  - Loaded the `Evaluate AI Guidelines` task with `pwsh ./scripts/ai/get-task.ps1 -Name "Evaluate AI Guidelines"`.
+  - Regenerated `ai/references/AI_GUIDELINES_POST_COMPACTION_EVALUATION.md` for the new owner-guide and task-library structure, including `ai/PLAN_EXECUTION.md`, current active-plan inventory, task-library inventory, practical read-set estimates, file grades, realized gains, remaining risks, obsolete recommendations, and ranked follow-ups.
+  - Recomputed the main measurement baselines: `AGENTS.md` is 13,251 characters / 3,313 estimated tokens; the 15-file standing owner-guide set is 80,900 characters / 20,230 estimated tokens; the two tracked active plans total 76,373 characters / 19,094 estimated tokens.
+  - Added a focused `CHANGELOG.md` unreleased entry for the refreshed post-compaction AI guideline evaluation report.
+  - Updated `ROADMAP.md` so the AI guidance restructure row is `Implemented`.
+  - Corrected stale human-facing AI inventory references in `README.md` and `CONTRIBUTING.md` discovered by the tracked stale-reference search.
+  - `pwsh ./scripts/ai/get-task.ps1 -List` passed and listed the task library.
+  - `pwsh ./scripts/ai/get-task.ps1 -Name "Create Plan"` passed.
+  - `pwsh ./scripts/ai/get-task.ps1 -Name "definitely not a task"` failed deterministically with `No task matched`.
+  - `Test-Path -LiteralPath scripts/ai/get-prompt.ps1`, `Test-Path -LiteralPath ai/prompts`, and `Test-Path -LiteralPath ai/PROMPTS.md` all returned `False`.
+  - Targeted tracked-file stale-reference searches, excluding `CHANGELOG.md`, `ai/archive/**`, this plan's historical notes, and the non-policy workflow-selection comparison, found no live references to the old task-loader path, old task-storage paths, old planning-guide path, old active-plan glob, misspelled planning-guide filename, legacy workflow-name strings, or prompt-owned library wording.
+  - Manual documentation/process review using `ai/DOCUMENTATION.md` and `ai/REVIEWS.md` found no blocking owner contradiction, policy drift, or security-sensitive application behavior change.
+  - `git diff --check` passed.
+  - `./build.ps1 build` passed through the lightweight-file shortcut and skipped Gradle for the documentation/support-file change set.
 - 2026-05-07 implementation Milestone 5 compaction and skill evaluation:
   - Loaded and applied the `Compact AI Docs` task from `ai/task-library/bodies/compact-ai-docs.md`.
   - Evaluated the optional `repo-ad-hoc-task-executor` skill and deferred creation because the new `ai/EXECUTION.md`, `ai/PLAN_EXECUTION.md`, and task library already cover the entry workflow without adding another policy surface.
