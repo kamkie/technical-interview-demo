@@ -60,14 +60,23 @@
 - `ai/EXECUTION.md` owns ad hoc tasks and individual plan milestones: smallest useful read set, context switching for efficiency, spec-first changes, validation at the checkpoint, review, and when to promote ad hoc work into a plan.
 - `ai/WORKFLOW.md` remains, but only for collaboration mechanics: branch/worktree hygiene, delegation boundaries, worker logs, integration, and remote handoff.
 - The prompt system becomes a reusable task library, with standing policy kept in owner guides and task bodies kept procedural.
+- `ai/TASK_LIBRARY.md` replaces `ai/PROMPTS.md` as the task-library index and usage guide.
 - The task library lives under `ai/task-library/`.
 - No old prompt-loader alias or compatibility wrapper remains after migration.
 - The ad hoc task execution skill is deferred by default and can be created only if it meets the narrow-wrapper acceptance criteria in this plan.
 - Public application behavior remains unchanged.
 
-## Execution Approach
+## Execution Shape And Shared Files
 - Use one coordinated documentation-maintenance run because the same owner-guide paths, task-library names, and cross-references are shared across the repo.
 - Do not split implementation until the new owner map and path migration are complete.
+- Keep legacy execution-mode names out of this plan and the final live guidance. Describe the work shape in plain terms: coordinator-owned documentation run, optional read-only review, explicitly owned worker slice, or integration handoff.
+- Coordinator-owned shared files:
+  - `AGENTS.md`, `WORKING_WITH_AI.md`, `ROADMAP.md`, `CHANGELOG.md`
+  - top-level `ai/*.md`
+  - active plans under `ai/plans/active/`
+  - `ai/templates/**`, `ai/references/**`, `ai/skills/**`
+  - task-library metadata and bodies under `ai/task-library/**`
+  - task-loader scripts under `scripts/ai/**`
 - If delegation is later requested, use only read-only review or explicitly non-overlapping file ownership after the coordinator has updated the central owner map.
 
 ## Affected Artifacts
@@ -90,7 +99,7 @@
   - `ROADMAP.md`
   - release cleanup references under `ai/references/`
 - Reusable task library:
-  - replacement for `ai/PROMPTS.md`
+  - `ai/TASK_LIBRARY.md` as the replacement for `ai/PROMPTS.md`
   - replacement for `ai/prompts/index.json`
   - replacement for `ai/prompts/bodies/`
   - `ai/task-library/index.json`
@@ -188,7 +197,7 @@
   - `ai/WORKFLOW.md` contains no owner overlap with planning or execution guides
   - template sections match the new owner model and active-plan paths
 - validation checkpoint:
-  - targeted search confirms the old named mode vocabulary is absent from live standing guides, task starters, templates, and active plans except intentional migration notes in this plan
+  - targeted search confirms legacy execution-mode names are absent from this plan, live standing guides, task starters, templates, and active plans; archived superseded plans may keep historical wording
   - `git diff --check`
 - commit checkpoint:
   - `docs: split plan and task execution guidance`
@@ -196,7 +205,7 @@
 ### Milestone 4: Replace Prompt Storage With Reusable Task Library
 - goal: make reusable starters task-shaped, discoverable, and clearly separate from standing policy.
 - owned files or packages:
-  - `ai/TASK_LIBRARY.md` or chosen replacement for `ai/PROMPTS.md`
+  - `ai/TASK_LIBRARY.md`
   - `ai/task-library/index.json`
   - `ai/task-library/bodies/*.md`
   - `scripts/ai/get-task.ps1`
@@ -216,6 +225,8 @@
   - `ai/DOCUMENTATION.md` owns the new task-library artifact routing
 - validation checkpoint:
   - task loader list and single-task load smoke checks pass
+  - task loader unknown-name check fails with a deterministic non-alias error
+  - `Test-Path -LiteralPath scripts/ai/get-prompt.ps1` returns false
   - targeted search confirms no active docs or scripts still invoke `scripts/ai/get-prompt.ps1`
   - targeted search confirms active docs no longer describe the library as prompt-owned policy
   - `git diff --check`
@@ -264,6 +275,8 @@
   - `ROADMAP.md` reflects the final active-work state
 - validation checkpoint:
   - task loader smoke checks
+  - task loader unknown-name check
+  - old prompt-loader script nonexistence check
   - targeted stale-reference searches
   - `git diff --check`
   - `./build.ps1 build`
@@ -282,7 +295,9 @@
 ## Validation Plan
 - Run targeted reference searches over live files, excluding `ai/archive/**` except when checking release cleanup instructions.
 - Run task loader smoke checks for list and single-task load paths.
-- Confirm no active live file still invokes `scripts/ai/get-prompt.ps1` after migration.
+- Run a task loader unknown-name check and confirm it fails deterministically instead of falling back to old prompt names.
+- Confirm `scripts/ai/get-prompt.ps1` no longer exists.
+- Confirm no active live file still invokes `scripts/ai/get-prompt.ps1`, `ai/prompts/`, or `ai/PROMPTS.md` after migration; only archived history and this plan's current-state or validation history may retain those strings.
 - Run `git diff --check`.
 - Run `./build.ps1 build`; for documentation-only AI-guidance changes, record whether the wrapper takes the lightweight-file shortcut or performs Gradle validation.
 - Manually review changed docs with `ai/DOCUMENTATION.md` and `ai/REVIEWS.md`.
@@ -292,7 +307,7 @@
 - Integration tests: not applicable because runtime app behavior does not change.
 - Contract tests: not applicable because REST Docs, OpenAPI, HTTP examples, and public API behavior do not change.
 - Smoke or benchmark tests: not applicable because performance and deployment behavior do not change.
-- Documentation verification: required through task loader smoke checks, targeted stale-reference searches, `git diff --check`, wrapper build, and manual owner-alignment review.
+- Documentation verification: required through task loader positive and negative smoke checks, old-loader nonexistence check, targeted stale-reference searches, `git diff --check`, wrapper build, and manual owner-alignment review.
 
 ## Better Engineering Notes
 - The prior workflow-selection variants are useful evidence but too narrow for this request. This plan should replace them rather than blend them.
@@ -306,7 +321,7 @@
 - No blocking requirement gap remains. The plan locks no prompt-loader compatibility alias, archives old candidate plans, uses `ai/task-library/`, keeps `ai/PLANNING.md`, and defers the ad hoc execution skill unless acceptance criteria are met.
 - Lifecycle is accurate: `Phase=Planning`, `Status=Ready`.
 - The plan is ready for implementation after user selection, with one caveat: implementation should not interrupt the active `v2.0.0-RC6` manual regression gate unless the user intentionally reprioritizes roadmap work.
-- The highest-risk areas are path migration and the non-compatible task-library loader cutover; both have early inventory and smoke-check milestones.
+- The highest-risk areas are path migration and the non-compatible task-library loader cutover; both have early inventory, nonexistence checks, and positive and negative smoke-check milestones.
 
 ## Validation Results
 - 2026-05-07 plan creation:
@@ -326,6 +341,15 @@
   - Ran a targeted decision-reference search for the ready roadmap row, no-alias task-loader decision, `ai/task-library/`, defer-by-default skill wording, and archived workflow-selection plans; confirmed the refined decision references.
   - Ran `git diff --check`; passed.
   - Ran `./build.ps1 build`; passed through the lightweight-file shortcut and skipped Gradle. The wrapper reported changed files as this plan and `ROADMAP.md`.
+- 2026-05-07 maturity hardening:
+  - Moved the roadmap entry from Intake `Candidate` to `Planned Work` with status `Planned`.
+  - Locked `ai/TASK_LIBRARY.md` as the replacement for `ai/PROMPTS.md`.
+  - Replaced the execution-mode-fit gap with `Execution Shape And Shared Files`, using coordinator-owned shared files and plain workflow-shape language instead of legacy execution-mode names.
+  - Strengthened the no-alias validation with task-loader positive and negative checks, old-loader nonexistence checks, and stale-reference searches for old prompt-loader paths.
+  - Ran a targeted search for exact legacy execution-mode names, retained compatibility-loader wording, the old roadmap candidate row, and unresolved task-library filename ambiguity against this plan and `ROADMAP.md`; no matches.
+  - Ran a targeted decision-reference search for `Planned Work`, `ai/TASK_LIBRARY.md`, execution-shape ownership, task-loader unknown-name checks, and old-loader nonexistence checks; confirmed the hardened references.
+  - Ran `git diff --check`; passed.
+  - Ran `./build.ps1 build`; passed through the lightweight-file shortcut and skipped Gradle. The wrapper reported changed files as this plan, `ROADMAP.md`, and pre-existing untracked `ai/references/LIFECYCLE_LENSES.md`.
 
 ## User Validation
 - Review this plan's owner split and the locked names: `ai/PLANNING.md`, `ai/PLAN_EXECUTION.md`, `ai/EXECUTION.md`, `ai/WORKFLOW.md`, and `ai/task-library/`.
@@ -341,8 +365,8 @@
 - Compatibility promises: public app contract unchanged; reusable starter loading remains deterministic; no legacy prompt-loader alias remains; historical archive wording remains historical.
 - Risks: path migration breaks globs, task-library rename churn, removed prompt-loader muscle memory, duplicated skill policy, stale evaluation timing.
 - Requirement gaps: resolved; ad hoc skill creation remains a conditional acceptance gate, not an open product decision.
-- Execution approach: one coordinated documentation-maintenance run with optional read-only review or explicit non-overlapping delegation after the central owner map lands.
+- Execution shape: one coordinated documentation-maintenance run with coordinator-owned shared files, optional read-only review, or explicit non-overlapping delegation after the central owner map lands.
 - Per-milestone context: named explicitly in each milestone.
 - Specs and docs: AI guidance, human-facing AI workflow docs, task library artifacts, templates, skills, references, roadmap, changelog, and evaluation report.
-- Validation: targeted searches, task loader smoke checks, `git diff --check`, `./build.ps1 build`, and manual owner-alignment review.
+- Validation: targeted searches, task loader positive and negative smoke checks, old-loader nonexistence check, `git diff --check`, `./build.ps1 build`, and manual owner-alignment review.
 - User verification: inspect owner names, supersession of old variants, and roadmap priority.

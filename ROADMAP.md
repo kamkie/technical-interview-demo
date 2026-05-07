@@ -41,6 +41,14 @@ Goal: use manual regression coverage as the RC-to-stable gate, then finish the s
 | 1 | In Progress | Manual regression gate for the final `2.0` release candidate | `ai/PLAN_manual_regression_execution.md` | Harness has landed; manual business-functionality regression still needs to run against final RC `v2.0.0-RC6`; if another RC is cut first, the plan is replanned to that RC |
 | 2 | Planned | Stable `v2.0.0` release | `CHANGELOG.md`, `ROADMAP.md`, release artifacts | Stable `v2.0.0` is released, changelog and roadmap are updated, and the completed `2.0` track is removed from this file |
 
+## Planned Work
+
+Use this section for plan-backed work that is ready but not selected as the immediate release-track action.
+
+| Status | Workstream | Plan Or Artifact | Notes |
+| --- | --- | --- | --- |
+| Planned | AI guidance execution and reusable task library restructure | `ai/PLAN_ai_guidance_execution_prompt_library_restructure.md` | Supersedes the three workflow-selection variant option plans by archiving them, removing named mode vocabulary, moving active plans to a subdirectory, splitting whole-plan execution from ad hoc or milestone execution, and replacing prompt storage with `ai/task-library/` without a prompt-loader compatibility alias |
+
 ## Intake
 
 Use this section for rough candidate tasks that are not specific enough for the active release track or deferred backlog.
@@ -48,7 +56,6 @@ Rewrite an item into a concrete roadmap row before moving it into active or defe
 
 | Status | Candidate | Notes |
 | --- | --- | --- |
-| Candidate | AI guidance execution and reusable task library restructure | Ready plan: `ai/PLAN_ai_guidance_execution_prompt_library_restructure.md`; supersedes the three workflow-selection variant option plans by archiving them, removing named mode vocabulary, moving active plans to a subdirectory, splitting whole-plan execution from ad hoc or milestone execution, and replacing prompt storage with `ai/task-library/` without a prompt-loader compatibility alias |
 
 ## Deferred Work
 
