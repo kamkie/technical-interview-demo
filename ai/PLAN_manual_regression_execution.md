@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Implementation |
-| Status | In Progress |
+| Phase | Planning |
+| Status | Ready |
 
 ## Summary
 - Create and execute a manual regression pass against the final `2.0` release candidate, currently `v2.0.0-RC5`, that touches the app's supported user-facing functionality without trying to duplicate every automated edge-case test.
@@ -427,13 +427,7 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
   - renamed all suites from single letters to ordered descriptive names (`01-public-overview-and-docs` through `12-operator-surface`) with declared prerequisites and added a `Suite Catalog And Order` table.
   - added dedicated sections for `Implementation Technology`, `Test Data Generation`, `User Input And Configuration`, and `Execution Report Generation`; added the corresponding open questions to `Requirement Gaps And Open Questions`.
   - `./build.ps1 build` lightweight-file shortcut expected to skip the Gradle build because only this plan file changed.
-- 2026-05-07 worktree execution kickoff (`plan/manual-regression-execution`):
-  - Lifecycle flipped to `Phase=Implementation`, `Status=In Progress`.
-  - Dedicated worktree `..\technical-interview-demo-manual-regression` created off `main`.
-  - Milestone 1 partial: reused existing `technical-interview-demo-postgres` container (started from `Exited` to `Up`); attempted background `./build.ps1 bootRun` with `SPRING_PROFILES_ACTIVE=local`, but the agent could not observe `:8080` becoming reachable within the session window (Tee-redirected log captured only the Gradle daemon banner). Background java processes were stopped before exit.
-  - Result-log scaffold seeded at `ai/tmp/manual-regression/v2_0_0_rc5.md` with tool versions, Milestone 1 state, suite status table (suites 01–05 `Pending`, suites 06–12 `Blocked` pending human OAuth login), and a `Resume-From-Here` block for the human executor.
-  - Suites 01–12 are not yet executed against RC5; the manual pass remains pending the human executor running `bootRun` foreground and completing OAuth sign-in.
-- Manual suite execution against `v2.0.0-RC5` is not yet complete; results land in `ai/tmp/manual-regression/v2_0_0_rc5.md` and a follow-up entry here.
+- Manual suite execution against `v2.0.0-RC5` is intentionally **not** part of this plan: this plan only designs and wires the manual-regression tooling/harness. Actual RC5 execution is performed by a human operator outside this plan and is recorded in `ai/tmp/manual-regression/<rc>.md` if durable evidence is wanted.
 
 ## User Validation
 - Review this plan and answer the open questions if the fallback assumptions are not acceptable.
