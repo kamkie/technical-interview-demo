@@ -4,7 +4,7 @@ Category: Plan Verification
 Slug: `review-plan-readiness`
 Placeholders: <plan_file>
 
-Review `<plan_file>` against `ai/PLANNING.md`.
+Review `<plan_file>` against `.agents/references/planning.md`.
 
 List concrete gaps or ambiguities first.
 Check whether the lifecycle phase and status are accurate.

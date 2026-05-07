@@ -19,12 +19,12 @@ Measure context size in:
 Count only repository AI instruction material:
 
 - `AGENTS.md`
-- files under `ai/`
+- files under `.agents/`
 
 Categorize measurements into these broad buckets:
 
 - standing root and AI top-level files
-- active plan files, meaning `ai/plans/PLAN_*.md`
+- active plan files, meaning `.agents/plans/PLAN_*.md`
 - archived plans
 - archived report artifacts
 - on-demand tasks
@@ -33,7 +33,7 @@ Categorize measurements into these broad buckets:
 - repo skill entrypoints
 - repo skill references
 
-Exclude archived material under `ai/archive/` from default and generic task loads unless explicitly loaded by a task. Still include archive size in total AI instruction inventory reporting.
+Exclude archived material under `.agents/archive/` from default and generic task loads unless explicitly loaded by a task. Still include archive size in total AI instruction inventory reporting.
 
 For each commit, measure these scenarios:
 
@@ -99,7 +99,7 @@ The statistics section should include:
 
 - **Baseline Metrics**: Smallest and biggest context use for each measured scenario.
 - **Improvement Trend**: Oldest-to-newest improvement for each scenario and total inventory, reported as absolute character delta, absolute estimated-token delta, and percentage change.
-- **Context Density**: Ratio of Standing Context (`AGENTS.md` + top-level `ai/*.md`) to Total AI Inventory.
+- **Context Density**: Ratio of Standing Context (`AGENTS.md` + standing `.agents/references/*.md` owner guides) to Total AI Inventory.
 - **Growth Velocity**: Average character and token change per analyzed commit.
 - **Bloat Factor**: The percentage overhead added by active plans and on-demand tasks relative to the default load.
 

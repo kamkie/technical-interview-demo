@@ -14,7 +14,7 @@ Use the human-facing docs deliberately:
 Use the AI-facing docs only when they are the owner for the workflow or rule you are changing:
 
 - `AGENTS.md` for repository-local AI rules, spec priority, required artifact updates, and definition of done
-- `ai/PLANNING.md`, `ai/PLAN_EXECUTION.md`, `ai/EXECUTION.md`, `ai/WORKFLOW.md`, `ai/TESTING.md`, `ai/REVIEWS.md`, and `ai/RELEASES.md` for the AI-side planning, execution, coordination, validation, and release workflow
+- `.agents/references/planning.md`, `.agents/references/plan-execution.md`, `.agents/references/execution.md`, `.agents/references/workflow.md`, `.agents/references/testing.md`, `.agents/references/reviews.md`, and `.agents/references/releases.md` for the AI-side planning, execution, coordination, validation, and release workflow
 
 ## Project Ground Rules
 
@@ -86,7 +86,7 @@ Human responsibilities do not move to the AI. The developer still owns:
 - validation choices and acceptance of the evidence
 - release decisions
 
-For multi-step work, planning should happen before implementation. When the work is large enough to justify a real plan, create or revise an `ai/plans/PLAN_*.md` file and follow the workflow described in `WORKING_WITH_AI.md` plus the owning `ai/` guides.
+For multi-step work, planning should happen before implementation. When the work is large enough to justify a real plan, create or revise an `.agents/plans/PLAN_*.md` file and follow the workflow described in `WORKING_WITH_AI.md` plus the owning `.agents/references/` guides.
 
 ## Branches And Commit Messages
 
@@ -228,7 +228,7 @@ Common routing:
 - `README.md` for supported project scope and public contract summary
 - `SETUP.md` for local setup, CI reproduction, deployment runbooks, and troubleshooting
 - `WORKING_WITH_AI.md` for the human-facing AI collaboration lifecycle
-- `AGENTS.md` and the relevant `ai/` guide when AI rules, ownership, workflow, or execution guidance changed
+- `AGENTS.md` and the relevant `.agents/references/` guide when AI rules, ownership, workflow, or execution guidance changed
 - `src/docs/asciidoc/` and the related REST Docs tests when public API behavior changed
 - `src/manualTests/resources/http/` when reviewer-facing request examples changed
 - `ROADMAP.md` when active work changed
@@ -238,7 +238,7 @@ Common routing:
 
 Release preparation starts only after the approved implementation PR has been merged onto `main`.
 
-Use `ai/RELEASES.md` for the detailed release workflow.
+Use `.agents/references/releases.md` for the detailed release workflow.
 
 At a minimum, release preparation should include:
 
@@ -248,7 +248,7 @@ At a minimum, release preparation should include:
 - confirming the exact release candidate passed `./build.ps1 -FullBuild build`
 - deciding whether `./build.ps1 gatlingBenchmark` is required for the scoped changes
 - running the manual `Post-Deploy Smoke` workflow with the expected build version and short commit id before promotion
-- updating `CHANGELOG.md`, `ROADMAP.md`, and any executed `ai/plans/PLAN_*.md` files before tagging
+- updating `CHANGELOG.md`, `ROADMAP.md`, and any executed `.agents/plans/PLAN_*.md` files before tagging
 - verifying the remote `Release` workflow published the semantic tag, immutable short-SHA tag, and GitHub Release notes
 
 ## Formatting Expectations

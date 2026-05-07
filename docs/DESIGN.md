@@ -3,7 +3,7 @@
 `docs/DESIGN.md` captures intended product and contract direction for `technical-interview-demo`.
 
 Use this file when the task changes user-visible behavior, supported scope, security posture, operational defaults, or roadmap tradeoffs.
-Use `docs/ARCHITECTURE.md` for structural placement and `ai/DOCUMENTATION.md` for artifact routing. This file explains intent behind the contract; it is not the contract itself.
+Use `docs/ARCHITECTURE.md` for structural placement and `.agents/references/documentation.md` for artifact routing. This file explains intent behind the contract; it is not the contract itself.
 
 ## Product Intent
 
@@ -129,7 +129,7 @@ Keep documentation roles distinct:
 
 - executable specs and published contract docs own behavior
 - `README.md`, `CONTRIBUTING.md`, and `SETUP.md` own human workflow
-- `AGENTS.md` and the focused `ai/` guides own AI workflow
+- `AGENTS.md` and the focused `.agents/references/` guides own AI workflow
 
 ## Roadmap Direction
 

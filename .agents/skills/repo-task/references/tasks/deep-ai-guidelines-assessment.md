@@ -7,16 +7,16 @@ Placeholders: none
 Deeply analyze, evaluate, and grade the current repository AI guideline set, then provide prioritized recommendations for improvement.
 
 Use this as an evidence-based assessment task, not as an implementation request for the recommendations it discovers.
-Base the assessment on the current `Context Report` measurement method and the latest archived AI-guideline evaluation under `ai/archive/reports/`, when one exists.
+Base the assessment on the current `Context Report` measurement method and the latest archived AI-guideline evaluation under `.agents/reports/`, when one exists.
 
 #### Scope
 
-- Read `AGENTS.md`, `ai/DOCUMENTATION.md`, `.agents/skills/repo-task/references/spec.md`, `.agents/skills/repo-task/references/index.md`, and, if present, the latest matching archived AI-guideline evaluation under `ai/archive/reports/` first.
+- Read `AGENTS.md`, `.agents/references/documentation.md`, `.agents/skills/repo-task/references/spec.md`, `.agents/skills/repo-task/references/index.md`, and, if present, the latest matching archived AI-guideline evaluation under `.agents/reports/` first.
 - Generate a fresh context report using the `Context Report` task method, or reuse a same-session context report only if it clearly covers the current HEAD and uncommitted AI-guidance changes.
-- Read top-level owner guides under `ai/` because the task grades the current guideline set as a whole.
+- Read standing owner guides under `.agents/references/` because the task grades the current guideline set as a whole.
 - Inspect active plans only for lifecycle state, context-load impact, stale references, and active-read-set hygiene.
 - Inspect on-demand references, templates, repo-task files, and repo-local skills only when the context report, archived evaluation report, or targeted searches identify them as important load, drift, duplication, or stale-reference contributors.
-- Do not bulk-load `ai/archive/`; read only matching report artifacts under `ai/archive/reports/`, and sample archived plans only when the assessment has a specific historical or stale-reference question.
+- Do not bulk-load `.agents/archive/`; read only matching report artifacts under `.agents/reports/`, and sample archived plans only when the assessment has a specific historical or stale-reference question.
 
 #### Assessment Tasks
 
@@ -70,9 +70,9 @@ The report must include:
 #### Guardrails
 
 - Do not implement recommendations unless I explicitly ask.
-- Do not move archived reports back into `ai/references/`; use `Evaluate AI Guidelines` only when a fresh evaluation snapshot is explicitly needed.
+- Do not move archived reports back into `.agents/references/`; use `Evaluate AI Guidelines` only when a fresh evaluation snapshot is explicitly needed.
 - Do not edit `CHANGELOG.md` unless a tracked report or AI-guidance file is intentionally updated.
-- Keep standing policy in the owning guide named by `ai/DOCUMENTATION.md`; do not copy full policy into the assessment report.
+- Keep standing policy in the owning guide named by `.agents/references/documentation.md`; do not copy full policy into the assessment report.
 - If a live contradiction makes grading unreliable, list it as a blocker before recommendations instead of smoothing over it.
 
 #### Validation

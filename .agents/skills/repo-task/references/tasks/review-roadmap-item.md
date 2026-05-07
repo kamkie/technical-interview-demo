@@ -6,4 +6,4 @@ Placeholders: <task>
 
 Review the roadmap item `<task>` before planning implementation.
 
-Explain what behavior would change, which current specs govern it, what is still ambiguous, and whether the task should remain in `Discovery`, move into `Planning`, or be treated as `Needs Input` under `ai/PLANNING.md`.
+Explain what behavior would change, which current specs govern it, what is still ambiguous, and whether the task should remain in `Discovery`, move into `Planning`, or be treated as `Needs Input` under `.agents/references/planning.md`.

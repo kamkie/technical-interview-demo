@@ -5,7 +5,7 @@ description: Dispatch repository-local reusable task starters from saved task re
 
 # Repo Task
 
-Use this skill to load one repository task workflow at a time. Keep standing policy in `AGENTS.md` and the focused `ai/*.md` owner guides; task files are only reusable starters.
+Use this skill to load one repository task workflow at a time. Keep standing policy in `AGENTS.md` and the focused `.agents/references/` owner guides; task files are only reusable starters.
 
 ## Resolve A Task
 

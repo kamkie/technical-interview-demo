@@ -3,7 +3,7 @@
 `WORKING_WITH_AI.md` is the human-facing guide for using AI in this repository across the application-development lifecycle.
 
 Use this file when you want to direct AI effectively as a developer.
-Use `AGENTS.md` and the files under `ai/` as the repository-local instructions that the AI should follow.
+Use `AGENTS.md` and the files under `.agents/` as the repository-local instructions that the AI should follow.
 Use `README.md` for the short project overview, `SETUP.md` for local environment setup, and `CONTRIBUTING.md` for contributor workflow expectations.
 
 ## Core Working Model
@@ -33,13 +33,13 @@ Use this guide as a navigation aid, not as a second copy of the AI runbooks.
 | Local setup, tools, and troubleshooting | `SETUP.md` |
 | Repository-specific AI rules and phase owner map | `AGENTS.md` |
 | Reusable task starters | `.agents/skills/repo-task/` |
-| Creating or revising execution plans | `ai/PLANNING.md` |
-| Executing a whole approved plan | `ai/PLAN_EXECUTION.md` |
-| Implementing an ad hoc task or one milestone | `ai/EXECUTION.md` |
-| Delegation, worktrees, worker logs, or integration mechanics | `ai/WORKFLOW.md` |
-| Validation scope and review activity | `ai/TESTING.md` and `ai/REVIEWS.md` |
-| Documentation and artifact routing | `ai/DOCUMENTATION.md` |
-| Intentional release preparation after integration | `ai/RELEASES.md` |
+| Creating or revising execution plans | `.agents/references/planning.md` |
+| Executing a whole approved plan | `.agents/references/plan-execution.md` |
+| Implementing an ad hoc task or one milestone | `.agents/references/execution.md` |
+| Delegation, worktrees, worker logs, or integration mechanics | `.agents/references/workflow.md` |
+| Validation scope and review activity | `.agents/references/testing.md` and `.agents/references/reviews.md` |
+| Documentation and artifact routing | `.agents/references/documentation.md` |
+| Intentional release preparation after integration | `.agents/references/releases.md` |
 
 Detailed task files, templates, deep references, skill references, and archived plans are on-demand material.
 Load them only when the task title, owner guide, or active work calls for them.
@@ -76,12 +76,12 @@ topic: add candidate search filtering
 
 ```text
 Implement Plan
-plan_file: ai/plans/PLAN_CANDIDATE_SEARCH.md
+plan_file: .agents/plans/PLAN_CANDIDATE_SEARCH.md
 ```
 
 ```text
 Run Required Validation
-plan_file: ai/plans/PLAN_CANDIDATE_SEARCH.md
+plan_file: .agents/plans/PLAN_CANDIDATE_SEARCH.md
 change: candidate search filtering API
 ```
 
@@ -108,7 +108,7 @@ Useful requests ask AI to inspect `ROADMAP.md`, clarify requirement gaps, or rec
 
 ### Planning
 
-Use AI to create or revise an execution plan under `ai/plans/PLAN_*.md`.
+Use AI to create or revise an execution plan under `.agents/plans/PLAN_*.md`.
 The plan should be decision-complete enough that implementation does not need to invent product behavior, and `ROADMAP.md` should point to active planned work without duplicating the plan.
 
 ### Plan Verification
@@ -126,21 +126,21 @@ Use the repository categories from `CONTRIBUTING.md`: `plan or spec work`, `whol
 ### Workflow Execution And Integration
 
 Most work should stay in the default linear workflow.
-When you want delegation, worktrees, or later integration of worker output, ask AI to use `ai/WORKFLOW.md`; it owns shared-file boundaries, worker logs, and integration mechanics.
+When you want delegation, worktrees, or later integration of worker output, ask AI to use `.agents/references/workflow.md`; it owns shared-file boundaries, worker logs, and integration mechanics.
 
 ### Verification
 
 Use AI to run validation, inspect contract impact, and review the change with a code-review mindset.
-`ai/TESTING.md` owns which command or manual check is sufficient, and `ai/REVIEWS.md` owns how findings should be prioritized.
+`.agents/references/testing.md` owns which command or manual check is sufficient, and `.agents/references/reviews.md` owns how findings should be prioritized.
 
 ### Release
 
 Release preparation is a maintainer step after the intended implementation has landed on `main`.
-Use `ai/RELEASES.md` for release preconditions, versioning, tagging, roadmap cleanup, changelog movement, and published-artifact verification.
+Use `.agents/references/releases.md` for release preconditions, versioning, tagging, roadmap cleanup, changelog movement, and published-artifact verification.
 
 ## Repo-Local Skills
 
-Repo-local workflow skills live under `ai/skills/`.
+Repo-local workflow skills live under `.agents/skills/`.
 The reusable task starter dispatcher lives under `.agents/skills/repo-task/`; use its compact index to resolve task names and then load only the matching task file.
 Codex-native reusable workflows can be packaged as plugins; `.agents/plugins/marketplace.json` registers a repo-scoped plugin marketplace, and the plugin bundle can contain `skills/<skill-name>/SKILL.md`.
 
@@ -151,7 +151,7 @@ Read a skill's `SKILL.md` only when that skill is invoked or clearly applies.
 Current focused skills include:
 
 - `repo-task`: repository reusable task starter dispatch
-- `repo-plan-author`: creating or revising `ai/plans/PLAN_*.md`
+- `repo-plan-author`: creating or revising `.agents/plans/PLAN_*.md`
 - `gh-fix-ci`: GitHub PR-check inspection and CI failure triage
 - `gh-fix-security-quality`: GitHub Security tab, code-scanning, and Dependabot alert triage
 

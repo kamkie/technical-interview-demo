@@ -2,11 +2,11 @@
 
 This is the on-demand reference that defines the phase activity and loop vocabulary for AI agents working in this repository.
 It is a vocabulary specification, not a workflow policy.
-Owner guides under `ai/` may adopt these names to make context switches explicit, but they remain the source of truth for their own rules.
+Owner guides under `.agents/references/` may adopt these names to make context switches explicit, but they remain the source of truth for their own rules.
 
 Use this file when:
 
-- adding activity tags to an owner guide such as `ai/EXECUTION.md`, `ai/PLANNING.md`, `ai/TESTING.md`, or `ai/REVIEWS.md`
+- adding activity tags to an owner guide such as `.agents/references/execution.md`, `.agents/references/planning.md`, `.agents/references/testing.md`, or `.agents/references/reviews.md`
 - discussing where a recurring activity belongs in the lifecycle
 - diagnosing wrong-activity-at-wrong-time failures during a task
 - proposing new owner guides for currently uncovered phases
@@ -20,7 +20,7 @@ Activity names here are descriptive shortcuts; the binding rules live in the own
 - **Switch**: an explicit transition between two phase activities. A switch always implies dropping the previous activity's working set per the `Context Hygiene` rule in `AGENTS.md`.
 - **Trigger**: a signal that requires a switch. Triggers can be planned (the next step in a loop) or conditional (e.g. a security-relevant change, a discovered plan gap).
 - **Loop**: a sequence of phase activities that iterates until an exit condition is met. Loops can nest.
-- **Phase**: a coarse lifecycle stage that contains one or more phase activities, mapped to the `Phase` enum in `ai/PLANNING.md`.
+- **Phase**: a coarse lifecycle stage that contains one or more phase activities, mapped to the `Phase` enum in `.agents/references/planning.md`.
 
 ## Activity Catalogue
 
@@ -29,9 +29,9 @@ Each activity lists its question, primary owner guide, and typical exit conditio
 ### Discovery and Framing
 
 - `Scan` — what artifacts and code already define this area? owner: `AGENTS.md` onboarding map, `docs/ARCHITECTURE.md`. Exit: relevant artifacts identified.
-- `Frame` — what is the actual change being requested? owner: `AGENTS.md` Task Interpretation, `ai/PLANNING.md`. Exit: scope and ambiguity surfaced.
-- `Clarify?` — does the user need to resolve a material ambiguity? owner: `ai/PLANNING.md` planning rules. Exit: ambiguity resolved or recorded as a fallback assumption.
-- `Capture` — does this surface a durable repo lesson? owner: `ai/LEARNINGS.md`. Conditional.
+- `Frame` — what is the actual change being requested? owner: `AGENTS.md` Task Interpretation, `.agents/references/planning.md`. Exit: scope and ambiguity surfaced.
+- `Clarify?` — does the user need to resolve a material ambiguity? owner: `.agents/references/planning.md` planning rules. Exit: ambiguity resolved or recorded as a fallback assumption.
+- `Capture` — does this surface a durable repo lesson? owner: `.agents/references/LEARNINGS.md`. Conditional.
 
 ### Requirements And Roadmap
 
@@ -44,50 +44,50 @@ Each activity lists its question, primary owner guide, and typical exit conditio
 ### Design, Spec, And Planning
 
 - `Design` — decide product or contract behavior. owner: `docs/DESIGN.md`, governing specs.
-- `Spec` — record the decided behavior in the governing spec artifact. owner: `ai/DOCUMENTATION.md` for routing, individual spec files for content.
-- `Decompose` — split into commit-sized milestone checkpoints; pick a workflow shape. owner: `ai/PLANNING.md`, `ai/WORKFLOW.md`.
-- `Validate-Plan` — run the plan readiness checklist before approval. owner: `ai/PLANNING.md` `Final Check`.
-- `Replan?` — revise an approved plan when execution reality disagrees with it. owner: `ai/PLANNING.md`. Cross-cutting.
+- `Spec` — record the decided behavior in the governing spec artifact. owner: `.agents/references/documentation.md` for routing, individual spec files for content.
+- `Decompose` — split into commit-sized milestone checkpoints; pick a workflow shape. owner: `.agents/references/planning.md`, `.agents/references/workflow.md`.
+- `Validate-Plan` — run the plan readiness checklist before approval. owner: `.agents/references/planning.md` `Final Check`.
+- `Replan?` — revise an approved plan when execution reality disagrees with it. owner: `.agents/references/planning.md`. Cross-cutting.
 
 ### Implementation
 
-- `Code` — write the smallest implementation that satisfies the spec. owner: `ai/CODE_STYLE.md`, source files.
-- `Docs` — route artifact updates per the change type. owner: `ai/DOCUMENTATION.md`.
-- `Commit` — produce a milestone-shaped checkpoint with the required tracking-artifact updates. owner: `ai/EXECUTION.md` Milestone Commit Rules, `ai/WORKFLOW.md`.
-- `Handoff` — report status, blockers, and any required push or pull request. owner: `ai/WORKFLOW.md`, `ai/EXECUTION.md` Completion Criteria.
+- `Code` — write the smallest implementation that satisfies the spec. owner: `.agents/references/code-style.md`, source files.
+- `Docs` — route artifact updates per the change type. owner: `.agents/references/documentation.md`.
+- `Commit` — produce a milestone-shaped checkpoint with the required tracking-artifact updates. owner: `.agents/references/execution.md` Milestone Commit Rules, `.agents/references/workflow.md`.
+- `Handoff` — report status, blockers, and any required push or pull request. owner: `.agents/references/workflow.md`, `.agents/references/execution.md` Completion Criteria.
 
 ### Testing And Verification
 
-- `Plan-Tests` — choose the smallest sufficient validation for this change type. owner: `ai/TESTING.md`.
+- `Plan-Tests` — choose the smallest sufficient validation for this change type. owner: `.agents/references/testing.md`.
 - `Author-Tests` — write or update the executable spec or reproduction. owner: existing test packages.
-- `Run` — execute the chosen validation. owner: `ai/TESTING.md`, `ai/ENVIRONMENT_QUICK_REF.md`.
-- `Diagnose?` — interpret a failure before changing anything. owner: `ai/references/TROUBLESHOOTING.md`.
-- `Fix?` — apply the smallest correction to the implementation, test, or spec. owner: `ai/EXECUTION.md`.
-- `Re-run` — confirm the previously failing validation now passes. owner: `ai/TESTING.md`.
-- `Record` — write the actual outcome into `Validation Results` or worker log. owner: `ai/TESTING.md` Recording Validation, `ai/WORKFLOW.md`.
+- `Run` — execute the chosen validation. owner: `.agents/references/testing.md`, `.agents/references/environment-quick-ref.md`.
+- `Diagnose?` — interpret a failure before changing anything. owner: `.agents/references/troubleshooting.md`.
+- `Fix?` — apply the smallest correction to the implementation, test, or spec. owner: `.agents/references/execution.md`.
+- `Re-run` — confirm the previously failing validation now passes. owner: `.agents/references/testing.md`.
+- `Record` — write the actual outcome into `Validation Results` or worker log. owner: `.agents/references/testing.md` Recording Validation, `.agents/references/workflow.md`.
 
 ### Review
 
-- `Self-Review` — first pass against `ai/REVIEWS.md` Review Priorities. owner: `ai/REVIEWS.md`.
-- `Code Review` — peer-style review of the validated diff. owner: `ai/REVIEWS.md`.
-- `Security Review?` — apply only when `ai/REVIEWS.md` security triggers fire. owner: `ai/REVIEWS.md`.
-- `Docs Review?` — apply when the change is documentation-heavy. owner: `ai/REVIEWS.md`, `ai/DOCUMENTATION.md`.
-- `Decide` — approve or request changes; loop back to `Code` or `Validation` if the latter. owner: `ai/REVIEWS.md`.
+- `Self-Review` — first pass against `.agents/references/reviews.md` Review Priorities. owner: `.agents/references/reviews.md`.
+- `Code Review` — peer-style review of the validated diff. owner: `.agents/references/reviews.md`.
+- `Security Review?` — apply only when `.agents/references/reviews.md` security triggers fire. owner: `.agents/references/reviews.md`.
+- `Docs Review?` — apply when the change is documentation-heavy. owner: `.agents/references/reviews.md`, `.agents/references/documentation.md`.
+- `Decide` — approve or request changes; loop back to `Code` or `Validation` if the latter. owner: `.agents/references/reviews.md`.
 
 ### Integration
 
-- `Re-validate` — confirm the merge target still passes after rebase or conflict resolution. owner: `ai/TESTING.md`.
-- `Resolve-Conflicts?` — merge conflict handling. owner: `ai/WORKFLOW.md`.
+- `Re-validate` — confirm the merge target still passes after rebase or conflict resolution. owner: `.agents/references/testing.md`.
+- `Resolve-Conflicts?` — merge conflict handling. owner: `.agents/references/workflow.md`.
 - `Merge` — land the work on `main`. owner: `AGENTS.md` Branch And Worktree Expectations.
-- `Post-Merge-Verify` — confirm `main` still builds and matches the plan's `Implemented` state. owner: `ai/EXECUTION.md` Completion Criteria.
+- `Post-Merge-Verify` — confirm `main` still builds and matches the plan's `Implemented` state. owner: `.agents/references/execution.md` Completion Criteria.
 
 ### Release
 
-- `Gate` — confirm release preconditions. owner: `ai/RELEASES.md`.
-- `Tag` — produce the release artifact. owner: `ai/RELEASES.md`.
-- `Notes` — generate or update `CHANGELOG.md`. owner: `ai/RELEASES.md`.
-- `Publish` — execute the release. owner: `ai/RELEASES.md`.
-- `Post-Release-Cleanup` — archive plans, refresh `ROADMAP.md` active-work entries, close the loop into Continuous Improvement. owner: `ai/RELEASES.md`, `ai/PLANNING.md`, `ROADMAP.md`.
+- `Gate` — confirm release preconditions. owner: `.agents/references/releases.md`.
+- `Tag` — produce the release artifact. owner: `.agents/references/releases.md`.
+- `Notes` — generate or update `CHANGELOG.md`. owner: `.agents/references/releases.md`.
+- `Publish` — execute the release. owner: `.agents/references/releases.md`.
+- `Post-Release-Cleanup` — archive plans, refresh `ROADMAP.md` active-work entries, close the loop into Continuous Improvement. owner: `.agents/references/releases.md`, `.agents/references/planning.md`, `ROADMAP.md`.
 
 ### Deployment And Operations
 
@@ -108,31 +108,31 @@ These phase activities are listed for completeness; they currently have **no AI 
 ### Continuous Improvement
 
 - `Retrospect` — review what worked and what did not after a release or major plan.
-- `Capture-Learning` — record a durable repo-wide lesson. owner: `ai/LEARNINGS.md`.
+- `Capture-Learning` — record a durable repo-wide lesson. owner: `.agents/references/LEARNINGS.md`.
 - `Refactor?` — schedule structural improvement work as its own plan.
 - `Tech-Debt-Plan?` — convert recurring pain into a planned roadmap item.
 - `Sync` — feed outcomes back into `ROADMAP.md`.
 
 ## Phase Activity Sequence
 
-The repository uses the `Phase` enum from `ai/PLANNING.md`. This table maps each phase to its in-order activity sequence; `?` marks conditional phase activities.
+The repository uses the `Phase` enum from `.agents/references/planning.md`. This table maps each phase to its in-order activity sequence; `?` marks conditional phase activities.
 
 | Phase | In-order phase activities | Primary owner guides |
 | --- | --- | --- |
-| Discovery | `Scan` → `Frame` → `Clarify?` → `Capture?` | `AGENTS.md`, `docs/ARCHITECTURE.md`, `ai/LEARNINGS.md` |
+| Discovery | `Scan` → `Frame` → `Clarify?` → `Capture?` | `AGENTS.md`, `docs/ARCHITECTURE.md`, `.agents/references/LEARNINGS.md` |
 | Roadmap intake | `Intake` → `Refine` → `Prioritize` → `Sequence` → `Sync` | `ROADMAP.md`, `docs/DESIGN.md` |
-| Planning | `Frame` → `Design` → `Spec` → `Decompose` → `Validate-Plan` → `Sync` → `Replan?` | `ai/PLANNING.md`, `docs/DESIGN.md`, `ai/templates/PLAN_TEMPLATE.md` |
-| Implementation | `Spec` → `Code` → `Docs` → `Run` → `Replan?` → `Self-Review` → `Code Review` → `Security Review?` → `Commit` → `Handoff` | `ai/EXECUTION.md`, `ai/DOCUMENTATION.md`, `ai/CODE_STYLE.md`, `ai/WORKFLOW.md` |
-| Testing | `Plan-Tests` → `Author-Tests` → `Run` → `Diagnose?` → `Fix?` → `Re-run` → `Record` | `ai/TESTING.md`, `ai/references/TROUBLESHOOTING.md` |
-| Review | `Self-Review` → `Code Review` → `Security Review?` → `Docs Review?` → `Decide` | `ai/REVIEWS.md` |
-| Integration | `Re-validate` → `Resolve-Conflicts?` → `Merge` → `Post-Merge-Verify` | `ai/WORKFLOW.md`, `AGENTS.md` |
-| Release | `Gate` → `Tag` → `Notes` → `Publish` → `Post-Release-Cleanup` | `ai/RELEASES.md`, `CHANGELOG.md` |
+| Planning | `Frame` → `Design` → `Spec` → `Decompose` → `Validate-Plan` → `Sync` → `Replan?` | `.agents/references/planning.md`, `docs/DESIGN.md`, `.agents/templates/plan-template.md` |
+| Implementation | `Spec` → `Code` → `Docs` → `Run` → `Replan?` → `Self-Review` → `Code Review` → `Security Review?` → `Commit` → `Handoff` | `.agents/references/execution.md`, `.agents/references/documentation.md`, `.agents/references/code-style.md`, `.agents/references/workflow.md` |
+| Testing | `Plan-Tests` → `Author-Tests` → `Run` → `Diagnose?` → `Fix?` → `Re-run` → `Record` | `.agents/references/testing.md`, `.agents/references/troubleshooting.md` |
+| Review | `Self-Review` → `Code Review` → `Security Review?` → `Docs Review?` → `Decide` | `.agents/references/reviews.md` |
+| Integration | `Re-validate` → `Resolve-Conflicts?` → `Merge` → `Post-Merge-Verify` | `.agents/references/workflow.md`, `AGENTS.md` |
+| Release | `Gate` → `Tag` → `Notes` → `Publish` → `Post-Release-Cleanup` | `.agents/references/releases.md`, `CHANGELOG.md` |
 | Deployment | `Stage` → `Smoke` → `Promote` → `Verify` → `Rollback?` | none yet (gap) |
 | Operations | `Observe` → `Triage` → `Hotfix?` → `Patch?` → `Backport?` → `Deprecate?` | partial: `CHANGELOG.md`, `ROADMAP.md` |
-| Continuous improvement | `Retrospect` → `Capture-Learning` → `Refactor?` → `Tech-Debt-Plan?` → `Sync` | `ai/LEARNINGS.md`, `ROADMAP.md` |
-| Closed | none | `ai/PLANNING.md`, `ai/archive/` |
+| Continuous improvement | `Retrospect` → `Capture-Learning` → `Refactor?` → `Tech-Debt-Plan?` → `Sync` | `.agents/references/LEARNINGS.md`, `ROADMAP.md` |
+| Closed | none | `.agents/references/planning.md`, `.agents/archive/` |
 
-The `Implementation` row deliberately includes review and validation phase activities because the existing milestone loop in `ai/EXECUTION.md` interleaves them. Do not split that loop apart on the basis of this table; the table is descriptive.
+The `Implementation` row deliberately includes review and validation phase activities because the existing milestone loop in `.agents/references/execution.md` interleaves them. Do not split that loop apart on the basis of this table; the table is descriptive.
 
 ## Loops
 
@@ -151,53 +151,53 @@ Outer Product Loop                              [per release]
 
 - Phase Activities: `Sync` (roadmap) → planning → implementation → release → `Retrospect` → `Capture-Learning` → `Sync` (roadmap).
 - Cadence: per release.
-- Owner: `ROADMAP.md` plus `ai/RELEASES.md` and `ai/LEARNINGS.md`.
+- Owner: `ROADMAP.md` plus `.agents/references/releases.md` and `.agents/references/LEARNINGS.md`.
 - Exit: a release ships and its outcomes feed the next intake.
 
 ### 2. Plan Loop
 
 - Phase Activities: `Frame` → `Design` → `Spec` → `Decompose` → `Validate-Plan` → `Replan?` → `Validate-Plan`.
 - Cadence: per plan, until decision-complete.
-- Owner: `ai/PLANNING.md`.
+- Owner: `.agents/references/planning.md`.
 - Exit: plan reaches `Status=Ready`.
 
 ### 3. Milestone Execution Loop
 
-- Phase Activities: the existing numbered loop in `ai/EXECUTION.md` Common Milestone Loop, expressed as `Spec` → `Code` → `Docs` → `Run` → `Replan?` → `Self-Review` → `Code Review` → `Security Review?` → `Commit` → `Handoff`.
+- Phase Activities: the existing numbered loop in `.agents/references/execution.md` Common Milestone Loop, expressed as `Spec` → `Code` → `Docs` → `Run` → `Replan?` → `Self-Review` → `Code Review` → `Security Review?` → `Commit` → `Handoff`.
 - Cadence: per milestone within an approved plan.
-- Owner: `ai/EXECUTION.md`.
+- Owner: `.agents/references/execution.md`.
 - Exit: milestone commit lands and tracking artifacts are updated.
 
 ### 4. Red-Green Loop
 
 - Phase Activities: `Run` → `Diagnose` → `Fix` → `Re-run`.
 - Cadence: per failing validation, inside a milestone.
-- Owner: `ai/TESTING.md`, with `ai/references/TROUBLESHOOTING.md` loaded on demand.
+- Owner: `.agents/references/testing.md`, with `.agents/references/troubleshooting.md` loaded on demand.
 - Exit: previously failing validation passes; if it cannot pass, exit through `Replan?`.
 
 ### 5. Review Loop
 
 - Phase Activities: `Self-Review` → `Code Review` → `Security Review?` → `Docs Review?` → `Decide` → loop back to `Code` or `Run` if changes are requested.
 - Cadence: per diff before merge.
-- Owner: `ai/REVIEWS.md`.
+- Owner: `.agents/references/reviews.md`.
 - Exit: an `Approve` decision; otherwise re-enter the milestone loop.
 
 ### 6. Operate-and-Improve Loop
 
 - Phase Activities: `Observe` → `Triage` → (`Hotfix?` or `Patch?`) → `Capture-Learning` → `Sync`.
 - Cadence: continuous, post-release.
-- Owner: gap. Currently scattered across `ai/LEARNINGS.md`, `ROADMAP.md`, and `CHANGELOG.md`.
+- Owner: gap. Currently scattered across `.agents/references/LEARNINGS.md`, `ROADMAP.md`, and `CHANGELOG.md`.
 - Exit: the signal is resolved or scheduled as planned work.
 
 ## Cross-Cutting Triggers
 
 These triggers can fire from any phase and force a switch.
 
-- `Replan` — execution-time gap, contradicted locked decision, or scope drift. Owner: `ai/PLANNING.md`.
-- `Security Review` — change touches an item in the `ai/REVIEWS.md` security triggers list.
-- `Sync` — any change that affects active-work tracking or contract artifacts. Owner: `ROADMAP.md`, `ai/DOCUMENTATION.md`.
-- `Capture-Learning` — recurring repo-wide lesson surfaces. Owner: `ai/LEARNINGS.md`.
-- `Docs-Routing` — any artifact touch that changes a contract or maintainer-facing document. Owner: `ai/DOCUMENTATION.md`.
+- `Replan` — execution-time gap, contradicted locked decision, or scope drift. Owner: `.agents/references/planning.md`.
+- `Security Review` — change touches an item in the `.agents/references/reviews.md` security triggers list.
+- `Sync` — any change that affects active-work tracking or contract artifacts. Owner: `ROADMAP.md`, `.agents/references/documentation.md`.
+- `Capture-Learning` — recurring repo-wide lesson surfaces. Owner: `.agents/references/LEARNINGS.md`.
+- `Docs-Routing` — any artifact touch that changes a contract or maintainer-facing document. Owner: `.agents/references/documentation.md`.
 - `Context-Hygiene` — fires between any two phase activities; agent must drop the prior activity's working set before loading the next. Owner: `AGENTS.md`.
 
 ## Adoption Guidance For Owner Guides
@@ -221,24 +221,24 @@ When this spec changes:
 Items the phase activity sequence exposes that this repository does not yet cover. None of these block adoption of the spec; they are recorded so future planning can address them.
 
 - no AI owner guide for `Deployment` or `Operations` phase activities; `infra/` and `src/externalTest/` exist but are not bound to phase activities
-- the `Red-Green Loop` is not named in `ai/TESTING.md`, even though it is where most validation work happens
-- the `Outer Product Loop` is not summarized in any single guide; readers must compose it from `ROADMAP.md`, `ai/RELEASES.md`, and `ai/LEARNINGS.md`
-- the `Review Loop` exit back into the milestone loop is implicit in `ai/REVIEWS.md` and `ai/EXECUTION.md`
+- the `Red-Green Loop` is not named in `.agents/references/testing.md`, even though it is where most validation work happens
+- the `Outer Product Loop` is not summarized in any single guide; readers must compose it from `ROADMAP.md`, `.agents/references/releases.md`, and `.agents/references/LEARNINGS.md`
+- the `Review Loop` exit back into the milestone loop is implicit in `.agents/references/reviews.md` and `.agents/references/execution.md`
 
 ## Non-Goals
 
 - this file does not change any policy
 - this file does not define new validation, review, or release rules
 - this file does not introduce a new `Phase` value
-- this file does not replace the workflow mechanics in `ai/WORKFLOW.md`
-- this file is not a plan and must not be moved under `ai/plans/PLAN_*.md`
+- this file does not replace the workflow mechanics in `.agents/references/workflow.md`
+- this file is not a plan and must not be moved under `.agents/plans/PLAN_*.md`
 
 ## Cross-References
 
 - `AGENTS.md` for the phase owner map and `Context Hygiene` rule
-- `ai/PLANNING.md` and `ai/references/PLAN_DETAILED_GUIDE.md` for the `Phase` and `Status` enums
-- `ai/EXECUTION.md` for the canonical milestone loop
-- `ai/TESTING.md` and `ai/references/TROUBLESHOOTING.md` for the validation and red-green details
-- `ai/REVIEWS.md` for review priorities and security triggers
-- `ai/RELEASES.md` for release phase activities
-- `ai/WORKFLOW.md` for execution shapes that constrain who owns which artifact during a loop
+- `.agents/references/planning.md` and `.agents/references/plan-detailed-guide.md` for the `Phase` and `Status` enums
+- `.agents/references/execution.md` for the canonical milestone loop
+- `.agents/references/testing.md` and `.agents/references/troubleshooting.md` for the validation and red-green details
+- `.agents/references/reviews.md` for review priorities and security triggers
+- `.agents/references/releases.md` for release phase activities
+- `.agents/references/workflow.md` for execution shapes that constrain who owns which artifact during a loop

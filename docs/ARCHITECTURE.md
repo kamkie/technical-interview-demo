@@ -1,7 +1,7 @@
 # Architecture Guide
 
 `docs/ARCHITECTURE.md` is the compact shared architecture map for `technical-interview-demo`.
-The detailed architecture reference lives on demand in `ai/references/ARCHITECTURE_DETAILED_MAP.md`.
+The detailed architecture reference lives on demand in `.agents/references/architecture-detailed-map.md`.
 This file owns package shape, feature ownership, and structural guidance.
 
 This file is descriptive, not authoritative.
@@ -60,8 +60,8 @@ Each feature package should keep its controller, service, repository, entities, 
 - Infrastructure assets live under `infra/`.
 - Build and security policy files live under `tooling/`.
 - Setup and tool walkthroughs live in `SETUP.md`, not architecture notes.
-- Contract and documentation routing lives in `ai/DOCUMENTATION.md`.
-- Validation expectations live in `ai/TESTING.md`.
+- Contract and documentation routing lives in `.agents/references/documentation.md`.
+- Validation expectations live in `.agents/references/testing.md`.
 
 ## API Shape
 

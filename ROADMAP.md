@@ -12,14 +12,14 @@ Released history belongs in `CHANGELOG.md`.
 | Breaking Change Policy | Disallowed |
 | Next Target Version | `v2.0.0` |
 | Stable Release Gate | Manual regression pass on the final release candidate, currently `v2.0.0-RC6` |
-| Immediate Next Action | Execute `ai/plans/PLAN_manual_regression_execution.md` against `v2.0.0-RC6` |
+| Immediate Next Action | Execute `.agents/plans/PLAN_manual_regression_execution.md` against `v2.0.0-RC6` |
 
 ## Roadmap Rules
 
 - Keep only active, planned, selected, or intentionally deferred work here.
 - Use `Status` values instead of checkbox semantics.
 - Remove work once it is released, intentionally dropped, or no longer active.
-- Keep detailed milestones, validation notes, and implementation history in `ai/plans/PLAN_*.md`, not in this file.
+- Keep detailed milestones, validation notes, and implementation history in `.agents/plans/PLAN_*.md`, not in this file.
 
 | Status | Meaning |
 | --- | --- |
@@ -38,8 +38,8 @@ Goal: use manual regression coverage as the RC-to-stable gate, then finish the s
 
 | Order | Status | Workstream | Plan Or Artifact | Exit Criteria |
 | --- | --- | --- | --- | --- |
-| 1 | In Progress | Manual regression gate for the final `2.0` release candidate | `ai/plans/PLAN_manual_regression_execution.md` | Harness has landed; manual business-functionality regression still needs to run against final RC `v2.0.0-RC6`; if another RC is cut first, the plan is replanned to that RC |
-| 2 | Selected | Repository knowledge layout migration for the next RC | `ai/plans/PLAN_repository_knowledge_layout_migration.md` | Durable repository knowledge follows the `docs/` plus `.agents/` layout; if this lands before stable, cut the next RC, expected `v2.0.0-RC7` |
+| 1 | In Progress | Manual regression gate for the final `2.0` release candidate | `.agents/plans/PLAN_manual_regression_execution.md` | Harness has landed; manual business-functionality regression still needs to run against final RC `v2.0.0-RC6`; if another RC is cut first, the plan is replanned to that RC |
+| 2 | Selected | Repository knowledge layout migration for the next RC | `.agents/plans/PLAN_repository_knowledge_layout_migration.md` | Durable repository knowledge follows the `docs/` plus `.agents/` layout; if this lands before stable, cut the next RC, expected `v2.0.0-RC7` |
 | 3 | Planned | Stable `v2.0.0` release | `CHANGELOG.md`, `ROADMAP.md`, release artifacts | Stable `v2.0.0` is released after the final accepted RC, changelog and roadmap are updated, and the completed `2.0` track is removed from this file |
 
 ## Planned Work
@@ -48,8 +48,8 @@ Use this section for plan-backed work that is ready but not selected as the imme
 
 | Status | Workstream | Plan Or Artifact | Notes |
 | --- | --- | --- | --- |
-| Implemented | Repo task skill migration | `ai/plans/PLAN_repo_task_skill_migration.md` | Replaced the former `ai/TASK_LIBRARY.md` catalog with the low-context `repo-task` skill; release cleanup can remove this active roadmap row when the AI-guidance changes are released |
-| Implemented | AI guidance execution and reusable task library restructure | `ai/plans/PLAN_ai_guidance_execution_prompt_library_restructure.md` | Implementation and final validation are complete; release cleanup can remove this active roadmap row when the AI-guidance changes are released |
+| Implemented | Repo task skill migration | `.agents/plans/PLAN_repo_task_skill_migration.md` | Replaced the former reusable-task catalog with the low-context `repo-task` skill; release cleanup can remove this active roadmap row when the AI-guidance changes are released |
+| Implemented | AI guidance execution and reusable task library restructure | `.agents/plans/PLAN_ai_guidance_execution_prompt_library_restructure.md` | Implementation and final validation are complete; release cleanup can remove this active roadmap row when the AI-guidance changes are released |
 
 ## Intake
 

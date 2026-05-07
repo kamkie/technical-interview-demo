@@ -42,23 +42,23 @@ Use these files when you want to work with AI in this repository or understand w
 - [WORKING_WITH_AI.md](WORKING_WITH_AI.md): human-facing guide for using AI across discovery, planning, implementation, verification, and release
 - [AGENTS.md](AGENTS.md): repository-local AI rules, spec priority, required contract updates, and definition of done
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): compact codebase map, package boundaries, feature ownership, and current API shape
-- [ai/CODE_STYLE.md](ai/CODE_STYLE.md): repo-local code style and change-shaping guidance
+- [.agents/references/code-style.md](.agents/references/code-style.md): repo-local code style and change-shaping guidance
 - [docs/DESIGN.md](docs/DESIGN.md): product intent, tradeoffs, and non-goals
-- [ai/DOCUMENTATION.md](ai/DOCUMENTATION.md): documentation ownership and when to update which docs
-- [ai/ENVIRONMENT_QUICK_REF.md](ai/ENVIRONMENT_QUICK_REF.md): AI shortcut for local Gradle wrapper commands
-- [ai/PLAN_EXECUTION.md](ai/PLAN_EXECUTION.md): how AI should execute a whole active plan across milestones
-- [ai/EXECUTION.md](ai/EXECUTION.md): how AI should execute ad hoc tasks or one plan milestone
-- [ai/LEARNINGS.md](ai/LEARNINGS.md): durable engineering lessons worth carrying through refactors
-- [ai/PLANNING.md](ai/PLANNING.md): compact guide for creating or revising execution plans
-- [ai/TASK_LIBRARY.md](ai/TASK_LIBRARY.md): reusable task catalog with task titles, placeholders, and task text
-- `ai/skills/`: repo-local skills
-- [ai/REVIEWS.md](ai/REVIEWS.md): code-review and security-review guidance
-- [ai/RELEASES.md](ai/RELEASES.md): release-preparation and release workflow guidance
-- [ai/TESTING.md](ai/TESTING.md): validation rules and change-sensitive checks
-- [ai/WORKFLOW.md](ai/WORKFLOW.md): branch, worktree, delegation, worker-log, integration, and remote-handoff mechanics
-- `ai/plans/PLAN_*.md`: task-specific execution plans for active work
-- `ai/references/` and `ai/templates/`: on-demand detailed references and templates
-- `ai/archive/`: archived plan files for completed or released work
+- [.agents/references/documentation.md](.agents/references/documentation.md): documentation ownership and when to update which docs
+- [.agents/references/environment-quick-ref.md](.agents/references/environment-quick-ref.md): AI shortcut for local Gradle wrapper commands
+- [.agents/references/plan-execution.md](.agents/references/plan-execution.md): how AI should execute a whole active plan across milestones
+- [.agents/references/execution.md](.agents/references/execution.md): how AI should execute ad hoc tasks or one plan milestone
+- [.agents/references/LEARNINGS.md](.agents/references/LEARNINGS.md): durable engineering lessons worth carrying through refactors
+- [.agents/references/planning.md](.agents/references/planning.md): compact guide for creating or revising execution plans
+- [.agents/skills/repo-task/](.agents/skills/repo-task/): reusable task starters with task titles, placeholders, and task text
+- `.agents/skills/`: repo-local skills
+- [.agents/references/reviews.md](.agents/references/reviews.md): code-review and security-review guidance
+- [.agents/references/releases.md](.agents/references/releases.md): release-preparation and release workflow guidance
+- [.agents/references/testing.md](.agents/references/testing.md): validation rules and change-sensitive checks
+- [.agents/references/workflow.md](.agents/references/workflow.md): branch, worktree, delegation, worker-log, integration, and remote-handoff mechanics
+- `.agents/plans/PLAN_*.md`: task-specific execution plans for active work
+- `.agents/references/` and `.agents/templates/`: on-demand detailed references and templates
+- `.agents/archive/`: archived plan files for completed or released work
 
 ## Notes
 

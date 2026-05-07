@@ -1,6 +1,6 @@
 # AI Project Instructions
 
-`README.md` is the human-facing counterpart of this file. `SETUP.md` is the environment and onboarding guide. The `ai/` directory contains AI-facing support documents. Keep these sources aligned when their scopes overlap, but do not duplicate setup/runbook detail from `SETUP.md` here.
+`README.md` is the human-facing counterpart of this file. `SETUP.md` is the environment and onboarding guide. The `docs/` directory contains shared project knowledge, and `.agents/` contains Codex-specific support documents. Keep these sources aligned when their scopes overlap, but do not duplicate setup/runbook detail from `SETUP.md` here.
 
 ## Role Of This File
 
@@ -54,7 +54,7 @@ Use these artifacts deliberately:
 - `SETUP.md`: local environment, tooling, onboarding, and troubleshooting
 - `.agents/references/repository-knowledge-spec.md`: repository knowledge layout and file ownership
 
-The `ai/` documents are guidance and planning aids. They are not higher-priority truth than executable specs, published contract docs, or the human-facing artifact that owns the topic.
+The `docs/` and `.agents/` guidance files are planning aids. They are not higher-priority truth than executable specs, published contract docs, or the human-facing artifact that owns the topic.
 
 ## Agent Onboarding Quick Start
 
@@ -65,8 +65,8 @@ If you are a new agent entering this repository, follow these steps to ground yo
 3. **Open `SETUP.md` only when needed** for setup, local tooling, Docker, or troubleshooting detail.
 4. **Identify the current task's lifecycle phase** (Discovery, Planning, Implementation, Testing, Review, Integration, Release).
 5. **Load the relevant owner guide** from the phase owner map below.
-6. **Locate or create a task plan** (`ai/plans/PLAN_*.md`) when the current workflow requires planned execution.
-7. **Run a targeted relevance scan** using task terms against `ai/LEARNINGS.md` and active `ai/plans/PLAN_*.md` files, then open only matches that overlap the current task.
+6. **Locate or create a task plan** (`.agents/plans/PLAN_*.md`) when the current workflow requires planned execution.
+7. **Run a targeted relevance scan** using task terms against `.agents/references/LEARNINGS.md` and active `.agents/plans/PLAN_*.md` files, then open only matches that overlap the current task.
 
 ## Phase Owner Map
 
@@ -75,50 +75,50 @@ Task titles, skills, templates, and deep references stay on demand until directl
 
 | Phase | Primary owner guides |
 | --- | --- |
-| Discovery or roadmap intake | `ROADMAP.md` and `ai/PLANNING.md`; add `README.md` or conditional descriptive guides only when the request needs product, contract, design, or structure framing |
-| Planning | `ai/PLANNING.md`, the relevant specs or source artifacts, and `ROADMAP.md` for active-work tracking |
-| Whole-plan implementation | `ai/PLAN_EXECUTION.md`, the target `ai/plans/PLAN_*.md`, and the owner guides for files being changed; keep descriptive guides conditional |
-| Ad hoc task or one-milestone implementation | `ai/EXECUTION.md`, the user request or target milestone, and the owner guides for files being changed; keep descriptive guides conditional |
-| Workflow, delegation, or integration | `ai/WORKFLOW.md`; load detailed workflow references only after the work shape requires delegation, worktrees, or multi-plan coordination |
-| Testing or review | `ai/TESTING.md`, `ai/REVIEWS.md`, and `ai/DOCUMENTATION.md` when artifact routing or contract impact is part of the check; keep descriptive guides conditional |
-| Release | `ai/RELEASES.md` only after the implementation state is integrated and release work is explicitly in scope |
-| Task-skill, skill, or template maintenance | `.agents/skills/repo-task/references/spec.md`, the relevant `ai/skills/` guide, or the specific template or task file being changed |
+| Discovery or roadmap intake | `ROADMAP.md` and `.agents/references/planning.md`; add `README.md` or conditional descriptive guides only when the request needs product, contract, design, or structure framing |
+| Planning | `.agents/references/planning.md`, the relevant specs or source artifacts, and `ROADMAP.md` for active-work tracking |
+| Whole-plan implementation | `.agents/references/plan-execution.md`, the target `.agents/plans/PLAN_*.md`, and the owner guides for files being changed; keep descriptive guides conditional |
+| Ad hoc task or one-milestone implementation | `.agents/references/execution.md`, the user request or target milestone, and the owner guides for files being changed; keep descriptive guides conditional |
+| Workflow, delegation, or integration | `.agents/references/workflow.md`; load detailed workflow references only after the work shape requires delegation, worktrees, or multi-plan coordination |
+| Testing or review | `.agents/references/testing.md`, `.agents/references/reviews.md`, and `.agents/references/documentation.md` when artifact routing or contract impact is part of the check; keep descriptive guides conditional |
+| Release | `.agents/references/releases.md` only after the implementation state is integrated and release work is explicitly in scope |
+| Task-skill, skill, or template maintenance | `.agents/skills/repo-task/references/spec.md`, the relevant `.agents/skills/` guide, or the specific template or task file being changed |
 
 Conditional descriptive guide triggers:
 
 - load `docs/ARCHITECTURE.md` only for structural code reading, architecture-sensitive changes, or package ownership questions
 - load `docs/DESIGN.md` only when user-visible behavior, supported scope, security posture, or roadmap tradeoffs are touched
-- load `ai/LEARNINGS.md` only from the targeted relevance scan or a known recurring repo lesson
+- load `.agents/references/LEARNINGS.md` only from the targeted relevance scan or a known recurring repo lesson
 
 ## AI Document Set
 
-The `ai/` directory is the AI-facing working set for non-contract repository knowledge.
+The `.agents/` directory is the Codex-specific working set for non-contract repository knowledge.
 
 Use these files deliberately:
 
 - `docs/ARCHITECTURE.md`: compact descriptive repository snapshot, codebase map, package responsibilities, and structural guidance
-- `ai/CODE_STYLE.md`: AI-facing code-style and change-shaping guidance for repo edits
+- `.agents/references/code-style.md`: AI-facing code-style and change-shaping guidance for repo edits
 - `docs/DESIGN.md`: intended design direction, product tradeoffs, and open design decisions
-- `ai/DOCUMENTATION.md`: AI-facing documentation ownership and update guidance
-- `ai/ENVIRONMENT_QUICK_REF.md`: AI-facing command wrapper reference for local Gradle execution
-- `ai/PLAN_EXECUTION.md`: AI-facing workflow for executing a whole active plan across milestones
-- `ai/EXECUTION.md`: AI-facing workflow for ad hoc tasks and individual plan milestones
-- `ai/LEARNINGS.md`: durable repo-wide engineering lessons that should survive refactors
-- `ai/PLANNING.md`: compact instructions for producing execution plans
-- `ai/plans/PLAN_*.md`: task-specific execution plans and milestone breakdowns
+- `.agents/references/documentation.md`: AI-facing documentation ownership and update guidance
+- `.agents/references/environment-quick-ref.md`: AI-facing command wrapper reference for local Gradle execution
+- `.agents/references/plan-execution.md`: AI-facing workflow for executing a whole active plan across milestones
+- `.agents/references/execution.md`: AI-facing workflow for ad hoc tasks and individual plan milestones
+- `.agents/references/LEARNINGS.md`: durable repo-wide engineering lessons that should survive refactors
+- `.agents/references/planning.md`: compact instructions for producing execution plans
+- `.agents/plans/PLAN_*.md`: task-specific execution plans and milestone breakdowns
 - `.agents/skills/repo-task/`: repository-local reusable task skill whose task reference files act as reusable commands; `references/spec.md` owns the dispatcher, index, and task schema
-- `ai/REVIEWS.md`: AI-facing code-review and security-review guidance
-- `ai/RELEASES.md`: AI-facing release workflow for intentional post-implementation releases
-- `ai/TESTING.md`: AI-facing testing and validation guidance
-- `ai/WORKFLOW.md`: compact AI-facing owner for branch, worktree, delegation, worker-log, integration, and remote-handoff mechanics
-- `ai/references/WORKFLOW_DELEGATED_PLAN.md`: on-demand detailed mechanics for splitting one active plan into worker-owned slices
-- `ai/references/WORKFLOW_COORDINATED_PLANS.md`: on-demand detailed mechanics for coordinating multiple active plans
-- `ai/references/`: other on-demand detailed references that should not be part of the default read set
-- `ai/templates/`: on-demand templates for creating new AI artifacts
-- `ai/skills/`: on-demand repo-local workflow skills; read a skill's `SKILL.md` only when that skill is invoked or clearly applies
+- `.agents/references/reviews.md`: AI-facing code-review and security-review guidance
+- `.agents/references/releases.md`: AI-facing release workflow for intentional post-implementation releases
+- `.agents/references/testing.md`: AI-facing testing and validation guidance
+- `.agents/references/workflow.md`: compact AI-facing owner for branch, worktree, delegation, worker-log, integration, and remote-handoff mechanics
+- `.agents/references/workflow-delegated-plan.md`: on-demand detailed mechanics for splitting one active plan into worker-owned slices
+- `.agents/references/workflow-coordinated-plans.md`: on-demand detailed mechanics for coordinating multiple active plans
+- `.agents/references/`: other on-demand detailed references that should not be part of the default read set
+- `.agents/templates/`: on-demand templates for creating new AI artifacts
+- `.agents/skills/`: on-demand repo-local workflow skills; read a skill's `SKILL.md` only when that skill is invoked or clearly applies
 - `.agents/references/repository-knowledge-spec.md`: repository knowledge layout and file ownership spec; read before adding or moving repository knowledge files
 - `.agents/plugins/marketplace.json`: Codex repo-scoped plugin marketplace configuration, only if this repository later promotes a reusable workflow to an installable Codex plugin
-- `ai/archive/`: archived AI execution plans and historical report-like analysis artifacts; read only for historical investigation
+- `.agents/archive/`: archived AI execution plans and historical report-like analysis artifacts; read only for historical investigation
 
 ## AI Instruction Load Policy
 
@@ -126,10 +126,10 @@ Load AI guidance on demand:
 
 - read `AGENTS.md` first
 - read only the owning AI guide for the current task
-- read active `ai/plans/PLAN_*.md` files only when planning, executing, verifying, or releasing that plan
+- read active `.agents/plans/PLAN_*.md` files only when planning, executing, verifying, or releasing that plan
 - use task-specific search terms for the onboarding relevance scan; do not read every active plan, archived plan or report, task section, reference, template, or skill as a pre-flight default
 - read task files under `.agents/skills/repo-task/references/tasks/`, templates, detailed references, skill files, and archived plans or reports only when the task specifically needs them
-- do not bulk-load `ai/archive/`, `ai/references/`, `ai/templates/`, or skill reference material as standing context
+- do not bulk-load `.agents/archive/`, `.agents/references/`, `.agents/templates/`, or skill reference material as standing context
 
 ### Context Hygiene
 
@@ -139,28 +139,28 @@ Maintain a clean working context to optimize performance and prevent hallucinati
 - **Avoid deep-file bulk loading**: Prefer targeted searches and structure checks over opening every file in a package.
 - **Summarize complex state**: If a long investigation concludes, summarize the findings and use that summary as the new grounding instead of re-reading the raw logs.
 - **Checkpoint degraded context quality**: If contradiction, unstable assumptions, unjustified hedging, or repeated re-derivation appears, write a short current-state summary before continuing. Put it in the active plan, worker log, or validation notes when such an artifact exists; otherwise use a concise user update or final note.
-- **Close completed plans**: When a task is done, the plan moves to `ai/archive/` and should be removed from the active read set.
+- **Close completed plans**: When a task is done, the plan moves to `.agents/archive/` and should be removed from the active read set.
 
 ### AI Document Maintenance
 
-Detailed AI-document maintenance rules live in `ai/DOCUMENTATION.md`. Load that guide before changing `AGENTS.md`, top-level `ai/*.md`, task-skill files, templates, skills, references, or archived plans or reports.
+Detailed AI-document maintenance rules live in `.agents/references/documentation.md`. Load that guide before changing `AGENTS.md`, `.agents/references/*.md`, task-skill files, templates, skills, references, or archived plans or reports.
 
 ## Required Updates By Change Type
 
-Detailed artifact routing lives in `ai/DOCUMENTATION.md`.
+Detailed artifact routing lives in `.agents/references/documentation.md`.
 
 High-level rules:
 
 - public behavior changes must update the governing specs, implementation, and published contract artifacts together
 - internal refactors should preserve existing specs without contract churn
-- setup and environment changes route to `SETUP.md` and, when AI command guidance changes, `ai/ENVIRONMENT_QUICK_REF.md`
+- setup and environment changes route to `SETUP.md` and, when AI command guidance changes, `.agents/references/environment-quick-ref.md`
 - roadmap changes route to `ROADMAP.md`; released history belongs in `CHANGELOG.md`
-- durable AI guidance changes route to the owning `ai/` guide; update `AGENTS.md` only when repo-level AI rules or document ownership changes
+- durable AI guidance changes route to the owning `.agents/references/` guide; update `AGENTS.md` only when repo-level AI rules or document ownership changes
 
 ## Architecture Constraints
 
 `docs/ARCHITECTURE.md` owns the compact descriptive repository snapshot, codebase map, current API shape, and structural guidance for this repository.
-Use `ai/references/ARCHITECTURE_DETAILED_MAP.md` only when the compact map is not enough.
+Use `.agents/references/architecture-detailed-map.md` only when the compact map is not enough.
 
 When making architecture-sensitive changes:
 
@@ -171,14 +171,14 @@ When making architecture-sensitive changes:
 ## Local Environment And Command Execution
 
 Use `SETUP.md` for setup walkthroughs and troubleshooting.
-Use `ai/ENVIRONMENT_QUICK_REF.md` for the AI-facing Gradle wrapper reference.
+Use `.agents/references/environment-quick-ref.md` for the AI-facing Gradle wrapper reference.
 
 Prefer `./build.ps1` through PowerShell for local and CI Gradle commands.
-Use `ai/ENVIRONMENT_QUICK_REF.md` for wrapper behavior and avoid adding setup boilerplate to plans or task starters unless wrapper troubleshooting is in scope.
+Use `.agents/references/environment-quick-ref.md` for wrapper behavior and avoid adding setup boilerplate to plans or task starters unless wrapper troubleshooting is in scope.
 
 ## Branch And Worktree Expectations
 
-`ai/WORKFLOW.md` owns common branch, worktree, coordinator, worker, and integration rules; the on-demand workflow references own detailed delegated-work mechanics.
+`.agents/references/workflow.md` owns common branch, worktree, coordinator, worker, and integration rules; the on-demand workflow references own detailed delegated-work mechanics.
 
 Repo-level invariants:
 
@@ -190,20 +190,20 @@ Repo-level invariants:
 
 ## Delegated Agents And Skill Wrappers
 
-`ai/WORKFLOW.md` owns delegation mechanics, worker capability expectations, and integration rules; load the matching workflow reference only when the work shape requires it.
+`.agents/references/workflow.md` owns delegation mechanics, worker capability expectations, and integration rules; load the matching workflow reference only when the work shape requires it.
 
 Specialized agents and repo-local skills may accelerate repeatable tasks when available and when the task clearly matches their scope.
 Treat skills as workflow helpers that point back to the owner guides, not as higher-priority policy.
-Read `ai/skills/<skill>/SKILL.md` only when that skill is invoked or clearly applies.
+Read `.agents/skills/<skill>/SKILL.md` only when that skill is invoked or clearly applies.
 Use `.agents/skills/repo-task/` for this repository's task starter dispatcher. Use `.agents/plugins/marketplace.json` only for Codex plugin marketplace configuration; Codex skills that need distribution belong inside a plugin bundle, for example `plugins/<plugin-name>/skills/<skill-name>/SKILL.md`.
 
 ## Verification Rules
 
-Verification rules and validation commands are owned by `ai/TESTING.md`.
+Verification rules and validation commands are owned by `.agents/references/testing.md`.
 
 ## Versioning And Releases
 
-Release versioning, tagging, and post-release cleanup rules are owned by `ai/RELEASES.md`.
+Release versioning, tagging, and post-release cleanup rules are owned by `.agents/references/releases.md`.
 
 ## Definition Of Done
 
@@ -213,4 +213,4 @@ A change is complete when:
 - implementation and specs agree
 - public contract artifacts are updated when behavior changed
 - if the work was done in a git worktree or non-`main` branch, the finished branch has been pushed and a pull request is open or already merged onto `main`
-- the required validation from `ai/TESTING.md` passes, normally `./build.ps1 build`
+- the required validation from `.agents/references/testing.md` passes, normally `./build.ps1 build`

@@ -4,23 +4,23 @@ Category: Lifecycle And Maintenance
 Slug: `evaluate-ai-guidelines`
 Placeholders: none
 
-Evaluate and grade the current repository AI guideline set, then write a timestamped archived evaluation snapshot under `ai/archive/reports/`.
+Evaluate and grade the current repository AI guideline set, then write a timestamped archived evaluation snapshot under `.agents/reports/`.
 
 Use this as an evaluation and reporting task, not as an implementation request for the recommendations it discovers.
 
 #### Scope
 
-- Read `AGENTS.md`, `ai/DOCUMENTATION.md`, `.agents/skills/repo-task/references/spec.md`, `.agents/skills/repo-task/references/index.md`, and standing top-level owner guides under `ai/`.
-- Exclude active `ai/plans/PLAN_*.md` files from the standing-guide baseline, but inspect active plans when they are relevant to lifecycle state, roadmap cleanup, or stale-reference checks.
+- Read `AGENTS.md`, `.agents/references/documentation.md`, `.agents/skills/repo-task/references/spec.md`, `.agents/skills/repo-task/references/index.md`, and standing owner guides under `.agents/references/`.
+- Exclude active `.agents/plans/PLAN_*.md` files from the standing-guide baseline, but inspect active plans when they are relevant to lifecycle state, roadmap cleanup, or stale-reference checks.
 - Read representative large task files under `.agents/skills/repo-task/references/tasks/` when checking task-policy drift.
 - Read on-demand references only when a standing guide points to them, when the latest archived evaluation report names them, or when a targeted search finds a likely stale reference.
-- Do not bulk-load `ai/archive/` unless the evaluation specifically needs historical context.
+- Do not bulk-load `.agents/archive/` unless the evaluation specifically needs historical context.
 
 #### Evaluation Tasks
 
 1. Recompute current standing guidance sizes:
    - `AGENTS.md`
-   - top-level `ai/*.md` owner guides excluding active `ai/plans/PLAN_*.md`
+   - standing `.agents/references/*.md` owner guides excluding active `.agents/plans/PLAN_*.md`
    - key on-demand references that affect practical load, such as workflow and release references
 2. Recompute practical read-set estimates:
    - standing root plus top-level owner guides
@@ -43,14 +43,14 @@ Use this as an evaluation and reporting task, not as an implementation request f
    - retired file names or moved guide references
    - old workflow terminology outside intentional historical notes
    - task files growing into standing policy dumps
-   - repeated artifact-routing rules outside `ai/DOCUMENTATION.md`
+   - repeated artifact-routing rules outside `.agents/references/documentation.md`
    - release, workflow, validation, and planning mechanics duplicated across owners
-5. Compare the current state to the latest matching archived AI-guideline evaluation under `ai/archive/reports/`, when one exists.
+5. Compare the current state to the latest matching archived AI-guideline evaluation under `.agents/reports/`, when one exists.
 6. Write the report so it describes current repository truth, not the state at the previous evaluation.
 
 #### Report Requirements
 
-Create or refresh a same-day report at `ai/archive/reports/AI_GUIDELINES_EVALUATION_<YYYY-MM-DD>.md` with:
+Create or refresh a same-day report at `.agents/reports/AI_GUIDELINES_EVALUATION_<YYYY-MM-DD>.md` with:
 
 - evaluation date
 - overall grade
@@ -64,14 +64,14 @@ Create or refresh a same-day report at `ai/archive/reports/AI_GUIDELINES_EVALUAT
 - obsolete recommendations that should not be repeated
 - ranked follow-up recommendations
 
-Keep the report on demand. Do not move the report into `ai/references/` or a standing top-level guide.
+Keep the report on demand. Do not move the report into `.agents/references/` or a standing top-level guide.
 
 #### Guardrails
 
 - Do not implement follow-up compaction recommendations unless the user explicitly asks for implementation.
 - If a concrete active-guidance contradiction makes the report inaccurate, fix only the narrow contradiction needed for report accuracy or stop and explain the blocker.
-- Keep standing policy in the owning guide named by `ai/DOCUMENTATION.md`; do not copy full policy into the report.
-- Keep archived content historical. Do not rewrite `ai/archive/` just to remove old terminology.
+- Keep standing policy in the owning guide named by `.agents/references/documentation.md`; do not copy full policy into the report.
+- Keep archived content historical. Do not rewrite `.agents/archive/` just to remove old terminology.
 - Update `CHANGELOG.md` under `## [Unreleased]` when a tracked archived report is created or refreshed.
 
 #### Validation
