@@ -12,6 +12,7 @@
 
 @baseUrl = http://localhost:8080
 @oauthProvider = github
+@csrfToken = not-captured-run-setup-first
 #@sessionCookie = paste-technical-interview-demo-session-here
 # csrfToken is captured automatically by the authenticated GET /api/session request below.
 #@providerClientId = paste-provider-client-id-here
@@ -31,7 +32,7 @@ Accept: application/json
 ### App authentication - start the optional OAuth login flow in a browser-capable client
 # This endpoint is active only when the oauth profile is enabled and the provider registration exists.
 # In the real UI flow, read the relative `authorizationPath` from `GET /api/session`
-# instead of hard-coding `@oauthProvider`. The variable stays here for reviewer convenience.
+# instead of hard-coding oauthProvider. The variable stays here for reviewer convenience.
 GET {{baseUrl}}/api/session/oauth2/authorization/{{oauthProvider}}
 
 ### App session contract - inspect the authenticated same-site browser session state
@@ -46,9 +47,9 @@ Accept: application/json
     const csrfCookie = response.cookiesByName("XSRF-TOKEN")[0];
     if (csrfCookie) {
         client.global.set("csrfToken", csrfCookie.value);
-        client.log("Updated csrfToken from XSRF-TOKEN.");
+        client.log("Captured XSRF-TOKEN from response.");
     } else {
-        client.log("No XSRF-TOKEN cookie was returned; csrfToken was not updated.");
+        client.log("XSRF-TOKEN cookie not found in response. Using existing global csrfToken if available.");
     }
 %}
 

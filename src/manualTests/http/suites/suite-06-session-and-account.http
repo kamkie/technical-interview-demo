@@ -1,4 +1,5 @@
 @baseUrl = http://localhost:8080
+@csrfToken = not-captured-run-setup-request-first
 
 ### Suite 06 — Session and Account
 # @name suite_06_setup
@@ -21,6 +22,9 @@ Cookie: technical-interview-demo-session={{sessionCookie}}
     const csrfCookie = response.cookiesByName("XSRF-TOKEN")[0];
     if (csrfCookie) {
         client.global.set("csrfToken", csrfCookie.value);
+        client.log("Captured XSRF-TOKEN from response.");
+    } else {
+        client.log("XSRF-TOKEN cookie not found in response. Using existing global csrfToken if available.");
     }
 %}
 

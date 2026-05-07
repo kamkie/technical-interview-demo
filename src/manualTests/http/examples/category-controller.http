@@ -5,6 +5,7 @@
 # cookie bootstrapped by GET /api/session.
 
 @baseUrl = http://localhost:8080
+@csrfToken = not-captured-run-setup-first
 @sessionCookie = paste-technical-interview-demo-session-here
 # csrfToken is populated automatically by the bootstrap request below.
 @writeCategoryId = 0
@@ -19,9 +20,9 @@ Accept: application/json
     const csrfCookie = response.cookiesByName("XSRF-TOKEN")[0];
     if (csrfCookie) {
         client.global.set("csrfToken", csrfCookie.value);
-        client.log("Updated csrfToken from XSRF-TOKEN.");
+        client.log("Captured XSRF-TOKEN from response.");
     } else {
-        client.log("No XSRF-TOKEN cookie was returned; csrfToken was not updated.");
+        client.log("XSRF-TOKEN cookie not found in response. Using existing global csrfToken if available.");
     }
 %}
 

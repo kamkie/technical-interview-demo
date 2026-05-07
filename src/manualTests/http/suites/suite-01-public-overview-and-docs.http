@@ -1,3 +1,5 @@
+@baseUrl = http://localhost:8080
+
 ### Suite 01 — Public Overview and Docs
 # @name suite_01_setup
 GET {{baseUrl}}/hello
