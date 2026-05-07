@@ -14,6 +14,8 @@
 - Success means a human can set up the app locally, run the grouped suites below, capture pass/fail notes, and identify any release-blocking functional regressions before stable `v2.0.0` is prepared.
 - Execution is hybrid: a partial-automation harness under a new `src/manualTests` Gradle source set drives anonymous read suites and the scriptable portions of authenticated/admin suites once the executor supplies a session cookie and CSRF token, while OAuth login, browser-driven docs checks, and judgement-heavy verification stay manual.
 - The harness auto-generates an execution report (Markdown + JSON) per run, supports interactive user input for missing required values, and seeds its own test data through documented APIs so reruns are isolated and repeatable.
+- New harness-output requirement: all generated manual-regression tooling output must go under the repo-root `/temp` directory (`temp/` path, already gitignored), including normal reports, timestamped execution logs, and example report output.
+- New observability requirement: every suite must heavily log every HTTP request and response into a timestamped execution log file with enough request, response, timing, suite, and assertion context to debug failures without relying on console history.
 
 ## Scope
 - In scope:
@@ -25,6 +27,9 @@
   - a lightweight manual result log produced during execution
   - a new `src/manualTests` Gradle source set that owns all manual-regression automation code and resources, including the moved IntelliJ HTTP Client examples under `src/manualTests/resources/http/`
   - a partial-automation harness inside `src/manualTests` that drives the scriptable portions of the suites, generates its own test data through documented APIs, exposes interactive prompts for missing required values, and auto-produces a Markdown + JSON execution report the executor folds into the manual result log
+  - a default generated-output root under repo-root `/temp` (`temp/manual-regression/...`), with no manual-regression generated files written to `.agents/tmp/`, `ai/tmp/`, source folders, or build-script working directories unless the executor explicitly overrides `OUT_DIR`
+  - full per-exchange execution logging for every harness HTTP request and response, with timestamp, suite, test, method, URL, redacted request headers, request body, expected status, actual response status, redacted response headers, response body, latency, and outcome context
+  - a deterministic example-report generation path that writes example `report.md`, `report.json`, and execution-log output under `/temp`; the example may use all-failure synthetic suite results as long as it exercises the report shape
 - Out of scope:
   - replacing automated tests, OpenAPI compatibility checks, REST Docs tests, Gatling benchmarks, security scans, or CI
   - exhaustive validation errors, malformed JSON, invalid sort aliases, optimistic-lock race cases, cache internals, logging sanitization, and every ProblemDetail edge case already covered by automated tests
@@ -49,15 +54,15 @@
   Fallback: local-only, because deployment smoke and release workflows already own production-like validation.
 - Is `v2.0.0-RC6` still the final release candidate, or did another plan require a later RC before stable `v2.0.0`?
   Fallback: if another RC is prepared before stable release, revise this plan to target that next RC and rerun readiness review before executing the manual suites.
-- Preferred result artifact location is not specified.
-  Fallback: create an uncommitted or committed run log under `.agents/tmp/manual-regression/v2_0_0_rc6.md` during execution, then summarize blockers in the plan's `Validation Results`.
+- Generated output location is now specified by user request.
+  Locked decision: use repo-root `/temp` (`temp/manual-regression/...`) as the default for all manual-regression generated output. Keep `/temp` gitignored and summarize durable release evidence in this plan or a release artifact instead of committing generated files.
 - Should `src/manualTests` be wired as a real Gradle source set (this plan's choice) or stay a plain folder driven by an external script?
   Fallback: register a Gradle source set so the harness benefits from IDE test integration and the existing Java/Gradle toolchain; revisit if dependency footprint becomes a concern.
 - Is JUnit 5 + REST Assured the accepted technology, or should the harness be Karate, Postman/Newman, Bruno, or PowerShell + Pester instead?
   Fallback: proceed with JUnit 5 + REST Assured (see `Implementation Technology`); the follow-up implementation plan must re-confirm before adding dependencies.
 - The HTTP client examples have moved from `src/test/resources/http/` to `src/manualTests/resources/http/` as part of the harness implementation.
-- Should generated execution reports be committed to the repo, kept in `.agents/tmp/` only, or auto-pruned?
-  Fallback: write reports to `.agents/tmp/manual-regression/<rc>/run-<UTC-timestamp>/` (gitignored by `.agents/tmp/` convention) and commit only the human result log if the executor wants durable evidence.
+- Generated execution report retention is now specified by user request.
+  Locked decision: keep generated reports and logs under gitignored `/temp` only. Commit no generated manual-regression output by default; if durable evidence is needed, summarize the result in this plan's `Validation Results`, release notes, or another owning artifact.
 - Where should the harness obtain the second non-admin OAuth identity for `403` checks?
   Fallback: keep it as supplied input (`REGULAR_SESSION_COOKIE`/`REGULAR_CSRF_TOKEN`/`REGULAR_USER_ID`); when absent, mark dependent assertions `Blocked` rather than failing.
 - Is the proposed `runTag`-based unique-data scheme acceptable for ISBN/category/localization keys, or do business validators require stricter formats?
@@ -73,6 +78,9 @@
 - Use a browser for the OAuth redirect/login flow and browser developer tools to copy the `technical-interview-demo-session` cookie into the HTTP client.
 - Use unique names and ISBN/message keys for write tests so repeat runs do not collide with previous manual data.
 - Keep manual regression focused on representative happy paths plus a few high-value access-control failures. Automated tests remain the authority for dense edge cases.
+- All manual-regression tooling output defaults to repo-root `/temp` (`temp/manual-regression/...`), which is gitignored by `.gitignore`; no generated reports or execution logs are committed by default.
+- Replace the current lightweight request recorder with heavy request/response logging for every suite. Secret-bearing values such as cookies, CSRF tokens, authorization headers, and configured secret inputs must be redacted before writing logs or reports.
+- Generate an example report as part of the harness-output update. The example report may be synthetic and all-failure, but it must prove that `report.md`, `report.json`, and the execution-log format are created under `/temp`.
 
 ## Implementation Technology
 - Decision: implement the harness as a new `src/manualTests` Gradle source set written in Java 25 (matching the rest of the repo) using **JUnit 5** as the runner and **REST Assured** as the HTTP client. Reports are emitted by a small custom JUnit `TestExecutionListener` that writes Markdown + JSON.
@@ -84,6 +92,7 @@
 - Gradle wiring (target shape, to be implemented by the follow-up plan):
   - register `manualTests` source set with `manualTestsImplementation` extending `testImplementation`
   - add a `manualTests` task of type `Test` with `useJUnitPlatform()`, wired so it is **not** part of `./build.ps1 build` and is invoked explicitly via `./build.ps1 manualTests` (or `./gradlew manualTests`)
+  - add an explicit example-report generation entry point, preferably a small Gradle task such as `manualRegressionExampleReport`, that writes synthetic report artifacts to `temp/manual-regression/example/run-<UTC-timestamp>/` without requiring a running app
   - dependencies: `org.junit.jupiter:junit-jupiter`, `io.rest-assured:rest-assured`, `org.assertj:assertj-core`, Jackson (already on the project classpath)
   - resources directory: `src/manualTests/resources/` containing the moved `http/` IntelliJ HTTP Client collection plus `run.properties.example` and `report-templates/`
 - Boundary rules (unchanged from prior revision, restated for the new harness location):
@@ -134,7 +143,7 @@
   - `REGULAR_SESSION_COOKIE`, `REGULAR_CSRF_TOKEN`, `REGULAR_USER_ID` (enable regular-user `403` checks and the role-grant round trip)
   - `RUN_TAG` (overrides the default timestamp tag for reproducible reruns)
   - `SUITES` (comma-separated list of suite names to run; default is the full ordered profile)
-  - `OUT_DIR` (overrides the default report output directory)
+  - `OUT_DIR` (overrides the default report output directory; default must remain under repo-root `/temp`)
 - Precedence (highest first): explicit Gradle property (`-PmanualTests.adminSessionCookie=...`) > environment variable > `src/manualTests/resources/run.properties` if present > interactive prompt.
 - Interactive prompts:
   - the harness checks that all required inputs for the selected suites are present **before** any HTTP call
@@ -145,10 +154,18 @@
   - the harness refuses to run write suites if the resolved environment looks like production (presence of `SPRING_PROFILES_ACTIVE` containing `prod`)
 
 ## Execution Report Generation
-- The harness writes one report per run under `.agents/tmp/manual-regression/<rc>/run-<UTC-timestamp>/` (override with `OUT_DIR`), containing:
+- The harness writes all generated output for one run under `temp/manual-regression/<rc>/run-<UTC-timestamp>/` by default (repo-root `/temp`, already gitignored; override with `OUT_DIR` only when the executor intentionally wants a different local scratch path), containing:
   - `report.md`: human-readable summary with per-suite status table, environment block, run tag, generated identifiers, and a release-blocker section the executor pastes into the manual result log
-  - `report.json`: machine-readable structure with per-request method, URL, expected status, actual status, latency, generated identifier mapping, and pass/fail/block reason
-  - `requests.log`: chronological newline-delimited JSON of all requests/responses (bodies truncated, secrets redacted) for post-mortem investigation
+  - `report.json`: machine-readable structure with per-suite status, generated identifier mapping, pass/fail/block reason, and links or relative paths to the execution log entries for that suite
+  - `execution-log.ndjson`: chronological newline-delimited JSON of every HTTP exchange, one record per request/response, with UTC timestamp, suite name, test/display name when available, correlation id, method, URL, redacted request headers, request body, expected status, actual status, redacted response headers, response body, latency, matched expectation flag, and note/outcome context
+- The execution log is the authoritative failure-debug artifact. Reports may summarize requests, but they must not be the only place where request/response detail exists.
+- Heavy logging means no suite is allowed to bypass the harness recorder for HTTP calls. If a request cannot be logged safely, the suite must redact secret fields explicitly and still record the method, target, status, timing, and reason for omitted body content.
+- Secret redaction is mandatory for cookies, CSRF tokens, authorization headers, session identifiers, OAuth values, and configured secret inputs before writing `report.md`, `report.json`, or `execution-log.ndjson`.
+- The harness provides an example-report generation mode or task that writes synthetic artifacts under `temp/manual-regression/example/run-<UTC-timestamp>/`:
+  - `report.md`
+  - `report.json`
+  - `execution-log.ndjson`
+  - the example can mark every suite `Failed` if that keeps generation deterministic, but it must include representative request and response log records so reviewers can inspect the final artifact shape without a running app
 - Status taxonomy used uniformly in both report files:
   - `Passed` — all assertions held
   - `Failed` — at least one assertion or HTTP expectation failed
@@ -157,7 +174,9 @@
 - Exit code: `0` if no `Failed` entries; `1` otherwise. `Blocked` does not fail the run, but the JUnit listener marks the suite assumption-failed so IntelliJ shows it distinctly.
 
 ## Implementation Status
-- The harness implementation under `src/manualTests/` has landed. The manual RC6 execution remains pending and can use `./build.ps1 manualTests` as a prefilled checklist before human judgement-heavy checks.
+- The initial harness implementation under `src/manualTests/` has landed.
+- The new `/temp` output, heavy request/response execution logging, timestamped execution-log file, and example-report generation requirements are pending implementation before the manual RC6 execution should be treated as release-gate evidence.
+- Manual RC6 execution remains pending and can use `./build.ps1 manualTests` as a prefilled checklist only after the pending harness-output requirements are implemented and validated.
 
 ## Execution Shape And Shared Files
 - Recommended shape: one local branch.
@@ -165,7 +184,7 @@
 - Coordinator-owned files:
   - `.agents/plans/PLAN_manual_regression_execution.md`
   - `ROADMAP.md`
-  - optional execution result log under `.agents/tmp/manual-regression/v2_0_0_rc6.md`
+  - generated local evidence under `temp/manual-regression/` remains untracked and should be summarized into the plan or release artifact when durable evidence is needed
 - If delegation becomes necessary, use read-only reviewers only after the manual result log exists.
 
 ## Affected Artifacts
@@ -188,21 +207,70 @@
   - `src/manualTests/resources/run.properties.example` for the input precedence example
   - `src/manualTests/resources/report-templates/` for Markdown report fragments
   - `build.gradle.kts` (registers the `manualTests` source set, dependencies, and Gradle task)
+- New or changed paths owned by the `/temp` output and heavy-logging update:
+  - `src/manualTests/java/team/jit/technicalinterviewdemo/manualregression/harness/ConfigLoader.java` for the default output root
+  - `src/manualTests/java/team/jit/technicalinterviewdemo/manualregression/harness/RunConfig.java` if output or example-report configuration expands
+  - `src/manualTests/java/team/jit/technicalinterviewdemo/manualregression/harness/HarnessHttp.java` for mandatory per-exchange capture
+  - `src/manualTests/java/team/jit/technicalinterviewdemo/manualregression/harness/RequestRecord.java` for request/response log fields
+  - `src/manualTests/java/team/jit/technicalinterviewdemo/manualregression/harness/ReportWriter.java` for `report.md`, `report.json`, and `execution-log.ndjson`
+  - `src/manualTests/java/team/jit/technicalinterviewdemo/manualregression/harness/ManualRegressionExtension.java` if flush or example-report generation wiring changes
+  - `src/manualTests/resources/README.md` and `src/manualTests/resources/run.properties.example` for the new default output path and example-report command
+  - `build.gradle.kts` if a `manualRegressionExampleReport` task or equivalent Gradle entry point is added
 - Optional execution evidence:
-  - `.agents/tmp/manual-regression/v2_0_0_rc6.md`
-  - `.agents/tmp/manual-regression/v2_0_0_rc6/run-<UTC-timestamp>/report.md`
-  - `.agents/tmp/manual-regression/v2_0_0_rc6/run-<UTC-timestamp>/report.json`
-  - `.agents/tmp/manual-regression/v2_0_0_rc6/run-<UTC-timestamp>/requests.log`
+  - `temp/manual-regression/v2_0_0_rc6.md`
+  - `temp/manual-regression/v2_0_0_rc6/run-<UTC-timestamp>/report.md`
+  - `temp/manual-regression/v2_0_0_rc6/run-<UTC-timestamp>/report.json`
+  - `temp/manual-regression/v2_0_0_rc6/run-<UTC-timestamp>/execution-log.ndjson`
+  - `temp/manual-regression/example/run-<UTC-timestamp>/report.md`
+  - `temp/manual-regression/example/run-<UTC-timestamp>/report.json`
+  - `temp/manual-regression/example/run-<UTC-timestamp>/execution-log.ndjson`
 - Contract docs/OpenAPI/HTTP examples:
   - no contract artifact changes expected
 - Tests:
-  - no automated tests should be added or changed for this manual regression plan
+  - no production automated tests should be added or changed for this manual regression plan
+  - harness-output changes are validated through `compileManualTestsJava`, example-report generation, generated-artifact inspection, and the standard wrapper build
 
 ## Execution Milestones
+### Milestone 0: Align Harness Output, Logging, And Example Report
+- goal: update the landed manual-regression harness so its generated artifacts follow the new `/temp` output, heavy request/response logging, timestamped execution-log, and example-report requirements before release-gate execution
+- owned files or packages:
+  - `build.gradle.kts` if an example-report Gradle task or equivalent entry point is needed
+  - `src/manualTests/java/team/jit/technicalinterviewdemo/manualregression/harness/`
+  - `src/manualTests/resources/README.md`
+  - `src/manualTests/resources/run.properties.example`
+- shared files reserved to the coordinator if delegated:
+  - this plan and `ROADMAP.md`
+- context required before execution:
+  - `.agents/references/execution.md`, `.agents/references/testing.md`, this plan, `build.gradle.kts`, the manual-regression harness package, `src/manualTests/resources/README.md`, `src/manualTests/resources/run.properties.example`, and `.gitignore`
+- behavior to preserve:
+  - the `manualTests` task remains opt-in and is not wired into the default `./build.ps1 build`
+  - the harness still uses documented HTTP endpoints only
+  - secret values are never written unredacted to generated reports or logs
+  - generated output remains untracked by default
+- exact deliverables:
+  - change the default output directory from old AI scratch paths to repo-root `/temp`, concretely `temp/manual-regression/<rc-or-run-tag>/run-<UTC-timestamp>/`
+  - ensure `OUT_DIR` can still override the output directory, but documentation states the default and expected local path are under `/temp`
+  - route or disable Gradle `manualTests` HTML/XML report artifacts for manual-regression execution so harness reports, execution logs, and example-report artifacts are not emitted under `build/` by default; normal Java compilation outputs may remain under `build/`
+  - replace the current request-only summary capture with a per-exchange log model that records every request and response made through the harness
+  - extend the recorded exchange data to include UTC timestamp, suite name, test/display name when available, correlation id, method, URL, redacted request headers, request body, expected status, actual status, redacted response headers, response body, latency, matched flag, and note/outcome context
+  - write the chronological execution log to `execution-log.ndjson` in the same run directory as `report.md` and `report.json`
+  - update `report.md` and `report.json` so they summarize suite outcomes and point reviewers to the execution log for full request/response detail
+  - add a deterministic example-report generation path, preferably `./build.ps1 manualRegressionExampleReport`, that does not require a running app and writes `report.md`, `report.json`, and `execution-log.ndjson` under `temp/manual-regression/example/run-<UTC-timestamp>/`
+  - update `src/manualTests/resources/README.md` and `run.properties.example` to name the `/temp` output default, execution-log file, and example-report command
+  - verify no generated manual-regression report or log output is written to `.agents/tmp/`, `ai/tmp/`, `src/manualTests/resources/`, or `build/` by default
+- validation checkpoint:
+  - `git diff --check`
+  - `./build.ps1 compileManualTestsJava`
+  - run the example-report generation command and confirm it creates `report.md`, `report.json`, and `execution-log.ndjson` under `temp/manual-regression/example/`
+  - inspect the example `execution-log.ndjson` and confirm each record has timestamp, request, response, status, latency, and redaction fields
+  - `./build.ps1 build` passes or takes the documented lightweight shortcut only if no non-lightweight files changed
+- commit checkpoint:
+  - `test: update manual regression artifact logging`
+
 ### Milestone 1: Prepare Manual Environment
 - goal: start the app in a predictable local state with OAuth and admin access
 - owned files or packages:
-  - optional `.agents/tmp/manual-regression/v2_0_0_rc6.md`
+  - optional `temp/manual-regression/v2_0_0_rc6.md`
 - shared files reserved to the coordinator if delegated:
   - this plan and roadmap
 - context required before execution:
@@ -257,7 +325,7 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
 ### Milestone 2: Execute Public And Technical Read Suites
 - goal: verify anonymous public reads and trusted internal/devops surfaces
 - owned files or packages:
-  - optional `.agents/tmp/manual-regression/v2_0_0_rc6.md`
+  - optional `temp/manual-regression/v2_0_0_rc6.md`
 - shared files reserved to the coordinator if delegated:
   - this plan and roadmap
 - context required before execution:
@@ -294,7 +362,7 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
 ### Milestone 3: Execute Authenticated Business Suites
 - goal: verify normal authenticated user behavior and core business write workflows
 - owned files or packages:
-  - optional `.agents/tmp/manual-regression/v2_0_0_rc6.md`
+  - optional `temp/manual-regression/v2_0_0_rc6.md`
 - shared files reserved to the coordinator if delegated:
   - this plan and roadmap
 - context required before execution:
@@ -337,7 +405,7 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
 ### Milestone 4: Execute Admin And Audit Suites
 - goal: verify admin-only operational and governance functionality
 - owned files or packages:
-  - optional `.agents/tmp/manual-regression/v2_0_0_rc6.md`
+  - optional `temp/manual-regression/v2_0_0_rc6.md`
 - shared files reserved to the coordinator if delegated:
   - this plan and roadmap
 - context required before execution:
@@ -369,12 +437,12 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
 ### Milestone 5: Close Out Regression Evidence
 - goal: produce a concise release-confidence summary and identify any blocking questions or defects
 - owned files or packages:
-  - optional `.agents/tmp/manual-regression/v2_0_0_rc6.md`
+  - optional `temp/manual-regression/v2_0_0_rc6.md`
   - this plan's `Validation Results` if the manual run is executed in this branch
 - shared files reserved to the coordinator if delegated:
   - `CHANGELOG.md` unless release work is explicitly requested
 - context required before execution:
-  - this plan's `Validation Results`, the manual result log under `.agents/tmp/manual-regression/` if one exists, `.agents/references/testing.md` for validation wording, and this milestone
+  - this plan's `Validation Results`, the manual result log under `temp/manual-regression/` if one exists, `.agents/references/testing.md` for validation wording, and this milestone
 - behavior to preserve:
   - release history is not updated by this manual planning pass
 - exact deliverables:
@@ -412,8 +480,15 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
 - Plan/documentation validation:
   - `git diff --check`
   - `./build.ps1 build`
+- Harness-output implementation validation for Milestone 0:
+  - `git diff --check`
+  - `./build.ps1 compileManualTestsJava`
+  - run the example-report generation command, expected target `./build.ps1 manualRegressionExampleReport` unless implementation chooses and documents a different entry point
+  - confirm generated example artifacts exist only under `temp/manual-regression/example/`
+  - inspect `execution-log.ndjson` for timestamp, request, response, status, latency, suite, and redaction fields
+  - `./build.ps1 build`
 - Manual execution validation:
-  - complete Milestones 1 through 5
+  - complete Milestones 0 through 5
   - record pass/fail/block status for all 12 named suites (`01-public-overview-and-docs` through `12-operator-surface`)
   - rerun `./build.ps1 build` only if manual execution changes tracked non-lightweight files or the user requests full release signoff in the same branch
 
@@ -436,7 +511,7 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
   - renamed all suites from single letters to ordered descriptive names (`01-public-overview-and-docs` through `12-operator-surface`) with declared prerequisites and added a `Suite Catalog And Order` table.
   - added dedicated sections for `Implementation Technology`, `Test Data Generation`, `User Input And Configuration`, and `Execution Report Generation`; added the corresponding open questions to `Requirement Gaps And Open Questions`.
   - `./build.ps1 build` lightweight-file shortcut expected to skip the Gradle build because only this plan file changed.
-- Manual suite execution against `v2.0.0-RC6` is intentionally **not** part of this plan: this plan only designs and wires the manual-regression tooling/harness. Actual RC6 execution is performed by a human operator outside this plan and is recorded in `.agents/tmp/manual-regression/<rc>.md` if durable evidence is wanted.
+- Manual suite execution against `v2.0.0-RC6` is intentionally **not** complete yet. Actual RC6 execution is performed by a human operator after Milestone 0 is implemented and can be recorded under `temp/manual-regression/<rc>.md` for local scratch evidence; durable release evidence should be summarized in this plan or release artifacts.
 - 2026-05-07 harness implementation:
   - registered the `manualTests` Gradle source set in `build.gradle.kts` with REST Assured 5.5.6, AssertJ, JUnit 5, and Jackson; the new `manualTests` task is intentionally not wired into `tasks.build` and is excluded from the JaCoCo agent.
   - moved `src/test/resources/http/` → `src/manualTests/resources/http/`; updated active references in `AGENTS.md`, `CONTRIBUTING.md`, `SETUP.md`, `.agents/references/documentation.md`, `.agents/references/plan-detailed-guide.md`, the Spotless target list, and `.gitignore`; archived plans intentionally left untouched.
@@ -449,8 +524,15 @@ $env:SPRING_PROFILES_ACTIVE='local,oauth'
   - Retargeted this active stable-release gate from `v2.0.0-RC5` to `v2.0.0-RC6` because another RC is being prepared before stable `v2.0.0`.
   - Updated result-log paths and `ROADMAP.md` stable-gate wording for `v2.0.0-RC6`.
   - Manual suite execution remains pending and must still be completed before stable `v2.0.0` release preparation.
+- 2026-05-07 harness-output requirements replan:
+  - Added the user-requested requirement that all manual-regression generated output defaults to repo-root `/temp` (`temp/manual-regression/...`) instead of `.agents/tmp/` or old `ai/tmp/` paths.
+  - Added the heavy request/response logging requirement for every suite and defined `execution-log.ndjson` as the timestamped per-exchange artifact.
+  - Added an example-report generation requirement under `temp/manual-regression/example/`; the example may be synthetic and all-failure as long as it proves `report.md`, `report.json`, and `execution-log.ndjson`.
+  - Added Milestone 0 so harness output/logging/report generation is implemented and validated before RC6 manual execution is treated as release-gate evidence.
+  - `git diff --check` passed.
+  - `./build.ps1 build` passed through the lightweight-file shortcut, reporting that only `.agents/plans/PLAN_manual_regression_execution.md` and `ROADMAP.md` changed and that Gradle build execution was skipped.
 
 ## User Validation
 - Review this plan and answer the open questions if the fallback assumptions are not acceptable.
-- During execution, follow Milestones 1 through 5 and use the descriptive suite names (`01-public-overview-and-docs` … `12-operator-surface`) as the manual regression checklist; if the harness is available, run `./build.ps1 manualTests` first and treat its report as the prefilled checklist.
+- During execution, follow Milestones 0 through 5 and use the descriptive suite names (`01-public-overview-and-docs` … `12-operator-surface`) as the manual regression checklist; after Milestone 0 lands, run `./build.ps1 manualTests` first and treat its report plus `execution-log.ndjson` as the prefilled checklist.
 - A release-ready manual pass has no failed suites, no unresolved release blockers, and clear notes for any blocked non-admin or provider-specific checks.

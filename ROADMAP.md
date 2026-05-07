@@ -11,8 +11,8 @@ Released history belongs in `CHANGELOG.md`.
 | Release Phase | Prerelease |
 | Breaking Change Policy | Disallowed |
 | Next Target Version | `v2.0.0` |
-| Stable Release Gate | Manual regression pass on the final release candidate, currently `v2.0.0-RC6` |
-| Immediate Next Action | Execute `.agents/plans/PLAN_manual_regression_execution.md` against `v2.0.0-RC6` |
+| Stable Release Gate | Manual regression pass on the final release candidate, currently `v2.0.0-RC6`, after the harness-output logging requirements are implemented |
+| Immediate Next Action | Implement Milestone 0 in `.agents/plans/PLAN_manual_regression_execution.md`, then execute the plan against `v2.0.0-RC6` |
 
 ## Roadmap Rules
 
@@ -38,7 +38,7 @@ Goal: use manual regression coverage as the RC-to-stable gate, then finish the s
 
 | Order | Status | Workstream | Plan Or Artifact | Exit Criteria |
 | --- | --- | --- | --- | --- |
-| 1 | In Progress | Manual regression gate for the final `2.0` release candidate | `.agents/plans/PLAN_manual_regression_execution.md` | Harness has landed; manual business-functionality regression still needs to run against final RC `v2.0.0-RC6`; if another RC is cut first, the plan is replanned to that RC |
+| 1 | In Progress | Manual regression gate for the final `2.0` release candidate | `.agents/plans/PLAN_manual_regression_execution.md` | Harness has landed, but new `/temp` output, heavy request/response logging, execution-log, and example-report requirements must land before manual business-functionality regression runs against final RC `v2.0.0-RC6`; if another RC is cut first, the plan is replanned to that RC |
 | 2 | Implemented | Repository knowledge layout migration for the next RC | `.agents/plans/PLAN_repository_knowledge_layout_migration.md` | Durable repository knowledge follows the `docs/` plus `.agents/` layout; if this lands before stable, cut the next RC, expected `v2.0.0-RC7` |
 | 3 | Planned | Stable `v2.0.0` release | `CHANGELOG.md`, `ROADMAP.md`, release artifacts | Stable `v2.0.0` is released after the final accepted RC, changelog and roadmap are updated, and the completed `2.0` track is removed from this file |
 
