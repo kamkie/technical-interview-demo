@@ -19,6 +19,7 @@ $ErrorActionPreference = "Stop"
 $zeroSha = "0000000000000000000000000000000000000000"
 $lightweightPatterns = @(
     "*.md",
+    "*.http",
     ".editorconfig",
     ".gitattributes",
     ".gitignore",
