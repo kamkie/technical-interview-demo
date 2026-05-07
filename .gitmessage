@@ -7,7 +7,7 @@ Project-Plan: <.agents/plans/PLAN_*.md or omit>
 Project-Milestone: <milestone name or omit>
 Project-Task: <repo-task slug/title or omit>
 Project-Prompt: <short direct-request summary or omit>
-Co-authored-by: Junie <junie@jetbrains.com>
+Co-authored-by: <agent-name> <agent-email>
 Refs: <paths/issues/PRs or omit>
 Validation: <command/result>
 
@@ -48,7 +48,7 @@ Validation: <command/result>
 #
 #   Project-Source: prompt
 #   Project-Prompt: add publication-year search filter
-#   Co-authored-by: Junie <junie@jetbrains.com>
+#   Co-authored-by: <agent-name> <agent-email>
 #   Validation: ./build.ps1 build - green
 #
 #   fix(security): reject forged csrf headers
