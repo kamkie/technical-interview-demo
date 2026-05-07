@@ -26,12 +26,20 @@ Use the owner guides instead:
 
 ## Default Read Sets
 
-- discovery and roadmap: `AGENTS.md`, `ROADMAP.md`, `ai/PLAN.md`; add design, architecture, or README only when relevant
-- planning: `AGENTS.md`, `ai/PLAN.md`, governing specs, and the matching prompt body if a title is used
-- implementation: `AGENTS.md`, `ai/EXECUTION.md`, target `ai/PLAN_*.md`, plus owner guides required by the changed files
-- workflow execution or integration: `AGENTS.md`, `ai/WORKFLOW.md`, `ai/EXECUTION.md`, relevant plans or worker logs
-- verification: `AGENTS.md`, `ai/TESTING.md`, `ai/DOCUMENTATION.md`, `ai/REVIEWS.md`
-- release: `AGENTS.md`, `ai/RELEASES.md`, executed plans, and changed release artifacts
+| Task | Minimum AI Guides | Add When Needed |
+| --- | --- | --- |
+| Discovery and roadmap | `AGENTS.md`, `ROADMAP.md`, `ai/PLAN.md` | `README.md`, `ai/DESIGN.md`, or `ai/ARCHITECTURE.md` only when product, contract, or structure framing matters |
+| Planning | `AGENTS.md`, `ai/PLAN.md`, governing specs, matching prompt body if a title is used | `ai/templates/PLAN_TEMPLATE.md` for a new plan skeleton; `ai/references/PLAN_DETAILED_GUIDE.md` for complex planning |
+| Implementation | `AGENTS.md`, `ai/EXECUTION.md`, target `ai/PLAN_*.md` when planned | Owner guides required by the changed files |
+| Workflow execution or integration | `AGENTS.md`, `ai/WORKFLOW.md`, `ai/EXECUTION.md`, relevant plans or worker logs | matching workflow reference only after a fanout mode is selected |
+| Verification | `AGENTS.md`, `ai/TESTING.md`, `ai/DOCUMENTATION.md`, `ai/REVIEWS.md` | `ai/references/GRADLE_TASK_GRAPH.md` for non-standard Gradle task selection; `ai/references/TROUBLESHOOTING.md` after validation failure |
+| Release | `AGENTS.md`, `ai/RELEASES.md`, executed plans, changed release artifacts | release checklist or artifact-verification references only when preparing or verifying a release |
+
+Descriptive docs stay conditional:
+
+- `ai/ARCHITECTURE.md`: package layout, module boundaries, cross-cutting infrastructure, or structural placement
+- `ai/DESIGN.md`: user-visible behavior, supported scope, security posture, operational defaults, or roadmap tradeoffs
+- `ai/LEARNINGS.md`: task-overlapping relevance-scan hits or a new durable learning trigger
 
 ## Prompt List
 

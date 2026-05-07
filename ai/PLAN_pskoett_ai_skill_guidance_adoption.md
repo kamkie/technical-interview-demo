@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Summary
 - Selectively fold the useful guidance patterns from `pskoett/pskoett-ai-skills` into this repository's existing AI workflow documents.
@@ -76,6 +76,8 @@
   - `ai/LEARNINGS.md`
 - Roadmap:
   - `ROADMAP.md`
+- Unreleased history:
+  - `CHANGELOG.md`
 - No application tests, REST Docs, OpenAPI baseline, HTTP examples, README, SETUP, build scripts, or source files should change.
 
 ## Execution Milestones
@@ -179,6 +181,15 @@
   - `./build.ps1 build` passed through the lightweight-file shortcut, reporting docs-only changes and skipping the Gradle build; the changed-file list also included an unrelated pre-existing edit to `ai/PLAN_manual_regression_execution.md`.
   - Manual consistency review confirmed the replan keeps `AGENTS.md`, `ai/EXECUTION.md`, `ai/REVIEWS.md`, `ai/DOCUMENTATION.md`, and `ai/LEARNINGS.md` ownership boundaries intact.
   - evaluation kept the selected four recommendations but tightened them to avoid bulk-loading active plans and duplicating `ai/EXECUTION.md` or `ai/REVIEWS.md` policy.
+- 2026-05-07 Milestone 1:
+  - Manual consistency check passed against `AGENTS.md` load policy: the relevance scan uses task terms, opens only task-overlapping matches, and preserves the no-bulk-load rule.
+  - Manual context-hygiene review passed: degraded context-quality summaries route to the active plan, worker log, validation notes, or concise user-facing notes without creating new artifacts.
+  - `git diff --check` passed.
+- 2026-05-07 Milestone 2:
+  - Manual consistency check passed against `ai/EXECUTION.md`, `ai/REVIEWS.md`, and `ai/DOCUMENTATION.md`: the milestone loop triggers post-validation review through the review guide, keeps the security lens conditional on review-guide triggers, and records meaningful pivots in existing tracking artifacts.
+  - Manual no-import review confirmed no `.learnings/`, `.evals/`, `.context-surfing/`, plugin, hook, source-code, OpenAPI, REST Docs, or HTTP example changes were introduced.
+  - `git diff --check` passed.
+  - `./build.ps1 build` passed through the lightweight-file shortcut, reporting docs-only changes and skipping the Gradle build.
 
 ## User Validation
 - Review the resulting `AGENTS.md` and `ai/EXECUTION.md` changes.

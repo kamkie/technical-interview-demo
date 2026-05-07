@@ -41,8 +41,7 @@ Use these files when you want to work with AI in this repository or understand w
 
 - [WORKING_WITH_AI.md](WORKING_WITH_AI.md): human-facing guide for using AI across discovery, planning, implementation, verification, and release
 - [AGENTS.md](AGENTS.md): repository-local AI rules, spec priority, required contract updates, and definition of done
-- [ai/ARCHITECTURE.md](ai/ARCHITECTURE.md): compact codebase map, package boundaries, and current API shape
-- [ai/BUSINESS_MODULES.md](ai/BUSINESS_MODULES.md): feature ownership and business-module boundaries
+- [ai/ARCHITECTURE.md](ai/ARCHITECTURE.md): compact codebase map, package boundaries, feature ownership, and current API shape
 - [ai/CODE_STYLE.md](ai/CODE_STYLE.md): repo-local code style and change-shaping guidance
 - [ai/DESIGN.md](ai/DESIGN.md): product intent, tradeoffs, and non-goals
 - [ai/DOCUMENTATION.md](ai/DOCUMENTATION.md): documentation ownership and when to update which docs

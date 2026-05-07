@@ -19,15 +19,24 @@ Execution in this repository means:
 
 ## Before You Implement
 
-Read these before editing:
+Start with the smallest useful read set:
 
 - `AGENTS.md`
-- `ai/PLAN.md`
-- the target `ai/PLAN_*.md`
-- `ai/WORKFLOW.md` to confirm the execution mode
-- the focused guides the change needs, usually `ai/CODE_STYLE.md`, `ai/DOCUMENTATION.md`, `ai/TESTING.md`, and `ai/REVIEWS.md`
-- `ai/ENVIRONMENT_QUICK_REF.md` before writing local Gradle commands
-- the governing specs, docs, examples, and source files named by the plan
+- `ai/EXECUTION.md`
+- the target `ai/PLAN_*.md`, when executing planned work
+- the user request or approved source artifact, when executing ad hoc documentation or maintenance work
+- the governing specs, docs, examples, and source files named by the task
+
+Load additional guides only when their trigger applies:
+
+- `ai/PLAN.md`: creating, materially revising, or readiness-reviewing a plan
+- `ai/WORKFLOW.md`: choosing an execution mode, using worktrees or branches, delegating, integrating worker output, pushing, or opening a PR
+- `ai/DOCUMENTATION.md`: moving docs, public contract artifacts, roadmap entries, changelog text, AI guidance, or other repository documentation
+- `ai/TESTING.md`: choosing validation scope or recording validation results
+- `ai/REVIEWS.md`: final diff review, user-requested review, or security-sensitive change
+- `ai/CODE_STYLE.md`: changing source code, tests, Gradle/build logic, workflow YAML, or other implementation files
+- `ai/ENVIRONMENT_QUICK_REF.md`: writing or running local Gradle wrapper commands
+- `ai/ARCHITECTURE.md`, `ai/DESIGN.md`, or `ai/LEARNINGS.md`: only when their descriptive triggers match the task or a targeted relevance scan finds a task-overlapping hit
 
 Before writing code or docs:
 
@@ -44,14 +53,16 @@ Do not add manual `JAVA_HOME` or dotenv setup steps to plans, prompts, or worker
 Every execution mode follows the same milestone loop.
 A milestone is not done until the implementation, validation, tracking artifacts, and commit are all in place.
 
-1. Re-read the target scope, locked decisions, non-goals, and the current milestone checkpoint.
+1. Re-read the target scope, in-scope outcome, locked decisions, non-goals, and the current milestone checkpoint.
 2. Update the governing spec first when behavior is intentionally changing.
 3. Implement the smallest coherent code or documentation change that satisfies that milestone.
 4. Keep artifact routing aligned through `ai/DOCUMENTATION.md`.
 5. Run the milestone validation named by the plan, then any broader validation required by `ai/TESTING.md`; if validation fails, load `ai/references/TROUBLESHOOTING.md` before choosing the recovery path.
-6. Update the tracking artifacts required by the active mode in `ai/WORKFLOW.md`.
-7. Create a normal non-interactive commit for the completed milestone.
-8. Repeat for the next milestone or stop and report status if the requested scope is complete.
+6. Review the validated diff using the priority order in `ai/REVIEWS.md`; apply the security review lens only when that guide's security triggers apply.
+7. Re-check the plan's in-scope outcome, locked decisions, and non-goals before claiming the checkpoint is done or moving to the next milestone. Record meaningful pivots as plan amendments, worker-log updates, or validation notes before continuing.
+8. Update the tracking artifacts required by the active mode in `ai/WORKFLOW.md`.
+9. Create a normal non-interactive commit for the completed milestone.
+10. Repeat for the next milestone or stop and report status if the requested scope is complete.
 
 ## Milestone Commit Rules
 
