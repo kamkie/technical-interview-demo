@@ -3,8 +3,8 @@
 @report = no-report-available
 @report_file = ../reports/fake_report.md
 @test_idx = 1
-@originalPreferredLanguageJson = "null"
-@temporaryPreferredLanguageJson = "en"
+@originalPreferredLanguageJson = null
+@temporaryPreferredLanguageJson = "pl"
 
 ### Suite 06 — Session and Account
 # @name suite_06_setup
@@ -73,13 +73,8 @@ Accept: application/json
         client.assert(response.status === 200, "Response status is not 200");
     });
 
-    var originalLanguage = response.body && Object.prototype.hasOwnProperty.call(response.body, "preferredLanguage")
-        ? response.body.preferredLanguage
-        : null;
-    client.global.set(
-        "originalPreferredLanguageJson",
-        originalLanguage === null || originalLanguage === undefined ? "null" : JSON.stringify(originalLanguage)
-    );
+    var originalLanguage = (response.body && response.body.preferredLanguage) || null;
+    client.global.set("originalPreferredLanguageJson", JSON.stringify(originalLanguage));
     client.global.set("temporaryPreferredLanguageJson", JSON.stringify(originalLanguage === "pl" ? "en" : "pl"));
 %}
 
