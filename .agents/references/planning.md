@@ -9,7 +9,7 @@ Use `.agents/references/plan-execution.md` after the user asks to execute a whol
 
 ## Lifecycle Metadata
 
-Every active plan starts with:
+Every active plan starts with a lifecycle block followed by a planning readiness snapshot:
 
 ```md
 ## Lifecycle
@@ -17,6 +17,15 @@ Every active plan starts with:
 | --- | --- |
 | Phase | Planning |
 | Status | Draft |
+
+## Planning Readiness
+| Field | Value |
+| --- | --- |
+| Decision Complete | No |
+| Blocking Open Questions | Q1, Q2, or None |
+| Accepted Fallbacks | None |
+| Ready For Execution | No |
+| Last Updated | YYYY-MM-DD |
 ```
 
 Use `Phase` for the coarse lifecycle:
@@ -41,6 +50,7 @@ Use `Status` for immediate state:
 - `Released`
 
 Keep the lifecycle block current as the plan moves.
+Keep `Planning Readiness` aligned with the open-question table and decision log; it is a scan-friendly summary, not a parallel lifecycle scheme.
 
 ## Planning Rules
 
@@ -57,6 +67,12 @@ Before writing the plan:
 Plan from repo truth first.
 Ask the user only when ambiguity affects product intent, scope, compatibility, rollout, acceptance criteria, validation, or another material tradeoff.
 Record requirement gaps, fallback assumptions, and locked decisions explicitly.
+Do not leave material open questions as loose prose.
+Give each question or gap a stable `Q` ID, owner, status, fallback or decision, and `Blocks Ready?` value in the plan's `Requirement Gaps And Open Questions` table.
+
+A plan with any `Open` question where `Blocks Ready?` is `Yes` must use lifecycle `Status | Needs Input`.
+Use `Status | Ready` only when every blocking question is answered or has an explicit accepted fallback recorded in both the open-question table and the decision log.
+Keep answered or deferred questions visible instead of deleting them, so later executors can see how readiness was reached.
 
 ## Roadmap Synchronization
 
@@ -66,7 +82,7 @@ Use `ROADMAP.md` for active-work tracking only:
 
 - if the plan came from an existing roadmap item, add or refresh the plan path and concise lifecycle/status note there
 - if the plan came from an ad hoc request that is now real planned work, add a concise roadmap entry in the appropriate active section with the plan path
-- keep detailed milestones, validation, and implementation notes in the plan file, not the roadmap
+- keep detailed milestones, progress tracking, validation, and implementation notes in the plan file, not the roadmap
 - do not add a roadmap entry for discarded ideas, roadmap-only cleanup, or work that is not ready to become an execution plan
 
 When a plan is later released or no longer active, follow the execution and release guides to update or remove the roadmap entry instead of leaving stale active work behind.
@@ -75,7 +91,7 @@ When a plan is later released or no longer active, follow the execution and rele
 
 Every concrete plan must be decision-complete enough for another agent to execute without inventing missing behavior.
 
-At minimum, identify the behavior, governing specs or contract artifacts, scope and non-goals, affected files, compatibility promises, requirement gaps, execution shape and shared-file boundaries, per-milestone context requirements, milestone checkpoints, validation, and user verification.
+At minimum, identify the behavior, governing specs or contract artifacts, scope and non-goals, affected files, compatibility promises, planning readiness, requirement gaps, locked decisions and assumptions, execution shape and shared-file boundaries, per-milestone context requirements, milestone checkpoints, progress tracking, validation, and user verification.
 Use `.agents/templates/plan-template.md` for the full skeleton and required-content checklist.
 
 ## Milestone Rules
@@ -83,6 +99,7 @@ Use `.agents/templates/plan-template.md` for the full skeleton and required-cont
 Milestones should be commit-sized checkpoints.
 Each milestone should name:
 
+- status
 - goal
 - owned files or packages
 - files reserved to the coordinator, if any
@@ -99,6 +116,18 @@ Do not list broad descriptive docs as defensive context.
 For execution shape, prefer a single local branch unless the work clearly benefits from explicitly owned worker slices.
 If delegation may be useful, state which files remain coordinator-owned and which files could be worker-owned.
 If multiple plans must move together, say which plan coordinates the work and how validation and changelog evidence will be rolled up.
+
+Every concrete plan should include a top-level `Progress Tracker` before detailed milestones.
+Use milestone statuses `Not Started`, `In Progress`, `Blocked`, `Done`, and `Skipped`.
+Update the tracker whenever a milestone starts, blocks, completes, or is intentionally skipped.
+For completed milestones, record the commit SHA or other checkpoint evidence and the validation result that proves the milestone.
+
+Use fixed fields for each milestone instead of loose bullets.
+The repeated field set should match the template and include status, goal, ownership, context required, behavior to preserve, deliverables, validation checkpoint, and commit checkpoint.
+
+Track execution-time blockers and conditions that require replanning in `Blockers And Replan Triggers`.
+Keep that table separate from `Requirement Gaps And Open Questions`: open questions decide whether the plan is ready; blockers and replan triggers describe what to do if execution later stops matching the plan.
+Record validation history in the `Validation Results` ledger with date, command, scope, result, and notes.
 
 ## Repo-Specific Rules
 
@@ -121,12 +150,18 @@ Before presenting a plan, verify that it:
 - is self-contained
 - identifies the governing specs
 - confirms `ROADMAP.md` reflects the plan path and current active-work status
+- includes a readiness snapshot that matches the open-question and decision tables
 - separates scope from non-goals
 - records unresolved gaps and fallback assumptions explicitly
+- uses stable question IDs with owner, status, fallback or decision, and blocking status
+- keeps answered or deferred questions visible in the plan
 - names likely files to change
 - identifies execution shape and shared-file boundaries
+- includes a progress tracker with milestone status, owner, commit, validation, and notes columns
 - defines per-milestone context requirements without broad just-in-case reads
 - defines specific, validatable milestones
+- records execution-time blockers or replan triggers separately from planning questions
 - includes repo-specific validation
+- uses a validation results ledger for actual command and outcome evidence
 - respects the demo scope of the application
 - does not hide compatibility, rollout, or benchmark consequences

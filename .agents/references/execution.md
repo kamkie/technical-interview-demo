@@ -44,7 +44,7 @@ Add only what the task needs:
 For ad hoc tasks and single milestones:
 
 1. Identify the behavior being changed and the spec or document that owns it.
-2. Re-read any locked decisions, non-goals, and the milestone context field if a plan milestone is involved.
+2. Re-read any decision log or locked decision entries, non-goals, progress tracker row when present, and the milestone context field if a plan milestone is involved.
 3. Update the governing spec first when behavior intentionally changes.
 4. Make the smallest coherent implementation or documentation change.
 5. Keep artifact routing aligned through `.agents/references/documentation.md`.
@@ -52,7 +52,8 @@ For ad hoc tasks and single milestones:
 7. If validation fails, load `.agents/references/troubleshooting.md` before choosing the recovery path.
 8. Review the diff using `.agents/references/reviews.md`; apply the security review activity when its triggers match.
 9. Record validation evidence in the plan, worker log, or final response as appropriate.
-10. Commit every completed task or milestone that changed tracked files before handing off or starting unrelated work. Follow the rules in `## AI Commit Message Rules` below.
+10. If executing a plan milestone, update the milestone detail and `Progress Tracker` with status, commit checkpoint, validation result, and any blocker or skip note.
+11. Commit every completed task or milestone that changed tracked files before handing off or starting unrelated work. Follow the rules in `## AI Commit Message Rules` below.
 
 ## AI Commit Message Rules
 
@@ -75,7 +76,7 @@ When the user asks for only one milestone:
 
 - implement only that milestone
 - preserve the remaining plan structure for later execution
-- update only the tracking artifacts that correspond to the completed milestone
+- update only the lifecycle, progress tracker, milestone detail, blocker table, and validation artifacts that correspond to the completed milestone
 - record only the validation actually run
 - do not start later milestones or cleanup implicitly
 - do not prepare or cut a release

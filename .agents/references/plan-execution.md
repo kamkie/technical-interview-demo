@@ -35,7 +35,7 @@ Before editing:
 
 - confirm the user wants the whole plan, not only one named milestone
 - confirm the plan lifecycle is ready enough to execute
-- re-read the plan summary, scope, locked decisions, non-goals, current milestone, and that milestone's context field
+- re-read the plan summary, scope, decision log or locked decisions, non-goals, progress tracker when present, current milestone, and that milestone's context field
 - if a real requirement gap appears, revise the plan before implementation instead of filling the gap ad hoc
 - if the work shape changes who may edit shared files, update the plan before splitting work
 
@@ -44,18 +44,21 @@ Before editing:
 For each milestone:
 
 1. Load only the extra context named by that milestone.
-2. Update the governing spec first when behavior intentionally changes.
-3. Implement the smallest coherent code or documentation change for that milestone.
-4. Keep artifact routing aligned through `.agents/references/documentation.md`.
-5. Run the milestone validation named by the plan, then any broader validation required by `.agents/references/testing.md`.
-6. If validation fails, load `.agents/references/troubleshooting.md` before choosing a recovery path.
-7. Review the validated diff using `.agents/references/reviews.md`.
-8. Re-check the plan's scope, locked decisions, non-goals, and milestone deliverables.
-9. Record validation evidence, blockers, pivots, or follow-up notes in the plan or worker log owned by the current work shape.
-10. Commit the completed milestone before starting the next one. Use the AI commit-message rules in `.agents/references/execution.md`.
+2. Mark the milestone `In Progress` in the milestone detail and top-level `Progress Tracker`.
+3. Update the governing spec first when behavior intentionally changes.
+4. Implement the smallest coherent code or documentation change for that milestone.
+5. Keep artifact routing aligned through `.agents/references/documentation.md`.
+6. Run the milestone validation named by the plan, then any broader validation required by `.agents/references/testing.md`.
+7. If validation fails, load `.agents/references/troubleshooting.md` before choosing a recovery path.
+8. Review the validated diff using `.agents/references/reviews.md`.
+9. Re-check the plan's scope, decision log or locked decisions, non-goals, and milestone deliverables.
+10. Record validation evidence, blockers, pivots, or follow-up notes in the plan or worker log owned by the current work shape.
+11. Update the milestone detail and `Progress Tracker` with `Done`, the commit checkpoint, validation result, and any notes.
+12. Commit the completed milestone before starting the next one. Use the AI commit-message rules in `.agents/references/execution.md`.
 
 Do not defer milestone commits until the end of the plan.
-If a milestone is blocked or only partially implemented, record the blocker but do not mark it complete.
+If a milestone is blocked or only partially implemented, record the blocker in the milestone detail, `Progress Tracker`, and `Blockers And Replan Triggers`, but do not mark it complete.
+Record exact commit SHAs in the tracker only when they are available without creating a standalone commit whose sole purpose is recording its own SHA; otherwise use the commit subject or another stable checkpoint reference.
 
 ## Context Switching
 
@@ -71,6 +74,7 @@ Keep plan execution context narrow as the work moves:
 During whole-plan execution:
 
 - keep the plan `Lifecycle` current, normally `Phase=Implementation` and `Status=In Progress` while work is underway
+- keep the plan `Planning Readiness`, `Progress Tracker`, milestone status fields, and `Blockers And Replan Triggers` current
 - update `Validation Results` with exact commands and outcomes
 - update `ROADMAP.md` when active-work state changes
 - update `CHANGELOG.md` under `## [Unreleased]` when the plan records unreleased user-facing, maintainer-facing, or AI-guidance changes
@@ -82,6 +86,7 @@ Whole-plan execution is complete when:
 
 - every requested milestone is implemented or explicitly recorded as blocked
 - every completed milestone has a commit
+- the progress tracker matches the milestone details, commit checkpoints, blockers, and validation evidence
 - required specs and documentation artifacts are aligned
 - required validation from `.agents/references/testing.md` passed, or any inability to run it is recorded
 - final review found no unresolved blocking drift
