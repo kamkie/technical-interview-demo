@@ -116,7 +116,7 @@
 - Build or benchmark checks:
   - Targeted tests during milestones.
   - `./build.ps1 refreshOpenApiBaseline` only after intentional contract review.
-  - Final `./build.ps1 build`.
+  - Final `./build.ps1 -FullBuild build`.
   - No benchmark by default unless implementation changes book list/search query behavior, localization lookup behavior, or OAuth/session startup behavior.
 
 ## Progress Tracker

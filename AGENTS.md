@@ -214,4 +214,4 @@ A change is complete when:
 - implementation and specs agree
 - public contract artifacts are updated when behavior changed
 - if the work was done in a git worktree or non-`main` branch, the finished branch has been pushed and a pull request is open or already merged onto `main`
-- the required validation from `.agents/references/testing.md` passes, normally `./build.ps1 build`
+- the required validation from `.agents/references/testing.md` passes; use `./build.ps1 build` for ordinary uncommitted implementation validation and `./build.ps1 -FullBuild build` when proving cumulative committed implementation work, whole plans, or release candidates

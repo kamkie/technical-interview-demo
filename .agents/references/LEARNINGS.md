@@ -68,3 +68,4 @@ Do not accumulate per-incident history, one-off mistakes, or temporary workaroun
 - **Use lower layers only when they prove something cheaper or clearer.**
 - **Technical hardening tests often encode deliberate design constraints.**
 - **Deterministic test data is part of readability.**
+- **Validation scope can exceed the uncommitted diff.** The `./build.ps1 build` lightweight shortcut only classifies current uncommitted files; use `./build.ps1 -FullBuild build` when proving a cumulative branch, whole plan, release candidate, or implementation work already committed earlier in the task.

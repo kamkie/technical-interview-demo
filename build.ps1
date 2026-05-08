@@ -146,7 +146,7 @@ function Test-ShouldSkipBuildForLightweightChanges
     }
 
     $changedFiles = @($classification.changedFiles)
-    Write-Host "Only lightweight files changed; skipping Gradle build."
+    Write-Host "Only lightweight uncommitted files changed; skipping Gradle build."
     Write-Host "Manual consistency review is sufficient for these uncommitted changes."
     Write-Host "Use './build.ps1 -FullBuild build' to force the full Gradle build."
 

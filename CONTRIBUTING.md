@@ -215,11 +215,12 @@ Exception:
 
 - `./build.ps1 build` performs the local uncommitted-change classifier check and exits successfully with manual-review guidance for lightweight-only changes; use `./build.ps1 -FullBuild build` to force the full Gradle build
 - the same classifier also drives the `CI` short-circuit for lightweight-only push and pull-request ranges
+- the lightweight shortcut is valid only when the whole local task or PR scope is lightweight; use `./build.ps1 -FullBuild build` when validating a cumulative branch, whole plan, release candidate, or code changes that were already committed before the final tracking edit
 
 Additional validation rules:
 
 - use `SETUP.md` for JDK 25, Docker, `.env`, and command prerequisites
-- use `./build.ps1 compileJava` or a similarly focused task for fast checks while editing, then use `./build.ps1 build` for final verification
+- use `./build.ps1 compileJava` or a similarly focused task for fast checks while editing, then use `./build.ps1 build` or `./build.ps1 -FullBuild build` for final verification according to the validation scope
 - use `./build.ps1 -SkipTests build`, `./build.ps1 -SkipChecks build`, or both only for local loops, not final verification
 - `-SkipChecks` skips formatting, PMD, SpotBugs, Error Prone, coverage verification, vulnerability scans, and SBOM checks
 - rerun `./build.ps1 gatlingBenchmark` when changing book list or search behavior, localization lookup behavior, or OAuth or session startup behavior

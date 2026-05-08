@@ -33,7 +33,8 @@ Use `.agents/references/gradle-task-graph.md` when command choice depends on Gra
 - use targeted tests when the touched behavior has focused executable coverage
 - `./build.ps1 -SkipTests build`, `./build.ps1 -SkipChecks build`, and `./build.ps1 -SkipTests -SkipChecks build` are local-loop shortcuts only, not final verification
 - `-SkipChecks` skips formatting, PMD, SpotBugs, Error Prone, coverage verification, the build-wired dependency vulnerability scan, explicit vulnerability scan tasks, and SBOM checks
-- use the `build` task for final verification before handoff unless the lightweight-only shortcut applies
+- use the `build` task for final verification before handoff, but treat the lightweight-only shortcut as valid only when the entire task scope is lightweight
+- use `./build.ps1 -FullBuild build` when final signoff must prove a cumulative branch, whole plan, release candidate, or previously committed implementation and the remaining uncommitted diff is lightweight-only
 
 ## Change-Type Expectations
 
@@ -53,7 +54,7 @@ Use `.agents/references/gradle-task-graph.md` when command choice depends on Gra
 - run the standard wrapper build and record whether it performed heavy Gradle validation or took the lightweight-only shortcut
 - repo-local skills under `.agents/skills/` count as lightweight support-file work for classifier purposes unless they accompany a non-lightweight change
 - skip benchmarks, external smoke, vulnerability scans, and other heavyweight validation unless the user explicitly asks for more
-- if lightweight edits accompany any non-lightweight change, validate based on the non-lightweight artifacts and repo rules
+- if lightweight edits accompany any non-lightweight change, validate based on the non-lightweight artifacts and repo rules; if those non-lightweight edits were already committed, force the final build with `./build.ps1 -FullBuild build`
 
 ## Standard Command
 
@@ -64,6 +65,10 @@ Use `.agents/references/gradle-task-graph.md` when command choice depends on Gra
 Use `SETUP.md` for environment prerequisites such as Java, Docker, and formatter configuration.
 Use `.agents/references/environment-quick-ref.md` for wrapper behavior.
 Use `src/manualTests/http/suites/README.md` for manual regression suites and `ijhttp` CLI usage.
+
+`./build.ps1 build` classifies only the current uncommitted change set before deciding whether to skip Gradle.
+Do not use a lightweight-only shortcut as proof for non-lightweight code, contract, deployment, or build changes that were committed earlier in the same task.
+Use `./build.ps1 -FullBuild build` when the validation target is broader than the current uncommitted diff.
 
 Record the wrapper result exactly.
 Use `.agents/references/environment-quick-ref.md` for wrapper behavior, including the lightweight-only shortcut and `-FullBuild`.

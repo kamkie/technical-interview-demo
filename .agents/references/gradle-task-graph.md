@@ -65,8 +65,8 @@ Decision shortcuts:
 
 - `./build.ps1 compileJava`: fastest Java production compile check.
 - `./build.ps1 test --tests <pattern>`: focused executable spec check.
-- `./build.ps1 build`: normal final verification; may skip Gradle for lightweight-only uncommitted changes.
-- `./build.ps1 -FullBuild build`: force final full verification, including Docker image build, checks, dependency vulnerability scan, and SBOM.
+- `./build.ps1 build`: normal final verification for the current uncommitted scope; may skip Gradle for lightweight-only uncommitted changes.
+- `./build.ps1 -FullBuild build`: force final full verification, including Docker image build, checks, dependency vulnerability scan, and SBOM. Use this when proving a cumulative branch, whole plan, release candidate, or earlier committed implementation.
 - `./build.ps1 imageVulnerabilityScan`: explicit container image vulnerability scan; not scheduled by `build`.
 - Do not separately run `test`, `asciidoctor`, `dockerBuild`, PMD, SpotBugs, `checkFormat`, dependency vulnerability scan, or SBOM when `build` already provides the required proof.
 
@@ -198,13 +198,13 @@ Decision shortcuts:
 
 | Change type | Fast loop | Final or extra proof |
 | --- | --- | --- |
-| Production Java compile change | `./build.ps1 compileJava` | `./build.ps1 build` |
+| Production Java compile change | `./build.ps1 compileJava` | `./build.ps1 build`; use `./build.ps1 -FullBuild build` when final proof covers earlier committed code |
 | Test-only compile change | `./build.ps1 testClasses` | targeted `test --tests <pattern>` or `build` |
-| Focused business or service rule | `./build.ps1 test --tests <pattern>` | `./build.ps1 build` |
-| Public API behavior or REST Docs | targeted integration/docs tests | `./build.ps1 build`; refresh OpenAPI only after intentional contract review |
+| Focused business or service rule | `./build.ps1 test --tests <pattern>` | `./build.ps1 build`; use `./build.ps1 -FullBuild build` when final proof covers earlier committed code |
+| Public API behavior or REST Docs | targeted integration/docs tests | `./build.ps1 build`; use `./build.ps1 -FullBuild build` when final proof covers earlier committed code; refresh OpenAPI only after intentional contract review |
 | Formatter-only change | `./build.ps1 checkFormat` or `./build.ps1 format --dry-run` | `./build.ps1 checkFormat`; `build` already includes equivalent formatter proof through `spotlessCheck` |
 | Build wrapper or Gradle config | `./build.ps1 -SkipChecks compileJava` or `--dry-run` | `./build.ps1 -FullBuild build` |
-| Docker image and runtime packaging | `./build.ps1 dockerBuild` when narrow | `./build.ps1 build` |
+| Docker image and runtime packaging | `./build.ps1 dockerBuild` when narrow | `./build.ps1 build`; use `./build.ps1 -FullBuild build` when final proof covers earlier committed packaging changes |
 | Container image vulnerability scan | `./build.ps1 imageVulnerabilityScan` | `./build.ps1 vulnerabilityScan` when dependency scan is also needed |
 | External smoke environment | `./build.ps1 externalSmokeTest` | combine with `build` in one invocation when both are required |
 | Already deployed environment | `./build.ps1 externalDeploymentCheck` | use only after target URL and credentials are configured |

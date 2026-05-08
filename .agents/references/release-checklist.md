@@ -16,7 +16,7 @@ From local `main`:
 9. Move the executed `.agents/plans/PLAN_*.md` file to `.agents/archive/` and update moved-path references in the same change.
 10. Update the target plan `Lifecycle` section to `Phase=Closed` and `Status=Released`.
 11. Update `.agents/references/LEARNINGS.md` if any durable engineering lessons were learned during the execution or release of this plan.
-12. Re-run `./build.ps1 build` only if the release-metadata edits made the earlier validation stale.
+12. Re-run `./build.ps1 -FullBuild build` if the release-metadata edits made the earlier validation stale or if the exact release candidate has not already passed full validation.
 13. Commit with `Prepare vMAJOR.MINOR.PATCH[-PRERELEASE] release`.
 14. Create an annotated tag `vMAJOR.MINOR.PATCH[-PRERELEASE]` with a concise annotation such as `Release vMAJOR.MINOR.PATCH[-PRERELEASE]`.
 15. Verify locally that the tag points at the release commit and that `git branch --show-current`, `git status --short`, `git log --first-parent --decorate --oneline -n 5`, `CHANGELOG.md`, `ROADMAP.md`, and the archived plan all reflect the release correctly.
