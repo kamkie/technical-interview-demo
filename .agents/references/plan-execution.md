@@ -48,13 +48,14 @@ For each milestone:
 3. Update the governing spec first when behavior intentionally changes.
 4. Implement the smallest coherent code or documentation change for that milestone.
 5. Keep artifact routing aligned through `.agents/references/documentation.md`.
-6. Run the milestone validation named by the plan, then any broader validation required by `.agents/references/testing.md`.
-7. If validation fails, load `.agents/references/troubleshooting.md` before choosing a recovery path.
-8. Review the validated diff using `.agents/references/reviews.md`.
-9. Re-check the plan's scope, decision log or locked decisions, non-goals, and milestone deliverables.
-10. Record validation evidence, blockers, pivots, or follow-up notes in the plan or worker log owned by the current work shape.
-11. Update the milestone detail and `Progress Tracker` with `Done`, the commit checkpoint, validation result, and any notes.
-12. Commit the completed milestone before starting the next one. Use the AI commit-message rules in `.agents/references/execution.md`.
+6. If existing AI guidance proves wrong, incomplete, contradictory, or requires an execution-time policy decision, classify the owner through `.agents/references/documentation.md`; update the owning guide in the same change, or record the blocker or follow-up in the active plan before continuing. Do not rely on final-response memory for guidance drift discovered during plan execution.
+7. Run the milestone validation named by the plan, then any broader validation required by `.agents/references/testing.md`.
+8. If validation fails, load `.agents/references/troubleshooting.md` before choosing a recovery path.
+9. Review the validated diff using `.agents/references/reviews.md`.
+10. Re-check the plan's scope, decision log or locked decisions, non-goals, and milestone deliverables.
+11. Record validation evidence, blockers, pivots, or follow-up notes in the plan or worker log owned by the current work shape.
+12. Update the milestone detail and `Progress Tracker` with `Done`, the commit checkpoint, validation result, and any notes.
+13. Commit the completed milestone before starting the next one. Use the AI commit-message rules in `.agents/references/execution.md`.
 
 Do not defer milestone commits until the end of the plan.
 If a milestone is blocked or only partially implemented, record the blocker in the milestone detail, `Progress Tracker`, and `Blockers And Replan Triggers`, but do not mark it complete.

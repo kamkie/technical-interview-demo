@@ -48,12 +48,13 @@ For ad hoc tasks and single milestones:
 3. Update the governing spec first when behavior intentionally changes.
 4. Make the smallest coherent implementation or documentation change.
 5. Keep artifact routing aligned through `.agents/references/documentation.md`.
-6. Run the smallest sufficient validation from `.agents/references/testing.md`.
-7. If validation fails, load `.agents/references/troubleshooting.md` before choosing the recovery path.
-8. Review the diff using `.agents/references/reviews.md`; apply the security review activity when its triggers match.
-9. Record validation evidence in the plan, worker log, or final response as appropriate.
-10. If executing a plan milestone, update the milestone detail and `Progress Tracker` with status, commit checkpoint, validation result, and any blocker or skip note.
-11. Commit every completed task or milestone that changed tracked files before handing off or starting unrelated work. Follow the rules in `## AI Commit Message Rules` below.
+6. If existing AI guidance proves wrong, incomplete, contradictory, or requires an execution-time policy decision, classify the owner through `.agents/references/documentation.md`; update the owning guide in the same change, or record the blocker or follow-up in the active plan before continuing. For ad hoc work without a plan, stop and ask when the owning guide cannot be updated safely; do not rely on final-response memory.
+7. Run the smallest sufficient validation from `.agents/references/testing.md`.
+8. If validation fails, load `.agents/references/troubleshooting.md` before choosing the recovery path.
+9. Review the diff using `.agents/references/reviews.md`; apply the security review activity when its triggers match.
+10. Record validation evidence in the plan, worker log, or final response as appropriate.
+11. If executing a plan milestone, update the milestone detail and `Progress Tracker` with status, commit checkpoint, validation result, and any blocker or skip note.
+12. Commit every completed task or milestone that changed tracked files before handing off or starting unrelated work. Follow the rules in `## AI Commit Message Rules` below.
 
 ## AI Commit Message Rules
 

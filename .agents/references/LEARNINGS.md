@@ -20,6 +20,7 @@ Evaluate whether a durable repo-wide lesson should be added during the task, not
 - a requested capability or workflow does not exist and the gap is likely to recur
 - an external API, dependency, build tool, or platform behaves differently than expected
 - an assumption is outdated compared with current repo truth, tool behavior, or supported contract
+- existing AI guidance proves wrong, contradictory, incomplete, or requires an execution-time policy decision
 - a better approach is discovered for a recurring task, diagnosis path, or validation loop
 
 Add only lessons that should survive refactors.
