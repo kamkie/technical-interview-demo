@@ -1,4 +1,4 @@
-# Detailed Planning Guide For AI Agents
+# Plan Authoring Guide For AI Agents
 
 This is the on-demand companion for creating strong `.agents/plans/PLAN_*.md` files.
 It does not own planning rules or required plan shape.

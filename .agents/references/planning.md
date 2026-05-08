@@ -1,7 +1,7 @@
 # Planning Guide For AI Agents
 
 `.agents/references/planning.md` owns the minimum standing rules for creating executable plans under `.agents/plans/`.
-Detailed examples are on demand in `.agents/references/plan-detailed-guide.md`.
+Detailed examples and fill guidance are on demand in `.agents/references/plan-authoring-guide.md`.
 Use `.agents/templates/plan-template.md` when you need the full skeleton.
 
 Use this file when the user asks for a plan, milestone breakdown, readiness review, or detailed change strategy.

@@ -14,7 +14,7 @@ Standing authority stays in:
 
 - `.agents/references/planning.md` for planning rules, lifecycle vocabulary, readiness rules, milestone requirements, roadmap synchronization, and final checks
 - `.agents/templates/plan-template.md` for the canonical plan skeleton
-- `.agents/references/plan-detailed-guide.md` for examples and fill guidance
+- `.agents/references/plan-authoring-guide.md` for examples and fill guidance
 - `.agents/references/documentation.md` for artifact routing
 - `.agents/references/testing.md` for validation scope
 - `.agents/references/workflow.md` only when branch, worktree, delegation, worker-log, or integration mechanics are part of the planning decision
@@ -37,7 +37,7 @@ Read only what the request needs:
 
 - always: `AGENTS.md`, `.agents/references/planning.md`
 - new plan or substantial revision: `.agents/templates/plan-template.md`
-- detailed fill examples or readiness review shape: `.agents/references/plan-detailed-guide.md`
+- detailed fill examples or readiness review shape: `.agents/references/plan-authoring-guide.md`
 - plan revision or readiness review: the target `.agents/plans/PLAN_*.md`
 - roadmap-driven work: `ROADMAP.md`
 - artifact routing: `.agents/references/documentation.md`
