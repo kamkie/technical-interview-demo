@@ -1,6 +1,6 @@
 # Release Checklist Reference
 
-This on-demand reference owns detailed mechanics for preparing a release metadata commit and annotated tag.
+`.agents/references/release-checklist.md` owns detailed mechanics for preparing a release metadata commit and annotated tag.
 Load it only after `.agents/references/releases.md` release preconditions are satisfied and the task is preparing a release from local `main`.
 
 From local `main`:

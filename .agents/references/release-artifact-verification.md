@@ -1,6 +1,6 @@
 # Release Artifact Verification Reference
 
-This on-demand reference owns detailed mechanics for pushing a prepared release, monitoring publication, and verifying published artifacts.
+`.agents/references/release-artifact-verification.md` owns detailed mechanics for pushing a prepared release, monitoring publication, and verifying published artifacts.
 Load it only when the user asked to push a prepared release, verify a published release, or diagnose release-publication state.
 
 ## Published Artifact Verification

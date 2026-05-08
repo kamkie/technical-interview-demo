@@ -1,6 +1,6 @@
 # Delegated One-Plan Workflow Reference
 
-This on-demand reference owns detailed mechanics for splitting one active plan into disjoint worker-owned slices.
+`.agents/references/workflow-delegated-plan.md` owns detailed mechanics for splitting one active plan into disjoint worker-owned slices.
 Load it only after the user has approved delegation, parallelism, or worktree-backed implementation for one active plan.
 
 Use this workflow when one active plan remains the canonical source of truth and a coordinator owns shared artifacts, final validation, and integration order.

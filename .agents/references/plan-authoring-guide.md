@@ -1,6 +1,6 @@
 # Plan Authoring Guide For AI Agents
 
-This is the on-demand companion for creating strong `.agents/plans/PLAN_*.md` files.
+`.agents/references/plan-authoring-guide.md` owns on-demand companion guidance for creating strong `.agents/plans/PLAN_*.md` files.
 It does not own planning rules or required plan shape.
 
 Source of truth:

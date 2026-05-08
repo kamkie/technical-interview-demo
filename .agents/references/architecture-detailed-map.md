@@ -1,6 +1,6 @@
 # Detailed Architecture Map
 
-This is the on-demand detailed architecture map for `technical-interview-demo`.
+`.agents/references/architecture-detailed-map.md` owns the on-demand detailed architecture map for `technical-interview-demo`.
 `docs/ARCHITECTURE.md` owns the compact standing architecture summary.
 
 Use this file only when the compact architecture guide is not enough to understand how the codebase is organized before structural changes.

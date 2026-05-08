@@ -1,6 +1,6 @@
 # AI Validation Troubleshooting
 
-This on-demand reference is for AI agents after a build, test, benchmark, workflow, or release-gate command fails.
+`.agents/references/troubleshooting.md` owns on-demand troubleshooting guidance for AI agents after a build, test, benchmark, workflow, or release-gate command fails.
 Use it to choose the first recovery step before improvising.
 
 Do not use this file for local install walkthroughs or human environment setup; use `SETUP.md` for that.

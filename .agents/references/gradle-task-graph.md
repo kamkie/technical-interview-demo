@@ -1,6 +1,6 @@
 # Gradle Task Dependency Graph
 
-Use this on-demand reference to choose the smallest useful `./build.ps1` command.
+`.agents/references/gradle-task-graph.md` owns the on-demand Gradle task dependency map used to choose the smallest useful `./build.ps1` command.
 
 Last refreshed: 2026-05-07.
 

@@ -1,6 +1,6 @@
 # Coordinated Multi-Plan Workflow Reference
 
-This on-demand reference owns detailed mechanics for coordinating multiple active plans that move in parallel.
+`.agents/references/workflow-coordinated-plans.md` owns detailed mechanics for coordinating multiple active plans that move in parallel.
 Load it only after the user has approved parallel execution of separate plan files.
 
 Use this workflow when each plan is independently approved, the source and contract surfaces are disjoint, and one coordinator will later integrate the accepted outputs.
