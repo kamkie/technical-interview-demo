@@ -236,7 +236,9 @@ Items the phase activity sequence exposes that this repository does not yet cove
 ## Cross-References
 
 - `AGENTS.md` for the phase owner map and `Context Hygiene` rule
-- `.agents/references/planning.md` and `.agents/references/plan-detailed-guide.md` for the `Phase` and `Status` enums
+- `.agents/references/planning.md` for the `Phase` and `Status` enums
+- `.agents/templates/plan-template.md` for the current plan skeleton and readiness/progress sections
+- `.agents/references/plan-detailed-guide.md` for planning examples and fill guidance
 - `.agents/references/execution.md` for the canonical milestone loop
 - `.agents/references/testing.md` and `.agents/references/troubleshooting.md` for the validation and red-green details
 - `.agents/references/reviews.md` for review priorities and security triggers

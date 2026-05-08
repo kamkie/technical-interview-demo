@@ -1,291 +1,301 @@
 # Detailed Planning Guide For AI Agents
 
-This is the on-demand detailed reference for producing implementation plans in this repository.
-`.agents/references/planning.md` owns the compact standing planning rules.
+This is the on-demand companion for creating strong `.agents/plans/PLAN_*.md` files.
+It does not own planning rules or required plan shape.
 
-Use this file only when the compact planning guide is not enough for a plan, milestone, execution document, milestone breakdown, or detailed change strategy.
-Do not use `ROADMAP.md` as a substitute for a real plan. `ROADMAP.md` is the roadmap. A plan is a self-contained handoff document for a concrete piece of work.
-Use `.agents/references/plan-execution.md` for whole-plan execution once a plan is approved.
-Use `.agents/references/workflow.md` for branch, worktree, coordinator, and worker mechanics.
-Use `.agents/references/documentation.md` for artifact ownership and `.agents/references/testing.md` for validation scope instead of restating those rules in the plan.
+Source of truth:
 
-## Lifecycle Metadata
+- `.agents/references/planning.md` owns lifecycle vocabulary, readiness rules, milestone rules, roadmap synchronization, and final checks.
+- `.agents/templates/plan-template.md` owns the canonical plan skeleton and required sections.
+- `.agents/references/documentation.md` owns artifact routing.
+- `.agents/references/testing.md` owns validation scope.
+- `.agents/references/plan-execution.md` and `.agents/references/execution.md` own execution after a plan is approved.
 
-Every `.agents/plans/PLAN_*.md` file should start with a small `Lifecycle` section immediately below the title.
-Use a compact table so the current state is obvious at a glance:
+Use this guide only when the compact planning guide and template are not enough to decide how to fill a plan, review readiness, or shape milestones.
+If this guide conflicts with `planning.md` or `plan-template.md`, follow those files and update this guide later.
 
-```md
-## Lifecycle
-| Status | Current |
-| --- | --- |
-| Phase | Planning |
-| Status | Draft |
-```
+## Planning Posture
 
-Prefer this controlled vocabulary unless the user explicitly asks for another scheme.
+A good plan is a handoff document, not a narrative of the agent's research.
+It should let another agent execute without inventing missing product, contract, validation, or ownership decisions.
 
-Recommended `Phase` values:
-
-- `Discovery`: repo research, framing, or pre-planning intake is still underway
-- `Planning`: the plan is being written, reviewed, or finalized
-- `Implementation`: approved work is actively being built
-- `Integration`: implementation is done and the work is being validated, merged, or prepared for release
-- `Closed`: no further active execution is expected for this plan
-
-Recommended `Status` values:
-
-- `Draft`: the plan is still being shaped
-- `Needs Input`: unanswered user questions still block a decision-complete plan
-- `Ready`: the plan is decision-complete and ready for execution
-- `In Progress`: implementation or integration work is actively happening
-- `Blocked`: execution cannot continue until an external blocker is resolved
-- `Implemented`: implementation and validation are complete, but release or archive cleanup is still pending
-- `Released`: the completed plan has shipped and been cleaned up
-
-Use `Phase` for the coarse lifecycle stage and `Status` for the immediate execution state.
-Keep the lifecycle block current as the plan moves from planning through implementation, integration, and eventual closure.
-
-## Planning Goals
-
-A good plan for this repository is:
+Prefer plans that are:
 
 - spec-driven before implementation-driven
-- explicit about the behavior being changed
-- grounded in current repo truth, not guesses
-- narrow enough to preserve the demo nature of the project
-- detailed enough that another agent can execute it without inventing missing decisions
-- structured as milestone checkpoints that can be implemented, validated, and committed cleanly
-- validation-heavy, with clear build, test, and contract checks
+- narrow enough to preserve the demo character of the repository
+- explicit about public contract impact
+- milestone-based, with each milestone small enough to validate and commit
+- clear about unresolved questions, accepted fallbacks, and decisions that should not be reopened during execution
 
-The application goals matter when planning:
+Do not use `ROADMAP.md` as a substitute for a plan.
+The roadmap tracks active work at a high level; the plan owns detailed milestones, progress, validation, blockers, and handoff context.
 
-- keep the codebase small, readable, and easy to reason about
-- keep the public API stable unless the task explicitly changes it
-- preserve the demo character of the project instead of over-engineering it
-- treat tests, REST Docs, OpenAPI compatibility, and benchmark gates as part of the product contract
+## Planning Flow
 
-Plans in this repository must name a practical execution shape:
+Use this sequence when filling the template:
 
-- one local branch for ordinary work
-- delegated one-plan work when one plan has disjoint worker-owned slices
-- coordinated multi-plan work when separate active plans can move independently
+1. Identify the behavior or workflow being changed.
+2. Find the governing spec or contract artifacts before proposing implementation.
+3. Resolve what repo truth already answers.
+4. Record remaining questions in the open-question table, with blocking status.
+5. Lock answered questions and fallback assumptions in the decision log.
+6. Choose the execution shape and shared-file boundaries.
+7. Define milestone checkpoints that can each be validated and committed.
+8. Define validation and user verification in concrete terms.
+9. Check that roadmap state, readiness, progress tracking, and required artifacts line up.
 
-That means every plan must be milestone-driven enough for one milestone to become one reviewable execution checkpoint.
-When a plan might be delegated, it must also make worker-safe ownership and shared-file boundaries explicit.
+Ask the user only when ambiguity changes product intent, compatibility, rollout, acceptance criteria, validation, or another material tradeoff.
+For non-blocking preference gaps, pick a conservative fallback and record it.
 
-## Before You Plan
+## Filling The Template
 
-Before writing a plan, read the repository guidance and the relevant specs.
-At minimum, inspect:
+### Lifecycle And Readiness
 
-- `AGENTS.md`
-- `README.md`
-- the owning AI guide when the work changes durable repo guidance, usually `docs/ARCHITECTURE.md`, `docs/DESIGN.md`, or `.agents/references/LEARNINGS.md`
-- `ROADMAP.md` if the work touches roadmap sequencing
-- relevant tests under `src/test/java/`
-- relevant docs under `src/docs/asciidoc/`
-- `src/test/resources/openapi/approved-openapi.json` if API behavior may change
-- relevant HTTP convenience scripts under `src/manualTests/http/examples/` when reviewer workflows need to mirror the change
-- implementation code in `src/main/java/`
+Use `Lifecycle` for the plan's coarse state and immediate execution state.
+Use `Planning Readiness` to make the decision state scannable.
 
-If the user referenced another document, ticket, PR, issue, API example, or web page, read it before planning.
-If the request leaves material gaps in scope, compatibility, rollout, acceptance criteria, or validation, resolve what repo truth can answer first and then ask targeted clarification questions before finalizing the plan. Do not hide material requirement holes inside silent assumptions.
+`Status | Ready` means no blocking open question remains unresolved.
+If any open question has `Blocks Ready? | Yes`, the lifecycle status should be `Needs Input`.
+If a blocking question is deferred, the fallback must be explicit in both `Requirement Gaps And Open Questions` and `Decision Log And Assumptions`.
 
-## Milestone Design Rules
+Good readiness rows are mechanical and current:
 
-Every execution milestone should be a commit-sized checkpoint.
-Design milestones so an executor can finish the milestone, run the planned validation, update the workflow-specific tracking artifacts, and commit before moving on.
+```md
+| Decision Complete | Yes |
+| Blocking Open Questions | None |
+| Accepted Fallbacks | D2 |
+| Ready For Execution | Yes |
+| Last Updated | 2026-05-08 |
+```
 
-Use these rules:
+### Summary, Scope, And Current State
 
-- keep milestone scope coherent: one user-visible behavior slice, one refactor checkpoint, or one documentation/contract checkpoint
-- include the spec, implementation, documentation, and validation work needed for that checkpoint instead of scattering one behavior across many vague milestones
-- name exact files or packages when possible
-- mark which files remain coordinator-owned if the plan is later delegated
-- avoid milestones that require multiple workers to touch the same file set at the same time
-- choose stable topic names when a plan might later participate in a coordinated multi-plan run with its own temporary changelog file
+Keep `Summary` short: what changes, why it matters, and how success will be measured.
+Use `Scope` to prevent quiet expansion during implementation.
+Use `Current State` for facts discovered from specs, docs, source, tests, roadmap, or user input.
 
-## How To Plan
+Avoid implementation guesses in `Current State`.
+If a fact is inferred rather than directly observed, say so and record whether the inference matters to readiness.
 
-1. Establish the real change.
-   Write down what behavior is changing, who uses it, and whether it is public API, internal behavior, setup, or roadmap-only work.
+### Open Questions
 
-2. Find the governing spec artifacts.
-   Identify which tests, docs, OpenAPI baseline, README sections, or roadmap entries define the current behavior.
+Every material question gets a stable `Q` ID.
+Use the table to show what is missing, why it matters, who owns the answer, and whether the plan can proceed.
 
-3. Research before asking.
-   Search the repo and inspect likely source files before asking the user questions. Do not ask questions whose answers are already in the codebase, docs, configs, or tests.
+Example:
 
-4. Ask only high-value questions.
-   Ask the user when ambiguity affects product intent, scope, compatibility, rollout, acceptance criteria, validation, or other material tradeoffs. If you ask, present concrete options and recommend one.
+```md
+| ID | Question / Gap | Why It Matters | Owner | Status | Fallback / Decision | Blocks Ready? |
+| --- | --- | --- | --- | --- | --- | --- |
+| Q1 | Should the new filter be public API or internal admin-only behavior? | Changes tests, docs, OpenAPI, and compatibility risk. | User | Open | Pending | Yes |
+| Q2 | Should existing examples be updated? | Affects reviewer workflow but not runtime behavior. | Agent | Deferred | D2: update examples only if contract docs move. | No |
+```
 
-5. Record requirement gaps explicitly.
-   If a material question is still open after repo research, record what is missing, why it matters, and whether planning is blocked pending user input.
+Do not delete answered questions during planning.
+Change their status to `Answered` or `Deferred` and point to the decision log.
 
-6. Lock assumptions carefully.
-   If the user does not answer a non-blocking preference question, proceed with a reasonable default and record it explicitly in the plan as a fallback assumption. Do not convert missing product decisions about scope, compatibility, rollout, acceptance criteria, or validation into silent assumptions.
+### Decisions And Assumptions
 
-7. Keep the plan decision-complete.
-   The implementer should not need to decide what files to touch, what behavior to preserve, what tests to add, what validation proves completion, or how milestone boundaries map to execution checkpoints.
+Use `Decision Log And Assumptions` for answers that execution should not reopen casually.
+Good decision rows name the source and revisit trigger:
 
-8. Prefer the smallest coherent change.
-   Favor direct Spring MVC, Spring Data, and `@Service`-level changes over new abstraction layers unless the user explicitly wants broader architecture work.
+```md
+| ID | Decision / Assumption | Source | Date | Revisit Trigger |
+| --- | --- | --- | --- | --- |
+| D1 | Preserve existing response shape; add no new error envelope. | Approved OpenAPI baseline and user request | 2026-05-08 | Revisit only if user asks for breaking API cleanup. |
+```
 
-9. Choose the execution shape.
-   Default to one local branch. Use delegated one-plan work only when one plan can be split into disjoint worker-owned slices. Use coordinated multi-plan work only when separate plan files can move independently with their own validation and temporary changelog copies.
+Use decision rows for:
 
-10. Mark shared and private artifacts.
-    If the work could fan out, state which files stay coordinator-owned, which files can be worker-owned, and which artifacts must stay private to a worker branch until integration.
+- explicit user decisions
+- repo-truth conclusions
+- accepted fallback assumptions
+- non-obvious compatibility constraints
 
-11. Call out better-engineering blockers.
-    If the requested change is poorly framed because a more fundamental problem must be solved first, say so in the plan. Small prerequisite cleanup can be included as an early milestone. Large prerequisite work should be called out as a separate plan.
+### Execution Shape And Shared Files
 
-12. Make validation concrete.
-    Every plan must explain exactly how the executor will prove correctness. Use `.agents/references/testing.md` for the required commands and extra gates.
+Default to one local branch.
+Choose delegated one-plan work only when milestones can be split into disjoint worker-owned slices.
+Choose coordinated multi-plan work only when separate active plans can move independently.
 
-## Required Planning Questions
+When delegation is realistic, name shared files early.
+Coordinator-owned files commonly include the canonical plan, `ROADMAP.md`, `CHANGELOG.md`, generated contract baselines, and shared docs.
 
-A plan is not ready until it answers all of these:
+### Affected Artifacts
 
-- What behavior is changing?
-- Why is the change needed?
-- What is explicitly out of scope?
-- Which spec artifacts currently define this behavior?
-- Which source files will likely change?
-- What compatibility promises must be preserved?
-- What edge cases or failure modes matter?
-- What requirement gaps still need user input, and which of them block planning?
-- Which execution shape is the default, and why?
-- If the work fans out, which files stay coordinator-owned or otherwise shared?
-- Are the milestones small enough to be validated and committed one checkpoint at a time?
-- What validation proves the work is complete?
-- Which documentation or contract artifacts must move according to `.agents/references/documentation.md`?
-- Is there a smaller or cleaner way to achieve the same goal?
+List likely artifacts by ownership, not by vague area.
+For example:
 
-## Repo-Specific Rules For Planning
+- `src/test/java/...BookControllerTest.java`
+- `src/docs/asciidoc/...`
+- `src/test/resources/openapi/approved-openapi.json`
+- `src/manualTests/http/examples/...`
+- `.agents/references/testing.md`
 
-### Public API changes
+For public API changes, expect specs, REST Docs, OpenAPI, manual HTTP examples, and README impact to be considered.
+For internal refactors, say explicitly that OpenAPI, REST Docs, and README should not move unless behavior changes.
 
-If the plan changes request handling, response shape, documented errors, security requirements, pagination, filtering, or endpoint behavior, the plan must name all affected contract artifacts required by `AGENTS.md` and routed through `.agents/references/documentation.md`.
-The plan must also state whether extra validation from `.agents/references/testing.md` is required, especially benchmark reruns for book list/search, localization lookup, or OAuth/session startup changes.
+### Progress Tracker
 
-### Durable AI guidance changes
+The `Progress Tracker` is a dashboard for execution.
+It should mirror the detailed milestone status, validation, blockers, and commit checkpoint.
 
-If the work changes a cross-cutting architectural or product convention that should remain true after the task-specific plan is archived, the plan must name the owning AI guide update explicitly.
-Examples include persistence or serialization conventions, package ownership changes, and durable design or engineering lessons.
-Do not treat the temporary `.agents/plans/PLAN_*.md` file as a substitute for updating `docs/ARCHITECTURE.md`, `docs/DESIGN.md`, or `.agents/references/LEARNINGS.md` when one of those guides is the durable owner.
+Use these statuses only: `Not Started`, `In Progress`, `Blocked`, `Done`, `Skipped`.
+Use `Pending` for commit and validation before work starts.
+During planning, do not invent commit SHAs.
 
-### Internal refactors
+### Milestones
 
-If the work is a refactor with no contract change, the plan should preserve existing specs and avoid unnecessary doc or OpenAPI edits.
+Each milestone should be a commit-sized checkpoint.
+Repeat the template's fixed field set for every milestone.
 
-### Setup or environment changes
+Strong milestones:
 
-If the work changes onboarding, tools, Java, Docker, formatter setup, or local runbooks, update `SETUP.md`. Do not move setup detail into `AGENTS.md` or `.agents/references/planning.md`.
+- include the spec, implementation, docs, and validation needed for one coherent behavior slice
+- name exact files or packages where possible
+- reserve shared files to the coordinator when delegation is possible
+- include the smallest useful context read set
+- state preserved behavior, not only new work
+- define concrete validation and commit checkpoints
 
-### Roadmap work
+Weak milestones:
 
-If the task is only reprioritization or scope management, update `ROADMAP.md`.
-Keep `ROADMAP.md` `## Current Project State` aligned when the active release phase, breaking-change policy, or next target version changes.
-Do not write a fake execution plan when the work is not ready to implement.
+- say "update tests as needed"
+- split one behavior across unrelated spec, implementation, and docs milestones without a reason
+- require multiple workers to edit the same files at the same time
+- ask the executor to decide compatibility, rollout, or acceptance criteria later
 
-## Plan Output Format
+Example milestone:
 
-When the user asks for a concrete execution plan, create a new file under `.agents/plans/` named `PLAN_<topic>.md`.
-Use short lowercase topic names with underscores, for example `PLAN_book_api_error_shape.md`.
+```md
+### Milestone 1: Add Book Filter Contract
+| Field | Value |
+| --- | --- |
+| Status | Not Started |
+| Goal | Define the supported request semantics before implementation. |
+| Owned Files Or Packages | `src/test/java/.../BookControllerTest.java`, `src/docs/asciidoc/...` |
+| Coordinator-Owned Shared Files | `src/test/resources/openapi/approved-openapi.json`, `CHANGELOG.md` |
+| Context Required | `AGENTS.md`, `.agents/references/execution.md`, this plan, relevant book API tests, REST Docs snippets |
+| Behavior To Preserve | Existing pagination, sorting, and error behavior remain unchanged. |
+| Deliverables | Failing or updated executable contract specs plus published docs updates for the new filter. |
+| Validation Checkpoint | Targeted book API tests document the intended request and response behavior. |
+| Commit Checkpoint | Commit contract/spec changes before implementation if they are reviewable alone. |
+```
 
-Use `.agents/templates/plan-template.md` as the canonical skeleton.
-This guide explains how to fill that skeleton in, how to design milestones, and how to keep plan content aligned with repo-specific ownership and validation rules.
+### Blockers And Replan Triggers
 
-Repeat the milestone section from the template for every commit-sized checkpoint.
-Each repeated milestone should use the same field set as the template milestone and name its own goal, owned files or packages, shared-file boundaries, context required before execution, behavior to preserve, exact deliverables, validation checkpoint, and commit checkpoint.
+Use this table for execution-time events, not initial planning questions.
+Examples:
 
-## What Good Planning Looks Like In This Repo
+- validation reveals public behavior already differs from docs
+- a generated OpenAPI baseline changes outside the planned endpoint
+- a worker-owned file becomes a shared-file conflict
+- the smallest coherent milestone is larger than expected
 
-Good plans in this repository usually:
+The response should say whether to pause, ask the user, revise the plan, narrow scope, or split work.
 
-- start from tests and contract docs instead of starting from controllers
-- include a simple lifecycle block that makes the current phase and execution status obvious
-- name exact files or packages instead of vague areas
-- distinguish public contract work from internal cleanup
-- make material requirement gaps explicit instead of silently guessing
-- point to `.agents/references/documentation.md` for artifact ownership instead of improvising file routing
-- point to `.agents/references/testing.md` for required validation instead of hand-waving about tests
-- define milestone checkpoints that can be implemented and committed cleanly
-- call out shared-file boundaries early if delegation is realistic
-- include manual user verification for visible behavior
+### Validation Plan And Results
 
-Poor plans in this repository usually:
+`Validation Plan` names intended proof.
+`Validation Results` records actual proof gathered during execution.
 
-- describe implementation without identifying the spec first
-- bury unresolved scope, compatibility, rollout, acceptance-criteria, or validation questions inside vague assumptions
-- change public behavior without naming the contract and documentation consequences
-- propose new abstractions that fight the demo scope
-- use vague language like "update tests as needed" instead of naming which tests must change
-- define milestones too vaguely to support commit-after-milestone execution
-- leave shared-file ownership implicit when the work could be delegated
+Good validation entries are exact:
 
-## Example Planning Frames
+```md
+| Date | Command | Scope | Result | Notes |
+| --- | --- | --- | --- | --- |
+| 2026-05-08 | `./build.ps1 test` | Automated tests | Passed | Contract tests and docs snippets regenerated. |
+```
 
-### Example 1: Public API change
+If a required command cannot run, record the command, result as `Skipped` or `Failed`, and the reason.
 
-Request: add a new supported filter to `GET /api/books`.
+### User Validation
 
-A good plan would:
+Use this section for the shortest practical walkthrough the user can perform.
+For API work, name the endpoint or HTTP example.
+For docs or AI-guidance changes, name the file section to inspect and the expected behavior for the next agent.
 
-- identify the current `Book` API tests and search behavior specs first
-- define request parameter semantics, validation rules, and sort compatibility before coding
-- name the contract artifacts that must move together through `.agents/references/documentation.md`
-- call out any benchmark rerun required by `.agents/references/testing.md`
-- make each milestone a real checkpoint that can be committed after validation
+## Planning Frames
 
-### Example 2: Internal cleanup
+### Public API Change
 
-Request: move duplicate mapping logic from a controller into a service helper without changing API behavior.
+A public API plan should:
 
-A good plan would:
+- start from integration tests, REST Docs tests, and approved OpenAPI baseline
+- define request, response, error, pagination, sorting, filtering, and compatibility semantics before coding
+- name all published contract artifacts that must move
+- call out benchmark or smoke checks required by `.agents/references/testing.md`
+- include manual HTTP example updates when reviewer workflows should mirror the behavior
 
-- treat the current tests as the contract to preserve
-- keep OpenAPI and REST Docs unchanged unless behavior really changes; update HTTP convenience scripts only when reviewer workflows should mirror the change
-- list the exact classes to refactor
-- validate with the existing test suite and standard repository checks
-- stay small enough that one local branch remains the obvious execution shape
+### Internal Refactor
 
-### Example 3: Delegated one-plan refactor
+An internal refactor plan should:
 
-Request: refactor one subsystem using a single approved plan and several workers.
+- state the existing specs are the contract to preserve
+- avoid OpenAPI, REST Docs, and README churn unless behavior actually changes
+- name the classes or packages being moved
+- include targeted validation that proves behavior stayed stable
+- keep abstraction small and consistent with the repository's demo scope
 
-A good plan would:
+### AI-Guidance Or Workflow Change
 
-- keep one canonical `.agents/plans/PLAN_*.md` as the source of truth
-- name which files stay coordinator-owned, at minimum the canonical plan file and `CHANGELOG.md`
-- split worker ownership by package, test class, or other defensible file boundary
-- make every worker milestone a standalone commit checkpoint with explicit validation
-- leave shared-file integration to the coordinator instead of asking workers to improvise it
+An AI-guidance plan should:
 
-## Execution Hand-Off
+- identify the owning `.agents/references/` file from `.agents/references/documentation.md`
+- avoid redistributing standing policy across templates, task starters, or archived plans
+- update the template only when the reusable artifact shape changes
+- update execution or workflow guides when a planning change creates new execution duties
+- validate with documentation review and `git diff --check`
 
-Once a plan is approved, execution belongs in:
+### Delegated One-Plan Work
 
-- `.agents/references/plan-execution.md` for executing the whole plan across milestones
-- `.agents/references/execution.md` for one named milestone from the plan
-- `.agents/references/workflow.md` for branch, worktree, delegation, worker-log, and integration mechanics
-- `.agents/references/releases.md` for the release step after implementation is complete
+A delegated one-plan work shape should:
 
-Keep `.agents/references/planning.md` focused on plan quality and handoff completeness rather than repeating execution mechanics.
+- keep one canonical plan as the coordination source
+- name coordinator-owned files before workers start
+- split worker ownership by file or package, not by vague responsibility
+- require each worker milestone to produce standalone validation evidence
+- leave shared-file integration to the coordinator
 
-## Final Planning Check
+## Readiness Review Shape
 
-Before presenting a plan to the user, verify that:
+When reviewing whether a plan is ready, lead with blockers.
 
-- the lifecycle block is present near the top and uses a clear phase/status pair
-- the plan is self-contained
-- the plan names the governing specs
-- the plan separates scope from non-goals
-- the plan names the likely files to change
-- the plan records any remaining requirement gaps and fallback assumptions explicitly
-- the plan identifies the execution shape and any shared-file boundaries that matter
-- the milestones are specific enough to validate and commit one checkpoint at a time
-- the plan includes repo-specific validation
-- the plan respects the demo scope of the application
-- the plan does not hide compatibility or benchmark consequences
+Use this shape:
+
+```md
+Readiness: Needs Input / Ready / Not Ready
+
+Blocking gaps:
+- Q1: ...
+
+Non-blocking risks:
+- ...
+
+Lifecycle check:
+- Phase/Status matches the current state: yes/no
+- Planning Readiness matches open questions and decisions: yes/no
+
+Execution check:
+- Milestones are commit-sized: yes/no
+- Progress tracker matches milestones: yes/no
+- Validation is concrete: yes/no
+```
+
+If there are no blocking gaps, say that clearly and name any residual risk.
+
+## Final Detailed Check
+
+Before handing off a plan, confirm:
+
+- `Lifecycle` and `Planning Readiness` agree with the open-question and decision tables
+- unresolved questions have owners, status values, fallback or decision fields, and blocking status
+- accepted fallbacks are visible in the decision log
+- scope, non-goals, compatibility promises, and edge cases are explicit
+- affected artifacts follow `.agents/references/documentation.md`
+- milestone context fields name the smallest useful read set
+- milestones are commit-sized and use the template's fixed field set
+- `Progress Tracker` mirrors the milestone list
+- execution-time blockers are separate from planning questions
+- validation plan and user validation are concrete
+- roadmap state is updated only for concrete active plans
