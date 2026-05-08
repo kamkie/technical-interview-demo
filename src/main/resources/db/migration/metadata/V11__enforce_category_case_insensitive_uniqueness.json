@@ -1,0 +1,7 @@
+{
+  "summary": "Adds database-enforced case-insensitive uniqueness for category names after checking for existing normalized duplicates.",
+  "rolloutCategory": "contract",
+  "deploymentOrder": "db-first",
+  "rollingCompatible": true,
+  "rollbackPosture": "image-only"
+}

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
 import team.jit.technicalinterviewdemo.business.book.BookRepository;
@@ -13,6 +14,7 @@ import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
 import team.jit.technicalinterviewdemo.testing.SecurityTestSupport.BrowserSession;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -157,6 +159,14 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .andExpect(jsonPath("$.detail").value("Category 'java' already exists."))
                 .andExpect(jsonPath("$.messageKey").value("error.request.invalid"))
                 .andExpect(jsonPath("$.language").value("en"));
+    }
+
+    @Test
+    void databaseRejectsCaseVariantDuplicateCategoryNames() {
+        categoryRepository.saveAndFlush(new Category("Architecture"));
+
+        assertThatThrownBy(() -> categoryRepository.saveAndFlush(new Category("architecture")))
+                .isInstanceOf(DataIntegrityViolationException.class);
     }
 
     @Test
