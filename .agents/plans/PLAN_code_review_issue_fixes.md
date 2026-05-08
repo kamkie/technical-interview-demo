@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Implementation |
+| Status | In Progress |
 
 ## Planning Readiness
 | Field | Value |
@@ -122,7 +122,7 @@
 ## Progress Tracker
 | Milestone | Status | Owner | Commit | Validation | Notes |
 | --- | --- | --- | --- | --- | --- |
-| 1: Role-Grant Replacement Safety | Not Started | Agent | Pending | Pending | Start with user-role executable spec before implementation. |
+| 1: Role-Grant Replacement Safety | Done | Agent | `fix(user): keep bootstrap role grants idempotent` | `./build.ps1 test --tests *AdminUserManagementApiIntegrationTests` passed | Bootstrap ADMIN self-replacement now keeps the bootstrap grant and writes only missing managed roles. |
 | 2: Book Write Validation And Contract | Not Started | Agent | Pending | Pending | Keep OpenAPI review explicit before baseline refresh. |
 | 3: Category Case-Insensitive Database Uniqueness | Not Started | Agent | Pending | Pending | New migration version must be checked against current branch state. |
 | 4: Integrity Error Wording And Alert Coverage | Not Started | Agent | Pending | Pending | Prefer a focused manifest test if a test home exists. |
@@ -133,7 +133,7 @@
 ### Milestone 1: Role-Grant Replacement Safety
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Make ADMIN role replacement idempotent when requested roles overlap with bootstrap grants. |
 | Owned Files Or Packages | `src/main/java/team/jit/technicalinterviewdemo/business/user/`, `src/test/java/team/jit/technicalinterviewdemo/business/user/` |
 | Coordinator-Owned Shared Files | None |
@@ -141,7 +141,7 @@
 | Behavior To Preserve | Bootstrap grants remain immutable through managed-role replacement; every managed role replacement still requires `USER`, an ADMIN actor, CSRF, and audit logging. |
 | Deliverables | 1. Add an integration or service test that replaces roles for the bootstrap admin with `["USER", "ADMIN"]` and verifies no duplicate grant/constraint failure.<br>2. Adjust `replaceManagedRoleGrants()` so roles already satisfied by bootstrap grants are not added again as managed grants.<br>3. Preserve existing provenance behavior for non-bootstrap managed role changes. |
 | Validation Checkpoint | `./build.ps1 test --tests *AdminUserManagementApiIntegrationTests` passes, or a narrower user-role service test also passes if added. |
-| Commit Checkpoint | Commit after targeted validation if this milestone is executed independently. |
+| Commit Checkpoint | `fix(user): keep bootstrap role grants idempotent` |
 
 ### Milestone 2: Book Write Validation And Contract
 | Field | Value |
@@ -253,6 +253,7 @@
 | Date | Command | Scope | Result | Notes |
 | --- | --- | --- | --- | --- |
 | 2026-05-08 | `./build.ps1 build` | Plan and roadmap revision validation | Passed | Wrapper detected only lightweight files changed, skipped Gradle, and reported manual consistency review as sufficient. |
+| 2026-05-08 | `./build.ps1 test --tests *AdminUserManagementApiIntegrationTests` | Milestone 1 role-grant replacement safety | Passed | Executed 7 `AdminUserManagementApiIntegrationTests`, including bootstrap admin self-replacement regression. |
 
 ## User Validation
 - Confirm `PUT /api/admin/users/{bootstrapAdminId}/roles` with `["USER", "ADMIN"]` succeeds without duplicate grants.

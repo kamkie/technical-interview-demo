@@ -157,6 +157,43 @@ class AdminUserManagementApiIntegrationTests extends AbstractMockMvcIntegrationT
     }
 
     @Test
+    void replaceManagedUserRolesForBootstrapAdminDoesNotDuplicateBootstrapGrant() throws Exception {
+        BrowserSession adminSession = adminSession();
+        UserAccount adminUser = synchronizeAccount(adminSession, "admin-user");
+
+        mockMvc.perform(put("/api/admin/users/{id}/roles", adminUser.getId())
+                        .with(adminSession.unsafeWrite())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {
+                              "roles": ["USER", "ADMIN"],
+                              "reason": "Keep bootstrap access while replacing managed roles."
+                            }
+                            """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.login").value("admin-user"))
+                .andExpect(jsonPath("$.roles[0]").value("ADMIN"))
+                .andExpect(jsonPath("$.roles[1]").value("USER"))
+                .andExpect(jsonPath("$.roleGrants[0].role").value("ADMIN"))
+                .andExpect(jsonPath("$.roleGrants[0].source").value("BOOTSTRAP"))
+                .andExpect(jsonPath("$.roleGrants[0].grantedByUserId").doesNotExist())
+                .andExpect(jsonPath("$.roleGrants[1].role").value("USER"))
+                .andExpect(jsonPath("$.roleGrants[1].source").value("ADMIN_MANAGED"))
+                .andExpect(jsonPath("$.roleGrants[1].grantedByUserId").value(adminUser.getId()))
+                .andExpect(jsonPath("$.roleGrants[1].reason")
+                        .value("Keep bootstrap access while replacing managed roles."));
+
+        UserAccount updatedAdmin = userAccountRepository.findById(adminUser.getId()).orElseThrow();
+        assertThat(updatedAdmin.getRoles()).containsExactlyInAnyOrder(UserRole.USER, UserRole.ADMIN);
+        assertThat(updatedAdmin.getRoleGrants()).hasSize(2);
+        assertThat(updatedAdmin.getRoleGrants())
+                .filteredOn(roleGrant -> roleGrant.getRole() == UserRole.ADMIN)
+                .singleElement()
+                .extracting(UserRoleGrant::getGrantSource)
+                .isEqualTo(UserRoleGrantSource.BOOTSTRAP);
+    }
+
+    @Test
     void replaceManagedUserRolesWithoutUserRoleReturnsBadRequest() throws Exception {
         BrowserSession adminSession = adminSession();
         UserAccount adminUser = synchronizeAccount(adminSession, "admin-user");

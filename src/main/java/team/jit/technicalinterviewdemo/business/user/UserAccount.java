@@ -150,7 +150,11 @@ public class UserAccount {
         String normalizedReason = normalizeRequired(reason, "reason");
 
         roleGrants.removeIf(grant -> grant.getGrantSource() != UserRoleGrantSource.BOOTSTRAP);
+        Set<UserRole> retainedBootstrapRoles = getRoles();
         for (UserRole role : normalizedRoles) {
+            if (retainedBootstrapRoles.contains(role)) {
+                continue;
+            }
             roleGrants.add(new UserRoleGrant(
                     this, role, UserRoleGrantSource.ADMIN_MANAGED, normalizedGrantor, normalizedReason));
         }
