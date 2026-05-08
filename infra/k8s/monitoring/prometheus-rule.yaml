@@ -48,13 +48,13 @@ spec:
               (
                 sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo",uri=~"/api/account|/api/account/language|/api/admin/audit-logs|/api/admin/operator-surface|/api/admin/users|/api/admin/users/.+",status=~"401|403"}[10m]))
                 +
-                sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo",method=~"POST|PUT|DELETE",uri=~"/api/categories|/api/categories/.+|/api/localizations|/api/localizations/.+",status=~"401|403"}[10m]))
+                sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo",method=~"POST|PUT|DELETE",uri=~"/api/books|/api/books/.+|/api/categories|/api/categories/.+|/api/localizations|/api/localizations/.+",status=~"401|403"}[10m]))
               )
               /
               clamp_min(
                 sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo",uri=~"/api/account|/api/account/language|/api/admin/audit-logs|/api/admin/operator-surface|/api/admin/users|/api/admin/users/.+"}[10m]))
                 +
-                sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo",method=~"POST|PUT|DELETE",uri=~"/api/categories|/api/categories/.+|/api/localizations|/api/localizations/.+"}[10m])),
+                sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo",method=~"POST|PUT|DELETE",uri=~"/api/books|/api/books/.+|/api/categories|/api/categories/.+|/api/localizations|/api/localizations/.+"}[10m])),
                 0.001
               )
             ) > 0.20
@@ -62,7 +62,7 @@ spec:
             (
               sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo",uri=~"/api/account|/api/account/language|/api/admin/audit-logs|/api/admin/operator-surface|/api/admin/users|/api/admin/users/.+"}[10m]))
               +
-              sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo",method=~"POST|PUT|DELETE",uri=~"/api/categories|/api/categories/.+|/api/localizations|/api/localizations/.+"}[10m]))
+              sum(rate(http_server_requests_seconds_count{namespace="technical-interview-demo",method=~"POST|PUT|DELETE",uri=~"/api/books|/api/books/.+|/api/categories|/api/categories/.+|/api/localizations|/api/localizations/.+"}[10m]))
             ) > 0.02
           for: 10m
           labels:

@@ -68,7 +68,7 @@ class ApiExceptionHandlerTests {
     }
 
     @Test
-    void handleDataIntegrityViolationIncludesRootCauseMessage() {
+    void handleDataIntegrityViolationUsesFeatureNeutralDetail() {
         when(localizationMessageService.findByMessageKeyForCurrentLanguageWithFallback(
                         eq("error.data.integrity_violation")))
                 .thenReturn(localizedMessage("error.data.integrity_violation", "Integrity violation"));
@@ -79,7 +79,7 @@ class ApiExceptionHandlerTests {
                 request("/api/books"));
 
         assertThat(problemDetail.getStatus()).isEqualTo(HttpStatus.CONFLICT.value());
-        assertThat(problemDetail.getDetail()).isEqualTo("Book data violates a database constraint.");
+        assertThat(problemDetail.getDetail()).isEqualTo("Request data violates a database constraint.");
         assertThat(problemDetail.getProperties())
                 .containsEntry("messageKey", "error.data.integrity_violation")
                 .containsEntry("message", "Integrity violation")

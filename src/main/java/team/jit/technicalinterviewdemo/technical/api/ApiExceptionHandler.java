@@ -266,7 +266,7 @@ public class ApiExceptionHandler {
         return apiProblemFactory.clientProblem(
                 HttpStatus.CONFLICT,
                 "Data Integrity Violation",
-                "Book data violates a database constraint.",
+                "Request data violates a database constraint.",
                 "error.data.integrity_violation",
                 request,
                 Map.of("exception", exception.getClass().getSimpleName(), "cause", rootCauseMessage(exception)));

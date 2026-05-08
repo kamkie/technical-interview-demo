@@ -125,7 +125,7 @@
 | 1: Role-Grant Replacement Safety | Done | Agent | `fix(user): keep bootstrap role grants idempotent` | `./build.ps1 test --tests *AdminUserManagementApiIntegrationTests` passed | Bootstrap ADMIN self-replacement now keeps the bootstrap grant and writes only missing managed roles. |
 | 2: Book Write Validation And Contract | Done | Agent | `fix(books): validate write field bounds` | `./build.ps1 test --tests *BookApiIntegrationTests --tests *ApiDocumentationTests --tests *OpenApiCompatibilityIntegrationTests` passed; `./build.ps1 refreshOpenApiBaseline` passed; `./build.ps1 test --tests *OpenApiCompatibilityIntegrationTests` passed | Create/update requests now enforce title/author length, ISBN create length, and publication-year range; REST Docs and OpenAPI baseline are aligned. |
 | 3: Category Case-Insensitive Database Uniqueness | Done | Agent | `fix(categories): enforce case-insensitive uniqueness` | `./build.ps1 test --tests *CategoryApiIntegrationTests` passed | Added `V11` preconditioned unique lower-name index plus PostgreSQL integration coverage for direct case-variant duplicates. |
-| 4: Integrity Error Wording And Alert Coverage | Not Started | Agent | Pending | Pending | Prefer a focused manifest test if a test home exists. |
+| 4: Integrity Error Wording And Alert Coverage | Done | Agent | `fix(api): neutralize integrity wording and alert books` | `./build.ps1 test --tests *ApiExceptionHandlerTests --tests *PrometheusRuleManifestTests` passed | Generic integrity detail is feature-neutral; auth-failure alert now includes protected book writes and has focused manifest coverage. |
 | 5: Contract Refresh And Full Validation | Not Started | Agent | Pending | Pending | Fill validation ledger with exact commands and outcomes. |
 
 ## Execution Milestones
@@ -172,7 +172,7 @@
 ### Milestone 4: Integrity Error Wording And Alert Coverage
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Remove misleading book-specific generic integrity wording and ensure auth-failure monitoring covers protected book writes. |
 | Owned Files Or Packages | `src/main/java/team/jit/technicalinterviewdemo/technical/api/`, `infra/k8s/monitoring/`, related tests |
 | Coordinator-Owned Shared Files | None |
@@ -180,7 +180,7 @@
 | Behavior To Preserve | Generic integrity errors remain 409 with no sensitive database details in the public response; alert threshold math and existing protected endpoint coverage remain intact. |
 | Deliverables | 1. Update the generic data-integrity detail to feature-neutral wording and update tests.<br>2. Extend `TechnicalInterviewDemoAuthenticationFailuresElevated` numerator and denominator to include protected book writes.<br>3. Add or update an infrastructure-manifest test if the repo has one; otherwise document the manifest diff in validation notes. |
 | Validation Checkpoint | `./build.ps1 test --tests *ApiExceptionHandlerTests` passes; monitoring manifest is tested or reviewed and recorded in `Validation Results`. |
-| Commit Checkpoint | Commit after targeted validation if this milestone is executed independently. |
+| Commit Checkpoint | `fix(api): neutralize integrity wording and alert books` |
 
 ### Milestone 5: Contract Refresh And Full Validation
 | Field | Value |
@@ -258,6 +258,7 @@
 | 2026-05-08 | `./build.ps1 refreshOpenApiBaseline` | Milestone 2 approved OpenAPI baseline refresh | Passed | Regenerated `src/test/resources/openapi/approved-openapi.json` after intentional request-schema constraint review. |
 | 2026-05-08 | `./build.ps1 test --tests *OpenApiCompatibilityIntegrationTests` | Milestone 2 post-refresh OpenAPI compatibility | Passed | Executed 1 compatibility test against the refreshed baseline. |
 | 2026-05-08 | `./build.ps1 test --tests *CategoryApiIntegrationTests` | Milestone 3 category database uniqueness | Passed | Executed 16 category integration tests; Flyway applied `V11` and direct case-variant duplicate persistence was rejected by the database. |
+| 2026-05-08 | `./build.ps1 test --tests *ApiExceptionHandlerTests --tests *PrometheusRuleManifestTests` | Milestone 4 integrity wording and alert coverage | Passed | Executed 5 tests; generic integrity detail is feature-neutral and the Prometheus auth-failure alert covers protected book writes. |
 
 ## User Validation
 - Confirm `PUT /api/admin/users/{bootstrapAdminId}/roles` with `["USER", "ADMIN"]` succeeds without duplicate grants.
