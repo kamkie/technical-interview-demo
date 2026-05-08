@@ -294,6 +294,33 @@ class BookApiIntegrationTests extends AbstractBookCatalogMockMvcIntegrationTest 
     }
 
     @Test
+    void createBookWithOutOfRangeAndTooLongFieldsReturnsBadRequest() throws Exception {
+        BrowserSession browserSession = readerSession();
+        String title = "T".repeat(256);
+        String author = "A".repeat(256);
+        String isbn = "1".repeat(33);
+
+        mockMvc.perform(post("/api/books")
+                        .with(browserSession.unsafeWrite())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {
+                              "title": "%s",
+                              "author": "%s",
+                              "isbn": "%s",
+                              "publicationYear": 3001
+                            }
+                            """.formatted(title, author, isbn)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.title").value("Validation Failed"))
+                .andExpect(jsonPath("$.fieldErrors.title").value("title must be at most 255 characters"))
+                .andExpect(jsonPath("$.fieldErrors.author").value("author must be at most 255 characters"))
+                .andExpect(jsonPath("$.fieldErrors.isbn").value("isbn must be at most 32 characters"))
+                .andExpect(jsonPath("$.fieldErrors.publicationYear")
+                        .value("publicationYear must be between 0 and 3000"));
+    }
+
+    @Test
     void updateBookReturnsUpdatedBook() throws Exception {
         BrowserSession browserSession = readerSession();
 
@@ -341,6 +368,31 @@ class BookApiIntegrationTests extends AbstractBookCatalogMockMvcIntegrationTest 
         mockMvc.perform(get("/api/books/{id}", cleanCode.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.isbn").value("9780132350884"));
+    }
+
+    @Test
+    void updateBookWithOutOfRangeAndTooLongFieldsReturnsBadRequest() throws Exception {
+        BrowserSession browserSession = readerSession();
+        String title = "T".repeat(256);
+        String author = "A".repeat(256);
+
+        mockMvc.perform(put("/api/books/{id}", cleanCode.getId())
+                        .with(browserSession.unsafeWrite())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {
+                              "title": "%s",
+                              "author": "%s",
+                              "version": %d,
+                              "publicationYear": -1
+                            }
+                            """.formatted(title, author, cleanCode.getVersion())))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.title").value("Validation Failed"))
+                .andExpect(jsonPath("$.fieldErrors.title").value("title must be at most 255 characters"))
+                .andExpect(jsonPath("$.fieldErrors.author").value("author must be at most 255 characters"))
+                .andExpect(jsonPath("$.fieldErrors.publicationYear")
+                        .value("publicationYear must be between 0 and 3000"));
     }
 
     @Test

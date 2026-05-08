@@ -10,6 +10,7 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 ### Fixed
 
 - Fixed ADMIN managed-role replacement for bootstrap admins so requested bootstrap roles are treated as already satisfied instead of being duplicated as managed grants.
+- Fixed book create and update validation so overlong title, author, ISBN, and out-of-range publication-year values return 400 validation problems before persistence.
 
 ## [v2.0.0] - 2026-05-08
 

@@ -1264,13 +1264,15 @@
         "type" : "object",
         "properties" : {
           "title" : {
-            "minLength" : 1,
+            "maxLength" : 255,
+            "minLength" : 0,
             "type" : "string",
             "description" : "Book title.",
             "example" : "Effective Java, Third Edition"
           },
           "author" : {
-            "minLength" : 1,
+            "maxLength" : 255,
+            "minLength" : 0,
             "type" : "string",
             "description" : "Primary author.",
             "example" : "Joshua Bloch"
@@ -1282,6 +1284,8 @@
             "example" : 0
           },
           "publicationYear" : {
+            "maximum" : 3000,
+            "minimum" : 0,
             "type" : "integer",
             "description" : "Publication year.",
             "format" : "int32",
@@ -1562,24 +1566,29 @@
         "type" : "object",
         "properties" : {
           "title" : {
-            "minLength" : 1,
+            "maxLength" : 255,
+            "minLength" : 0,
             "type" : "string",
             "description" : "Book title.",
             "example" : "Effective Java"
           },
           "author" : {
-            "minLength" : 1,
+            "maxLength" : 255,
+            "minLength" : 0,
             "type" : "string",
             "description" : "Primary author.",
             "example" : "Joshua Bloch"
           },
           "isbn" : {
-            "minLength" : 1,
+            "maxLength" : 32,
+            "minLength" : 0,
             "type" : "string",
             "description" : "Unique ISBN for the new book.",
             "example" : "9780134685991"
           },
           "publicationYear" : {
+            "maximum" : 3000,
+            "minimum" : 0,
             "type" : "integer",
             "description" : "Publication year.",
             "format" : "int32",
@@ -1734,11 +1743,11 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "pageable" : {
-            "$ref" : "#/components/schemas/PageableObject"
-          },
           "sort" : {
             "$ref" : "#/components/schemas/SortObject"
+          },
+          "pageable" : {
+            "$ref" : "#/components/schemas/PageableObject"
           },
           "empty" : {
             "type" : "boolean"
@@ -1752,13 +1761,8 @@
             "type" : "integer",
             "format" : "int64"
           },
-          "pageNumber" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "pageSize" : {
-            "type" : "integer",
-            "format" : "int32"
+          "unpaged" : {
+            "type" : "boolean"
           },
           "paged" : {
             "type" : "boolean"
@@ -1766,8 +1770,13 @@
           "sort" : {
             "$ref" : "#/components/schemas/SortObject"
           },
-          "unpaged" : {
-            "type" : "boolean"
+          "pageSize" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "pageNumber" : {
+            "type" : "integer",
+            "format" : "int32"
           }
         }
       },
@@ -1777,10 +1786,10 @@
           "empty" : {
             "type" : "boolean"
           },
-          "sorted" : {
+          "unsorted" : {
             "type" : "boolean"
           },
-          "unsorted" : {
+          "sorted" : {
             "type" : "boolean"
           }
         }
@@ -1820,11 +1829,11 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "pageable" : {
-            "$ref" : "#/components/schemas/PageableObject"
-          },
           "sort" : {
             "$ref" : "#/components/schemas/SortObject"
+          },
+          "pageable" : {
+            "$ref" : "#/components/schemas/PageableObject"
           },
           "empty" : {
             "type" : "boolean"

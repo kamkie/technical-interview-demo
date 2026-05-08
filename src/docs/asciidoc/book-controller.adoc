@@ -35,6 +35,7 @@ include::{snippets}/books/get-book/response-fields.adoc[]
 == `POST /api/books`
 
 Creates a book. Optional `categories` must reference existing category names.
+`title` and `author` must be at most 255 characters, `isbn` must be at most 32 characters, and `publicationYear` must be between 0 and 3000.
 
 include::{snippets}/books/create-book/curl-request.adoc[]
 include::{snippets}/books/create-book/http-request.adoc[]
@@ -47,6 +48,7 @@ include::{snippets}/books/create-book/response-fields.adoc[]
 == `PUT /api/books/{id}`
 
 Updates title, author, publication year, and category assignments. `isbn` is immutable after creation and is not part of the update request. `version` is required for optimistic locking.
+`title` and `author` must be at most 255 characters, and `publicationYear` must be between 0 and 3000.
 
 include::{snippets}/books/update-book/curl-request.adoc[]
 include::{snippets}/books/update-book/http-request.adoc[]

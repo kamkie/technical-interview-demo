@@ -355,10 +355,10 @@ class ApiDocumentationTests extends AbstractDocumentationIntegrationTest {
                         "books/create-book",
                         requestBody(),
                         requestFields(
-                                fieldWithPath("title").description("Book title."),
-                                fieldWithPath("author").description("Book author."),
-                                fieldWithPath("isbn").description("Unique ISBN for the new book."),
-                                fieldWithPath("publicationYear").description("Publication year."),
+                                fieldWithPath("title").description("Book title, at most 255 characters."),
+                                fieldWithPath("author").description("Book author, at most 255 characters."),
+                                fieldWithPath("isbn").description("Unique ISBN for the new book, at most 32 characters."),
+                                fieldWithPath("publicationYear").description("Publication year from 0 through 3000."),
                                 fieldWithPath("categories")
                                         .optional()
                                         .description("Optional list of existing category names to assign to the book."),
@@ -446,11 +446,11 @@ class ApiDocumentationTests extends AbstractDocumentationIntegrationTest {
                         pathParameters(parameterWithName("id").description("Book identifier.")),
                         requestBody(),
                         requestFields(
-                                fieldWithPath("title").description("Updated book title."),
-                                fieldWithPath("author").description("Updated book author."),
+                                fieldWithPath("title").description("Updated book title, at most 255 characters."),
+                                fieldWithPath("author").description("Updated book author, at most 255 characters."),
                                 fieldWithPath("version")
                                         .description("Current optimistic-locking version required for the update."),
-                                fieldWithPath("publicationYear").description("Updated publication year."),
+                                fieldWithPath("publicationYear").description("Updated publication year from 0 through 3000."),
                                 fieldWithPath("categories")
                                         .optional()
                                         .description("Optional replacement list of existing category names."),

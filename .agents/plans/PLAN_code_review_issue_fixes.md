@@ -123,7 +123,7 @@
 | Milestone | Status | Owner | Commit | Validation | Notes |
 | --- | --- | --- | --- | --- | --- |
 | 1: Role-Grant Replacement Safety | Done | Agent | `fix(user): keep bootstrap role grants idempotent` | `./build.ps1 test --tests *AdminUserManagementApiIntegrationTests` passed | Bootstrap ADMIN self-replacement now keeps the bootstrap grant and writes only missing managed roles. |
-| 2: Book Write Validation And Contract | Not Started | Agent | Pending | Pending | Keep OpenAPI review explicit before baseline refresh. |
+| 2: Book Write Validation And Contract | Done | Agent | `fix(books): validate write field bounds` | `./build.ps1 test --tests *BookApiIntegrationTests --tests *ApiDocumentationTests --tests *OpenApiCompatibilityIntegrationTests` passed; `./build.ps1 refreshOpenApiBaseline` passed; `./build.ps1 test --tests *OpenApiCompatibilityIntegrationTests` passed | Create/update requests now enforce title/author length, ISBN create length, and publication-year range; REST Docs and OpenAPI baseline are aligned. |
 | 3: Category Case-Insensitive Database Uniqueness | Not Started | Agent | Pending | Pending | New migration version must be checked against current branch state. |
 | 4: Integrity Error Wording And Alert Coverage | Not Started | Agent | Pending | Pending | Prefer a focused manifest test if a test home exists. |
 | 5: Contract Refresh And Full Validation | Not Started | Agent | Pending | Pending | Fill validation ledger with exact commands and outcomes. |
@@ -146,7 +146,7 @@
 ### Milestone 2: Book Write Validation And Contract
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Define and enforce public validation for book create/update field lengths and publication-year range. |
 | Owned Files Or Packages | `src/main/java/team/jit/technicalinterviewdemo/business/book/`, book API integration/docs tests, OpenAPI baseline if intentionally changed |
 | Coordinator-Owned Shared Files | `src/test/resources/openapi/approved-openapi.json` |
@@ -154,7 +154,7 @@
 | Behavior To Preserve | Valid book create/update payloads continue to return the current response shape; ISBN remains immutable on update; duplicate ISBN remains 409; existing read-side filter behavior remains unchanged. |
 | Deliverables | 1. Add executable specs for too-long title/author/isbn and out-of-range publication years returning 400 validation problems.<br>2. Add validation annotations or equivalent service validation that matches persistence limits and the existing `0..3000` year policy.<br>3. Update REST Docs snippets and approved OpenAPI only when schema constraints intentionally change.<br>4. Stop and replan the schema/documentation piece if OpenAPI compatibility flags the published constraint change as breaking. |
 | Validation Checkpoint | `./build.ps1 test --tests *BookApiIntegrationTests --tests *ApiDocumentationTests --tests *OpenApiCompatibilityIntegrationTests` passes, with approved baseline refresh only after review. |
-| Commit Checkpoint | Commit after targeted validation if this milestone is executed independently. |
+| Commit Checkpoint | `fix(books): validate write field bounds` |
 
 ### Milestone 3: Category Case-Insensitive Database Uniqueness
 | Field | Value |
@@ -254,6 +254,9 @@
 | --- | --- | --- | --- | --- |
 | 2026-05-08 | `./build.ps1 build` | Plan and roadmap revision validation | Passed | Wrapper detected only lightweight files changed, skipped Gradle, and reported manual consistency review as sufficient. |
 | 2026-05-08 | `./build.ps1 test --tests *AdminUserManagementApiIntegrationTests` | Milestone 1 role-grant replacement safety | Passed | Executed 7 `AdminUserManagementApiIntegrationTests`, including bootstrap admin self-replacement regression. |
+| 2026-05-08 | `./build.ps1 test --tests *BookApiIntegrationTests --tests *ApiDocumentationTests --tests *OpenApiCompatibilityIntegrationTests` | Milestone 2 book write validation and pre-refresh compatibility | Passed | Executed 76 tests; new create/update validation specs and REST Docs checks passed; compatibility gate did not classify the schema constraints as breaking. |
+| 2026-05-08 | `./build.ps1 refreshOpenApiBaseline` | Milestone 2 approved OpenAPI baseline refresh | Passed | Regenerated `src/test/resources/openapi/approved-openapi.json` after intentional request-schema constraint review. |
+| 2026-05-08 | `./build.ps1 test --tests *OpenApiCompatibilityIntegrationTests` | Milestone 2 post-refresh OpenAPI compatibility | Passed | Executed 1 compatibility test against the refreshed baseline. |
 
 ## User Validation
 - Confirm `PUT /api/admin/users/{bootstrapAdminId}/roles` with `["USER", "ADMIN"]` succeeds without duplicate grants.
