@@ -183,7 +183,8 @@ class AdminUserManagementApiIntegrationTests extends AbstractMockMvcIntegrationT
                 .andExpect(jsonPath("$.roleGrants[1].reason")
                         .value("Keep bootstrap access while replacing managed roles."));
 
-        UserAccount updatedAdmin = userAccountRepository.findById(adminUser.getId()).orElseThrow();
+        UserAccount updatedAdmin =
+                userAccountRepository.findById(adminUser.getId()).orElseThrow();
         assertThat(updatedAdmin.getRoles()).containsExactlyInAnyOrder(UserRole.USER, UserRole.ADMIN);
         assertThat(updatedAdmin.getRoleGrants()).hasSize(2);
         assertThat(updatedAdmin.getRoleGrants())

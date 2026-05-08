@@ -316,8 +316,8 @@ class BookApiIntegrationTests extends AbstractBookCatalogMockMvcIntegrationTest 
                 .andExpect(jsonPath("$.fieldErrors.title").value("title must be at most 255 characters"))
                 .andExpect(jsonPath("$.fieldErrors.author").value("author must be at most 255 characters"))
                 .andExpect(jsonPath("$.fieldErrors.isbn").value("isbn must be at most 32 characters"))
-                .andExpect(jsonPath("$.fieldErrors.publicationYear")
-                        .value("publicationYear must be between 0 and 3000"));
+                .andExpect(
+                        jsonPath("$.fieldErrors.publicationYear").value("publicationYear must be between 0 and 3000"));
     }
 
     @Test
@@ -391,8 +391,8 @@ class BookApiIntegrationTests extends AbstractBookCatalogMockMvcIntegrationTest 
                 .andExpect(jsonPath("$.title").value("Validation Failed"))
                 .andExpect(jsonPath("$.fieldErrors.title").value("title must be at most 255 characters"))
                 .andExpect(jsonPath("$.fieldErrors.author").value("author must be at most 255 characters"))
-                .andExpect(jsonPath("$.fieldErrors.publicationYear")
-                        .value("publicationYear must be between 0 and 3000"));
+                .andExpect(
+                        jsonPath("$.fieldErrors.publicationYear").value("publicationYear must be between 0 and 3000"));
     }
 
     @Test

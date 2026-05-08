@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Implementation |
-| Status | In Progress |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Planning Readiness
 | Field | Value |
@@ -18,7 +18,7 @@
 ## Summary
 - Fix the five findings from the 2026-05-08 whole-application code review: role-grant duplication, weak book write validation, category case-insensitive uniqueness, generic integrity-error wording, and auth-failure alert coverage.
 - Treat this as a `2.x` maintenance plan: valid published behavior must keep working, and invalid or operationally misleading behavior should become better specified.
-- Success means each finding has an executable spec or infrastructure check, implementation matches the spec, affected published contract artifacts are aligned, and `./build.ps1 build` passes.
+- Success means each finding has an executable spec or infrastructure check, implementation matches the spec, affected published contract artifacts are aligned, and `./build.ps1 -FullBuild build` passes.
 
 ## Scope
 - In scope:
@@ -126,7 +126,7 @@
 | 2: Book Write Validation And Contract | Done | Agent | `fix(books): validate write field bounds` | `./build.ps1 test --tests *BookApiIntegrationTests --tests *ApiDocumentationTests --tests *OpenApiCompatibilityIntegrationTests` passed; `./build.ps1 refreshOpenApiBaseline` passed; `./build.ps1 test --tests *OpenApiCompatibilityIntegrationTests` passed | Create/update requests now enforce title/author length, ISBN create length, and publication-year range; REST Docs and OpenAPI baseline are aligned. |
 | 3: Category Case-Insensitive Database Uniqueness | Done | Agent | `fix(categories): enforce case-insensitive uniqueness` | `./build.ps1 test --tests *CategoryApiIntegrationTests` passed | Added `V11` preconditioned unique lower-name index plus PostgreSQL integration coverage for direct case-variant duplicates. |
 | 4: Integrity Error Wording And Alert Coverage | Done | Agent | `fix(api): neutralize integrity wording and alert books` | `./build.ps1 test --tests *ApiExceptionHandlerTests --tests *PrometheusRuleManifestTests` passed | Generic integrity detail is feature-neutral; auth-failure alert now includes protected book writes and has focused manifest coverage. |
-| 5: Contract Refresh And Full Validation | Not Started | Agent | Pending | Pending | Fill validation ledger with exact commands and outcomes. |
+| 5: Contract Refresh And Full Validation | Done | Agent | `chore(plan): complete code review issue fixes` | Combined targeted suite passed; `./build.ps1 -FullBuild build` passed | Final validation and tracking are recorded; release and tagging remain out of scope. |
 
 ## Execution Milestones
 
@@ -185,24 +185,24 @@
 ### Milestone 5: Contract Refresh And Full Validation
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Integrate all changes, refresh generated contract artifacts intentionally, and prove the maintenance set is green. |
 | Owned Files Or Packages | Generated REST Docs/OpenAPI artifacts, validation notes |
 | Coordinator-Owned Shared Files | `src/test/resources/openapi/approved-openapi.json`, `ROADMAP.md`, this plan |
 | Context Required | `AGENTS.md`, `.agents/references/execution.md`, `.agents/references/testing.md`, `.agents/references/documentation.md`, this plan |
 | Behavior To Preserve | Stable `2.x` valid requests stay backward-compatible; invalid-request tightening remains documented as maintenance. |
-| Deliverables | 1. Run the targeted tests from previous milestones.<br>2. Run `./build.ps1 refreshOpenApiBaseline` only after reviewing intentional OpenAPI changes.<br>3. Run final `./build.ps1 build`.<br>4. Fill `## Validation Results` with exact commands and outcomes.<br>5. Update the progress tracker with commit and validation evidence. |
+| Deliverables | 1. Run the targeted tests from previous milestones.<br>2. Run `./build.ps1 refreshOpenApiBaseline` only after reviewing intentional OpenAPI changes.<br>3. Run final `./build.ps1 -FullBuild build`.<br>4. Fill `## Validation Results` with exact commands and outcomes.<br>5. Update the progress tracker with commit and validation evidence. |
 | Validation Checkpoint | Final wrapper build passes. |
-| Commit Checkpoint | Final commit before handoff if prior milestones were not already committed. |
+| Commit Checkpoint | `chore(plan): complete code review issue fixes` |
 
 ## Blockers And Replan Triggers
 | Trigger / Blocker | Response | Owner | Status |
 | --- | --- | --- | --- |
-| OpenAPI compatibility reports validation schema tightening as breaking. | Stop before refreshing `approved-openapi.json`; decide whether to keep runtime validation without schema tightening, document the exception as maintenance, or defer the schema piece to a later major-version plan. | Agent/User if policy decision is needed | Open |
-| A new migration version already exists or another branch reserves `V11`. | Re-scan current migrations, choose the next available version, and update this plan before adding migration files. | Agent | Open |
-| Category duplicate data already exists in an environment targeted by the migration. | Add a clear precondition/failure message or operator-facing remediation note; do not silently merge or delete categories. | Agent/User if rollout policy is needed | Open |
-| Implementing book validation changes book list/search behavior, localization lookup behavior, or OAuth/session startup. | Revisit benchmark scope and include `./build.ps1 gatlingBenchmark` if the touched path matches `.agents/references/testing.md`. | Agent | Open |
-| No suitable automated Prometheus-manifest test home exists. | Record focused manifest review evidence in `Validation Results` and avoid inventing a broad infrastructure test framework for this narrow fix. | Agent | Open |
+| OpenAPI compatibility reports validation schema tightening as breaking. | Stop before refreshing `approved-openapi.json`; decide whether to keep runtime validation without schema tightening, document the exception as maintenance, or defer the schema piece to a later major-version plan. | Agent/User if policy decision is needed | Resolved; compatibility passed before baseline refresh. |
+| A new migration version already exists or another branch reserves `V11`. | Re-scan current migrations, choose the next available version, and update this plan before adding migration files. | Agent | Not triggered; `V11` was available. |
+| Category duplicate data already exists in an environment targeted by the migration. | Add a clear precondition/failure message or operator-facing remediation note; do not silently merge or delete categories. | Agent/User if rollout policy is needed | Mitigated by migration precondition; not triggered in local validation. |
+| Implementing book validation changes book list/search behavior, localization lookup behavior, or OAuth/session startup. | Revisit benchmark scope and include `./build.ps1 gatlingBenchmark` if the touched path matches `.agents/references/testing.md`. | Agent | Not triggered; benchmark scope stayed out of scope. |
+| No suitable automated Prometheus-manifest test home exists. | Record focused manifest review evidence in `Validation Results` and avoid inventing a broad infrastructure test framework for this narrow fix. | Agent | Resolved; focused Prometheus manifest test was added. |
 
 ## Edge Cases And Failure Modes
 - Bootstrap ADMIN role replacement must not remove the only admin path or create duplicate role-grant keys.
@@ -220,7 +220,7 @@
 - Contract refresh when intentional:
   - `./build.ps1 refreshOpenApiBaseline`
 - Final proof:
-  - `./build.ps1 build`
+  - `./build.ps1 -FullBuild build`
 - Benchmark:
   - Not required by default because no book list/search query behavior, localization lookup behavior, or OAuth/session startup behavior is intentionally changed. Reconsider if implementation touches those paths.
 
@@ -259,6 +259,10 @@
 | 2026-05-08 | `./build.ps1 test --tests *OpenApiCompatibilityIntegrationTests` | Milestone 2 post-refresh OpenAPI compatibility | Passed | Executed 1 compatibility test against the refreshed baseline. |
 | 2026-05-08 | `./build.ps1 test --tests *CategoryApiIntegrationTests` | Milestone 3 category database uniqueness | Passed | Executed 16 category integration tests; Flyway applied `V11` and direct case-variant duplicate persistence was rejected by the database. |
 | 2026-05-08 | `./build.ps1 test --tests *ApiExceptionHandlerTests --tests *PrometheusRuleManifestTests` | Milestone 4 integrity wording and alert coverage | Passed | Executed 5 tests; generic integrity detail is feature-neutral and the Prometheus auth-failure alert covers protected book writes. |
+| 2026-05-08 | `./build.ps1 test --tests *AdminUserManagementApiIntegrationTests --tests *BookApiIntegrationTests --tests *ApiDocumentationTests --tests *OpenApiCompatibilityIntegrationTests --tests *CategoryApiIntegrationTests --tests *ApiExceptionHandlerTests --tests *PrometheusRuleManifestTests` | Milestone 5 combined targeted regression suite | Passed | Executed 104 tests covering all milestone-specific suites. |
+| 2026-05-08 | `./build.ps1 -FullBuild build` | Milestone 5 full validation first attempt | Failed | `spotlessJavaCheck` reported formatting-only violations in `BookApiIntegrationTests`, `AdminUserManagementApiIntegrationTests`, and `ApiDocumentationTests`; no behavioral test failure was reported before the formatting gate. |
+| 2026-05-08 | `./build.ps1 spotlessApply` | Milestone 5 formatting remediation | Passed | Applied Palantir/Spotless formatting to the three affected test files. |
+| 2026-05-08 | `./build.ps1 -FullBuild build` | Milestone 5 final full validation | Passed | Executed 270 tests; coverage, REST Docs generation, static checks, SBOM, Trivy dependency scan, Docker image build, and Spotless checks passed. |
 
 ## User Validation
 - Confirm `PUT /api/admin/users/{bootstrapAdminId}/roles` with `["USER", "ADMIN"]` succeeds without duplicate grants.
@@ -270,7 +274,7 @@
 ## Required Content Checklist
 - Behavior changing: yes, all five review findings are covered.
 - Decision-complete and ready for execution: yes; blocking open questions are `None`.
-- Roadmap entry: `ROADMAP.md` Planned Work row for `Code review issue fixes`.
+- Roadmap entry: `ROADMAP.md` Active Release Track row for `Code review issue fixes`.
 - Out of scope: documented in `## Scope`.
 - Governing specs and contract artifacts: documented in `## Current State` and per milestone.
 - Likely source files and packages: documented in `## Affected Artifacts`.
@@ -285,6 +289,6 @@
 - Context per milestone: documented with targeted read sets.
 - Tests/docs/OpenAPI/HTTP examples/AI guides: documented in `## Affected Artifacts`, milestones, and validation plan.
 - Testing strategy: includes unit, integration, contract, smoke/benchmark, and negative-scenario scope.
-- Validation proof: targeted tests plus `./build.ps1 build`.
+- Validation proof: targeted tests plus `./build.ps1 -FullBuild build`.
 - Validation results location: `## Validation Results`.
 - User verification: documented.
