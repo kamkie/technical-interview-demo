@@ -7,6 +7,8 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+## [v2.0.1] - 2026-05-09
+
 ### Fixed
 
 - Fixed ADMIN managed-role replacement for bootstrap admins so requested bootstrap roles are treated as already satisfied instead of being duplicated as managed grants.

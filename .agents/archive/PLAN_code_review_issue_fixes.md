@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Integration |
-| Status | Implemented |
+| Phase | Closed |
+| Status | Released |
 
 ## Planning Readiness
 | Field | Value |
@@ -13,7 +13,7 @@
 | Blocking Open Questions | None |
 | Accepted Fallbacks | D1, D3, D4, D7, D8 |
 | Ready For Execution | Yes |
-| Last Updated | 2026-05-08 |
+| Last Updated | 2026-05-09 |
 
 ## Summary
 - Fix the five findings from the 2026-05-08 whole-application code review: role-grant duplication, weak book write validation, category case-insensitive uniqueness, generic integrity-error wording, and auth-failure alert coverage.
@@ -263,6 +263,9 @@
 | 2026-05-08 | `./build.ps1 -FullBuild build` | Milestone 5 full validation first attempt | Failed | `spotlessJavaCheck` reported formatting-only violations in `BookApiIntegrationTests`, `AdminUserManagementApiIntegrationTests`, and `ApiDocumentationTests`; no behavioral test failure was reported before the formatting gate. |
 | 2026-05-08 | `./build.ps1 spotlessApply` | Milestone 5 formatting remediation | Passed | Applied Palantir/Spotless formatting to the three affected test files. |
 | 2026-05-08 | `./build.ps1 -FullBuild build` | Milestone 5 final full validation | Passed | Executed 270 tests; coverage, REST Docs generation, static checks, SBOM, Trivy dependency scan, Docker image build, and Spotless checks passed. |
+| 2026-05-09 | `pwsh ./scripts/release/get-release-migration-impact.ps1 -PreviousReleaseTag v2.0.0 -CurrentRef HEAD` | Release migration impact review | Passed | Migration impact is `rolling-compatible` for `V11__enforce_category_case_insensitive_uniqueness.sql`; no restore drill required. |
+| 2026-05-09 | `gh run watch 25583720267 --exit-status` | Default-branch CodeQL pre-release check | Passed | CodeQL passed for the integrated `main` candidate before release metadata edits. |
+| 2026-05-09 | `gh run watch 25583720268 --exit-status` | Default-branch CI pre-release check | Passed | CI passed for the integrated `main` candidate, including full build, image vulnerability scan, Helm checks, external smoke validation, and dependency graph submission. |
 
 ## User Validation
 - Confirm `PUT /api/admin/users/{bootstrapAdminId}/roles` with `["USER", "ADMIN"]` succeeds without duplicate grants.

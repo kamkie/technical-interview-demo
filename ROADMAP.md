@@ -8,11 +8,11 @@ Released history belongs in `CHANGELOG.md`.
 
 | Field | Current |
 | --- | --- |
-| Release Phase | Stable `v2.0.0` |
+| Release Phase | Stable `v2.0.1` |
 | Breaking Change Policy | Disallowed on the stable `2.x` line unless a later major-version plan explicitly changes it |
-| Next Target Version | Not selected; default to `v2.0.1` for maintenance fixes or `v2.1.0` for backward-compatible feature work |
-| Latest Stable Release | `v2.0.0` released on 2026-05-08 from accepted `v2.0.0-RC7`; manual-regression evidence is archived in `.agents/archive/PLAN_manual_regression_execution.md` |
-| Immediate Next Action | Review implemented `.agents/plans/PLAN_code_review_issue_fixes.md` changes and decide whether to release `v2.0.1`; release work has not started |
+| Next Target Version | Not selected; default to `v2.0.2` for maintenance fixes or `v2.1.0` for backward-compatible feature work |
+| Latest Stable Release | `v2.0.1` released on 2026-05-09 from the code review issue fixes plan archived in `.agents/archive/PLAN_code_review_issue_fixes.md` |
+| Immediate Next Action | Select the next post-`v2.0.1` workstream; frontend AI contract remains planned. |
 
 ## Roadmap Rules
 
@@ -34,7 +34,6 @@ Released history belongs in `CHANGELOG.md`.
 
 | Status | Workstream | Plan Or Artifact | Notes |
 | --- | --- | --- | --- |
-| Implemented | Code review issue fixes | `.agents/plans/PLAN_code_review_issue_fixes.md` | Maintenance fixes are implemented and fully validated; release and tagging remain out of scope. |
 
 ## Planned Work
 
