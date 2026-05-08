@@ -35,6 +35,7 @@ Add only what the task needs:
 
 - the target active plan when executing one named milestone
 - `.agents/references/documentation.md` when artifact routing or AI-document maintenance is involved
+- `.agents/references/references-rules.md` when changing `.agents/references/*.md`
 - `.agents/references/testing.md` for validation scope
 - `.agents/references/reviews.md` before finalizing
 - `.agents/references/workflow.md` when worktrees, delegation, worker logs, or integration handoff are in scope

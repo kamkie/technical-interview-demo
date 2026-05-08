@@ -1,6 +1,7 @@
 # Documentation Guide For AI Agents
 
 `.agents/references/documentation.md` owns artifact routing and cross-file alignment for repository docs and AI guidance.
+`.agents/references/references-rules.md` owns the standing rules for `.agents/references/*.md` documents themselves.
 
 Use this file to decide which artifact moves when behavior, setup, workflow, roadmap, release, or AI guidance changes.
 Other guides should link here instead of re-listing ownership rules.
@@ -8,7 +9,7 @@ Other guides should link here instead of re-listing ownership rules.
 Entry points:
 
 - artifact-location lookup only: read `## Artifact Ownership`
-- AI-document edits: read `## Artifact Ownership` and `### AI Document Maintenance`
+- AI-document edits: read `## Artifact Ownership` and `### AI Document Maintenance`; for `.agents/references/*.md` edits, also read `.agents/references/references-rules.md`
 - documentation changes: continue into change-type routing, alignment rules, and common routing as needed
 
 ## Artifact Ownership
@@ -18,7 +19,8 @@ Update the artifact that owns the truth being changed:
 - runtime behavior and public API contract: executable tests, `src/docs/asciidoc/`, `src/test/resources/openapi/approved-openapi.json`, and `README.md`
 - human-facing guide for developers using AI through the application lifecycle: `WORKING_WITH_AI.md`
 - AI repository rules and AI-document inventory: `AGENTS.md`
-- repository knowledge layout and file ownership: this guide, especially `## Artifact Ownership` and `### AI Document Maintenance`
+- repository knowledge layout and artifact ownership: this guide, especially `## Artifact Ownership` and `### AI Document Maintenance`
+- rules for creating, editing, compacting, moving, and retiring `.agents/references/*.md`: `.agents/references/references-rules.md`
 - AI local command wrapper shortcut: `.agents/references/environment-quick-ref.md`
 - local setup, tools, troubleshooting, and onboarding: `SETUP.md`
 - contributor workflow and maintainer expectations: `CONTRIBUTING.md`
@@ -45,28 +47,22 @@ If ownership is unclear, decide that before editing multiple docs.
 
 ### AI Document Maintenance
 
-Load this section on demand before changing `AGENTS.md`, `.agents/references/*.md`, task-skill files, templates, skills, references, or archived plans or reports.
+Load this section on demand before changing `AGENTS.md`, task-skill files, templates, skills, archived plans or reports, or repository knowledge ownership.
+Before changing `.agents/references/*.md`, also load `.agents/references/references-rules.md`.
 
 Rules for maintaining the `.agents/` documents:
 
-- keep the role of each file distinct; do not collapse architecture, code style, design, documentation ownership, execution, planning, release workflow, review guidance, testing guidance, workflow guidance, and learnings into one document
-- keep AI instruction markdown files under `.agents/references/` by default; `AGENTS.md` is the only standing exception
-- update the relevant `.agents/references/` file in the same change when architecture, code-style expectations, design intent, documentation ownership, durable engineering guidance, release workflow, review/security review guidance, testing/validation guidance, workflow guidance, or an execution plan materially changes
+- use `.agents/references/references-rules.md` for all rules that govern `.agents/references/*.md` documents
 - keep `.agents/skills/repo-task/` as a task dispatcher and task-reference store, not standing policy; task files may include procedural starters, but durable rules belong in the best owning AI document
 - treat the task files listed in `.agents/skills/repo-task/references/index.md` as reusable commands, following `.agents/skills/repo-task/references/spec.md` for exact-slug, ambiguous-request, placeholder, index, and task-schema rules
-- keep current detailed examples, templates, and deep references in `.agents/templates/` or `.agents/references/` instead of the standing top-level AI files
-- keep retired report-like AI analysis artifacts under `.agents/archive/` instead of `.agents/references/`
-- write AI-guidance changes as current-state rules; route any still-useful historical context using this guide
+- outside `.agents/references/*.md`, write AI-guidance changes as current-state rules; route any still-useful historical context using this guide
 - keep repo-local skills narrow and workflow-oriented; use them to accelerate repeated entry tasks or focused triage, not to replace the owner guides
 - create `.agents/plugins/marketplace.json` and a plugin bundle only when a workflow needs Codex plugin distribution or install-time discovery; keep ordinary reusable starters in `.agents/skills/repo-task/`
-- keep standing code-style, testing, review, and documentation guidance in their focused owning files instead of redistributing it across task starters or workflow docs
 - when a repo-local skill wraps a workflow owned by another guide, update the skill and the owning guide together if that workflow changes
-- when AI instruction files accumulate overlap, compact them by moving duplicated guidance into the single best owning file and updating cross-references in the same change
 - archive executed `.agents/plans/PLAN_*.md` files under `.agents/archive/` as part of the release cleanup once that work has been released
 - archive retired AI-guidance reports, evaluations, comparisons, and similar analysis artifacts under `.agents/archive/`
 - treat `docs/ARCHITECTURE.md`, `docs/DESIGN.md`, and `.agents/references/LEARNINGS.md` as descriptive guidance, not executable spec authority
-- if an interrupted tool or IDE run leaves an `.agents/` document incomplete, finish it or clearly mark the gaps instead of leaving misleading partial content
-- when moving or renaming AI documents, update references in `AGENTS.md` and other `.agents/` files in the same change
+- when moving or renaming non-reference AI documents, update references in `AGENTS.md` and other `.agents/` files in the same change
 - when adding or moving repository knowledge files, use this guide's artifact ownership rules first and update this guide when no existing owner fits
 
 ## Change-Type Routing
@@ -112,7 +108,7 @@ Update all affected artifacts in the same change:
 ## Alignment Rules
 
 - update overlapping human-facing and AI-facing docs in the same change
-- use `### AI Document Maintenance` in this guide for task-skill files, skills, templates, references, top-level AI guides, and archived plans
+- use `### AI Document Maintenance` in this guide for task-skill files, skills, templates, top-level AI guides, and archived plans; use `.agents/references/references-rules.md` for `.agents/references/*.md`
 - keep setup detail out of planning, workflow, and release guides
 - keep active or selected work in `ROADMAP.md` and released history in `CHANGELOG.md`
 - keep REST Docs AsciiDoc files formatter-managed; write unordered lists with explicit AsciiDoc marker depth (`*`, `**`) so IntelliJ formatting cannot flatten indentation-only nesting
@@ -122,7 +118,7 @@ Update all affected artifacts in the same change:
 
 - public behavior change: update the governing spec artifacts first, then the published contract artifacts they drive
 - human-facing AI collaboration workflow change: update `WORKING_WITH_AI.md`, and update overlapping AI-facing guides in the same change when the underlying repository workflow also changed
-- workflow or AI-guidance change: update the owning AI guide first; touch `AGENTS.md` only when the AI-document set or maintenance rules changed
+- workflow or AI-guidance change: update the owning AI guide first; follow `.agents/references/references-rules.md` for reference-document edits; touch `AGENTS.md` only when the AI-document set or maintenance rules changed
 - repo-local skill change: update the skill plus the owning AI guide when the skill wraps a workflow whose rules changed
 - local command-wrapper guidance for AI agents: update `.agents/references/environment-quick-ref.md`, and update `SETUP.md` only when human setup or troubleshooting behavior changed
 - setup or tooling change: update `SETUP.md`, not `README.md`, `AGENTS.md`, or workflow guides unless their inventories or high-level rules changed
@@ -134,3 +130,4 @@ Update all affected artifacts in the same change:
 
 - use `.agents/references/testing.md` for required validation once the right artifact set is identified
 - use `.agents/references/reviews.md` for contradiction and drift checks before finalizing doc-heavy changes
+- use `.agents/references/references-rules.md` for rules that govern `.agents/references/*.md` files

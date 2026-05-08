@@ -27,6 +27,7 @@ Load the smallest useful read set:
 - this file
 - the target active plan
 - `.agents/references/documentation.md` when artifact routing is part of the work
+- `.agents/references/references-rules.md` when changing `.agents/references/*.md`
 - `.agents/references/testing.md` for validation scope
 - `.agents/references/reviews.md` before finalizing a milestone
 - `.agents/references/workflow.md` only when delegation, worktrees, worker logs, or integration mechanics are in scope

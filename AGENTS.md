@@ -53,7 +53,8 @@ Use these artifacts deliberately:
 - `ROADMAP.md`: active release phase, roadmap sequencing, and current project state
 - `CHANGELOG.md`: release history only
 - `SETUP.md`: local environment, tooling, onboarding, and troubleshooting
-- `.agents/references/documentation.md`: artifact routing, AI document maintenance, and repository knowledge layout ownership
+- `.agents/references/documentation.md`: artifact routing and repository knowledge layout ownership
+- `.agents/references/references-rules.md`: rules that govern `.agents/references/*.md` documents
 
 The `docs/` and `.agents/` guidance files are planning aids. They are not higher-priority truth than executable specs, published contract docs, or the human-facing artifact that owns the topic.
 
@@ -100,7 +101,8 @@ Use these files deliberately:
 - `docs/ARCHITECTURE.md`: compact descriptive repository snapshot, codebase map, package responsibilities, and structural guidance
 - `.agents/references/code-style.md`: AI-facing code-style and change-shaping guidance for repo edits
 - `docs/DESIGN.md`: intended design direction, product tradeoffs, and open design decisions
-- `.agents/references/documentation.md`: AI-facing documentation ownership, repository knowledge layout, and update guidance
+- `.agents/references/documentation.md`: AI-facing artifact routing, documentation ownership, and repository knowledge layout guidance
+- `.agents/references/references-rules.md`: AI-facing rules for creating, editing, compacting, moving, and retiring `.agents/references/*.md` documents
 - `.agents/references/environment-quick-ref.md`: AI-facing command wrapper reference for local Gradle execution
 - `.agents/references/plan-execution.md`: AI-facing workflow for executing a whole active plan across milestones
 - `.agents/references/execution.md`: AI-facing workflow for ad hoc tasks and individual plan milestones
@@ -128,6 +130,7 @@ Load AI guidance on demand:
 - read `AGENTS.md` first
 - read only the owning AI guide for the current task
 - read active `.agents/plans/PLAN_*.md` files only when planning, executing, verifying, or releasing that plan
+- read `.agents/references/references-rules.md` before changing any `.agents/references/*.md` file
 - use task-specific search terms for the onboarding relevance scan; do not read every active plan, archived plan or report, task section, reference, template, or skill as a pre-flight default
 - read task files under `.agents/skills/repo-task/references/tasks/`, templates, detailed references, skill files, and archived plans or reports only when the task specifically needs them
 - do not bulk-load `.agents/archive/`, `.agents/reports/`, `.agents/references/`, `.agents/templates/`, or skill reference material as standing context
@@ -144,7 +147,9 @@ Maintain a clean working context to optimize performance and prevent hallucinati
 
 ### AI Document Maintenance
 
-Detailed AI-document maintenance rules live in `.agents/references/documentation.md`. Load that guide before changing `AGENTS.md`, `.agents/references/*.md`, task-skill files, templates, skills, references, or archived plans or reports.
+Detailed AI-document maintenance routing lives in `.agents/references/documentation.md`.
+Rules for `.agents/references/*.md` documents live in `.agents/references/references-rules.md`.
+Load the relevant guide before changing `AGENTS.md`, `.agents/references/*.md`, task-skill files, templates, skills, references, or archived plans or reports.
 
 ## Required Updates By Change Type
 
