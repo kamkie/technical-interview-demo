@@ -92,6 +92,194 @@ flowchart TD
     RelGate -. precondition fails .-> IntValidate
 ```
 
+## Prompt-Triggered Document Load Chains
+
+These charts show primary-path document loads for the same prompts. Repeated document labels are intentional: each lifecycle action starts from `AGENTS.md` again, then routes to the documents for that action. Dashed document edges are optional or conditional loads.
+
+### Document Load Chain / Create Plan
+
+```mermaid
+flowchart TD
+    CreatePrompt["Prompt: create plan PLAN_book_publisher.md to add publisher field to Book entity"] --> CPF["Planning / Frame"]
+    CPF --> CPD["Planning / Design"]
+    CPD --> CPS["Planning / Spec"]
+    CPS --> CPDec["Planning / Decompose"]
+    CPDec --> CPV["Planning / Validate-Plan"]
+    CPV --> CPSync["Planning / Sync"]
+
+    CPF -->|M| CPF_AGENTS["AGENTS.md"]
+    CPF_AGENTS -->|M| CPF_Planning[".agents/references/planning.md"]
+    CPF_AGENTS -->|M| CPF_Roadmap["ROADMAP.md"]
+    CPF_AGENTS -. O .-> CPF_Design["docs/DESIGN.md"]
+    CPF_AGENTS -. O .-> CPF_TaskSpec["task-specific governing spec or published contract artifact"]
+    CPF_AGENTS -. O .-> CPF_Reference["referenced ticket, pull request, example, document, or web page"]
+    CPF_AGENTS -. O .-> CPF_LifecycleSpec["docs/specs/application-lifecycle-spec.md"]
+    CPF_AGENTS -. O .-> CPF_PhaseActivities["docs/specs/lifecycle-phase-activities.md"]
+
+    CPD -->|M| CPD_AGENTS["AGENTS.md"]
+    CPD_AGENTS -->|M| CPD_Planning[".agents/references/planning.md"]
+    CPD_AGENTS -->|M| CPD_DesignOrSpec["docs/DESIGN.md or task-specific governing spec or published contract artifact"]
+    CPD_AGENTS -. O .-> CPD_Documentation[".agents/references/documentation.md"]
+    CPD_AGENTS -. O .-> CPD_Readme["README.md"]
+    CPD_AGENTS -. O .-> CPD_Asciidoc["src/docs/asciidoc/"]
+
+    CPS -->|M| CPS_AGENTS["AGENTS.md"]
+    CPS_AGENTS -->|M| CPS_Planning[".agents/references/planning.md"]
+    CPS_AGENTS -->|M| CPS_TaskSpec["task-specific governing spec or published contract artifact"]
+    CPS_AGENTS -. O .-> CPS_Documentation[".agents/references/documentation.md"]
+    CPS_AGENTS -. O .-> CPS_OpenApi["src/test/resources/openapi/approved-openapi.json"]
+    CPS_AGENTS -. O .-> CPS_Readme["README.md"]
+    CPS_AGENTS -. O .-> CPS_Asciidoc["src/docs/asciidoc/"]
+
+    CPDec -->|M| CPDec_AGENTS["AGENTS.md"]
+    CPDec_AGENTS -->|M| CPDec_Planning[".agents/references/planning.md"]
+    CPDec_AGENTS -->|M| CPDec_Template[".agents/templates/plan-template.md"]
+    CPDec_AGENTS -. O .-> CPDec_Workflow[".agents/references/workflow.md"]
+    CPDec_AGENTS -. O .-> CPDec_Authoring[".agents/references/plan-authoring-guide.md"]
+
+    CPV -->|M| CPV_AGENTS["AGENTS.md"]
+    CPV_AGENTS -->|M| CPV_Planning[".agents/references/planning.md"]
+    CPV_AGENTS -->|M| CPV_Plan[".agents/plans/PLAN_book_publisher.md"]
+    CPV_AGENTS -. O .-> CPV_Testing[".agents/references/testing.md"]
+    CPV_AGENTS -. O .-> CPV_Documentation[".agents/references/documentation.md"]
+    CPV_AGENTS -. O .-> CPV_Workflow[".agents/references/workflow.md"]
+
+    CPSync -->|M| CPSync_AGENTS["AGENTS.md"]
+    CPSync_AGENTS -->|M| CPSync_Roadmap["ROADMAP.md"]
+    CPSync_AGENTS -->|M| CPSync_Plan[".agents/plans/PLAN_book_publisher.md"]
+```
+
+### Document Load Chain / Implement Plan
+
+```mermaid
+flowchart TD
+    ImplementPrompt["Prompt: implement plan PLAN_book_publisher.md"] --> ISpec["Implementation / Spec"]
+    ISpec --> ICode["Implementation / Code"]
+    ICode --> IDocs["Implementation / Docs"]
+    IDocs --> IRun["Implementation / Run"]
+    IRun --> ISelfReview["Implementation / Self-Review"]
+    ISelfReview --> ICodeReview["Implementation / Code Review"]
+    ICodeReview --> ICommit["Implementation / Commit"]
+    ICommit --> IHandoff["Implementation / Handoff"]
+
+    ISpec -->|M| ISpec_AGENTS["AGENTS.md"]
+    ISpec_AGENTS -->|M| ISpec_Execution[".agents/references/execution.md"]
+    ISpec_AGENTS -->|M| ISpec_TaskSpec["task-specific governing spec or published contract artifact"]
+    ISpec_AGENTS -. O .-> ISpec_Documentation[".agents/references/documentation.md"]
+
+    ICode -->|M| ICode_AGENTS["AGENTS.md"]
+    ICode_AGENTS -->|M| ICode_Execution[".agents/references/execution.md"]
+    ICode_AGENTS -->|M| ICode_Style[".agents/references/code-style.md"]
+    ICode_AGENTS -->|M| ICode_Source["task-specific source files"]
+    ICode_AGENTS -. O .-> ICode_Architecture["docs/ARCHITECTURE.md"]
+    ICode_AGENTS -. O .-> ICode_Design["docs/DESIGN.md"]
+    ICode_AGENTS -. O .-> ICode_TaskSpec["task-specific governing spec or published contract artifact"]
+
+    IDocs -->|M| IDocs_AGENTS["AGENTS.md"]
+    IDocs_AGENTS -->|M| IDocs_Documentation[".agents/references/documentation.md"]
+    IDocs_AGENTS -->|M| IDocs_ChangedDocs["changed documentation or contract files"]
+    IDocs_AGENTS -. O .-> IDocs_Rules[".agents/references/references-rules.md"]
+    IDocs_AGENTS -. O .-> IDocs_Readme["README.md"]
+    IDocs_AGENTS -. O .-> IDocs_Asciidoc["src/docs/asciidoc/"]
+    IDocs_AGENTS -. O .-> IDocs_FrontendContract["docs/FRONTEND_AI_CONTRACT.md"]
+    IDocs_AGENTS -. O .-> IDocs_OpenApi["src/test/resources/openapi/approved-openapi.json"]
+
+    IRun -->|M| IRun_AGENTS["AGENTS.md"]
+    IRun_AGENTS -->|M| IRun_Testing[".agents/references/testing.md"]
+    IRun_AGENTS -->|M| IRun_Environment[".agents/references/environment-quick-ref.md"]
+    IRun_AGENTS -. O .-> IRun_GradleGraph[".agents/references/gradle-task-graph.md"]
+    IRun_AGENTS -. O .-> IRun_Troubleshooting[".agents/references/troubleshooting.md"]
+
+    ISelfReview -->|M| ISelfReview_AGENTS["AGENTS.md"]
+    ISelfReview_AGENTS -->|M| ISelfReview_Reviews[".agents/references/reviews.md"]
+    ISelfReview_AGENTS -. O .-> ISelfReview_Testing[".agents/references/testing.md"]
+    ISelfReview_AGENTS -. O .-> ISelfReview_Documentation[".agents/references/documentation.md"]
+
+    ICodeReview -->|M| ICodeReview_AGENTS["AGENTS.md"]
+    ICodeReview_AGENTS -->|M| ICodeReview_Reviews[".agents/references/reviews.md"]
+    ICodeReview_AGENTS -. O .-> ICodeReview_TaskSpec["task-specific governing spec or published contract artifact"]
+    ICodeReview_AGENTS -. O .-> ICodeReview_Source["task-specific source files"]
+
+    ICommit -->|M| ICommit_AGENTS["AGENTS.md"]
+    ICommit_AGENTS -->|M| ICommit_Execution[".agents/references/execution.md"]
+    ICommit_AGENTS -->|M| ICommit_GitMessage[".gitmessage"]
+    ICommit_AGENTS -. O .-> ICommit_Plan[".agents/plans/PLAN_book_publisher.md"]
+    ICommit_AGENTS -. O .-> ICommit_WorkflowLog[".agents/tmp/workflow/*.md"]
+    ICommit_AGENTS -. O .-> ICommit_Workflow[".agents/references/workflow.md"]
+
+    IHandoff -->|M| IHandoff_AGENTS["AGENTS.md"]
+    IHandoff_AGENTS -->|M| IHandoff_Execution[".agents/references/execution.md"]
+    IHandoff_AGENTS -. O .-> IHandoff_Workflow[".agents/references/workflow.md"]
+    IHandoff_AGENTS -. O .-> IHandoff_Plan[".agents/plans/PLAN_book_publisher.md"]
+    IHandoff_AGENTS -. O .-> IHandoff_WorkflowLog[".agents/tmp/workflow/*.md"]
+```
+
+### Document Load Chain / Integrate And Release
+
+```mermaid
+flowchart TD
+    ReleasePrompt["Prompt: integrate changes and prepare release and publish it"] --> IRV["Integration / Re-validate"]
+    IRV --> IMerge["Integration / Merge"]
+    IMerge --> IPMV["Integration / Post-Merge-Verify"]
+    IPMV --> RGate["Release / Gate"]
+    RGate --> RTag["Release / Tag"]
+    RTag --> RNotes["Release / Notes"]
+    RNotes --> RPublish["Release / Publish"]
+    RPublish --> RCleanup["Release / Post-Release-Cleanup"]
+
+    IRV -->|M| IRV_AGENTS["AGENTS.md"]
+    IRV_AGENTS -->|M| IRV_Testing[".agents/references/testing.md"]
+    IRV_AGENTS -->|M| IRV_Environment[".agents/references/environment-quick-ref.md"]
+    IRV_AGENTS -. O .-> IRV_Workflow[".agents/references/workflow.md"]
+    IRV_AGENTS -. O .-> IRV_GradleGraph[".agents/references/gradle-task-graph.md"]
+
+    IMerge -->|M| IMerge_AGENTS["AGENTS.md"]
+    IMerge_AGENTS -->|M| IMerge_Workflow[".agents/references/workflow.md"]
+    IMerge_AGENTS -. O .-> IMerge_Plan[".agents/plans/PLAN_book_publisher.md"]
+    IMerge_AGENTS -. O .-> IMerge_WorkflowLog[".agents/tmp/workflow/*.md"]
+
+    IPMV -->|M| IPMV_AGENTS["AGENTS.md"]
+    IPMV_AGENTS -->|M| IPMV_Testing[".agents/references/testing.md"]
+    IPMV_AGENTS -->|M| IPMV_Workflow[".agents/references/workflow.md"]
+    IPMV_AGENTS -. O .-> IPMV_Execution[".agents/references/execution.md"]
+    IPMV_AGENTS -. O .-> IPMV_PlanExecution[".agents/references/plan-execution.md"]
+
+    RGate -->|M| RGate_AGENTS["AGENTS.md"]
+    RGate_AGENTS -->|M| RGate_Releases[".agents/references/releases.md"]
+    RGate_AGENTS -->|M| RGate_Testing[".agents/references/testing.md"]
+    RGate_AGENTS -->|M| RGate_Documentation[".agents/references/documentation.md"]
+    RGate_AGENTS -. O .-> RGate_Plan[".agents/plans/PLAN_book_publisher.md"]
+    RGate_AGENTS -. O .-> RGate_Roadmap["ROADMAP.md"]
+    RGate_AGENTS -. O .-> RGate_Changelog["CHANGELOG.md"]
+
+    RTag -->|M| RTag_AGENTS["AGENTS.md"]
+    RTag_AGENTS -->|M| RTag_Releases[".agents/references/releases.md"]
+    RTag_AGENTS -->|M| RTag_Checklist[".agents/references/release-checklist.md"]
+    RTag_AGENTS -->|M| RTag_Changelog["CHANGELOG.md"]
+    RTag_AGENTS -->|M| RTag_Roadmap["ROADMAP.md"]
+    RTag_AGENTS -. O .-> RTag_Learnings[".agents/references/LEARNINGS.md"]
+    RTag_AGENTS -. O .-> RTag_Archive[".agents/archive/"]
+
+    RNotes -->|M| RNotes_AGENTS["AGENTS.md"]
+    RNotes_AGENTS -->|M| RNotes_Releases[".agents/references/releases.md"]
+    RNotes_AGENTS -->|M| RNotes_Changelog["CHANGELOG.md"]
+    RNotes_AGENTS -. O .-> RNotes_Checklist[".agents/references/release-checklist.md"]
+    RNotes_AGENTS -. O .-> RNotes_TemporaryChangelog["temporary CHANGELOG_<topic>.md files"]
+
+    RPublish -->|M| RPublish_AGENTS["AGENTS.md"]
+    RPublish_AGENTS -->|M| RPublish_Releases[".agents/references/releases.md"]
+    RPublish_AGENTS -. O .-> RPublish_ArtifactVerification[".agents/references/release-artifact-verification.md"]
+
+    RCleanup -->|M| RCleanup_AGENTS["AGENTS.md"]
+    RCleanup_AGENTS -->|M| RCleanup_Releases[".agents/references/releases.md"]
+    RCleanup_AGENTS -->|M| RCleanup_Checklist[".agents/references/release-checklist.md"]
+    RCleanup_AGENTS -->|M| RCleanup_Roadmap["ROADMAP.md"]
+    RCleanup_AGENTS -->|M| RCleanup_Changelog["CHANGELOG.md"]
+    RCleanup_AGENTS -->|M| RCleanup_Archive[".agents/archive/"]
+    RCleanup_AGENTS -. O .-> RCleanup_Learnings[".agents/references/LEARNINGS.md"]
+    RCleanup_AGENTS -. O .-> RCleanup_Workflow[".agents/references/workflow.md"]
+```
+
 ## Discovery
 
 ### Discovery / Scan
