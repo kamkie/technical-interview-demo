@@ -36,6 +36,7 @@ Entry points:
 
 - load only the reference document, owner guide, and source artifacts needed for the current change
 - avoid bulk-loading `.agents/references/` as a standing pre-flight step
+- when a request introduces or changes requirements for AI documents, update this guide in the same change before editing the affected AI documents; keep domain-specific rules in their owning guides
 - update cross-references in the same change when moving, renaming, splitting, or consolidating reference guidance
 - update `AGENTS.md` only when repo-level AI rules, owner-guide entry points, or document ownership changes
 - when a repo-local skill wraps a workflow owned by a reference document, update the skill and the owning reference document together if that workflow changes
