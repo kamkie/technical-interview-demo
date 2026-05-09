@@ -292,6 +292,93 @@ flowchart TD
     RCleanup_AGENTS -. O .-> RCleanup_Workflow[".agents/references/workflow.md"]
 ```
 
+## Prompt-Triggered Document-Only Load Graphs
+
+These charts collapse the prompt document-load chains to distinct documents and file families only. They intentionally omit prompt and lifecycle action nodes, so repeated loads across actions are represented once. `M/O` means a document is mandatory in at least one source action and optional in at least one other source action.
+
+### Document-Only Load Graph / Create Plan
+
+Metrics: document-only chain depth 1; distinct documents shown 18; total loaded slots represented 35; mandatory or mixed edges 6; optional-only edges 11.
+
+```mermaid
+flowchart TD
+    DOCP_AGENTS["AGENTS.md"]
+    DOCP_AGENTS -->|M| DOCP_Planning[".agents/references/planning.md"]
+    DOCP_AGENTS -->|M| DOCP_Roadmap["ROADMAP.md"]
+    DOCP_AGENTS -->|M/O| DOCP_TaskSpec["task-specific governing spec or published contract artifact"]
+    DOCP_AGENTS -->|M| DOCP_DesignOrSpec["docs/DESIGN.md or task-specific governing spec or published contract artifact"]
+    DOCP_AGENTS -->|M| DOCP_Template[".agents/templates/plan-template.md"]
+    DOCP_AGENTS -->|M| DOCP_Plan[".agents/plans/PLAN_book_publisher.md"]
+    DOCP_AGENTS -. O .-> DOCP_Design["docs/DESIGN.md"]
+    DOCP_AGENTS -. O .-> DOCP_Reference["referenced ticket, pull request, example, document, or web page"]
+    DOCP_AGENTS -. O .-> DOCP_LifecycleSpec["docs/specs/application-lifecycle-spec.md"]
+    DOCP_AGENTS -. O .-> DOCP_PhaseActivities["docs/specs/lifecycle-phase-activities.md"]
+    DOCP_AGENTS -. O .-> DOCP_Documentation[".agents/references/documentation.md"]
+    DOCP_AGENTS -. O .-> DOCP_Readme["README.md"]
+    DOCP_AGENTS -. O .-> DOCP_Asciidoc["src/docs/asciidoc/"]
+    DOCP_AGENTS -. O .-> DOCP_OpenApi["src/test/resources/openapi/approved-openapi.json"]
+    DOCP_AGENTS -. O .-> DOCP_Workflow[".agents/references/workflow.md"]
+    DOCP_AGENTS -. O .-> DOCP_Authoring[".agents/references/plan-authoring-guide.md"]
+    DOCP_AGENTS -. O .-> DOCP_Testing[".agents/references/testing.md"]
+```
+
+### Document-Only Load Graph / Implement Plan
+
+Metrics: document-only chain depth 1; distinct documents shown 23; total loaded slots represented 43; mandatory or mixed edges 10; optional-only edges 12.
+
+```mermaid
+flowchart TD
+    DOIP_AGENTS["AGENTS.md"]
+    DOIP_AGENTS -->|M| DOIP_Execution[".agents/references/execution.md"]
+    DOIP_AGENTS -->|M/O| DOIP_TaskSpec["task-specific governing spec or published contract artifact"]
+    DOIP_AGENTS -->|M/O| DOIP_Documentation[".agents/references/documentation.md"]
+    DOIP_AGENTS -->|M| DOIP_CodeStyle[".agents/references/code-style.md"]
+    DOIP_AGENTS -->|M/O| DOIP_Source["task-specific source files"]
+    DOIP_AGENTS -->|M| DOIP_ChangedDocs["changed documentation or contract files"]
+    DOIP_AGENTS -->|M/O| DOIP_Testing[".agents/references/testing.md"]
+    DOIP_AGENTS -->|M| DOIP_Environment[".agents/references/environment-quick-ref.md"]
+    DOIP_AGENTS -->|M| DOIP_Reviews[".agents/references/reviews.md"]
+    DOIP_AGENTS -->|M| DOIP_GitMessage[".gitmessage"]
+    DOIP_AGENTS -. O .-> DOIP_Architecture["docs/ARCHITECTURE.md"]
+    DOIP_AGENTS -. O .-> DOIP_Design["docs/DESIGN.md"]
+    DOIP_AGENTS -. O .-> DOIP_Rules[".agents/references/references-rules.md"]
+    DOIP_AGENTS -. O .-> DOIP_Readme["README.md"]
+    DOIP_AGENTS -. O .-> DOIP_Asciidoc["src/docs/asciidoc/"]
+    DOIP_AGENTS -. O .-> DOIP_FrontendContract["docs/FRONTEND_AI_CONTRACT.md"]
+    DOIP_AGENTS -. O .-> DOIP_OpenApi["src/test/resources/openapi/approved-openapi.json"]
+    DOIP_AGENTS -. O .-> DOIP_GradleGraph[".agents/references/gradle-task-graph.md"]
+    DOIP_AGENTS -. O .-> DOIP_Troubleshooting[".agents/references/troubleshooting.md"]
+    DOIP_AGENTS -. O .-> DOIP_Plan[".agents/plans/PLAN_book_publisher.md"]
+    DOIP_AGENTS -. O .-> DOIP_WorkflowLog[".agents/tmp/workflow/*.md"]
+    DOIP_AGENTS -. O .-> DOIP_Workflow[".agents/references/workflow.md"]
+```
+
+### Document-Only Load Graph / Integrate And Release
+
+Metrics: document-only chain depth 1; distinct documents shown 18; total loaded slots represented 44; mandatory or mixed edges 9; optional-only edges 8.
+
+```mermaid
+flowchart TD
+    DOIR_AGENTS["AGENTS.md"]
+    DOIR_AGENTS -->|M/O| DOIR_Testing[".agents/references/testing.md"]
+    DOIR_AGENTS -->|M| DOIR_Environment[".agents/references/environment-quick-ref.md"]
+    DOIR_AGENTS -->|M/O| DOIR_Workflow[".agents/references/workflow.md"]
+    DOIR_AGENTS -->|M| DOIR_Releases[".agents/references/releases.md"]
+    DOIR_AGENTS -->|M| DOIR_Documentation[".agents/references/documentation.md"]
+    DOIR_AGENTS -->|M/O| DOIR_Roadmap["ROADMAP.md"]
+    DOIR_AGENTS -->|M/O| DOIR_Changelog["CHANGELOG.md"]
+    DOIR_AGENTS -->|M/O| DOIR_Checklist[".agents/references/release-checklist.md"]
+    DOIR_AGENTS -->|M/O| DOIR_Archive[".agents/archive/"]
+    DOIR_AGENTS -. O .-> DOIR_GradleGraph[".agents/references/gradle-task-graph.md"]
+    DOIR_AGENTS -. O .-> DOIR_Plan[".agents/plans/PLAN_book_publisher.md"]
+    DOIR_AGENTS -. O .-> DOIR_WorkflowLog[".agents/tmp/workflow/*.md"]
+    DOIR_AGENTS -. O .-> DOIR_Execution[".agents/references/execution.md"]
+    DOIR_AGENTS -. O .-> DOIR_PlanExecution[".agents/references/plan-execution.md"]
+    DOIR_AGENTS -. O .-> DOIR_Learnings[".agents/references/LEARNINGS.md"]
+    DOIR_AGENTS -. O .-> DOIR_TemporaryChangelog["temporary CHANGELOG_<topic>.md files"]
+    DOIR_AGENTS -. O .-> DOIR_ArtifactVerification[".agents/references/release-artifact-verification.md"]
+```
+
 ## Discovery
 
 ### Discovery / Scan
