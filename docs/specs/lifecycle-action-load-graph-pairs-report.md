@@ -30,6 +30,68 @@ This report shows only the full graph for each action because all current full a
 | Distinct loaded slots across all actions | 292 |
 | Chain length distribution | 2: 3; 3: 10; 4: 17; 5: 20; 6: 6; 7: 4; 8: 3 |
 
+## Prompt-Triggered Action Chains
+
+These charts show common chained lifecycle actions for concrete prompts. Each action node uses the per-action document-load graph defined later in this report. Conditional branches are dashed and are not unrolled indefinitely.
+
+| Prompt | Primary actions | Primary loaded slots | Primary distinct documents | Loaded slots with conditionals once | Distinct documents with conditionals |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `create plan PLAN_book_publisher.md to add publisher field to Book entity` | 6 | 35 | 18 | 46 | 20 |
+| `implement plan PLAN_book_publisher.md` | 8 | 43 | 23 | 53 | 26 |
+| `integrate changes and prepare release and publish it` | 8 | 44 | 18 | 49 | 20 |
+
+### Prompt Chain / Create Plan
+
+```mermaid
+flowchart TD
+    PromptPlan["Prompt: create plan PLAN_book_publisher.md to add publisher field to Book entity"] --> PlanFrame["Planning / Frame"]
+    PlanFrame --> PlanDesign["Planning / Design"]
+    PlanDesign --> PlanSpec["Planning / Spec"]
+    PlanSpec --> PlanDecompose["Planning / Decompose"]
+    PlanDecompose --> PlanValidate["Planning / Validate-Plan"]
+    PlanValidate --> PlanSync["Planning / Sync"]
+    PlanValidate -. missing decision or open question .-> PlanReplan["Planning / Replan?"]
+    PlanReplan -. revised plan .-> PlanValidate
+```
+
+### Prompt Chain / Implement Plan
+
+```mermaid
+flowchart TD
+    PromptImplement["Prompt: implement plan PLAN_book_publisher.md"] --> ImplSpec["Implementation / Spec"]
+    ImplSpec --> ImplCode["Implementation / Code"]
+    ImplCode --> ImplDocs["Implementation / Docs"]
+    ImplDocs --> ImplRun["Implementation / Run"]
+    ImplRun --> ImplSelfReview["Implementation / Self-Review"]
+    ImplSelfReview --> ImplCodeReview["Implementation / Code Review"]
+    ImplCodeReview --> ImplCommit["Implementation / Commit"]
+    ImplCommit --> ImplHandoff["Implementation / Handoff"]
+    ImplRun -. validation failure .-> ImplRun
+    ImplRun -. scope gap or contradicted decision .-> ImplReplan["Implementation / Replan?"]
+    ImplReplan -. plan updated .-> ImplSpec
+    ImplCodeReview -. security-sensitive change .-> ImplSecurity["Implementation / Security Review?"]
+    ImplSecurity --> ImplCommit
+    ImplCodeReview -. changes requested .-> ImplCode
+```
+
+### Prompt Chain / Integrate And Release
+
+```mermaid
+flowchart TD
+    PromptRelease["Prompt: integrate changes and prepare release and publish it"] --> IntValidate["Integration / Re-validate"]
+    IntValidate --> IntMerge["Integration / Merge"]
+    IntValidate -. conflicts found .-> IntConflicts["Integration / Resolve-Conflicts?"]
+    IntConflicts -. resolved .-> IntMerge
+    IntMerge --> IntPostMerge["Integration / Post-Merge-Verify"]
+    IntPostMerge --> RelGate["Release / Gate"]
+    RelGate --> RelTag["Release / Tag"]
+    RelTag --> RelNotes["Release / Notes"]
+    RelNotes --> RelPublish["Release / Publish"]
+    RelPublish --> RelCleanup["Release / Post-Release-Cleanup"]
+    IntPostMerge -. verification failure .-> IntValidate
+    RelGate -. precondition fails .-> IntValidate
+```
+
 ## Discovery
 
 ### Discovery / Scan
