@@ -44,6 +44,8 @@ Use these files when you want to work with AI in this repository or understand w
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): compact codebase map, package boundaries, feature ownership, and current API shape
 - [.agents/references/code-style.md](.agents/references/code-style.md): repo-local code style and change-shaping guidance
 - [docs/DESIGN.md](docs/DESIGN.md): product intent, tradeoffs, and non-goals
+- [docs/specs/application-lifecycle-spec.md](docs/specs/application-lifecycle-spec.md): application lifecycle phase, activity, loop, and gate model
+- [docs/specs/lifecycle-phase-activities.md](docs/specs/lifecycle-phase-activities.md): repository-specific lifecycle activity vocabulary for owner guides
 - [.agents/references/documentation.md](.agents/references/documentation.md): documentation ownership and when to update which docs
 - [.agents/references/environment-quick-ref.md](.agents/references/environment-quick-ref.md): AI shortcut for local Gradle wrapper commands
 - [.agents/references/plan-execution.md](.agents/references/plan-execution.md): how AI should execute a whole active plan across milestones

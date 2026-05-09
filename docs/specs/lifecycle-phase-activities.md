@@ -20,7 +20,7 @@ Activity names here are descriptive shortcuts; the binding rules live in the own
 - **Switch**: an explicit transition between two phase activities. A switch always implies dropping the previous activity's working set per the `Context Hygiene` rule in `AGENTS.md`.
 - **Trigger**: a signal that requires a switch. Triggers can be planned (the next step in a loop) or conditional (e.g. a security-relevant change, a discovered plan gap).
 - **Loop**: a sequence of phase activities that iterates until an exit condition is met. Loops can nest.
-- **Phase**: a coarse lifecycle stage that contains one or more phase activities, mapped to the `Phase` enum in `.agents/references/planning.md`.
+- **Phase**: a coarse lifecycle stage that contains one or more phase activities, using the same phase vocabulary as `.agents/references/planning.md` and `docs/specs/application-lifecycle-spec.md`.
 
 ## Activity Catalogue
 
@@ -31,7 +31,7 @@ Each activity lists its question, primary owner guide, and typical exit conditio
 - `Scan` — what artifacts and code already define this area? owner: `AGENTS.md` onboarding map, `docs/ARCHITECTURE.md`. Exit: relevant artifacts identified.
 - `Frame` — what is the actual change being requested? owner: `AGENTS.md` Task Interpretation, `.agents/references/planning.md`. Exit: scope and ambiguity surfaced.
 - `Clarify?` — does the user need to resolve a material ambiguity? owner: `.agents/references/planning.md` planning rules. Exit: ambiguity resolved or recorded as a fallback assumption.
-- `Capture` — does this surface a durable repo lesson? owner: `.agents/references/LEARNINGS.md`. Conditional.
+- `Capture?` — does this surface a durable repo lesson? owner: `.agents/references/LEARNINGS.md`. Conditional.
 
 ### Requirements And Roadmap
 
@@ -72,7 +72,7 @@ Each activity lists its question, primary owner guide, and typical exit conditio
 - `Code Review` — peer-style review of the validated diff. owner: `.agents/references/reviews.md`.
 - `Security Review?` — apply only when `.agents/references/reviews.md` security triggers fire. owner: `.agents/references/reviews.md`.
 - `Docs Review?` — apply when the change is documentation-heavy. owner: `.agents/references/reviews.md`, `.agents/references/documentation.md`.
-- `Decide` — approve or request changes; loop back to `Code` or `Validation` if the latter. owner: `.agents/references/reviews.md`.
+- `Decide` — approve or request changes; loop back to `Code` or `Run` if changes are requested. owner: `.agents/references/reviews.md`.
 
 ### Integration
 
@@ -115,12 +115,13 @@ These phase activities are listed for completeness; they currently have **no AI 
 
 ## Phase Activity Sequence
 
-The repository uses the `Phase` enum from `.agents/references/planning.md`. This table maps each phase to its in-order activity sequence; `?` marks conditional phase activities.
+The repository uses the `Phase` vocabulary from `.agents/references/planning.md`, which mirrors `docs/specs/application-lifecycle-spec.md`.
+This table maps each phase to its in-order activity sequence; `?` marks conditional phase activities.
 
 | Phase | In-order phase activities | Primary owner guides |
 | --- | --- | --- |
 | Discovery | `Scan` → `Frame` → `Clarify?` → `Capture?` | `AGENTS.md`, `docs/ARCHITECTURE.md`, `.agents/references/LEARNINGS.md` |
-| Roadmap intake | `Intake` → `Refine` → `Prioritize` → `Sequence` → `Sync` | `ROADMAP.md`, `docs/DESIGN.md` |
+| Roadmap Intake | `Intake` → `Refine` → `Prioritize` → `Sequence` → `Sync` | `ROADMAP.md`, `docs/DESIGN.md` |
 | Planning | `Frame` → `Design` → `Spec` → `Decompose` → `Validate-Plan` → `Sync` → `Replan?` | `.agents/references/planning.md`, `docs/DESIGN.md`, `.agents/templates/plan-template.md` |
 | Implementation | `Spec` → `Code` → `Docs` → `Run` → `Replan?` → `Self-Review` → `Code Review` → `Security Review?` → `Commit` → `Handoff` | `.agents/references/execution.md`, `.agents/references/documentation.md`, `.agents/references/code-style.md`, `.agents/references/workflow.md` |
 | Testing | `Plan-Tests` → `Author-Tests` → `Run` → `Diagnose?` → `Fix?` → `Re-run` → `Record` | `.agents/references/testing.md`, `.agents/references/troubleshooting.md` |
@@ -129,8 +130,7 @@ The repository uses the `Phase` enum from `.agents/references/planning.md`. This
 | Release | `Gate` → `Tag` → `Notes` → `Publish` → `Post-Release-Cleanup` | `.agents/references/releases.md`, `CHANGELOG.md` |
 | Deployment | `Stage` → `Smoke` → `Promote` → `Verify` → `Rollback?` | none yet (gap) |
 | Operations | `Observe` → `Triage` → `Hotfix?` → `Patch?` → `Backport?` → `Deprecate?` | partial: `CHANGELOG.md`, `ROADMAP.md` |
-| Continuous improvement | `Retrospect` → `Capture-Learning` → `Refactor?` → `Tech-Debt-Plan?` → `Sync` | `.agents/references/LEARNINGS.md`, `ROADMAP.md` |
-| Closed | none | `.agents/references/planning.md`, `.agents/archive/` |
+| Continuous Improvement | `Retrospect` → `Capture-Learning` → `Refactor?` → `Tech-Debt-Plan?` → `Sync` | `.agents/references/LEARNINGS.md`, `ROADMAP.md` |
 
 The `Implementation` row deliberately includes review and validation phase activities because the existing milestone loop in `.agents/references/execution.md` interleaves them. Do not split that loop apart on the basis of this table; the table is descriptive.
 
@@ -205,7 +205,7 @@ These triggers can fire from any phase and force a switch.
 When an owner guide adopts activity names from this spec:
 
 - list only the phase activities that fire in the loop or section that guide actually owns
-- tag the existing prose with the activity name in square brackets, for example `[Code]`, `[Validation]`, `[Replan?]`
+- tag the existing prose with the activity name in square brackets, for example `[Code]`, `[Run]`, `[Replan?]`
 - do not copy activity definitions from this file; link to this file for the definition and keep policy in the owner guide
 - do not introduce a new activity name without adding it here first
 - keep `Context-Hygiene` implicit in prose; do not annotate every sentence with it
@@ -229,14 +229,14 @@ Items the phase activity sequence exposes that this repository does not yet cove
 
 - this file does not change any policy
 - this file does not define new validation, review, or release rules
-- this file does not introduce a new `Phase` value
+- this file does not define terminal plan statuses such as `Closed`; `.agents/references/planning.md` owns status values
 - this file does not replace the workflow mechanics in `.agents/references/workflow.md`
 - this file is not a plan and must not be moved under `.agents/plans/PLAN_*.md`
 
 ## Cross-References
 
 - `AGENTS.md` for the phase owner map and `Context Hygiene` rule
-- `.agents/references/planning.md` for the `Phase` and `Status` enums
+- `.agents/references/planning.md` for plan `Phase` and `Status` vocabulary
 - `.agents/templates/plan-template.md` for the current plan skeleton and readiness/progress sections
 - `.agents/references/plan-authoring-guide.md` for planning examples and fill guidance
 - `.agents/references/execution.md` for the canonical milestone loop

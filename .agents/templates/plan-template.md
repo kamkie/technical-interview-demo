@@ -25,6 +25,7 @@
 - Out of scope
 
 ## Current State
+- Current lifecycle phase/activity, when known
 - Current behavior
 - Current constraints
 - Relevant existing specs and code
@@ -110,6 +111,7 @@
 
 ## Required Content Checklist
 - what behavior is changing and why
+- which lifecycle phase/activity owns this work, using `docs/specs/application-lifecycle-spec.md` and `docs/specs/lifecycle-phase-activities.md` wording
 - whether the plan is decision-complete and ready for execution
 - which `ROADMAP.md` entry tracks this plan, or which new roadmap entry this plan added
 - what is out of scope

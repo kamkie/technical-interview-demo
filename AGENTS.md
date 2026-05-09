@@ -65,7 +65,7 @@ If you are a new agent entering this repository, follow these steps to ground yo
 1. **Read `AGENTS.md` first** to understand the engineering rules and spec-driven development philosophy.
 2. **Use `README.md` only when needed** for the human-facing project overview or supported contract summary.
 3. **Open `SETUP.md` only when needed** for setup, local tooling, Docker, or troubleshooting detail.
-4. **Identify the current task's lifecycle phase** (Discovery, Planning, Implementation, Testing, Review, Integration, Release).
+4. **Identify the current task's lifecycle phase** (Discovery, Roadmap Intake, Planning, Implementation, Testing, Review, Integration, Release, Deployment, Operations, Continuous Improvement).
 5. **Load the relevant owner guide** from the phase owner map below.
 6. **Locate or create a task plan** (`.agents/plans/PLAN_*.md`) when the current workflow requires planned execution.
 7. **Run a targeted relevance scan** using task terms against `.agents/references/LEARNINGS.md` and active `.agents/plans/PLAN_*.md` files, then open only matches that overlap the current task.
@@ -75,21 +75,27 @@ If you are a new agent entering this repository, follow these steps to ground yo
 Start with `AGENTS.md`, then add only the owner guides that match the current lifecycle phase and changed artifacts.
 Task titles, skills, templates, and deep references stay on demand until directly invoked or required by the selected workflow.
 
-| Phase | Primary owner guides |
+| Lifecycle phase / work shape | Primary owner guides |
 | --- | --- |
-| Discovery or roadmap intake | `ROADMAP.md` and `.agents/references/planning.md`; add `README.md` or conditional descriptive guides only when the request needs product, contract, design, or structure framing |
+| Discovery | `ROADMAP.md` and `.agents/references/planning.md`; add `README.md` or conditional descriptive guides only when the request needs product, contract, design, or structure framing |
+| Roadmap Intake | `ROADMAP.md` and `.agents/references/planning.md`; add `docs/DESIGN.md` only when product, contract, or roadmap tradeoffs are touched |
 | Planning | `.agents/references/planning.md`, the relevant specs or source artifacts, and `ROADMAP.md` for active-work tracking |
-| Whole-plan implementation | `.agents/references/plan-execution.md`, the target `.agents/plans/PLAN_*.md`, and the owner guides for files being changed; keep descriptive guides conditional |
-| Ad hoc task or one-milestone implementation | `.agents/references/execution.md`, the user request or target milestone, and the owner guides for files being changed; keep descriptive guides conditional |
-| Workflow, delegation, or integration | `.agents/references/workflow.md`; load detailed workflow references only after the work shape requires delegation, worktrees, or multi-plan coordination |
-| Testing or review | `.agents/references/testing.md`, `.agents/references/reviews.md`, and `.agents/references/documentation.md` when artifact routing or contract impact is part of the check; keep descriptive guides conditional |
+| Implementation, whole-plan work | `.agents/references/plan-execution.md`, the target `.agents/plans/PLAN_*.md`, and the owner guides for files being changed; keep descriptive guides conditional |
+| Implementation, ad hoc task or one milestone | `.agents/references/execution.md`, the user request or target milestone, and the owner guides for files being changed; keep descriptive guides conditional |
+| Testing | `.agents/references/testing.md`, `.agents/references/troubleshooting.md` only after a validation failure, and `.agents/references/documentation.md` when artifact routing or contract impact is part of the check |
+| Review | `.agents/references/reviews.md`, plus `.agents/references/documentation.md` when documentation or contract impact is part of the review |
+| Integration or coordinated workflow | `.agents/references/workflow.md`; load detailed workflow references only after the work shape requires delegation, worktrees, multi-plan coordination, or merge/integration mechanics |
 | Release | `.agents/references/releases.md` only after the implementation state is integrated and release work is explicitly in scope |
+| Deployment | No general AI owner guide yet; use explicit user-provided runbooks, deployment artifacts, and `.agents/references/testing.md` for validation scope, then record any durable gap as Roadmap Intake |
+| Operations | No general AI owner guide yet; use explicit user-provided signals or runbooks, triage through `ROADMAP.md`, and capture durable lessons in `.agents/references/LEARNINGS.md` when warranted |
+| Continuous Improvement | `.agents/references/LEARNINGS.md`, `ROADMAP.md`, and `.agents/references/releases.md` for post-release cleanup that feeds the next cycle |
 | Task-skill, skill, or template maintenance | `.agents/skills/repo-task/references/spec.md`, the relevant `.agents/skills/` guide, or the specific template or task file being changed |
 
 Conditional descriptive guide triggers:
 
 - load `docs/ARCHITECTURE.md` only for structural code reading, architecture-sensitive changes, or package ownership questions
 - load `docs/DESIGN.md` only when user-visible behavior, supported scope, security posture, or roadmap tradeoffs are touched
+- load `docs/specs/application-lifecycle-spec.md` and `docs/specs/lifecycle-phase-activities.md` only when lifecycle phase/activity wording, owner-guide mapping, or loop vocabulary changes
 - load `.agents/references/LEARNINGS.md` only from the targeted relevance scan or a known recurring repo lesson
 
 ## AI Document Set
@@ -101,6 +107,8 @@ Use these files deliberately:
 - `docs/ARCHITECTURE.md`: compact descriptive repository snapshot, codebase map, package responsibilities, and structural guidance
 - `.agents/references/code-style.md`: AI-facing code-style and change-shaping guidance for repo edits
 - `docs/DESIGN.md`: intended design direction, product tradeoffs, and open design decisions
+- `docs/specs/application-lifecycle-spec.md`: repo-agnostic lifecycle phase, activity, loop, artifact, and gate model adopted by this repository
+- `docs/specs/lifecycle-phase-activities.md`: repository-specific activity and loop vocabulary used by owner guides when lifecycle wording matters
 - `.agents/references/documentation.md`: AI-facing artifact routing, documentation ownership, and repository knowledge layout guidance
 - `.agents/references/references-rules.md`: AI-facing rules for creating, editing, compacting, moving, and retiring `.agents/references/*.md` documents
 - `.agents/references/environment-quick-ref.md`: AI-facing command wrapper reference for local Gradle execution

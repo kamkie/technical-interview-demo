@@ -7,6 +7,8 @@ Source of truth:
 
 - `.agents/references/planning.md` owns lifecycle vocabulary, readiness rules, milestone rules, roadmap synchronization, and final checks.
 - `.agents/templates/plan-template.md` owns the canonical plan skeleton and required sections.
+- `docs/specs/application-lifecycle-spec.md` owns the lifecycle phase model that planning vocabulary must match.
+- `docs/specs/lifecycle-phase-activities.md` owns the activity and loop names used when planning prose names lifecycle activities.
 - `.agents/references/documentation.md` owns artifact routing.
 - `.agents/references/testing.md` owns validation scope.
 - `.agents/references/plan-execution.md` and `.agents/references/execution.md` own execution after a plan is approved.
@@ -32,17 +34,15 @@ The roadmap tracks active work at a high level; the plan owns detailed milestone
 
 ## Planning Flow
 
-Use this sequence when filling the template:
+Use the Planning phase activity sequence when filling the template:
 
-1. Identify the behavior or workflow being changed.
-2. Find the governing spec or contract artifacts before proposing implementation.
-3. Resolve what repo truth already answers.
-4. Record remaining questions in the open-question table, with blocking status.
-5. Lock answered questions and fallback assumptions in the decision log.
-6. Choose the execution shape and shared-file boundaries.
-7. Define milestone checkpoints that can each be validated and committed.
-8. Define validation and user verification in concrete terms.
-9. Check that roadmap state, readiness, progress tracking, and required artifacts line up.
+1. `Frame`: identify the behavior or workflow being changed and surface scope boundaries.
+2. `Design`: decide product, contract, compatibility, and rollout behavior that cannot be left to implementation.
+3. `Spec`: find or update the governing spec or contract artifacts before proposing implementation.
+4. `Decompose`: choose the execution shape, shared-file boundaries, and milestone checkpoints that can each be validated and committed.
+5. `Validate-Plan`: record remaining questions, accepted fallbacks, locked decisions, validation, and user verification in concrete terms.
+6. `Sync`: check that roadmap state, readiness, progress tracking, and required artifacts line up.
+7. `Replan?`: revise the plan when it is not decision-complete or when execution reality later disagrees with a locked decision, milestone, or validation path, then return to `Validate-Plan`.
 
 Ask the user only when ambiguity changes product intent, compatibility, rollout, acceptance criteria, validation, or another material tradeoff.
 For non-blocking preference gaps, pick a conservative fallback and record it.
@@ -51,8 +51,11 @@ For non-blocking preference gaps, pick a conservative fallback and record it.
 
 ### Lifecycle And Readiness
 
-Use `Lifecycle` for the plan's coarse state and immediate execution state.
+Use `Lifecycle` for the plan's coarse lifecycle phase and immediate plan status.
 Use `Planning Readiness` to make the decision state scannable.
+`Phase` must use the lifecycle phase names from `.agents/references/planning.md`, which mirror `docs/specs/application-lifecycle-spec.md`.
+`Status` describes the immediate state inside that phase.
+`Closed` is a terminal `Status`, not a `Phase`.
 
 `Status | Ready` means no blocking open question remains unresolved.
 If any open question has `Blocks Ready? | Yes`, the lifecycle status should be `Needs Input`.
@@ -264,7 +267,7 @@ When reviewing whether a plan is ready, lead with blockers.
 Use this shape:
 
 ```md
-Readiness: Needs Input / Ready / Not Ready
+Readiness: Draft / Needs Input / Ready / Blocked
 
 Blocking gaps:
 - Q1: ...
@@ -289,6 +292,7 @@ If there are no blocking gaps, say that clearly and name any residual risk.
 Before handing off a plan, confirm:
 
 - `Lifecycle` and `Planning Readiness` agree with the open-question and decision tables
+- `Lifecycle` uses phase and status values from `.agents/references/planning.md`
 - unresolved questions have owners, status values, fallback or decision fields, and blocking status
 - accepted fallbacks are visible in the decision log
 - scope, non-goals, compatibility promises, and edge cases are explicit

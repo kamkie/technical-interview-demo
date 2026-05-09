@@ -3,6 +3,7 @@
 `.agents/references/planning.md` owns the minimum standing rules for creating executable plans under `.agents/plans/`.
 Detailed examples and fill guidance are on demand in `.agents/references/plan-authoring-guide.md`.
 Use `.agents/templates/plan-template.md` when you need the full skeleton.
+Use `docs/specs/application-lifecycle-spec.md` for lifecycle phase vocabulary and `docs/specs/lifecycle-phase-activities.md` for activity and loop names.
 
 Use this file when the user asks for a plan, milestone breakdown, readiness review, or detailed change strategy.
 Use `.agents/references/plan-execution.md` after the user asks to execute a whole active plan, `.agents/references/execution.md` for ad hoc tasks or one plan milestone, `.agents/references/workflow.md` for branch/worktree/delegation mechanics, `.agents/references/documentation.md` for artifact routing, and `.agents/references/testing.md` for validation scope.
@@ -28,16 +29,24 @@ Every active plan starts with a lifecycle block followed by a planning readiness
 | Last Updated | YYYY-MM-DD |
 ```
 
-Use `Phase` for the coarse lifecycle:
+Use `Phase` for the coarse lifecycle stage.
+Valid plan phase values mirror the eleven phases in `docs/specs/application-lifecycle-spec.md`:
 
-- `Discovery`: repo research or framing is still underway
-- `Planning`: the plan is being written, reviewed, or finalized
-- `Implementation`: approved work is being built
-- `Testing`: validation or verification work is the primary focus
-- `Review`: security, maintainability, or peer review is the primary focus
-- `Integration`: implementation is done and merge or release cleanup remains
-- `Release`: release artifacts, tags, and documentation are being prepared
-- `Closed`: no active execution remains
+- `Discovery`: a request, idea, or signal is being scanned and framed
+- `Roadmap Intake`: a promoted discovery item is being refined, prioritized, sequenced, and synced into active-work tracking
+- `Planning`: a roadmap item is being turned into a decision-complete plan
+- `Implementation`: an approved plan or bounded task is being built as the smallest spec-driven change
+- `Testing`: locally complete implementation is being validated
+- `Review`: a validated change is being reviewed for approval or requested changes
+- `Integration`: an approved change is landing on the integration branch and post-merge checks are being confirmed
+- `Release`: an integrated change is being prepared, tagged, published, and cleaned up as a release
+- `Deployment`: a released artifact is being promoted and verified in a target environment
+- `Operations`: a live artifact is being observed, triaged, patched, or scheduled for follow-up
+- `Continuous Improvement`: release outcomes or recurring signals are being captured and fed back into active-work tracking
+
+`Closed` is not a phase.
+It is a terminal plan status for work whose lifecycle is complete and archived or intentionally retired.
+When a plan uses `Status | Closed`, keep `Phase` set to the lifecycle phase that closed the work, normally `Release` or `Continuous Improvement`.
 
 Use `Status` for immediate state:
 
@@ -48,13 +57,17 @@ Use `Status` for immediate state:
 - `Blocked`
 - `Implemented`
 - `Released`
+- `Closed`
 
 Keep the lifecycle block current as the plan moves.
+Every phase transition is explicit: update the plan and any active-work owner artifact in the same change.
 Keep `Planning Readiness` aligned with the open-question table and decision log; it is a scan-friendly summary, not a parallel lifecycle scheme.
 
 ## Planning Rules
 
 A plan is ready only when it is decision-complete for another agent to execute without inventing missing choices.
+Planning follows the Planning phase activity sequence from `docs/specs/lifecycle-phase-activities.md`: `Frame` -> `Design` -> `Spec` -> `Decompose` -> `Validate-Plan` -> `Sync`.
+When the plan is not decision-complete or execution reality later disagrees with it, the Plan Loop uses `Replan?` and returns to `Validate-Plan` until the plan is ready again.
 
 Before writing the plan:
 
@@ -77,6 +90,7 @@ Keep answered or deferred questions visible instead of deleting them, so later e
 ## Roadmap Synchronization
 
 Creating or materially revising a concrete active plan must update `ROADMAP.md` in the same change.
+This is the planning `Sync` activity: active-work tracking must match the plan's current lifecycle state.
 
 Use `ROADMAP.md` for active-work tracking only:
 
@@ -148,6 +162,7 @@ Use `.agents/templates/plan-template.md` for the full structure.
 Before presenting a plan, verify that it:
 
 - is self-contained
+- uses lifecycle `Phase` and `Status` values exactly as this guide defines them
 - identifies the governing specs
 - confirms `ROADMAP.md` reflects the plan path and current active-work status
 - includes a readiness snapshot that matches the open-question and decision tables

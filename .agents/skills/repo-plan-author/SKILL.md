@@ -1,6 +1,6 @@
 ---
 name: repo-plan-author
-description: Create, revise, or review repository-local `.agents/plans/PLAN_*.md` execution plans, including lifecycle metadata, planning readiness, structured open questions, decision logs, milestone breakdowns, progress tracking, and readiness reviews. Use when asked to plan work, turn roadmap items into a plan, revise an active plan, review whether a plan is ready, or decide whether work should remain in `Discovery`, move to `Planning`, or wait for input.
+description: Create, revise, or review repository-local `.agents/plans/PLAN_*.md` execution plans, including lifecycle metadata, planning readiness, structured open questions, decision logs, milestone breakdowns, progress tracking, and readiness reviews. Use when asked to plan work, turn roadmap items into a plan, revise an active plan, review whether a plan is ready, or decide whether work should remain in `Discovery`, move through `Roadmap Intake` or `Planning`, or wait for input.
 ---
 
 # Repo Plan Author
@@ -15,6 +15,7 @@ Standing authority stays in:
 - `.agents/references/planning.md` for planning rules, lifecycle vocabulary, readiness rules, milestone requirements, roadmap synchronization, and final checks
 - `.agents/templates/plan-template.md` for the canonical plan skeleton
 - `.agents/references/plan-authoring-guide.md` for examples and fill guidance
+- `docs/specs/application-lifecycle-spec.md` and `docs/specs/lifecycle-phase-activities.md` for lifecycle phase and activity vocabulary
 - `.agents/references/documentation.md` for artifact routing
 - `.agents/references/testing.md` for validation scope
 - `.agents/references/workflow.md` only when branch, worktree, delegation, worker-log, or integration mechanics are part of the planning decision
@@ -40,6 +41,7 @@ Read only what the request needs:
 - detailed fill examples or readiness review shape: `.agents/references/plan-authoring-guide.md`
 - plan revision or readiness review: the target `.agents/plans/PLAN_*.md`
 - roadmap-driven work: `ROADMAP.md`
+- lifecycle wording changes: `docs/specs/application-lifecycle-spec.md`, `docs/specs/lifecycle-phase-activities.md`
 - artifact routing: `.agents/references/documentation.md`
 - validation selection: `.agents/references/testing.md`
 - delegation or shared-file planning: `.agents/references/workflow.md`
@@ -52,7 +54,7 @@ Do not bulk-load active plans, archived plans, templates, task files, or referen
 
 1. Identify the behavior or workflow being planned.
 2. Identify the governing spec, contract, roadmap, or AI-guidance artifact before proposing implementation.
-3. Decide whether the work is still `Discovery`, ready for `Planning`, or blocked by missing input.
+3. Decide whether the work is still `Discovery`, belongs in `Roadmap Intake`, is ready for `Planning`, or is blocked by missing input.
 4. Resolve what repo truth already answers before asking the user.
 5. Record remaining material questions as stable `Q` rows with owner, status, fallback or decision, and `Blocks Ready?`.
 6. Record answered questions, repo-truth conclusions, and accepted fallback assumptions in `Decision Log And Assumptions`.
@@ -103,7 +105,7 @@ If no blocking gap remains, say so directly and name any residual non-blocking r
 
 ## Guardrails
 
-- do not invent lifecycle values, milestone status values, or a parallel readiness scheme
+- do not invent lifecycle phase values, plan status values, milestone status values, activity names, or a parallel readiness scheme
 - do not convert roadmap bullets directly into implementation prose without checking current repo truth
 - do not bury material product, compatibility, rollout, acceptance, or validation gaps in assumptions
 - do not force delegated or coordinated work when ownership boundaries are not explicit

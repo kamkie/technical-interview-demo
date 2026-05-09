@@ -32,6 +32,7 @@ Use this guide as a navigation aid, not as a second copy of the AI runbooks.
 | Project overview and implemented scope | `README.md` |
 | Local setup, tools, and troubleshooting | `SETUP.md` |
 | Repository-specific AI rules and phase owner map | `AGENTS.md` |
+| Lifecycle phase and activity vocabulary | `docs/specs/application-lifecycle-spec.md` and `docs/specs/lifecycle-phase-activities.md` |
 | Reusable task starters | `.agents/skills/repo-task/` |
 | Creating or revising execution plans | `.agents/references/planning.md` |
 | Executing a whole approved plan | `.agents/references/plan-execution.md` |
@@ -101,17 +102,25 @@ If the title, placeholder, or target artifact is ambiguous, expect AI to ask a t
 
 ## Lifecycle Guide
 
+Use the lifecycle phase names from `docs/specs/application-lifecycle-spec.md`.
+Use `docs/specs/lifecycle-phase-activities.md` when you need the activity names such as `Frame`, `Spec`, `Validate-Plan`, `Run`, or `Replan?`.
+
 ### Discovery
 
 Use AI to turn rough ideas into concrete candidate work without jumping into implementation too early.
 Useful requests ask AI to inspect `ROADMAP.md`, clarify requirement gaps, or recommend the next workstream while keeping product and contract decisions explicit.
+
+### Roadmap Intake
+
+Use AI to refine a discovery item into active-work tracking before asking for a decision-complete plan.
+The useful output is a sequenced roadmap entry or a clear reason the idea is not ready for active planning.
 
 ### Planning
 
 Use AI to create or revise an execution plan under `.agents/plans/PLAN_*.md`.
 The plan should be decision-complete enough that implementation does not need to invent product behavior, and `ROADMAP.md` should point to active planned work without duplicating the plan.
 
-### Plan Verification
+### Planning Validation
 
 Before implementing large or multi-step work, ask AI to review the plan itself.
 The useful output is a readiness judgment: lifecycle state, requirement gaps, milestone boundaries, execution shape, validation scope, and unresolved decisions.
@@ -135,20 +144,29 @@ IntelliJ AI Assistant can be aligned with the repository's AI commit-message rul
    "Follow the commit-message rules in `.agents/references/execution.md`; use `.gitmessage` only as the local template shape."
 5. Alternatively, when asking the AI to commit, you can explicitly say: "Write a commit message following `.agents/references/execution.md`."
 
-### Workflow Execution And Integration
-
-Most work should stay in the default linear workflow.
-When you want delegation, worktrees, or later integration of worker output, ask AI to use `.agents/references/workflow.md`; it owns shared-file boundaries, worker logs, and integration mechanics.
-
-### Verification
+### Testing And Review
 
 Use AI to run validation, inspect contract impact, and review the change with a code-review mindset.
 `.agents/references/testing.md` owns which command or manual check is sufficient, and `.agents/references/reviews.md` owns how findings should be prioritized.
+
+### Integration And Workflow Coordination
+
+Most work should stay in the default linear workflow.
+When you want delegation, worktrees, or later integration of worker output, ask AI to use `.agents/references/workflow.md`; it owns shared-file boundaries, worker logs, and integration mechanics.
 
 ### Release
 
 Release preparation is a maintainer step after the intended implementation has landed on `main`.
 Use `.agents/references/releases.md` for release preconditions, versioning, tagging, roadmap cleanup, changelog movement, and published-artifact verification.
+
+### Deployment And Operations
+
+This repository does not yet have general AI owner guides for Deployment or Operations.
+Use explicit task-specific runbooks, deployment artifacts, and validation guidance, then convert durable gaps or recurring signals into Roadmap Intake.
+
+### Continuous Improvement
+
+Use AI to capture durable lessons, update active-work tracking after a release or recurring signal, and keep follow-up work separate from completed release history.
 
 ## Repo-Local Skills
 
