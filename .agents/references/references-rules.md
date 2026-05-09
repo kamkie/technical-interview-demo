@@ -1,6 +1,7 @@
 # References Rules For AI Agents
 
-`.agents/references/references-rules.md` owns the standing rules for creating, editing, compacting, moving, and retiring markdown instruction documents under `.agents/references/`.
+`.agents/references/references-rules.md` owns the current standing rules for creating, editing, compacting, moving, and retiring markdown instruction documents under `.agents/references/`.
+Use this file as the rule set that other `.agents/references/*.md` files are measured against; do not use it as a changelog, incident report, or record of edits already made.
 
 This file makes the implicit and explicit rules for `.agents/references/*.md` documents explicit.
 It does not own repository artifact routing; use `.agents/references/documentation.md` to decide which artifact owns a topic before editing multiple docs.
@@ -16,6 +17,7 @@ Entry points:
 
 - keep the role of each reference document distinct; do not collapse architecture, code style, design, documentation ownership, execution, planning, release workflow, review guidance, testing guidance, workflow guidance, and learnings into one document
 - give each reference document a clear opening ownership statement that names the file and the guidance it owns
+- keep this file expressed as the current reference-document rule set; replace outdated expectations with current expectations instead of appending notes about past changes
 - write AI-guidance changes as current-state rules, not incident history or narrative reports
 - update the relevant `.agents/references/` file in the same change when architecture, code-style expectations, design intent, documentation ownership, durable engineering guidance, release workflow, review/security review guidance, testing/validation guidance, workflow guidance, planning guidance, or plan-execution guidance materially changes
 - keep standing rules in their focused owning files instead of redistributing them across task starters, plans, templates, skills, worker logs, or final responses
@@ -36,7 +38,7 @@ Entry points:
 
 - load only the reference document, owner guide, and source artifacts needed for the current change
 - avoid bulk-loading `.agents/references/` as a standing pre-flight step
-- when a request introduces or changes requirements for AI documents, update this guide in the same change before editing the affected AI documents; keep domain-specific rules in their owning guides
+- when a request introduces or changes requirements for AI documents, update this guide in the same change by changing the standing rule future reference documents must satisfy, not by recording that the request happened or listing files changed; keep domain-specific rules in their owning guides
 - update cross-references in the same change when moving, renaming, splitting, or consolidating reference guidance
 - update `AGENTS.md` only when repo-level AI rules, owner-guide entry points, or document ownership changes
 - when a repo-local skill wraps a workflow owned by a reference document, update the skill and the owning reference document together if that workflow changes

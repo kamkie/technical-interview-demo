@@ -38,6 +38,7 @@ Use these completion rules for AI work in this repository:
 - Treat public behavior changes as incomplete until governing specs and published contract artifacts move together; treat internal refactors as incomplete if they create unnecessary contract churn.
 - Run the required validation from `.agents/references/testing.md` for the correct diff boundary. If required validation cannot run or is explicitly out of scope, record the exact reason and remaining risk.
 - Complete final review through `.agents/references/reviews.md`; do not hand off with unresolved blocking drift, missing security review for security-sensitive changes, or hidden scope expansion.
+- Treat edits to `.agents/references/*.md` as incomplete until the edited reference documents satisfy `.agents/references/references-rules.md`; keep `references-rules.md` itself as the current rule set that other reference files are measured against, never as a changelog or record of completed edits.
 - Keep active plans, progress trackers, validation ledgers, worker logs, roadmap entries, and changelog entries aligned with the actual state; do not rely on final-response memory for durable status.
 - Commit every completed task or milestone that changed tracked files with the required AI commit-message format before handoff or unrelated work starts. During an explicitly ongoing interactive session, uncommitted work remains in progress until the user asks for handoff.
 - For work done outside `main`, finish only from an integrated state: push the finished branch and open or merge the pull request, unless the user explicitly chose a no-PR flow already on `main`.
@@ -81,7 +82,7 @@ Load descriptive or deep references only when the task needs them:
 Keep working context narrow. Treat the ownership lists above as routing aids, not a standing pre-flight bulk-load list; once work enters execution, follow `.agents/references/execution.md` or `.agents/references/plan-execution.md` for context switching and checkpoint summaries.
 
 For AI-document maintenance and required updates by change type, use `.agents/references/documentation.md`; for `.agents/references/*.md` edits, also use `.agents/references/references-rules.md`.
-When a request introduces or changes requirements for AI documents, update `.agents/references/references-rules.md` in the same change before editing the affected AI documents.
+When a request introduces or changes requirements for AI documents, update `.agents/references/references-rules.md` in the same change before editing the affected AI documents, and express the update as the standing rule future reference documents must satisfy.
 
 ## Integration And Release Invariants
 
