@@ -37,7 +37,7 @@ Entry points:
 - load only the reference document, owner guide, and source artifacts needed for the current change
 - avoid bulk-loading `.agents/references/` as a standing pre-flight step
 - update cross-references in the same change when moving, renaming, splitting, or consolidating reference guidance
-- update `AGENTS.md` only when the AI-document inventory, repo-level AI rules, or document ownership changes
+- update `AGENTS.md` only when repo-level AI rules, owner-guide entry points, or document ownership changes
 - when a repo-local skill wraps a workflow owned by a reference document, update the skill and the owning reference document together if that workflow changes
 - if an interrupted tool or IDE run leaves a reference document incomplete, finish it or clearly mark the gaps before handoff
 - validate documentation-only reference changes with manual consistency review, `git diff --check`, and the standard validation expected by `.agents/references/testing.md`
@@ -54,6 +54,6 @@ Entry points:
 
 - add a new reference document only when durable guidance needs a distinct owner or an existing owner would become confusing
 - before adding a new reference document, check `.agents/references/documentation.md` for artifact ownership and search existing reference files for an appropriate owner
-- when adding a new reference document, update `.agents/references/documentation.md` artifact ownership and `AGENTS.md` inventory or load-policy text when the new file changes repo-level AI document ownership
+- when adding a new reference document, update `.agents/references/documentation.md` artifact ownership and `AGENTS.md` owner-guide entry points when the new file changes repo-level AI document ownership
 - when retiring a reference document, move any still-current rules to the best owning reference first, then move historical or report-like residue to `.agents/archive/`
 - when renaming or moving a reference document, update `AGENTS.md` and other `.agents/` cross-references in the same change
