@@ -27,6 +27,22 @@ When resolving truth, use this order:
 5. active planning in `ROADMAP.md` ordered plan sections
 6. historical release notes in `CHANGELOG.md`
 
+## Definition Of Done
+
+Use these completion rules for AI work in this repository:
+
+- Do not call a task, milestone, plan, delegated run, branch, or release complete while requested scope is unfinished; record blocked, skipped, failed, or cancelled work explicitly.
+- Represent the intended behavior or documentation change in the owning spec, contract, or guidance artifact before or alongside the implementation.
+- Keep implementation, executable specs, published contract artifacts, human-facing docs, AI guidance, and generated references aligned for the actual change through `.agents/references/documentation.md`.
+- Treat public behavior changes as incomplete until governing specs and published contract artifacts move together; treat internal refactors as incomplete if they create unnecessary contract churn.
+- Run the required validation from `.agents/references/testing.md` for the correct diff boundary. If required validation cannot run or is explicitly out of scope, record the exact reason and remaining risk.
+- Complete final review through `.agents/references/reviews.md`; do not hand off with unresolved blocking drift, missing security review for security-sensitive changes, or hidden scope expansion.
+- Keep active plans, progress trackers, validation ledgers, worker logs, roadmap entries, and changelog entries aligned with the actual state; do not rely on final-response memory for durable status.
+- Commit every completed task or milestone that changed tracked files with the required AI commit-message format before handoff or unrelated work starts. During an explicitly ongoing interactive session, uncommitted work remains in progress until the user asks for handoff.
+- For work done outside `main`, finish only from an integrated state: push the finished branch and open or merge the pull request, unless the user explicitly chose a no-PR flow already on `main`.
+- For delegated or coordinated work, wait for every worker to reach a terminal state and record integration status before declaring the run complete.
+- Leave release work undone unless explicitly requested. If release work is requested, tag only the validated release candidate on `main`, keep release notes and roadmap cleanup aligned, and archive released plans through `.agents/references/releases.md`.
+
 ## Working Context And Guidance Loading
 
 Read `AGENTS.md` first, then load only the source artifacts and owner guides that match the current task.
@@ -81,19 +97,3 @@ Specialized agents and repo-local skills may accelerate repeatable tasks when av
 Treat skills as workflow helpers that point back to the owner guides, not as higher-priority policy.
 Read `.agents/skills/<skill>/SKILL.md` only when that skill is invoked or clearly applies.
 Use `.agents/skills/repo-task/` for this repository's task starter dispatcher. Use `.agents/plugins/marketplace.json` only for Codex plugin marketplace configuration; Codex skills that need distribution belong inside a plugin bundle, for example `plugins/<plugin-name>/skills/<skill-name>/SKILL.md`.
-
-## Definition Of Done
-
-Use these completion rules for AI work in this repository:
-
-- Do not call a task, milestone, plan, delegated run, branch, or release complete while requested scope is unfinished; record blocked, skipped, failed, or cancelled work explicitly.
-- Represent the intended behavior or documentation change in the owning spec, contract, or guidance artifact before or alongside the implementation.
-- Keep implementation, executable specs, published contract artifacts, human-facing docs, AI guidance, and generated references aligned for the actual change through `.agents/references/documentation.md`.
-- Treat public behavior changes as incomplete until governing specs and published contract artifacts move together; treat internal refactors as incomplete if they create unnecessary contract churn.
-- Run the required validation from `.agents/references/testing.md` for the correct diff boundary. If required validation cannot run or is explicitly out of scope, record the exact reason and remaining risk.
-- Complete final review through `.agents/references/reviews.md`; do not hand off with unresolved blocking drift, missing security review for security-sensitive changes, or hidden scope expansion.
-- Keep active plans, progress trackers, validation ledgers, worker logs, roadmap entries, and changelog entries aligned with the actual state; do not rely on final-response memory for durable status.
-- Commit every completed task or milestone that changed tracked files with the required AI commit-message format before handoff or unrelated work starts. During an explicitly ongoing interactive session, uncommitted work remains in progress until the user asks for handoff.
-- For work done outside `main`, finish only from an integrated state: push the finished branch and open or merge the pull request, unless the user explicitly chose a no-PR flow already on `main`.
-- For delegated or coordinated work, wait for every worker to reach a terminal state and record integration status before declaring the run complete.
-- Leave release work undone unless explicitly requested. If release work is requested, tag only the validated release candidate on `main`, keep release notes and roadmap cleanup aligned, and archive released plans through `.agents/references/releases.md`.
