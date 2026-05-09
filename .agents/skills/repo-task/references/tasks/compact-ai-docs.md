@@ -8,8 +8,9 @@ Compact the standing AI instruction files.
 
 #### Scope
 
-- Read `AGENTS.md`, `.agents/references/documentation.md`, `.agents/skills/repo-task/references/spec.md`, `.agents/skills/repo-task/references/index.md`, and standing owner guides under `.agents/references/` first; exclude active `.agents/plans/PLAN_*.md` files unless they are relevant to the compaction target.
-- Do not bulk-load `.agents/archive/`, `.agents/references/`, `.agents/templates/`, or `.agents/skills/`; open them only when a cross-reference or overlapping policy points there.
+- Read `AGENTS.md`, `.agents/references/documentation.md`, `.agents/skills/repo-task/references/spec.md`, `.agents/skills/repo-task/references/index.md`, and this task file first.
+- Use targeted searches and cross-references to choose the standing owner guides under `.agents/references/` that are relevant to the compaction target.
+- Do not bulk-load `.agents/archive/`, `.agents/references/`, `.agents/templates/`, `.agents/skills/`, or active `.agents/plans/PLAN_*.md` files; open them only when a cross-reference or overlapping policy points there.
 - Check `WORKING_WITH_AI.md` only when human-facing workflow wording overlaps with the AI guidance being changed.
 
 #### Compaction Targets

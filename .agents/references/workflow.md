@@ -78,6 +78,7 @@ Each worker log records:
 - validation commands run and their pass or fail result
 - proposed changelog text
 - commit SHA(s)
+- PR or remote-handoff status when applicable
 - blockers, risks, and coordinator decisions still needed
 - whether the current milestone or slice is ready for integration
 
