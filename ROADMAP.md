@@ -12,7 +12,7 @@ Released history belongs in `CHANGELOG.md`.
 | Breaking Change Policy | Disallowed on the stable `2.x` line unless a later major-version plan explicitly changes it |
 | Next Target Version | Not selected; default to `v2.0.2` for maintenance fixes or `v2.1.0` for backward-compatible feature work |
 | Latest Stable Release | `v2.0.1` released on 2026-05-09 from the code review issue fixes plan archived in `.agents/archive/PLAN_code_review_issue_fixes.md` |
-| Immediate Next Action | Select the next post-`v2.0.1` workstream; frontend AI contract remains planned. |
+| Immediate Next Action | Resolve frontend repository destination and target AI-instruction path for `.agents/plans/PLAN_frontend_ai_contract.md`. |
 
 ## Roadmap Rules
 
@@ -41,7 +41,7 @@ Use this section for plan-backed work that is ready but not selected as the imme
 
 | Status | Workstream | Plan Or Artifact | Notes |
 | --- | --- | --- | --- |
-| Planned | Frontend AI contract | To be planned | Generate a frontend-contract AI instruction file in this repository using Anthropic's `frontend-design` skill as source guidance, then copy it into the frontend repository as source input for that repo's AI instructions |
+| Selected | Frontend AI contract | `.agents/plans/PLAN_frontend_ai_contract.md` | Draft plan created; needs frontend repository destination and target AI-instruction path before execution |
 
 ## Intake
 
