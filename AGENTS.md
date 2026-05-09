@@ -177,10 +177,7 @@ When making architecture-sensitive changes:
 ## Local Environment And Command Execution
 
 Use `SETUP.md` for setup walkthroughs and troubleshooting.
-Use `.agents/references/environment-quick-ref.md` for the AI-facing Gradle wrapper reference.
-
-Prefer `./build.ps1` through PowerShell for local and CI Gradle commands.
-Use `.agents/references/environment-quick-ref.md` for wrapper behavior and avoid adding setup boilerplate to plans or task starters unless wrapper troubleshooting is in scope.
+Use `.agents/references/environment-quick-ref.md` for AI-facing Gradle wrapper commands, wrapper behavior, and instruction-writing rules for plans, task starters, and worker logs.
 
 ## Branch And Worktree Expectations
 
