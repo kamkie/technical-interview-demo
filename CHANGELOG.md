@@ -9,7 +9,7 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ### Added
 
-- Added `docs/FRONTEND_AI_CONTRACT.md` as the backend-owned source contract, security guidance, approved OpenAPI source reference, and design-constraint handoff for AI agents working in a separate first-party frontend repository.
+- Added `docs/FRONTEND_AI_CONTRACT.md` as the backend-owned source contract, external security/design skill reference list, approved OpenAPI source reference, and integration handoff for AI agents working in a separate first-party frontend repository.
 
 ## [v2.0.1] - 2026-05-09
 

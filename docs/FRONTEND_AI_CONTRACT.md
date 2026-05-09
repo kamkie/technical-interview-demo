@@ -22,6 +22,17 @@ Use this priority when deciding frontend behavior:
 
 Use `src/docs/asciidoc/upgrade-1x-to-2-0.adoc` only as migration guidance.
 
+## External Skill References
+
+Do not inline skill bodies or copied recommendation blocks into this document.
+When a frontend agent needs security or design guidance, load the current skill source by URL reference only:
+
+- https://github.com/agamm/claude-code-owasp/blob/main/.claude/skills/owasp-security/SKILL.md
+- https://github.com/openai/skills/blob/main/skills/.curated/security-best-practices/SKILL.md
+- https://github.com/anthropics/skills/blob/main/skills/frontend-design/SKILL.md
+
+If the destination frontend repository has local skills or AI instructions, follow them only when they do not weaken this backend contract.
+
 ## OpenAPI Contract Reference
 
 Do not inline or fork the full OpenAPI JSON/YAML in this file.
@@ -94,27 +105,6 @@ Integration rules:
 - use stable fields such as `messageKey`, status code, and endpoint context for branching
 - do not invent backend endpoints, request fields, auth headers, or alternate transports
 
-## Security Defaults
-
-These rules adapt this repository's `security-best-practices` JavaScript/TypeScript web frontend guidance to the first-party UI contract.
-If a future frontend repository uses React, Vue, Next.js, or another framework, load the matching framework-specific security guidance there.
-
-- Never put private API keys, OAuth secrets, refresh tokens, session identifiers, or cookies in browser source, storage, logs, telemetry, screenshots, or generated reports.
-- Keep session auth server-managed; do not copy the session cookie into JavaScript-accessible storage and do not persist `XSRF-TOKEN` outside the browser cookie/header flow.
-- Treat API responses, URL data, route data, browser storage, and `postMessage` payloads as untrusted until validated for their use.
-- Avoid DOM XSS sinks: `innerHTML`, `outerHTML`, `insertAdjacentHTML`, `document.write`, event-handler attributes, `eval`, `new Function`, and string-based timers.
-- Prefer safe rendering primitives: framework text interpolation, `textContent`, typed components, explicit DOM node creation, and allowlist sanitization only when rich HTML is genuinely required.
-- Validate navigation and URL-bearing sinks such as `window.location`, link `href`, iframe `src`, and form `action`; reject `javascript:`, unexpected protocols, and unapproved external origins.
-- Use exact-origin validation for `postMessage`, explicit `targetOrigin`, shape checks for `event.data`, and no HTML rendering of message data.
-- Use browser storage only for non-sensitive UI preferences, and validate stored values before use.
-- Minimize third-party JavaScript; prefer pinned or self-hosted assets, Subresource Integrity for CDN assets, and narrow CSP allowlists.
-- Design code to work under a strict CSP: avoid inline scripts, inline event handlers, `unsafe-inline`, and `unsafe-eval`.
-- Consider Trusted Types for high-risk DOM rendering, but keep policies small, reviewed, and paired with real sanitization.
-- Use module-scoped constants or explicit parsed config instead of security-sensitive `window.*` or `document.*` named properties.
-
-Security headers, TLS termination, frame controls, and edge throttling may live in the frontend host, reverse proxy, or deployment platform.
-Verify them in the destination frontend repository or runtime environment.
-
 ## Localization And Errors
 
 The API supports `Accept-Language`, optional `lang`, and cookie `language` fallback.
@@ -122,25 +112,6 @@ Supported application languages are currently `en`, `es`, `de`, `fr`, `pl`, `uk`
 
 Error payloads use localized `ProblemDetail` data and include `messageKey`, localized `message`, and resolved `language`.
 Render localized feedback, but do not branch on English message text.
-
-## UI And Design
-
-The UI should be compact, operational, scannable, and explicit about security, session, role, and error states.
-This is an interview-demo administration and catalog-management tool, not a marketing site.
-
-Frontend agents should make these states visible:
-
-- session bootstrap loading
-- unauthenticated with zero or more login providers
-- authenticated account loading separately from session state
-- authenticated non-admin user
-- stale session or stale CSRF failure
-- localized validation/domain error
-- forbidden admin operation
-- backend unavailable or reverse-proxy misrouting
-
-Prefer dense but organized tables, filters, forms, and detail panels.
-Avoid generic AI visuals, purple-gradient SaaS patterns, card-heavy marketing layouts, decorative UI that hides API state, and hard-coded English-only status copy when backend localization data is available.
 
 ## Frontend Copy Instructions
 
