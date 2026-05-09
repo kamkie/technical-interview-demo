@@ -45,11 +45,10 @@ Use this section for plan-backed work that is ready but not selected as the imme
 
 ## Intake
 
-Use this section for rough candidate tasks that are not specific enough for the active release track or deferred backlog.
-Rewrite an item into a concrete roadmap row before moving it into active or deferred work.
-
-| Status | Candidate | Notes |
-| --- | --- | --- |
+1. upgrade-1x-to-2-0.adoc can be removed
+2. introduce adr to pre-planing workflow https://adr.github.io or https://github.com/adr/madr or https://github.com/architecture-decision-record/architecture-decision-record
+3. redo workflow and template for roadmap docs to improve visibility and reduce noise. it should folow[application-lifecycle-spec.md](docs/specs/application-lifecycle-spec.md)
+[lifecycle-phase-activities.md](docs/specs/lifecycle-phase-activities.md)
 
 ## Deferred Work
 
