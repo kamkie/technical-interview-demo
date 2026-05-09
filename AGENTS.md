@@ -2,20 +2,6 @@
 
 `README.md` is the human-facing counterpart of this file. `SETUP.md` is the environment and onboarding guide. The `docs/` directory contains shared project knowledge, and `.agents/` contains Codex-specific support documents. Keep these sources aligned when their scopes overlap, but do not duplicate setup/runbook detail from `SETUP.md` here.
 
-## Role Of This File
-
-`AGENTS.md` defines how AI agents should work in this repository.
-
-Use this file for:
-
-- project-specific engineering rules
-- architectural constraints
-- authoritative spec locations
-- required spec updates for different kinds of changes
-- quality gates and release rules
-
-Do not use this file for detailed local setup, IDE walkthroughs, Docker onboarding, or troubleshooting steps that already belong in `SETUP.md`.
-
 ## Core Approach: Spec-Driven Development
 
 This repository should be changed using Spec-Driven Development.

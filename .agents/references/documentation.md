@@ -20,11 +20,11 @@ Update the artifact that owns the truth being changed:
 - generated import-ready backend contract, external skill references, OpenAPI source snapshot, and integration guidance for AI agents working in a separate first-party frontend repository: `docs/FRONTEND_AI_CONTRACT.md`
 - human-facing guide for developers using AI through the application lifecycle: `WORKING_WITH_AI.md`
 - application development lifecycle phase model, activity vocabulary, and diagrams: `docs/specs/application-lifecycle-spec.md`, `docs/specs/lifecycle-phase-activities.md`, and `docs/specs/application-lifecycle-diagrams.md`
-- AI repository rules and owner-guide entry points: `AGENTS.md`
+- AI repository rules, project-specific engineering constraints, authoritative spec locations, required spec-update policy, quality gates, release rules, and owner-guide entry points: `AGENTS.md`
 - repository knowledge layout and artifact ownership: this guide, especially `## Artifact Ownership` and `### AI Document Maintenance`
 - rules for creating, editing, compacting, moving, and retiring `.agents/references/*.md`: `.agents/references/references-rules.md`
 - AI local command wrapper shortcut: `.agents/references/environment-quick-ref.md`
-- local setup, tools, troubleshooting, and onboarding: `SETUP.md`
+- local setup, tools, IDE walkthroughs, Docker onboarding, troubleshooting, and environment runbooks: `SETUP.md`
 - contributor workflow and maintainer expectations: `CONTRIBUTING.md`
 - active planned work: `ROADMAP.md`
 - released history: `CHANGELOG.md`
