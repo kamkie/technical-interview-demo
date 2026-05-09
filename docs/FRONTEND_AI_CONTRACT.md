@@ -124,6 +124,80 @@ General frontend integration rules:
 Do not invent backend endpoints, request fields, auth headers, or alternate transport contracts.
 If the frontend needs behavior not published by the backend, create a backend contract task first.
 
+## Approved OpenAPI Snapshot
+
+This is a compact snapshot of `src/test/resources/openapi/approved-openapi.json` for frontend AI planning.
+It is a convenience copy, not the authoritative machine-readable contract.
+If this section disagrees with `approved-openapi.json`, use the JSON baseline and update this section.
+
+Snapshot metadata:
+
+- OpenAPI version: `3.0.1`
+- Title: `technical-interview-demo API`
+- Contract version marker: `APPROVED`
+- Path templates: 14
+- Operations: 22
+- Component schemas: 40
+- Security scheme: `sessionCookie` as an API key in cookie `technical-interview-demo-session`
+
+Endpoint snapshot:
+
+| Method | Path | Tag | Auth | CSRF | Summary |
+| --- | --- | --- | --- | --- | --- |
+| GET | `/api/account` | Account | `sessionCookie` | no | Get the current account |
+| PUT | `/api/account/language` | Account | `sessionCookie` | yes | Update the account language |
+| GET | `/api/admin/audit-logs` | Audit Logs | `sessionCookie` | no | List audit logs |
+| GET | `/api/admin/operator-surface` | Operator | `sessionCookie` | no | Get operator inspection surface |
+| GET | `/api/admin/users` | Admin Users | `sessionCookie` | no | List persisted users |
+| PUT | `/api/admin/users/{id}/roles` | Admin Users | `sessionCookie` | yes | Replace managed user roles |
+| GET | `/api/books` | Books | public | no | List books |
+| POST | `/api/books` | Books | `sessionCookie` | yes | Create a book |
+| DELETE | `/api/books/{id}` | Books | `sessionCookie` | yes | Delete a book |
+| GET | `/api/books/{id}` | Books | public | no | Get a book by id |
+| PUT | `/api/books/{id}` | Books | `sessionCookie` | yes | Update a book |
+| GET | `/api/categories` | Categories | public | no | List categories |
+| POST | `/api/categories` | Categories | `sessionCookie` | yes | Create a category |
+| DELETE | `/api/categories/{id}` | Categories | `sessionCookie` | yes | Delete a category |
+| PUT | `/api/categories/{id}` | Categories | `sessionCookie` | yes | Update a category |
+| GET | `/api/localizations` | Localizations | public | no | List localizations |
+| POST | `/api/localizations` | Localizations | `sessionCookie` | yes | Create a localization |
+| DELETE | `/api/localizations/{id}` | Localizations | `sessionCookie` | yes | Delete a localization |
+| GET | `/api/localizations/{id}` | Localizations | public | no | Get a localization by id |
+| PUT | `/api/localizations/{id}` | Localizations | `sessionCookie` | yes | Update a localization |
+| GET | `/api/session` | Session | public | no | Get the current browser session contract |
+| POST | `/api/session/logout` | Session | public | conditional | Log out the current browser session |
+
+For `POST /api/session/logout`, `approved-openapi.json` documents the CSRF header as optional at the schema level because logout is public and idempotent when no current application session exists.
+When a real authenticated application session exists, the frontend must still include the valid same-site CSRF header.
+
+Schema inventory:
+
+- Core resources: `Book`, `Category`, `LocalizationResponse`, `UserAccountResponse`, `AdminUserAccountResponse`, `AuditLogResponse`
+- Write requests: `BookCreateRequest`, `BookUpdateRequest`, `CategoryCreateRequest`, `CategoryUpdateRequest`, `LocalizationRequest`, `UserAccountLanguageRequest`, `AdminUserRoleUpdateRequest`
+- Session contract: `SessionResponse`, `SessionCookieContract`, `SessionCsrfContract`, `SessionLoginProvider`
+- Errors and pagination: `ApiProblemResponse`, `PageBook`, `PageLocalizationResponse`, `AuditLogPageResponse`, `PageableObject`, `SortObject`
+- Admin and operator details: `AdminUserRoleGrantResponse`, `OperatorSurfaceResponse`, `OperatorAuditSection`, `OperatorRuntimeDiagnostics`, `OperatorOperationalStatus`
+- Technical overview details: `AbuseProtectionDetails`, `BuildDetails`, `ConfigurationDetails`, `DocumentationDetails`, `GitDetails`, `ObservabilityDetails`, `PaginationDetails`, `RuntimeDetails`, `SecurityDetails`, `SessionDetails`, `ShutdownDetails`, `TechnicalOverviewResponse`
+
+## Frontend Security Recommendations
+
+These rules adapt this repository's `security-best-practices` JavaScript/TypeScript web frontend guidance to the first-party UI contract.
+If a future frontend repository uses React, Vue, Next.js, or another framework, load the matching framework-specific security guidance there as well.
+
+- Do not put secrets in browser code. Never request, log, hard-code, commit, or store private API keys, OAuth secrets, refresh tokens, session identifiers, or cookies in frontend source, browser storage, logs, telemetry, screenshots, or generated reports.
+- Keep backend session auth server-managed. Do not copy the session cookie into JavaScript-accessible storage, do not invent bearer tokens, and do not persist `XSRF-TOKEN` outside the browser cookie/header flow.
+- Treat every API response, URL parameter, route segment, browser storage value, and `postMessage` payload as untrusted data until validated for its use.
+- Avoid DOM XSS sinks. Do not place untrusted values into `innerHTML`, `outerHTML`, `insertAdjacentHTML`, `document.write`, event-handler attributes, or string-to-code APIs such as `eval`, `new Function`, or string-based timers.
+- Prefer safe rendering primitives: framework text interpolation, `textContent`, explicit DOM node creation, typed components, and allowlist-based sanitization only when rich HTML is genuinely required.
+- Validate navigation targets before assigning `window.location`, `location.href`, `location.assign`, link `href`, iframe `src`, form `action`, or similar URL-bearing sinks. Prefer same-origin relative paths and reject `javascript:`, unexpected protocols, and unapproved external origins.
+- If using `postMessage`, send with an explicit `targetOrigin`, validate `event.origin` against an exact allowlist, validate `event.data` shape, and never render message data as HTML.
+- Use browser storage only for non-sensitive UI preferences. Values read from `localStorage`, `sessionStorage`, or IndexedDB remain untrusted and must be parsed and validated before use.
+- Minimize third-party JavaScript. Treat every third-party script as first-party privileged code, prefer self-hosting or pinned versions, use Subresource Integrity for CDN assets, and keep Content Security Policy allowlists narrow.
+- Design frontend code to work under a strict CSP: avoid inline scripts, inline event handlers, `unsafe-inline`, and `unsafe-eval`; use nonce or hash based script policies where the hosting stack supports them.
+- Consider Trusted Types for high-risk DOM-rendering paths where supported, but keep policy creation small, reviewed, and paired with real sanitization.
+- Do not rely on implicit `window.*` or `document.*` named properties for security-sensitive configuration. Use module-scoped constants or explicit parsed configuration to avoid DOM clobbering hazards.
+- Security headers, TLS, HSTS, frame controls, and edge throttling may live in the frontend host, reverse proxy, or deployment platform. Verify them in the destination frontend repository or runtime environment instead of assuming this backend contract provides them.
+
 ## Localization And Errors
 
 The API supports browser-compatible localization.
