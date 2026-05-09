@@ -39,6 +39,7 @@ Use these completion rules for AI work in this repository:
 - Run the required validation from `.agents/references/testing.md` for the correct diff boundary. If required validation cannot run or is explicitly out of scope, record the exact reason and remaining risk.
 - Complete final review through `.agents/references/reviews.md`; do not hand off with unresolved blocking drift, missing security review for security-sensitive changes, or hidden scope expansion.
 - Treat edits to `.agents/references/*.md` as incomplete until the edited reference documents satisfy `.agents/references/references-rules.md`; keep `references-rules.md` itself as the current rule set that other reference files are measured against, never as a changelog or record of completed edits.
+- Learn from agent mistakes, user corrections, failed assumptions, and avoidable rework; when the correction reveals durable guidance, update the focused owner guide or `.agents/references/LEARNINGS.md` using that file's learning loop.
 - Keep durable status in the owning artifacts; do not rely on final-response memory for plan progress, validation evidence, blockers, roadmap state, or release history.
 - Commit every completed task or milestone that changed tracked files with the required AI commit-message format before handoff or unrelated work starts. During an explicitly ongoing interactive session, uncommitted work remains in progress until the user asks for handoff.
 - Leave release work undone unless explicitly requested.
@@ -78,7 +79,7 @@ Load descriptive or deep references only when the task needs them:
 - `docs/ARCHITECTURE.md` for structural code reading, architecture-sensitive changes, or package ownership questions
 - `docs/DESIGN.md` for user-visible behavior, supported scope, security posture, or roadmap tradeoffs
 - `docs/specs/application-lifecycle-spec.md` and `docs/specs/lifecycle-phase-activities.md` when lifecycle phase, activity, owner-guide mapping, or loop vocabulary changes
-- `.agents/references/LEARNINGS.md` only from a targeted relevance scan or a known recurring repo lesson
+- `.agents/references/LEARNINGS.md` only from a targeted relevance scan, a known recurring repo lesson, or a correction that exposes durable guidance
 - active `.agents/plans/PLAN_*.md` files only when planning, executing, verifying, or releasing that plan
 - task files, templates, detailed workflow references, skill bodies, archived plans, and reports only when directly invoked or required
 

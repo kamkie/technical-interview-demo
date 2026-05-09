@@ -20,6 +20,7 @@ Entry points:
 - keep this file expressed as the current reference-document rule set; replace outdated expectations with current expectations instead of appending notes about past changes
 - write AI-guidance changes as current-state rules, not incident history or narrative reports
 - update the relevant `.agents/references/` file in the same change when architecture, code-style expectations, design intent, documentation ownership, durable engineering guidance, release workflow, review/security review guidance, testing/validation guidance, workflow guidance, planning guidance, or plan-execution guidance materially changes
+- when an agent mistake, user correction, failed assumption, or guidance gap reveals a durable rule, update the focused owning reference document or `.agents/references/LEARNINGS.md` in the same change; write the result as reusable current guidance, not as a mistake log
 - keep standing rules in their focused owning files instead of redistributing them across task starters, plans, templates, skills, worker logs, or final responses
 - keep setup walkthroughs and troubleshooting details out of reference documents unless the reference file specifically owns AI-facing setup or troubleshooting guidance
 - treat reference documents as AI planning and execution aids, not higher-priority truth than executable specs, published contract docs, or the human-facing artifact that owns the topic
@@ -39,7 +40,7 @@ Entry points:
 
 - load only the reference document, owner guide, and source artifacts needed for the current change
 - avoid bulk-loading `.agents/references/` as a standing pre-flight step
-- when a request introduces or changes requirements for AI documents, update this guide in the same change by changing the standing rule future reference documents must satisfy, not by recording that the request happened or listing files changed; keep domain-specific rules in their owning guides
+- when a request introduces or changes requirements for `.agents/references/*.md` documents, update this guide in the same change by changing the standing rule future reference documents must satisfy, not by recording that the request happened or listing files changed; keep domain-specific rules in their owning guides
 - update cross-references in the same change when moving, renaming, splitting, or consolidating reference guidance
 - update `AGENTS.md` only when repo-level AI rules, owner-guide entry points, or document ownership changes
 - when a repo-local skill wraps a workflow owned by a reference document, update the skill and the owning reference document together if that workflow changes

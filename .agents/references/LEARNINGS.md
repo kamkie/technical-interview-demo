@@ -11,6 +11,20 @@ Use this scope ladder when deciding where a new insight belongs:
 - **Symbol-local behavior:** put it in code near the symbol.
 - **Naming or API confusion:** prefer renaming or reshaping the API over adding more prose.
 
+## Learning From Mistakes
+
+Treat agent mistakes, user corrections, failed assumptions, and avoidable rework as signals that current guidance may be incomplete.
+When a correction exposes a durable rule, update the focused owning artifact in the same change instead of relying on final-response memory.
+
+Use this learning loop:
+
+1. Name the mismatch between the assumption or action and the repository truth, user request, executable spec, or owner guide.
+2. Decide whether the lesson is durable enough to help future agents avoid the same mistake.
+3. Prefer fixing the owning guide, spec, API, name, or workflow over adding a broad lesson.
+4. Add to this file only when the lesson is repo-wide, recurring, and likely to survive refactors.
+5. Write the lesson as a reusable rule or habit, not as an apology, incident timeline, or list of files changed.
+6. If the lesson is real but cannot be safely recorded during the task, record the blocker or follow-up in the active plan or final response.
+
 ## When To Consider A Learning
 
 Evaluate whether a durable repo-wide lesson should be added during the task, not only during release cleanup, when:
