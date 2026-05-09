@@ -19,7 +19,7 @@ Update the artifact that owns the truth being changed:
 - runtime behavior and public API contract: executable tests, `src/docs/asciidoc/`, `src/test/resources/openapi/approved-openapi.json`, and `README.md`
 - generated import-ready backend contract, external skill references, OpenAPI source snapshot, and integration guidance for AI agents working in a separate first-party frontend repository: `docs/FRONTEND_AI_CONTRACT.md`
 - human-facing guide for developers using AI through the application lifecycle: `WORKING_WITH_AI.md`
-- application development lifecycle phase model, activity vocabulary, and diagrams: `docs/specs/application-lifecycle-spec.md`, `docs/specs/lifecycle-phase-activities.md`, and `docs/specs/application-lifecycle-diagrams.md`
+- application development lifecycle phase model and activity vocabulary: `docs/specs/application-lifecycle-spec.md` and `docs/specs/lifecycle-phase-activities.md`
 - AI repository rules, project-specific engineering constraints, authoritative spec locations, required spec-update policy, quality gates, release rules, and owner-guide entry points: `AGENTS.md`
 - repository knowledge layout and artifact ownership: this guide, especially `## Artifact Ownership` and `### AI Document Maintenance`
 - rules for creating, editing, compacting, moving, and retiring `.agents/references/*.md`: `.agents/references/references-rules.md`

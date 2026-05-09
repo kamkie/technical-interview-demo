@@ -12,7 +12,7 @@ Every action includes mandatory `AGENTS.md`.
 Solid edges marked `M` are mandatory. Dashed edges marked `O` are optional or conditional.
 Alternative nodes such as `docs/DESIGN.md or task-specific governing spec or published contract artifact` count as one selected load slot in the metrics because a single execution selects one of the alternatives.
 Task-specific file-family names count as one abstract load slot even when a real task touches several concrete files.
-The action node names the user-initiated action only; it is not a loaded document and does not contribute to chain depth. `AGENTS.md` is the mandatory first loaded document and the routing source for the other loads. Chain depth is the longest acyclic document-to-document load depth; if document A loads documents B and C directly, depth is `1`. Loop-back edges are shown but excluded from depth counting.
+The action node names the user-initiated action only; it is not a loaded document and does not contribute to chain depth. `AGENTS.md` is the mandatory first loaded document and primary routing source. Owner guides may route to deeper documents when they are the artifact that names the dependency. Chain depth is the longest acyclic document-to-document load depth; if document A loads documents B and C directly, depth is `1`. Loop-back edges are shown but excluded from depth counting.
 
 This report shows only the full graph for each action because all current full and deduplicated action graphs resolve to the same document-load targets. If a future action has a real deduplicated difference, include both graphs for that action.
 
@@ -24,7 +24,7 @@ This report shows only the full graph for each action because all current full a
 | Actions with identical full and deduplicated graph targets | 63 |
 | Actions shown as full-only graphs | 63 |
 | Actions showing both full and deduplicated graphs | 0 |
-| Chain depth range | 1 |
+| Chain depth range | 1-2 |
 | Chain length range | 2-8 |
 | Total loaded slots across all actions | 292 |
 | Distinct loaded slots across all actions | 292 |
@@ -159,7 +159,7 @@ flowchart TD
 
 ### Document Load Chain / Implement Plan
 
-Metrics: document chain depth 1; action chain length 8; total loaded slots 43; mandatory loaded slots 22; optional loaded slots 21; distinct documents 23.
+Metrics: document chain depth 2; action chain length 8; total loaded slots 43; mandatory loaded slots 22; optional loaded slots 21; distinct documents 23.
 
 ```mermaid
 flowchart TD
@@ -212,7 +212,7 @@ flowchart TD
 
     ICommit -->|M| ICommit_AGENTS["AGENTS.md"]
     ICommit_AGENTS -->|M| ICommit_Execution[".agents/references/execution.md"]
-    ICommit_AGENTS -->|M| ICommit_GitMessage[".gitmessage"]
+    ICommit_Execution -->|M| ICommit_GitMessage[".gitmessage"]
     ICommit_AGENTS -. O .-> ICommit_Plan[".agents/plans/PLAN_book_publisher.md"]
     ICommit_AGENTS -. O .-> ICommit_WorkflowLog[".agents/tmp/workflow/*.md"]
     ICommit_AGENTS -. O .-> ICommit_Workflow[".agents/references/workflow.md"]
@@ -324,7 +324,7 @@ flowchart TD
 
 ### Document-Only Load Graph / Implement Plan
 
-Metrics: document-only chain depth 1; distinct documents shown 23; total loaded slots represented 43; mandatory or mixed edges 10; optional-only edges 12.
+Metrics: document-only chain depth 2; distinct documents shown 23; total loaded slots represented 43; mandatory or mixed edges 10; optional-only edges 12.
 
 ```mermaid
 flowchart TD
@@ -338,7 +338,7 @@ flowchart TD
     DOIP_AGENTS -->|M/O| DOIP_Testing[".agents/references/testing.md"]
     DOIP_AGENTS -->|M| DOIP_Environment[".agents/references/environment-quick-ref.md"]
     DOIP_AGENTS -->|M| DOIP_Reviews[".agents/references/reviews.md"]
-    DOIP_AGENTS -->|M| DOIP_GitMessage[".gitmessage"]
+    DOIP_Execution -->|M| DOIP_GitMessage[".gitmessage"]
     DOIP_AGENTS -. O .-> DOIP_Architecture["docs/ARCHITECTURE.md"]
     DOIP_AGENTS -. O .-> DOIP_Design["docs/DESIGN.md"]
     DOIP_AGENTS -. O .-> DOIP_Rules[".agents/references/references-rules.md"]
@@ -696,13 +696,13 @@ flowchart TD
 
 ### Implementation / Commit
 
-Metrics: chain depth 1; chain length 6; total loaded 6; deduplicated chain length 6; distinct loaded 6.
+Metrics: chain depth 2; chain length 6; total loaded 6; deduplicated chain length 6; distinct loaded 6.
 
 ```mermaid
 flowchart TD
     FA["Implementation / Commit"] -->|M| AGENTS_md_full["AGENTS.md"]
     AGENTS_md_full -->|M| agents_references_execution_md_full[".agents/references/execution.md"]
-    AGENTS_md_full -->|M| gitmessage_full[".gitmessage"]
+    agents_references_execution_md_full -->|M| gitmessage_full[".gitmessage"]
     AGENTS_md_full -. O .-> concrete_agents_plans_PLAN_md_full["concrete .agents/plans/PLAN_*.md"]
     AGENTS_md_full -. O .-> agents_tmp_workflow_md_full[".agents/tmp/workflow/*.md"]
     AGENTS_md_full -. O .-> agents_references_workflow_md_full[".agents/references/workflow.md"]
