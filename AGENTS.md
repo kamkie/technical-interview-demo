@@ -21,11 +21,12 @@ If the intended behavior is not clear enough to express as a spec, stop and clar
 When resolving truth, use this order:
 
 1. explicit user request in the current task
-2. executable specs: integration tests, REST Docs tests, OpenAPI compatibility tests, benchmark checks
+2. executable specs and checked contract baselines: integration tests, REST Docs tests, OpenAPI compatibility tests, `src/test/resources/openapi/approved-openapi.json`, benchmark checks
 3. published contract docs: `README.md`, `src/docs/asciidoc/`
 4. `ROADMAP.md` `## Current Project State` for the active release phase, breaking-change policy, and next target version
 5. active planning in `ROADMAP.md` ordered plan sections
 6. historical release notes in `CHANGELOG.md`
+7. topic-owning AI or human guidance documents
 
 ## Definition Of Done
 
@@ -80,6 +81,7 @@ Load descriptive or deep references only when the task needs them:
 Keep working context narrow. Treat the ownership lists above as routing aids, not a standing pre-flight bulk-load list; once work enters execution, follow `.agents/references/execution.md` or `.agents/references/plan-execution.md` for context switching and checkpoint summaries.
 
 For AI-document maintenance and required updates by change type, use `.agents/references/documentation.md`; for `.agents/references/*.md` edits, also use `.agents/references/references-rules.md`.
+When a request introduces or changes requirements for AI documents, update `.agents/references/references-rules.md` in the same change before editing the affected AI documents.
 
 ## Integration And Release Invariants
 
