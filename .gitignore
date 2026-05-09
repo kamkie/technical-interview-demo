@@ -52,7 +52,8 @@ http-client.private.env.json
 /.agents/tmp/
 
 ### Junie local state ###
-/.junie/
+/.junie/*
+!/.junie/AGENTS.md
 
 ### Local temp files ###
 /temp
