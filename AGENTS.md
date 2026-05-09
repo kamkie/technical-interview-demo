@@ -49,7 +49,7 @@ Use these completion rules for AI work in this repository:
 Read `AGENTS.md` first, then load only the source artifacts and owner guides that match the current task.
 Do not treat `docs/` or `.agents/` guidance as higher-priority truth than executable specs, published contract docs, or the human-facing artifact that owns the topic.
 
-## Fast Loading Paths
+### Fast Loading Paths
 
 Treat cross-references in owner guides as conditional pointers, not recursive load requirements.
 A loaded guide is terminal unless the current task matches another guide's explicit entry condition.
@@ -63,6 +63,8 @@ Start common tasks with these read sets:
 
 Use `.agents/references/documentation.md` only when a task needs artifact routing beyond the fast paths, cross-file alignment, AI-document maintenance outside `.agents/references/*.md`, or repository knowledge ownership decisions.
 
+### Owner Guide Entry Points
+
 Use workflow guides on demand:
 
 - planning or roadmap intake: `.agents/references/planning.md`
@@ -74,6 +76,8 @@ Use workflow guides on demand:
 - branch, worktree, delegation, integration, or remote handoff: `.agents/references/workflow.md`
 - release: `.agents/references/releases.md`
 
+### Descriptive And Deep References
+
 Load descriptive or deep references only when the task needs them:
 
 - `docs/ARCHITECTURE.md` for structural code reading, architecture-sensitive changes, or package ownership questions
@@ -84,6 +88,8 @@ Load descriptive or deep references only when the task needs them:
 - task files, templates, detailed workflow references, skill bodies, archived plans, and reports only when directly invoked or required
 
 Keep working context narrow. Treat the ownership lists above as routing aids, not a standing pre-flight bulk-load list; once work enters execution, follow `.agents/references/execution.md` or `.agents/references/plan-execution.md` for context switching and checkpoint summaries.
+
+### AI Document Maintenance
 
 For AI-document maintenance outside `.agents/references/*.md`, use `.agents/references/documentation.md`.
 For `.agents/references/*.md` edits, use `.agents/references/references-rules.md`; add `.agents/references/documentation.md` only when artifact ownership or cross-file alignment is unclear.
