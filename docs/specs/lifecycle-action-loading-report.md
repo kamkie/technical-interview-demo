@@ -202,33 +202,56 @@ flowchart TB
     O6 -. schedule removal .-> R1
 ```
 
-## Chain Length And Load Totals
+## Chain Metrics And Deduplication
 
 Counting rules:
 
-- Chain length counts the longest simple document-to-document path, including `AGENTS.md`, after the action starts. Loops are counted once per iteration shape; infinite loop repetition is not counted.
-- Total loaded counts unique file aliases from the graph for the path or action, counting task-specific file families as one alias each.
-- `M` means mandatory-only. `Max` means all listed optional branches for that row fire.
+- `Chain length` counts load events along the max-expanded action sequence for the scope. Repeated loads count again.
+- `Total loaded` counts all load events in the same max-expanded scope. For these phase rows, the action sequence is linear, so it matches `Chain length`.
+- `Deduplicated chain length` removes documents already loaded earlier in the same scope.
+- `Distinct loaded` is the unique file-alias count for the same scope.
+- Each user-initiated action includes `AGENTS.md`; therefore repeated `AGENTS.md` loads are counted in raw chain and total numbers.
+- Optional branches listed in the action matrix are included once in max-expanded counts. Infinite loop repetition is not counted.
 
-| Scope | Chain length | Total documents/files loaded | Notes |
-| --- | ---: | ---: | --- |
-| Minimum single action with no owner-guide mapping | 1 | 1 | Deployment and some Operations gap actions load only `AGENTS.md` unless the user supplies task-specific files. |
-| Typical roadmap action | 2 | 2-3 | `AGENTS.md` plus `ROADMAP.md`, with optional `docs/DESIGN.md` or active plan. |
-| Typical planning action | 3-4 | 3-7 | Planning can add roadmap, design, spec routing, validation, workflow, and template docs. |
-| Typical bounded implementation action before validation failure | 3 | 4-7 | `AGENTS.md`, `execution.md`, `code-style.md`, source/spec files, then validation/review at checkpoints. |
-| Documentation routing action | 3-4 | 3-8 | `Docs` reaches the largest single-action optional set when public contract and reference-doc rules are all in scope. |
-| Red-Green Loop after validation failure | 5 | 7-9 | Adds `testing.md`, `environment-quick-ref.md`, `troubleshooting.md`, implementation/spec files, and possibly planning or learning docs. |
-| Review Loop with requested changes | 4-5 | 5-9 | Review can branch into validation, documentation routing, security-sensitive files, then back to implementation. |
-| Delegated or coordinated workflow branch | 4 | 6-8 | Adds workflow detail docs, worker logs, validation, review, and documentation alignment. |
-| Release preparation path | 4 | 7-10 | Gate, checklist, changelog, roadmap, archive, validation, documentation, and learning review can all be in scope. |
-| Release publication verification path | 3 | 3-4 | `release-artifact-verification.md` is loaded only after publish/verification is explicitly requested. |
-| Full expanded graph | 5 | 50 aliases | 37 fixed repository paths or path patterns plus 13 task-specific file-family aliases. |
+### Phase Metrics
 
-Single-action maximums:
+| Scope | Chain length | Total loaded | Deduplicated chain length | Distinct loaded | Notes |
+| --- | ---: | ---: | ---: | ---: | --- |
+| All 63 action occurrences | 295 | 295 | 50 | 50 | Max-expanded count across every action in the lifecycle specs. |
+| Discovery | 14 | 14 | 9 | 9 | Includes ambiguity and learning branches once. |
+| Roadmap Intake | 15 | 15 | 5 | 5 | Mostly repeats `ROADMAP.md`. |
+| Planning | 40 | 40 | 19 | 19 | Add 5 raw loads and 2 more distinct files when the optional parallel workflow branch is also expanded. |
+| Implementation | 53 | 53 | 26 | 26 | Broadest normal phase because spec, code, docs, validation, review, commit, and handoff all participate. |
+| Testing | 34 | 34 | 17 | 17 | Includes one red-green failure diagnosis and rerun path. |
+| Review | 23 | 23 | 10 | 10 | Includes security and docs-review branches once. |
+| Integration | 19 | 19 | 11 | 11 | Includes conflict and post-merge verification paths once. |
+| Release | 30 | 30 | 13 | 13 | Includes local release preparation, publication branch, and cleanup once. |
+| Deployment | 17 | 17 | 8 | 8 | Mostly optional because no complete AI owner guide exists for this phase. |
+| Operations | 26 | 26 | 12 | 12 | Partial mapping through planning, execution, roadmap, workflow, and release-history files. |
+| Continuous Improvement | 24 | 24 | 13 | 13 | Learning and roadmap files repeat heavily. |
 
-- `Implementation / Docs`: 8 aliases when reference-doc rules, README, REST Docs, frontend contract, and OpenAPI are all in scope.
-- `Release / Post-Release-Cleanup`: 8 aliases when release cleanup also captures learnings and branch/worktree cleanup.
-- `Release / Gate` and `Release / Tag`: 7 aliases when all precondition or checklist branches fire.
+### Common Loop Metrics
+
+| Loop or path | Chain length | Total loaded | Deduplicated chain length | Distinct loaded | Notes |
+| --- | ---: | ---: | ---: | ---: | --- |
+| Plan Loop, one pass | 32 | 32 | 17 | 17 | `Frame -> Design -> Spec -> Decompose -> Validate-Plan`. |
+| Plan Loop, one replan iteration | 43 | 43 | 19 | 19 | Adds `Replan? -> Validate-Plan` once. |
+| Milestone Execution Loop | 53 | 53 | 26 | 26 | Same max-expanded count as the Implementation phase row. |
+| Red-Green Loop after one failure | 20 | 20 | 12 | 12 | `Run -> Diagnose? -> Fix? -> Re-run`. |
+| Review Loop with conditional reviews | 23 | 23 | 10 | 10 | `Self-Review -> Code Review -> Security Review? -> Docs Review? -> Decide`. |
+| Delegated workflow branch | 8 | 8 | 7 | 7 | Workflow guide, delegated/coordinated detail, worker log, validation, review, and docs alignment. |
+| Local release preparation | 27 | 27 | 12 | 12 | `Gate -> Tag -> Notes -> Post-Release-Cleanup`, excluding remote publication verification. |
+| Release publication verification | 6 | 6 | 4 | 4 | `Publish` plus publication verification. |
+
+### Single-Action Extremes
+
+| Action | Chain length | Total loaded | Deduplicated chain length | Distinct loaded | Why |
+| --- | ---: | ---: | ---: | ---: | --- |
+| `Implementation / Docs` | 8 | 8 | 8 | 8 | Can touch documentation routing, changed docs, reference rules, README, REST Docs, frontend contract, and OpenAPI. |
+| `Release / Post-Release-Cleanup` | 8 | 8 | 8 | 8 | Can touch release guides, roadmap, changelog, archives, learnings, and workflow cleanup. |
+| `Release / Gate` | 7 | 7 | 7 | 7 | Checks release, validation, documentation, active plan, roadmap, and changelog context. |
+| `Release / Tag` | 7 | 7 | 7 | 7 | Loads release guide, checklist, changelog, roadmap, learnings, and archive context. |
+| Deployment or Operations gap actions with no explicit owner guide | 1 | 1 | 1 | 1 | Only `AGENTS.md` is mandatory until a task-specific owner is supplied. |
 
 ## Action Load Matrix
 
@@ -329,6 +352,8 @@ Single-action maximums:
 - Occurrences with explicit no-complete-owner-guide gaps: 11 (`Deployment` and `Operations`).
 - Continuous Improvement occurrences with partial ownership through learnings, roadmap, and planning: 5.
 - Mandatory global load for every user-initiated action: 1 file, `AGENTS.md`.
+- Max-expanded raw load events across all action occurrences: 295.
+- Max-expanded distinct load aliases across all action occurrences: 50.
 - Typical bounded implementation path before validation failure: `AGENTS.md`, `.agents/references/execution.md`, `.agents/references/code-style.md`, task-specific specs/source files.
 - Typical red-green failure path adds at least `.agents/references/testing.md`, `.agents/references/environment-quick-ref.md`, and `.agents/references/troubleshooting.md`.
 - Release publication is the broadest static path because it can touch release guides, validation guide, documentation guide, changelog, roadmap, archives, and remote-publication verification guidance.
