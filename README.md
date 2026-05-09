@@ -23,7 +23,7 @@ Technical Interview Demo is a small, spec-driven Spring Boot application for int
 - [CONTRIBUTING.md](CONTRIBUTING.md): contributor workflow, validation expectations, and PR or release handoff
 - [ROADMAP.md](ROADMAP.md): active and planned work only
 - [WORKING_WITH_AI.md](WORKING_WITH_AI.md): how to use AI effectively in this repository
-- [FRONTEND_AI_CONTRACT.md](FRONTEND_AI_CONTRACT.md): backend-owned source instructions for AI agents building a separate first-party frontend
+- [docs/FRONTEND_AI_CONTRACT.md](docs/FRONTEND_AI_CONTRACT.md): backend-owned source instructions for AI agents building a separate first-party frontend
 - `infra/`: checked-in Helm, Kubernetes, and monitoring assets
 - `tooling/`: build-tool rules, static-analysis config, and scan suppressions
 - `src/docs/asciidoc/`: published API documentation sources
@@ -42,7 +42,7 @@ Use these files when you want to work with AI in this repository or understand w
 
 - [WORKING_WITH_AI.md](WORKING_WITH_AI.md): human-facing guide for using AI across discovery, planning, implementation, verification, and release
 - [AGENTS.md](AGENTS.md): repository-local AI rules, spec priority, required contract updates, and definition of done
-- [FRONTEND_AI_CONTRACT.md](FRONTEND_AI_CONTRACT.md): source backend contract and design constraints for a separate frontend repository's AI agents
+- [docs/FRONTEND_AI_CONTRACT.md](docs/FRONTEND_AI_CONTRACT.md): source backend contract and design constraints for a separate frontend repository's AI agents
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): compact codebase map, package boundaries, feature ownership, and current API shape
 - [.agents/references/code-style.md](.agents/references/code-style.md): repo-local code style and change-shaping guidance
 - [docs/DESIGN.md](docs/DESIGN.md): product intent, tradeoffs, and non-goals

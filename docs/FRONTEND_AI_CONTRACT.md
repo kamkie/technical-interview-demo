@@ -213,4 +213,3 @@ When a concrete frontend repository is available:
 
 Do not copy this file into an unrelated sibling directory just to satisfy a plan checkbox.
 The destination copy is intentionally a separate task until the frontend repository path and local instruction convention are known.
-
