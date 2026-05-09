@@ -81,19 +81,10 @@ Keep working context narrow. Treat the ownership lists above as routing aids, no
 
 For AI-document maintenance and required updates by change type, use `.agents/references/documentation.md`; for `.agents/references/*.md` edits, also use `.agents/references/references-rules.md`.
 
-## Workflow Invariants
+## Integration And Release Invariants
 
-`.agents/references/workflow.md` owns common branch, worktree, coordinator, worker, and integration rules; the on-demand workflow references own detailed delegated-work mechanics.
+`main` is the integration branch for completed work.
+Do not cut releases from unintegrated side branches, worktrees, detached tips, or changes that have not landed on `main`.
 
-Repo-level invariants:
-
-- treat `main` as the integration branch for completed work
-- keep worktree or side-branch implementation isolated until the planned scope is complete and locally validated
-- prefer merging accepted branches or pull requests; use cherry-pick only when the user asks for it, when accepting less than the full branch or pull request, or when a normal merge is not viable, and record the reason
-- do not cut releases from unintegrated side branches, worktrees, detached tips, or changes that have not landed on `main`
-- when creating a commit, follow the AI commit-message rules in `.agents/references/execution.md`; every completed task or milestone that changed tracked files must be committed before handoff or unrelated work starts
-
-Specialized agents and repo-local skills may accelerate repeatable tasks when available and when the task clearly matches their scope.
-Treat skills as workflow helpers that point back to the owner guides, not as higher-priority policy.
-Read `.agents/skills/<skill>/SKILL.md` only when that skill is invoked or clearly applies.
-Use `.agents/skills/repo-task/` for this repository's task starter dispatcher. Use `.agents/plugins/marketplace.json` only for Codex plugin marketplace configuration; Codex skills that need distribution belong inside a plugin bundle, for example `plugins/<plugin-name>/skills/<skill-name>/SKILL.md`.
+Use `.agents/references/workflow.md` for branch, worktree, delegation, integration, and remote-handoff mechanics.
+Use `.agents/references/releases.md` for release sequencing after implementation is integrated.
