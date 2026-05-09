@@ -66,10 +66,11 @@ Record exact commit SHAs in the tracker only when they are available without cre
 
 Keep plan execution context narrow as the work moves:
 
+- prefer targeted searches and structure checks over opening every file in a package
 - stop referencing milestone-specific files once that milestone is committed
 - use the plan's current state and validation notes as the durable summary instead of re-reading long logs
 - when switching to a new package, doc family, or validation layer, load the owner guide for that slice only when it becomes relevant
-- if repeated re-derivation or contradictions appear, write a short current-state checkpoint in the plan before continuing
+- if contradictions, unstable assumptions, unjustified hedging, or repeated re-derivation appear, write a short current-state checkpoint in the plan or worker log before continuing
 
 ## Tracking Updates
 

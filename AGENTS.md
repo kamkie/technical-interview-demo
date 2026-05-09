@@ -61,33 +61,9 @@ Load descriptive or deep references only when the task needs them:
 - active `.agents/plans/PLAN_*.md` files only when planning, executing, verifying, or releasing that plan
 - task files, templates, detailed workflow references, skill bodies, archived plans, and reports only when directly invoked or required
 
-### Context Hygiene
+Keep working context narrow. Treat the ownership lists above as routing aids, not a standing pre-flight bulk-load list; once work enters execution, follow `.agents/references/execution.md` or `.agents/references/plan-execution.md` for context switching and checkpoint summaries.
 
-Maintain a clean working context to optimize performance and prevent hallucinations:
-
-- **Drop stale context**: Once a milestone or sub-task is complete, stop referencing files that are no longer relevant to the next step.
-- **Avoid deep-file bulk loading**: Prefer targeted searches and structure checks over opening every file in a package.
-- **Summarize complex state**: If a long investigation concludes, summarize the findings and use that summary as the new grounding instead of re-reading the raw logs.
-- **Checkpoint degraded context quality**: If contradiction, unstable assumptions, unjustified hedging, or repeated re-derivation appears, write a short current-state summary before continuing. Put it in the active plan, worker log, or validation notes when such an artifact exists; otherwise use a concise user update or final note.
-- **Close completed plans**: When a task is done, the plan moves to `.agents/archive/` and should be removed from the active read set.
-
-### AI Document Maintenance
-
-Detailed AI-document maintenance routing lives in `.agents/references/documentation.md`.
-Rules for `.agents/references/*.md` documents live in `.agents/references/references-rules.md`.
-Load the relevant guide before changing `AGENTS.md`, `.agents/references/*.md`, task-skill files, templates, skills, references, or archived plans or reports.
-
-## Required Updates By Change Type
-
-Detailed artifact routing lives in `.agents/references/documentation.md`.
-
-High-level rules:
-
-- public behavior changes must update the governing specs, implementation, and published contract artifacts together
-- internal refactors should preserve existing specs without contract churn
-- setup and environment changes route to `SETUP.md` and, when AI command guidance changes, `.agents/references/environment-quick-ref.md`
-- roadmap changes route to `ROADMAP.md`; released history belongs in `CHANGELOG.md`
-- durable AI guidance changes route to the owning `.agents/references/` guide; update `AGENTS.md` only when repo-level AI rules or document ownership changes
+For AI-document maintenance and required updates by change type, use `.agents/references/documentation.md`; for `.agents/references/*.md` edits, also use `.agents/references/references-rules.md`.
 
 ## Architecture Constraints
 

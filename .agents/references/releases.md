@@ -15,6 +15,7 @@ When a coordinated multi-plan workflow used root-level `CHANGELOG_<topic>.md` fi
 - create annotated tags for intentional releases
 - keep `CHANGELOG.md` aligned with releases
 - update `ROADMAP.md` after each release so completed items are removed, only active work remains, and `## Current Project State` reflects the new release phase, breaking-change policy, and next target version
+- archive released `.agents/plans/PLAN_*.md` files under `.agents/archive/` during post-release cleanup, and stop treating archived plans as active read-set inputs
 - do not introduce another human-facing completion archive file
 
 ## Release Preconditions

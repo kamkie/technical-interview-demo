@@ -67,10 +67,11 @@ Use the `.gitmessage` file in the repository root as the authoritative template,
 
 Keep context efficient:
 
+- prefer targeted searches and structure checks over opening every file in a package
 - load package, guide, or reference context only when it is needed for the current checkpoint
 - drop files that belonged only to a completed checkpoint
-- summarize long findings into the plan, worker log, or final response instead of repeatedly reopening raw logs
-- if assumptions become unstable, stop and clarify or write a short checkpoint before continuing
+- summarize long or complex findings into the plan, worker log, validation notes, or final response instead of repeatedly reopening raw logs
+- if contradictions, unstable assumptions, unjustified hedging, or repeated re-derivation appear, write a short current-state summary before continuing; put it in the active plan, worker log, validation notes, or final response as appropriate
 
 ## Milestone-Only Rules
 
