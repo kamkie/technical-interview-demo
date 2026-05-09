@@ -42,6 +42,8 @@ These charts show common chained lifecycle actions for concrete prompts. Each ac
 
 ### Prompt Chain / Create Plan
 
+Metrics: primary action chain length 6; action nodes shown 7; conditional action nodes 1; primary loaded slots 35; distinct documents 18; loaded slots with conditionals once 46; distinct documents with conditionals 20.
+
 ```mermaid
 flowchart TD
     PromptPlan["Prompt: create plan PLAN_book_publisher.md to add publisher field to Book entity"] --> PlanFrame["Planning / Frame"]
@@ -55,6 +57,8 @@ flowchart TD
 ```
 
 ### Prompt Chain / Implement Plan
+
+Metrics: primary action chain length 8; action nodes shown 10; conditional action nodes 2; primary loaded slots 43; distinct documents 23; loaded slots with conditionals once 53; distinct documents with conditionals 26.
 
 ```mermaid
 flowchart TD
@@ -75,6 +79,8 @@ flowchart TD
 ```
 
 ### Prompt Chain / Integrate And Release
+
+Metrics: primary action chain length 8; action nodes shown 9; conditional action nodes 1; primary loaded slots 44; distinct documents 18; loaded slots with conditionals once 49; distinct documents with conditionals 20.
 
 ```mermaid
 flowchart TD
@@ -97,6 +103,8 @@ flowchart TD
 These charts show primary-path document loads for the same prompts. Repeated document labels are intentional: each lifecycle action starts from `AGENTS.md` again, then routes to the documents for that action. Dashed document edges are optional or conditional loads.
 
 ### Document Load Chain / Create Plan
+
+Metrics: document chain depth 1; action chain length 6; total loaded slots 35; mandatory loaded slots 18; optional loaded slots 17; distinct documents 18.
 
 ```mermaid
 flowchart TD
@@ -150,6 +158,8 @@ flowchart TD
 ```
 
 ### Document Load Chain / Implement Plan
+
+Metrics: document chain depth 1; action chain length 8; total loaded slots 43; mandatory loaded slots 22; optional loaded slots 21; distinct documents 23.
 
 ```mermaid
 flowchart TD
@@ -215,6 +225,8 @@ flowchart TD
 ```
 
 ### Document Load Chain / Integrate And Release
+
+Metrics: document chain depth 1; action chain length 8; total loaded slots 44; mandatory loaded slots 28; optional loaded slots 16; distinct documents 18.
 
 ```mermaid
 flowchart TD
