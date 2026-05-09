@@ -51,6 +51,9 @@ http-client.private.env.json
 ### AI workflow scratch ###
 /.agents/tmp/
 
+### Junie local state ###
+/.junie/
+
 ### Local temp files ###
 /temp
 /.output.txt
