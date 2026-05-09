@@ -34,30 +34,33 @@ Use these completion rules for AI work in this repository:
 
 - Do not call a task, milestone, plan, delegated run, branch, or release complete while requested scope is unfinished; record blocked, skipped, failed, or cancelled work explicitly.
 - Represent the intended behavior or documentation change in the owning spec, contract, or guidance artifact before or alongside the implementation.
-- Keep implementation, executable specs, published contract artifacts, human-facing docs, AI guidance, and generated references aligned for the actual change through `.agents/references/documentation.md`.
+- Keep implementation, executable specs, published contract artifacts, human-facing docs, AI guidance, and generated references aligned for the actual change; use `.agents/references/documentation.md` when artifact ownership or cross-file alignment is unclear.
 - Treat public behavior changes as incomplete until governing specs and published contract artifacts move together; treat internal refactors as incomplete if they create unnecessary contract churn.
 - Run the required validation from `.agents/references/testing.md` for the correct diff boundary. If required validation cannot run or is explicitly out of scope, record the exact reason and remaining risk.
 - Complete final review through `.agents/references/reviews.md`; do not hand off with unresolved blocking drift, missing security review for security-sensitive changes, or hidden scope expansion.
 - Treat edits to `.agents/references/*.md` as incomplete until the edited reference documents satisfy `.agents/references/references-rules.md`; keep `references-rules.md` itself as the current rule set that other reference files are measured against, never as a changelog or record of completed edits.
-- Keep active plans, progress trackers, validation ledgers, worker logs, roadmap entries, and changelog entries aligned with the actual state; do not rely on final-response memory for durable status.
+- Keep durable status in the owning artifacts; do not rely on final-response memory for plan progress, validation evidence, blockers, roadmap state, or release history.
 - Commit every completed task or milestone that changed tracked files with the required AI commit-message format before handoff or unrelated work starts. During an explicitly ongoing interactive session, uncommitted work remains in progress until the user asks for handoff.
-- For work done outside `main`, finish only from an integrated state: push the finished branch and open or merge the pull request, unless the user explicitly chose a no-PR flow already on `main`.
-- For delegated or coordinated work, wait for every worker to reach a terminal state and record integration status before declaring the run complete.
-- Leave release work undone unless explicitly requested. If release work is requested, tag only the validated release candidate on `main`, keep release notes and roadmap cleanup aligned, and archive released plans through `.agents/references/releases.md`.
+- Leave release work undone unless explicitly requested.
 
 ## Working Context And Guidance Loading
 
 Read `AGENTS.md` first, then load only the source artifacts and owner guides that match the current task.
 Do not treat `docs/` or `.agents/` guidance as higher-priority truth than executable specs, published contract docs, or the human-facing artifact that owns the topic.
 
-Use repository artifacts by ownership:
+## Fast Loading Paths
 
-- behavior and public API truth: `src/test/java/`, `src/docs/asciidoc/`, `src/test/resources/openapi/approved-openapi.json`, and `README.md`
-- active work and release state: `ROADMAP.md` for current planning and `CHANGELOG.md` for released history
-- setup and troubleshooting: `SETUP.md`
-- generated frontend import guidance: `docs/FRONTEND_AI_CONTRACT.md`
-- artifact routing and repository knowledge layout: `.agents/references/documentation.md`
-- reference-document maintenance rules: `.agents/references/references-rules.md`
+Treat cross-references in owner guides as conditional pointers, not recursive load requirements.
+A loaded guide is terminal unless the current task matches another guide's explicit entry condition.
+
+Start common tasks with these read sets:
+
+- documentation-only edit with clear ownership: `AGENTS.md`, the target document, and the owning guide; for `.agents/references/*.md`, also read `.agents/references/references-rules.md`; load `.agents/references/documentation.md` only when artifact ownership or cross-file alignment is unclear
+- bounded code, test, build, or workflow edit: `AGENTS.md`, `.agents/references/execution.md`, `.agents/references/code-style.md`, and the governing spec or source files; load documentation, testing, and review guides at their checkpoints instead of during initial context loading
+- whole-plan execution: `AGENTS.md`, `.agents/references/plan-execution.md`, the active plan, and only the current milestone's named context
+- release work: `AGENTS.md` and `.agents/references/releases.md`; load detailed release references only when their phase begins
+
+Use `.agents/references/documentation.md` only when a task needs artifact routing beyond the fast paths, cross-file alignment, AI-document maintenance outside `.agents/references/*.md`, or repository knowledge ownership decisions.
 
 Use workflow guides on demand:
 
@@ -81,13 +84,12 @@ Load descriptive or deep references only when the task needs them:
 
 Keep working context narrow. Treat the ownership lists above as routing aids, not a standing pre-flight bulk-load list; once work enters execution, follow `.agents/references/execution.md` or `.agents/references/plan-execution.md` for context switching and checkpoint summaries.
 
-For AI-document maintenance and required updates by change type, use `.agents/references/documentation.md`; for `.agents/references/*.md` edits, also use `.agents/references/references-rules.md`.
-When a request introduces or changes requirements for AI documents, update `.agents/references/references-rules.md` in the same change before editing the affected AI documents, and express the update as the standing rule future reference documents must satisfy.
+For AI-document maintenance outside `.agents/references/*.md`, use `.agents/references/documentation.md`.
+For `.agents/references/*.md` edits, use `.agents/references/references-rules.md`; add `.agents/references/documentation.md` only when artifact ownership or cross-file alignment is unclear.
+When a request introduces or changes requirements for `.agents/references/*.md` documents, update `.agents/references/references-rules.md` in the same change before editing the affected reference documents, and express the update as the standing rule future reference documents must satisfy.
 
 ## Integration And Release Invariants
 
 `main` is the integration branch for completed work.
-Do not cut releases from unintegrated side branches, worktrees, detached tips, or changes that have not landed on `main`.
-
 Use `.agents/references/workflow.md` for branch, worktree, delegation, integration, and remote-handoff mechanics.
-Use `.agents/references/releases.md` for release sequencing after implementation is integrated.
+Use `.agents/references/releases.md` for release sequencing only after the user requests release work and the candidate is integrated on `main`.

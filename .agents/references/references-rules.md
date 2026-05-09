@@ -23,6 +23,7 @@ Entry points:
 - keep standing rules in their focused owning files instead of redistributing them across task starters, plans, templates, skills, worker logs, or final responses
 - keep setup walkthroughs and troubleshooting details out of reference documents unless the reference file specifically owns AI-facing setup or troubleshooting guidance
 - treat reference documents as AI planning and execution aids, not higher-priority truth than executable specs, published contract docs, or the human-facing artifact that owns the topic
+- treat cross-references in owner guides as conditional pointers, not recursive load requirements; a loaded guide is terminal unless the current task matches another guide's explicit entry condition
 - use `.agents/references/documentation.md` first when ownership or artifact routing is unclear
 
 ## Placement And Naming
