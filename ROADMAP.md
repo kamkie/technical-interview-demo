@@ -12,7 +12,7 @@ Released history belongs in `CHANGELOG.md`.
 | Breaking Change Policy | Disallowed on the stable `2.x` line unless a later major-version plan explicitly changes it |
 | Next Target Version | Not selected; default to `v2.0.2` for maintenance fixes or `v2.1.0` for backward-compatible feature work |
 | Latest Stable Release | `v2.0.1` released on 2026-05-09 from the code review issue fixes plan archived in `.agents/archive/PLAN_code_review_issue_fixes.md` |
-| Immediate Next Action | Resolve frontend repository destination and target AI-instruction path for `.agents/plans/PLAN_frontend_ai_contract.md`. |
+| Immediate Next Action | Execute ready source-contract plan `.agents/plans/PLAN_frontend_ai_contract.md`; external frontend-repo copy is deferred until a destination is known. |
 
 ## Roadmap Rules
 
@@ -41,7 +41,7 @@ Use this section for plan-backed work that is ready but not selected as the imme
 
 | Status | Workstream | Plan Or Artifact | Notes |
 | --- | --- | --- | --- |
-| Selected | Frontend AI contract | `.agents/plans/PLAN_frontend_ai_contract.md` | Draft plan created; needs frontend repository destination and target AI-instruction path before execution |
+| Selected | Frontend AI contract | `.agents/plans/PLAN_frontend_ai_contract.md` | Replanned as ready backend-owned source-contract work; external frontend-repo copy deferred until destination and instruction path are known |
 
 ## Intake
 
