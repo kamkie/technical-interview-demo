@@ -32,6 +32,7 @@ Use this guide as a navigation aid, not as a second copy of the AI runbooks.
 | Project overview and implemented scope | `README.md` |
 | Local setup, tools, and troubleshooting | `SETUP.md` |
 | Repository-specific AI rules and phase owner map | `AGENTS.md` |
+| Backend contract source for separate frontend AI agents | `FRONTEND_AI_CONTRACT.md` |
 | Lifecycle phase and activity vocabulary | `docs/specs/application-lifecycle-spec.md` and `docs/specs/lifecycle-phase-activities.md` |
 | Reusable task starters | `.agents/skills/repo-task/` |
 | Creating or revising execution plans | `.agents/references/planning.md` |
@@ -44,6 +45,9 @@ Use this guide as a navigation aid, not as a second copy of the AI runbooks.
 
 Detailed task files, templates, deep references, generated reports, skill references, and archived plans are on-demand material.
 Load them only when the task title, owner guide, or active work calls for them.
+
+Use `FRONTEND_AI_CONTRACT.md` when asking AI to prepare or review instructions for a separate first-party frontend repository.
+It summarizes frontend-facing backend constraints, but backend executable specs, REST Docs, OpenAPI, and `README.md` remain higher-priority contract sources.
 
 ## A Good Request To AI
 

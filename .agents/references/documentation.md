@@ -17,6 +17,7 @@ Entry points:
 Update the artifact that owns the truth being changed:
 
 - runtime behavior and public API contract: executable tests, `src/docs/asciidoc/`, `src/test/resources/openapi/approved-openapi.json`, and `README.md`
+- backend-owned source guidance for AI agents working in a separate first-party frontend repository: `FRONTEND_AI_CONTRACT.md`
 - human-facing guide for developers using AI through the application lifecycle: `WORKING_WITH_AI.md`
 - application development lifecycle phase model, activity vocabulary, and diagrams: `docs/specs/application-lifecycle-spec.md`, `docs/specs/lifecycle-phase-activities.md`, and `docs/specs/application-lifecycle-diagrams.md`
 - AI repository rules and AI-document inventory: `AGENTS.md`
@@ -120,6 +121,7 @@ Update all affected artifacts in the same change:
 - public behavior change: update the governing spec artifacts first, then the published contract artifacts they drive
 - human-facing AI collaboration workflow change: update `WORKING_WITH_AI.md`, and update overlapping AI-facing guides in the same change when the underlying repository workflow also changed
 - workflow or AI-guidance change: update the owning AI guide first; follow `.agents/references/references-rules.md` for reference-document edits; touch `AGENTS.md` only when the AI-document set or maintenance rules changed
+- separate frontend AI contract source change: update `FRONTEND_AI_CONTRACT.md`, keep it subordinate to executable specs, REST Docs, OpenAPI, and `README.md`, and update `README.md`, `WORKING_WITH_AI.md`, `AGENTS.md`, and this guide when its discoverability or ownership changes
 - repo-local skill change: update the skill plus the owning AI guide when the skill wraps a workflow whose rules changed
 - local command-wrapper guidance for AI agents: update `.agents/references/environment-quick-ref.md`, and update `SETUP.md` only when human setup or troubleshooting behavior changed
 - setup or tooling change: update `SETUP.md`, not `README.md`, `AGENTS.md`, or workflow guides unless their inventories or high-level rules changed

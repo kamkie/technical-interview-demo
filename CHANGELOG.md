@@ -7,6 +7,10 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Added
+
+- Added `FRONTEND_AI_CONTRACT.md` as the backend-owned source contract and design-constraint handoff for AI agents working in a separate first-party frontend repository.
+
 ## [v2.0.1] - 2026-05-09
 
 ### Fixed

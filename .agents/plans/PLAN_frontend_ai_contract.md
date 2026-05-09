@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Implementation |
+| Status | In Progress |
 
 ## Planning Readiness
 | Field | Value |
@@ -70,6 +70,7 @@
 ## Affected Artifacts
 - Source AI contract: `FRONTEND_AI_CONTRACT.md` (new)
 - Human/AI indexes likely needing alignment: `README.md`, `WORKING_WITH_AI.md`, `AGENTS.md`, `.agents/references/documentation.md`
+- Release history staging: `CHANGELOG.md` `## [Unreleased]`
 - Roadmap tracking: `ROADMAP.md`
 - Backend contract references to read, not edit unless a contradiction is found: `src/docs/asciidoc/index.adoc`, `src/docs/asciidoc/session-controller.adoc`, `src/docs/asciidoc/upgrade-1x-to-2-0.adoc`, `src/test/resources/openapi/approved-openapi.json`, `README.md`, `docs/DESIGN.md`
 - External frontend repository files are not affected by this plan
@@ -78,36 +79,36 @@
 ## Progress Tracker
 | Milestone | Status | Owner | Commit | Validation | Notes |
 | --- | --- | --- | --- | --- | --- |
-| 1: Draft source frontend AI contract | Not Started | Agent | Pending | Pending | Ready for execution |
-| 2: Register source artifact in repo docs | Not Started | Agent | Pending | Pending | Requires `.agents/references/references-rules.md` before editing `.agents/references/documentation.md` |
+| 1: Draft source frontend AI contract | Done | Agent | Pending with Milestone 2 | Passed | Source artifact drafted and manually checked against session/API contract terms |
+| 2: Register source artifact in repo docs | Done | Agent | Pending | Passed | Source artifact registered in human/AI indexes and unreleased changelog |
 | 3: Validate and hand off | Not Started | Agent | Pending | Pending | Includes roadmap/plan status update and docs-only validation |
 
 ## Execution Milestones
 ### Milestone 1: Draft source frontend AI contract
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Create the source instruction file that tells frontend AI agents how to design and build against this backend without violating the supported contract. |
 | Owned Files Or Packages | `FRONTEND_AI_CONTRACT.md` |
 | Coordinator-Owned Shared Files | `ROADMAP.md`, `.agents/plans/PLAN_frontend_ai_contract.md` |
 | Context Required | `AGENTS.md`, `.agents/references/execution.md`, this plan, `ROADMAP.md`, `docs/DESIGN.md`, `src/docs/asciidoc/index.adoc`, `src/docs/asciidoc/session-controller.adoc`, `src/docs/asciidoc/upgrade-1x-to-2-0.adoc`, `README.md`, `src/test/resources/openapi/approved-openapi.json`, and the current Anthropic `frontend-design` source if reachable |
 | Behavior To Preserve | No backend behavior or public contract changes; frontend guidance must defer to backend specs and published docs. |
 | Deliverables | `FRONTEND_AI_CONTRACT.md` with purpose, source-of-truth hierarchy, API/session/CSRF rules, UI-state expectations, design-quality rules adapted from Anthropic guidance, anti-patterns, and future copy instructions for a frontend repo. |
-| Validation Checkpoint | Manual consistency review against the session docs, API overview, and OpenAPI session schema; confirm no source or generated contract files changed. |
-| Commit Checkpoint | Commit after Milestone 2 unless the user asks for milestone-by-milestone commits. |
+| Validation Checkpoint | Passed: manual consistency review against the session docs, API overview, and OpenAPI session schema; `rg` confirmed required and forbidden session/auth terms are present in the source artifact. |
+| Commit Checkpoint | Pending with Milestone 2 per plan commit checkpoint. |
 
 ### Milestone 2: Register source artifact in repo docs
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | In Progress |
 | Goal | Make the new source artifact discoverable and owned by the repository's documentation map. |
-| Owned Files Or Packages | `README.md`, `WORKING_WITH_AI.md`, `AGENTS.md`, `.agents/references/documentation.md` |
+| Owned Files Or Packages | `README.md`, `WORKING_WITH_AI.md`, `AGENTS.md`, `.agents/references/documentation.md`, `CHANGELOG.md` |
 | Coordinator-Owned Shared Files | `FRONTEND_AI_CONTRACT.md`, `ROADMAP.md`, `.agents/plans/PLAN_frontend_ai_contract.md` |
 | Context Required | `AGENTS.md`, `.agents/references/execution.md`, this plan, `.agents/references/documentation.md`, `.agents/references/references-rules.md`, `README.md`, and `WORKING_WITH_AI.md` |
 | Behavior To Preserve | Keep setup details out of AI docs, keep active-work detail in the plan, and avoid making the new frontend file a higher-priority source than executable specs or published backend contracts. |
-| Deliverables | Short references in the appropriate AI/human-facing indexes and documentation ownership guidance for `FRONTEND_AI_CONTRACT.md`. |
-| Validation Checkpoint | `rg -n "FRONTEND_AI_CONTRACT|Frontend AI contract|frontend AI contract" README.md WORKING_WITH_AI.md AGENTS.md .agents/references/documentation.md FRONTEND_AI_CONTRACT.md`; manual check for duplicated policy. |
-| Commit Checkpoint | Commit local source-artifact and index updates together. |
+| Deliverables | Done: short references in the appropriate AI/human-facing indexes, documentation ownership guidance for `FRONTEND_AI_CONTRACT.md`, and an unreleased changelog entry. |
+| Validation Checkpoint | Passed: `rg -n "FRONTEND_AI_CONTRACT|Frontend AI contract|frontend AI contract" README.md WORKING_WITH_AI.md AGENTS.md .agents/references/documentation.md FRONTEND_AI_CONTRACT.md CHANGELOG.md`; manual check found no duplicated setup or contract policy. |
+| Commit Checkpoint | Pending commit for local source-artifact and index updates together. |
 
 ### Milestone 3: Validate and hand off
 | Field | Value |
@@ -166,6 +167,10 @@
 | 2026-05-09 | `./build.ps1 build` | Original local docs/AI-guidance validation | Passed | Lightweight-only path; Gradle build skipped because only `.agents/plans/PLAN_frontend_ai_contract.md` and `ROADMAP.md` changed |
 | 2026-05-09 | `git diff --check` | Replan whitespace check | Passed | No whitespace errors reported |
 | 2026-05-09 | `./build.ps1 build` | Replan validation | Passed | Lightweight-only path; Gradle build skipped because only `.agents/plans/PLAN_frontend_ai_contract.md` and `ROADMAP.md` changed |
+| 2026-05-09 | `rg -n "CORS|JWT|bearer|/login|/oauth2/authorization/github|GET /api/session|authorizationPath|XSRF-TOKEN|X-XSRF-TOKEN|messageKey|FRONTEND_AI_CONTRACT" FRONTEND_AI_CONTRACT.md` | Milestone 1 contract-term check | Passed | Source artifact includes required session/CSRF/error guidance and names forbidden frontend assumptions |
+| 2026-05-09 | `rg -n "FRONTEND_AI_CONTRACT|Frontend AI contract|frontend AI contract" README.md WORKING_WITH_AI.md AGENTS.md .agents/references/documentation.md FRONTEND_AI_CONTRACT.md CHANGELOG.md` | Milestone 2 reference check | Passed | Source artifact is discoverable from human-facing and AI-facing indexes plus unreleased changelog |
+| 2026-05-09 | `git diff --check` | Milestone 1 and 2 whitespace check | Passed | No whitespace errors reported |
+| 2026-05-09 | `./build.ps1 build` | Milestone 1 and 2 validation | Passed | Lightweight-only path; Gradle build skipped because only support/documentation files changed |
 | 2026-05-09 | Pending | Replanned source-contract implementation validation | Pending | To run after `FRONTEND_AI_CONTRACT.md` and index updates are implemented |
 
 ## User Validation
@@ -179,7 +184,7 @@
 - Roadmap entry: `ROADMAP.md` `Frontend AI contract` tracks this plan.
 - Out of scope: backend runtime/API changes, frontend implementation, generated UI assets, setup/release process changes, and external frontend-repo edits.
 - Governing specs/contracts: `AGENTS.md` spec priority, `ROADMAP.md`, REST Docs, approved OpenAPI, README, and design guide.
-- Likely files: `FRONTEND_AI_CONTRACT.md`, `README.md`, `WORKING_WITH_AI.md`, `AGENTS.md`, `.agents/references/documentation.md`, and `ROADMAP.md`.
+- Likely files: `FRONTEND_AI_CONTRACT.md`, `README.md`, `WORKING_WITH_AI.md`, `AGENTS.md`, `.agents/references/documentation.md`, `CHANGELOG.md`, and `ROADMAP.md`.
 - Compatibility promises: stable `2.x`, same-site first-party UI, session-cookie auth, CSRF metadata, no CORS/JWT/bearer-token promise.
 - Edge cases and risks: destination repo unknown, external skill source may change, accidental contract drift, excessive copying of external source text.
 - Requirement gaps: Q1 and Q2 are explicit, deferred, and non-blocking.

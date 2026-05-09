@@ -41,7 +41,7 @@ Use this section for plan-backed work that is ready but not selected as the imme
 
 | Status | Workstream | Plan Or Artifact | Notes |
 | --- | --- | --- | --- |
-| Selected | Frontend AI contract | `.agents/plans/PLAN_frontend_ai_contract.md` | Replanned as ready backend-owned source-contract work; external frontend-repo copy deferred until destination and instruction path are known |
+| In Progress | Frontend AI contract | `.agents/plans/PLAN_frontend_ai_contract.md` | Source contract implementation is underway; external frontend-repo copy deferred until destination and instruction path are known |
 
 ## Intake
 

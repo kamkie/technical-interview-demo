@@ -49,6 +49,7 @@ Use these artifacts deliberately:
 - `src/docs/asciidoc/`: published REST Docs structure
 - `src/test/resources/openapi/approved-openapi.json`: approved machine-readable public API contract
 - `README.md`: supported human-facing contract summary
+- `FRONTEND_AI_CONTRACT.md`: backend-owned source instructions for AI agents building a separate first-party frontend; this is a handoff guide, not higher-priority contract authority
 - `src/manualTests/http/`: convenience IntelliJ HTTP Client examples and suites for reviewer/operator workflows, not public contract authority
 - `ROADMAP.md`: active release phase, roadmap sequencing, and current project state
 - `CHANGELOG.md`: release history only
@@ -115,6 +116,7 @@ Use these files deliberately:
 - `.agents/references/plan-execution.md`: AI-facing workflow for executing a whole active plan across milestones
 - `.agents/references/execution.md`: AI-facing workflow for ad hoc tasks and individual plan milestones
 - `.agents/references/LEARNINGS.md`: durable repo-wide engineering lessons that should survive refactors
+- `FRONTEND_AI_CONTRACT.md`: copyable backend-owned source guidance for separate frontend AI agents; load when frontend handoff, frontend-repo AI instructions, or first-party UI integration constraints are in scope
 - `.agents/references/planning.md`: compact instructions for producing execution plans
 - `.agents/plans/PLAN_*.md`: task-specific execution plans and milestone breakdowns
 - `.agents/skills/repo-task/`: repository-local reusable task skill whose task reference files act as reusable commands; `references/spec.md` owns the dispatcher, index, and task schema
