@@ -65,17 +65,6 @@ Keep working context narrow. Treat the ownership lists above as routing aids, no
 
 For AI-document maintenance and required updates by change type, use `.agents/references/documentation.md`; for `.agents/references/*.md` edits, also use `.agents/references/references-rules.md`.
 
-## Architecture Constraints
-
-`docs/ARCHITECTURE.md` owns the compact descriptive repository snapshot, codebase map, current API shape, and structural guidance for this repository.
-Use `.agents/references/architecture-detailed-map.md` only when the compact map is not enough.
-
-When making architecture-sensitive changes:
-
-- follow `docs/ARCHITECTURE.md`
-- preserve the demo nature of the project and prefer direct code over abstraction
-- keep `AGENTS.md` aligned only when repo-level architectural rules or AI-document ownership changed
-
 ## Workflow Invariants
 
 `.agents/references/workflow.md` owns common branch, worktree, coordinator, worker, and integration rules; the on-demand workflow references own detailed delegated-work mechanics.
@@ -95,10 +84,16 @@ Use `.agents/skills/repo-task/` for this repository's task starter dispatcher. U
 
 ## Definition Of Done
 
-A change is complete when:
+Use these completion rules for AI work in this repository:
 
-- the intended behavior exists in an appropriate spec artifact
-- implementation and specs agree
-- public contract artifacts are updated when behavior changed
-- if the work was done in a git worktree or non-`main` branch, the finished branch has been pushed and a pull request is open or already merged onto `main`
-- the required validation from `.agents/references/testing.md` passes; use `./build.ps1 build` for ordinary uncommitted implementation validation and `./build.ps1 -FullBuild build` when proving cumulative committed implementation work, whole plans, or release candidates
+- Do not call a task, milestone, plan, delegated run, branch, or release complete while requested scope is unfinished; record blocked, skipped, failed, or cancelled work explicitly.
+- Represent the intended behavior or documentation change in the owning spec, contract, or guidance artifact before or alongside the implementation.
+- Keep implementation, executable specs, published contract artifacts, human-facing docs, AI guidance, and generated references aligned for the actual change through `.agents/references/documentation.md`.
+- Treat public behavior changes as incomplete until governing specs and published contract artifacts move together; treat internal refactors as incomplete if they create unnecessary contract churn.
+- Run the required validation from `.agents/references/testing.md` for the correct diff boundary. If required validation cannot run or is explicitly out of scope, record the exact reason and remaining risk.
+- Complete final review through `.agents/references/reviews.md`; do not hand off with unresolved blocking drift, missing security review for security-sensitive changes, or hidden scope expansion.
+- Keep active plans, progress trackers, validation ledgers, worker logs, roadmap entries, and changelog entries aligned with the actual state; do not rely on final-response memory for durable status.
+- Commit every completed task or milestone that changed tracked files with the required AI commit-message format before handoff or unrelated work starts. During an explicitly ongoing interactive session, uncommitted work remains in progress until the user asks for handoff.
+- For work done outside `main`, finish only from an integrated state: push the finished branch and open or merge the pull request, unless the user explicitly chose a no-PR flow already on `main`.
+- For delegated or coordinated work, wait for every worker to reach a terminal state and record integration status before declaring the run complete.
+- Leave release work undone unless explicitly requested. If release work is requested, tag only the validated release candidate on `main`, keep release notes and roadmap cleanup aligned, and archive released plans through `.agents/references/releases.md`.
