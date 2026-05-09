@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Implementation |
-| Status | In Progress |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Planning Readiness
 | Field | Value |
@@ -79,9 +79,9 @@
 ## Progress Tracker
 | Milestone | Status | Owner | Commit | Validation | Notes |
 | --- | --- | --- | --- | --- | --- |
-| 1: Draft source frontend AI contract | Done | Agent | Pending with Milestone 2 | Passed | Source artifact drafted and manually checked against session/API contract terms |
-| 2: Register source artifact in repo docs | Done | Agent | Pending | Passed | Source artifact registered in human/AI indexes and unreleased changelog |
-| 3: Validate and hand off | Not Started | Agent | Pending | Pending | Includes roadmap/plan status update and docs-only validation |
+| 1: Draft source frontend AI contract | Done | Agent | `53ad6d0` | Passed | Source artifact drafted and manually checked against session/API contract terms |
+| 2: Register source artifact in repo docs | Done | Agent | `53ad6d0` | Passed | Source artifact registered in human/AI indexes and unreleased changelog |
+| 3: Validate and hand off | Done | Agent | Final tracking commit | Passed | Final validation passed; external frontend-repo copy remains deferred |
 
 ## Execution Milestones
 ### Milestone 1: Draft source frontend AI contract
@@ -95,12 +95,12 @@
 | Behavior To Preserve | No backend behavior or public contract changes; frontend guidance must defer to backend specs and published docs. |
 | Deliverables | `FRONTEND_AI_CONTRACT.md` with purpose, source-of-truth hierarchy, API/session/CSRF rules, UI-state expectations, design-quality rules adapted from Anthropic guidance, anti-patterns, and future copy instructions for a frontend repo. |
 | Validation Checkpoint | Passed: manual consistency review against the session docs, API overview, and OpenAPI session schema; `rg` confirmed required and forbidden session/auth terms are present in the source artifact. |
-| Commit Checkpoint | Pending with Milestone 2 per plan commit checkpoint. |
+| Commit Checkpoint | Completed in `53ad6d0` with Milestone 2. |
 
 ### Milestone 2: Register source artifact in repo docs
 | Field | Value |
 | --- | --- |
-| Status | In Progress |
+| Status | Done |
 | Goal | Make the new source artifact discoverable and owned by the repository's documentation map. |
 | Owned Files Or Packages | `README.md`, `WORKING_WITH_AI.md`, `AGENTS.md`, `.agents/references/documentation.md`, `CHANGELOG.md` |
 | Coordinator-Owned Shared Files | `FRONTEND_AI_CONTRACT.md`, `ROADMAP.md`, `.agents/plans/PLAN_frontend_ai_contract.md` |
@@ -108,20 +108,20 @@
 | Behavior To Preserve | Keep setup details out of AI docs, keep active-work detail in the plan, and avoid making the new frontend file a higher-priority source than executable specs or published backend contracts. |
 | Deliverables | Done: short references in the appropriate AI/human-facing indexes, documentation ownership guidance for `FRONTEND_AI_CONTRACT.md`, and an unreleased changelog entry. |
 | Validation Checkpoint | Passed: `rg -n "FRONTEND_AI_CONTRACT|Frontend AI contract|frontend AI contract" README.md WORKING_WITH_AI.md AGENTS.md .agents/references/documentation.md FRONTEND_AI_CONTRACT.md CHANGELOG.md`; manual check found no duplicated setup or contract policy. |
-| Commit Checkpoint | Pending commit for local source-artifact and index updates together. |
+| Commit Checkpoint | Completed in `53ad6d0`. |
 
 ### Milestone 3: Validate and hand off
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Prove the completed docs/AI-guidance work is internally consistent and did not alter backend behavior. |
 | Owned Files Or Packages | Validation records in this plan, `ROADMAP.md` |
 | Coordinator-Owned Shared Files | `.agents/plans/PLAN_frontend_ai_contract.md` |
 | Context Required | `AGENTS.md`, `.agents/references/testing.md`, `.agents/references/execution.md`, and this plan |
 | Behavior To Preserve | No backend code or contract drift; roadmap and plan lifecycle stay aligned. |
-| Deliverables | Updated `Validation Results`, final roadmap status note, and concise handoff summary naming the deferred external-repo copy. |
-| Validation Checkpoint | `git diff --check`; `./build.ps1 build`; targeted reference search; manual diff review for docs-only scope. |
-| Commit Checkpoint | Commit plan/roadmap validation updates if tracked files changed after prior commits. |
+| Deliverables | Done: updated `Validation Results`, final roadmap status note, and handoff notes naming the deferred external-repo copy. |
+| Validation Checkpoint | Passed: `git diff --check`, targeted reference search, implementation-scope diff review, and `./build.ps1 -FullBuild build`. |
+| Commit Checkpoint | Final tracking commit records this plan/roadmap completion state. |
 
 ## Blockers And Replan Triggers
 | Trigger / Blocker | Response | Owner | Status |
@@ -171,7 +171,12 @@
 | 2026-05-09 | `rg -n "FRONTEND_AI_CONTRACT|Frontend AI contract|frontend AI contract" README.md WORKING_WITH_AI.md AGENTS.md .agents/references/documentation.md FRONTEND_AI_CONTRACT.md CHANGELOG.md` | Milestone 2 reference check | Passed | Source artifact is discoverable from human-facing and AI-facing indexes plus unreleased changelog |
 | 2026-05-09 | `git diff --check` | Milestone 1 and 2 whitespace check | Passed | No whitespace errors reported |
 | 2026-05-09 | `./build.ps1 build` | Milestone 1 and 2 validation | Passed | Lightweight-only path; Gradle build skipped because only support/documentation files changed |
-| 2026-05-09 | Pending | Replanned source-contract implementation validation | Pending | To run after `FRONTEND_AI_CONTRACT.md` and index updates are implemented |
+| 2026-05-09 | `git diff --check` | Final whitespace check | Passed | No whitespace errors reported |
+| 2026-05-09 | `rg -n "FRONTEND_AI_CONTRACT|Frontend AI contract|frontend AI contract" README.md WORKING_WITH_AI.md AGENTS.md .agents/references/documentation.md FRONTEND_AI_CONTRACT.md CHANGELOG.md` | Final reference check | Passed | Source artifact remains discoverable from required indexes |
+| 2026-05-09 | `git diff --name-only HEAD~1..HEAD; git diff --name-only` | Final scope review | Passed | Implementation commit touched only planned docs/support files; remaining uncommitted diff was plan tracking only |
+| 2026-05-09 | `./build.ps1 -FullBuild build` | Whole-plan final validation | Passed | Full Gradle build completed successfully; 270 tests passed |
+| 2026-05-09 | `git diff --check` | Final tracking whitespace check | Passed | No whitespace errors reported after plan and roadmap completion updates |
+| 2026-05-09 | `./build.ps1 build` | Final tracking validation | Passed | Lightweight-only path; Gradle build skipped because only `.agents/plans/PLAN_frontend_ai_contract.md` and `ROADMAP.md` changed |
 
 ## User Validation
 - Review `FRONTEND_AI_CONTRACT.md` and confirm it reflects how a separate frontend should consume this backend.
