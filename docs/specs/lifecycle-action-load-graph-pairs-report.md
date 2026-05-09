@@ -7,11 +7,12 @@ This report maps each user-initiated phase-action occurrence from `docs/specs/ap
 
 The report is descriptive. `AGENTS.md` and the focused owner guides remain authoritative.
 
-The graphs use the file aliases defined in `docs/specs/lifecycle-action-loading-report.md`.
-Every action includes `M:F0` (`AGENTS.md`).
+The graphs show full document and file-family names directly.
+Every action includes mandatory `AGENTS.md`.
 Solid edges marked `M` are mandatory. Dashed edges marked `O` are optional or conditional.
-Alternative nodes such as `F6 or F38` count as one selected load slot in the metrics because a single execution selects one of the alternatives.
-Task-specific file-family aliases count as one abstract load slot even when a real task touches several concrete files.
+Alternative nodes such as `docs/DESIGN.md or task-specific governing spec or published contract artifact` count as one selected load slot in the metrics because a single execution selects one of the alternatives.
+Task-specific file-family names count as one abstract load slot even when a real task touches several concrete files.
+The action node names the user-initiated action only; it is not a loaded document and does not contribute to chain depth. `AGENTS.md` is the mandatory first loaded document and the routing source for the other loads. Chain depth is the longest acyclic document-to-document load depth; if document A loads documents B and C directly, depth is `1`. Loop-back edges are shown but excluded from depth counting.
 
 Most isolated action graphs have identical full and deduplicated forms because duplicate loads mainly accumulate across phase and loop scopes. When an action has no duplicate target inside its own graph, the deduplicated graph is intentionally identical.
 
@@ -19,79 +20,79 @@ Most isolated action graphs have identical full and deduplicated forms because d
 
 ### Discovery / Scan
 
-Metrics: chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
+Metrics: chain depth 1; chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Discovery / Scan"] -->|M| F0a["F0"]
-        F0a -->|M| F1a["F1"]
-        F0a -. O .-> F4a["F4"]
-        F0a -. O .-> F39a["F39"]
+        FA["Discovery / Scan"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| docs_ARCHITECTURE_md_full["docs/ARCHITECTURE.md"]
+        AGENTS_md_full -. O .-> agents_references_LEARNINGS_md_full[".agents/references/LEARNINGS.md"]
+        AGENTS_md_full -. O .-> task_specific_source_files_full["task-specific source files"]
     end
     subgraph Deduplicated
-        DA["Discovery / Scan"] -->|M| F0b["F0"]
-        F0b -->|M| F1b["F1"]
-        F0b -. O .-> F4b["F4"]
-        F0b -. O .-> F39b["F39"]
+        DA["Discovery / Scan"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| docs_ARCHITECTURE_md_dedup["docs/ARCHITECTURE.md"]
+        AGENTS_md_dedup -. O .-> agents_references_LEARNINGS_md_dedup[".agents/references/LEARNINGS.md"]
+        AGENTS_md_dedup -. O .-> task_specific_source_files_dedup["task-specific source files"]
     end
 ```
 
 ### Discovery / Frame
 
-Metrics: chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
+Metrics: chain depth 1; chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Discovery / Frame"] -->|M| F0a["F0"]
-        F0a -->|M| F2a["F2"]
-        F0a -. O .-> F3a["F3"]
-        F0a -. O .-> F5a["F5"]
+        FA["Discovery / Frame"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_planning_md_full[".agents/references/planning.md"]
+        AGENTS_md_full -. O .-> agents_references_execution_md_full[".agents/references/execution.md"]
+        AGENTS_md_full -. O .-> ROADMAP_md_full["ROADMAP.md"]
     end
     subgraph Deduplicated
-        DA["Discovery / Frame"] -->|M| F0b["F0"]
-        F0b -->|M| F2b["F2"]
-        F0b -. O .-> F3b["F3"]
-        F0b -. O .-> F5b["F5"]
+        DA["Discovery / Frame"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_planning_md_dedup[".agents/references/planning.md"]
+        AGENTS_md_dedup -. O .-> agents_references_execution_md_dedup[".agents/references/execution.md"]
+        AGENTS_md_dedup -. O .-> ROADMAP_md_dedup["ROADMAP.md"]
     end
 ```
 
 ### Discovery / Clarify?
 
-Metrics: chain length 2; total loaded 2; deduplicated chain length 2; distinct loaded 2.
+Metrics: chain depth 1; chain length 2; total loaded 2; deduplicated chain length 2; distinct loaded 2.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Discovery / Clarify?"] -->|M| F0a["F0"]
-        F0a -->|M| F2a["F2"]
-        F2a -. loop after answer .-> FA
+        FA["Discovery / Clarify?"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_planning_md_full[".agents/references/planning.md"]
+        agents_references_planning_md_full -. loop after answer .-> FA
     end
     subgraph Deduplicated
-        DA["Discovery / Clarify?"] -->|M| F0b["F0"]
-        F0b -->|M| F2b["F2"]
-        F2b -. loop after answer .-> DA
+        DA["Discovery / Clarify?"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_planning_md_dedup[".agents/references/planning.md"]
+        agents_references_planning_md_dedup -. loop after answer .-> DA
     end
 ```
 
 ### Discovery / Capture?
 
-Metrics: chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
+Metrics: chain depth 1; chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Discovery / Capture?"] -->|M| F0a["F0"]
-        F0a -->|M| F4a["F4"]
-        F0a -. O .-> F45a["F45"]
-        F0a -. O .-> F8a["F8"]
+        FA["Discovery / Capture?"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_LEARNINGS_md_full[".agents/references/LEARNINGS.md"]
+        AGENTS_md_full -. O .-> focused_owner_guide_for_a_durable_correction_full["focused owner guide for a durable correction"]
+        AGENTS_md_full -. O .-> agents_references_references_rules_md_full[".agents/references/references-rules.md"]
     end
     subgraph Deduplicated
-        DA["Discovery / Capture?"] -->|M| F0b["F0"]
-        F0b -->|M| F4b["F4"]
-        F0b -. O .-> F45b["F45"]
-        F0b -. O .-> F8b["F8"]
+        DA["Discovery / Capture?"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_LEARNINGS_md_dedup[".agents/references/LEARNINGS.md"]
+        AGENTS_md_dedup -. O .-> focused_owner_guide_for_a_durable_correction_dedup["focused owner guide for a durable correction"]
+        AGENTS_md_dedup -. O .-> agents_references_references_rules_md_dedup[".agents/references/references-rules.md"]
     end
 ```
 
@@ -99,91 +100,91 @@ flowchart TD
 
 ### Roadmap Intake / Intake
 
-Metrics: chain length 3; total loaded 3; deduplicated chain length 3; distinct loaded 3.
+Metrics: chain depth 1; chain length 3; total loaded 3; deduplicated chain length 3; distinct loaded 3.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Roadmap Intake / Intake"] -->|M| F0a["F0"]
-        F0a -->|M| F5a["F5"]
-        F0a -. O .-> F2a["F2"]
+        FA["Roadmap Intake / Intake"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| ROADMAP_md_full["ROADMAP.md"]
+        AGENTS_md_full -. O .-> agents_references_planning_md_full[".agents/references/planning.md"]
     end
     subgraph Deduplicated
-        DA["Roadmap Intake / Intake"] -->|M| F0b["F0"]
-        F0b -->|M| F5b["F5"]
-        F0b -. O .-> F2b["F2"]
+        DA["Roadmap Intake / Intake"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| ROADMAP_md_dedup["ROADMAP.md"]
+        AGENTS_md_dedup -. O .-> agents_references_planning_md_dedup[".agents/references/planning.md"]
     end
 ```
 
 ### Roadmap Intake / Refine
 
-Metrics: chain length 3; total loaded 3; deduplicated chain length 3; distinct loaded 3.
+Metrics: chain depth 1; chain length 3; total loaded 3; deduplicated chain length 3; distinct loaded 3.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Roadmap Intake / Refine"] -->|M| F0a["F0"]
-        F0a -->|M| F5a["F5"]
-        F0a -. O .-> F6a["F6"]
+        FA["Roadmap Intake / Refine"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| ROADMAP_md_full["ROADMAP.md"]
+        AGENTS_md_full -. O .-> docs_DESIGN_md_full["docs/DESIGN.md"]
     end
     subgraph Deduplicated
-        DA["Roadmap Intake / Refine"] -->|M| F0b["F0"]
-        F0b -->|M| F5b["F5"]
-        F0b -. O .-> F6b["F6"]
+        DA["Roadmap Intake / Refine"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| ROADMAP_md_dedup["ROADMAP.md"]
+        AGENTS_md_dedup -. O .-> docs_DESIGN_md_dedup["docs/DESIGN.md"]
     end
 ```
 
 ### Roadmap Intake / Prioritize
 
-Metrics: chain length 3; total loaded 3; deduplicated chain length 3; distinct loaded 3.
+Metrics: chain depth 1; chain length 3; total loaded 3; deduplicated chain length 3; distinct loaded 3.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Roadmap Intake / Prioritize"] -->|M| F0a["F0"]
-        F0a -->|M| F5a["F5"]
-        F0a -. O .-> F6a["F6"]
+        FA["Roadmap Intake / Prioritize"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| ROADMAP_md_full["ROADMAP.md"]
+        AGENTS_md_full -. O .-> docs_DESIGN_md_full["docs/DESIGN.md"]
     end
     subgraph Deduplicated
-        DA["Roadmap Intake / Prioritize"] -->|M| F0b["F0"]
-        F0b -->|M| F5b["F5"]
-        F0b -. O .-> F6b["F6"]
+        DA["Roadmap Intake / Prioritize"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| ROADMAP_md_dedup["ROADMAP.md"]
+        AGENTS_md_dedup -. O .-> docs_DESIGN_md_dedup["docs/DESIGN.md"]
     end
 ```
 
 ### Roadmap Intake / Sequence
 
-Metrics: chain length 3; total loaded 3; deduplicated chain length 3; distinct loaded 3.
+Metrics: chain depth 1; chain length 3; total loaded 3; deduplicated chain length 3; distinct loaded 3.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Roadmap Intake / Sequence"] -->|M| F0a["F0"]
-        F0a -->|M| F5a["F5"]
-        F0a -. O .-> F36a["F36"]
+        FA["Roadmap Intake / Sequence"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| ROADMAP_md_full["ROADMAP.md"]
+        AGENTS_md_full -. O .-> concrete_agents_plans_PLAN_md_full["concrete .agents/plans/PLAN_*.md"]
     end
     subgraph Deduplicated
-        DA["Roadmap Intake / Sequence"] -->|M| F0b["F0"]
-        F0b -->|M| F5b["F5"]
-        F0b -. O .-> F36b["F36"]
+        DA["Roadmap Intake / Sequence"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| ROADMAP_md_dedup["ROADMAP.md"]
+        AGENTS_md_dedup -. O .-> concrete_agents_plans_PLAN_md_dedup["concrete .agents/plans/PLAN_*.md"]
     end
 ```
 
 ### Roadmap Intake / Sync
 
-Metrics: chain length 3; total loaded 3; deduplicated chain length 3; distinct loaded 3.
+Metrics: chain depth 1; chain length 3; total loaded 3; deduplicated chain length 3; distinct loaded 3.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Roadmap Intake / Sync"] -->|M| F0a["F0"]
-        F0a -->|M| F5a["F5"]
-        F0a -. O .-> F36a["F36"]
+        FA["Roadmap Intake / Sync"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| ROADMAP_md_full["ROADMAP.md"]
+        AGENTS_md_full -. O .-> concrete_agents_plans_PLAN_md_full["concrete .agents/plans/PLAN_*.md"]
     end
     subgraph Deduplicated
-        DA["Roadmap Intake / Sync"] -->|M| F0b["F0"]
-        F0b -->|M| F5b["F5"]
-        F0b -. O .-> F36b["F36"]
+        DA["Roadmap Intake / Sync"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| ROADMAP_md_dedup["ROADMAP.md"]
+        AGENTS_md_dedup -. O .-> concrete_agents_plans_PLAN_md_dedup["concrete .agents/plans/PLAN_*.md"]
     end
 ```
 
@@ -191,167 +192,167 @@ flowchart TD
 
 ### Planning / Frame
 
-Metrics: chain length 8; total loaded 8; deduplicated chain length 8; distinct loaded 8.
+Metrics: chain depth 1; chain length 8; total loaded 8; deduplicated chain length 8; distinct loaded 8.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Planning / Frame"] -->|M| F0a["F0"]
-        F0a -->|M| F2a["F2"]
-        F0a -->|M| F5a["F5"]
-        F0a -. O .-> F6a["F6"]
-        F0a -. O .-> F38a["F38"]
-        F0a -. O .-> F46a["F46"]
-        F0a -. O .-> F33a["F33"]
-        F0a -. O .-> F34a["F34"]
+        FA["Planning / Frame"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_planning_md_full[".agents/references/planning.md"]
+        AGENTS_md_full -->|M| ROADMAP_md_full["ROADMAP.md"]
+        AGENTS_md_full -. O .-> docs_DESIGN_md_full["docs/DESIGN.md"]
+        AGENTS_md_full -. O .-> task_specific_governing_spec_or_published_contract_artifact_full["task-specific governing spec or published contract artifact"]
+        AGENTS_md_full -. O .-> referenced_ticket_pull_request_example_document_or_web_page_full["referenced ticket, pull request, example, document, or web page"]
+        AGENTS_md_full -. O .-> docs_specs_application_lifecycle_spec_md_full["docs/specs/application-lifecycle-spec.md"]
+        AGENTS_md_full -. O .-> docs_specs_lifecycle_phase_activities_md_full["docs/specs/lifecycle-phase-activities.md"]
     end
     subgraph Deduplicated
-        DA["Planning / Frame"] -->|M| F0b["F0"]
-        F0b -->|M| F2b["F2"]
-        F0b -->|M| F5b["F5"]
-        F0b -. O .-> F6b["F6"]
-        F0b -. O .-> F38b["F38"]
-        F0b -. O .-> F46b["F46"]
-        F0b -. O .-> F33b["F33"]
-        F0b -. O .-> F34b["F34"]
+        DA["Planning / Frame"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_planning_md_dedup[".agents/references/planning.md"]
+        AGENTS_md_dedup -->|M| ROADMAP_md_dedup["ROADMAP.md"]
+        AGENTS_md_dedup -. O .-> docs_DESIGN_md_dedup["docs/DESIGN.md"]
+        AGENTS_md_dedup -. O .-> task_specific_governing_spec_or_published_contract_artifact_dedup["task-specific governing spec or published contract artifact"]
+        AGENTS_md_dedup -. O .-> referenced_ticket_pull_request_example_document_or_web_page_dedup["referenced ticket, pull request, example, document, or web page"]
+        AGENTS_md_dedup -. O .-> docs_specs_application_lifecycle_spec_md_dedup["docs/specs/application-lifecycle-spec.md"]
+        AGENTS_md_dedup -. O .-> docs_specs_lifecycle_phase_activities_md_dedup["docs/specs/lifecycle-phase-activities.md"]
     end
 ```
 
 ### Planning / Design
 
-Metrics: chain length 6; total loaded 6; deduplicated chain length 6; distinct loaded 6.
+Metrics: chain depth 1; chain length 6; total loaded 6; deduplicated chain length 6; distinct loaded 6.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Planning / Design"] -->|M| F0a["F0"]
-        F0a -->|M| F2a["F2"]
-        F0a -->|M| AltA["F6 or F38"]
-        F0a -. O .-> F7a["F7"]
-        F0a -. O .-> F9a["F9"]
-        F0a -. O .-> F10a["F10"]
+        FA["Planning / Design"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_planning_md_full[".agents/references/planning.md"]
+        AGENTS_md_full -->|M| AltA["docs/DESIGN.md or task-specific governing spec or published contract artifact"]
+        AGENTS_md_full -. O .-> agents_references_documentation_md_full[".agents/references/documentation.md"]
+        AGENTS_md_full -. O .-> README_md_full["README.md"]
+        AGENTS_md_full -. O .-> src_docs_asciidoc_full["src/docs/asciidoc/"]
     end
     subgraph Deduplicated
-        DA["Planning / Design"] -->|M| F0b["F0"]
-        F0b -->|M| AltB["F6 or F38"]
-        F0b -->|M| F2b["F2"]
-        F0b -. O .-> F7b["F7"]
-        F0b -. O .-> F9b["F9"]
-        F0b -. O .-> F10b["F10"]
+        DA["Planning / Design"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| AltB["docs/DESIGN.md or task-specific governing spec or published contract artifact"]
+        AGENTS_md_dedup -->|M| agents_references_planning_md_dedup[".agents/references/planning.md"]
+        AGENTS_md_dedup -. O .-> agents_references_documentation_md_dedup[".agents/references/documentation.md"]
+        AGENTS_md_dedup -. O .-> README_md_dedup["README.md"]
+        AGENTS_md_dedup -. O .-> src_docs_asciidoc_dedup["src/docs/asciidoc/"]
     end
 ```
 
 ### Planning / Spec
 
-Metrics: chain length 7; total loaded 7; deduplicated chain length 7; distinct loaded 7.
+Metrics: chain depth 1; chain length 7; total loaded 7; deduplicated chain length 7; distinct loaded 7.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Planning / Spec"] -->|M| F0a["F0"]
-        F0a -->|M| F2a["F2"]
-        F0a -->|M| F38a["F38"]
-        F0a -. O .-> F7a["F7"]
-        F0a -. O .-> F11a["F11"]
-        F0a -. O .-> F9a["F9"]
-        F0a -. O .-> F10a["F10"]
+        FA["Planning / Spec"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_planning_md_full[".agents/references/planning.md"]
+        AGENTS_md_full -->|M| task_specific_governing_spec_or_published_contract_artifact_full["task-specific governing spec or published contract artifact"]
+        AGENTS_md_full -. O .-> agents_references_documentation_md_full[".agents/references/documentation.md"]
+        AGENTS_md_full -. O .-> src_test_resources_openapi_approved_openapi_json_full["src/test/resources/openapi/approved-openapi.json"]
+        AGENTS_md_full -. O .-> README_md_full["README.md"]
+        AGENTS_md_full -. O .-> src_docs_asciidoc_full["src/docs/asciidoc/"]
     end
     subgraph Deduplicated
-        DA["Planning / Spec"] -->|M| F0b["F0"]
-        F0b -->|M| F2b["F2"]
-        F0b -->|M| F38b["F38"]
-        F0b -. O .-> F7b["F7"]
-        F0b -. O .-> F11b["F11"]
-        F0b -. O .-> F9b["F9"]
-        F0b -. O .-> F10b["F10"]
+        DA["Planning / Spec"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_planning_md_dedup[".agents/references/planning.md"]
+        AGENTS_md_dedup -->|M| task_specific_governing_spec_or_published_contract_artifact_dedup["task-specific governing spec or published contract artifact"]
+        AGENTS_md_dedup -. O .-> agents_references_documentation_md_dedup[".agents/references/documentation.md"]
+        AGENTS_md_dedup -. O .-> src_test_resources_openapi_approved_openapi_json_dedup["src/test/resources/openapi/approved-openapi.json"]
+        AGENTS_md_dedup -. O .-> README_md_dedup["README.md"]
+        AGENTS_md_dedup -. O .-> src_docs_asciidoc_dedup["src/docs/asciidoc/"]
     end
 ```
 
 ### Planning / Decompose
 
-Metrics: chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
+Metrics: chain depth 1; chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Planning / Decompose"] -->|M| F0a["F0"]
-        F0a -->|M| F2a["F2"]
-        F0a -->|M| F13a["F13"]
-        F0a -. O .-> F14a["F14"]
-        F0a -. O .-> F15a["F15"]
+        FA["Planning / Decompose"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_planning_md_full[".agents/references/planning.md"]
+        AGENTS_md_full -->|M| agents_templates_plan_template_md_full[".agents/templates/plan-template.md"]
+        AGENTS_md_full -. O .-> agents_references_workflow_md_full[".agents/references/workflow.md"]
+        AGENTS_md_full -. O .-> agents_references_plan_authoring_guide_md_full[".agents/references/plan-authoring-guide.md"]
     end
     subgraph Deduplicated
-        DA["Planning / Decompose"] -->|M| F0b["F0"]
-        F0b -->|M| F2b["F2"]
-        F0b -->|M| F13b["F13"]
-        F0b -. O .-> F14b["F14"]
-        F0b -. O .-> F15b["F15"]
+        DA["Planning / Decompose"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_planning_md_dedup[".agents/references/planning.md"]
+        AGENTS_md_dedup -->|M| agents_templates_plan_template_md_dedup[".agents/templates/plan-template.md"]
+        AGENTS_md_dedup -. O .-> agents_references_workflow_md_dedup[".agents/references/workflow.md"]
+        AGENTS_md_dedup -. O .-> agents_references_plan_authoring_guide_md_dedup[".agents/references/plan-authoring-guide.md"]
     end
 ```
 
 ### Planning / Validate-Plan
 
-Metrics: chain length 6; total loaded 6; deduplicated chain length 6; distinct loaded 6.
+Metrics: chain depth 1; chain length 6; total loaded 6; deduplicated chain length 6; distinct loaded 6.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Planning / Validate-Plan"] -->|M| F0a["F0"]
-        F0a -->|M| F2a["F2"]
-        F0a -->|M| F36a["F36"]
-        F0a -. O .-> F16a["F16"]
-        F0a -. O .-> F7a["F7"]
-        F0a -. O .-> F14a["F14"]
+        FA["Planning / Validate-Plan"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_planning_md_full[".agents/references/planning.md"]
+        AGENTS_md_full -->|M| concrete_agents_plans_PLAN_md_full["concrete .agents/plans/PLAN_*.md"]
+        AGENTS_md_full -. O .-> agents_references_testing_md_full[".agents/references/testing.md"]
+        AGENTS_md_full -. O .-> agents_references_documentation_md_full[".agents/references/documentation.md"]
+        AGENTS_md_full -. O .-> agents_references_workflow_md_full[".agents/references/workflow.md"]
     end
     subgraph Deduplicated
-        DA["Planning / Validate-Plan"] -->|M| F0b["F0"]
-        F0b -->|M| F2b["F2"]
-        F0b -->|M| F36b["F36"]
-        F0b -. O .-> F16b["F16"]
-        F0b -. O .-> F7b["F7"]
-        F0b -. O .-> F14b["F14"]
+        DA["Planning / Validate-Plan"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_planning_md_dedup[".agents/references/planning.md"]
+        AGENTS_md_dedup -->|M| concrete_agents_plans_PLAN_md_dedup["concrete .agents/plans/PLAN_*.md"]
+        AGENTS_md_dedup -. O .-> agents_references_testing_md_dedup[".agents/references/testing.md"]
+        AGENTS_md_dedup -. O .-> agents_references_documentation_md_dedup[".agents/references/documentation.md"]
+        AGENTS_md_dedup -. O .-> agents_references_workflow_md_dedup[".agents/references/workflow.md"]
     end
 ```
 
 ### Planning / Sync
 
-Metrics: chain length 3; total loaded 3; deduplicated chain length 3; distinct loaded 3.
+Metrics: chain depth 1; chain length 3; total loaded 3; deduplicated chain length 3; distinct loaded 3.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Planning / Sync"] -->|M| F0a["F0"]
-        F0a -->|M| F5a["F5"]
-        F0a -->|M| F36a["F36"]
+        FA["Planning / Sync"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| ROADMAP_md_full["ROADMAP.md"]
+        AGENTS_md_full -->|M| concrete_agents_plans_PLAN_md_full["concrete .agents/plans/PLAN_*.md"]
     end
     subgraph Deduplicated
-        DA["Planning / Sync"] -->|M| F0b["F0"]
-        F0b -->|M| F5b["F5"]
-        F0b -->|M| F36b["F36"]
+        DA["Planning / Sync"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| ROADMAP_md_dedup["ROADMAP.md"]
+        AGENTS_md_dedup -->|M| concrete_agents_plans_PLAN_md_dedup["concrete .agents/plans/PLAN_*.md"]
     end
 ```
 
 ### Planning / Replan?
 
-Metrics: chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
+Metrics: chain depth 1; chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Planning / Replan?"] -->|M| F0a["F0"]
-        F0a -->|M| F2a["F2"]
-        F0a -->|M| F36a["F36"]
-        F0a -. O .-> F3a["F3"]
-        F0a -. O .-> F17a["F17"]
-        F2a -. loop .-> FA
+        FA["Planning / Replan?"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_planning_md_full[".agents/references/planning.md"]
+        AGENTS_md_full -->|M| concrete_agents_plans_PLAN_md_full["concrete .agents/plans/PLAN_*.md"]
+        AGENTS_md_full -. O .-> agents_references_execution_md_full[".agents/references/execution.md"]
+        AGENTS_md_full -. O .-> agents_references_plan_execution_md_full[".agents/references/plan-execution.md"]
+        agents_references_planning_md_full -. loop .-> FA
     end
     subgraph Deduplicated
-        DA["Planning / Replan?"] -->|M| F0b["F0"]
-        F0b -->|M| F2b["F2"]
-        F0b -->|M| F36b["F36"]
-        F0b -. O .-> F3b["F3"]
-        F0b -. O .-> F17b["F17"]
-        F2b -. loop .-> DA
+        DA["Planning / Replan?"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_planning_md_dedup[".agents/references/planning.md"]
+        AGENTS_md_dedup -->|M| concrete_agents_plans_PLAN_md_dedup["concrete .agents/plans/PLAN_*.md"]
+        AGENTS_md_dedup -. O .-> agents_references_execution_md_dedup[".agents/references/execution.md"]
+        AGENTS_md_dedup -. O .-> agents_references_plan_execution_md_dedup[".agents/references/plan-execution.md"]
+        agents_references_planning_md_dedup -. loop .-> DA
     end
 ```
 
@@ -359,231 +360,231 @@ flowchart TD
 
 ### Implementation / Spec
 
-Metrics: chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
+Metrics: chain depth 1; chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Implementation / Spec"] -->|M| F0a["F0"]
-        F0a -->|M| F3a["F3"]
-        F0a -->|M| F38a["F38"]
-        F0a -. O .-> F7a["F7"]
+        FA["Implementation / Spec"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_execution_md_full[".agents/references/execution.md"]
+        AGENTS_md_full -->|M| task_specific_governing_spec_or_published_contract_artifact_full["task-specific governing spec or published contract artifact"]
+        AGENTS_md_full -. O .-> agents_references_documentation_md_full[".agents/references/documentation.md"]
     end
     subgraph Deduplicated
-        DA["Implementation / Spec"] -->|M| F0b["F0"]
-        F0b -->|M| F3b["F3"]
-        F0b -->|M| F38b["F38"]
-        F0b -. O .-> F7b["F7"]
+        DA["Implementation / Spec"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_execution_md_dedup[".agents/references/execution.md"]
+        AGENTS_md_dedup -->|M| task_specific_governing_spec_or_published_contract_artifact_dedup["task-specific governing spec or published contract artifact"]
+        AGENTS_md_dedup -. O .-> agents_references_documentation_md_dedup[".agents/references/documentation.md"]
     end
 ```
 
 ### Implementation / Code
 
-Metrics: chain length 7; total loaded 7; deduplicated chain length 7; distinct loaded 7.
+Metrics: chain depth 1; chain length 7; total loaded 7; deduplicated chain length 7; distinct loaded 7.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Implementation / Code"] -->|M| F0a["F0"]
-        F0a -->|M| F3a["F3"]
-        F0a -->|M| F18a["F18"]
-        F0a -->|M| F39a["F39"]
-        F0a -. O .-> F1a["F1"]
-        F0a -. O .-> F6a["F6"]
-        F0a -. O .-> F38a["F38"]
+        FA["Implementation / Code"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_execution_md_full[".agents/references/execution.md"]
+        AGENTS_md_full -->|M| agents_references_code_style_md_full[".agents/references/code-style.md"]
+        AGENTS_md_full -->|M| task_specific_source_files_full["task-specific source files"]
+        AGENTS_md_full -. O .-> docs_ARCHITECTURE_md_full["docs/ARCHITECTURE.md"]
+        AGENTS_md_full -. O .-> docs_DESIGN_md_full["docs/DESIGN.md"]
+        AGENTS_md_full -. O .-> task_specific_governing_spec_or_published_contract_artifact_full["task-specific governing spec or published contract artifact"]
     end
     subgraph Deduplicated
-        DA["Implementation / Code"] -->|M| F0b["F0"]
-        F0b -->|M| F3b["F3"]
-        F0b -->|M| F18b["F18"]
-        F0b -->|M| F39b["F39"]
-        F0b -. O .-> F1b["F1"]
-        F0b -. O .-> F6b["F6"]
-        F0b -. O .-> F38b["F38"]
+        DA["Implementation / Code"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_execution_md_dedup[".agents/references/execution.md"]
+        AGENTS_md_dedup -->|M| agents_references_code_style_md_dedup[".agents/references/code-style.md"]
+        AGENTS_md_dedup -->|M| task_specific_source_files_dedup["task-specific source files"]
+        AGENTS_md_dedup -. O .-> docs_ARCHITECTURE_md_dedup["docs/ARCHITECTURE.md"]
+        AGENTS_md_dedup -. O .-> docs_DESIGN_md_dedup["docs/DESIGN.md"]
+        AGENTS_md_dedup -. O .-> task_specific_governing_spec_or_published_contract_artifact_dedup["task-specific governing spec or published contract artifact"]
     end
 ```
 
 ### Implementation / Docs
 
-Metrics: chain length 8; total loaded 8; deduplicated chain length 8; distinct loaded 8.
+Metrics: chain depth 1; chain length 8; total loaded 8; deduplicated chain length 8; distinct loaded 8.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Implementation / Docs"] -->|M| F0a["F0"]
-        F0a -->|M| F7a["F7"]
-        F0a -->|M| F41a["F41"]
-        F0a -. O .-> F8a["F8"]
-        F0a -. O .-> F9a["F9"]
-        F0a -. O .-> F10a["F10"]
-        F0a -. O .-> F12a["F12"]
-        F0a -. O .-> F11a["F11"]
+        FA["Implementation / Docs"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_documentation_md_full[".agents/references/documentation.md"]
+        AGENTS_md_full -->|M| changed_documentation_or_contract_files_full["changed documentation or contract files"]
+        AGENTS_md_full -. O .-> agents_references_references_rules_md_full[".agents/references/references-rules.md"]
+        AGENTS_md_full -. O .-> README_md_full["README.md"]
+        AGENTS_md_full -. O .-> src_docs_asciidoc_full["src/docs/asciidoc/"]
+        AGENTS_md_full -. O .-> docs_FRONTEND_AI_CONTRACT_md_full["docs/FRONTEND_AI_CONTRACT.md"]
+        AGENTS_md_full -. O .-> src_test_resources_openapi_approved_openapi_json_full["src/test/resources/openapi/approved-openapi.json"]
     end
     subgraph Deduplicated
-        DA["Implementation / Docs"] -->|M| F0b["F0"]
-        F0b -->|M| F7b["F7"]
-        F0b -->|M| F41b["F41"]
-        F0b -. O .-> F8b["F8"]
-        F0b -. O .-> F9b["F9"]
-        F0b -. O .-> F10b["F10"]
-        F0b -. O .-> F12b["F12"]
-        F0b -. O .-> F11b["F11"]
+        DA["Implementation / Docs"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_documentation_md_dedup[".agents/references/documentation.md"]
+        AGENTS_md_dedup -->|M| changed_documentation_or_contract_files_dedup["changed documentation or contract files"]
+        AGENTS_md_dedup -. O .-> agents_references_references_rules_md_dedup[".agents/references/references-rules.md"]
+        AGENTS_md_dedup -. O .-> README_md_dedup["README.md"]
+        AGENTS_md_dedup -. O .-> src_docs_asciidoc_dedup["src/docs/asciidoc/"]
+        AGENTS_md_dedup -. O .-> docs_FRONTEND_AI_CONTRACT_md_dedup["docs/FRONTEND_AI_CONTRACT.md"]
+        AGENTS_md_dedup -. O .-> src_test_resources_openapi_approved_openapi_json_dedup["src/test/resources/openapi/approved-openapi.json"]
     end
 ```
 
 ### Implementation / Run
 
-Metrics: chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
+Metrics: chain depth 1; chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Implementation / Run"] -->|M| F0a["F0"]
-        F0a -->|M| F16a["F16"]
-        F0a -->|M| F19a["F19"]
-        F0a -. O .-> F20a["F20"]
-        F0a -. O .-> F21a["F21"]
-        F21a -. failure loop .-> FA
+        FA["Implementation / Run"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_testing_md_full[".agents/references/testing.md"]
+        AGENTS_md_full -->|M| agents_references_environment_quick_ref_md_full[".agents/references/environment-quick-ref.md"]
+        AGENTS_md_full -. O .-> agents_references_gradle_task_graph_md_full[".agents/references/gradle-task-graph.md"]
+        AGENTS_md_full -. O .-> agents_references_troubleshooting_md_full[".agents/references/troubleshooting.md"]
+        agents_references_troubleshooting_md_full -. failure loop .-> FA
     end
     subgraph Deduplicated
-        DA["Implementation / Run"] -->|M| F0b["F0"]
-        F0b -->|M| F16b["F16"]
-        F0b -->|M| F19b["F19"]
-        F0b -. O .-> F20b["F20"]
-        F0b -. O .-> F21b["F21"]
-        F21b -. failure loop .-> DA
+        DA["Implementation / Run"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_testing_md_dedup[".agents/references/testing.md"]
+        AGENTS_md_dedup -->|M| agents_references_environment_quick_ref_md_dedup[".agents/references/environment-quick-ref.md"]
+        AGENTS_md_dedup -. O .-> agents_references_gradle_task_graph_md_dedup[".agents/references/gradle-task-graph.md"]
+        AGENTS_md_dedup -. O .-> agents_references_troubleshooting_md_dedup[".agents/references/troubleshooting.md"]
+        agents_references_troubleshooting_md_dedup -. failure loop .-> DA
     end
 ```
 
 ### Implementation / Replan?
 
-Metrics: chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
+Metrics: chain depth 1; chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Implementation / Replan?"] -->|M| F0a["F0"]
-        F0a -->|M| F2a["F2"]
-        F0a -->|M| F36a["F36"]
-        F0a -. O .-> F17a["F17"]
-        F0a -. O .-> F14a["F14"]
-        F2a -. returns to plan loop .-> FA
+        FA["Implementation / Replan?"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_planning_md_full[".agents/references/planning.md"]
+        AGENTS_md_full -->|M| concrete_agents_plans_PLAN_md_full["concrete .agents/plans/PLAN_*.md"]
+        AGENTS_md_full -. O .-> agents_references_plan_execution_md_full[".agents/references/plan-execution.md"]
+        AGENTS_md_full -. O .-> agents_references_workflow_md_full[".agents/references/workflow.md"]
+        agents_references_planning_md_full -. returns to plan loop .-> FA
     end
     subgraph Deduplicated
-        DA["Implementation / Replan?"] -->|M| F0b["F0"]
-        F0b -->|M| F2b["F2"]
-        F0b -->|M| F36b["F36"]
-        F0b -. O .-> F17b["F17"]
-        F0b -. O .-> F14b["F14"]
-        F2b -. returns to plan loop .-> DA
+        DA["Implementation / Replan?"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_planning_md_dedup[".agents/references/planning.md"]
+        AGENTS_md_dedup -->|M| concrete_agents_plans_PLAN_md_dedup["concrete .agents/plans/PLAN_*.md"]
+        AGENTS_md_dedup -. O .-> agents_references_plan_execution_md_dedup[".agents/references/plan-execution.md"]
+        AGENTS_md_dedup -. O .-> agents_references_workflow_md_dedup[".agents/references/workflow.md"]
+        agents_references_planning_md_dedup -. returns to plan loop .-> DA
     end
 ```
 
 ### Implementation / Self-Review
 
-Metrics: chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
+Metrics: chain depth 1; chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Implementation / Self-Review"] -->|M| F0a["F0"]
-        F0a -->|M| F23a["F23"]
-        F0a -. O .-> F16a["F16"]
-        F0a -. O .-> F7a["F7"]
+        FA["Implementation / Self-Review"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_reviews_md_full[".agents/references/reviews.md"]
+        AGENTS_md_full -. O .-> agents_references_testing_md_full[".agents/references/testing.md"]
+        AGENTS_md_full -. O .-> agents_references_documentation_md_full[".agents/references/documentation.md"]
     end
     subgraph Deduplicated
-        DA["Implementation / Self-Review"] -->|M| F0b["F0"]
-        F0b -->|M| F23b["F23"]
-        F0b -. O .-> F16b["F16"]
-        F0b -. O .-> F7b["F7"]
+        DA["Implementation / Self-Review"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_reviews_md_dedup[".agents/references/reviews.md"]
+        AGENTS_md_dedup -. O .-> agents_references_testing_md_dedup[".agents/references/testing.md"]
+        AGENTS_md_dedup -. O .-> agents_references_documentation_md_dedup[".agents/references/documentation.md"]
     end
 ```
 
 ### Implementation / Code Review
 
-Metrics: chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
+Metrics: chain depth 1; chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Implementation / Code Review"] -->|M| F0a["F0"]
-        F0a -->|M| F23a["F23"]
-        F0a -. O .-> F38a["F38"]
-        F0a -. O .-> F39a["F39"]
+        FA["Implementation / Code Review"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_reviews_md_full[".agents/references/reviews.md"]
+        AGENTS_md_full -. O .-> task_specific_governing_spec_or_published_contract_artifact_full["task-specific governing spec or published contract artifact"]
+        AGENTS_md_full -. O .-> task_specific_source_files_full["task-specific source files"]
     end
     subgraph Deduplicated
-        DA["Implementation / Code Review"] -->|M| F0b["F0"]
-        F0b -->|M| F23b["F23"]
-        F0b -. O .-> F38b["F38"]
-        F0b -. O .-> F39b["F39"]
+        DA["Implementation / Code Review"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_reviews_md_dedup[".agents/references/reviews.md"]
+        AGENTS_md_dedup -. O .-> task_specific_governing_spec_or_published_contract_artifact_dedup["task-specific governing spec or published contract artifact"]
+        AGENTS_md_dedup -. O .-> task_specific_source_files_dedup["task-specific source files"]
     end
 ```
 
 ### Implementation / Security Review?
 
-Metrics: chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
+Metrics: chain depth 1; chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Implementation / Security Review?"] -->|M| F0a["F0"]
-        F0a -->|M| F23a["F23"]
-        F0a -. O .-> F48a["F48"]
-        F0a -. O .-> F16a["F16"]
-        F0a -. O .-> F7a["F7"]
+        FA["Implementation / Security Review?"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_reviews_md_full[".agents/references/reviews.md"]
+        AGENTS_md_full -. O .-> security_sensitive_source_workflow_config_or_release_files_full["security-sensitive source, workflow, config, or release files"]
+        AGENTS_md_full -. O .-> agents_references_testing_md_full[".agents/references/testing.md"]
+        AGENTS_md_full -. O .-> agents_references_documentation_md_full[".agents/references/documentation.md"]
     end
     subgraph Deduplicated
-        DA["Implementation / Security Review?"] -->|M| F0b["F0"]
-        F0b -->|M| F23b["F23"]
-        F0b -. O .-> F48b["F48"]
-        F0b -. O .-> F16b["F16"]
-        F0b -. O .-> F7b["F7"]
+        DA["Implementation / Security Review?"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_reviews_md_dedup[".agents/references/reviews.md"]
+        AGENTS_md_dedup -. O .-> security_sensitive_source_workflow_config_or_release_files_dedup["security-sensitive source, workflow, config, or release files"]
+        AGENTS_md_dedup -. O .-> agents_references_testing_md_dedup[".agents/references/testing.md"]
+        AGENTS_md_dedup -. O .-> agents_references_documentation_md_dedup[".agents/references/documentation.md"]
     end
 ```
 
 ### Implementation / Commit
 
-Metrics: chain length 6; total loaded 6; deduplicated chain length 6; distinct loaded 6.
+Metrics: chain depth 1; chain length 6; total loaded 6; deduplicated chain length 6; distinct loaded 6.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Implementation / Commit"] -->|M| F0a["F0"]
-        F0a -->|M| F3a["F3"]
-        F0a -->|M| F24a["F24"]
-        F0a -. O .-> F36a["F36"]
-        F0a -. O .-> F37a["F37"]
-        F0a -. O .-> F14a["F14"]
+        FA["Implementation / Commit"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_execution_md_full[".agents/references/execution.md"]
+        AGENTS_md_full -->|M| gitmessage_full[".gitmessage"]
+        AGENTS_md_full -. O .-> concrete_agents_plans_PLAN_md_full["concrete .agents/plans/PLAN_*.md"]
+        AGENTS_md_full -. O .-> agents_tmp_workflow_md_full[".agents/tmp/workflow/*.md"]
+        AGENTS_md_full -. O .-> agents_references_workflow_md_full[".agents/references/workflow.md"]
     end
     subgraph Deduplicated
-        DA["Implementation / Commit"] -->|M| F0b["F0"]
-        F0b -->|M| F3b["F3"]
-        F0b -->|M| F24b["F24"]
-        F0b -. O .-> F36b["F36"]
-        F0b -. O .-> F37b["F37"]
-        F0b -. O .-> F14b["F14"]
+        DA["Implementation / Commit"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_execution_md_dedup[".agents/references/execution.md"]
+        AGENTS_md_dedup -->|M| gitmessage_dedup[".gitmessage"]
+        AGENTS_md_dedup -. O .-> concrete_agents_plans_PLAN_md_dedup["concrete .agents/plans/PLAN_*.md"]
+        AGENTS_md_dedup -. O .-> agents_tmp_workflow_md_dedup[".agents/tmp/workflow/*.md"]
+        AGENTS_md_dedup -. O .-> agents_references_workflow_md_dedup[".agents/references/workflow.md"]
     end
 ```
 
 ### Implementation / Handoff
 
-Metrics: chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
+Metrics: chain depth 1; chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Implementation / Handoff"] -->|M| F0a["F0"]
-        F0a -->|M| F3a["F3"]
-        F0a -. O .-> F14a["F14"]
-        F0a -. O .-> F36a["F36"]
-        F0a -. O .-> F37a["F37"]
+        FA["Implementation / Handoff"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_execution_md_full[".agents/references/execution.md"]
+        AGENTS_md_full -. O .-> agents_references_workflow_md_full[".agents/references/workflow.md"]
+        AGENTS_md_full -. O .-> concrete_agents_plans_PLAN_md_full["concrete .agents/plans/PLAN_*.md"]
+        AGENTS_md_full -. O .-> agents_tmp_workflow_md_full[".agents/tmp/workflow/*.md"]
     end
     subgraph Deduplicated
-        DA["Implementation / Handoff"] -->|M| F0b["F0"]
-        F0b -->|M| F3b["F3"]
-        F0b -. O .-> F14b["F14"]
-        F0b -. O .-> F36b["F36"]
-        F0b -. O .-> F37b["F37"]
+        DA["Implementation / Handoff"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_execution_md_dedup[".agents/references/execution.md"]
+        AGENTS_md_dedup -. O .-> agents_references_workflow_md_dedup[".agents/references/workflow.md"]
+        AGENTS_md_dedup -. O .-> concrete_agents_plans_PLAN_md_dedup["concrete .agents/plans/PLAN_*.md"]
+        AGENTS_md_dedup -. O .-> agents_tmp_workflow_md_dedup[".agents/tmp/workflow/*.md"]
     end
 ```
 
@@ -591,151 +592,151 @@ flowchart TD
 
 ### Testing / Plan-Tests
 
-Metrics: chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
+Metrics: chain depth 1; chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Testing / Plan-Tests"] -->|M| F0a["F0"]
-        F0a -->|M| F16a["F16"]
-        F0a -. O .-> F7a["F7"]
-        F0a -. O .-> F20a["F20"]
+        FA["Testing / Plan-Tests"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_testing_md_full[".agents/references/testing.md"]
+        AGENTS_md_full -. O .-> agents_references_documentation_md_full[".agents/references/documentation.md"]
+        AGENTS_md_full -. O .-> agents_references_gradle_task_graph_md_full[".agents/references/gradle-task-graph.md"]
     end
     subgraph Deduplicated
-        DA["Testing / Plan-Tests"] -->|M| F0b["F0"]
-        F0b -->|M| F16b["F16"]
-        F0b -. O .-> F7b["F7"]
-        F0b -. O .-> F20b["F20"]
+        DA["Testing / Plan-Tests"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_testing_md_dedup[".agents/references/testing.md"]
+        AGENTS_md_dedup -. O .-> agents_references_documentation_md_dedup[".agents/references/documentation.md"]
+        AGENTS_md_dedup -. O .-> agents_references_gradle_task_graph_md_dedup[".agents/references/gradle-task-graph.md"]
     end
 ```
 
 ### Testing / Author-Tests
 
-Metrics: chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
+Metrics: chain depth 1; chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Testing / Author-Tests"] -->|M| F0a["F0"]
-        F0a -->|M| F16a["F16"]
-        F0a -->|M| F40a["F40"]
-        F0a -. O .-> F18a["F18"]
-        F0a -. O .-> F39a["F39"]
+        FA["Testing / Author-Tests"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_testing_md_full[".agents/references/testing.md"]
+        AGENTS_md_full -->|M| task_specific_test_or_executable_spec_files_full["task-specific test or executable-spec files"]
+        AGENTS_md_full -. O .-> agents_references_code_style_md_full[".agents/references/code-style.md"]
+        AGENTS_md_full -. O .-> task_specific_source_files_full["task-specific source files"]
     end
     subgraph Deduplicated
-        DA["Testing / Author-Tests"] -->|M| F0b["F0"]
-        F0b -->|M| F16b["F16"]
-        F0b -->|M| F40b["F40"]
-        F0b -. O .-> F18b["F18"]
-        F0b -. O .-> F39b["F39"]
+        DA["Testing / Author-Tests"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_testing_md_dedup[".agents/references/testing.md"]
+        AGENTS_md_dedup -->|M| task_specific_test_or_executable_spec_files_dedup["task-specific test or executable-spec files"]
+        AGENTS_md_dedup -. O .-> agents_references_code_style_md_dedup[".agents/references/code-style.md"]
+        AGENTS_md_dedup -. O .-> task_specific_source_files_dedup["task-specific source files"]
     end
 ```
 
 ### Testing / Run
 
-Metrics: chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
+Metrics: chain depth 1; chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Testing / Run"] -->|M| F0a["F0"]
-        F0a -->|M| F16a["F16"]
-        F0a -->|M| F19a["F19"]
-        F0a -. O .-> F20a["F20"]
-        F0a -. O .-> F21a["F21"]
-        F21a -. failure .-> FA
+        FA["Testing / Run"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_testing_md_full[".agents/references/testing.md"]
+        AGENTS_md_full -->|M| agents_references_environment_quick_ref_md_full[".agents/references/environment-quick-ref.md"]
+        AGENTS_md_full -. O .-> agents_references_gradle_task_graph_md_full[".agents/references/gradle-task-graph.md"]
+        AGENTS_md_full -. O .-> agents_references_troubleshooting_md_full[".agents/references/troubleshooting.md"]
+        agents_references_troubleshooting_md_full -. failure .-> FA
     end
     subgraph Deduplicated
-        DA["Testing / Run"] -->|M| F0b["F0"]
-        F0b -->|M| F16b["F16"]
-        F0b -->|M| F19b["F19"]
-        F0b -. O .-> F20b["F20"]
-        F0b -. O .-> F21b["F21"]
-        F21b -. failure .-> DA
+        DA["Testing / Run"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_testing_md_dedup[".agents/references/testing.md"]
+        AGENTS_md_dedup -->|M| agents_references_environment_quick_ref_md_dedup[".agents/references/environment-quick-ref.md"]
+        AGENTS_md_dedup -. O .-> agents_references_gradle_task_graph_md_dedup[".agents/references/gradle-task-graph.md"]
+        AGENTS_md_dedup -. O .-> agents_references_troubleshooting_md_dedup[".agents/references/troubleshooting.md"]
+        agents_references_troubleshooting_md_dedup -. failure .-> DA
     end
 ```
 
 ### Testing / Diagnose?
 
-Metrics: chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
+Metrics: chain depth 1; chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Testing / Diagnose?"] -->|M| F0a["F0"]
-        F0a -->|M| F21a["F21"]
-        F0a -. O .-> F16a["F16"]
-        F0a -. O .-> F22a["F22"]
-        F0a -. O .-> F4a["F4"]
+        FA["Testing / Diagnose?"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_troubleshooting_md_full[".agents/references/troubleshooting.md"]
+        AGENTS_md_full -. O .-> agents_references_testing_md_full[".agents/references/testing.md"]
+        AGENTS_md_full -. O .-> SETUP_md_full["SETUP.md"]
+        AGENTS_md_full -. O .-> agents_references_LEARNINGS_md_full[".agents/references/LEARNINGS.md"]
     end
     subgraph Deduplicated
-        DA["Testing / Diagnose?"] -->|M| F0b["F0"]
-        F0b -->|M| F21b["F21"]
-        F0b -. O .-> F16b["F16"]
-        F0b -. O .-> F22b["F22"]
-        F0b -. O .-> F4b["F4"]
+        DA["Testing / Diagnose?"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_troubleshooting_md_dedup[".agents/references/troubleshooting.md"]
+        AGENTS_md_dedup -. O .-> agents_references_testing_md_dedup[".agents/references/testing.md"]
+        AGENTS_md_dedup -. O .-> SETUP_md_dedup["SETUP.md"]
+        AGENTS_md_dedup -. O .-> agents_references_LEARNINGS_md_dedup[".agents/references/LEARNINGS.md"]
     end
 ```
 
 ### Testing / Fix?
 
-Metrics: chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
+Metrics: chain depth 1; chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Testing / Fix?"] -->|M| F0a["F0"]
-        F0a -->|M| F3a["F3"]
-        F0a -->|M| AffectedA["F39/F40/F38"]
-        F0a -. O .-> F2a["F2"]
+        FA["Testing / Fix?"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_execution_md_full[".agents/references/execution.md"]
+        AGENTS_md_full -->|M| AffectedA["task-specific source files / task-specific test or executable-spec files / task-specific governing spec or published contract artifact"]
+        AGENTS_md_full -. O .-> agents_references_planning_md_full[".agents/references/planning.md"]
     end
     subgraph Deduplicated
-        DA["Testing / Fix?"] -->|M| F0b["F0"]
-        F0b -->|M| F3b["F3"]
-        F0b -->|M| AffectedB["F39/F40/F38"]
-        F0b -. O .-> F2b["F2"]
+        DA["Testing / Fix?"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_execution_md_dedup[".agents/references/execution.md"]
+        AGENTS_md_dedup -->|M| AffectedB["task-specific source files / task-specific test or executable-spec files / task-specific governing spec or published contract artifact"]
+        AGENTS_md_dedup -. O .-> agents_references_planning_md_dedup[".agents/references/planning.md"]
     end
 ```
 
 ### Testing / Re-run
 
-Metrics: chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
+Metrics: chain depth 1; chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Testing / Re-run"] -->|M| F0a["F0"]
-        F0a -->|M| F16a["F16"]
-        F0a -->|M| F19a["F19"]
-        F0a -. O .-> F20a["F20"]
-        F20a -. still fails .-> FA
+        FA["Testing / Re-run"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_testing_md_full[".agents/references/testing.md"]
+        AGENTS_md_full -->|M| agents_references_environment_quick_ref_md_full[".agents/references/environment-quick-ref.md"]
+        AGENTS_md_full -. O .-> agents_references_gradle_task_graph_md_full[".agents/references/gradle-task-graph.md"]
+        agents_references_gradle_task_graph_md_full -. still fails .-> FA
     end
     subgraph Deduplicated
-        DA["Testing / Re-run"] -->|M| F0b["F0"]
-        F0b -->|M| F16b["F16"]
-        F0b -->|M| F19b["F19"]
-        F0b -. O .-> F20b["F20"]
-        F20b -. still fails .-> DA
+        DA["Testing / Re-run"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_testing_md_dedup[".agents/references/testing.md"]
+        AGENTS_md_dedup -->|M| agents_references_environment_quick_ref_md_dedup[".agents/references/environment-quick-ref.md"]
+        AGENTS_md_dedup -. O .-> agents_references_gradle_task_graph_md_dedup[".agents/references/gradle-task-graph.md"]
+        agents_references_gradle_task_graph_md_dedup -. still fails .-> DA
     end
 ```
 
 ### Testing / Record
 
-Metrics: chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
+Metrics: chain depth 1; chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Testing / Record"] -->|M| F0a["F0"]
-        F0a -->|M| F16a["F16"]
-        F0a -->|M| PlanOrLogA["F36 or F37"]
-        F0a -. O .-> F14a["F14"]
+        FA["Testing / Record"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_testing_md_full[".agents/references/testing.md"]
+        AGENTS_md_full -->|M| PlanOrLogA["concrete .agents/plans/PLAN_*.md or .agents/tmp/workflow/*.md"]
+        AGENTS_md_full -. O .-> agents_references_workflow_md_full[".agents/references/workflow.md"]
     end
     subgraph Deduplicated
-        DA["Testing / Record"] -->|M| F0b["F0"]
-        F0b -->|M| F16b["F16"]
-        F0b -->|M| PlanOrLogB["F36 or F37"]
-        F0b -. O .-> F14b["F14"]
+        DA["Testing / Record"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_testing_md_dedup[".agents/references/testing.md"]
+        AGENTS_md_dedup -->|M| PlanOrLogB["concrete .agents/plans/PLAN_*.md or .agents/tmp/workflow/*.md"]
+        AGENTS_md_dedup -. O .-> agents_references_workflow_md_dedup[".agents/references/workflow.md"]
     end
 ```
 
@@ -743,109 +744,109 @@ flowchart TD
 
 ### Review / Self-Review
 
-Metrics: chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
+Metrics: chain depth 1; chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Review / Self-Review"] -->|M| F0a["F0"]
-        F0a -->|M| F23a["F23"]
-        F0a -. O .-> F16a["F16"]
-        F0a -. O .-> F7a["F7"]
+        FA["Review / Self-Review"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_reviews_md_full[".agents/references/reviews.md"]
+        AGENTS_md_full -. O .-> agents_references_testing_md_full[".agents/references/testing.md"]
+        AGENTS_md_full -. O .-> agents_references_documentation_md_full[".agents/references/documentation.md"]
     end
     subgraph Deduplicated
-        DA["Review / Self-Review"] -->|M| F0b["F0"]
-        F0b -->|M| F23b["F23"]
-        F0b -. O .-> F16b["F16"]
-        F0b -. O .-> F7b["F7"]
+        DA["Review / Self-Review"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_reviews_md_dedup[".agents/references/reviews.md"]
+        AGENTS_md_dedup -. O .-> agents_references_testing_md_dedup[".agents/references/testing.md"]
+        AGENTS_md_dedup -. O .-> agents_references_documentation_md_dedup[".agents/references/documentation.md"]
     end
 ```
 
 ### Review / Code Review
 
-Metrics: chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
+Metrics: chain depth 1; chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Review / Code Review"] -->|M| F0a["F0"]
-        F0a -->|M| F23a["F23"]
-        F0a -->|M| F41a["F41"]
-        F0a -. O .-> F38a["F38"]
-        F0a -. O .-> F16a["F16"]
+        FA["Review / Code Review"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_reviews_md_full[".agents/references/reviews.md"]
+        AGENTS_md_full -->|M| changed_documentation_or_contract_files_full["changed documentation or contract files"]
+        AGENTS_md_full -. O .-> task_specific_governing_spec_or_published_contract_artifact_full["task-specific governing spec or published contract artifact"]
+        AGENTS_md_full -. O .-> agents_references_testing_md_full[".agents/references/testing.md"]
     end
     subgraph Deduplicated
-        DA["Review / Code Review"] -->|M| F0b["F0"]
-        F0b -->|M| F23b["F23"]
-        F0b -->|M| F41b["F41"]
-        F0b -. O .-> F38b["F38"]
-        F0b -. O .-> F16b["F16"]
+        DA["Review / Code Review"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_reviews_md_dedup[".agents/references/reviews.md"]
+        AGENTS_md_dedup -->|M| changed_documentation_or_contract_files_dedup["changed documentation or contract files"]
+        AGENTS_md_dedup -. O .-> task_specific_governing_spec_or_published_contract_artifact_dedup["task-specific governing spec or published contract artifact"]
+        AGENTS_md_dedup -. O .-> agents_references_testing_md_dedup[".agents/references/testing.md"]
     end
 ```
 
 ### Review / Security Review?
 
-Metrics: chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
+Metrics: chain depth 1; chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Review / Security Review?"] -->|M| F0a["F0"]
-        F0a -->|M| F23a["F23"]
-        F0a -. O .-> F48a["F48"]
-        F0a -. O .-> F16a["F16"]
-        F0a -. O .-> F7a["F7"]
+        FA["Review / Security Review?"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_reviews_md_full[".agents/references/reviews.md"]
+        AGENTS_md_full -. O .-> security_sensitive_source_workflow_config_or_release_files_full["security-sensitive source, workflow, config, or release files"]
+        AGENTS_md_full -. O .-> agents_references_testing_md_full[".agents/references/testing.md"]
+        AGENTS_md_full -. O .-> agents_references_documentation_md_full[".agents/references/documentation.md"]
     end
     subgraph Deduplicated
-        DA["Review / Security Review?"] -->|M| F0b["F0"]
-        F0b -->|M| F23b["F23"]
-        F0b -. O .-> F48b["F48"]
-        F0b -. O .-> F16b["F16"]
-        F0b -. O .-> F7b["F7"]
+        DA["Review / Security Review?"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_reviews_md_dedup[".agents/references/reviews.md"]
+        AGENTS_md_dedup -. O .-> security_sensitive_source_workflow_config_or_release_files_dedup["security-sensitive source, workflow, config, or release files"]
+        AGENTS_md_dedup -. O .-> agents_references_testing_md_dedup[".agents/references/testing.md"]
+        AGENTS_md_dedup -. O .-> agents_references_documentation_md_dedup[".agents/references/documentation.md"]
     end
 ```
 
 ### Review / Docs Review?
 
-Metrics: chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
+Metrics: chain depth 1; chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Review / Docs Review?"] -->|M| F0a["F0"]
-        F0a -->|M| F23a["F23"]
-        F0a -->|M| F7a["F7"]
-        F0a -. O .-> F8a["F8"]
-        F0a -. O .-> F49a["F49"]
+        FA["Review / Docs Review?"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_reviews_md_full[".agents/references/reviews.md"]
+        AGENTS_md_full -->|M| agents_references_documentation_md_full[".agents/references/documentation.md"]
+        AGENTS_md_full -. O .-> agents_references_references_rules_md_full[".agents/references/references-rules.md"]
+        AGENTS_md_full -. O .-> published_contract_docs_not_otherwise_named_in_this_row_full["published contract docs not otherwise named in this row"]
     end
     subgraph Deduplicated
-        DA["Review / Docs Review?"] -->|M| F0b["F0"]
-        F0b -->|M| F23b["F23"]
-        F0b -->|M| F7b["F7"]
-        F0b -. O .-> F8b["F8"]
-        F0b -. O .-> F49b["F49"]
+        DA["Review / Docs Review?"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_reviews_md_dedup[".agents/references/reviews.md"]
+        AGENTS_md_dedup -->|M| agents_references_documentation_md_dedup[".agents/references/documentation.md"]
+        AGENTS_md_dedup -. O .-> agents_references_references_rules_md_dedup[".agents/references/references-rules.md"]
+        AGENTS_md_dedup -. O .-> published_contract_docs_not_otherwise_named_in_this_row_dedup["published contract docs not otherwise named in this row"]
     end
 ```
 
 ### Review / Decide
 
-Metrics: chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
+Metrics: chain depth 1; chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Review / Decide"] -->|M| F0a["F0"]
-        F0a -->|M| F23a["F23"]
-        F0a -. O .-> F3a["F3"]
-        F0a -. O .-> F16a["F16"]
-        F3a -. changes requested .-> FA
+        FA["Review / Decide"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_reviews_md_full[".agents/references/reviews.md"]
+        AGENTS_md_full -. O .-> agents_references_execution_md_full[".agents/references/execution.md"]
+        AGENTS_md_full -. O .-> agents_references_testing_md_full[".agents/references/testing.md"]
+        agents_references_execution_md_full -. changes requested .-> FA
     end
     subgraph Deduplicated
-        DA["Review / Decide"] -->|M| F0b["F0"]
-        F0b -->|M| F23b["F23"]
-        F0b -. O .-> F3b["F3"]
-        F0b -. O .-> F16b["F16"]
-        F3b -. changes requested .-> DA
+        DA["Review / Decide"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_reviews_md_dedup[".agents/references/reviews.md"]
+        AGENTS_md_dedup -. O .-> agents_references_execution_md_dedup[".agents/references/execution.md"]
+        AGENTS_md_dedup -. O .-> agents_references_testing_md_dedup[".agents/references/testing.md"]
+        agents_references_execution_md_dedup -. changes requested .-> DA
     end
 ```
 
@@ -853,89 +854,89 @@ flowchart TD
 
 ### Integration / Re-validate
 
-Metrics: chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
+Metrics: chain depth 1; chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Integration / Re-validate"] -->|M| F0a["F0"]
-        F0a -->|M| F16a["F16"]
-        F0a -->|M| F19a["F19"]
-        F0a -. O .-> F14a["F14"]
-        F0a -. O .-> F20a["F20"]
+        FA["Integration / Re-validate"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_testing_md_full[".agents/references/testing.md"]
+        AGENTS_md_full -->|M| agents_references_environment_quick_ref_md_full[".agents/references/environment-quick-ref.md"]
+        AGENTS_md_full -. O .-> agents_references_workflow_md_full[".agents/references/workflow.md"]
+        AGENTS_md_full -. O .-> agents_references_gradle_task_graph_md_full[".agents/references/gradle-task-graph.md"]
     end
     subgraph Deduplicated
-        DA["Integration / Re-validate"] -->|M| F0b["F0"]
-        F0b -->|M| F16b["F16"]
-        F0b -->|M| F19b["F19"]
-        F0b -. O .-> F14b["F14"]
-        F0b -. O .-> F20b["F20"]
+        DA["Integration / Re-validate"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_testing_md_dedup[".agents/references/testing.md"]
+        AGENTS_md_dedup -->|M| agents_references_environment_quick_ref_md_dedup[".agents/references/environment-quick-ref.md"]
+        AGENTS_md_dedup -. O .-> agents_references_workflow_md_dedup[".agents/references/workflow.md"]
+        AGENTS_md_dedup -. O .-> agents_references_gradle_task_graph_md_dedup[".agents/references/gradle-task-graph.md"]
     end
 ```
 
 ### Integration / Resolve-Conflicts?
 
-Metrics: chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
+Metrics: chain depth 1; chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Integration / Resolve-Conflicts?"] -->|M| F0a["F0"]
-        F0a -->|M| F14a["F14"]
-        F0a -->|M| F42a["F42"]
-        F0a -. O .-> F36a["F36"]
-        F0a -. O .-> F23a["F23"]
+        FA["Integration / Resolve-Conflicts?"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_workflow_md_full[".agents/references/workflow.md"]
+        AGENTS_md_full -->|M| conflicting_files_being_resolved_full["conflicting files being resolved"]
+        AGENTS_md_full -. O .-> concrete_agents_plans_PLAN_md_full["concrete .agents/plans/PLAN_*.md"]
+        AGENTS_md_full -. O .-> agents_references_reviews_md_full[".agents/references/reviews.md"]
     end
     subgraph Deduplicated
-        DA["Integration / Resolve-Conflicts?"] -->|M| F0b["F0"]
-        F0b -->|M| F14b["F14"]
-        F0b -->|M| F42b["F42"]
-        F0b -. O .-> F36b["F36"]
-        F0b -. O .-> F23b["F23"]
+        DA["Integration / Resolve-Conflicts?"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_workflow_md_dedup[".agents/references/workflow.md"]
+        AGENTS_md_dedup -->|M| conflicting_files_being_resolved_dedup["conflicting files being resolved"]
+        AGENTS_md_dedup -. O .-> concrete_agents_plans_PLAN_md_dedup["concrete .agents/plans/PLAN_*.md"]
+        AGENTS_md_dedup -. O .-> agents_references_reviews_md_dedup[".agents/references/reviews.md"]
     end
 ```
 
 ### Integration / Merge
 
-Metrics: chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
+Metrics: chain depth 1; chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Integration / Merge"] -->|M| F0a["F0"]
-        F0a -->|M| F14a["F14"]
-        F0a -. O .-> F36a["F36"]
-        F0a -. O .-> F37a["F37"]
+        FA["Integration / Merge"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_workflow_md_full[".agents/references/workflow.md"]
+        AGENTS_md_full -. O .-> concrete_agents_plans_PLAN_md_full["concrete .agents/plans/PLAN_*.md"]
+        AGENTS_md_full -. O .-> agents_tmp_workflow_md_full[".agents/tmp/workflow/*.md"]
     end
     subgraph Deduplicated
-        DA["Integration / Merge"] -->|M| F0b["F0"]
-        F0b -->|M| F14b["F14"]
-        F0b -. O .-> F36b["F36"]
-        F0b -. O .-> F37b["F37"]
+        DA["Integration / Merge"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_workflow_md_dedup[".agents/references/workflow.md"]
+        AGENTS_md_dedup -. O .-> concrete_agents_plans_PLAN_md_dedup["concrete .agents/plans/PLAN_*.md"]
+        AGENTS_md_dedup -. O .-> agents_tmp_workflow_md_dedup[".agents/tmp/workflow/*.md"]
     end
 ```
 
 ### Integration / Post-Merge-Verify
 
-Metrics: chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
+Metrics: chain depth 1; chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Integration / Post-Merge-Verify"] -->|M| F0a["F0"]
-        F0a -->|M| F16a["F16"]
-        F0a -->|M| F14a["F14"]
-        F0a -. O .-> F3a["F3"]
-        F0a -. O .-> F17a["F17"]
-        F16a -. failure .-> FA
+        FA["Integration / Post-Merge-Verify"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_testing_md_full[".agents/references/testing.md"]
+        AGENTS_md_full -->|M| agents_references_workflow_md_full[".agents/references/workflow.md"]
+        AGENTS_md_full -. O .-> agents_references_execution_md_full[".agents/references/execution.md"]
+        AGENTS_md_full -. O .-> agents_references_plan_execution_md_full[".agents/references/plan-execution.md"]
+        agents_references_testing_md_full -. failure .-> FA
     end
     subgraph Deduplicated
-        DA["Integration / Post-Merge-Verify"] -->|M| F0b["F0"]
-        F0b -->|M| F16b["F16"]
-        F0b -->|M| F14b["F14"]
-        F0b -. O .-> F3b["F3"]
-        F0b -. O .-> F17b["F17"]
-        F16b -. failure .-> DA
+        DA["Integration / Post-Merge-Verify"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_testing_md_dedup[".agents/references/testing.md"]
+        AGENTS_md_dedup -->|M| agents_references_workflow_md_dedup[".agents/references/workflow.md"]
+        AGENTS_md_dedup -. O .-> agents_references_execution_md_dedup[".agents/references/execution.md"]
+        AGENTS_md_dedup -. O .-> agents_references_plan_execution_md_dedup[".agents/references/plan-execution.md"]
+        agents_references_testing_md_dedup -. failure .-> DA
     end
 ```
 
@@ -943,123 +944,123 @@ flowchart TD
 
 ### Release / Gate
 
-Metrics: chain length 7; total loaded 7; deduplicated chain length 7; distinct loaded 7.
+Metrics: chain depth 1; chain length 7; total loaded 7; deduplicated chain length 7; distinct loaded 7.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Release / Gate"] -->|M| F0a["F0"]
-        F0a -->|M| F25a["F25"]
-        F0a -->|M| F16a["F16"]
-        F0a -->|M| F7a["F7"]
-        F0a -. O .-> F36a["F36"]
-        F0a -. O .-> F5a["F5"]
-        F0a -. O .-> F27a["F27"]
-        F25a -. precondition fails .-> FA
+        FA["Release / Gate"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_releases_md_full[".agents/references/releases.md"]
+        AGENTS_md_full -->|M| agents_references_testing_md_full[".agents/references/testing.md"]
+        AGENTS_md_full -->|M| agents_references_documentation_md_full[".agents/references/documentation.md"]
+        AGENTS_md_full -. O .-> concrete_agents_plans_PLAN_md_full["concrete .agents/plans/PLAN_*.md"]
+        AGENTS_md_full -. O .-> ROADMAP_md_full["ROADMAP.md"]
+        AGENTS_md_full -. O .-> CHANGELOG_md_full["CHANGELOG.md"]
+        agents_references_releases_md_full -. precondition fails .-> FA
     end
     subgraph Deduplicated
-        DA["Release / Gate"] -->|M| F0b["F0"]
-        F0b -->|M| F25b["F25"]
-        F0b -->|M| F16b["F16"]
-        F0b -->|M| F7b["F7"]
-        F0b -. O .-> F36b["F36"]
-        F0b -. O .-> F5b["F5"]
-        F0b -. O .-> F27b["F27"]
-        F25b -. precondition fails .-> DA
+        DA["Release / Gate"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_releases_md_dedup[".agents/references/releases.md"]
+        AGENTS_md_dedup -->|M| agents_references_testing_md_dedup[".agents/references/testing.md"]
+        AGENTS_md_dedup -->|M| agents_references_documentation_md_dedup[".agents/references/documentation.md"]
+        AGENTS_md_dedup -. O .-> concrete_agents_plans_PLAN_md_dedup["concrete .agents/plans/PLAN_*.md"]
+        AGENTS_md_dedup -. O .-> ROADMAP_md_dedup["ROADMAP.md"]
+        AGENTS_md_dedup -. O .-> CHANGELOG_md_dedup["CHANGELOG.md"]
+        agents_references_releases_md_dedup -. precondition fails .-> DA
     end
 ```
 
 ### Release / Tag
 
-Metrics: chain length 7; total loaded 7; deduplicated chain length 7; distinct loaded 7.
+Metrics: chain depth 1; chain length 7; total loaded 7; deduplicated chain length 7; distinct loaded 7.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Release / Tag"] -->|M| F0a["F0"]
-        F0a -->|M| F25a["F25"]
-        F0a -->|M| F26a["F26"]
-        F0a -->|M| F27a["F27"]
-        F0a -->|M| F5a["F5"]
-        F0a -. O .-> F4a["F4"]
-        F0a -. O .-> F28a["F28"]
+        FA["Release / Tag"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_releases_md_full[".agents/references/releases.md"]
+        AGENTS_md_full -->|M| agents_references_release_checklist_md_full[".agents/references/release-checklist.md"]
+        AGENTS_md_full -->|M| CHANGELOG_md_full["CHANGELOG.md"]
+        AGENTS_md_full -->|M| ROADMAP_md_full["ROADMAP.md"]
+        AGENTS_md_full -. O .-> agents_references_LEARNINGS_md_full[".agents/references/LEARNINGS.md"]
+        AGENTS_md_full -. O .-> agents_archive_full[".agents/archive/"]
     end
     subgraph Deduplicated
-        DA["Release / Tag"] -->|M| F0b["F0"]
-        F0b -->|M| F25b["F25"]
-        F0b -->|M| F26b["F26"]
-        F0b -->|M| F27b["F27"]
-        F0b -->|M| F5b["F5"]
-        F0b -. O .-> F4b["F4"]
-        F0b -. O .-> F28b["F28"]
+        DA["Release / Tag"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_releases_md_dedup[".agents/references/releases.md"]
+        AGENTS_md_dedup -->|M| agents_references_release_checklist_md_dedup[".agents/references/release-checklist.md"]
+        AGENTS_md_dedup -->|M| CHANGELOG_md_dedup["CHANGELOG.md"]
+        AGENTS_md_dedup -->|M| ROADMAP_md_dedup["ROADMAP.md"]
+        AGENTS_md_dedup -. O .-> agents_references_LEARNINGS_md_dedup[".agents/references/LEARNINGS.md"]
+        AGENTS_md_dedup -. O .-> agents_archive_dedup[".agents/archive/"]
     end
 ```
 
 ### Release / Notes
 
-Metrics: chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
+Metrics: chain depth 1; chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Release / Notes"] -->|M| F0a["F0"]
-        F0a -->|M| F25a["F25"]
-        F0a -->|M| F27a["F27"]
-        F0a -. O .-> F26a["F26"]
-        F0a -. O .-> F47a["F47"]
+        FA["Release / Notes"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_releases_md_full[".agents/references/releases.md"]
+        AGENTS_md_full -->|M| CHANGELOG_md_full["CHANGELOG.md"]
+        AGENTS_md_full -. O .-> agents_references_release_checklist_md_full[".agents/references/release-checklist.md"]
+        AGENTS_md_full -. O .-> temporary_CHANGELOG_topic_md_files_full["temporary CHANGELOG_<topic>.md files"]
     end
     subgraph Deduplicated
-        DA["Release / Notes"] -->|M| F0b["F0"]
-        F0b -->|M| F25b["F25"]
-        F0b -->|M| F27b["F27"]
-        F0b -. O .-> F26b["F26"]
-        F0b -. O .-> F47b["F47"]
+        DA["Release / Notes"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_releases_md_dedup[".agents/references/releases.md"]
+        AGENTS_md_dedup -->|M| CHANGELOG_md_dedup["CHANGELOG.md"]
+        AGENTS_md_dedup -. O .-> agents_references_release_checklist_md_dedup[".agents/references/release-checklist.md"]
+        AGENTS_md_dedup -. O .-> temporary_CHANGELOG_topic_md_files_dedup["temporary CHANGELOG_<topic>.md files"]
     end
 ```
 
 ### Release / Publish
 
-Metrics: chain length 3; total loaded 3; deduplicated chain length 3; distinct loaded 3.
+Metrics: chain depth 1; chain length 3; total loaded 3; deduplicated chain length 3; distinct loaded 3.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Release / Publish"] -->|M| F0a["F0"]
-        F0a -->|M| F25a["F25"]
-        F0a -. O .-> F29a["F29"]
+        FA["Release / Publish"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_releases_md_full[".agents/references/releases.md"]
+        AGENTS_md_full -. O .-> agents_references_release_artifact_verification_md_full[".agents/references/release-artifact-verification.md"]
     end
     subgraph Deduplicated
-        DA["Release / Publish"] -->|M| F0b["F0"]
-        F0b -->|M| F25b["F25"]
-        F0b -. O .-> F29b["F29"]
+        DA["Release / Publish"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_releases_md_dedup[".agents/references/releases.md"]
+        AGENTS_md_dedup -. O .-> agents_references_release_artifact_verification_md_dedup[".agents/references/release-artifact-verification.md"]
     end
 ```
 
 ### Release / Post-Release-Cleanup
 
-Metrics: chain length 8; total loaded 8; deduplicated chain length 8; distinct loaded 8.
+Metrics: chain depth 1; chain length 8; total loaded 8; deduplicated chain length 8; distinct loaded 8.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Release / Post-Release-Cleanup"] -->|M| F0a["F0"]
-        F0a -->|M| F25a["F25"]
-        F0a -->|M| F26a["F26"]
-        F0a -->|M| F5a["F5"]
-        F0a -->|M| F27a["F27"]
-        F0a -->|M| F28a["F28"]
-        F0a -. O .-> F4a["F4"]
-        F0a -. O .-> F14a["F14"]
+        FA["Release / Post-Release-Cleanup"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_releases_md_full[".agents/references/releases.md"]
+        AGENTS_md_full -->|M| agents_references_release_checklist_md_full[".agents/references/release-checklist.md"]
+        AGENTS_md_full -->|M| ROADMAP_md_full["ROADMAP.md"]
+        AGENTS_md_full -->|M| CHANGELOG_md_full["CHANGELOG.md"]
+        AGENTS_md_full -->|M| agents_archive_full[".agents/archive/"]
+        AGENTS_md_full -. O .-> agents_references_LEARNINGS_md_full[".agents/references/LEARNINGS.md"]
+        AGENTS_md_full -. O .-> agents_references_workflow_md_full[".agents/references/workflow.md"]
     end
     subgraph Deduplicated
-        DA["Release / Post-Release-Cleanup"] -->|M| F0b["F0"]
-        F0b -->|M| F25b["F25"]
-        F0b -->|M| F26b["F26"]
-        F0b -->|M| F5b["F5"]
-        F0b -->|M| F27b["F27"]
-        F0b -->|M| F28b["F28"]
-        F0b -. O .-> F4b["F4"]
-        F0b -. O .-> F14b["F14"]
+        DA["Release / Post-Release-Cleanup"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_releases_md_dedup[".agents/references/releases.md"]
+        AGENTS_md_dedup -->|M| agents_references_release_checklist_md_dedup[".agents/references/release-checklist.md"]
+        AGENTS_md_dedup -->|M| ROADMAP_md_dedup["ROADMAP.md"]
+        AGENTS_md_dedup -->|M| CHANGELOG_md_dedup["CHANGELOG.md"]
+        AGENTS_md_dedup -->|M| agents_archive_dedup[".agents/archive/"]
+        AGENTS_md_dedup -. O .-> agents_references_LEARNINGS_md_dedup[".agents/references/LEARNINGS.md"]
+        AGENTS_md_dedup -. O .-> agents_references_workflow_md_dedup[".agents/references/workflow.md"]
     end
 ```
 
@@ -1067,95 +1068,95 @@ flowchart TD
 
 ### Deployment / Stage
 
-Metrics: chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
+Metrics: chain depth 1; chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Deployment / Stage"] -->|M| F0a["F0"]
-        F0a -. O .-> F29a["F29"]
-        F0a -. O .-> F30a["F30"]
-        F0a -. O .-> F31a["F31"]
+        FA["Deployment / Stage"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -. O .-> agents_references_release_artifact_verification_md_full[".agents/references/release-artifact-verification.md"]
+        AGENTS_md_full -. O .-> infra_full["infra/"]
+        AGENTS_md_full -. O .-> src_externalTest_full["src/externalTest/"]
     end
     subgraph Deduplicated
-        DA["Deployment / Stage"] -->|M| F0b["F0"]
-        F0b -. O .-> F29b["F29"]
-        F0b -. O .-> F30b["F30"]
-        F0b -. O .-> F31b["F31"]
+        DA["Deployment / Stage"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -. O .-> agents_references_release_artifact_verification_md_dedup[".agents/references/release-artifact-verification.md"]
+        AGENTS_md_dedup -. O .-> infra_dedup["infra/"]
+        AGENTS_md_dedup -. O .-> src_externalTest_dedup["src/externalTest/"]
     end
 ```
 
 ### Deployment / Smoke
 
-Metrics: chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
+Metrics: chain depth 1; chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Deployment / Smoke"] -->|M| F0a["F0"]
-        F0a -. O .-> F29a["F29"]
-        F0a -. O .-> F32a["F32"]
-        F0a -. O .-> F31a["F31"]
+        FA["Deployment / Smoke"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -. O .-> agents_references_release_artifact_verification_md_full[".agents/references/release-artifact-verification.md"]
+        AGENTS_md_full -. O .-> src_manualTests_http_suites_README_md_full["src/manualTests/http/suites/README.md"]
+        AGENTS_md_full -. O .-> src_externalTest_full["src/externalTest/"]
     end
     subgraph Deduplicated
-        DA["Deployment / Smoke"] -->|M| F0b["F0"]
-        F0b -. O .-> F29b["F29"]
-        F0b -. O .-> F32b["F32"]
-        F0b -. O .-> F31b["F31"]
+        DA["Deployment / Smoke"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -. O .-> agents_references_release_artifact_verification_md_dedup[".agents/references/release-artifact-verification.md"]
+        AGENTS_md_dedup -. O .-> src_manualTests_http_suites_README_md_dedup["src/manualTests/http/suites/README.md"]
+        AGENTS_md_dedup -. O .-> src_externalTest_dedup["src/externalTest/"]
     end
 ```
 
 ### Deployment / Promote
 
-Metrics: chain length 2; total loaded 2; deduplicated chain length 2; distinct loaded 2.
+Metrics: chain depth 1; chain length 2; total loaded 2; deduplicated chain length 2; distinct loaded 2.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Deployment / Promote"] -->|M| F0a["F0"]
-        F0a -. O .-> F43a["F43"]
+        FA["Deployment / Promote"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -. O .-> deployment_specific_workflow_configuration_or_check_files_full["deployment-specific workflow, configuration, or check files"]
     end
     subgraph Deduplicated
-        DA["Deployment / Promote"] -->|M| F0b["F0"]
-        F0b -. O .-> F43b["F43"]
+        DA["Deployment / Promote"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -. O .-> deployment_specific_workflow_configuration_or_check_files_dedup["deployment-specific workflow, configuration, or check files"]
     end
 ```
 
 ### Deployment / Verify
 
-Metrics: chain length 3; total loaded 3; deduplicated chain length 3; distinct loaded 3.
+Metrics: chain depth 1; chain length 3; total loaded 3; deduplicated chain length 3; distinct loaded 3.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Deployment / Verify"] -->|M| F0a["F0"]
-        F0a -. O .-> F29a["F29"]
-        F0a -. O .-> F43a["F43"]
+        FA["Deployment / Verify"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -. O .-> agents_references_release_artifact_verification_md_full[".agents/references/release-artifact-verification.md"]
+        AGENTS_md_full -. O .-> deployment_specific_workflow_configuration_or_check_files_full["deployment-specific workflow, configuration, or check files"]
     end
     subgraph Deduplicated
-        DA["Deployment / Verify"] -->|M| F0b["F0"]
-        F0b -. O .-> F29b["F29"]
-        F0b -. O .-> F43b["F43"]
+        DA["Deployment / Verify"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -. O .-> agents_references_release_artifact_verification_md_dedup[".agents/references/release-artifact-verification.md"]
+        AGENTS_md_dedup -. O .-> deployment_specific_workflow_configuration_or_check_files_dedup["deployment-specific workflow, configuration, or check files"]
     end
 ```
 
 ### Deployment / Rollback?
 
-Metrics: chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
+Metrics: chain depth 1; chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Deployment / Rollback?"] -->|M| F0a["F0"]
-        F0a -. O .-> F14a["F14"]
-        F0a -. O .-> F25a["F25"]
-        F0a -. O .-> F43a["F43"]
+        FA["Deployment / Rollback?"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -. O .-> agents_references_workflow_md_full[".agents/references/workflow.md"]
+        AGENTS_md_full -. O .-> agents_references_releases_md_full[".agents/references/releases.md"]
+        AGENTS_md_full -. O .-> deployment_specific_workflow_configuration_or_check_files_full["deployment-specific workflow, configuration, or check files"]
     end
     subgraph Deduplicated
-        DA["Deployment / Rollback?"] -->|M| F0b["F0"]
-        F0b -. O .-> F14b["F14"]
-        F0b -. O .-> F25b["F25"]
-        F0b -. O .-> F43b["F43"]
+        DA["Deployment / Rollback?"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -. O .-> agents_references_workflow_md_dedup[".agents/references/workflow.md"]
+        AGENTS_md_dedup -. O .-> agents_references_releases_md_dedup[".agents/references/releases.md"]
+        AGENTS_md_dedup -. O .-> deployment_specific_workflow_configuration_or_check_files_dedup["deployment-specific workflow, configuration, or check files"]
     end
 ```
 
@@ -1163,125 +1164,125 @@ flowchart TD
 
 ### Operations / Observe
 
-Metrics: chain length 2; total loaded 2; deduplicated chain length 2; distinct loaded 2.
+Metrics: chain depth 1; chain length 2; total loaded 2; deduplicated chain length 2; distinct loaded 2.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Operations / Observe"] -->|M| F0a["F0"]
-        F0a -. O .-> F44a["F44"]
+        FA["Operations / Observe"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -. O .-> user_supplied_monitoring_log_trace_or_incident_files_full["user-supplied monitoring, log, trace, or incident files"]
     end
     subgraph Deduplicated
-        DA["Operations / Observe"] -->|M| F0b["F0"]
-        F0b -. O .-> F44b["F44"]
+        DA["Operations / Observe"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -. O .-> user_supplied_monitoring_log_trace_or_incident_files_dedup["user-supplied monitoring, log, trace, or incident files"]
     end
 ```
 
 ### Operations / Triage
 
-Metrics: chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
+Metrics: chain depth 1; chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Operations / Triage"] -->|M| F0a["F0"]
-        F0a -->|M| F5a["F5"]
-        F0a -. O .-> F2a["F2"]
-        F0a -. O .-> F4a["F4"]
-        F0a -. O .-> F44a["F44"]
+        FA["Operations / Triage"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| ROADMAP_md_full["ROADMAP.md"]
+        AGENTS_md_full -. O .-> agents_references_planning_md_full[".agents/references/planning.md"]
+        AGENTS_md_full -. O .-> agents_references_LEARNINGS_md_full[".agents/references/LEARNINGS.md"]
+        AGENTS_md_full -. O .-> user_supplied_monitoring_log_trace_or_incident_files_full["user-supplied monitoring, log, trace, or incident files"]
     end
     subgraph Deduplicated
-        DA["Operations / Triage"] -->|M| F0b["F0"]
-        F0b -->|M| F5b["F5"]
-        F0b -. O .-> F2b["F2"]
-        F0b -. O .-> F4b["F4"]
-        F0b -. O .-> F44b["F44"]
+        DA["Operations / Triage"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| ROADMAP_md_dedup["ROADMAP.md"]
+        AGENTS_md_dedup -. O .-> agents_references_planning_md_dedup[".agents/references/planning.md"]
+        AGENTS_md_dedup -. O .-> agents_references_LEARNINGS_md_dedup[".agents/references/LEARNINGS.md"]
+        AGENTS_md_dedup -. O .-> user_supplied_monitoring_log_trace_or_incident_files_dedup["user-supplied monitoring, log, trace, or incident files"]
     end
 ```
 
 ### Operations / Hotfix?
 
-Metrics: chain length 6; total loaded 6; deduplicated chain length 6; distinct loaded 6.
+Metrics: chain depth 1; chain length 6; total loaded 6; deduplicated chain length 6; distinct loaded 6.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Operations / Hotfix?"] -->|M| F0a["F0"]
-        F0a -->|M| F3a["F3"]
-        F0a -->|M| F16a["F16"]
-        F0a -->|M| F23a["F23"]
-        F0a -. O .-> F14a["F14"]
-        F0a -. O .-> F2a["F2"]
+        FA["Operations / Hotfix?"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_execution_md_full[".agents/references/execution.md"]
+        AGENTS_md_full -->|M| agents_references_testing_md_full[".agents/references/testing.md"]
+        AGENTS_md_full -->|M| agents_references_reviews_md_full[".agents/references/reviews.md"]
+        AGENTS_md_full -. O .-> agents_references_workflow_md_full[".agents/references/workflow.md"]
+        AGENTS_md_full -. O .-> agents_references_planning_md_full[".agents/references/planning.md"]
     end
     subgraph Deduplicated
-        DA["Operations / Hotfix?"] -->|M| F0b["F0"]
-        F0b -->|M| F3b["F3"]
-        F0b -->|M| F16b["F16"]
-        F0b -->|M| F23b["F23"]
-        F0b -. O .-> F14b["F14"]
-        F0b -. O .-> F2b["F2"]
+        DA["Operations / Hotfix?"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_execution_md_dedup[".agents/references/execution.md"]
+        AGENTS_md_dedup -->|M| agents_references_testing_md_dedup[".agents/references/testing.md"]
+        AGENTS_md_dedup -->|M| agents_references_reviews_md_dedup[".agents/references/reviews.md"]
+        AGENTS_md_dedup -. O .-> agents_references_workflow_md_dedup[".agents/references/workflow.md"]
+        AGENTS_md_dedup -. O .-> agents_references_planning_md_dedup[".agents/references/planning.md"]
     end
 ```
 
 ### Operations / Patch?
 
-Metrics: chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
+Metrics: chain depth 1; chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Operations / Patch?"] -->|M| F0a["F0"]
-        F0a -->|M| AltA["F2 or F3"]
-        F0a -. O .-> F5a["F5"]
-        F0a -. O .-> F16a["F16"]
-        F0a -. O .-> F23a["F23"]
+        FA["Operations / Patch?"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| AltA[".agents/references/planning.md or .agents/references/execution.md"]
+        AGENTS_md_full -. O .-> ROADMAP_md_full["ROADMAP.md"]
+        AGENTS_md_full -. O .-> agents_references_testing_md_full[".agents/references/testing.md"]
+        AGENTS_md_full -. O .-> agents_references_reviews_md_full[".agents/references/reviews.md"]
     end
     subgraph Deduplicated
-        DA["Operations / Patch?"] -->|M| F0b["F0"]
-        F0b -->|M| AltB["F2 or F3"]
-        F0b -. O .-> F5b["F5"]
-        F0b -. O .-> F16b["F16"]
-        F0b -. O .-> F23b["F23"]
+        DA["Operations / Patch?"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| AltB[".agents/references/planning.md or .agents/references/execution.md"]
+        AGENTS_md_dedup -. O .-> ROADMAP_md_dedup["ROADMAP.md"]
+        AGENTS_md_dedup -. O .-> agents_references_testing_md_dedup[".agents/references/testing.md"]
+        AGENTS_md_dedup -. O .-> agents_references_reviews_md_dedup[".agents/references/reviews.md"]
     end
 ```
 
 ### Operations / Backport?
 
-Metrics: chain length 3; total loaded 3; deduplicated chain length 3; distinct loaded 3.
+Metrics: chain depth 1; chain length 3; total loaded 3; deduplicated chain length 3; distinct loaded 3.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Operations / Backport?"] -->|M| F0a["F0"]
-        F0a -. O .-> F14a["F14"]
-        F0a -. O .-> F27a["F27"]
+        FA["Operations / Backport?"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -. O .-> agents_references_workflow_md_full[".agents/references/workflow.md"]
+        AGENTS_md_full -. O .-> CHANGELOG_md_full["CHANGELOG.md"]
     end
     subgraph Deduplicated
-        DA["Operations / Backport?"] -->|M| F0b["F0"]
-        F0b -. O .-> F14b["F14"]
-        F0b -. O .-> F27b["F27"]
+        DA["Operations / Backport?"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -. O .-> agents_references_workflow_md_dedup[".agents/references/workflow.md"]
+        AGENTS_md_dedup -. O .-> CHANGELOG_md_dedup["CHANGELOG.md"]
     end
 ```
 
 ### Operations / Deprecate?
 
-Metrics: chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
+Metrics: chain depth 1; chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Operations / Deprecate?"] -->|M| F0a["F0"]
-        F0a -->|M| F5a["F5"]
-        F0a -->|M| F6a["F6"]
-        F0a -. O .-> F2a["F2"]
-        F0a -. O .-> F49a["F49"]
+        FA["Operations / Deprecate?"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| ROADMAP_md_full["ROADMAP.md"]
+        AGENTS_md_full -->|M| docs_DESIGN_md_full["docs/DESIGN.md"]
+        AGENTS_md_full -. O .-> agents_references_planning_md_full[".agents/references/planning.md"]
+        AGENTS_md_full -. O .-> published_contract_docs_not_otherwise_named_in_this_row_full["published contract docs not otherwise named in this row"]
     end
     subgraph Deduplicated
-        DA["Operations / Deprecate?"] -->|M| F0b["F0"]
-        F0b -->|M| F5b["F5"]
-        F0b -->|M| F6b["F6"]
-        F0b -. O .-> F2b["F2"]
-        F0b -. O .-> F49b["F49"]
+        DA["Operations / Deprecate?"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| ROADMAP_md_dedup["ROADMAP.md"]
+        AGENTS_md_dedup -->|M| docs_DESIGN_md_dedup["docs/DESIGN.md"]
+        AGENTS_md_dedup -. O .-> agents_references_planning_md_dedup[".agents/references/planning.md"]
+        AGENTS_md_dedup -. O .-> published_contract_docs_not_otherwise_named_in_this_row_dedup["published contract docs not otherwise named in this row"]
     end
 ```
 
@@ -1289,109 +1290,109 @@ flowchart TD
 
 ### Continuous Improvement / Retrospect
 
-Metrics: chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
+Metrics: chain depth 1; chain length 5; total loaded 5; deduplicated chain length 5; distinct loaded 5.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Continuous Improvement / Retrospect"] -->|M| F0a["F0"]
-        F0a -->|M| F4a["F4"]
-        F0a -. O .-> F25a["F25"]
-        F0a -. O .-> F36a["F36"]
-        F0a -. O .-> F5a["F5"]
+        FA["Continuous Improvement / Retrospect"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_LEARNINGS_md_full[".agents/references/LEARNINGS.md"]
+        AGENTS_md_full -. O .-> agents_references_releases_md_full[".agents/references/releases.md"]
+        AGENTS_md_full -. O .-> concrete_agents_plans_PLAN_md_full["concrete .agents/plans/PLAN_*.md"]
+        AGENTS_md_full -. O .-> ROADMAP_md_full["ROADMAP.md"]
     end
     subgraph Deduplicated
-        DA["Continuous Improvement / Retrospect"] -->|M| F0b["F0"]
-        F0b -->|M| F4b["F4"]
-        F0b -. O .-> F25b["F25"]
-        F0b -. O .-> F36b["F36"]
-        F0b -. O .-> F5b["F5"]
+        DA["Continuous Improvement / Retrospect"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_LEARNINGS_md_dedup[".agents/references/LEARNINGS.md"]
+        AGENTS_md_dedup -. O .-> agents_references_releases_md_dedup[".agents/references/releases.md"]
+        AGENTS_md_dedup -. O .-> concrete_agents_plans_PLAN_md_dedup["concrete .agents/plans/PLAN_*.md"]
+        AGENTS_md_dedup -. O .-> ROADMAP_md_dedup["ROADMAP.md"]
     end
 ```
 
 ### Continuous Improvement / Capture-Learning
 
-Metrics: chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
+Metrics: chain depth 1; chain length 4; total loaded 4; deduplicated chain length 4; distinct loaded 4.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Continuous Improvement / Capture-Learning"] -->|M| F0a["F0"]
-        F0a -->|M| F4a["F4"]
-        F0a -. O .-> F45a["F45"]
-        F0a -. O .-> F8a["F8"]
+        FA["Continuous Improvement / Capture-Learning"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_LEARNINGS_md_full[".agents/references/LEARNINGS.md"]
+        AGENTS_md_full -. O .-> focused_owner_guide_for_a_durable_correction_full["focused owner guide for a durable correction"]
+        AGENTS_md_full -. O .-> agents_references_references_rules_md_full[".agents/references/references-rules.md"]
     end
     subgraph Deduplicated
-        DA["Continuous Improvement / Capture-Learning"] -->|M| F0b["F0"]
-        F0b -->|M| F4b["F4"]
-        F0b -. O .-> F45b["F45"]
-        F0b -. O .-> F8b["F8"]
+        DA["Continuous Improvement / Capture-Learning"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_LEARNINGS_md_dedup[".agents/references/LEARNINGS.md"]
+        AGENTS_md_dedup -. O .-> focused_owner_guide_for_a_durable_correction_dedup["focused owner guide for a durable correction"]
+        AGENTS_md_dedup -. O .-> agents_references_references_rules_md_dedup[".agents/references/references-rules.md"]
     end
 ```
 
 ### Continuous Improvement / Refactor?
 
-Metrics: chain length 6; total loaded 6; deduplicated chain length 6; distinct loaded 6.
+Metrics: chain depth 1; chain length 6; total loaded 6; deduplicated chain length 6; distinct loaded 6.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Continuous Improvement / Refactor?"] -->|M| F0a["F0"]
-        F0a -->|M| F2a["F2"]
-        F0a -->|M| F5a["F5"]
-        F0a -. O .-> F1a["F1"]
-        F0a -. O .-> F18a["F18"]
-        F0a -. O .-> F16a["F16"]
+        FA["Continuous Improvement / Refactor?"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_planning_md_full[".agents/references/planning.md"]
+        AGENTS_md_full -->|M| ROADMAP_md_full["ROADMAP.md"]
+        AGENTS_md_full -. O .-> docs_ARCHITECTURE_md_full["docs/ARCHITECTURE.md"]
+        AGENTS_md_full -. O .-> agents_references_code_style_md_full[".agents/references/code-style.md"]
+        AGENTS_md_full -. O .-> agents_references_testing_md_full[".agents/references/testing.md"]
     end
     subgraph Deduplicated
-        DA["Continuous Improvement / Refactor?"] -->|M| F0b["F0"]
-        F0b -->|M| F2b["F2"]
-        F0b -->|M| F5b["F5"]
-        F0b -. O .-> F1b["F1"]
-        F0b -. O .-> F18b["F18"]
-        F0b -. O .-> F16b["F16"]
+        DA["Continuous Improvement / Refactor?"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_planning_md_dedup[".agents/references/planning.md"]
+        AGENTS_md_dedup -->|M| ROADMAP_md_dedup["ROADMAP.md"]
+        AGENTS_md_dedup -. O .-> docs_ARCHITECTURE_md_dedup["docs/ARCHITECTURE.md"]
+        AGENTS_md_dedup -. O .-> agents_references_code_style_md_dedup[".agents/references/code-style.md"]
+        AGENTS_md_dedup -. O .-> agents_references_testing_md_dedup[".agents/references/testing.md"]
     end
 ```
 
 ### Continuous Improvement / Tech-Debt-Plan?
 
-Metrics: chain length 6; total loaded 6; deduplicated chain length 6; distinct loaded 6.
+Metrics: chain depth 1; chain length 6; total loaded 6; deduplicated chain length 6; distinct loaded 6.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Continuous Improvement / Tech-Debt-Plan?"] -->|M| F0a["F0"]
-        F0a -->|M| F2a["F2"]
-        F0a -->|M| F5a["F5"]
-        F0a -. O .-> F4a["F4"]
-        F0a -. O .-> F1a["F1"]
-        F0a -. O .-> F6a["F6"]
+        FA["Continuous Improvement / Tech-Debt-Plan?"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| agents_references_planning_md_full[".agents/references/planning.md"]
+        AGENTS_md_full -->|M| ROADMAP_md_full["ROADMAP.md"]
+        AGENTS_md_full -. O .-> agents_references_LEARNINGS_md_full[".agents/references/LEARNINGS.md"]
+        AGENTS_md_full -. O .-> docs_ARCHITECTURE_md_full["docs/ARCHITECTURE.md"]
+        AGENTS_md_full -. O .-> docs_DESIGN_md_full["docs/DESIGN.md"]
     end
     subgraph Deduplicated
-        DA["Continuous Improvement / Tech-Debt-Plan?"] -->|M| F0b["F0"]
-        F0b -->|M| F2b["F2"]
-        F0b -->|M| F5b["F5"]
-        F0b -. O .-> F4b["F4"]
-        F0b -. O .-> F1b["F1"]
-        F0b -. O .-> F6b["F6"]
+        DA["Continuous Improvement / Tech-Debt-Plan?"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| agents_references_planning_md_dedup[".agents/references/planning.md"]
+        AGENTS_md_dedup -->|M| ROADMAP_md_dedup["ROADMAP.md"]
+        AGENTS_md_dedup -. O .-> agents_references_LEARNINGS_md_dedup[".agents/references/LEARNINGS.md"]
+        AGENTS_md_dedup -. O .-> docs_ARCHITECTURE_md_dedup["docs/ARCHITECTURE.md"]
+        AGENTS_md_dedup -. O .-> docs_DESIGN_md_dedup["docs/DESIGN.md"]
     end
 ```
 
 ### Continuous Improvement / Sync
 
-Metrics: chain length 3; total loaded 3; deduplicated chain length 3; distinct loaded 3.
+Metrics: chain depth 1; chain length 3; total loaded 3; deduplicated chain length 3; distinct loaded 3.
 
 ```mermaid
 flowchart TD
     subgraph Full
-        FA["Continuous Improvement / Sync"] -->|M| F0a["F0"]
-        F0a -->|M| F5a["F5"]
-        F0a -. O .-> F27a["F27"]
+        FA["Continuous Improvement / Sync"] -->|M| AGENTS_md_full["AGENTS.md"]
+        AGENTS_md_full -->|M| ROADMAP_md_full["ROADMAP.md"]
+        AGENTS_md_full -. O .-> CHANGELOG_md_full["CHANGELOG.md"]
     end
     subgraph Deduplicated
-        DA["Continuous Improvement / Sync"] -->|M| F0b["F0"]
-        F0b -->|M| F5b["F5"]
-        F0b -. O .-> F27b["F27"]
+        DA["Continuous Improvement / Sync"] -->|M| AGENTS_md_dedup["AGENTS.md"]
+        AGENTS_md_dedup -->|M| ROADMAP_md_dedup["ROADMAP.md"]
+        AGENTS_md_dedup -. O .-> CHANGELOG_md_dedup["CHANGELOG.md"]
     end
 ```
 
