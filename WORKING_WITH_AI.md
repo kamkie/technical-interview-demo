@@ -47,7 +47,7 @@ Detailed task files, templates, deep references, generated reports, skill refere
 Load them only when the task title, owner guide, or active work calls for them.
 
 Use `docs/FRONTEND_AI_CONTRACT.md` when asking AI to prepare or review instructions for a separate first-party frontend repository.
-It summarizes frontend-facing backend constraints, links external security and design skills by URL, and names the OpenAPI source location, but backend executable specs, REST Docs, OpenAPI, and `README.md` remain higher-priority contract sources.
+It is a generated import-ready document with frontend-facing backend constraints, external security and design skill URLs, and an approved OpenAPI snapshot, but backend executable specs, REST Docs, OpenAPI, and `README.md` remain higher-priority contract sources.
 
 ## A Good Request To AI
 

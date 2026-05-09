@@ -16,18 +16,19 @@
 | Last Updated | 2026-05-09 |
 
 ## Summary
-- Create a repository-owned frontend AI contract document under `docs/` that gives agents in a separate first-party UI repository the backend contract, API, OpenAPI source, and integration constraints they must preserve.
+- Create a generated import-ready frontend AI contract document under `docs/` that gives agents in a separate first-party UI repository the backend contract, API, OpenAPI source, and integration constraints they must preserve.
 - Reference external OWASP, OpenAI security, and Anthropic frontend design skills by URL only; do not inline or synthesize skill bodies or copied recommendation blocks into the contract.
-- Keep this plan scoped to the backend repository source artifact and its local documentation indexes; include copy guidance for a future frontend-repository task instead of editing an unknown external repository now.
+- Keep this plan scoped to the backend repository source artifact and its local documentation indexes; keep destination-repository importing as a separate task instead of editing an unknown external repository now.
 - Success is measured by a discoverable source file in this repository, aligned repository AI/documentation indexes, updated active-work tracking, and validation evidence showing no backend contract artifacts changed accidentally.
 
 ## Scope
 - In scope:
-  - create `docs/FRONTEND_AI_CONTRACT.md` in this repository as the source instruction artifact
+  - create `docs/FRONTEND_AI_CONTRACT.md` in this repository as the generated import-ready instruction artifact
   - encode the supported `/api/**`, same-site browser, session, CSRF, authentication, authorization, error, localization, and deployment assumptions that frontend AI must respect
   - list the external OWASP security, OpenAI security best practices, and Anthropic frontend design skill URLs without copying their bodies or recommendation blocks
-  - include a short copy/adaptation section for future placement in a frontend repository
+  - keep the generated document limited to instructions useful to an AI agent importing it in a frontend repository
   - register the new source artifact in the owning AI and human-facing documentation indexes
+  - remove live non-exempt mentions of `upgrade-1x-to-2-0.adoc` from setup and generated REST Docs source pages
   - keep `ROADMAP.md` aligned with this plan's ready state and deferred external-copy decision
 - Out of scope:
   - changing backend runtime behavior, public API shape, OpenAPI, REST Docs snippets, database schema, or application code
@@ -62,6 +63,7 @@
 | D7 | Replan the work as a backend-repository source contract plus local discoverability updates. Defer copying into a separate frontend repository until a concrete destination and instruction convention are provided. | User replan request and planning readiness review | 2026-05-09 | If the user provides the frontend repository and asks to include the external copy in this plan before execution starts |
 | D8 | Move the source artifact from repository root to `docs/FRONTEND_AI_CONTRACT.md` and update ownership/discoverability references to the docs path. | User follow-up request | 2026-05-09 | If the repository later promotes this guidance to a plugin, skill, or frontend-repo-local artifact |
 | D9 | Supersede inline security/design guidance in the frontend contract with URL-only references to the OWASP security, OpenAI security best practices, and Anthropic frontend design skill sources. | User follow-up request | 2026-05-09 | If the user later requests a licensed vendored skill copy or destination-specific frontend instructions |
+| D10 | Mark the frontend contract as a generated import-ready document and remove content meant only for maintaining or copying it, including the migration-guide pointer. | User follow-up request | 2026-05-09 | If a real generator script or destination repository convention is introduced |
 
 ## Execution Shape And Shared Files
 - Recommended shape: one local branch in this repository.
@@ -72,6 +74,7 @@
 ## Affected Artifacts
 - Source AI contract: `docs/FRONTEND_AI_CONTRACT.md` (new)
 - Human/AI indexes likely needing alignment: `README.md`, `WORKING_WITH_AI.md`, `AGENTS.md`, `.agents/references/documentation.md`
+- Live documentation references needing cleanup: `SETUP.md`, `src/docs/asciidoc/index.adoc`, `src/docs/asciidoc/session-controller.adoc`, `src/docs/asciidoc/technical-overview-controller.adoc`
 - Release history staging: `CHANGELOG.md` `## [Unreleased]`
 - Roadmap tracking: `ROADMAP.md`
 - Backend contract references to read, not edit unless a contradiction is found: `src/docs/asciidoc/index.adoc`, `src/docs/asciidoc/session-controller.adoc`, `src/docs/asciidoc/upgrade-1x-to-2-0.adoc`, `src/test/resources/openapi/approved-openapi.json`, `README.md`, `docs/DESIGN.md`
@@ -84,6 +87,7 @@
 | 1: Draft source frontend AI contract | Done | Agent | `53ad6d0` | Passed | Source artifact drafted and manually checked against session/API contract terms |
 | 2: Register source artifact in repo docs | Done | Agent | `53ad6d0` | Passed | Source artifact registered in human/AI indexes and unreleased changelog |
 | 3: Validate and hand off | Done | Agent | Final tracking commit | Passed | Final validation passed; external frontend-repo copy remains deferred |
+| 4: Rewrite as generated import document | Done | Agent | Final follow-up commit | Passed | Frontend contract rewritten for imported AI-agent use only; live migration-guide mentions removed from non-exempt docs |
 
 ## Execution Milestones
 ### Milestone 1: Draft source frontend AI contract
@@ -95,7 +99,7 @@
 | Coordinator-Owned Shared Files | `ROADMAP.md`, `.agents/plans/PLAN_frontend_ai_contract.md` |
 | Context Required | `AGENTS.md`, `.agents/references/execution.md`, this plan, `ROADMAP.md`, `docs/DESIGN.md`, `src/docs/asciidoc/index.adoc`, `src/docs/asciidoc/session-controller.adoc`, `src/docs/asciidoc/upgrade-1x-to-2-0.adoc`, `README.md`, `src/test/resources/openapi/approved-openapi.json`, and the external skill URLs named by D9 |
 | Behavior To Preserve | No backend behavior or public contract changes; frontend guidance must defer to backend specs and published docs. |
-| Deliverables | `docs/FRONTEND_AI_CONTRACT.md` with purpose, source-of-truth hierarchy, external skill URL references, OpenAPI source snapshot, API/session/CSRF rules, integration anti-patterns, and future copy instructions for a frontend repo. |
+| Deliverables | `docs/FRONTEND_AI_CONTRACT.md` with generated-document notice, required backend inputs, external skill URL references, OpenAPI source snapshot, API/session/CSRF rules, and integration anti-patterns for a frontend AI agent importing the document. |
 | Validation Checkpoint | Passed: manual consistency review against the session docs, API overview, and OpenAPI session schema; `rg` confirmed required and forbidden session/auth terms are present in the source artifact. |
 | Commit Checkpoint | Completed in `53ad6d0` with Milestone 2. |
 
@@ -125,6 +129,19 @@
 | Validation Checkpoint | Passed: `git diff --check`, targeted reference search, implementation-scope diff review, and `./build.ps1 -FullBuild build`. |
 | Commit Checkpoint | Final tracking commit records this plan/roadmap completion state. |
 
+### Milestone 4: Rewrite as generated import document
+| Field | Value |
+| --- | --- |
+| Status | Done |
+| Goal | Make `docs/FRONTEND_AI_CONTRACT.md` useful only as an imported instruction document for frontend AI agents, and remove live non-exempt migration-guide mentions. |
+| Owned Files Or Packages | `docs/FRONTEND_AI_CONTRACT.md`, `README.md`, `WORKING_WITH_AI.md`, `AGENTS.md`, `.agents/references/documentation.md`, `CHANGELOG.md`, `SETUP.md`, `src/docs/asciidoc/index.adoc`, `src/docs/asciidoc/session-controller.adoc`, `src/docs/asciidoc/technical-overview-controller.adoc` |
+| Coordinator-Owned Shared Files | `ROADMAP.md`, `.agents/plans/PLAN_frontend_ai_contract.md` |
+| Context Required | `AGENTS.md`, `.agents/references/execution.md`, `.agents/references/documentation.md`, `.agents/references/references-rules.md`, `.agents/references/testing.md`, this plan, and the user follow-up request |
+| Behavior To Preserve | No backend runtime behavior or approved OpenAPI change; frontend contract remains subordinate to executable specs, REST Docs, approved OpenAPI, and README. |
+| Deliverables | Generated-document notice, import-only frontend AI contract wording, removal of the migration-guide pointer from the frontend contract, and removal of live non-exempt migration-guide references. |
+| Validation Checkpoint | Passed: `git diff --check`, targeted reference searches, approved OpenAPI snapshot assertion, and `./build.ps1 build`. |
+| Commit Checkpoint | Final follow-up commit records this generated import-document rewrite. |
+
 ## Blockers And Replan Triggers
 | Trigger / Blocker | Response | Owner | Status |
 | --- | --- | --- | --- |
@@ -138,6 +155,7 @@
 - The generated instruction must not tell frontend agents to rely on CORS, JWTs, bearer tokens, `/login`, `/oauth2/authorization/github`, or provider callback paths outside the documented `/api/session/**` contract.
 - The file should distinguish current cookie/header names from the safer integration rule: bootstrap from `GET /api/session` and use published CSRF metadata for unsafe writes.
 - The frontend contract must keep security and design skill guidance as URL-only references instead of copying, summarizing, or adapting the external skill bodies.
+- The frontend contract must not include copy-maintenance instructions, source-document narration, or other content that is not useful to the AI agent importing the document.
 - Because this plan does not edit a frontend repository, it must include enough future-copy guidance for a later agent without pretending that destination-specific conventions have been inspected.
 
 ## Validation Plan
@@ -145,6 +163,7 @@
 - Run `./build.ps1 build` after local documentation/AI-guidance edits; this should classify as lightweight support-file work unless an unexpected non-lightweight file changes.
 - Run targeted text checks for the new artifact references:
   - `rg -n "FRONTEND_AI_CONTRACT|Frontend AI contract|frontend AI contract" README.md WORKING_WITH_AI.md AGENTS.md .agents/references/documentation.md docs/FRONTEND_AI_CONTRACT.md`
+- Run targeted text checks for removed migration-guide references outside exempt plan, roadmap, changelog, and documentation-owner files.
 - Manually review `docs/FRONTEND_AI_CONTRACT.md` against `src/docs/asciidoc/session-controller.adoc`, `src/docs/asciidoc/index.adoc`, and the approved OpenAPI session schema.
 - Confirm `git diff --name-only` shows no backend source, generated contract, database migration, build-logic, or release-history changes unless the plan is revised.
 
@@ -154,9 +173,11 @@
 - Contract tests: no OpenAPI or REST Docs generation expected; run only if implementation changes contract artifacts, which should trigger replanning.
 - Smoke/benchmark tests: not applicable for docs/AI-guidance-only work.
 - Negative scenarios: manual review should check for forbidden frontend assumptions: CORS support, bearer-token auth, hard-coded provider paths, bypassing `GET /api/session`, and ignoring CSRF metadata.
+- Import-only review should check that `docs/FRONTEND_AI_CONTRACT.md` no longer includes source-copy procedure, migration-guide pointers, or maintenance-only instructions.
 
 ## Better Engineering Notes
 - Prefer a concise, explicit source instruction file over a broad prompt dump; frontend agents need contract-critical constraints and current external skill links, not copied prompt bodies.
+- The frontend contract is now a generated import document; keep repository-maintenance notes in the plan, documentation ownership guide, roadmap, or changelog instead of the imported file.
 - Keep roadmap detail small; this plan owns milestones and validation history.
 - The deferred external copy is intentional. When the frontend repository is known, use this source file as input to a separate destination-aware task instead of expanding this plan retroactively after local validation is complete.
 - If this source file proves useful beyond one frontend repo, consider a later small task to turn it into a reusable skill or task starter rather than expanding this plan.
@@ -186,6 +207,10 @@
 | 2026-05-09 | `rg -n "External Skill References\|claude-code-owasp\|openai/skills\|anthropics/skills\|Security Defaults\|UI And Design\|Never put private API keys\|Avoid DOM XSS\|purple-gradient" docs/FRONTEND_AI_CONTRACT.md` | D9 URL-only skill reference content check | Passed | Only the external skill section and three URL references matched; removed inlined security and UI guidance did not match |
 | 2026-05-09 | `PowerShell approved-openapi summary assertion` | D9 approved OpenAPI snapshot check | Failed then passed | Initial command used invalid property access for JSON key `in`; corrected explicit property access confirmed the contract summary matches `approved-openapi.json` |
 | 2026-05-09 | `./build.ps1 build` | D9 URL-only skill reference validation | Passed | Lightweight-only path; Gradle build skipped because only support/documentation files changed |
+| 2026-05-09 | `git diff --check` | D10 generated import-document whitespace check | Passed | No whitespace errors reported |
+| 2026-05-09 | `rg` targeted generated notice, skill URL, removed-section, and migration-guide checks | D10 generated import-document content check | Passed | Generated notice and three skill URLs are present; removed inlined sections and frontend-contract migration pointer are absent; no non-exempt `upgrade-1x-to-2-0.adoc` references remain |
+| 2026-05-09 | `PowerShell approved-openapi summary assertion` | D10 approved OpenAPI snapshot check | Passed | Confirmed the generated contract snapshot still matches `approved-openapi.json` |
+| 2026-05-09 | `./build.ps1 build` | D10 generated import-document validation | Passed | Full Gradle build completed successfully; 270 tests passed |
 
 ## User Validation
 - Review `docs/FRONTEND_AI_CONTRACT.md` and confirm it reflects how a separate frontend should consume this backend.
@@ -202,7 +227,7 @@
 - Compatibility promises: stable `2.x`, same-site first-party UI, session-cookie auth, CSRF metadata, no CORS/JWT/bearer-token promise.
 - Edge cases and risks: destination repo unknown, external skill URLs may change, accidental contract drift, excessive copying of external source text.
 - Requirement gaps: Q1 and Q2 are explicit, deferred, and non-blocking.
-- Locked decisions: D1-D9.
+- Locked decisions: D1-D10.
 - Execution shape: one local branch in this repository; external copy is a future destination-aware task.
 - Shared files: named in execution shape and milestones.
 - Progress tracking: top-level tracker included.

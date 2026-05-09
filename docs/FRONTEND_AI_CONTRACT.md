@@ -1,42 +1,36 @@
 # Frontend AI Contract
 
-This is the backend-owned source instruction for AI agents working in a separate first-party frontend repository for Technical Interview Demo.
-It is a handoff guide, not a new public API contract.
+> Generated document for AI import into a separate first-party frontend repository.
+> Do not edit imported copies by hand; refresh them from this backend source document.
 
-If this file conflicts with executable tests, REST Docs, the approved OpenAPI baseline, or `README.md`, follow those higher-priority backend artifacts and update this file afterward.
+Use this document only as frontend-agent instructions for integrating with the Technical Interview Demo backend.
+It is not a standalone API contract.
 
-## Source Of Truth
+## Required Backend Inputs
 
-Use this priority when deciding frontend behavior:
+Before implementing endpoint clients, request/response types, generated API bindings, authentication flow, or error handling, load these backend artifacts when available:
 
-1. Current frontend task requirements in the frontend repository.
-2. Backend executable specs and generated contract artifacts:
-   - integration and REST Docs tests under `src/test/java/`
-   - REST Docs sources under `src/docs/asciidoc/`
-   - approved OpenAPI baseline at `src/test/resources/openapi/approved-openapi.json`
-3. Backend published summaries:
-   - `README.md`
-   - `docs/DESIGN.md`
-   - this file
-4. Frontend repository conventions, design system, and AI instructions, as long as they do not contradict the backend contract.
+1. `src/test/resources/openapi/approved-openapi.json`
+2. REST Docs sources under `src/docs/asciidoc/`
+3. `README.md`
+4. this generated document
 
-Use `src/docs/asciidoc/upgrade-1x-to-2-0.adoc` only as migration guidance.
+If those backend artifacts conflict with this generated summary, follow the backend artifacts above and request a refreshed generated copy.
+Frontend repository conventions, design systems, and AI instructions apply only when they do not weaken this backend contract.
 
 ## External Skill References
 
-Do not inline skill bodies or copied recommendation blocks into this document.
-When a frontend agent needs security or design guidance, load the current skill source by URL reference only:
+When security or design guidance is needed, load the current skill source by URL reference only:
 
 - https://github.com/agamm/claude-code-owasp/blob/main/.claude/skills/owasp-security/SKILL.md
 - https://github.com/openai/skills/blob/main/skills/.curated/security-best-practices/SKILL.md
 - https://github.com/anthropics/skills/blob/main/skills/frontend-design/SKILL.md
 
-If the destination frontend repository has local skills or AI instructions, follow them only when they do not weaken this backend contract.
+Do not rely on copied skill text embedded in this document.
 
-## OpenAPI Contract Reference
+## Approved OpenAPI Snapshot
 
-Do not inline or fork the full OpenAPI JSON/YAML in this file.
-The canonical machine-readable contract is `src/test/resources/openapi/approved-openapi.json`.
+Use `src/test/resources/openapi/approved-openapi.json` as the canonical machine-readable contract.
 
 Current approved baseline summary:
 
@@ -47,15 +41,15 @@ Current approved baseline summary:
 - Component schemas: 40
 - Security scheme: `sessionCookie` as an API key in cookie `technical-interview-demo-session`
 
-Frontend agents must read the approved JSON before implementing endpoint clients, request/response types, or generated API bindings.
-If the frontend repository needs a portable contract copy, generate or copy a separate YAML/JSON file there and record how it will be refreshed; do not paste the full spec into this Markdown guide.
+If the frontend needs a portable JSON or YAML copy, keep it as a separate generated contract artifact with a documented refresh path.
+Do not treat this Markdown summary as the full API specification.
 
 ## Browser Boundary
 
-The supported frontend is a separate first-party UI that shares one public origin with this backend through reverse-proxy deployment.
+The supported frontend is a separate first-party UI sharing one public origin with this backend through reverse-proxy deployment.
 Public application traffic should target only `/api/**`.
 
-Do not design the frontend around:
+Do not design frontend behavior around:
 
 - cross-origin browser calls
 - CORS as a promised integration surface
@@ -84,7 +78,7 @@ Frontend rules:
 - prefer `csrf.cookieName` and `csrf.headerName` from `GET /api/session`; the current approved names are `XSRF-TOKEN` and `X-XSRF-TOKEN`
 
 `POST /api/session/logout` is public and idempotent when no session exists.
-When a real authenticated session exists, the frontend must include the valid same-site CSRF header.
+When a real authenticated session exists, include the valid same-site CSRF header.
 
 ## API Usage Rules
 
@@ -112,16 +106,3 @@ Supported application languages are currently `en`, `es`, `de`, `fr`, `pl`, `uk`
 
 Error payloads use localized `ProblemDetail` data and include `messageKey`, localized `message`, and resolved `language`.
 Render localized feedback, but do not branch on English message text.
-
-## Frontend Copy Instructions
-
-When a concrete frontend repository is available:
-
-1. Inspect that repository's AI-instruction convention first.
-2. Add or adapt this file without overwriting unrelated frontend guidance.
-3. Keep this backend repository as the source of truth for backend contract details.
-4. Adjust local paths so frontend agents can find this file's backend source and the frontend repo's own instructions.
-5. Run the smallest available frontend docs, lint, type-check, or generated-client validation.
-
-Do not copy this file into an unrelated sibling directory just to satisfy a plan checkbox.
-The destination copy remains a separate task until the frontend repository path and local instruction convention are known.

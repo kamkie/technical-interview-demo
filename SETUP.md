@@ -117,7 +117,6 @@ The deployment story is standardized around these artifacts:
 
 Use these checked-in artifacts together when wiring or reviewing the separate first-party UI:
 
-- `src/docs/asciidoc/upgrade-1x-to-2-0.adoc` is the owning `1.x` to `2.0` migration guide and is served by the packaged app at `/docs/upgrade-1x-to-2-0.html`
 - `src/manualTests/http/examples/authentication.http` is a convenience script for the bootstrap, provider-login, authenticated-session refresh, and logout flow
 - `src/manualTests/http/examples/user-account-controller.http` is a convenience script for one authenticated unsafe write using the documented `XSRF-TOKEN` cookie plus `X-XSRF-TOKEN` header handshake
 - `infra/k8s/edge/public-api-ingress.yaml` and `infra/k8s/edge/README.md` are the checked-in `/api/**` public-edge reference assets for the one-public-origin deployment model

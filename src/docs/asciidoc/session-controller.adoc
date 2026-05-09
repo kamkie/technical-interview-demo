@@ -12,8 +12,6 @@ The supported contract is for a separate first-party UI that shares one public o
 
 `GET /api/session` is the supported bootstrap and session-state surface. `GET /api/account` remains the authenticated persisted-profile endpoint.
 
-For the one-time migration narrative from `1.x`, see xref:upgrade-1x-to-2-0.adoc[Upgrade From 1.x To 2.0].
-
 == UI Integration Checklist
 
 * call `GET /api/session` on initial load to discover the current session state, `loginProviders[]`, logout path, and CSRF metadata
