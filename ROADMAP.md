@@ -23,12 +23,12 @@ Released history belongs in `CHANGELOG.md`.
 
 | Status | Meaning |
 | --- | --- |
-| Selected | Approved for current planning or development |
+| Candidate | Rough work that needs refinement before planning |
 | Planned | Known upcoming work, not yet selected for execution |
+| Selected | Approved for current planning or development |
 | In Progress | Execution or validation is underway |
 | Implemented | Execution is done but integration, release, or cleanup still keeps the item active |
 | Deferred | Intentionally postponed until the named trigger |
-| Candidate | Rough work that needs refinement before planning |
 
 ## Active Release Track
 
