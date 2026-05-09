@@ -1,6 +1,6 @@
 # Learnings
 
-`.agents/references/LEARNINGS.md` stores durable repo-wide lessons that should still be true after packages move, endpoints expand, or internals are refactored.
+`.agents/references/LEARNINGS.md` owns durable repo-wide lessons that should still be true after packages move, endpoints expand, or internals are refactored.
 
 Use this scope ladder when deciding where a new insight belongs:
 
