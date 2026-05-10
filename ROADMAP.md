@@ -6,6 +6,18 @@ Released history belongs in `CHANGELOG.md`.
 
 Section ordering follows the lifecycle vocabulary in `.agents/references/application-lifecycle.md`: rough capture lands in `## Conceptualization`, structured requirements work in `## Analysis`, durable decisions in `## Decisions`, accept/defer/prioritize calls in `## Triage`, and committed execution in `## Active Release Track` and `## Planned Work`.
 
+## Table Of Contents
+
+- [Current Project State](#current-project-state)
+- [Roadmap Rules](#roadmap-rules)
+- [Conceptualization](#conceptualization)
+- [Analysis](#analysis)
+- [Decisions](#decisions)
+- [Triage](#triage)
+- [Active Release Track](#active-release-track)
+- [Planned Work](#planned-work)
+- [Deferred Work](#deferred-work)
+
 ## Current Project State
 
 | Field | Current |
