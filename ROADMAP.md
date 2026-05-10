@@ -22,11 +22,11 @@ Section ordering follows the lifecycle vocabulary in `.agents/references/applica
 
 | Field | Current |
 | --- | --- |
-| Release Phase | Stable `v2.0.2` |
+| Release Phase | Stable `v2.0.3` |
 | Breaking Change Policy | Disallowed on the stable `2.x` line unless a later major-version plan explicitly changes it |
-| Next Target Version | Not selected; default to `v2.0.3` for maintenance fixes or `v2.1.0` for backward-compatible feature work |
-| Latest Stable Release | `v2.0.2` released on 2026-05-10 from the AI-guidance and multi-agent workflow plans archived under `.agents/archive/PLAN_frontend_ai_contract.md`, `.agents/archive/PLAN_multi_agent_roles_and_skills.md`, `.agents/archive/PLAN_multi_agent_workflow_consolidation.md`, and `.agents/archive/PLAN_pre_planning_lifecycle_artifacts.md` |
-| Immediate Next Action | Human documentation split is implemented on `main`; release work remains unrequested. |
+| Next Target Version | Not selected; default to `v2.0.4` for maintenance fixes or `v2.1.0` for backward-compatible feature work |
+| Latest Stable Release | `v2.0.3` released on 2026-05-11 from the human documentation split and follow-up AI-guidance cleanup archived under `.agents/archive/PLAN_human_documentation_split.md` |
+| Immediate Next Action | No active release-track work is selected. |
 
 ## Roadmap Rules
 
@@ -91,7 +91,7 @@ Use this section to surface durable decisions captured in `docs/decisions/`. The
 | Accepted | `docs/decisions/0003-adopt-multi-agent-roles-and-skill-catalog.md` | — | `.agents/archive/PLAN_multi_agent_roles_and_skills.md` |
 | Accepted | `docs/decisions/0004-adopt-skill-first-multi-agent-workflow.md` | — | `.agents/archive/PLAN_multi_agent_roles_and_skills.md` |
 | Accepted | `docs/decisions/0005-adopt-operations-and-deployment-owner-guide.md` | 2026-05-10 | `.agents/references/operations.md` |
-| Accepted | `docs/decisions/0006-split-human-documentation-and-ai-workflow-guides.md` | 2026-05-10 | `.agents/plans/PLAN_human_documentation_split.md` |
+| Accepted | `docs/decisions/0006-split-human-documentation-and-ai-workflow-guides.md` | 2026-05-10 | `.agents/archive/PLAN_human_documentation_split.md` |
 
 ## Triage
 
@@ -106,7 +106,8 @@ No active triage items.
 
 | Status | Workstream | Phase | Plan | Linked ADR/PRD/Spec | Notes |
 | --- | --- | --- | --- | --- | --- |
-| Integrated | Human documentation split | Integration | `.agents/plans/PLAN_human_documentation_split.md` | `docs/decisions/0006-split-human-documentation-and-ai-workflow-guides.md` | Implemented on `main`; final docs audit and full build passed. Release work remains unrequested. |
+
+No active release-track work.
 
 ## Planned Work
 

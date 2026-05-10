@@ -32,7 +32,8 @@ Do not list [PLAN_TEMPLATE.md](PLAN_TEMPLATE.md) here.
 
 | Plan | Purpose |
 | --- | --- |
-| [PLAN_human_documentation_split.md](PLAN_human_documentation_split.md) | Human documentation split (ADR 0006 follow-up) |
+
+No active plans.
 
 ## Archived Plans
 

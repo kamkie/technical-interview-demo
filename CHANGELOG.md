@@ -7,6 +7,28 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+## [v2.0.3] - 2026-05-11
+
+### Added
+
+- Added a documentation health audit script and wired it into CI so user-facing Markdown, AsciiDoc links, release-version references, frontend-contract summaries, and supported-language summaries are checked even when heavyweight CI is skipped.
+- Added a local toolchain check script for Java, Gradle wrapper, PowerShell, Docker, GitHub CLI, Helm, Kubernetes, Trivy, Cosign, IntelliJ, VS Code, Python, and related development tooling.
+- Added human-facing documentation entry points for the documentation index, development lifecycle, local development workflow, operations runbooks, and AI collaboration guide.
+- Added AI owner guidance for deployment/operations routing and durable learning-rule routing.
+
+### Changed
+
+- Split human-facing documentation so `SETUP.md` now focuses on local environment setup, `docs/LOCAL_DEVELOPMENT.md` owns local commands and validation workflows, and `docs/OPERATIONS.md` owns deployment and runtime runbooks.
+- Slimmed `README.md` and `CONTRIBUTING.md` into concise entry points while moving detailed lifecycle and AI collaboration guidance under `docs/`.
+- Relocated the active plan template to `.agents/plans/PLAN_TEMPLATE.md`, moved durable learning storage to `docs/LEARNINGS.md`, and archived retired workflow-state records.
+- Tightened AI guidance around generated-artifact provenance, lifecycle loop naming, plan archival timing, documentation ownership, and skill/workflow routing.
+- Clarified release preparation guidance so stable-version documentation audits run after the local annotated release tag exists.
+- Cleaned dev-container documentation and shell helpers so Linux container commands use `./gradlew`, optional services are described as optional, and generated completion reports are removed.
+
+### Fixed
+
+- Removed stale current references to the old root `WORKING_WITH_AI.md` path and aligned live navigation with `docs/WORKING_WITH_AI.md`.
+
 ## [v2.0.2] - 2026-05-10
 
 ### Added

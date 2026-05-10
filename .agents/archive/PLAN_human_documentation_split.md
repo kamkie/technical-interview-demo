@@ -12,8 +12,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Integration |
-| Status | Implemented |
+| Phase | Release |
+| Status | Closed |
 
 ## Planning Readiness
 | Field | Value |
@@ -48,7 +48,7 @@
 - `docs/OPERATIONS.md` owns deployment contract, release-artifact verification, image build and smoke, post-deploy smoke, runtime expectations, upgrade and rollback, Kubernetes, Helm, monitoring, OAuth runtime setup, and operations troubleshooting.
 - `docs/WORKING_WITH_AI.md` owns the human-facing AI guide; no root `WORKING_WITH_AI.md` compatibility pointer remains.
 - `docs/README.md` and `docs/DEVELOPMENT_LIFECYCLE.md` exist and link the human-facing documentation tree.
-- `ROADMAP.md` tracks this plan as integrated work awaiting any separately requested release work.
+- `v2.0.3` released this plan on 2026-05-11, and `ROADMAP.md` no longer tracks it as active work.
 
 ## Requirement Gaps And Open Questions
 | ID | Question / Gap | Why It Matters | Owner | Status | Fallback / Decision | Blocks Ready? |
@@ -75,7 +75,7 @@
 - Pre-planning artifacts: `docs/decisions/0006-split-human-documentation-and-ai-workflow-guides.md` remains the governing ADR.
 - Docs: `README.md`, `SETUP.md`, `CONTRIBUTING.md`, `docs/README.md`, `docs/DEVELOPMENT_LIFECYCLE.md`, `docs/WORKING_WITH_AI.md`, `docs/OPERATIONS.md`, `docs/DESIGN.md`, and relevant docs links.
 - AI guidance: `AGENTS.md` and `.agents/references/documentation.md`.
-- Roadmap and plan tracking: `ROADMAP.md` and `.agents/plans/PLAN_human_documentation_split.md`.
+- Roadmap and plan tracking: `ROADMAP.md` and `.agents/archive/PLAN_human_documentation_split.md`.
 - Tests and source files: none expected.
 - Validation: `pwsh ./scripts/docs/audit-docs.ps1` and `./build.ps1 build`.
 
@@ -132,7 +132,7 @@
 | --- | --- |
 | Status | Done |
 | Goal | Prove the documentation split is internally consistent and record completion evidence. |
-| Owned Files Or Packages | `.agents/plans/PLAN_human_documentation_split.md`, `ROADMAP.md` |
+| Owned Files Or Packages | `.agents/archive/PLAN_human_documentation_split.md`, `ROADMAP.md` |
 | Coordinator-Owned Shared Files | All changed files for final review. |
 | Context Required | `AGENTS.md`, `.agents/references/execution.md`, `.agents/references/testing.md`, `.agents/references/reviews.md`, this plan |
 | Behavior To Preserve | Do not introduce release work or code changes. |
@@ -187,6 +187,7 @@
 | 2026-05-11 | Targeted `rg` checks | AI-guidance alignment follow-up | Passed | Confirmed no stale current root `WORKING_WITH_AI.md` pointer wording, lifecycle loop-gap wording, or premature plan-archive wording remains in active AI guidance. |
 | 2026-05-11 | `git diff --check` | AI-guidance alignment follow-up | Passed | No whitespace errors. |
 | 2026-05-11 | `./build.ps1 build` | AI-guidance alignment follow-up | Passed | Wrapper reported only lightweight uncommitted files changed and skipped Gradle; manual consistency review is sufficient for this diff. |
+| 2026-05-11 | Release cleanup | `v2.0.3` release metadata | Passed | Plan closed and archived under `.agents/archive/PLAN_human_documentation_split.md`; `CHANGELOG.md` and `ROADMAP.md` prepared for release validation. |
 
 ## User Validation
 - Open `README.md` and `docs/README.md`; confirm the project overview and documentation index point to setup, contributing, lifecycle, AI collaboration, operations, design, roadmap, ADRs, PRDs, specs, and frontend contract material.
