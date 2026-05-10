@@ -17,7 +17,7 @@ Work in this repository is spec-driven:
 
 | Phase | Human Meaning | Primary Artifacts |
 | --- | --- | --- |
-| Conceptualization | Capture a rough idea, TODO, maintenance signal, or user request. | [ROADMAP.md](../ROADMAP.md), [LEARNINGS.md](../.agents/references/LEARNINGS.md) |
+| Conceptualization | Capture a rough idea, TODO, maintenance signal, or user request. | [ROADMAP.md](../ROADMAP.md), [learning-rules.md](../.agents/references/learning-rules.md), [LEARNINGS.md](../.agents/references/LEARNINGS.md) |
 | Analysis | Turn broad or ambiguous work into goals, requirements, constraints, and acceptance criteria. | [docs/requirements/](requirements/), [docs/specs/](specs/), [DESIGN.md](DESIGN.md) |
 | Triage | Accept, defer, reject, prioritize, or sequence candidate work. | [ROADMAP.md](../ROADMAP.md) |
 | Planning | Create a decision-complete execution plan. | [.agents/plans/](../.agents/plans/), [planning.md](../.agents/references/planning.md) |
@@ -27,8 +27,8 @@ Work in this repository is spec-driven:
 | Integration | Land reviewed work on `main` and re-check the integration state. | [workflow.md](../.agents/references/workflow.md), [ROADMAP.md](../ROADMAP.md) |
 | Release | Publish a versioned artifact after integrated work is ready. | [releases.md](../.agents/references/releases.md), [CHANGELOG.md](../CHANGELOG.md) |
 | Deployment | Promote a released artifact into an environment and verify it. | [operations.md](../.agents/references/operations.md) |
-| Operations | Observe, triage, remediate, or schedule live signals. | [operations.md](../.agents/references/operations.md), [LEARNINGS.md](../.agents/references/LEARNINGS.md) |
-| Maintenance | Feed lessons and follow-up work into the next cycle. | [LEARNINGS.md](../.agents/references/LEARNINGS.md), [ROADMAP.md](../ROADMAP.md) |
+| Operations | Observe, triage, remediate, or schedule live signals. | [operations.md](../.agents/references/operations.md), [learning-rules.md](../.agents/references/learning-rules.md), [LEARNINGS.md](../.agents/references/LEARNINGS.md) |
+| Maintenance | Feed lessons and follow-up work into the next cycle. | [learning-rules.md](../.agents/references/learning-rules.md), [LEARNINGS.md](../.agents/references/LEARNINGS.md), [ROADMAP.md](../ROADMAP.md) |
 
 Small local documentation fixes or typo-level maintenance do not need every phase.
 They still need the right owner artifact, validation, and review for their scope.

@@ -68,7 +68,8 @@ Use this section for rough ideas, TODOs, maintenance signals, links, and early f
 
 | Status | Idea | Linked Artifacts | Next Decision |
 | --- | --- | --- | --- |
-| Candidate | Split `.agents/references/LEARNINGS.md` into separate owner-rule and durable-learning storage files. | `.agents/references/LEARNINGS.md`, `.agents/references/documentation.md`, `.agents/references/references-rules.md` | Decide target file names and ownership before changing AI guidance. |
+
+No active conceptualization items.
 
 ## Analysis
 

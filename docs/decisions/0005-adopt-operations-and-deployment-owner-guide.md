@@ -36,7 +36,7 @@ Scope and behavior of the guide:
 - Not loaded during integration or release authoring; that work stays with `releases.md`, `release-checklist.md`, and `release-artifact-verification.md`.
 - Names which validation applies to each activity but defers command shape to `.agents/references/testing.md`.
 - Keeps branch mechanics in `.agents/references/workflow.md`; `operations.md` owns *when* to invoke hotfix or rollback flows.
-- Routes durable lessons to `.agents/references/LEARNINGS.md` via a Capture-Learning step in the Operations loop.
+- Routes durable lesson decisions through `.agents/references/learning-rules.md` and stores accepted lessons in `.agents/references/LEARNINGS.md` via a Capture-Learning step in the Operations loop.
 
 Guide structure:
 
@@ -45,7 +45,7 @@ Guide structure:
 - `## Operations Loop` — `Observe -> Operational-Triage -> (Hotfix? or Patch?) -> Capture-Learning -> Sync` with signal sources, severity ladder, and escalation.
 - `## Cross-Cutting Triggers` — decision rules for `Hotfix` vs `Patch` vs `Backport` vs `Deprecate` and the spec or contract artifacts each one must touch.
 - `## Validation Expectations` — per-activity validation pointers into `testing.md`.
-- `## Cross-References` — `application-lifecycle.md`, `releases.md`, `workflow.md`, `testing.md`, `reviews.md`, `LEARNINGS.md`.
+- `## Cross-References` — `application-lifecycle.md`, `releases.md`, `workflow.md`, `testing.md`, `reviews.md`, `learning-rules.md`, `LEARNINGS.md`.
 
 Acceptance implementation lands the new owner guide and these ripple edits in a single focused change:
 
@@ -118,6 +118,7 @@ This decision is reflected in the repository when:
 - `.agents/references/references-rules.md`
 - `.agents/references/testing.md`
 - `.agents/references/reviews.md`
+- `.agents/references/learning-rules.md`
 - `.agents/references/LEARNINGS.md`
 - `docs/decisions/0002-align-lifecycle-vocabulary-with-industry-practice.md`
 - `docs/decisions/0004-adopt-skill-first-multi-agent-workflow.md`

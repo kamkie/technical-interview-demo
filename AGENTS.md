@@ -70,7 +70,8 @@ Add only guides whose domains match the current task.
 - deployment, post-release verification, rollback, incident response, hotfix, patch, backport, or deprecation routing: `.agents/references/operations.md`
 - commit message format, required AI trailer block, and non-interactive commit construction: `.gitmessage` (authoritative template) plus `.agents/references/execution.md` "Commits" rules
 - application lifecycle phase, activity, owner-guide mapping, or loop vocabulary: `.agents/references/application-lifecycle.md`
-- durable repo-wide lesson: `.agents/references/LEARNINGS.md`
+- learning-loop rules, lesson-routing criteria, or deciding whether to record a durable lesson: `.agents/references/learning-rules.md`
+- durable repo-wide lesson storage: `.agents/references/LEARNINGS.md`
 - active plan content: the relevant `.agents/plans/PLAN_*.md`
 - repository task prompt, template, archived plan, report, or skill body: only when directly invoked or required
 
@@ -93,7 +94,7 @@ Use these completion rules for AI work in this repository:
 - Run the required validation from `.agents/references/testing.md` for the correct diff boundary. If required validation cannot run or is explicitly out of scope, record the exact reason and remaining risk.
 - Complete final review through `.agents/references/reviews.md`; do not hand off with unresolved blocking drift, missing security review for security-sensitive changes, or hidden scope expansion.
 - Treat edits to `.agents/references/*.md` as incomplete until the edited reference documents satisfy `.agents/references/references-rules.md`; keep `references-rules.md` itself as the current rule set that other reference files are measured against, never as a changelog or record of completed edits.
-- Learn from agent mistakes, user corrections, failed assumptions, and avoidable rework; when the correction reveals durable guidance, update the focused owner guide or `.agents/references/LEARNINGS.md` using that file's learning loop.
+- Learn from agent mistakes, user corrections, failed assumptions, and avoidable rework; when the correction may reveal durable guidance, use `.agents/references/learning-rules.md` to route it, then update the focused owner guide or `.agents/references/LEARNINGS.md` as appropriate.
 - Keep durable status in the owning artifacts; do not rely on final-response memory for plan progress, validation evidence, blockers, roadmap state, or release history.
 - Commit every completed task or plan task that changed tracked files with the required AI commit-message format before handoff or unrelated work starts. The format is owned by `.gitmessage` and the "Commits" rules in `.agents/references/execution.md`; load both before composing a commit, include every applicable `Project-*` footer plus `Co-authored-by` and `Validation`, keep the trailer block contiguous, and build the message via a commit message file or a single final paragraph rather than chained `-m` arguments. During an explicitly ongoing interactive session, uncommitted work remains in progress until the user asks for handoff.
 - Leave release work undone unless explicitly requested.

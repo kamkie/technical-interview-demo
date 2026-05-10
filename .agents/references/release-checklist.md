@@ -15,7 +15,7 @@ From local `main`:
 8. Update `ROADMAP.md` to remove work completed by the release.
 9. Move the executed `.agents/plans/PLAN_*.md` file to `.agents/archive/` and update moved-path references in the same change.
 10. Update the target plan `Lifecycle` section to the closing lifecycle phase, normally `Phase=Release`, and `Status=Closed`; `Closed` is a terminal status, not a phase.
-11. Update `.agents/references/LEARNINGS.md` if any durable engineering lessons were learned during the execution or release of this plan.
+11. Use `.agents/references/learning-rules.md` to decide whether any execution or release lesson should be recorded, then update `.agents/references/LEARNINGS.md` only for accepted durable repo-wide lessons.
 12. Re-run `./build.ps1 -FullBuild build` if the release-metadata edits made the earlier validation stale or if the exact release candidate has not already passed full validation.
 13. Commit with `Prepare vMAJOR.MINOR.PATCH[-PRERELEASE] release`.
 14. Create an annotated tag `vMAJOR.MINOR.PATCH[-PRERELEASE]` with a concise annotation such as `Release vMAJOR.MINOR.PATCH[-PRERELEASE]`.

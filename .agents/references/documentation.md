@@ -51,7 +51,8 @@ Update the artifact that owns the truth being changed:
 - AI-facing architecture guidance, structural placement, detailed codebase map, and business feature ownership: `.agents/references/architecture.md`
 - historical AI-analysis reports, evaluations, comparisons, and retired specs: `.agents/archive/`
 - product and contract direction: `docs/DESIGN.md`
-- durable repo-wide lessons: `.agents/references/LEARNINGS.md`
+- durable learning decision rules, learning-loop routing, and criteria for recording lessons: `.agents/references/learning-rules.md`
+- durable repo-wide lesson storage: `.agents/references/LEARNINGS.md`
 - edit-shaping rules: `.agents/references/code-style.md`
 - validation scope and commands: `.agents/references/testing.md`
 - review and security-review expectations: `.agents/references/reviews.md`

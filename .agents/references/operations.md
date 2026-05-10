@@ -36,7 +36,7 @@ If a task crosses from release publication into staging, promotion, post-deploy 
 - Keep branch and worktree mechanics in `.agents/references/workflow.md`; this guide owns when to choose rollback, hotfix, patch, backport, or deprecation.
 - Keep validation command details in `.agents/references/testing.md`; this guide owns which operational activity needs proof.
 - Apply `.agents/references/reviews.md` security review triggers when the operational change touches auth, sessions, secrets, CI permissions, release paths, deployment-facing config, or exposed endpoints.
-- Route durable lessons from avoidable operational failures to `.agents/references/LEARNINGS.md`.
+- Route durable lessons from avoidable operational failures through `.agents/references/learning-rules.md`; store accepted repo-wide lessons in `.agents/references/LEARNINGS.md`.
 - Update `ROADMAP.md` when a live signal becomes active, planned, deferred, or intentionally rejected work.
 
 ## Deployment Loop
@@ -167,7 +167,7 @@ Do not label ordinary planned work as hotfix only because the source signal came
 
 Question: did the signal reveal durable repo-wide guidance?
 
-Update `.agents/references/LEARNINGS.md` only when the lesson should survive the current incident, release, or plan.
+Use `.agents/references/learning-rules.md` to decide whether the lesson should survive the current incident, release, or plan, then update `.agents/references/LEARNINGS.md` only for accepted repo-wide lessons.
 Otherwise record the result in the relevant roadmap row, plan, final response, or operational evidence.
 
 ### Sync
@@ -224,4 +224,5 @@ Do not break stable-line behavior unless `ROADMAP.md` and the governing contract
 - `.agents/references/testing.md`: validation command selection and evidence recording.
 - `.agents/references/reviews.md`: review and security review triggers.
 - `.agents/references/documentation.md`: artifact routing and cross-file alignment.
-- `.agents/references/LEARNINGS.md`: durable lessons from operational failures or repeated signals.
+- `.agents/references/learning-rules.md`: durable lesson routing and recording criteria.
+- `.agents/references/LEARNINGS.md`: durable lesson storage for operational failures or repeated signals.

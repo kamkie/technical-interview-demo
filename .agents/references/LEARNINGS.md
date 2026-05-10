@@ -1,44 +1,9 @@
-# Learnings
+# Durable Learnings
 
-`.agents/references/LEARNINGS.md` owns durable repo-wide lessons that should still be true after packages move, endpoints expand, or internals are refactored.
+`.agents/references/LEARNINGS.md` stores durable repo-wide lessons that should still be true after packages move, endpoints expand, or internals are refactored.
+Use `.agents/references/learning-rules.md` to decide whether an insight belongs here and how to route it.
 
-Use this scope ladder when deciding where a new insight belongs:
-
-- **Repo-wide and durable:** put it in `.agents/references/LEARNINGS.md`.
-- **Current structure or ownership:** put AI-facing guidance in `.agents/references/architecture.md`.
-- **Product or contract direction:** put it in `docs/DESIGN.md`.
-- **Public behavior or payload shape:** put it in the governing specs, published docs, and approved OpenAPI.
-- **Symbol-local behavior:** put it in code near the symbol.
-- **Naming or API confusion:** prefer renaming or reshaping the API over adding more prose.
-
-## Learning From Mistakes
-
-Treat agent mistakes, user corrections, failed assumptions, and avoidable rework as signals that current guidance may be incomplete.
-When a correction exposes a durable rule, update the focused owning artifact in the same change instead of relying on final-response memory.
-
-Use this learning loop:
-
-1. Name the mismatch between the assumption or action and the repository truth, user request, executable spec, or owner guide.
-2. Decide whether the lesson is durable enough to help future agents avoid the same mistake.
-3. Prefer fixing the owning guide, spec, API, name, or workflow over adding a broad lesson.
-4. Add to this file only when the lesson is repo-wide, recurring, and likely to survive refactors.
-5. Write the lesson as a reusable rule or habit, not as an apology, incident timeline, or list of files changed.
-6. If the lesson is real but cannot be safely recorded during the task, record the blocker or follow-up in the active plan or final response.
-
-## When To Consider A Learning
-
-Evaluate whether a durable repo-wide lesson should be added during the task, not only during release cleanup, when:
-
-- a command, tool, or validation step fails in a way future agents could avoid
-- the user corrects a repo assumption, workflow interpretation, or implementation direction
-- a requested capability or workflow does not exist and the gap is likely to recur
-- an external API, dependency, build tool, or platform behaves differently than expected
-- an assumption is outdated compared with current repo truth, tool behavior, or supported contract
-- existing AI guidance proves wrong, contradictory, incomplete, or requires an execution-time policy decision
-- a better approach is discovered for a recurring task, diagnosis path, or validation loop
-
-Add only lessons that should survive refactors.
-Do not accumulate per-incident history, one-off mistakes, or temporary workaround notes here.
+Keep this file as curated lesson storage: short reusable habits grouped by domain, not learning policy, incident history, or task logs.
 
 ## Engineering Habits
 
