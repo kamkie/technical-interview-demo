@@ -42,20 +42,20 @@ Add only what the task needs:
 
 ## Execution Loop
 
-For ad hoc tasks and single plan tasks:
+For ad hoc tasks and single plan tasks. Step tags reference `.agents/references/application-lifecycle.md` `## Activity Catalogue`:
 
-1. Identify the behavior being changed and the spec or document that owns it.
-2. Re-read any decision log or locked decision entries, non-goals, progress tracker row when present, and the plan task's context field if a plan task is involved.
-3. Update the governing spec first when behavior intentionally changes.
-4. Make the smallest coherent implementation or documentation change.
-5. Keep artifact routing aligned through `.agents/references/documentation.md`.
-6. If existing AI guidance proves wrong, incomplete, contradictory, or requires an execution-time policy decision, classify the owner through `.agents/references/documentation.md`; update the owning guide in the same change, or record the blocker or follow-up in the active plan before continuing. For ad hoc work without a plan, stop and ask when the owning guide cannot be updated safely; do not rely on final-response memory.
-7. Run the smallest sufficient validation from `.agents/references/testing.md`.
-8. If validation fails, load `.agents/references/troubleshooting.md` before choosing the recovery path.
-9. Review the diff using `.agents/references/reviews.md`; apply the security review activity when its triggers match.
-10. Record validation evidence in the plan, workflow state file, or final response as appropriate.
-11. If executing a plan task, update the task detail and `Progress Tracker` with status, commit checkpoint, validation result, and any blocker or skip note.
-12. Commit every completed task or plan task that changed tracked files before handing off or starting unrelated work. Follow the rules in `## AI Commit Message Rules` below.
+1. `[Frame]` Identify the behavior being changed and the spec or document that owns it.
+2. `[Scan]` Re-read any decision log or locked decision entries, non-goals, progress tracker row when present, and the plan task's context field if a plan task is involved.
+3. `[Spec]` Update the governing spec first when behavior intentionally changes.
+4. `[Code]` Make the smallest coherent implementation or documentation change.
+5. `[Docs]` Keep artifact routing aligned through `.agents/references/documentation.md`.
+6. `[Replan?]` If existing AI guidance proves wrong, incomplete, contradictory, or requires an execution-time policy decision, classify the owner through `.agents/references/documentation.md`; update the owning guide in the same change, or record the blocker or follow-up in the active plan before continuing. For ad hoc work without a plan, stop and ask when the owning guide cannot be updated safely; do not rely on final-response memory.
+7. `[Run]` Run the smallest sufficient validation from `.agents/references/testing.md`.
+8. `[Diagnose?]` If validation fails, load `.agents/references/troubleshooting.md` before choosing the recovery path.
+9. `[Self-Review]` / `[Security Review?]` Review the diff using `.agents/references/reviews.md`; apply the security review activity when its triggers match.
+10. `[Record]` Record validation evidence in the plan, workflow state file, or final response as appropriate.
+11. `[Record]` If executing a plan task, update the task detail and `Progress Tracker` with status, commit checkpoint, validation result, and any blocker or skip note.
+12. `[Commit]` Commit every completed task or plan task that changed tracked files before handing off or starting unrelated work. Follow the rules in `## AI Commit Message Rules` below.
 
 ## AI Commit Message Rules
 

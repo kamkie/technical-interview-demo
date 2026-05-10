@@ -29,6 +29,8 @@ Use `.agents/references/gradle-task-graph.md` when command choice depends on Gra
 
 ## Implementation Loop
 
+This is the `Red-Green Loop` from `.agents/references/application-lifecycle.md`: run validation, diagnose any failure via `.agents/references/troubleshooting.md`, fix the first real failure, then re-run until the smallest sufficient proof is green.
+
 - use `./build.ps1 compileJava` or a similarly narrow Gradle task for quick checks while editing
 - use targeted tests when the touched behavior has focused executable coverage
 - `./build.ps1 -SkipTests build`, `./build.ps1 -SkipChecks build`, and `./build.ps1 -SkipTests -SkipChecks build` are local-loop shortcuts only, not final verification

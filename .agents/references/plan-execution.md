@@ -43,21 +43,21 @@ Before editing:
 
 ## Whole-Plan Loop
 
-For each plan task:
+For each plan task. Step tags reference `.agents/references/application-lifecycle.md` `## Activity Catalogue`:
 
-1. Load only the extra context named by that task.
-2. Mark the plan task `In Progress` in the task detail and top-level `Progress Tracker`.
-3. Update the governing spec first when behavior intentionally changes.
-4. Implement the smallest coherent code or documentation change for that task.
-5. Keep artifact routing aligned through `.agents/references/documentation.md`.
-6. If existing AI guidance proves wrong, incomplete, contradictory, or requires an execution-time policy decision, classify the owner through `.agents/references/documentation.md`; update the owning guide in the same change, or record the blocker or follow-up in the active plan before continuing. Do not rely on final-response memory for guidance drift discovered during plan execution.
-7. Run the task validation named by the plan, then any broader validation required by `.agents/references/testing.md`.
-8. If validation fails, load `.agents/references/troubleshooting.md` before choosing a recovery path.
-9. Review the validated diff using `.agents/references/reviews.md`.
-10. Re-check the plan's scope, decision log or locked decisions, non-goals, and task deliverables.
-11. Record validation evidence, blockers, pivots, or follow-up notes in the plan or workflow state owned by the current work shape.
-12. Update the task detail and `Progress Tracker` with `Done`, the commit checkpoint, validation result, and any notes.
-13. Commit the completed plan task before starting the next one. Use the AI commit-message rules in `.agents/references/execution.md`.
+1. `[Scan]` Load only the extra context named by that task.
+2. `[Sync]` Mark the plan task `In Progress` in the task detail and top-level `Progress Tracker`.
+3. `[Spec]` Update the governing spec first when behavior intentionally changes.
+4. `[Code]` Implement the smallest coherent code or documentation change for that task.
+5. `[Docs]` Keep artifact routing aligned through `.agents/references/documentation.md`.
+6. `[Replan?]` If existing AI guidance proves wrong, incomplete, contradictory, or requires an execution-time policy decision, classify the owner through `.agents/references/documentation.md`; update the owning guide in the same change, or record the blocker or follow-up in the active plan before continuing. Do not rely on final-response memory for guidance drift discovered during plan execution.
+7. `[Run]` Run the task validation named by the plan, then any broader validation required by `.agents/references/testing.md`.
+8. `[Diagnose?]` If validation fails, load `.agents/references/troubleshooting.md` before choosing a recovery path.
+9. `[Self-Review]` / `[Security Review?]` Review the validated diff using `.agents/references/reviews.md`.
+10. `[Validate-Plan]` Re-check the plan's scope, decision log or locked decisions, non-goals, and task deliverables.
+11. `[Record]` Record validation evidence, blockers, pivots, or follow-up notes in the plan or workflow state owned by the current work shape.
+12. `[Record]` Update the task detail and `Progress Tracker` with `Done`, the commit checkpoint, validation result, and any notes.
+13. `[Commit]` Commit the completed plan task before starting the next one. Use the AI commit-message rules in `.agents/references/execution.md`.
 
 Do not defer plan-task commits until the end of the plan.
 If a plan task is blocked or only partially implemented, record the blocker in the task detail, `Progress Tracker`, and `Blockers And Replan Triggers`, but do not mark it complete.

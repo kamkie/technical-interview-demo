@@ -2,10 +2,10 @@
 
 Prepare a report measuring how much context the repository AI instructions consume over time.
 
-Run the checked-in report script:
+Run the checked-in report script through PowerShell 7+ (`pwsh`); Windows PowerShell 5.1 lacks `ProcessStartInfo.ArgumentList` and the script will fail there:
 
 ```powershell
-./scripts/ai/context-report.ps1
+pwsh -NoProfile -File ./scripts/ai/context-report.ps1
 ```
 
 Use `-Range START..END` when the user provides a range. Otherwise let the script compare the previous first-parent commit with `HEAD`.

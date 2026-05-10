@@ -49,23 +49,15 @@ Stage 7  Coordinator       integrate-branch              → merge, post-integra
                                                            plan/ROADMAP/CHANGELOG updates
 ```
 
-### Trigger Rules
+### Trigger Rules, Sidecar Independence, And Durable State Bus
 
-- Stage 1 fires on any Task Gate trigger from `.agents/references/execution.md` (unclear intent, public API change, multi-task work, ownership splits).
-- Stage 4 (independent Reviewer) is mandatory for `M4`; recommended for `M2`/`M3` on non-trivial diffs.
-- Stage 5 (independent Verifier) is mandatory for `M4`; recommended whenever the Worker's environment differs from the integration target.
-- Stage 6 specialists fire on declared triggers in their `SKILL.md` (e.g., security review on auth/crypto/secrets/CI permissions; OpenAPI check on REST controller or schema changes; GH security on Dependabot/code-scanning alerts).
-- Stage 7 always runs for any change that produces tracked-file edits.
+These topics are owned by `.agents/references/workflow.md`. This index only summarizes when each stage applies; the authoritative rules for mode selection, stage triggers, sidecar independence, and the durable state bus live there:
 
-### Sidecar Independence
+- stage triggers (when Stages 1, 4, 5, 6, 7 fire) — see `.agents/references/workflow.md` § Mode Decision and § Coordination Patterns.
+- sidecar independence (fresh-context requirement for Reviewer/Verifier/Specialist) — see `.agents/references/workflow.md` § Coordination Patterns.
+- durable state bus under `.agents/context/*` with `<plan_stem_or_topic>__<role>.md` naming — see `.agents/references/workflow.md` § Coordination Patterns and § Integration And Handoff.
 
-Reviewer, Verifier, and Specialist agents must run from a *fresh context* (no shared scratchpad with the Worker) for their findings to add signal beyond the Worker's self-review.
-
-### Durable State Bus
-
-Use `.agents/context/*` as the integration bus between stages.
-File names follow `<plan_stem_or_topic>__<role>.md`.
-Conversational memory is not a substitute for these files.
+If this summary appears to disagree with `workflow.md`, treat `workflow.md` as authoritative and update it through `.agents/references/documentation.md`.
 
 ## Authoring New Skills
 

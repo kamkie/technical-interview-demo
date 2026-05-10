@@ -52,6 +52,10 @@ For documentation-heavy changes, review for:
 - task sections growing into policy dumps instead of linking to owning guidance
 - release, PR, and validation instructions drifting away from the checked-in automation
 
+## Review Loop Exit
+
+This guide owns the `Review Loop` from `.agents/references/application-lifecycle.md`. When a review surfaces blocking findings, exit back into the Implementation or Verification phase: route code-shaped fixes through `.agents/references/execution.md` (or `.agents/references/plan-execution.md` for plan-scoped work), re-run the smallest sufficient validation per `.agents/references/testing.md`, and re-enter review only with findings closed or the remaining risk recorded explicitly.
+
 ## Reporting Expectations
 
 When the user asked for a review:
