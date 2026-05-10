@@ -27,19 +27,19 @@ print_warning() {
 }
 
 # Development shortcuts
-alias gb='./gradlew.bat'
-alias gbt='./gradlew.bat test'
-alias gbr='./gradlew.bat bootRun'
-alias gbscan='./gradlew.bat checkFormat'
-alias gbformat='./gradlew.bat format'
-alias gbpmd='./gradlew.bat --no-problems-report pmdMain'
-alias gbdocs='./gradlew.bat asciidoctor'
-alias gbdocker='./gradlew.bat dockerBuild'
-alias gbclean='./gradlew.bat clean'
+alias gb='./gradlew'
+alias gbt='./gradlew test'
+alias gbr='./gradlew bootRun'
+alias gbscan='./gradlew checkFormat'
+alias gbformat='./gradlew format'
+alias gbpmd='./gradlew --no-problems-report pmdMain'
+alias gbdocs='./gradlew asciidoctor'
+alias gbdocker='./gradlew dockerBuild'
+alias gbclean='./gradlew clean'
 
 # Database shortcuts
-alias pg='psql -h postgres -U demo_user -d technical_interview_demo'
-alias pgdrop='psql -h postgres -U demo_user -c "DROP DATABASE IF EXISTS technical_interview_demo; CREATE DATABASE technical_interview_demo;"'
+alias pg='psql -h localhost -U demo_user -d technical_interview_demo'
+alias pgdrop='psql -h localhost -U demo_user -c "DROP DATABASE IF EXISTS technical_interview_demo; CREATE DATABASE technical_interview_demo;"'
 
 # Service management
 alias docker-ps='docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"'
@@ -49,34 +49,34 @@ alias docker-logs-prom='docker logs -f technical-interview-demo-prometheus'
 # Common workflows
 dev-setup() {
   print_section "Setting up development environment..."
-  ./gradlew.bat clean build
+  ./gradlew clean build
   print_success "Setup complete!"
 }
 
 dev-start() {
   print_section "Starting Spring Boot application..."
-  ./gradlew.bat bootRun
+  ./gradlew bootRun
 }
 
 dev-test() {
   print_section "Running tests..."
-  ./gradlew.bat test
+  ./gradlew test
 }
 
 dev-quality() {
   print_section "Running quality checks..."
   print_warning "Running checkFormat..."
-  ./gradlew.bat checkFormat || print_error "Format check failed!"
+  ./gradlew checkFormat || print_error "Format check failed!"
   print_warning "Running PMD..."
-  ./gradlew.bat --no-problems-report pmdMain || print_error "PMD check failed!"
+  ./gradlew --no-problems-report pmdMain || print_error "PMD check failed!"
   print_warning "Running tests..."
-  ./gradlew.bat test || print_error "Tests failed!"
+  ./gradlew test || print_error "Tests failed!"
   print_success "Quality checks complete!"
 }
 
 dev-docs() {
   print_section "Generating API documentation..."
-  ./gradlew.bat asciidoctor
+  ./gradlew asciidoctor
   print_success "Docs generated at: build/docs/asciidoc/index.html"
 }
 
@@ -106,15 +106,15 @@ dev-help() {
 ${BLUE}Development Container Quick Reference${NC}
 
 ${YELLOW}Gradle Shortcuts:${NC}
-  gb              ./gradlew.bat
-  gbt             ./gradlew.bat test
-  gbr             ./gradlew.bat bootRun
-  gbscan          ./gradlew.bat checkFormat
-  gbformat        ./gradlew.bat format
-  gbpmd           ./gradlew.bat --no-problems-report pmdMain
-  gbdocs          ./gradlew.bat asciidoctor
-  gbdocker        ./gradlew.bat dockerBuild
-  gbclean         ./gradlew.bat clean
+  gb              ./gradlew
+  gbt             ./gradlew test
+  gbr             ./gradlew bootRun
+  gbscan          ./gradlew checkFormat
+  gbformat        ./gradlew format
+  gbpmd           ./gradlew --no-problems-report pmdMain
+  gbdocs          ./gradlew asciidoctor
+  gbdocker        ./gradlew dockerBuild
+  gbclean         ./gradlew clean
 
 ${YELLOW}Database Shortcuts:${NC}
   pg              psql to PostgreSQL
@@ -142,8 +142,8 @@ ${YELLOW}Application Access:${NC}
 ${BLUE}Tips:${NC}
   • Use 'dev-quality' before committing
   • Use 'dev-test' during development
-  • PostgreSQL is at: postgres://demo_user:demo_password@postgres:5432/technical_interview_demo
-  • Services auto-start via docker-compose.yml
+  • PostgreSQL is at: postgresql://demo_user:demo_password@localhost:5432/technical_interview_demo
+  • Optional services can be started with: docker compose -f .devcontainer/docker-compose.yml up -d
 
 EOF
 }

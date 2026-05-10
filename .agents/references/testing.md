@@ -53,6 +53,7 @@ This is the `Red-Green Loop` from `.agents/references/application-lifecycle.md`:
 
 ### Documentation-only or lightweight support-file work
 
+- run `pwsh ./scripts/docs/audit-docs.ps1` when user-facing Markdown or AsciiDoc changed; it checks local documentation links, stale generated-document signals, stable-version agreement, frontend-contract OpenAPI summary counts, and supported-language summaries
 - run the standard wrapper build and record whether it performed heavy Gradle validation or took the lightweight-only shortcut
 - repo-local skills under `.agents/skills/` count as lightweight support-file work for classifier purposes unless they accompany a non-lightweight change
 - when repo-local skills change, also run `./scripts/ai/validate-skills.ps1` to verify skill structure without external Python or YAML dependencies

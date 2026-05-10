@@ -1,13 +1,13 @@
 # Dev Container Quick Reference Card
 
-## Getting Started (3 Steps)
+## Getting Started
 
 ```
 1. Install: code --install-extension ms-vscode-remote.remote-containers
 2. Open: code /path/to/technical-interview-demo
-3. Reopen: Ctrl+Shift+P → "Dev Containers: Reopen in Container"
+3. Reopen: Ctrl+Shift+P -> "Dev Containers: Reopen in Container"
 4. Wait: 5-10 minutes for first build
-✓ Done! You're ready to develop
+5. Run: ./gradlew bootRun
 ```
 
 ## What's Included
@@ -15,23 +15,24 @@
 - **Java 25 JDK** (official Microsoft OpenJDK)
 - **Gradle** (via wrapper)
 - **Docker & Docker Compose** (Docker-in-Docker)
-- **PostgreSQL** (port 5432, auto-starts)
-- **Prometheus** (port 9090, auto-starts)
+- **Optional PostgreSQL** (port 5432)
+- **Optional Prometheus** (port 9090)
 - **VS Code extensions** (Java Pack, Spring Boot, Docker, etc.)
-- **Helper commands** (20+ shortcuts)
+- **Helper commands** (after sourcing `commands.sh`)
 
 ## Essential Commands
 
 | Task | Command |
 |------|---------|
-| **Start App** | `./gradlew.bat bootRun` |
-| **Run Tests** | `./gradlew.bat test` |
-| **Check Format** | `./gradlew.bat checkFormat` |
-| **Fix Format** | `./gradlew.bat format` |
-| **Run PMD** | `./gradlew.bat --no-problems-report pmdMain` |
-| **Generate Docs** | `./gradlew.bat asciidoctor` |
-| **Build Docker** | `./gradlew.bat dockerBuild` |
+| **Start App** | `./gradlew bootRun` |
+| **Run Tests** | `./gradlew test` |
+| **Check Format** | `./gradlew checkFormat` |
+| **Fix Format** | `./gradlew format` |
+| **Run PMD** | `./gradlew --no-problems-report pmdMain` |
+| **Generate Docs** | `./gradlew asciidoctor` |
+| **Build Docker** | `./gradlew dockerBuild` |
 | **Quality Check** | `dev-quality` *(after sourcing commands.sh)* |
+| **Start Optional Services** | `docker compose -f .devcontainer/docker-compose.yml up -d` |
 
 ## Access Points
 
@@ -46,7 +47,7 @@
 ## Database Info
 
 ```
-Host:     postgres (or localhost from host machine)
+Host:     localhost
 Port:     5432
 Database: technical_interview_demo
 User:     demo_user
@@ -58,8 +59,8 @@ Password: demo_password
 ```bash
 # After: source .devcontainer/commands.sh
 
-gb help         # List all commands
-gb              # ./gradlew.bat
+dev-help        # List all commands
+gb              # ./gradlew
 gbt             # Run tests
 gbr             # Run app
 gbdocs          # Generate docs
@@ -82,21 +83,21 @@ docker-ps       # Show containers
 
 ```
 .devcontainer/
-  ├── devcontainer.json       ← Main config
-  ├── README.md               ← Full documentation
-  ├── Dockerfile              ← Optional custom image
-  ├── docker-compose.yml      ← Services
-  ├── commands.sh             ← Helper shortcuts
+  ├── devcontainer.json       # Main config
+  ├── README.md               # Full documentation
+  ├── Dockerfile              # Optional custom image
+  ├── docker-compose.yml      # Optional services
+  ├── commands.sh             # Helper shortcuts
   └── ...
 ```
 
 ## Tips
 
-✨ **Hot Reload:** Spring DevTools auto-reloads on code changes
-✨ **Debug:** Set breakpoints in VS Code while running
-✨ **Cache:** ~/.m2 and ~/.gradle automatically cached
-✨ **Git:** Git commands work normally in container
-✨ **Performance:** Second and subsequent builds are much faster
+- **Hot Reload:** Spring DevTools auto-reloads on code changes
+- **Debug:** Set breakpoints in VS Code while running
+- **Cache:** `~/.m2` and `~/.gradle` are mounted from the host
+- **Git:** Git commands work normally in the container
+- **Performance:** Second and subsequent builds are much faster
 
 ## Key Ports
 
@@ -116,7 +117,7 @@ docker logs -f <container_id>
 docker ps
 
 # 3. Rebuild container
-# Ctrl+Shift+P → "Dev Containers: Rebuild Container"
+# Ctrl+Shift+P -> "Dev Containers: Rebuild Container"
 
 # 4. Clean everything
 docker system prune -a

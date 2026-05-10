@@ -306,6 +306,12 @@ A full `build` covers Palantir/Spotless formatting, PMD, SpotBugs plus FindSecBu
 The container image vulnerability scan is intentionally explicit instead of part of the `build` target; run `./build.ps1 imageVulnerabilityScan` or `./build.ps1 vulnerabilityScan` when image-scan evidence is required.
 Use focused commands such as `test`, `asciidoctor`, or `dockerBuild` only when you intentionally want a narrower loop.
 
+Documentation health workflow:
+
+- run `pwsh ./scripts/docs/audit-docs.ps1` after changing user-facing Markdown or AsciiDoc, especially top-level docs, `docs/`, REST Docs sources, manual-regression README files, edge reference docs, or `.devcontainer` docs
+- the check audits local documentation links, stale generated-document signals, stable-version agreement, frontend-contract OpenAPI summary counts, and supported-language summaries
+- CI runs the same check before either the lightweight-only shortcut or the heavy Gradle validation path
+
 Security scan shortcuts:
 
 - run `./build.ps1 staticSecurityScan` when you want the code-focused SpotBugs plus FindSecBugs gate directly
@@ -337,6 +343,7 @@ The `CI` workflow currently validates the repository with these commands and pre
 
 ```powershell
 docker version
+pwsh ./scripts/docs/audit-docs.ps1
 ./build.ps1 -FullBuild build imageVulnerabilityScan
 helm lint infra/helm/technical-interview-demo
 helm template technical-interview-demo infra/helm/technical-interview-demo -f infra/helm/technical-interview-demo/values-local.yaml

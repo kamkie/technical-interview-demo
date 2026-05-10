@@ -220,6 +220,7 @@ Exception:
 Additional validation rules:
 
 - use `SETUP.md` for JDK 25, Docker, `.env`, and command prerequisites
+- run `pwsh ./scripts/docs/audit-docs.ps1` when user-facing Markdown or AsciiDoc changes; CI runs it for both lightweight-only and full validation paths
 - use `./build.ps1 compileJava` or a similarly focused task for fast checks while editing, then use `./build.ps1 build` or `./build.ps1 -FullBuild build` for final verification according to the validation scope
 - use `./build.ps1 -SkipTests build`, `./build.ps1 -SkipChecks build`, or both only for local loops, not final verification
 - `-SkipChecks` skips formatting, PMD, SpotBugs, Error Prone, coverage verification, vulnerability scans, and SBOM checks
@@ -258,6 +259,12 @@ Common routing:
 - `src/manualTests/http/suites/` when semi-automated manual-regression HTTP Client convenience scripts changed
 - `ROADMAP.md` when active work changed
 - `CHANGELOG.md` when preparing or documenting a release
+
+Before review, run the documentation health check for user-facing documentation edits:
+
+```powershell
+pwsh ./scripts/docs/audit-docs.ps1
+```
 
 ## Release And Maintainer Expectations
 

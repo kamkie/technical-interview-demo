@@ -72,10 +72,13 @@ jobs:
           echo "Skipping the Gradle build, Helm validation, and external smoke validation for this CI run." >> "${GITHUB_STEP_SUMMARY}"
 
       - name: Check out repository
-        if: needs.change_detection.outputs.skip_heavy_ci != 'true'
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
+
+      - name: Run documentation health check
+        shell: pwsh
+        run: ./scripts/docs/audit-docs.ps1
 
       - name: Set up Java 25
         if: needs.change_detection.outputs.skip_heavy_ci != 'true'

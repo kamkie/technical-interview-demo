@@ -1,20 +1,18 @@
 # Development Container Setup
 
-This project includes a preconfigured development container (dev container) that provides a complete, isolated development environment using VS Code's Remote - Containers extension.
+This project includes a preconfigured development container that provides an isolated Java 25 development environment through VS Code's Dev Containers extension.
 
 ## Prerequisites
 
-1. **VS Code** (version 1.52 or later)
+1. **VS Code**
 2. **Docker Desktop** (installed and running)
 3. **VS Code Extensions:**
-    - Remote - Containers
     - Dev Containers
 
 Install the extensions:
 
 ```bash
 code --install-extension ms-vscode-remote.remote-containers
-code --install-extension ms-vscode.remote-explorer
 ```
 
 ## Quick Start
@@ -55,9 +53,13 @@ docker ps
     - PostgreSQL client tools
     - Node.js/npm (for potential frontend work)
 
-### Supporting Services (Docker Compose)
+### Optional Supporting Services
 
-The `.devcontainer/docker-compose.yml` defines optional services:
+The `.devcontainer/docker-compose.yml` file defines optional local services. The current `devcontainer.json` uses a standalone image, so these services are not started automatically. Start them from the repository root when you need PostgreSQL or Prometheus inside the dev-container Docker daemon:
+
+```bash
+docker compose -f .devcontainer/docker-compose.yml up -d
+```
 
 - **PostgreSQL** (port 5432)
     - Database: `technical_interview_demo`
@@ -95,7 +97,7 @@ Custom Java and editor settings are automatically applied:
 
 ```bash
 # From the terminal inside the dev container
-./gradlew.bat bootRun
+./gradlew bootRun
 ```
 
 The app will start on `http://localhost:8080`
@@ -103,26 +105,26 @@ The app will start on `http://localhost:8080`
 ### Run Tests
 
 ```bash
-./gradlew.bat test
+./gradlew test
 ```
 
 ### Run Quality Checks
 
 ```bash
-./gradlew.bat checkFormat
-./gradlew.bat --no-problems-report pmdMain
-./gradlew.bat asciidoctor
+./gradlew checkFormat
+./gradlew --no-problems-report pmdMain
+./gradlew asciidoctor
 ```
 
 ### Build Docker Image
 
 ```bash
-./gradlew.bat dockerBuild
+./gradlew dockerBuild
 ```
 
-### Access Services from Host
+### Access Services
 
-The dev container forwards these ports to your host machine:
+The dev container forwards these ports. The Spring Boot app appears after `./gradlew bootRun`; PostgreSQL and Prometheus appear after you start the optional compose services.
 
 | Service | Port | URL |
 |---------|------|-----|
@@ -134,7 +136,7 @@ The dev container forwards these ports to your host machine:
 
 ### PostgreSQL Connection
 
-To connect to PostgreSQL from outside the container:
+After starting the optional PostgreSQL service, connect from the dev-container terminal or from the host through the forwarded port:
 
 ```bash
 psql -h localhost -p 5432 -U demo_user -d technical_interview_demo
@@ -209,7 +211,7 @@ For continuous testing or compilation:
 
 ```bash
 # Watch and run tests on file changes (requires a plugin)
-./gradlew.bat test --watch
+./gradlew test --watch
 ```
 
 ### 7. Hot Reload
@@ -217,7 +219,7 @@ For continuous testing or compilation:
 Spring Boot DevTools is included. Changes to Java classes or resources may trigger auto-reload:
 
 ```bash
-./gradlew.bat bootRun
+./gradlew bootRun
 ```
 
 Make code changes, and the app will restart automatically (if DevTools is enabled).
@@ -293,9 +295,11 @@ TZ=UTC
 ├── onCreateCommand.sh      # Initial setup script
 ├── postCreateCommand.sh    # Setup after container creation
 ├── postStartCommand.sh     # Runs on every container start
-├── docker-compose.yml      # Services (PostgreSQL, Prometheus)
+├── docker-compose.yml      # Optional services (PostgreSQL, Prometheus)
 ├── prometheus.yml          # Prometheus configuration
 ├── postgres-init.sql       # PostgreSQL initialization
+├── QUICK_START.md          # Short command reference
+├── commands.sh             # Optional shell helpers
 └── README.md               # This file
 ```
 
@@ -333,7 +337,7 @@ Edit `.devcontainer/devcontainer.json` to:
 
 ### Adding Services
 
-Edit `.devcontainer/docker-compose.yml` to add more services:
+Edit `.devcontainer/docker-compose.yml` to add more optional services:
 
 ```yaml
   redis:
@@ -344,10 +348,10 @@ Edit `.devcontainer/docker-compose.yml` to add more services:
       - dev-network
 ```
 
-Then reference the container name in your app configuration:
+When the app runs directly in the dev-container terminal, publish the service port and connect through `localhost` unless you also move the app into the same compose network:
 
 ```properties
-spring.redis.host=redis
+spring.redis.host=localhost
 spring.redis.port=6379
 ```
 
@@ -360,7 +364,7 @@ spring.redis.port=6379
 **Note:** The container remains running. To stop it:
 
 ```bash
-docker-compose -f .devcontainer/docker-compose.yml down
+docker compose -f .devcontainer/docker-compose.yml down
 ```
 
 ## Resources
@@ -374,11 +378,7 @@ docker-compose -f .devcontainer/docker-compose.yml down
 
 For issues or questions:
 
-1. Check VS Code's Remote - Containers documentation
+1. Check VS Code's Dev Containers documentation
 2. Review the `postCreateCommand.sh` output for error details
 3. Rebuild the container to ensure clean state
 4. Check Docker Desktop logs for infrastructure issues
-
----
-
-Happy coding! 🚀

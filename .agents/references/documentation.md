@@ -29,6 +29,7 @@ Update the artifact that owns the truth being changed:
 - AI local command wrapper shortcut: `.agents/references/command-wrapper.md`
 - local setup, tools, IDE walkthroughs, Docker onboarding, troubleshooting, and environment runbooks: `SETUP.md`
 - contributor workflow and maintainer expectations: `CONTRIBUTING.md`
+- user-facing documentation health checks, local link checks, stable-version agreement checks, and generated-contract summary drift checks: `scripts/docs/audit-docs.ps1`
 - active planned work: `ROADMAP.md`
 - released history: `CHANGELOG.md`
 - commit message template and AI commit rules: `.gitmessage`

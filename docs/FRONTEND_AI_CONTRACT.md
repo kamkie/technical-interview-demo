@@ -36,9 +36,9 @@ Current approved baseline summary:
 
 - OpenAPI version: `3.0.1`
 - Contract version marker: `APPROVED`
-- Path templates: 14
-- Operations: 22
-- Component schemas: 40
+- Path templates: `14`
+- Operations: `22`
+- Component schemas: `40`
 - Security scheme: `sessionCookie` as an API key in cookie `technical-interview-demo-session`
 
 If the frontend needs a portable JSON or YAML copy, keep it as a separate generated contract artifact with a documented refresh path.
