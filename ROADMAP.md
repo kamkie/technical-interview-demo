@@ -26,7 +26,7 @@ Section ordering follows the lifecycle vocabulary in `.agents/references/applica
 | Breaking Change Policy | Disallowed on the stable `2.x` line unless a later major-version plan explicitly changes it |
 | Next Target Version | Not selected; default to `v2.0.3` for maintenance fixes or `v2.1.0` for backward-compatible feature work |
 | Latest Stable Release | `v2.0.2` released on 2026-05-10 from the AI-guidance and multi-agent workflow plans archived under `.agents/archive/PLAN_frontend_ai_contract.md`, `.agents/archive/PLAN_multi_agent_roles_and_skills.md`, `.agents/archive/PLAN_multi_agent_workflow_consolidation.md`, and `.agents/archive/PLAN_pre_planning_lifecycle_artifacts.md` |
-| Immediate Next Action | Finish final validation and review for `.agents/plans/PLAN_human_documentation_split.md`; release work remains unrequested. |
+| Immediate Next Action | Human documentation split is implemented on `main`; release work remains unrequested. |
 
 ## Roadmap Rules
 
@@ -106,7 +106,7 @@ No active triage items.
 
 | Status | Workstream | Phase | Plan | Linked ADR/PRD/Spec | Notes |
 | --- | --- | --- | --- | --- | --- |
-| In Progress | Human documentation split | Implementation | `.agents/plans/PLAN_human_documentation_split.md` | `docs/decisions/0006-split-human-documentation-and-ai-workflow-guides.md` | Documentation spine, AI guide move, operations/setup split, and ownership-map alignment are complete; final validation remains. |
+| Integrated | Human documentation split | Integration | `.agents/plans/PLAN_human_documentation_split.md` | `docs/decisions/0006-split-human-documentation-and-ai-workflow-guides.md` | Implemented on `main`; final docs audit and full build passed. Release work remains unrequested. |
 
 ## Planned Work
 
