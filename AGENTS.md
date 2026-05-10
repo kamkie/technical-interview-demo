@@ -28,6 +28,60 @@ When resolving truth, use this order:
 6. historical release notes in `CHANGELOG.md`
 7. topic-owning AI or human guidance documents
 
+## Working Context And Guidance Loading
+
+Load only the source artifacts and owner guides that match the current task.
+Do not treat `docs/` or `.agents/` guidance as higher-priority truth than executable specs, published contract docs, or the human-facing artifact that owns the topic.
+
+### Context Loading Model
+
+Treat cross-references in owner guides as conditional pointers, not recursive load requirements.
+A loaded guide is terminal unless the current task matches another guide's explicit entry condition.
+Do not bulk-load `.agents/references/`, active plans, archived plans, templates, task prompts, reports, or skill bodies as a pre-flight default.
+
+Start from the smallest task-shaped read set:
+
+- documentation-only edit with clear ownership: target document plus the owning guide
+- `.agents/references/*.md` edit: target reference plus `.agents/references/references-rules.md`
+- bounded code, test, build, or workflow edit: `.agents/references/execution.md`, `.agents/references/code-style.md`, and the governing spec or source files
+- whole-plan execution: `.agents/references/plan-execution.md`, the active plan, and only the current milestone's named context
+- release work: `.agents/references/releases.md`; load detailed release references only when their phase begins
+
+Add more context only when a trigger fires.
+Once work enters execution, follow `.agents/references/execution.md` or `.agents/references/plan-execution.md` for context switching and checkpoint summaries.
+
+### Owner Map
+
+Load a guide only when the current task matches its owner-map domain.
+Treat cross-references from other guides as optional pointers, not automatic reasons to load more files.
+
+- artifact routing, cross-file alignment, AI-document maintenance outside `.agents/references/*.md`, or repository knowledge ownership: `.agents/references/documentation.md`
+- rules for `.agents/references/*.md` documents: `.agents/references/references-rules.md`
+- planning, roadmap intake, plan revision, or readiness review: `.agents/references/planning.md`
+- whole active-plan execution: `.agents/references/plan-execution.md`
+- ad hoc execution or a single plan milestone: `.agents/references/execution.md`
+- edit shape and repo-local code conventions: `.agents/references/code-style.md`
+- architecture, structural placement, package ownership, or codebase map: `.agents/references/architecture.md`
+- product direction, supported scope, security posture, or roadmap tradeoffs: `docs/DESIGN.md`
+- local Gradle wrapper and AI command syntax: `.agents/references/command-wrapper.md`
+- validation scope and commands: `.agents/references/testing.md`
+- diagnosis after validation failure: `.agents/references/troubleshooting.md`
+- review or security review: `.agents/references/reviews.md`
+- branch, worktree, delegation, multi-agent state, sidecar, integration, or remote handoff: `.agents/references/workflow.md`
+- release sequencing: `.agents/references/releases.md`
+- application lifecycle phase, activity, owner-guide mapping, or loop vocabulary: `.agents/references/application-lifecycle.md`
+- durable repo-wide lesson: `.agents/references/LEARNINGS.md`
+- active plan content: the relevant `.agents/plans/PLAN_*.md`
+- repository task prompt, template, archived plan, report, or skill body: only when directly invoked or required
+
+### AI Guidance Maintenance
+
+When AI guidance changes, update the focused owner instead of duplicating the rule in task prompts, plans, skills, workflow state files, or final responses.
+
+- for `.agents/references/*.md` edits, follow the reference-document rules owner in the map above
+- add the artifact-routing owner only when artifact ownership, cross-file alignment, or non-reference AI document maintenance is unclear
+- when a request introduces or changes requirements for reference documents, update the reference-document rules owner in the same change before editing the affected references, and express the update as the standing rule future reference documents must satisfy
+
 ## Definition Of Done
 
 Use these completion rules for AI work in this repository:
@@ -43,58 +97,6 @@ Use these completion rules for AI work in this repository:
 - Keep durable status in the owning artifacts; do not rely on final-response memory for plan progress, validation evidence, blockers, roadmap state, or release history.
 - Commit every completed task or milestone that changed tracked files with the required AI commit-message format before handoff or unrelated work starts. During an explicitly ongoing interactive session, uncommitted work remains in progress until the user asks for handoff.
 - Leave release work undone unless explicitly requested.
-
-## Working Context And Guidance Loading
-
-Read `AGENTS.md` first, then load only the source artifacts and owner guides that match the current task.
-Do not treat `docs/` or `.agents/` guidance as higher-priority truth than executable specs, published contract docs, or the human-facing artifact that owns the topic.
-
-### Fast Loading Paths
-
-Treat cross-references in owner guides as conditional pointers, not recursive load requirements.
-A loaded guide is terminal unless the current task matches another guide's explicit entry condition.
-
-Start common tasks with these read sets:
-
-- documentation-only edit with clear ownership: `AGENTS.md`, the target document, and the owning guide; for `.agents/references/*.md`, also read `.agents/references/references-rules.md`; load `.agents/references/documentation.md` only when artifact ownership or cross-file alignment is unclear
-- bounded code, test, build, or workflow edit: `AGENTS.md`, `.agents/references/execution.md`, `.agents/references/code-style.md`, and the governing spec or source files; load architecture, documentation, testing, and review guides at their checkpoints instead of during initial context loading
-- whole-plan execution: `AGENTS.md`, `.agents/references/plan-execution.md`, the active plan, and only the current milestone's named context
-- release work: `AGENTS.md` and `.agents/references/releases.md`; load detailed release references only when their phase begins
-
-Use `.agents/references/documentation.md` only when a task needs artifact routing beyond the fast paths, cross-file alignment, AI-document maintenance outside `.agents/references/*.md`, or repository knowledge ownership decisions.
-
-### Owner Guide Entry Points
-
-Use workflow guides on demand:
-
-- planning or roadmap intake: `.agents/references/planning.md`
-- architecture or structural placement: `.agents/references/architecture.md`
-- whole-plan execution: `.agents/references/plan-execution.md`
-- ad hoc implementation or a single milestone: `.agents/references/execution.md`
-- local Gradle wrapper and AI command syntax: `.agents/references/command-wrapper.md`
-- validation: `.agents/references/testing.md`, and `.agents/references/troubleshooting.md` only after a validation failure
-- review: `.agents/references/reviews.md`
-- branch, worktree, delegation, multi-agent state, sidecar, integration, or remote handoff: `.agents/references/workflow.md`
-- release: `.agents/references/releases.md`
-- application lifecycle phase, activity, owner-guide mapping, or loop vocabulary: `.agents/references/application-lifecycle.md`
-
-### Descriptive And Deep References
-
-Load descriptive or deep references only when the task needs them:
-
-- `.agents/references/architecture.md` for structural code reading, architecture-sensitive changes, or package ownership questions
-- `docs/DESIGN.md` for user-visible behavior, supported scope, security posture, or roadmap tradeoffs
-- `.agents/references/LEARNINGS.md` only from a targeted relevance scan, a known recurring repo lesson, or a correction that exposes durable guidance
-- active `.agents/plans/PLAN_*.md` files only when planning, executing, verifying, or releasing that plan
-- repository task prompts under `.agents/tasks/`, templates, detailed workflow references, skill bodies, archived plans, and reports only when directly invoked or required
-
-Keep working context narrow. Treat the ownership lists above as routing aids, not a standing pre-flight bulk-load list; once work enters execution, follow `.agents/references/execution.md` or `.agents/references/plan-execution.md` for context switching and checkpoint summaries.
-
-### AI Document Maintenance
-
-For AI-document maintenance outside `.agents/references/*.md`, use `.agents/references/documentation.md`.
-For `.agents/references/*.md` edits, use `.agents/references/references-rules.md`; add `.agents/references/documentation.md` only when artifact ownership or cross-file alignment is unclear.
-When a request introduces or changes requirements for `.agents/references/*.md` documents, update `.agents/references/references-rules.md` in the same change before editing the affected reference documents, and express the update as the standing rule future reference documents must satisfy.
 
 ## Integration And Release Invariants
 
