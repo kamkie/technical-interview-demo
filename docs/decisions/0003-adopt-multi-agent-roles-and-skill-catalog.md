@@ -32,7 +32,7 @@ The current AI guidance set was authored primarily for Codex and GPT-5.x; Junie 
 Both agent platforms benefit from narrower per-role context and from procedure-encoded skills that cut repeated reasoning.
 
 ADR 0001 introduced pre-planning artifacts; ADR 0002 aligned lifecycle vocabulary.
-This ADR addresses the orthogonal question of *who acts* and *which procedures they invoke* during execution.
+This ADR implements the principle decision in ADR 0004 by defining *who acts* and *which procedures they invoke* during execution.
 
 ## Decision
 
@@ -231,7 +231,7 @@ Implementation should be verified by manual documentation review that:
 
 ## Links
 
-- Competing lighter proposal: `docs/decisions/0004-adopt-skill-first-multi-agent-workflow.md`
+- Principle decision: `docs/decisions/0004-adopt-skill-first-multi-agent-workflow.md`
 - `.agents/references/workflow.md`
 - `.agents/references/planning.md`
 - `.agents/references/execution.md`

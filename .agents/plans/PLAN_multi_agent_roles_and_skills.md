@@ -93,7 +93,7 @@
 | Task | Status | Owner | Commit | Validation | Notes |
 | --- | --- | --- | --- | --- | --- |
 | 1: Resolve Q1–Q3 with user | Done | Coordinator | `docs(plan): unblock multi-agent roles plan` | `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | User accepted both ADRs and authorized implementation if no blockers. |
-| 2: Reconcile ADR 0004 roster + ADR cross-links | Not Started | Worker | Pending | Pending | Phase 0. |
+| 2: Reconcile ADR 0004 roster + ADR cross-links | Done | Worker | `docs(decisions): align multi-agent ADR relationship` | `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | ADR 0004 now uses the six-role roster and ADR 0003 is the implementation decision. |
 | 3: Rename mode labels in `workflow.md` and update both ADRs | Not Started | Worker | Pending | Pending | Phase A.1. |
 | 4: Materialize `.agents/context/*` and add per-role read-set table | Not Started | Worker | Pending | Pending | Phase A.2. |
 | 5: Record user acceptance decision for ADR 0004 and ADR 0003 | Not Started | Coordinator | Pending | Pending | Gate before skills. |
@@ -121,15 +121,15 @@
 ### Task 2: Reconcile ADR 0004 Roster And Cross-Links
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Edit ADR 0004 so its role roster matches ADR 0003's six identities; add `Refines`/`Implemented by` cross-links between 0003 and 0004; drop "competing" framing. |
 | Owned Files Or Packages | `docs/decisions/0003-adopt-multi-agent-roles-and-skill-catalog.md`, `docs/decisions/0004-adopt-skill-first-multi-agent-workflow.md`. |
 | Coordinator-Owned Shared Files | None beyond owned files. |
 | Context Required | Both ADRs, `.agents/references/workflow.md`. |
 | Behavior To Preserve | ADR decision content and consequences; only roster vocabulary and cross-links change. |
 | Deliverables | Updated ADRs with reconciled roster and explicit cross-links. |
-| Validation Checkpoint | Manual diff review confirming no role outside the six-role roster remains as a top-level identity. |
-| Commit Checkpoint | One commit. |
+| Validation Checkpoint | Passed: manual diff review confirms ADR 0004's top-level role table now uses Coordinator, Planner, Worker, Reviewer, Verifier, and Specialist. |
+| Commit Checkpoint | `docs(decisions): align multi-agent ADR relationship` |
 
 ### Task 3: Rename Mode Labels In `workflow.md` And Update Both ADRs
 | Field | Value |
@@ -276,6 +276,9 @@
 | 2026-05-10 | `./build.ps1 build` | Documentation-only wrapper validation | Passed | Wrapper detected only lightweight uncommitted files and skipped Gradle; manual consistency review is sufficient. |
 | 2026-05-10 | `git diff --check` | Task 1 plan-readiness update | Passed | No whitespace diagnostics. |
 | 2026-05-10 | `./build.ps1 build` | Task 1 plan-readiness update | Passed | Wrapper detected only lightweight uncommitted files and skipped Gradle; manual consistency review is sufficient. |
+| 2026-05-10 | `rg -n "\| Orchestrator|\| Explorer|\| Documentation Agent|\| Release Agent|competing|Competing" docs\decisions\0003-adopt-multi-agent-roles-and-skill-catalog.md docs\decisions\0004-adopt-skill-first-multi-agent-workflow.md` | Task 2 ADR relationship update | Passed | No matches; ADR 0004 no longer has the old roles as top-level table rows or competing-proposal wording. |
+| 2026-05-10 | `git diff --check` | Task 2 ADR relationship update | Passed | No whitespace diagnostics. |
+| 2026-05-10 | `./build.ps1 build` | Task 2 ADR relationship update | Passed | Wrapper detected only lightweight uncommitted files and skipped Gradle; manual consistency review is sufficient. |
 
 ## User Validation
 - Confirm `.agents/references/workflow.md` defines `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, and `M4: gated` with unchanged mode semantics.

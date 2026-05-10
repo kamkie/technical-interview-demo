@@ -13,8 +13,8 @@ Proposed on 2026-05-10
 The repository already defines AI work around spec-driven development, scoped context loading, executable validation, review, and integration rules.
 It also has workflow guidance for solo execution, sidecars, bounded workers, parallel slices, and full sidecar gates.
 
-ADR 0003 proposes a concrete multi-agent roster, starter skill catalog, durable state directories, and per-role read sets.
-This ADR records a lighter competing proposal: adopt the skill-first, orchestrator-led operating model first, then implement concrete roles, skills, and state only after the model is accepted.
+ADR 0003 records the concrete implementation decision for the multi-agent roster, starter skill catalog, durable state directories, and per-role read sets.
+This ADR records the principle decision: adopt the skill-first, orchestrator-led operating model, then use ADR 0003 as the first implementation decision.
 It also proposes clearer workflow-mode labels while preserving the existing `M0` through `M4` identifiers and mode semantics.
 
 The repository needs a decision that separates:
@@ -56,18 +56,19 @@ The rename is vocabulary-only.
 It does not change mode ordering, ownership rules, delegation limits, sidecar behavior, integration responsibility, or validation requirements.
 Use `gated` rather than `agentic` for `M4` because every mode is agentic in some sense; `M4` is distinct because independent gates are required.
 
-Recommended role model:
+Recommended role model, using the six-role implementation vocabulary from ADR 0003:
 
 | Role | Primary responsibility | Typical skills or guidance |
 | --- | --- | --- |
-| Orchestrator | Own intake, routing, decomposition, integration, validation evidence, and handoff | workflow, planning, review |
+| Coordinator | Own intake, routing, decomposition, shared files, integration, final validation evidence, and handoff | workflow, planning, review |
 | Planner | Clarify scope, acceptance criteria, risks, dependencies, and spec gaps | planning |
-| Explorer | Answer narrow codebase, test, docs, or ownership questions in parallel | architecture, documentation, testing |
 | Worker | Implement one bounded code, test, docs, or support-file slice | coding, testing |
-| Tester / Verifier | Define and run validation, investigate failures, and report residual risk | testing, troubleshooting |
 | Reviewer | Check correctness, spec alignment, maintainability, security risk, and hidden scope expansion | review, security-review |
-| Documentation Agent | Keep user-facing docs, AI guidance, decision records, plans, and generated references aligned when applicable | documentation |
-| Release Agent | Perform versioning, changelog, artifact, tag, and publication checks only when release work is explicitly requested | release |
+| Verifier | Define and run validation, investigate failures, and report residual risk | testing, troubleshooting |
+| Specialist | Own role-scoped gates such as architecture, documentation, security, release readiness, or other specialist checks | architecture, documentation, security-review, release |
+
+Exploration, documentation review, and release readiness are Specialist activities unless a later accepted ADR creates separate top-level identities.
+Release work remains inactive unless explicitly requested.
 
 Recommended execution shape:
 
@@ -111,30 +112,21 @@ Execution rules:
 - let the orchestrator, not an individual worker, declare the whole task complete
 - move durable lessons into the owning skill, guide, spec, or documentation artifact
 
-## Comparison With ADR 0003
+## Relationship With ADR 0003
 
 This ADR and ADR 0003 agree on the core direction: multi-agent execution should be orchestrator-led, proportional to task complexity, and backed by reusable skills.
-They differ in how much implementation detail should be accepted now.
+ADR 0004 is the principle decision.
+ADR 0003 is the implementation decision.
 
-| Question | ADR 0003: roles and catalog | ADR 0004: skill-first workflow |
+| Question | ADR 0004: principle decision | ADR 0003: implementation decision |
 | --- | --- | --- |
-| Decision style | Concrete implementation proposal | Principle-first operating model |
-| Scope | Six-role roster, starter skill bundles, durable state directories, per-role read sets, Junie/Codex alignment | Orchestrator-led workflow, agent responsibilities, skill categories, delegation rules |
-| Best fit | The team is ready to build the supporting skill and state infrastructure now | The team wants to agree on operating principles before committing to exact files and role roster |
-| Strength | More actionable; follow-up work can start immediately | Lower commitment; easier to accept without over-specifying implementation |
-| Risk | May overfit the first implementation and create more upfront work | May leave too many implementation choices undecided |
-| Mode vocabulary | Keeps the current mode labels unless revised during implementation | Renames labels to `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, and `M4: gated` |
-| Skill detail | Names concrete starter skills such as `repo-task-execute`, `run-validation`, `diff-review`, and `handoff-pack` | Names activity categories such as `planning`, `coding`, `testing`, and `review` |
-| Agent detail | Defines Coordinator, Planner, Worker, Reviewer, Verifier, and Specialist as explicit identities | Defines broader roles including Orchestrator, Planner, Explorer, Worker, Tester, Reviewer, Documentation Agent, and Release Agent |
-| State model | Materializes `.agents/context/*` directories | Requires clear handoff/reporting but defers exact state storage |
-| Cross-platform scope | Explicitly includes Codex and Junie follow-up | Stays platform-neutral unless follow-up work chooses platform-specific guidance |
-| Adoption path | Accept, then implement a concrete skill catalog and state layout | Accept, then create a plan to choose exact roles, skills, and state layout |
-
-Decision guidance:
-
-- choose ADR 0003 if the desired next step is implementation of a concrete multi-agent infrastructure
-- choose ADR 0004 if the desired next step is agreement on direction before designing the concrete infrastructure
-- combine them by accepting ADR 0004 as the principle decision and using ADR 0003 as the first implementation plan input
+| Decision style | Principle-first operating model | Concrete implementation decision |
+| Scope | Skill-first orchestration, proportional delegation, improved mode labels, and responsibility boundaries | Six-role roster, starter skill bundles, durable state directories, per-role read sets, Junie/Codex alignment |
+| Role vocabulary | Reuses ADR 0003's Coordinator, Planner, Worker, Reviewer, Verifier, Specialist roster | Defines those six identities as the implementation vocabulary |
+| Mode vocabulary | Renames labels to `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, and `M4: gated` | Uses the accepted labels when implemented in workflow guidance |
+| Skill detail | Names activity categories such as `planning`, `coding`, `testing`, and `review` | Names concrete starter skills such as `repo-task-execute`, `run-validation`, `diff-review`, and `handoff-pack` |
+| State model | Requires clear handoff and reporting discipline | Materializes `.agents/context/*` directories |
+| Adoption path | Accept as the architectural direction | Implement as the first concrete rollout of that direction |
 
 ## Consequences
 
@@ -160,7 +152,7 @@ Costs and risks:
 
 Required follow-up changes if accepted:
 
-1. Decide whether ADR 0003 becomes the implementation plan input, is revised, or is rejected.
+1. Use ADR 0003 as the implementation decision for the first rollout.
 2. Update `.agents/references/workflow.md` to use the proposed mode labels while keeping the `M0` through `M4` identifiers and preserving existing mode semantics.
 3. Add or formalize repo-local skills for the accepted activity set.
 4. Update `.agents/references/documentation.md` if skill ownership or artifact-routing rules change.
@@ -170,11 +162,11 @@ Required follow-up changes if accepted:
 
 ## Alternatives Considered
 
-### Accept ADR 0003 Directly
+### Accept Only ADR 0003
 
 ADR 0003 is more actionable and includes the concrete role roster, starter skills, durable state directories, and platform follow-up work.
-It is the better choice if the next step should be immediate implementation.
-This ADR keeps those details as a follow-up decision so the principle can be accepted without committing to the exact implementation.
+It does not separate the operating principle from the first concrete implementation as clearly.
+Keeping both ADRs lets future implementation details change without losing the principle decision.
 
 ### Keep Multi-Agent Work Ad Hoc
 
