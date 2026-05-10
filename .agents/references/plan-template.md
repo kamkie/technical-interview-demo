@@ -9,6 +9,8 @@ When creating a concrete plan, replace placeholders and remove this ownership no
 | Phase | Planning |
 | Status | Draft |
 
+Use one lifecycle phase from `.agents/references/application-lifecycle.md`: `Conceptualization`, `Analysis`, `Triage`, `Planning`, `Implementation`, `Verification`, `Review`, `Integration`, `Release`, `Deployment`, `Operations`, or `Maintenance`.
+
 ## Planning Readiness
 | Field | Value |
 | --- | --- |
@@ -17,6 +19,13 @@ When creating a concrete plan, replace placeholders and remove this ownership no
 | Accepted Fallbacks | None |
 | Ready For Execution | No |
 | Last Updated | YYYY-MM-DD |
+
+## Linked Pre-Planning Artifacts
+| Artifact | Path | Role | Status |
+| --- | --- | --- | --- |
+| ADR | None or `docs/decisions/NNNN-<kebab-title>.md` | Durable decision rationale when needed | Proposed/Accepted/None |
+| PRD | None or `docs/requirements/PRD_<topic>.md` | Product intent when broad user-facing scope needs definition | Draft/Accepted/None |
+| Spec | None or `docs/specs/SPEC_<topic>.md` | Behavior, contract, acceptance criteria, and validation mapping when existing specs are insufficient | Draft/Accepted/None |
 
 ## Summary
 - What will change
@@ -51,6 +60,7 @@ When creating a concrete plan, replace placeholders and remove this ownership no
 - If this coordinates multiple selected plans, use `M3: parallel-sliced` unless the decision log explains serial execution or `M4` sidecar gates
 
 ## Affected Artifacts
+- Pre-planning artifacts
 - Tests
 - Docs
 - OpenAPI
@@ -94,7 +104,7 @@ When creating a concrete plan, replace placeholders and remove this ownership no
 - docs or contract checks
 - manual verification steps
 
-## Testing Strategy
+## Verification Strategy
 - unit tests (logic, edge cases)
 - integration tests (database, external services)
 - contract tests (OpenAPI, REST Docs)

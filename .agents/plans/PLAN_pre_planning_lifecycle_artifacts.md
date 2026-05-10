@@ -15,6 +15,14 @@
 | Ready For Execution | Yes |
 | Last Updated | 2026-05-10 |
 
+## Linked Pre-Planning Artifacts
+| Artifact | Path | Role | Status |
+| --- | --- | --- | --- |
+| ADR | `docs/decisions/0001-adopt-pre-planning-artifacts.md` | Optional ADR, PRD, spec, and plan artifact roles | Accepted on 2026-05-10 |
+| ADR | `docs/decisions/0002-align-lifecycle-vocabulary-with-industry-practice.md` | Accepted lifecycle phase and artifact-role vocabulary | Accepted on 2026-05-10 |
+| PRD | None | No broad user-facing product intent gap for this workflow change | None |
+| Spec | None | Behavior is guidance-only and governed by the accepted ADRs plus owner guides | None |
+
 ## Summary
 - Implement ADR 0001 and ADR 0002 as one coordinated documentation and AI-guidance change after the decision records are accepted.
 - Introduce optional ADR, PRD, spec, and plan artifact roles without making routine maintenance carry extra process.
@@ -41,7 +49,8 @@
 - ADR 0001 proposes optional pre-planning artifacts: ADR, PRD, spec, and plan.
 - ADR 0002 proposes one-word lifecycle phase names and maps them to common SDLC and product-delivery terminology.
 - `.agents/references/application-lifecycle.md` is the live lifecycle vocabulary owner and now uses the accepted lifecycle vocabulary from ADR 0002.
-- `.agents/references/planning.md` still says valid plan phase values mirror the current eleven-phase lifecycle model.
+- `.agents/references/planning.md` now uses the accepted twelve-phase lifecycle values and routes linked ADR, PRD, and spec inputs during planning.
+- `.agents/references/plan-template.md` now includes linked pre-planning artifacts and a verification strategy section.
 - `WORKING_WITH_AI.md` still has human-facing sections for `Discovery`, `Roadmap Intake`, `Testing And Review`, and `Continuous Improvement`.
 - `ROADMAP.md` now tracks this work as in-progress plan-backed work and no longer keeps the original ADR/spec-format ideas as loose intake bullets.
 - This plan now uses `Phase | Implementation` because the ADRs are accepted and implementation has started.
@@ -106,7 +115,7 @@
 | 1: Accept decisions and unlock implementation | Done | User/Agent | `docs(plan): accept pre-planning lifecycle ADRs` | Manual readiness readback passed | Q1 answered by explicit user instruction; plan moved to execution. |
 | 2: Add artifact templates and routing | Done | Agent | `docs(workflow): add pre-planning artifact templates` | Manual template/routing review and `git diff --check` passed | Templates are short and skip-friendly; documentation routing owns ADR, PRD, and spec locations. |
 | 3: Update lifecycle vocabulary owner | Done | Agent | `docs(lifecycle): adopt accepted phase vocabulary` | Manual lifecycle reference review and `git diff --check` passed | Lifecycle owner now defines the accepted twelve-phase model and artifact roles. |
-| 4: Align planning guidance and plan template | Not Started | Agent | Pending | Pending | Depends on Task 3 terminology. |
+| 4: Align planning guidance and plan template | Done | Agent | `docs(planning): align plans with lifecycle artifacts` | Manual plan-guidance review and `git diff --check` passed | Planning guide and template now use accepted phases and linked pre-planning artifacts. |
 | 5: Align human-facing guidance, indexes, and roadmap | Not Started | Agent | Pending | Pending | Depends on Tasks 2-4. |
 | 6: Review, validate, and close plan implementation | Not Started | Agent | Pending | Pending | Manual review only unless normal validation is re-enabled. |
 
@@ -153,15 +162,15 @@
 ### Task 4: Align planning guidance and plan template
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Teach plan creation, readiness review, and plan files to use the accepted lifecycle vocabulary and linked pre-planning artifacts. |
 | Owned Files Or Packages | `.agents/references/planning.md`, `.agents/references/plan-template.md` |
 | Coordinator-Owned Shared Files | `.agents/references/application-lifecycle.md`, `.agents/references/documentation.md`, `AGENTS.md`, this plan |
 | Context Required | `AGENTS.md`, `.agents/references/execution.md`, this plan, `.agents/references/planning.md`, `.agents/references/plan-template.md`, `.agents/references/references-rules.md`, ADR 0001, ADR 0002 |
 | Behavior To Preserve | Plans stay decision-complete execution artifacts; rough ideas route to `Conceptualization`, requirement definition routes to `Analysis`, sequencing routes to `Triage`, and implementation handoff stays in `Planning`. |
 | Deliverables | Updated valid phase values, readiness guidance, plan workflow, artifact-link prompts, and lifecycle placeholders. |
-| Validation Checkpoint | Manual plan-guidance review confirms `Planning Readiness`, open questions, decisions, progress tracking, and plan-task quality rules still align. |
-| Commit Checkpoint | Commit after planning guide and template alignment. |
+| Validation Checkpoint | Passed: manual plan-guidance review confirms `Planning Readiness`, open questions, decisions, progress tracking, and plan-task quality rules still align. |
+| Commit Checkpoint | `docs(planning): align plans with lifecycle artifacts` |
 
 ### Task 5: Align human-facing guidance, indexes, and roadmap
 | Field | Value |
@@ -204,7 +213,7 @@
 - Updating phase names in planning guidance before the lifecycle owner guide changes, leaving inconsistent valid values.
 - Renaming historical plan or changelog text and creating unnecessary churn.
 - Leaving `WORKING_WITH_AI.md` pointing at stale lifecycle sources or nonexistent spec files.
-- Keeping both old and new roadmap intake vocabulary as live guidance.
+- Keeping both previous and accepted triage vocabulary as live guidance.
 - Adding templates that duplicate standing rules instead of linking to owner guidance.
 
 ## Validation Plan
@@ -219,7 +228,7 @@
   - generated documentation checks
   - linters and formatters
 
-## Testing Strategy
+## Verification Strategy
 - Unit tests: not applicable.
 - Integration tests: not applicable.
 - Contract tests: not applicable because runtime behavior and public API contract should not change.
@@ -243,6 +252,9 @@
 | 2026-05-10 | Manual lifecycle reference review | `.agents/references/application-lifecycle.md` against ADR 0002 and `.agents/references/references-rules.md` | Passed | Lifecycle owner now has twelve accepted phases, updated activities, loops, triggers, artifact roles, gaps, non-goals, and maintenance wording. |
 | 2026-05-10 | Targeted lifecycle vocabulary search | `.agents/references/application-lifecycle.md` live phase tables and activity headings | Passed | Previous phase labels appear only in the migration map. |
 | 2026-05-10 | `git diff --check` | Documentation-only task 3 diff | Passed | No whitespace errors. |
+| 2026-05-10 | Manual plan-guidance review | `.agents/references/planning.md`, `.agents/references/plan-template.md`, and this plan | Passed | Planning readiness, linked artifact prompts, plan-task quality rules, progress tracking, and validation sections remain aligned. |
+| 2026-05-10 | Targeted planning vocabulary search | `.agents/references/planning.md` and `.agents/references/plan-template.md` | Passed | Valid phase values and template placeholders use accepted lifecycle terms; old phase labels were removed from live planning guidance. |
+| 2026-05-10 | `git diff --check` | Documentation-only task 4 diff | Passed | No whitespace errors. |
 
 ## User Validation
 - After implementation, review the updated lifecycle and pre-planning guidance for terminology fit and workflow overhead.

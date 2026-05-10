@@ -6,7 +6,7 @@ Use `.agents/references/plan-template.md` only when you need the full skeleton.
 Use `.agents/references/application-lifecycle.md` for lifecycle phase, activity, and loop vocabulary.
 
 Use this file when the user asks for a plan, plan-task breakdown, readiness review, execution-shape decision, or detailed change strategy.
-Use `.agents/references/plan-execution.md` after the user asks to execute a whole active plan, `.agents/references/execution.md` for ad hoc tasks or one plan task, `.agents/references/workflow.md` for branch, worktree, delegation, shared-file, or integration mechanics, `.agents/references/documentation.md` for artifact routing, and `.agents/references/testing.md` for validation scope.
+Use `.agents/references/plan-execution.md` after the user asks to execute a whole active plan, `.agents/references/execution.md` for ad hoc tasks or one plan task, `.agents/references/workflow.md` for branch, worktree, delegation, shared-file, or integration mechanics, `.agents/references/documentation.md` for artifact routing and pre-planning artifacts, and `.agents/references/testing.md` for validation scope.
 Use `.agents/tasks/` only when the user asks for a named repository-specific task prompt that is more specific than direct plan authoring.
 
 ## Modes And Read Set
@@ -14,7 +14,7 @@ Use `.agents/tasks/` only when the user asks for a named repository-specific tas
 Choose the mode that matches the request:
 
 - `Create Plan`: turn a concrete request into a new `.agents/plans/PLAN_<topic>.md`
-- `Plan From Roadmap`: turn one roadmap item into a plan and keep `ROADMAP.md` aligned
+- `Plan From Roadmap`: turn one triaged roadmap item into a plan and keep `ROADMAP.md` aligned
 - `Revise Plan`: update an existing active plan for new information, constraints, or changed scope
 - `Review Readiness`: decide whether a plan is `Ready`, `Needs Input`, `Blocked`, or still draft
 - `Choose Execution Shape`: decide which `M0` through `M4` workflow mode fits the planned work before execution starts
@@ -24,7 +24,7 @@ Load only what the request needs:
 - always: `AGENTS.md` and this file
 - new plan or substantial revision: `.agents/references/plan-template.md`
 - plan revision or readiness review: the target `.agents/plans/PLAN_*.md`
-- roadmap-driven work or concrete active plans: `ROADMAP.md`
+- triage-driven roadmap work or concrete active plans: `ROADMAP.md`
 - lifecycle wording changes: `.agents/references/application-lifecycle.md`
 - artifact routing: `.agents/references/documentation.md`
 - validation selection: `.agents/references/testing.md`
@@ -58,11 +58,11 @@ Every active plan starts with a lifecycle block followed by a planning readiness
 ```
 
 Use `Phase` for the coarse lifecycle stage.
-Valid plan phase values mirror the eleven phases in `.agents/references/application-lifecycle.md`: `Discovery`, `Roadmap Intake`, `Planning`, `Implementation`, `Testing`, `Review`, `Integration`, `Release`, `Deployment`, `Operations`, and `Continuous Improvement`.
+Valid plan phase values mirror the twelve phases in `.agents/references/application-lifecycle.md`: `Conceptualization`, `Analysis`, `Triage`, `Planning`, `Implementation`, `Verification`, `Review`, `Integration`, `Release`, `Deployment`, `Operations`, and `Maintenance`.
 
 `Closed` is not a phase.
 It is a terminal plan status for work whose lifecycle is complete and archived or intentionally retired.
-When a plan uses `Status | Closed`, keep `Phase` set to the lifecycle phase that closed the work, normally `Release` or `Continuous Improvement`.
+When a plan uses `Status | Closed`, keep `Phase` set to the lifecycle phase that closed the work, normally `Release` or `Maintenance`.
 
 Use these `Status` values only: `Draft`, `Needs Input`, `Ready`, `In Progress`, `Blocked`, `Implemented`, `Released`, and `Closed`.
 Every phase transition is explicit: update the plan and any active-work owner artifact in the same change.
@@ -75,18 +75,18 @@ Keep answered or deferred questions visible so later executors can see how readi
 ## Planning Workflow
 
 A plan is ready only when it is decision-complete for another agent to execute without inventing missing product, contract, validation, or ownership choices.
-Planning follows `Frame` -> `Design` -> `Spec` -> `Decompose` -> `Validate-Plan` -> `Sync`.
+Planning follows `Frame` -> `Elicit` -> `Analyze` -> `Define-Requirements` -> `Spec` -> `Decompose` -> `Validate-Plan` -> `Sync`, skipping earlier Analysis activities only when existing artifacts already answer them.
 When the plan is not decision-complete or execution reality later disagrees with it, the Plan Loop uses `Replan?` and returns to `Validate-Plan` until the plan is ready again.
 
 For every plan creation, revision, or readiness pass:
 
 1. Identify the behavior or workflow being planned.
-2. Identify the governing spec, contract, roadmap, or AI-guidance artifact before proposing implementation.
-3. Decide whether the work is still `Discovery`, belongs in `Roadmap Intake`, is ready for `Planning`, or is blocked by missing input.
+2. Identify the governing spec, contract, roadmap, ADR, PRD, standalone spec, or AI-guidance artifact before proposing implementation.
+3. Decide whether the work is still `Conceptualization`, needs `Analysis`, belongs in `Triage`, is ready for `Planning`, or is blocked by missing input.
 4. Resolve what repo truth already answers before asking the user.
 5. Record remaining material questions as stable `Q` rows with owner, status, fallback or decision, and `Blocks Ready?`.
 6. Record answered questions, repo-truth conclusions, and accepted fallback assumptions in `Decision Log And Assumptions`.
-7. Choose an execution shape, likely artifact set, plan tasks, validation, and user verification.
+7. Choose an execution shape, linked pre-planning artifact set, plan tasks, validation, and user verification.
 8. Keep `ROADMAP.md` aligned when creating or materially revising a concrete active plan.
 9. Run this guide's final check before handoff.
 
@@ -94,6 +94,8 @@ Plan from repo truth first.
 Ask the user only when ambiguity affects product intent, scope, compatibility, rollout, acceptance criteria, validation, or another material tradeoff.
 For non-blocking preference gaps, choose a conservative fallback and record it.
 Do not leave material open questions as loose prose.
+Use an ADR, PRD, or standalone spec only when it resolves ambiguity that would otherwise make the plan invent product, behavior, contract, or process truth.
+Route rough idea capture to `Conceptualization`, structured requirements or decision work to `Analysis`, active-work selection to `Triage`, and executable `.agents/plans/PLAN_*.md` creation to `Planning`.
 
 ## Plan Files
 
@@ -101,7 +103,7 @@ Create concrete plans under `.agents/plans/` as `PLAN_<topic>.md` with lowercase
 Prefer one coherent plan unless the work is genuinely disjoint.
 Start new plans from `.agents/references/plan-template.md`.
 
-Every concrete plan must identify the behavior, governing specs or contract artifacts, scope and non-goals, affected files, compatibility promises, planning readiness, requirement gaps, locked decisions and assumptions, execution shape and shared-file boundaries, per-plan-task context requirements, plan-task checkpoints, progress tracking, validation, and user verification.
+Every concrete plan must identify the behavior, linked ADRs, PRDs, and standalone specs when they exist, governing executable specs or contract artifacts, scope and non-goals, affected files, compatibility promises, planning readiness, requirement gaps, locked decisions and assumptions, execution shape and shared-file boundaries, per-plan-task context requirements, plan-task checkpoints, progress tracking, validation, and user verification.
 Keep the plan self-contained enough for another agent to execute without inventing missing decisions.
 Use `Current State` for observed repo facts; when a fact is inferred, say so and record whether that inference affects readiness.
 
@@ -166,14 +168,14 @@ If no blocking gap remains, say so directly and name any residual non-blocking r
 - Internal refactors should preserve existing specs and avoid OpenAPI, REST Docs, or README churn unless behavior actually changes.
 - Setup or environment changes belong in `SETUP.md`; AI-facing command-wrapper guidance belongs in `.agents/references/command-wrapper.md`.
 - Durable architecture, design, code-style, testing, review, release, workflow, or engineering lessons belong in their focused AI owner files, not only in a temporary plan.
-- Roadmap-only work updates `ROADMAP.md`; do not create an execution plan when work is not ready to implement.
+- Triage-only or roadmap-only work updates `ROADMAP.md`; do not create an execution plan when work is not ready to implement.
 
 ## Final Check
 
 Before presenting a plan, verify that it:
 
 - uses valid lifecycle `Phase` and `Status` values
-- identifies governing specs and likely changed files
+- identifies linked ADR, PRD, or standalone spec artifacts when they exist, plus governing specs and likely changed files
 - keeps `Planning Readiness`, open questions, decisions, progress, blockers, and validation aligned
 - separates scope, non-goals, compatibility promises, unresolved gaps, and accepted fallbacks
 - confirms `ROADMAP.md` reflects the plan path and active-work status when applicable
