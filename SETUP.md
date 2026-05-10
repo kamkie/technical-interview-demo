@@ -61,6 +61,14 @@ Useful tools by workflow:
 - API and contract checks: OpenAPI and REST Docs tasks through `./build.ps1`; `ijhttp` only when manual HTTP regression suites are requested
 - deployment and release checks: Helm, `kubectl`, Cosign, and Trivy-related wrapper tasks only when deployment, image verification, or release work is in scope
 
+Quickly check the local toolchain from the repository root:
+
+```powershell
+pwsh ./scripts/check-local-tools.ps1
+```
+
+The helper loads the root `.env` before Java-sensitive probes, reports required, conditional, recommended, and diagnostic tools, and exits non-zero only when required checks fail. Use `-RequiredOnly` for the fastest core check or `-Strict` when conditional and recommended tool gaps should fail the command.
+
 When a relevant tool is missing, the AI should name the missing command or dependency, name the fallback it used, and state any remaining risk.
 Examples: "`rg` is unavailable, using PowerShell search instead" or "Python with PyYAML is unavailable, so the dependency-free PowerShell skill validator ran instead."
 
