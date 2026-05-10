@@ -46,9 +46,9 @@ Start with the narrowest matching scope. Do not bulk-load `.agents/references/`,
 - whole-plan execution: `.agents/references/plan-execution.md`, the active plan, and only the current milestone's named context
 - release work: `.agents/references/releases.md`; load detailed release references only when their phase begins
 
-### Owner Guides
+### Domain Guides
 
-Add only owner guides whose domains match the current task.
+Add only guides whose domains match the current task.
 
 - artifact routing, cross-file alignment, AI-document maintenance outside `.agents/references/*.md`, or repository knowledge ownership: `.agents/references/documentation.md`
 - rules for `.agents/references/*.md` documents: `.agents/references/references-rules.md`
