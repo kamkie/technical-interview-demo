@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed on 2026-05-10
+Accepted on 2026-05-10
 
 ## Date
 
@@ -153,7 +153,7 @@ Costs and risks:
 Required follow-up changes if accepted:
 
 1. Use ADR 0003 as the implementation decision for the first rollout.
-2. Update `.agents/references/workflow.md` to use the proposed mode labels while keeping the `M0` through `M4` identifiers and preserving existing mode semantics.
+2. Update `.agents/references/workflow.md` to use the accepted mode labels while keeping the `M0` through `M4` identifiers and preserving existing mode semantics.
 3. Add or formalize repo-local skills for the accepted activity set.
 4. Update `.agents/references/documentation.md` if skill ownership or artifact-routing rules change.
 5. Update `WORKING_WITH_AI.md` if human-facing AI collaboration guidance should describe when to request or expect multi-agent workflows.
@@ -208,8 +208,8 @@ The two should remain aligned rather than one replacing the other.
 
 ## Confirmation
 
-This ADR remains proposed until explicitly accepted.
-Before implementation, confirm that:
+This ADR was accepted by explicit user instruction on 2026-05-10.
+Implementation must continue to confirm that:
 
 - the workflow still follows spec-driven development and repository completion rules
 - the orchestrator remains accountable for final integration, validation, and handoff

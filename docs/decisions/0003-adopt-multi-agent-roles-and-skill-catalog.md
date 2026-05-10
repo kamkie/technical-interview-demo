@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed on 2026-05-10
+Accepted on 2026-05-10
 
 ## Date
 
@@ -218,8 +218,7 @@ Contradicts the durable-state expectation already declared in `workflow.md`.
 
 ## Confirmation
 
-This ADR is proposed and not yet accepted.
-Acceptance requires an explicit user decision recorded in `## Status`.
+This ADR was accepted by explicit user instruction on 2026-05-10.
 Implementation should be verified by manual documentation review that:
 
 - `.agents/references/workflow.md` declares the six-role roster and the per-role read set

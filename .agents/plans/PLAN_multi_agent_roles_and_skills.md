@@ -18,8 +18,8 @@
 ## Linked Pre-Planning Artifacts
 | Artifact | Path | Role | Status |
 | --- | --- | --- | --- |
-| ADR | `docs/decisions/0004-adopt-skill-first-multi-agent-workflow.md` | Principle ADR: orchestrator-led skill-first operating model | Proposed |
-| ADR | `docs/decisions/0003-adopt-multi-agent-roles-and-skill-catalog.md` | Implementation ADR: six-role roster, starter skill catalog, durable state | Proposed |
+| ADR | `docs/decisions/0004-adopt-skill-first-multi-agent-workflow.md` | Principle ADR: orchestrator-led skill-first operating model | Accepted |
+| ADR | `docs/decisions/0003-adopt-multi-agent-roles-and-skill-catalog.md` | Implementation ADR: six-role roster, starter skill catalog, durable state | Accepted |
 | PRD | None | Not user-facing | None |
 | Spec | None | AI workflow architecture, no runtime contract change | None |
 
@@ -47,7 +47,7 @@
   - Introducing additional ADRs beyond updates to 0003/0004.
 
 ## Current State
-- Phase: Planning. Both ADRs are `Proposed`, dated 2026-05-10, and present each other as competing.
+- Phase: Implementation. Both ADRs are accepted as of 2026-05-10; ADR 0004 is the principle decision and ADR 0003 is the implementation decision.
 - `.agents/references/workflow.md` now defines `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, `M4: gated`, declares the six-role read-set table, and references materialized `.agents/context/*` directories.
 - `.agents/skills/` contains only `gh-fix-ci/` and `gh-fix-security-quality/`.
 - ADR 0004 introduces role names (`Orchestrator`, `Explorer`, `Documentation Agent`, `Release Agent`) not present in `workflow.md`, creating vocabulary drift.
@@ -96,7 +96,7 @@
 | 2: Reconcile ADR 0004 roster + ADR cross-links | Done | Worker | `docs(decisions): align multi-agent ADR relationship` | `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | ADR 0004 now uses the six-role roster and ADR 0003 is the implementation decision. |
 | 3: Rename mode labels in `workflow.md` and update both ADRs | Done | Worker | `docs(workflow): rename multi-agent mode labels` | `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | Mode identifiers and semantics preserved. |
 | 4: Materialize `.agents/context/*` and add per-role read-set table | Done | Worker | `docs(workflow): add multi-agent state readsets` | `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | Context directories have tracked README files. |
-| 5: Record user acceptance decision for ADR 0004 and ADR 0003 | Not Started | Coordinator | Pending | Pending | Gate before skills. |
+| 5: Record user acceptance decision for ADR 0004 and ADR 0003 | Done | Coordinator | `docs(decisions): accept multi-agent workflow ADRs` | `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | ADR 0004 and ADR 0003 are accepted as of 2026-05-10. |
 | 6: Add Phase B skill bundles | Not Started | Worker | Pending | Pending | Phase B. |
 | 7: Smoke-test the loop on one bounded task | Not Started | Coordinator + Worker + Reviewer + Verifier | Pending | Pending | Captures `LEARNINGS.md` entry. |
 | 8: Add Phase C skill bundles and platform alignment | Not Started | Worker | Pending | Pending | Phase C. |
@@ -160,15 +160,15 @@
 ### Task 5: Record User Acceptance Decision For ADR 0004 And ADR 0003
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Record the explicit user decision: accept ADR 0004, accept ADR 0003, merge one into the other, or leave either proposed. |
 | Owned Files Or Packages | Both ADRs. |
 | Coordinator-Owned Shared Files | None. |
 | Context Required | Both ADRs after Tasks 2–4. |
 | Behavior To Preserve | ADR content; only status changes. |
 | Deliverables | ADR status and relationship updated according to the user decision. |
-| Validation Checkpoint | Spec Priority compliance: explicit user decision recorded before any ADR is marked `Accepted`. |
-| Commit Checkpoint | One commit. |
+| Validation Checkpoint | Passed: explicit user decision recorded and both ADR status blocks now say `Accepted on 2026-05-10`. |
+| Commit Checkpoint | `docs(decisions): accept multi-agent workflow ADRs` |
 
 ### Task 6: Add Phase B Skill Bundles
 | Field | Value |
@@ -286,6 +286,9 @@
 | 2026-05-10 | `rg -n "Role Identities And Read Sets|Coordinator|Planner|Worker|Reviewer|Verifier|Specialist" .agents\references\workflow.md` | Task 4 context directories and read-set table | Passed | Read-set table and six role identities are present in `workflow.md`. |
 | 2026-05-10 | `git diff --check` | Task 4 context directories and read-set table | Passed | No whitespace diagnostics. |
 | 2026-05-10 | `./build.ps1 build` | Task 4 context directories and read-set table | Passed | Wrapper detected only lightweight uncommitted files and skipped Gradle; manual consistency review is sufficient. |
+| 2026-05-10 | `rg -n "Status|Accepted on 2026-05-10|proposed|not yet accepted|Proposed" docs\decisions\0003-adopt-multi-agent-roles-and-skill-catalog.md docs\decisions\0004-adopt-skill-first-multi-agent-workflow.md .agents\plans\PLAN_multi_agent_roles_and_skills.md` | Task 5 ADR acceptance | Passed | Both ADR status blocks are accepted; remaining lowercase `proposed` text appears only in generic task wording. |
+| 2026-05-10 | `git diff --check` | Task 5 ADR acceptance | Passed | No whitespace diagnostics. |
+| 2026-05-10 | `./build.ps1 build` | Task 5 ADR acceptance | Passed | Wrapper detected only lightweight uncommitted files and skipped Gradle; manual consistency review is sufficient. |
 
 ## User Validation
 - Confirm `.agents/references/workflow.md` defines `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, and `M4: gated` with unchanged mode semantics.
