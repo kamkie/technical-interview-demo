@@ -28,18 +28,21 @@ When resolving truth, use this order:
 6. historical release notes in `CHANGELOG.md`
 7. topic-owning AI or human guidance documents
 
-## Working Context And Guidance Loading
+## Working AI Context
 
-Load only the source artifacts and owner guides that match the current task.
-Do not treat `docs/` or `.agents/` guidance as higher-priority truth than executable specs, published contract docs, or the human-facing artifact that owns the topic.
+Use the smallest task-shaped context that can answer the request. Guidance in `docs/` and `.agents/` helps route work, but it does not outrank executable specs, published contract docs, or the human-facing artifact that owns the topic.
 
-### Context Loading Model
+Use `## Documents Map` in two passes: choose the task-shaped starting point, then add only owner guides whose domains match the current task. Do not bulk-load `.agents/references/`, active plans, archived plans, templates, task prompts, reports, or skill bodies as a pre-flight default.
 
-Treat cross-references in owner guides as conditional pointers, not recursive load requirements.
-A loaded guide is terminal unless the current task matches another guide's explicit entry condition.
-Do not bulk-load `.agents/references/`, active plans, archived plans, templates, task prompts, reports, or skill bodies as a pre-flight default.
+Treat cross-references in loaded guides as conditional pointers, not recursive load requirements. A loaded guide is terminal unless another guide's explicit entry condition applies to the current task. Add more context only when the task exposes a concrete trigger for it.
 
-Start from the smallest task-shaped read set:
+Once work enters execution, follow `.agents/references/execution.md` or `.agents/references/plan-execution.md` for context switching and checkpoint summaries.
+
+## Documents Map
+
+Use this map to choose the task-shaped starting point and matching owner guides.
+
+Task-shaped starting points:
 
 - documentation-only edit with clear ownership: target document plus the owning guide
 - `.agents/references/*.md` edit: target reference plus `.agents/references/references-rules.md`
@@ -47,13 +50,7 @@ Start from the smallest task-shaped read set:
 - whole-plan execution: `.agents/references/plan-execution.md`, the active plan, and only the current milestone's named context
 - release work: `.agents/references/releases.md`; load detailed release references only when their phase begins
 
-Add more context only when a trigger fires.
-Once work enters execution, follow `.agents/references/execution.md` or `.agents/references/plan-execution.md` for context switching and checkpoint summaries.
-
-### Owner Map
-
-Load a guide only when the current task matches its owner-map domain.
-Treat cross-references from other guides as optional pointers, not automatic reasons to load more files.
+Owner guides:
 
 - artifact routing, cross-file alignment, AI-document maintenance outside `.agents/references/*.md`, or repository knowledge ownership: `.agents/references/documentation.md`
 - rules for `.agents/references/*.md` documents: `.agents/references/references-rules.md`
@@ -74,7 +71,7 @@ Treat cross-references from other guides as optional pointers, not automatic rea
 - active plan content: the relevant `.agents/plans/PLAN_*.md`
 - repository task prompt, template, archived plan, report, or skill body: only when directly invoked or required
 
-### AI Guidance Maintenance
+## AI Guidance Maintenance
 
 When AI guidance changes, update the focused owner instead of duplicating the rule in task prompts, plans, skills, workflow state files, or final responses.
 
