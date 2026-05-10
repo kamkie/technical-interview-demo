@@ -35,6 +35,7 @@ Validation: <command/result>
 # Project metadata footers:
 #   Project-Source is required for AI-created commits.
 #   Co-authored-by footer is required for AI-created commits.
+#   Keep all metadata footers contiguous; do not put blank lines between trailer lines.
 #   Use plan for whole-plan or plan/spec-only commits.
 #   Use plan-task for one named task within an active plan.
 #   Use task for a repo-task starter.

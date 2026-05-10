@@ -62,6 +62,8 @@ For ad hoc tasks and single plan tasks:
 AI-created commits use Conventional Commits 1.0.0 style plus repository project metadata footers.
 
 Use the `.gitmessage` file in the repository root as the authoritative template, rule set, and example source for all AI-created commits.
+Keep all project metadata footers in one contiguous trailer block with no blank lines between footer lines.
+When creating commits non-interactively, use a commit message file or put all footer lines in one final message paragraph; do not pass each footer as a separate `git commit -m` argument because Git inserts blank lines between message paragraphs.
 
 ## Context Switching
 
