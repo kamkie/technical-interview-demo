@@ -6,7 +6,7 @@ It does not own planning rules or required plan shape.
 Source of truth:
 
 - `.agents/references/planning.md` owns planning modes, read sets, lifecycle vocabulary, readiness rules, roadmap synchronization, milestone rules, routing rules, and final checks.
-- `.agents/templates/plan-template.md` owns the canonical plan skeleton and required sections.
+- `.agents/references/plan-template.md` owns the canonical plan skeleton and required sections.
 - `docs/specs/application-lifecycle-spec.md` owns the lifecycle phase model.
 - `docs/specs/lifecycle-phase-activities.md` owns activity and loop names used in planning prose.
 - `.agents/references/documentation.md` owns artifact routing.

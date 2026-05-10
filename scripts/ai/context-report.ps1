@@ -435,11 +435,6 @@ function Get-BucketName
         return "on-demand references"
     }
 
-    if ($Path.StartsWith(".agents/templates/"))
-    {
-        return "on-demand templates"
-    }
-
     if ($Path.StartsWith(".agents/skills/"))
     {
         if ($Path -like ".agents/skills/*/SKILL.md" -or $Path -like ".agents/skills/*/agents/*")
@@ -1108,7 +1103,6 @@ function Build-Report
         ".agents/archive/",
         ".agents/reports/",
         ".agents/references/",
-        ".agents/templates/",
         ".agents/skills/",
         ".agents/skills/repo-task/",
         ".agents/skills/repo-task/references/",

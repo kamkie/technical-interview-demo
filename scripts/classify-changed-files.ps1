@@ -34,7 +34,6 @@ $lightweightPatterns = @(
     "docs/*",
     ".agents/references/*",
     ".agents/plans/*",
-    ".agents/templates/*",
     ".agents/reports/*",
     ".agents/archive/*",
     ".agents/skills/*",

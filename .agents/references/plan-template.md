@@ -1,5 +1,8 @@
 # Plan: <title>
 
+`.agents/references/plan-template.md` owns the canonical skeleton for `.agents/plans/PLAN_*.md` files.
+When creating a concrete plan, replace placeholders and remove this ownership note from the plan file.
+
 ## Lifecycle
 | Status | Current |
 | --- | --- |

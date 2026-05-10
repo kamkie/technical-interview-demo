@@ -2,7 +2,7 @@
 
 `.agents/references/planning.md` owns the standing rules for creating, revising, and reviewing executable plans under `.agents/plans/`.
 Detailed examples and fill guidance are on demand in `.agents/references/plan-authoring-guide.md`.
-Use `.agents/templates/plan-template.md` when you need the full skeleton.
+Use `.agents/references/plan-template.md` when you need the full skeleton.
 Use `docs/specs/application-lifecycle-spec.md` for lifecycle phase vocabulary and `docs/specs/lifecycle-phase-activities.md` for activity and loop names.
 
 Use this file when the user asks for a plan, milestone breakdown, readiness review, execution-shape decision, or detailed change strategy.
@@ -22,7 +22,7 @@ Choose the mode that matches the request:
 Load only what the request needs:
 
 - always: `AGENTS.md` and this file
-- new plan or substantial revision: `.agents/templates/plan-template.md`
+- new plan or substantial revision: `.agents/references/plan-template.md`
 - detailed fill examples or readiness review shape: `.agents/references/plan-authoring-guide.md`
 - plan revision or readiness review: the target `.agents/plans/PLAN_*.md`
 - roadmap-driven work or concrete active plans: `ROADMAP.md`
@@ -98,7 +98,7 @@ Do not leave material open questions as loose prose.
 
 Create concrete plans under `.agents/plans/` as `PLAN_<topic>.md` with lowercase underscore topic names.
 Prefer one coherent plan unless the work is genuinely disjoint.
-Start new plans from `.agents/templates/plan-template.md`.
+Start new plans from `.agents/references/plan-template.md`.
 
 Every concrete plan must identify the behavior, governing specs or contract artifacts, scope and non-goals, affected files, compatibility promises, planning readiness, requirement gaps, locked decisions and assumptions, execution shape and shared-file boundaries, per-milestone context requirements, milestone checkpoints, progress tracking, validation, and user verification.
 Keep the plan self-contained enough for another agent to execute without inventing missing decisions.

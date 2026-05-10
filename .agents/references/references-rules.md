@@ -31,7 +31,7 @@ Entry points:
 
 - keep AI instruction markdown files under `.agents/references/` by default; `AGENTS.md` is the only standing top-level exception
 - prefer lower-kebab-case names for new reference files unless preserving a deliberate existing name such as `.agents/references/LEARNINGS.md`
-- keep current detailed examples and templates in `.agents/templates/` or focused reference files instead of expanding standing top-level AI files
+- keep current detailed examples and reusable templates in focused reference files instead of expanding standing top-level AI files
 - keep retired report-like AI analysis artifacts under `.agents/archive/`, not `.agents/references/`
 - keep active execution plans under `.agents/plans/`; reference documents must not become task-specific progress logs
 - put durable repo-wide lessons in `.agents/references/LEARNINGS.md` only when they should survive refactors

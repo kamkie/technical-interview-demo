@@ -61,7 +61,7 @@ Use these files when you want to work with AI in this repository or understand w
 - [.agents/references/testing.md](.agents/references/testing.md): validation rules and change-sensitive checks
 - [.agents/references/workflow.md](.agents/references/workflow.md): branch, worktree, delegation, worker-log, integration, and remote-handoff mechanics
 - `.agents/plans/PLAN_*.md`: task-specific execution plans for active work
-- `.agents/references/` and `.agents/templates/`: on-demand detailed references and templates
+- `.agents/references/`: on-demand detailed references and reusable plan template
 - `.agents/reports/`: generated AI analysis reports only when a task intentionally creates a tracked report
 - `.agents/archive/`: archived plan files for completed or released work
 

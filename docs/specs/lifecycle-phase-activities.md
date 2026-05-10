@@ -122,7 +122,7 @@ This table maps each phase to its in-order activity sequence; `?` marks conditio
 | --- | --- | --- |
 | Discovery | `Scan` → `Frame` → `Clarify?` → `Capture?` | `AGENTS.md`, `docs/ARCHITECTURE.md`, `.agents/references/LEARNINGS.md` |
 | Roadmap Intake | `Intake` → `Refine` → `Prioritize` → `Sequence` → `Sync` | `ROADMAP.md`, `docs/DESIGN.md` |
-| Planning | `Frame` → `Design` → `Spec` → `Decompose` → `Validate-Plan` → `Sync` → `Replan?` | `.agents/references/planning.md`, `docs/DESIGN.md`, `.agents/templates/plan-template.md` |
+| Planning | `Frame` → `Design` → `Spec` → `Decompose` → `Validate-Plan` → `Sync` → `Replan?` | `.agents/references/planning.md`, `docs/DESIGN.md`, `.agents/references/plan-template.md` |
 | Implementation | `Spec` → `Code` → `Docs` → `Run` → `Replan?` → `Self-Review` → `Code Review` → `Security Review?` → `Commit` → `Handoff` | `.agents/references/execution.md`, `.agents/references/documentation.md`, `.agents/references/code-style.md`, `.agents/references/workflow.md` |
 | Testing | `Plan-Tests` → `Author-Tests` → `Run` → `Diagnose?` → `Fix?` → `Re-run` → `Record` | `.agents/references/testing.md`, `.agents/references/troubleshooting.md` |
 | Review | `Self-Review` → `Code Review` → `Security Review?` → `Docs Review?` → `Decide` | `.agents/references/reviews.md` |
@@ -237,7 +237,7 @@ Items the phase activity sequence exposes that this repository does not yet cove
 
 - `AGENTS.md` for the phase owner map and `Context Hygiene` rule
 - `.agents/references/planning.md` for plan `Phase` and `Status` vocabulary
-- `.agents/templates/plan-template.md` for the current plan skeleton and readiness/progress sections
+- `.agents/references/plan-template.md` for the current plan skeleton and readiness/progress sections
 - `.agents/references/plan-authoring-guide.md` for planning examples and fill guidance
 - `.agents/references/execution.md` for the canonical milestone loop
 - `.agents/references/testing.md` and `.agents/references/troubleshooting.md` for the validation and red-green details

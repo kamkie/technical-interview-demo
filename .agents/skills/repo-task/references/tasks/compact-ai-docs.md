@@ -10,7 +10,7 @@ Compact the standing AI instruction files.
 
 - Read `AGENTS.md`, `.agents/references/documentation.md`, `.agents/skills/repo-task/references/spec.md`, `.agents/skills/repo-task/references/index.md`, and this task file first.
 - Use targeted searches and cross-references to choose the standing owner guides under `.agents/references/` that are relevant to the compaction target.
-- Do not bulk-load `.agents/archive/`, `.agents/references/`, `.agents/templates/`, `.agents/skills/`, or active `.agents/plans/PLAN_*.md` files; open them only when a cross-reference or overlapping policy points there.
+- Do not bulk-load `.agents/archive/`, `.agents/references/`, `.agents/skills/`, or active `.agents/plans/PLAN_*.md` files; open them only when a cross-reference or overlapping policy points there.
 - Check `WORKING_WITH_AI.md` only when human-facing workflow wording overlaps with the AI guidance being changed.
 
 #### Compaction Targets
@@ -21,7 +21,7 @@ Look for any of the following, not only verbatim duplicates:
 - overlapping or restated policies (same intent, different wording)
 - guidance placed outside its owning file (per `.agents/references/documentation.md` ownership rules)
 - stale references (renamed/moved files, archived plans, retired tasks)
-- verbose phrasing, redundant lists, or examples that belong in `.agents/references/` or `.agents/templates/`
+- verbose phrasing, redundant lists, or examples that belong in `.agents/references/`
 - orphaned cross-references and broken anchors
 - stale workflow references and anchors after delegated-work mechanics move between `.agents/references/workflow.md` and `.agents/references/`, checked with targeted `rg` searches rather than bulk-loading all references
 - accumulated history inside standing guideline files: changelog notes, "previously…/now…" wording, migration narratives, dated decisions, deprecation traces, user-request history, prior directive wording, or rationale about past states rather than current rules
