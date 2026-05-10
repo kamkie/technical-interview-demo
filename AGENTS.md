@@ -40,10 +40,11 @@ Treat cross-references in loaded guides as conditional pointers, not recursive l
 
 Start with the narrowest matching scope. Do not bulk-load `.agents/references/`, active plans, archived plans, templates, task prompts, reports, or skill bodies as a pre-flight default.
 
+- named task prompt: identify the exact prompt from `.agents/tasks/README.md` or a direct path, load only that prompt, then follow its declared read set
 - documentation-only edit with clear ownership: target document plus the owning guide
 - `.agents/references/*.md` edit: target reference plus `.agents/references/references-rules.md`
 - bounded code, test, build, or workflow edit: `.agents/references/execution.md`, `.agents/references/code-style.md`, and the governing spec or source files
-- whole-plan execution: `.agents/references/plan-execution.md`, the active plan, and only the current milestone's named context
+- whole-plan execution: `.agents/references/plan-execution.md`, the active plan, and only the current plan task's named context
 - release work: `.agents/references/releases.md`; load detailed release references only when their phase begins
 
 ### Domain Guides
@@ -53,8 +54,8 @@ Add only guides whose domains match the current task.
 - artifact routing, cross-file alignment, AI-document maintenance outside `.agents/references/*.md`, or repository knowledge ownership: `.agents/references/documentation.md`
 - rules for `.agents/references/*.md` documents: `.agents/references/references-rules.md`
 - planning, roadmap intake, plan revision, or readiness review: `.agents/references/planning.md`
-- whole active-plan execution, milestone context switching, or plan checkpoint summaries: `.agents/references/plan-execution.md`
-- ad hoc execution, single plan milestone, bounded-work context switching, or checkpoint summaries: `.agents/references/execution.md`
+- whole active-plan execution, plan-task context switching, or plan checkpoint summaries: `.agents/references/plan-execution.md`
+- ad hoc execution, single plan task, bounded-work context switching, or checkpoint summaries: `.agents/references/execution.md`
 - edit shape and repo-local code conventions: `.agents/references/code-style.md`
 - architecture, structural placement, package ownership, or codebase map: `.agents/references/architecture.md`
 - product direction, supported scope, security posture, or roadmap tradeoffs: `docs/DESIGN.md`
@@ -81,7 +82,7 @@ When AI guidance changes, update the focused owner instead of duplicating the ru
 
 Use these completion rules for AI work in this repository:
 
-- Do not call a task, milestone, plan, delegated run, branch, or release complete while requested scope is unfinished; record blocked, skipped, failed, or cancelled work explicitly.
+- Do not call a task, plan task, plan, delegated run, branch, or release complete while requested scope is unfinished; record blocked, skipped, failed, or cancelled work explicitly.
 - Represent the intended behavior or documentation change in the owning spec, contract, or guidance artifact before or alongside the implementation.
 - Keep implementation, executable specs, published contract artifacts, human-facing docs, AI guidance, and generated references aligned for the actual change; use `.agents/references/documentation.md` when artifact ownership or cross-file alignment is unclear.
 - Treat public behavior changes as incomplete until governing specs and published contract artifacts move together; treat internal refactors as incomplete if they create unnecessary contract churn.
@@ -90,7 +91,7 @@ Use these completion rules for AI work in this repository:
 - Treat edits to `.agents/references/*.md` as incomplete until the edited reference documents satisfy `.agents/references/references-rules.md`; keep `references-rules.md` itself as the current rule set that other reference files are measured against, never as a changelog or record of completed edits.
 - Learn from agent mistakes, user corrections, failed assumptions, and avoidable rework; when the correction reveals durable guidance, update the focused owner guide or `.agents/references/LEARNINGS.md` using that file's learning loop.
 - Keep durable status in the owning artifacts; do not rely on final-response memory for plan progress, validation evidence, blockers, roadmap state, or release history.
-- Commit every completed task or milestone that changed tracked files with the required AI commit-message format before handoff or unrelated work starts. During an explicitly ongoing interactive session, uncommitted work remains in progress until the user asks for handoff.
+- Commit every completed task or plan task that changed tracked files with the required AI commit-message format before handoff or unrelated work starts. During an explicitly ongoing interactive session, uncommitted work remains in progress until the user asks for handoff.
 - Leave release work undone unless explicitly requested.
 
 ## Integration And Release Invariants

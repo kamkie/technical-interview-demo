@@ -30,11 +30,11 @@ Update the artifact that owns the truth being changed:
 - released history: `CHANGELOG.md`
 - commit message template and AI commit rules: `.gitmessage`
 - planning process, plan-file rules, fill guidance, and readiness review shape: `.agents/references/planning.md`; canonical plan skeleton: `.agents/references/plan-template.md`
-- whole active-plan execution across milestones: `.agents/references/plan-execution.md`
-- ad hoc task and single-milestone execution: `.agents/references/execution.md`
+- whole active-plan execution across plan tasks: `.agents/references/plan-execution.md`
+- ad hoc task and single-plan-task execution: `.agents/references/execution.md`
 - branch, worktree, delegation, multi-agent state, sidecar, integration, and remote-handoff mechanics: `.agents/references/workflow.md`
 - release sequencing and tagging: `.agents/references/releases.md`; detailed release checklist and artifact verification: `.agents/references/release-checklist.md` and `.agents/references/release-artifact-verification.md`
-- standalone repository task prompts and catalog: `.agents/tasks/README.md`; prompt files live under `.agents/tasks/` and must add task-specific instructions that are not thin wrappers around an existing domain guide
+- standalone repository task prompts, catalog, and task loading rules: `.agents/tasks/README.md`; prompt files live under `.agents/tasks/` and must add task-specific instructions that are not thin wrappers around an existing domain guide
 - repo-local reusable workflow wrappers: `.agents/skills/`; Codex plugin marketplace configuration: `.agents/plugins/marketplace.json` when intentionally introducing a repo-scoped plugin
 - AI-facing architecture guidance, structural placement, detailed codebase map, and business feature ownership: `.agents/references/architecture.md`
 - historical AI-analysis reports, evaluations, comparisons, and retired specs: `.agents/archive/`
@@ -57,6 +57,7 @@ Rules for maintaining the `.agents/` documents:
 - use `.agents/references/references-rules.md` for all rules that govern `.agents/references/*.md` documents
 - keep `.agents/tasks/` as standalone reusable prompts, not standing policy; durable rules belong in the best owning AI document
 - keep `.agents/tasks/README.md` current when adding, renaming, moving, or removing task prompts
+- keep task-prompt loading rules in `.agents/tasks/README.md`; use `AGENTS.md` only for the repo-level entry point
 - do not keep task prompts that only say to follow a workflow already owned by `.agents/references/*.md`; invoke the matching domain guide directly instead
 - outside `.agents/references/*.md`, write AI-guidance changes as current-state rules; route any still-useful historical context using this guide
 - keep repo-local skills narrow and workflow-oriented; use them to accelerate repeated entry tasks or focused triage, not to replace domain guides

@@ -87,7 +87,7 @@ Activities marked with `?` are conditional.
 
 - `Design`: decide product or contract behavior. Owner: `docs/DESIGN.md` and governing specs.
 - `Spec`: record the decided behavior in the governing spec artifact. Owner: `.agents/references/documentation.md` for routing and the individual spec file for content.
-- `Decompose`: split planned work into commit-sized milestones and pick the workflow shape. Owner: `.agents/references/planning.md`, `.agents/references/workflow.md`.
+- `Decompose`: split planned work into commit-sized plan tasks and pick the workflow shape. Owner: `.agents/references/planning.md`, `.agents/references/workflow.md`.
 - `Validate-Plan`: run the plan readiness checklist before approval. Owner: `.agents/references/planning.md`.
 - `Replan?`: revise an approved plan when execution reality disagrees with it. Owner: `.agents/references/planning.md`. Cross-cutting.
 
@@ -95,7 +95,7 @@ Activities marked with `?` are conditional.
 
 - `Code`: write the smallest implementation that satisfies the spec. Owner: `.agents/references/code-style.md` and source files.
 - `Docs`: route documentation and contract updates per change class. Owner: `.agents/references/documentation.md`.
-- `Commit`: produce a milestone-shaped checkpoint with required tracking-artifact updates. Owner: `.agents/references/execution.md`, `.agents/references/workflow.md`, and `.gitmessage`.
+- `Commit`: produce a plan-task checkpoint with required tracking-artifact updates. Owner: `.agents/references/execution.md`, `.agents/references/workflow.md`, and `.gitmessage`.
 - `Handoff`: report status, blockers, and any required push or pull request. Owner: `.agents/references/workflow.md`, `.agents/references/execution.md`.
 
 ### Testing And Verification
@@ -175,7 +175,7 @@ This table is descriptive; owner guides still own their specific rules.
 | Operations | `Observe` -> `Triage` -> `Hotfix?` -> `Patch?` -> `Backport?` -> `Deprecate?` | partial: `CHANGELOG.md`, `ROADMAP.md` |
 | Continuous Improvement | `Retrospect` -> `Capture-Learning` -> `Refactor?` -> `Tech-Debt-Plan?` -> `Sync` | `.agents/references/LEARNINGS.md`, `ROADMAP.md` |
 
-The `Implementation` row deliberately interleaves review and validation activities because `.agents/references/execution.md` runs them in a tight milestone loop.
+The `Implementation` row deliberately interleaves review and validation activities because `.agents/references/execution.md` runs them in a tight plan-task loop.
 This is not a license to skip dedicated Testing or Review gates for the overall change.
 
 ## Loops
@@ -186,7 +186,7 @@ Lifecycle work happens in six nested or parallel loops:
 Outer Product Loop                              [per release]
   |-- Operate-and-Improve Loop                  [continuous, post-release]
   `-- Plan Loop                                 [per plan]
-        `-- Milestone Execution Loop            [per milestone]
+        `-- Plan Task Execution Loop            [per plan task]
               |-- Red-Green Loop                [per failing validation]
               `-- Review Loop                   [per diff before merge]
 ```
@@ -205,17 +205,17 @@ Outer Product Loop                              [per release]
 - Owner: `.agents/references/planning.md`.
 - Exit: plan reaches `Status | Ready`.
 
-### Milestone Execution Loop
+### Plan Task Execution Loop
 
 - Activities: `Spec` -> `Code` -> `Docs` -> `Run` -> `Replan?` -> `Self-Review` -> `Code Review` -> `Security Review?` -> `Commit` -> `Handoff`.
-- Cadence: per milestone within an approved plan.
+- Cadence: per plan task within an approved plan.
 - Owner: `.agents/references/execution.md`.
-- Exit: milestone commit lands and tracking artifacts are updated.
+- Exit: plan-task commit lands and tracking artifacts are updated.
 
 ### Red-Green Loop
 
 - Activities: `Run` -> `Diagnose` -> `Fix` -> `Re-run`.
-- Cadence: per failing validation, inside a milestone.
+- Cadence: per failing validation, inside a plan task.
 - Owner: `.agents/references/testing.md`; load `.agents/references/troubleshooting.md` on demand.
 - Exit: the previously failing validation passes, or the work exits through `Replan?`.
 
@@ -299,7 +299,7 @@ When this file changes:
 - no AI owner guide for Deployment or Operations phase activities
 - the `Red-Green Loop` is not named directly in `.agents/references/testing.md`, even though validation work commonly follows it
 - the `Outer Product Loop` is composed from `ROADMAP.md`, `.agents/references/releases.md`, and `.agents/references/LEARNINGS.md` rather than owned by a single guide
-- the `Review Loop` exit back into milestone execution is implicit in `.agents/references/reviews.md` and `.agents/references/execution.md`
+- the `Review Loop` exit back into plan-task execution is implicit in `.agents/references/reviews.md` and `.agents/references/execution.md`
 
 ## Non-Goals
 

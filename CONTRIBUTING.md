@@ -75,7 +75,7 @@ Use AI with the same discipline as manual work:
 
 - frame the request in terms of behavior, not only code
 - give the AI the correct owner documents for the current lifecycle phase
-- keep work milestone-sized
+- keep work task-sized
 - review the diff, validation, and contract impact yourself
 - keep release work separate from implementation work
 
@@ -128,7 +128,7 @@ Rules:
 - use a lowercase type, optional lowercase scope in parentheses, colon, space, and concise imperative description
 - use `feat` for new user-facing or API behavior and `fix` for bug fixes
 - use one of the repo-supported maintenance types when it fits better: `docs`, `test`, `refactor`, `chore`, `build`, `ci`, `perf`, `style`, or `revert`
-- add a body when the motivation, plan path, milestone, or validation context would help reviewers
+- add a body when the motivation, plan path, plan task, or validation context would help reviewers
 - do not use `!` or a `BREAKING CHANGE:` footer while `ROADMAP.md` says breaking changes are disallowed
 - include project metadata footers for AI-created commits so provenance and validation stay machine-readable
 
@@ -145,9 +145,9 @@ Good examples:
 ```text
 feat(admin): add user management examples
 
-Project-Source: milestone
+Project-Source: plan-task
 Project-Plan: .agents/plans/PLAN_admin_user_management.md
-Project-Milestone: Milestone 2 - Document admin examples
+Project-Plan-Task: Task 2 - Document admin examples
 Validation: ./build.ps1 build - passed
 ```
 

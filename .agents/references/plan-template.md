@@ -60,19 +60,19 @@ When creating a concrete plan, replace placeholders and remove this ownership no
 - Build or benchmark checks
 
 ## Progress Tracker
-| Milestone | Status | Owner | Commit | Validation | Notes |
+| Task | Status | Owner | Commit | Validation | Notes |
 | --- | --- | --- | --- | --- | --- |
 | 1: <name> | Not Started/In Progress/Blocked/Done/Skipped | Agent/Coordinator/Worker | Pending | Pending | Progress note or blocker |
 
-## Execution Milestones
-### Milestone 1: <name>
+## Execution Tasks
+### Task 1: <name>
 | Field | Value |
 | --- | --- |
 | Status | Not Started |
 | Goal | ... |
 | Owned Files Or Packages | ... |
 | Coordinator-Owned Shared Files | ... |
-| Context Required | `none beyond AGENTS.md, .agents/references/execution.md, and this plan` for small milestones; otherwise name exact guides, references, plan sections, source packages, or spec artifacts |
+| Context Required | `none beyond AGENTS.md, .agents/references/execution.md, and this plan` for small tasks; otherwise name exact guides, references, plan sections, source packages, or spec artifacts |
 | Behavior To Preserve | ... |
 | Deliverables | ... |
 | Validation Checkpoint | ... |
@@ -108,7 +108,7 @@ When creating a concrete plan, replace placeholders and remove this ownership no
 ## Validation Results
 | Date | Command | Scope | Result | Notes |
 | --- | --- | --- | --- | --- |
-| YYYY-MM-DD | Pending | Full build, targeted tests, docs check, or manual verification | Pending/Passed/Failed/Skipped | Workflow state may hold temporary per-milestone detail until the coordinator integrates it when `.agents/references/workflow.md` says so |
+| YYYY-MM-DD | Pending | Full build, targeted tests, docs check, or manual verification | Pending/Passed/Failed/Skipped | Workflow state may hold temporary per-task detail until the coordinator integrates it when `.agents/references/workflow.md` says so |
 
 ## User Validation
 - Short walkthrough for the user to verify the delivered behavior

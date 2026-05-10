@@ -49,8 +49,8 @@ Use these files when you want to work with AI in this repository or understand w
 - [.agents/references/application-lifecycle.md](.agents/references/application-lifecycle.md): application lifecycle phase, activity, loop, trigger, and owner-guide mapping
 - [.agents/references/documentation.md](.agents/references/documentation.md): documentation ownership and when to update which docs
 - [.agents/references/environment-quick-ref.md](.agents/references/environment-quick-ref.md): AI shortcut for local Gradle wrapper commands
-- [.agents/references/plan-execution.md](.agents/references/plan-execution.md): how AI should execute a whole active plan across milestones
-- [.agents/references/execution.md](.agents/references/execution.md): how AI should execute ad hoc tasks or one plan milestone
+- [.agents/references/plan-execution.md](.agents/references/plan-execution.md): how AI should execute a whole active plan across plan tasks
+- [.agents/references/execution.md](.agents/references/execution.md): how AI should execute ad hoc tasks or one plan task
 - [.agents/references/LEARNINGS.md](.agents/references/LEARNINGS.md): durable engineering lessons worth carrying through refactors
 - [.agents/references/planning.md](.agents/references/planning.md): compact guide for creating or revising execution plans
 - [.agents/skills/repo-task/](.agents/skills/repo-task/): reusable task starters with task titles, placeholders, and task text

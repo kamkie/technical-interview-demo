@@ -19,7 +19,7 @@ Released history belongs in `CHANGELOG.md`.
 - Keep only active, planned, selected, or intentionally deferred work here.
 - Use `Status` values instead of checkbox semantics.
 - Remove work once it is released, intentionally dropped, or no longer active.
-- Keep detailed active milestones, validation notes, and implementation history in `.agents/plans/PLAN_*.md`, not in this file; released plan history belongs under `.agents/archive/`.
+- Keep detailed active plan tasks, validation notes, and implementation history in `.agents/plans/PLAN_*.md`, not in this file; released plan history belongs under `.agents/archive/`.
 
 | Status | Meaning |
 | --- | --- |
@@ -48,7 +48,6 @@ Use this section for plan-backed work that is ready but not selected as the imme
 
 1. introduce adr to pre-planning workflow https://adr.github.io or https://github.com/adr/madr or https://github.com/architecture-decision-record/architecture-decision-record
 2. formalise adr and spec format C:\Users\kamki\AppData\Roaming\JetBrains\IntelliJIdea2026.1\scratches\desing_how_to_implement_that.md
-3. rename milestones to tasks or steps in plans
 
 ## Deferred Work
 

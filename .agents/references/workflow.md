@@ -4,7 +4,7 @@
 It does not own plan creation, whole-plan execution loops, ad hoc task execution, validation scope, review policy, or release sequencing.
 
 Use this file only when work needs collaboration mechanics beyond one local agent editing one working tree, or when an approved plan names workflow state, delegation, worktrees, sidecars, integration queues, or remote handoff.
-Use `.agents/references/plan-execution.md` for whole-plan execution, `.agents/references/execution.md` for ad hoc or one-milestone work, `.agents/references/testing.md` for validation scope, `.agents/references/reviews.md` for review expectations, and `.agents/references/releases.md` only after implementation is integrated and release work is in scope.
+Use `.agents/references/plan-execution.md` for whole-plan execution, `.agents/references/execution.md` for ad hoc or one-plan-task work, `.agents/references/testing.md` for validation scope, `.agents/references/reviews.md` for review expectations, and `.agents/references/releases.md` only after implementation is integrated and release work is in scope.
 
 ## Mode Decision
 
@@ -33,7 +33,7 @@ Name shared files before workers start, and keep them coordinator-owned unless t
 
 Split work only when the benefit is concrete and the inferred no-plan mode or approved plan allows delegation, parallelism, or a worktree-backed handoff.
 Good boundaries follow package, contract, artifact, or plan ownership, such as `business.book`, `business.category`, `business.localization`, `business.user`, `technical.security`, one bounded public API change with its contract artifacts, documentation-only slices that do not overlap source edits, or one approved plan per worker.
-Do not split work when workers would overlap on the same controller, service, integration test, REST Docs or OpenAPI artifact, roadmap row, changelog row, plan status row, unresolved decision, or indivisible milestone.
+Do not split work when workers would overlap on the same controller, service, integration test, REST Docs or OpenAPI artifact, roadmap row, changelog row, plan status row, unresolved decision, or indivisible plan task.
 
 ## Delegation Contract
 
@@ -87,4 +87,4 @@ Do not give a final success summary while any worker or sidecar is still active.
 
 ## Replan Triggers
 
-Route to `Replan?` when two agents need the same write scope; a worker finds missing, stale, or contradictory specs; user-owned changes exist inside a write scope; validation failure cannot be isolated to one scope; integration needs an unplanned design, security, release, architecture, documentation-ownership, or product decision; an agent edits outside scope; outputs conflict; review or verification findings affect another active scope; gate decisions conflict; a shared file must move from coordinator ownership to a worker; or actual work expands beyond the approved plan, milestone, or user request.
+Route to `Replan?` when two agents need the same write scope; a worker finds missing, stale, or contradictory specs; user-owned changes exist inside a write scope; validation failure cannot be isolated to one scope; integration needs an unplanned design, security, release, architecture, documentation-ownership, or product decision; an agent edits outside scope; outputs conflict; review or verification findings affect another active scope; gate decisions conflict; a shared file must move from coordinator ownership to a worker; or actual work expands beyond the approved plan, plan task, or user request.

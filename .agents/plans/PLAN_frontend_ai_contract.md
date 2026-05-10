@@ -82,15 +82,15 @@
 - Not affected unless replan is required: `src/main/`, `src/test/java/`, OpenAPI baseline, REST Docs snippets, database migrations, build logic, release notes
 
 ## Progress Tracker
-| Milestone | Status | Owner | Commit | Validation | Notes |
+| Task | Status | Owner | Commit | Validation | Notes |
 | --- | --- | --- | --- | --- | --- |
 | 1: Draft source frontend AI contract | Done | Agent | `53ad6d0` | Passed | Source artifact drafted and manually checked against session/API contract terms |
 | 2: Register source artifact in repo docs | Done | Agent | `53ad6d0` | Passed | Source artifact registered in human/AI indexes and unreleased changelog |
 | 3: Validate and hand off | Done | Agent | Final tracking commit | Passed | Final validation passed; external frontend-repo copy remains deferred |
 | 4: Rewrite as generated import document | Done | Agent | Final follow-up commit | Passed | Frontend contract rewritten for imported AI-agent use only; live migration-guide mentions removed from non-exempt docs |
 
-## Execution Milestones
-### Milestone 1: Draft source frontend AI contract
+## Execution Tasks
+### Task 1: Draft source frontend AI contract
 | Field | Value |
 | --- | --- |
 | Status | Done |
@@ -101,9 +101,9 @@
 | Behavior To Preserve | No backend behavior or public contract changes; frontend guidance must defer to backend specs and published docs. |
 | Deliverables | `docs/FRONTEND_AI_CONTRACT.md` with generated-document notice, required backend inputs, external skill URL references, OpenAPI source snapshot, API/session/CSRF rules, and integration anti-patterns for a frontend AI agent importing the document. |
 | Validation Checkpoint | Passed: manual consistency review against the session docs, API overview, and OpenAPI session schema; `rg` confirmed required and forbidden session/auth terms are present in the source artifact. |
-| Commit Checkpoint | Completed in `53ad6d0` with Milestone 2. |
+| Commit Checkpoint | Completed in `53ad6d0` with Task 2. |
 
-### Milestone 2: Register source artifact in repo docs
+### Task 2: Register source artifact in repo docs
 | Field | Value |
 | --- | --- |
 | Status | Done |
@@ -116,7 +116,7 @@
 | Validation Checkpoint | Passed: `rg -n "FRONTEND_AI_CONTRACT|Frontend AI contract|frontend AI contract" README.md WORKING_WITH_AI.md AGENTS.md .agents/references/documentation.md docs/FRONTEND_AI_CONTRACT.md CHANGELOG.md`; manual check found no duplicated setup or contract policy. |
 | Commit Checkpoint | Completed in `53ad6d0`. |
 
-### Milestone 3: Validate and hand off
+### Task 3: Validate and hand off
 | Field | Value |
 | --- | --- |
 | Status | Done |
@@ -129,7 +129,7 @@
 | Validation Checkpoint | Passed: `git diff --check`, targeted reference search, implementation-scope diff review, and `./build.ps1 -FullBuild build`. |
 | Commit Checkpoint | Final tracking commit records this plan/roadmap completion state. |
 
-### Milestone 4: Rewrite as generated import document
+### Task 4: Rewrite as generated import document
 | Field | Value |
 | --- | --- |
 | Status | Done |
@@ -145,7 +145,7 @@
 ## Blockers And Replan Triggers
 | Trigger / Blocker | Response | Owner | Status |
 | --- | --- | --- | --- |
-| User provides a concrete frontend repository and asks to include the copy before execution starts | Replan to add an external-repo milestone, inspect the destination AI-instruction convention, and restore destination validation. | User/Agent | Open |
+| User provides a concrete frontend repository and asks to include the copy before execution starts | Replan to add an external-repo task, inspect the destination AI-instruction convention, and restore destination validation. | User/Agent | Open |
 | External skill URLs change, disappear, or need destination-specific pinning | Revise the frontend contract's URL references and any destination-repository copy instructions. | Agent/User | Open |
 | Backend published contract docs conflict with each other | Stop and resolve the contract source using `AGENTS.md` spec priority before writing frontend guidance. | Agent | Open |
 | Implementation discovers the new file belongs under `.agents/` instead of repository root | Replan D2 and update affected documentation ownership before moving the file. | Agent/User | Open |
@@ -178,7 +178,7 @@
 ## Better Engineering Notes
 - Prefer a concise, explicit source instruction file over a broad prompt dump; frontend agents need contract-critical constraints and current external skill links, not copied prompt bodies.
 - The frontend contract is now a generated import document; keep repository-maintenance notes in the plan, documentation ownership guide, roadmap, or changelog instead of the imported file.
-- Keep roadmap detail small; this plan owns milestones and validation history.
+- Keep roadmap detail small; this plan owns tasks and validation history.
 - The deferred external copy is intentional. When the frontend repository is known, use this source file as input to a separate destination-aware task instead of expanding this plan retroactively after local validation is complete.
 - If this source file proves useful beyond one frontend repo, consider a later small task to turn it into a reusable skill or task prompt rather than expanding this plan.
 
@@ -189,10 +189,10 @@
 | 2026-05-09 | `./build.ps1 build` | Original local docs/AI-guidance validation | Passed | Lightweight-only path; Gradle build skipped because only `.agents/plans/PLAN_frontend_ai_contract.md` and `ROADMAP.md` changed |
 | 2026-05-09 | `git diff --check` | Replan whitespace check | Passed | No whitespace errors reported |
 | 2026-05-09 | `./build.ps1 build` | Replan validation | Passed | Lightweight-only path; Gradle build skipped because only `.agents/plans/PLAN_frontend_ai_contract.md` and `ROADMAP.md` changed |
-| 2026-05-09 | `rg -n "CORS|JWT|bearer|/login|/oauth2/authorization/github|GET /api/session|authorizationPath|XSRF-TOKEN|X-XSRF-TOKEN|messageKey|FRONTEND_AI_CONTRACT" FRONTEND_AI_CONTRACT.md` | Milestone 1 contract-term check | Passed | Source artifact includes required session/CSRF/error guidance and names forbidden frontend assumptions; path later moved by D8 |
-| 2026-05-09 | `rg -n "FRONTEND_AI_CONTRACT|Frontend AI contract|frontend AI contract" README.md WORKING_WITH_AI.md AGENTS.md .agents/references/documentation.md FRONTEND_AI_CONTRACT.md CHANGELOG.md` | Milestone 2 reference check | Passed | Source artifact is discoverable from human-facing and AI-facing indexes plus unreleased changelog; path later moved by D8 |
-| 2026-05-09 | `git diff --check` | Milestone 1 and 2 whitespace check | Passed | No whitespace errors reported |
-| 2026-05-09 | `./build.ps1 build` | Milestone 1 and 2 validation | Passed | Lightweight-only path; Gradle build skipped because only support/documentation files changed |
+| 2026-05-09 | `rg -n "CORS|JWT|bearer|/login|/oauth2/authorization/github|GET /api/session|authorizationPath|XSRF-TOKEN|X-XSRF-TOKEN|messageKey|FRONTEND_AI_CONTRACT" FRONTEND_AI_CONTRACT.md` | Task 1 contract-term check | Passed | Source artifact includes required session/CSRF/error guidance and names forbidden frontend assumptions; path later moved by D8 |
+| 2026-05-09 | `rg -n "FRONTEND_AI_CONTRACT|Frontend AI contract|frontend AI contract" README.md WORKING_WITH_AI.md AGENTS.md .agents/references/documentation.md FRONTEND_AI_CONTRACT.md CHANGELOG.md` | Task 2 reference check | Passed | Source artifact is discoverable from human-facing and AI-facing indexes plus unreleased changelog; path later moved by D8 |
+| 2026-05-09 | `git diff --check` | Task 1 and 2 whitespace check | Passed | No whitespace errors reported |
+| 2026-05-09 | `./build.ps1 build` | Task 1 and 2 validation | Passed | Lightweight-only path; Gradle build skipped because only support/documentation files changed |
 | 2026-05-09 | `git diff --check` | Final whitespace check | Passed | No whitespace errors reported |
 | 2026-05-09 | `rg -n "FRONTEND_AI_CONTRACT|Frontend AI contract|frontend AI contract" README.md WORKING_WITH_AI.md AGENTS.md .agents/references/documentation.md FRONTEND_AI_CONTRACT.md CHANGELOG.md` | Final reference check | Passed | Source artifact remained discoverable from required indexes before the D8 path move |
 | 2026-05-09 | `git diff --name-only HEAD~1..HEAD; git diff --name-only` | Final scope review | Passed | Implementation commit touched only planned docs/support files; remaining uncommitted diff was plan tracking only |
@@ -229,10 +229,10 @@
 - Requirement gaps: Q1 and Q2 are explicit, deferred, and non-blocking.
 - Locked decisions: D1-D10.
 - Execution shape: one local branch in this repository; external copy is a future destination-aware task.
-- Shared files: named in execution shape and milestones.
+- Shared files: named in execution shape and tasks.
 - Progress tracking: top-level tracker included.
 - Replan triggers: blocker table included.
-- Context per milestone: exact read sets named.
+- Context per task: exact read sets named.
 - Artifact movement: docs/AI guidance only; no backend contract artifact changes expected.
 - Validation: diff check, wrapper build, text checks, manual contract review, no backend contract/source diff confirmation.
 - Validation ledger: included.

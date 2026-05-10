@@ -17,7 +17,7 @@ The normal loop is:
 2. Identify the governing spec or contract artifact.
 3. Decide the current lifecycle phase.
 4. Give AI the right owner documents for that phase.
-5. Keep the work milestone-sized.
+5. Keep the work task-sized.
 6. Review the diff, validation, and contract impact before moving to the next step.
 
 Human responsibilities do not disappear when AI is involved.
@@ -37,7 +37,7 @@ Use this guide as a navigation aid, not as a second copy of the AI runbooks.
 | Reusable task starters | `.agents/skills/repo-task/` |
 | Creating or revising execution plans | `.agents/references/planning.md` |
 | Executing a whole approved plan | `.agents/references/plan-execution.md` |
-| Implementing an ad hoc task or one milestone | `.agents/references/execution.md` |
+| Implementing an ad hoc task or one plan task | `.agents/references/execution.md` |
 | Delegation, worktrees, worker logs, or integration mechanics | `.agents/references/workflow.md` |
 | Validation scope and review activity | `.agents/references/testing.md` and `.agents/references/reviews.md` |
 | Documentation and artifact routing | `.agents/references/documentation.md` |
@@ -127,12 +127,12 @@ The plan should be decision-complete enough that implementation does not need to
 ### Planning Validation
 
 Before implementing large or multi-step work, ask AI to review the plan itself.
-The useful output is a readiness judgment: lifecycle state, requirement gaps, milestone boundaries, execution shape, validation scope, and unresolved decisions.
+The useful output is a readiness judgment: lifecycle state, requirement gaps, plan-task boundaries, execution shape, validation scope, and unresolved decisions.
 
 ### Implementation
 
-Once the plan is ready, use AI to implement either the whole plan or one milestone.
-The repository expects milestone-sized checkpoints: implementation, validation evidence, tracking artifacts, and a commit before the milestone is treated as done.
+Once the plan is ready, use AI to implement either the whole plan or one plan task.
+The repository expects task-sized checkpoints: implementation, validation evidence, tracking artifacts, and a commit before the plan task is treated as done.
 Ask AI to write commit messages in Conventional Commits style, such as `feat(scope): summary`, `fix(scope): summary`, or `docs(scope): summary`.
 For AI-created commits, `.agents/references/execution.md` owns the required commit-message rules.
 Ask AI to include the required project metadata and validation footers from that guide.
@@ -193,7 +193,7 @@ Current focused skills include:
 - ask AI to name the spec artifacts before it edits code
 - ask AI to say what is in scope and out of scope
 - ask AI to list blockers explicitly instead of hiding them in assumptions
-- prefer milestone-sized requests over long open-ended requests
+- prefer task-sized requests over long open-ended requests
 - ask for validation and contract impact before approving the result
 - keep release work separate from implementation work
 - use `$repo-task` task slugs or titles as reusable commands when you want a consistent repository-local workflow

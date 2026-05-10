@@ -106,13 +106,13 @@
 - Build or benchmark checks: explicitly out of scope for this interactive documentation session.
 
 ## Progress Tracker
-| Milestone | Status | Owner | Commit | Validation | Notes |
+| Task | Status | Owner | Commit | Validation | Notes |
 | --- | --- | --- | --- | --- | --- |
 | 1: Consolidate workflow owner | Done | Agent | `232f263` | Manual doc consistency review passed | Consolidated `workflow.md`, adopted `.agents/context/*`, preserved branch/worktree rules, and retired companion files. |
 | 2: Align routing references | Done | Agent | `docs(workflow): align consolidated workflow routing` | Manual stale-reference review passed | Updated routing references, workflow-state terminology, roadmap state, and lifecycle owner references. |
 
-## Execution Milestones
-### Milestone 1: Consolidate workflow owner
+## Execution Tasks
+### Task 1: Consolidate workflow owner
 | Field | Value |
 | --- | --- |
 | Status | Done |
@@ -123,9 +123,9 @@
 | Behavior To Preserve | Workflow guidance remains focused, current-state, and subordinate to executable specs and published contract docs; `workflow.md` remains the entry point for branch, worktree, delegation, `.agents/context/*` state, integration, and remote handoff. |
 | Deliverables | Consolidated `workflow.md`; deleted retired companion files after preserving current rules. |
 | Validation Checkpoint | Manual review that the consolidated guide has one opening ownership statement, uses `.agents/context/*` state paths, preserves branch/worktree rules, defines M0-M4 modes without forcing delegation, and contains no stale references to missing `codex-runtime.md` or canonical `.agents/tmp/workflow/` state paths. |
-| Commit Checkpoint | Commit after Milestone 1 if this plan is executed outside the current uncommitted interactive session; otherwise leave uncommitted until explicit handoff. |
+| Commit Checkpoint | Commit after Task 1 if this plan is executed outside the current uncommitted interactive session; otherwise leave uncommitted until explicit handoff. |
 
-### Milestone 2: Align routing references
+### Task 2: Align routing references
 | Field | Value |
 | --- | --- |
 | Status | Done |
@@ -136,7 +136,7 @@
 | Behavior To Preserve | Owner-guide loading remains narrow; workflow consolidation does not create recursive load requirements or move plan execution, validation, review, release, architecture, or code-style rules into `workflow.md`. |
 | Deliverables | Updated cross-references, workflow-state terminology, and plan/roadmap status reflecting the actual non-release state. |
 | Validation Checkpoint | Manual stale-reference review for retired workflow filenames and external-only paths; manual consistency review against `references-rules.md`. No tests, builds, generated-doc checks, or normal verification commands during this interactive session. |
-| Commit Checkpoint | Commit after Milestone 2 if the user requests handoff and the interactive session permits committing; otherwise record remaining uncommitted work explicitly. |
+| Commit Checkpoint | Commit after Task 2 if the user requests handoff and the interactive session permits committing; otherwise record remaining uncommitted work explicitly. |
 
 ## Blockers And Replan Triggers
 | Trigger / Blocker | Response | Owner | Status |
@@ -188,8 +188,8 @@
 | --- | --- | --- | --- | --- |
 | 2026-05-10 | Manual planning review | Plan readiness, scope, routing, and validation constraints | Passed | Plan is ready for documentation-only execution; normal validation intentionally skipped under user session constraint. |
 | 2026-05-10 | Manual plan revision readback | `.agents/context/*` state-layout requirement in this plan and `ROADMAP.md` | Passed | Plan now adopts `.agents/context/*`; `.agents/tmp/workflow/` appears only as an obsolete canonical path to retire. |
-| 2026-05-10 | Manual Milestone 1 consistency review | `.agents/references/workflow.md` and retired companion files | Passed | Consolidated guide has one ownership statement, uses `.agents/context/*` state paths, preserves branch/worktree rules, defines M0-M4 without forcing delegation, and contains no live canonical `.agents/tmp/workflow/` state paths or `codex-runtime.md` references. |
-| 2026-05-10 | Manual Milestone 2 stale-reference review | `AGENTS.md`, `.agents/references/*.md`, `docs/specs/lifecycle-phase-activities.md`, `ROADMAP.md` | Passed | Live routing points to consolidated `workflow.md`; retired workflow companion files and old worker-log vocabulary were removed from live guidance. |
+| 2026-05-10 | Manual Task 1 consistency review | `.agents/references/workflow.md` and retired companion files | Passed | Consolidated guide has one ownership statement, uses `.agents/context/*` state paths, preserves branch/worktree rules, defines M0-M4 without forcing delegation, and contains no live canonical `.agents/tmp/workflow/` state paths or `codex-runtime.md` references. |
+| 2026-05-10 | Manual Task 2 stale-reference review | `AGENTS.md`, `.agents/references/*.md`, `docs/specs/lifecycle-phase-activities.md`, `ROADMAP.md` | Passed | Live routing points to consolidated `workflow.md`; retired workflow companion files and old worker-log vocabulary were removed from live guidance. |
 | 2026-05-10 | Not run | Tests, builds, generated documentation checks, and normal validation commands | Skipped | Explicit interactive-session constraint in this plan required manual documentation review only. |
 
 ## User Validation
