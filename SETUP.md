@@ -21,6 +21,24 @@ Install the tools that match your workflow:
 - Docker Desktop if you want PostgreSQL, container builds, the VS Code dev container, or to run the integration test and build lifecycles
 - IntelliJ IDEA or VS Code if you want IDE support
 
+### AI Workflow Helper Tools
+
+AI agents should use the fastest relevant local tool and report expected or useful tools that are unavailable when that affects workflow speed, validation, or fallback quality.
+Agents should not probe every optional tool up front; they should check tools when the current task needs them.
+
+Useful tools by workflow:
+
+- search and navigation: `rg` and `git`
+- shell and wrapper commands: PowerShell 7+ (`pwsh`) and `./build.ps1`
+- build and validation: Java 25, the Gradle wrapper, and Docker Desktop for Testcontainers, image builds, and full build lifecycles
+- skill and AI-guidance checks: `./scripts/ai/validate-skills.ps1`; Python with PyYAML only when using external YAML-based skill validators
+- GitHub diagnostics: `gh` for GitHub Actions, code-scanning, Dependabot, attestation, or release-artifact checks
+- API and contract checks: OpenAPI and REST Docs tasks through `./build.ps1`; `ijhttp` only when manual HTTP regression suites are requested
+- deployment and release checks: Helm, `kubectl`, Cosign, and Trivy-related wrapper tasks only when deployment, image verification, or release work is in scope
+
+When a relevant tool is missing, the AI should name the missing command or dependency, name the fallback it used, and state any remaining risk.
+Examples: "`rg` is unavailable, using PowerShell search instead" or "Python with PyYAML is unavailable, so the dependency-free PowerShell skill validator ran instead."
+
 ## Quick Start
 
 ### PowerShell
