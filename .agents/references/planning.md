@@ -1,12 +1,42 @@
 # Planning Guide For AI Agents
 
-`.agents/references/planning.md` owns the minimum standing rules for creating executable plans under `.agents/plans/`.
+`.agents/references/planning.md` owns the standing rules for creating, revising, and reviewing executable plans under `.agents/plans/`.
 Detailed examples and fill guidance are on demand in `.agents/references/plan-authoring-guide.md`.
 Use `.agents/templates/plan-template.md` when you need the full skeleton.
 Use `docs/specs/application-lifecycle-spec.md` for lifecycle phase vocabulary and `docs/specs/lifecycle-phase-activities.md` for activity and loop names.
 
 Use this file when the user asks for a plan, milestone breakdown, readiness review, or detailed change strategy.
 Use `.agents/references/plan-execution.md` after the user asks to execute a whole active plan, `.agents/references/execution.md` for ad hoc tasks or one plan milestone, `.agents/references/workflow.md` for branch/worktree/delegation mechanics, `.agents/references/documentation.md` for artifact routing, and `.agents/references/testing.md` for validation scope.
+
+## Planning Entry Modes
+
+Choose the planning mode that matches the user request:
+
+- `Create Plan`: turn a concrete request into a new `.agents/plans/PLAN_<topic>.md`
+- `Plan From Roadmap`: turn one roadmap item into a plan and keep `ROADMAP.md` aligned
+- `Revise Plan`: update an existing active plan for new information, constraints, or changed scope
+- `Review Readiness`: decide whether a plan is `Ready`, `Needs Input`, `Blocked`, or still draft
+- `Choose Execution Shape`: decide whether one branch, delegated one-plan work, or coordinated multi-plan work fits
+
+Use `.agents/skills/repo-task/` task titles or slugs when the user wants a reusable task starter instead of direct plan authoring.
+
+## Planning Read Set
+
+Load only what the request needs:
+
+- always: `AGENTS.md` and this file
+- new plan or substantial revision: `.agents/templates/plan-template.md`
+- detailed fill examples or readiness review shape: `.agents/references/plan-authoring-guide.md`
+- plan revision or readiness review: the target `.agents/plans/PLAN_*.md`
+- roadmap-driven work or concrete active plans: `ROADMAP.md`
+- lifecycle wording changes: `docs/specs/application-lifecycle-spec.md` and `docs/specs/lifecycle-phase-activities.md`
+- artifact routing: `.agents/references/documentation.md`
+- validation selection: `.agents/references/testing.md`
+- delegation, branch, worktree, shared-file, or integration planning: `.agents/references/workflow.md`
+- behavior-sensitive work: the governing specs, contract docs, source files, tests, OpenAPI baseline, or HTTP examples named by the task or discovered by targeted search
+- product, contract, or package framing: `README.md`, `docs/DESIGN.md`, or `docs/ARCHITECTURE.md` only when directly relevant
+
+Do not bulk-load active plans, archived plans, templates, task files, or reference guides as a pre-flight default.
 
 ## Lifecycle Metadata
 
@@ -69,13 +99,20 @@ A plan is ready only when it is decision-complete for another agent to execute w
 Planning follows the Planning phase activity sequence from `docs/specs/lifecycle-phase-activities.md`: `Frame` -> `Design` -> `Spec` -> `Decompose` -> `Validate-Plan` -> `Sync`.
 When the plan is not decision-complete or execution reality later disagrees with it, the Plan Loop uses `Replan?` and returns to `Validate-Plan` until the plan is ready again.
 
-Before writing the plan:
+For every plan creation, revision, or readiness pass:
 
-- read `AGENTS.md`
-- inspect the governing specs, tests, docs, OpenAPI baseline, source files, and any HTTP convenience scripts relevant to the requested workflow
-- read `ROADMAP.md` so new or revised plans stay tied to active work and release sequencing
-- read the owning AI guide when durable architecture, design, code-style, testing, review, release, documentation, workflow, or learning guidance changes
-- read referenced tickets, PRs, examples, documents, or web pages before planning from them
+1. Identify the behavior or workflow being planned.
+2. Identify the governing spec, contract, roadmap, or AI-guidance artifact before proposing implementation.
+3. Decide whether the work is still `Discovery`, belongs in `Roadmap Intake`, is ready for `Planning`, or is blocked by missing input.
+4. Resolve what repo truth already answers before asking the user.
+5. Record remaining material questions as stable `Q` rows with owner, status, fallback or decision, and `Blocks Ready?`.
+6. Record answered questions, repo-truth conclusions, and accepted fallback assumptions in `Decision Log And Assumptions`.
+7. Fill or update `Planning Readiness` so it matches the question and decision tables.
+8. Choose an execution shape and name coordinator-owned or shared files when delegation is realistic.
+9. Build commit-sized milestones using the template's fixed fields and smallest useful context read set.
+10. Add or refresh the `Progress Tracker`, blocker or replan triggers, validation plan, validation ledger, and user validation.
+11. Keep `ROADMAP.md` aligned when creating or materially revising a concrete active plan.
+12. Run this guide's final check before handoff.
 
 Plan from repo truth first.
 Ask the user only when ambiguity affects product intent, scope, compatibility, rollout, acceptance criteria, validation, or another material tradeoff.
@@ -156,6 +193,41 @@ Record validation history in the `Validation Results` ledger with date, command,
 
 Create concrete plans under `.agents/plans/` as `PLAN_<topic>.md` with lowercase underscore topic names.
 Use `.agents/templates/plan-template.md` for the full structure.
+
+## Plan Creation And Revision
+
+When creating a plan:
+
+- prefer one coherent `.agents/plans/PLAN_<topic>.md` unless the work is genuinely disjoint
+- use lowercase underscore topic names
+- start from `.agents/templates/plan-template.md`
+- keep the plan self-contained enough for another agent to execute without inventing product, contract, validation, or ownership decisions
+- add a roadmap entry or refresh an existing one only for concrete active work
+- set lifecycle `Status | Needs Input` when any open blocking question remains unresolved
+- set lifecycle `Status | Ready` only when all blocking questions are answered or have explicit accepted fallbacks
+
+When revising a plan:
+
+- update only sections affected by the new requirement, constraint, or discovered repo truth
+- preserve milestone history, validation evidence, and completed-progress notes unless the user explicitly asks for cleanup
+- keep `Planning Readiness`, open questions, decision log, progress tracker, milestone details, blockers, and validation ledger mutually consistent
+- if execution reality contradicts the plan, revise the plan before coding beyond approved scope
+- update `ROADMAP.md` only when active-work status, scope, or plan path materially changes
+
+## Readiness Review Output
+
+When reviewing readiness, lead with concrete gaps.
+Report:
+
+- readiness result: `Ready`, `Needs Input`, `Blocked`, or `Draft`
+- blocking open questions by `Q` ID
+- missing fallbacks or decisions
+- lifecycle and readiness metadata accuracy
+- milestone quality and whether progress tracking matches milestone details
+- validation completeness
+- roadmap alignment when the plan is concrete active work
+
+If no blocking gap remains, say so directly and name any residual non-blocking risk.
 
 ## Final Check
 

@@ -185,7 +185,6 @@ Read a skill's `SKILL.md` only when that skill is invoked or clearly applies.
 Current focused skills include:
 
 - `repo-task`: repository reusable task starter dispatch
-- `repo-plan-author`: creating or revising `.agents/plans/PLAN_*.md`
 - `gh-fix-ci`: GitHub PR-check inspection and CI failure triage
 - `gh-fix-security-quality`: GitHub Security tab, code-scanning, and Dependabot alert triage
 
