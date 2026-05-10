@@ -89,6 +89,7 @@ Use `.agents/references/command-wrapper.md` for wrapper behavior, including the 
 
 - name the exact commands that ran
 - say what passed, failed, or was skipped
+- when a validation helper or useful prerequisite is unavailable, name the exact missing command, module, or dependency, such as Python with PyYAML, and record the fallback proof that ran instead
 - keep the plan's `Validation Results` aligned with reality
 
 ## Cross-References

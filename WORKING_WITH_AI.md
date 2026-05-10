@@ -227,6 +227,7 @@ Current focused skills include:
 - ask AI to name the spec artifacts before it edits code
 - ask AI to say what is in scope and out of scope
 - ask AI to list blockers explicitly instead of hiding them in assumptions
+- expect AI to report missing expected tools or dependencies, such as `rg` or Python with PyYAML, when that affects workflow speed, validation, or the chosen fallback
 - prefer task-sized requests over long open-ended requests
 - ask for validation and contract impact before approving the result
 - keep release work separate from implementation work

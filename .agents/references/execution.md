@@ -68,6 +68,8 @@ Use the `.gitmessage` file in the repository root as the authoritative template,
 Keep context efficient:
 
 - prefer targeted searches and structure checks over opening every file in a package
+- use the fastest expected local tool for the job, such as `rg` for search; when an expected or useful tool is unavailable, report the missing command or dependency once, name the fallback, and continue with the next most efficient safe option
+- do not probe every optional tool up front; check availability when the tool is relevant to the current task, validation, or workflow step
 - load package, guide, or reference context only when it is needed for the current checkpoint
 - drop files that belonged only to a completed checkpoint
 - summarize long or complex findings into the plan, workflow state, validation notes, or final response instead of repeatedly reopening raw logs
