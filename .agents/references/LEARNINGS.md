@@ -77,6 +77,7 @@ Do not accumulate per-incident history, one-off mistakes, or temporary workaroun
 - **State-changing operations need auditable evidence.**
 - **Sanitize before logging.**
 - **Benchmarks are change detectors, not noise.**
+- **Record skill-validator environment gaps explicitly.** When repo-local skill validation cannot run because the local Python environment lacks validator dependencies such as PyYAML, record the exact blocker and run a deterministic structural fallback instead of treating the skill as fully validator-checked.
 
 ## Testing Lessons
 

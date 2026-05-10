@@ -98,7 +98,7 @@
 | 4: Materialize `.agents/context/*` and add per-role read-set table | Done | Worker | `docs(workflow): add multi-agent state readsets` | `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | Context directories have tracked README files. |
 | 5: Record user acceptance decision for ADR 0004 and ADR 0003 | Done | Coordinator | `docs(decisions): accept multi-agent workflow ADRs` | `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | ADR 0004 and ADR 0003 are accepted as of 2026-05-10. |
 | 6: Add Phase B skill bundles | Done | Worker | `docs(skills): add phase b multi-agent workflows` | Structural skill check passed; `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | `quick_validate.py` could not run because the local Python environment lacks PyYAML. |
-| 7: Smoke-test the loop on one bounded task | Not Started | Coordinator + Worker + Reviewer + Verifier | Pending | Pending | Captures `LEARNINGS.md` entry. |
+| 7: Smoke-test the loop on one bounded task | Done | Coordinator + Worker + Reviewer + Verifier | `docs(workflow): smoke-test phase b handoff loop` | `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | Handoff, worker, review, and verification artifacts are present; `LEARNINGS.md` records the validator-gap lesson. |
 | 8: Add Phase C skill bundles and platform alignment | Not Started | Worker | Pending | Pending | Phase C. |
 | 9: Sweep old mode labels from live guidance | Not Started | Worker | Pending | Pending | After Phase B smoke-test passes. |
 | 10: Update `ROADMAP.md` final state | Not Started | Coordinator | Pending | Pending | Closes the plan. |
@@ -186,15 +186,15 @@
 ### Task 7: Smoke-Test The Loop On One Bounded Task
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Pick one small, already-scoped change (documentation or a bounded code slice) and run it end-to-end through Coordinator → Worker → Reviewer → Verifier using only Phase B skills; capture lessons in `.agents/references/LEARNINGS.md`. |
 | Owned Files Or Packages | The chosen smoke-test change's files; `.agents/context/*`; `.agents/references/LEARNINGS.md`. |
 | Coordinator-Owned Shared Files | `.agents/references/LEARNINGS.md`. |
 | Context Required | Phase B skills, `.agents/references/workflow.md`, target change spec or issue. |
 | Behavior To Preserve | The smoke-test change itself, per its own scope. |
 | Deliverables | One handoff packet, one worker output, one reviewer note, one verifier result, one `LEARNINGS.md` entry. |
-| Validation Checkpoint | All four artifacts present in `.agents/context/*`; `LEARNINGS.md` records at least one durable lesson or "no gaps found". |
-| Commit Checkpoint | One commit for the smoke-test change plus its `.agents/context/*` artifacts. |
+| Validation Checkpoint | Passed: all four artifacts exist in `.agents/context/*`; `LEARNINGS.md` records the durable validator-gap lesson; `git diff --check` and `./build.ps1 build` passed. |
+| Commit Checkpoint | `docs(workflow): smoke-test phase b handoff loop` |
 
 ### Task 8: Add Phase C Skill Bundles And Platform Alignment
 | Field | Value |
@@ -293,6 +293,9 @@
 | 2026-05-10 | Phase B skill structural PowerShell check | Task 6 Phase B skill bundles | Passed | Verified required frontmatter, `Read Set`, `Inputs`, `Workflow`, `Stop Conditions`, no TODO placeholders, and `agents/openai.yaml` for all five skills. |
 | 2026-05-10 | `git diff --check` | Task 6 Phase B skill bundles | Passed | No whitespace diagnostics. |
 | 2026-05-10 | `./build.ps1 build` | Task 6 Phase B skill bundles | Passed | Wrapper detected only lightweight uncommitted files and skipped Gradle; manual consistency review is sufficient. |
+| 2026-05-10 | `Get-ChildItem .agents\context\handoffs\multi_agent_roles_and_skills__task7_worker.md, .agents\context\workers\multi_agent_roles_and_skills__task7_worker.md, .agents\context\reviews\multi_agent_roles_and_skills__task7_reviewer.md, .agents\context\verifications\multi_agent_roles_and_skills__task7_verifier.md` | Task 7 smoke test | Passed | Handoff, worker, review, and verification artifacts are present. |
+| 2026-05-10 | `git diff --check` | Task 7 smoke test | Passed | No whitespace diagnostics. |
+| 2026-05-10 | `./build.ps1 build` | Task 7 smoke test | Passed | Wrapper detected only lightweight uncommitted files and skipped Gradle; manual consistency review is sufficient. |
 
 ## User Validation
 - Confirm `.agents/references/workflow.md` defines `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, and `M4: gated` with unchanged mode semantics.
