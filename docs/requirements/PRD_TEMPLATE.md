@@ -8,6 +8,15 @@ Draft
 
 YYYY-MM-DD
 
+## Provenance
+
+| Field | Value |
+| --- | --- |
+| Created By | `<AI agent name/model, or human author>` |
+| Created On | `YYYY-MM-DD` |
+| Source Request | `<prompt, roadmap row, issue, linked artifact, or manual context>` |
+| Generation Context | `<loaded guides, source artifacts, branch/worktree, delegation context, or manual context>` |
+
 ## Product Context
 
 - Who is affected?

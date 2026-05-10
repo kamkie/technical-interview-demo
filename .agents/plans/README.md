@@ -21,7 +21,7 @@ For canonical behavior or contract truth, use a standalone spec in [docs/specs/]
 ## How To Add A Plan
 
 1. Create a new file named `PLAN_<short_snake_case_title>.md` in this directory.
-2. Follow the structure described in [.agents/references/planning.md](../references/planning.md): context, scope, ordered tasks with validation, links to governing specs.
+2. Follow the structure described in [.agents/references/planning.md](../references/planning.md): provenance, context, scope, ordered tasks with validation, links to governing specs.
 3. Link the new plan from any related ADR, PRD, standalone spec, or [ROADMAP.md](../../ROADMAP.md) entry.
 4. Execute the plan using the loop in [.agents/references/plan-execution.md](../references/plan-execution.md); when the plan is complete, move it under [.agents/archive/](../archive/).
 

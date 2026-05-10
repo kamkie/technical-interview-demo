@@ -43,6 +43,7 @@ Validation: <command/result>
 #   Use manual only for human-authored commits outside the AI workflow.
 #   Include only the Project-* footers that apply.
 #   Validation is required for AI-created commits; say "not run" with a reason when needed.
+#   For generated ADRs, PRDs, and plans, commit metadata supplements the artifact's Provenance section; do not rely on the commit alone for generation context.
 #
 # Examples:
 #   feat(books): add publication-year search filter

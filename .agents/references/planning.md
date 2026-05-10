@@ -38,7 +38,22 @@ Do not create or retain a separate descriptive companion for plan shape when thi
 
 ## Lifecycle And Readiness
 
-Every active plan starts with a lifecycle block followed by a planning readiness snapshot:
+Every active plan starts with a provenance block, then a lifecycle block followed by a planning readiness snapshot.
+For generated plans, `Created By` names the creating AI agent, `Source Request` names the prompt, roadmap row, issue, or linked artifact that caused generation, and `Generation Context` names the workflow mode, loaded guides, source artifacts, branch or worktree, delegation context, or other context needed to understand how the plan was produced.
+Commit metadata can supplement this section but does not replace visible plan provenance.
+
+```md
+## Provenance
+
+| Field | Value |
+| --- | --- |
+| Created By | `<AI agent name/model, or human author>` |
+| Created On | `YYYY-MM-DD` |
+| Source Request | `<prompt, roadmap row, issue, linked artifact, or manual context>` |
+| Generation Context | `<workflow mode, loaded guides, source artifacts, branch/worktree, delegation context, or manual context>` |
+```
+
+Then include the lifecycle block:
 
 ```md
 ## Lifecycle
@@ -103,7 +118,7 @@ Create concrete plans under `.agents/plans/` as `PLAN_<topic>.md` with lowercase
 Prefer one coherent plan unless the work is genuinely disjoint.
 Start new plans from `.agents/references/plan-template.md`.
 
-Every concrete plan must identify the behavior, linked ADRs, PRDs, and standalone specs when they exist, governing executable specs or contract artifacts, scope and non-goals, affected files, compatibility promises, planning readiness, requirement gaps, locked decisions and assumptions, execution shape and shared-file boundaries, per-plan-task context requirements, plan-task checkpoints, progress tracking, validation, and user verification.
+Every concrete plan must identify provenance, the behavior, linked ADRs, PRDs, and standalone specs when they exist, governing executable specs or contract artifacts, scope and non-goals, affected files, compatibility promises, planning readiness, requirement gaps, locked decisions and assumptions, execution shape and shared-file boundaries, per-plan-task context requirements, plan-task checkpoints, progress tracking, validation, and user verification.
 Keep the plan self-contained enough for another agent to execute without inventing missing decisions.
 Use `Current State` for observed repo facts; when a fact is inferred, say so and record whether that inference affects readiness.
 
@@ -175,6 +190,7 @@ If no blocking gap remains, say so directly and name any residual non-blocking r
 Before presenting a plan, verify that it:
 
 - uses valid lifecycle `Phase` and `Status` values
+- includes visible provenance for the creating AI agent or human author and the generation context
 - identifies linked ADR, PRD, or standalone spec artifacts when they exist, plus governing specs and likely changed files
 - keeps `Planning Readiness`, open questions, decisions, progress, blockers, and validation aligned
 - separates scope, non-goals, compatibility promises, unresolved gaps, and accepted fallbacks

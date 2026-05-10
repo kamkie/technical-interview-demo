@@ -74,6 +74,7 @@ Rules for maintaining the `.agents/` documents:
 - outside `.agents/references/*.md`, write AI-guidance changes as current-state rules; route any still-useful historical context using this guide
 - keep repo-local skills narrow and workflow-oriented; use them to accelerate repeated entry tasks or focused triage, not to replace domain guides
 - keep skills tactical; they must reference owner guides for standing rules instead of becoming governance documents
+- keep visible artifact-level provenance in generated ADRs, PRDs, and execution plans; the `## Provenance` section must name the creating AI agent or human author, creation date, source request, and generation context, and AI commit metadata is supplemental rather than a substitute
 - create `.agents/plugins/marketplace.json` and a plugin bundle only when a workflow needs Codex plugin distribution or install-time discovery; keep ordinary reusable prompts in `.agents/tasks/`
 - when a repo-local skill wraps a workflow owned by a domain guide, update the skill and that guide together if the workflow changes
 - archive executed `.agents/plans/PLAN_*.md` files under `.agents/archive/` as part of the release cleanup once that work has been released

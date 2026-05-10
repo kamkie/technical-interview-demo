@@ -20,7 +20,7 @@ For task-sized implementation checkpoints, use an execution plan under [.agents/
 ## How To Add A PRD
 
 1. Copy [PRD_TEMPLATE.md](PRD_TEMPLATE.md) to a descriptive kebab-case filename in this directory.
-2. Fill in the template sections (goals, users, requirements, non-goals, acceptance criteria, links).
+2. Fill in the template sections (provenance, goals, users, requirements, non-goals, acceptance criteria, links).
 3. Link the new PRD from any related ADR, standalone spec, execution plan, or [ROADMAP.md](../../ROADMAP.md) entry.
 4. Update the index below.
 

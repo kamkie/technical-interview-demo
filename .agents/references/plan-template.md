@@ -3,6 +3,15 @@
 `.agents/references/plan-template.md` owns the canonical skeleton for `.agents/plans/PLAN_*.md` files.
 When creating a concrete plan, replace placeholders and remove this ownership note from the plan file.
 
+## Provenance
+
+| Field | Value |
+| --- | --- |
+| Created By | `<AI agent name/model, or human author>` |
+| Created On | `YYYY-MM-DD` |
+| Source Request | `<prompt, roadmap row, issue, linked artifact, or manual context>` |
+| Generation Context | `<workflow mode, loaded guides, source artifacts, branch/worktree, delegation context, or manual context>` |
+
 ## Lifecycle
 | Status | Current |
 | --- | --- |

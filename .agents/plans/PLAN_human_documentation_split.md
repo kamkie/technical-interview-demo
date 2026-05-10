@@ -1,5 +1,14 @@
 # Plan: Human Documentation Split
 
+## Provenance
+
+| Field | Value |
+| --- | --- |
+| Created By | AI agent; exact model was not recorded before provenance became required |
+| Created On | 2026-05-10 |
+| Source Request | Follow-up implementation plan for `docs/decisions/0006-split-human-documentation-and-ai-workflow-guides.md` and the matching `ROADMAP.md` active release-track entry |
+| Generation Context | Inferred from existing plan metadata: `M0: direct` documentation split using `AGENTS.md`, `.agents/references/planning.md`, `.agents/references/documentation.md`, and ADR 0006; original prompt context was not recorded |
+
 ## Lifecycle
 | Status | Current |
 | --- | --- |

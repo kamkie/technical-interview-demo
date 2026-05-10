@@ -18,7 +18,7 @@ For short-lived implementation choices use an execution plan under [.agents/plan
 ## How To Add An ADR
 
 1. Copy [ADR_TEMPLATE.md](ADR_TEMPLATE.md) to `NNNN-short-kebab-title.md`, where `NNNN` is the next zero-padded sequence number.
-2. Fill in Status, Date, Context, Decision, Consequences, Alternatives Considered, Confirmation, and Links.
+2. Fill in Status, Date, Provenance, Context, Decision, Consequences, Alternatives Considered, Confirmation, and Links.
 3. If the ADR supersedes an earlier one, update the earlier ADR's Status to point at the new file and move the earlier file under [.agents/archive/](../../.agents/archive/) only when explicitly archived.
 4. Update incoming references and add the new ADR to the index below.
 
