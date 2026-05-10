@@ -112,6 +112,8 @@ If the title, placeholder, or target artifact is ambiguous, expect AI to ask a t
 
 Use `.agents/references/application-lifecycle.md` for the accepted phase names and activity names such as `Frame`, `Elicit`, `Define-Requirements`, `Validate-Plan`, `Run`, and `Replan?`.
 
+Lifecycle phases map to `ROADMAP.md` sections as follows: rough capture lands in `## Conceptualization`, structured requirements work in `## Analysis`, durable decisions in `## Decisions`, accept/defer/prioritize calls in `## Triage`, and committed execution rows in `## Active Release Track` or `## Planned Work`. Skip rules under `ROADMAP.md` `### When To Skip Pre-Planning Artifacts` keep small or local changes from needing pre-planning rows.
+
 ### Conceptualization
 
 Use AI to capture rough ideas, TODOs, maintenance signals, links, and early framing without jumping into implementation too early.

@@ -118,6 +118,8 @@ Update all affected artifacts in the same change:
 
 - update `ROADMAP.md`
 - keep `ROADMAP.md` `## Current Project State` aligned with the active release phase, breaking-change policy, and next target version whenever roadmap sequencing or release targeting changes
+- route rows by lifecycle phase: rough capture to `## Conceptualization`, structured requirements to `## Analysis`, durable decisions to `## Decisions`, accept/defer/prioritize calls to `## Triage`, and plan-backed execution to `## Active Release Track` or `## Planned Work`
+- honor `ROADMAP.md` `### When To Skip Pre-Planning Artifacts`; trivial or local-only work does not need a pre-planning row
 - use `ROADMAP.md` status values for active-work state; if checkbox items appear, treat `[x]` as selected for active planning or development, not as completed history
 - remove completed items instead of archiving them elsewhere
 - do not recreate a second human history file; released history belongs in `CHANGELOG.md`
