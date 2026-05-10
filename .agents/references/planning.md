@@ -3,7 +3,7 @@
 `.agents/references/planning.md` owns the standing rules for creating, revising, and reviewing executable plans under `.agents/plans/`.
 It also owns plan fill guidance, readiness review shape, and milestone-quality rules.
 Use `.agents/references/plan-template.md` only when you need the full skeleton.
-Use `docs/specs/application-lifecycle-spec.md` for lifecycle phase vocabulary and `docs/specs/lifecycle-phase-activities.md` for activity and loop names.
+Use `.agents/references/application-lifecycle.md` for lifecycle phase, activity, and loop vocabulary.
 
 Use this file when the user asks for a plan, milestone breakdown, readiness review, execution-shape decision, or detailed change strategy.
 Use `.agents/references/plan-execution.md` after the user asks to execute a whole active plan, `.agents/references/execution.md` for ad hoc tasks or one plan milestone, `.agents/references/workflow.md` for branch, worktree, delegation, shared-file, or integration mechanics, `.agents/references/documentation.md` for artifact routing, and `.agents/references/testing.md` for validation scope.
@@ -25,7 +25,7 @@ Load only what the request needs:
 - new plan or substantial revision: `.agents/references/plan-template.md`
 - plan revision or readiness review: the target `.agents/plans/PLAN_*.md`
 - roadmap-driven work or concrete active plans: `ROADMAP.md`
-- lifecycle wording changes: `docs/specs/application-lifecycle-spec.md` and `docs/specs/lifecycle-phase-activities.md`
+- lifecycle wording changes: `.agents/references/application-lifecycle.md`
 - artifact routing: `.agents/references/documentation.md`
 - validation selection: `.agents/references/testing.md`
 - delegation, branch, worktree, shared-file, or integration planning: `.agents/references/workflow.md`
@@ -58,7 +58,7 @@ Every active plan starts with a lifecycle block followed by a planning readiness
 ```
 
 Use `Phase` for the coarse lifecycle stage.
-Valid plan phase values mirror the eleven phases in `docs/specs/application-lifecycle-spec.md`: `Discovery`, `Roadmap Intake`, `Planning`, `Implementation`, `Testing`, `Review`, `Integration`, `Release`, `Deployment`, `Operations`, and `Continuous Improvement`.
+Valid plan phase values mirror the eleven phases in `.agents/references/application-lifecycle.md`: `Discovery`, `Roadmap Intake`, `Planning`, `Implementation`, `Testing`, `Review`, `Integration`, `Release`, `Deployment`, `Operations`, and `Continuous Improvement`.
 
 `Closed` is not a phase.
 It is a terminal plan status for work whose lifecycle is complete and archived or intentionally retired.

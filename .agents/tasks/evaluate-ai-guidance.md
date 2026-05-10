@@ -6,8 +6,8 @@ Do not implement recommendations during this task.
 When no additional arguments are passed, report only on the current repository state.
 Do comparison or trend analysis only when the user provides explicit git references, such as commits, tags, branches, or a range.
 
-Read first: `AGENTS.md`, `.agents/references/documentation.md`, this task, and `docs/specs/application-lifecycle-spec.md`.
-Load `docs/specs/lifecycle-phase-activities.md`, owner guides, active plans, human-facing docs, skills, templates, or archives only when needed to answer a specific finding.
+Read first: `AGENTS.md`, `.agents/references/documentation.md`, this task, and `.agents/references/application-lifecycle.md`.
+Load owner guides, active plans, human-facing docs, skills, templates, or archives only when needed to answer a specific finding.
 Do not bulk-load `.agents/archive/`.
 
 Generate or reuse a same-session context report when it covers the requested boundary and relevant uncommitted AI-guidance changes.
@@ -16,7 +16,7 @@ Use `scripts/ai/context-report.ps1` through the `measure-ai-context` task when g
 Evaluate:
 
 - ownership clarity and single-source guidance
-- lifecycle phase, activity, loop, trigger, artifact, owner, and gate coverage against the lifecycle specs
+- lifecycle phase, activity, loop, trigger, artifact, owner, and gate coverage against the lifecycle reference
 - spec-driven development, truth priority, definition of done, branch/worktree, validation, review, integration, release, deployment, operations, and continuous-improvement coverage
 - default-load discipline, practical read sets, `.agents/tasks/` prompt quality, active-plan hygiene, skill/template/archive containment, and stale-reference risk
 - contradictions, policy duplication, missing routing, and recommendations with owner file, expected benefit, context impact, implementation risk, and validation needed

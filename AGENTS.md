@@ -75,6 +75,7 @@ Use workflow guides on demand:
 - review: `.agents/references/reviews.md`
 - branch, worktree, delegation, multi-agent state, sidecar, integration, or remote handoff: `.agents/references/workflow.md`
 - release: `.agents/references/releases.md`
+- application lifecycle phase, activity, owner-guide mapping, or loop vocabulary: `.agents/references/application-lifecycle.md`
 
 ### Descriptive And Deep References
 
@@ -82,7 +83,6 @@ Load descriptive or deep references only when the task needs them:
 
 - `docs/ARCHITECTURE.md` for structural code reading, architecture-sensitive changes, or package ownership questions
 - `docs/DESIGN.md` for user-visible behavior, supported scope, security posture, or roadmap tradeoffs
-- `docs/specs/application-lifecycle-spec.md` and `docs/specs/lifecycle-phase-activities.md` when lifecycle phase, activity, owner-guide mapping, or loop vocabulary changes
 - `.agents/references/LEARNINGS.md` only from a targeted relevance scan, a known recurring repo lesson, or a correction that exposes durable guidance
 - active `.agents/plans/PLAN_*.md` files only when planning, executing, verifying, or releasing that plan
 - repository task prompts under `.agents/tasks/`, templates, detailed workflow references, skill bodies, archived plans, and reports only when directly invoked or required
