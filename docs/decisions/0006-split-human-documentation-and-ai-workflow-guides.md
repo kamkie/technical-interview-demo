@@ -34,7 +34,7 @@ Target document roles:
 - `docs/WORKING_WITH_AI.md`: human-facing guide for asking AI to help with planning, implementation, validation, review, and release preparation. It should link to lifecycle and workflow owner guides instead of restating the full AI runbooks.
 - `docs/DESIGN.md`: product and contract intent, non-goals, public contract direction, security and deployment direction, and roadmap direction.
 - `SETUP.md`: local developer setup only: prerequisites, quick start, environment variables, IDE setup, local database, running the app, running tests, local CI reproduction, and local troubleshooting.
-- `docs/OPERATIONS.md` or `OPERATIONS.md`: deployment and operations runbooks: deployment contract, release-artifact verification, image build and smoke, post-deploy smoke, healthy runtime expectations, upgrade and rollback, Kubernetes, Helm, monitoring, and deployment troubleshooting.
+- `docs/OPERATIONS.md`: deployment and operations runbooks: deployment contract, release-artifact verification, image build and smoke, post-deploy smoke, healthy runtime expectations, upgrade and rollback, Kubernetes, Helm, monitoring, OAuth runtime setup, and deployment troubleshooting.
 - `CONTRIBUTING.md`: contributor workflow, spec-driven development expectations, branch and commit rules, PR expectations, validation expectations, documentation expectations, and release handoff expectations.
 - `.agents/references/*`: AI-facing owner guides for detailed lifecycle vocabulary, planning, execution, workflow coordination, validation, review, release, documentation routing, and code style.
 
@@ -45,8 +45,7 @@ When `WORKING_WITH_AI.md` moves under `docs/`, all repository links should targe
 Human-only documentation that is generated from, derived from, or summarizing owner artifacts should include a short notice that it is generated or derived, name the documents that own its content, and direct maintainers to update those owner documents first.
 Human-targeting Markdown documents should use Markdown links for files, directories, and section references where appropriate so readers can navigate the documentation directly. Use code spans for commands, globs, identifiers, literal values, and examples where linking would reduce clarity.
 
-The first implementation plan should decide whether operations content belongs at repository root as `OPERATIONS.md` or under `docs/OPERATIONS.md`.
-Until that plan is accepted, this ADR records the split and leaves the exact operations path open.
+The implementation plan selected `docs/OPERATIONS.md` for operations content so the human documentation tree owns design, lifecycle, AI collaboration, operations, and frontend contract material together.
 
 ## Consequences
 
@@ -64,7 +63,7 @@ Costs or risks:
 - The first split will touch several high-traffic documentation files and can create stale links if not validated.
 - Moving operational sections out of `SETUP.md` may inconvenience users who currently expect every command in one file.
 - Adding `docs/DEVELOPMENT_LIFECYCLE.md` risks duplicating `.agents/references/application-lifecycle.md` unless it stays human-facing and summary-level.
-- The operations document location must be chosen deliberately so `README.md`, `CONTRIBUTING.md`, `WORKING_WITH_AI.md`, `AGENTS.md`, and `.agents/references/documentation.md` do not point at different owners.
+- The operations document location must stay aligned so `README.md`, `CONTRIBUTING.md`, `docs/WORKING_WITH_AI.md`, `AGENTS.md`, and `.agents/references/documentation.md` do not point at different owners.
 - Moving `WORKING_WITH_AI.md` requires root-level compatibility and link migration decisions so existing readers are not stranded.
 - Generated or derived human-only documents can drift if their owner notice is missing, stale, or too vague.
 
@@ -128,7 +127,11 @@ This decision is reflected in the repository when:
 - [README.md](../../README.md)
 - [SETUP.md](../../SETUP.md)
 - [CONTRIBUTING.md](../../CONTRIBUTING.md)
-- [WORKING_WITH_AI.md](../../WORKING_WITH_AI.md) until it moves to `docs/WORKING_WITH_AI.md`
+- [docs/README.md](../README.md)
+- [docs/DEVELOPMENT_LIFECYCLE.md](../DEVELOPMENT_LIFECYCLE.md)
+- [docs/WORKING_WITH_AI.md](../WORKING_WITH_AI.md)
+- [docs/OPERATIONS.md](../OPERATIONS.md)
+- [WORKING_WITH_AI.md](../../WORKING_WITH_AI.md) compatibility pointer
 - [ROADMAP.md](../../ROADMAP.md)
 - [docs/DESIGN.md](../DESIGN.md)
 - [docs/decisions/0001-adopt-pre-planning-artifacts.md](0001-adopt-pre-planning-artifacts.md)

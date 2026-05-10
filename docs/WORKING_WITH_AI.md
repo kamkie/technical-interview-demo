@@ -57,6 +57,7 @@ Use the smallest owner set that can answer the request:
 | Local setup, tools, and local troubleshooting | [SETUP.md](../SETUP.md) |
 | Contributor workflow and PR expectations | [CONTRIBUTING.md](../CONTRIBUTING.md) |
 | Lifecycle and artifact routing for humans | [Development Lifecycle](DEVELOPMENT_LIFECYCLE.md) |
+| Deployment and runtime operations runbooks | [OPERATIONS.md](OPERATIONS.md) |
 | Active and planned work | [ROADMAP.md](../ROADMAP.md) |
 | Product intent and non-goals | [DESIGN.md](DESIGN.md) |
 | Durable decisions | [docs/decisions/](decisions/) |
@@ -110,6 +111,7 @@ For validation and review:
 For release or operations:
 
 - keep release preparation separate from implementation work
+- use [OPERATIONS.md](OPERATIONS.md) for deployment and runtime runbooks
 - use [.agents/references/releases.md](../.agents/references/releases.md) only after the implementation is integrated on `main`
 - use [.agents/references/operations.md](../.agents/references/operations.md) for post-release deployment, rollback, hotfix, patch, backport, or deprecation routing
 

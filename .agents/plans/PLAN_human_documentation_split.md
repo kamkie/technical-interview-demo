@@ -11,7 +11,7 @@
 | --- | --- |
 | Decision Complete | Yes |
 | Blocking Open Questions | None |
-| Accepted Fallbacks | Operations runbooks move to `docs/OPERATIONS.md`; keep a root `WORKING_WITH_AI.md` compatibility pointer during the move |
+| Accepted Fallbacks | Operations runbooks moved to `docs/OPERATIONS.md`; root `WORKING_WITH_AI.md` remains a compatibility pointer |
 | Ready For Execution | Yes |
 | Last Updated | 2026-05-10 |
 
@@ -34,12 +34,12 @@
 - Out of scope: application behavior, public API contracts, release preparation, deployment execution, and changelog updates.
 
 ## Current State
-- `docs/decisions/0006-split-human-documentation-and-ai-workflow-guides.md` is accepted and lists required follow-up changes.
-- `SETUP.md` currently mixes local setup with deployment contract, release-artifact verification, image build, smoke, runtime, rollback, Kubernetes, Helm, monitoring, OAuth, and troubleshooting sections.
-- `WORKING_WITH_AI.md` exists at the repository root and includes broad lifecycle and artifact-routing detail.
-- `docs/README.md`, `docs/DEVELOPMENT_LIFECYCLE.md`, and `docs/OPERATIONS.md` do not exist.
-- `ROADMAP.md` indexes ADR 0006 as accepted but not planned.
-- `.agents/references/documentation.md` still names root `WORKING_WITH_AI.md` as the human-facing AI guide and `SETUP.md` as the broad setup/troubleshooting/runbook owner.
+- `docs/decisions/0006-split-human-documentation-and-ai-workflow-guides.md` is accepted and now records `docs/OPERATIONS.md` as the selected operations path.
+- `SETUP.md` is focused on local setup, local commands, CI reproduction, and local troubleshooting.
+- `docs/OPERATIONS.md` owns deployment contract, release-artifact verification, image build and smoke, post-deploy smoke, runtime expectations, upgrade and rollback, Kubernetes, Helm, monitoring, OAuth runtime setup, and operations troubleshooting.
+- `docs/WORKING_WITH_AI.md` owns the human-facing AI guide; root `WORKING_WITH_AI.md` remains a compatibility pointer.
+- `docs/README.md` and `docs/DEVELOPMENT_LIFECYCLE.md` exist and link the human-facing documentation tree.
+- `ROADMAP.md` tracks this plan as in-progress implementation work.
 
 ## Requirement Gaps And Open Questions
 | ID | Question / Gap | Why It Matters | Owner | Status | Fallback / Decision | Blocks Ready? |
@@ -75,7 +75,7 @@
 | --- | --- | --- | --- | --- | --- |
 | 1: Documentation Spine And AI Guide Move | Done | Agent | `docs(ai): move human AI guide into docs` | `pwsh ./scripts/docs/audit-docs.ps1` passed | Created the human docs index, lifecycle summary, moved AI collaboration guide, and root compatibility pointer. |
 | 2: Operations And Setup Split | Done | Agent | `docs(operations): split runbooks from setup` | `pwsh ./scripts/docs/audit-docs.ps1` passed | Moved deployment/runtime runbooks into `docs/OPERATIONS.md` and narrowed `SETUP.md` to local setup and local troubleshooting. |
-| 3: Ownership Map And Link Alignment | Not Started | Agent | Pending | Pending | Align top-level docs, AI ownership maps, ADR links, and roadmap/plan tracking. |
+| 3: Ownership Map And Link Alignment | Done | Agent | `docs: align human documentation ownership map` | `pwsh ./scripts/docs/audit-docs.ps1` and `git diff --check` passed | Aligned top-level docs, AI ownership maps, ADR links, roadmap state, and operations/AI guide references. |
 | 4: Final Validation And Review | Not Started | Agent | Pending | Pending | Run docs audit/build, review drift, and close plan tracking for implementation readiness or completion. |
 
 ## Execution Tasks
@@ -108,7 +108,7 @@
 ### Task 3: Ownership Map And Link Alignment
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Make human-facing docs and AI ownership maps agree on the new document roles. |
 | Owned Files Or Packages | `README.md`, `CONTRIBUTING.md`, `docs/DESIGN.md`, `AGENTS.md`, `.agents/references/documentation.md`, `docs/decisions/0006-split-human-documentation-and-ai-workflow-guides.md`, `ROADMAP.md`, this plan |
 | Coordinator-Owned Shared Files | All owned files are shared because execution is `M0: direct`. |
@@ -170,6 +170,8 @@
 | 2026-05-10 | `./build.ps1 build` | Plan creation and roadmap selection checkpoint | Passed | Wrapper reported only lightweight uncommitted files changed and skipped Gradle; manual consistency review is sufficient for this checkpoint. |
 | 2026-05-10 | `pwsh ./scripts/docs/audit-docs.ps1` | Task 1 documentation spine and AI guide move | Passed | Audited 33 user-facing documents, checked 79 local links, and passed. |
 | 2026-05-10 | `pwsh ./scripts/docs/audit-docs.ps1` | Task 2 operations and setup split | Passed | Audited 36 user-facing documents, checked 141 local links, and passed. |
+| 2026-05-10 | `pwsh ./scripts/docs/audit-docs.ps1` | Task 3 ownership map and link alignment | Passed | Audited 37 user-facing documents, checked 188 local links, and passed. |
+| 2026-05-10 | `git diff --check` | Task 3 ownership map and reference-doc consistency review | Passed | No whitespace errors; manual review checked changed `.agents/references/*.md` files against `references-rules.md` owner statements and current-rule style. |
 | 2026-05-10 | Pending | Documentation audit and wrapper build for implementation tasks | Pending | Run after implementation tasks complete. |
 
 ## User Validation

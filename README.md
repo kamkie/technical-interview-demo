@@ -21,10 +21,13 @@ See [docs/DESIGN.md](docs/DESIGN.md) for product intent and non-goals.
 
 ## Project Map
 
+- [docs/README.md](docs/README.md): human-facing documentation index
 - [SETUP.md](SETUP.md): local environment, prerequisites, and run commands
 - [CONTRIBUTING.md](CONTRIBUTING.md): contributor workflow, validation expectations, and PR or release handoff
 - [ROADMAP.md](ROADMAP.md): active and planned work only
-- [WORKING_WITH_AI.md](WORKING_WITH_AI.md): how to use AI effectively in this repository
+- [docs/DEVELOPMENT_LIFECYCLE.md](docs/DEVELOPMENT_LIFECYCLE.md): human-facing lifecycle and artifact-routing summary
+- [docs/WORKING_WITH_AI.md](docs/WORKING_WITH_AI.md): how to use AI effectively in this repository
+- [docs/OPERATIONS.md](docs/OPERATIONS.md): deployment, runtime, smoke, rollback, Kubernetes, Helm, monitoring, OAuth, and operations troubleshooting runbooks
 - [docs/decisions/](docs/decisions/): optional ADRs for durable architecture, workflow, contract-policy, security, documentation-ownership, or process decisions
 - [docs/requirements/](docs/requirements/): optional PRDs for broad or ambiguous user-facing product intent
 - [docs/specs/](docs/specs/): optional standalone specs for behavior or contract truth not already clear in executable specs or published docs
@@ -40,14 +43,15 @@ See [docs/DESIGN.md](docs/DESIGN.md) for product intent and non-goals.
 - start with [SETUP.md](SETUP.md) to get Java 25, Docker, and local commands working
 - use [CONTRIBUTING.md](CONTRIBUTING.md) for branch, validation, PR, and release expectations
 - make changes spec-first: update the governing tests, docs, or contract artifacts before or alongside implementation
-- use [WORKING_WITH_AI.md](WORKING_WITH_AI.md) when you want AI help with planning, implementation, verification, or release preparation
-- open an ADR ([docs/decisions/](docs/decisions/)) for durable architecture, workflow, contract, security, or process decisions; a PRD ([docs/requirements/](docs/requirements/)) for ambiguous user-facing product intent; or a standalone spec ([docs/specs/](docs/specs/)) when behavior is not already covered by executable specs — see [WORKING_WITH_AI.md](WORKING_WITH_AI.md) and [ROADMAP.md](ROADMAP.md) for lifecycle routing
+- use [docs/WORKING_WITH_AI.md](docs/WORKING_WITH_AI.md) when you want AI help with planning, implementation, verification, or release preparation
+- open an ADR ([docs/decisions/](docs/decisions/)) for durable architecture, workflow, contract, security, or process decisions; a PRD ([docs/requirements/](docs/requirements/)) for ambiguous user-facing product intent; or a standalone spec ([docs/specs/](docs/specs/)) when behavior is not already covered by executable specs; see [docs/DEVELOPMENT_LIFECYCLE.md](docs/DEVELOPMENT_LIFECYCLE.md) and [ROADMAP.md](ROADMAP.md) for lifecycle routing
+- use [docs/OPERATIONS.md](docs/OPERATIONS.md) for deployment and runtime runbooks
 
 ## AI Guidance Files
 
 Use these entry points when you want to work with AI in this repository or understand what the AI is expected to follow:
 
-- [WORKING_WITH_AI.md](WORKING_WITH_AI.md): human-facing guide for using AI across the lifecycle
+- [docs/WORKING_WITH_AI.md](docs/WORKING_WITH_AI.md): human-facing guide for using AI across the lifecycle
 - [AGENTS.md](AGENTS.md): repository-local AI rules, spec priority, definition of done, and the full Documents Map
 - [.agents/skills/README.md](.agents/skills/README.md): repo-local skills catalog and the standard M0–M4 workflow chain
 - [docs/FRONTEND_AI_CONTRACT.md](docs/FRONTEND_AI_CONTRACT.md): generated import-ready backend contract for a separate first-party frontend repository's AI agents

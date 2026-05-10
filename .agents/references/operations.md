@@ -61,7 +61,7 @@ Exit when the artifact is staged, staging is blocked with a named reason, or the
 
 Question: does the staged artifact satisfy the smallest required runtime proof?
 
-Use existing runbooks and wrapper tasks from `SETUP.md`, deployment assets, CI workflow documentation, or the user-supplied environment instructions.
+Use existing runbooks and wrapper tasks from `docs/OPERATIONS.md`, deployment assets, CI workflow documentation, or the user-supplied environment instructions.
 Choose validation through `.agents/references/testing.md`.
 
 Record:

@@ -21,13 +21,16 @@ Update the artifact that owns the truth being changed:
 - proposed or accepted durable architecture, workflow, contract-policy, security, documentation-ownership, or repository-process decisions: `docs/decisions/*.md`; template: `docs/decisions/ADR_TEMPLATE.md`
 - product intent, users, goals, non-goals, requirements, acceptance criteria, and product-scope open questions for broad or ambiguous user-facing work: `docs/requirements/*.md`; template: `docs/requirements/PRD_TEMPLATE.md`
 - standalone behavior, contract, acceptance criteria, and validation mapping when executable specs or published contract docs do not already define the behavior clearly enough: `docs/specs/*.md`; template: `docs/specs/SPEC_TEMPLATE.md`
-- human-facing guide for developers using AI through the application lifecycle: `WORKING_WITH_AI.md`
+- human-facing documentation index: `docs/README.md`
+- human-facing application lifecycle and artifact-routing summary derived from AI owner guides and roadmap rules: `docs/DEVELOPMENT_LIFECYCLE.md`
+- human-facing guide for developers using AI through the application lifecycle: `docs/WORKING_WITH_AI.md`; root `WORKING_WITH_AI.md` is a compatibility pointer only
+- human-facing deployment and runtime operations runbooks: `docs/OPERATIONS.md`
 - application development lifecycle phase model, activity vocabulary, loops, triggers, and owner-guide mapping: `.agents/references/application-lifecycle.md`
 - AI repository rules, spec priority, required spec-update policy, working AI context, Documents Map, completion rules, and integration/release invariants: `AGENTS.md`
 - repository knowledge layout and artifact ownership: this guide, especially `## Artifact Ownership` and `### AI Document Maintenance`
 - rules for creating, editing, compacting, moving, and retiring `.agents/references/*.md`: `.agents/references/references-rules.md`
 - AI local command wrapper shortcut: `.agents/references/command-wrapper.md`
-- local setup, tools, IDE walkthroughs, Docker onboarding, troubleshooting, and environment runbooks: `SETUP.md`
+- local setup, tools, IDE walkthroughs, Docker onboarding, local commands, CI reproduction, and local troubleshooting: `SETUP.md`
 - contributor workflow and maintainer expectations: `CONTRIBUTING.md`
 - user-facing documentation health checks, local link checks, stable-version agreement checks, and generated-contract summary drift checks: `scripts/docs/audit-docs.ps1`
 - active planned work: `ROADMAP.md`
@@ -111,9 +114,10 @@ Update all affected artifacts in the same change:
 - avoid changing OpenAPI or README unless behavior actually changed
 - prefer renames and moves that reduce exceptions in naming and packaging
 
-### Setup or environment change
+### Setup, environment, or operations change
 
 - update `SETUP.md` for human setup, tool, and troubleshooting changes
+- update `docs/OPERATIONS.md` for deployment contract, runtime, smoke, rollback, Kubernetes, Helm, monitoring, OAuth runtime setup, or operations troubleshooting changes
 - update `.agents/references/command-wrapper.md` when AI-facing command-wrapper guidance changes
 - only touch `README.md` or `AGENTS.md` when the high-level contract or rules changed, not for walkthrough duplication
 
@@ -132,6 +136,7 @@ Update all affected artifacts in the same change:
 - update overlapping human-facing and AI-facing docs in the same change
 - use `### AI Document Maintenance` in this guide for task prompts, skills, templates, top-level AI guides, and archived plans; use `.agents/references/references-rules.md` for `.agents/references/*.md`
 - keep setup detail out of planning, workflow, and release guides
+- keep deployment and runtime runbook detail in `docs/OPERATIONS.md`, not in `SETUP.md` or AI workflow guides
 - keep active or selected work in `ROADMAP.md` and released history in `CHANGELOG.md`
 - keep REST Docs AsciiDoc files formatter-managed; write unordered lists with explicit AsciiDoc marker depth (`*`, `**`) so IntelliJ formatting cannot flatten indentation-only nesting
 - keep migration SQL documentation and examples aligned with hand-formatted Flyway scripts; do not normalize migration SQL through IntelliJ reformatting when documenting schema changes
@@ -139,12 +144,13 @@ Update all affected artifacts in the same change:
 ## Common Routing
 
 - public behavior change: update the governing spec artifacts first, then the published contract artifacts they drive
-- human-facing AI collaboration workflow change: update `WORKING_WITH_AI.md`, and update overlapping AI-facing guides in the same change when the underlying repository workflow also changed
+- human-facing AI collaboration workflow change: update `docs/WORKING_WITH_AI.md`, and update overlapping AI-facing guides in the same change when the underlying repository workflow also changed
 - workflow or AI-guidance change: update the matching domain guide first; follow `.agents/references/references-rules.md` for reference-document edits; touch `AGENTS.md` only when the AI-document set or maintenance rules changed
-- separate frontend AI contract source change: update `docs/FRONTEND_AI_CONTRACT.md`, keep it subordinate to executable specs, REST Docs, OpenAPI, and `README.md`, and update `README.md`, `WORKING_WITH_AI.md`, `AGENTS.md`, and this guide when its discoverability or ownership changes
+- separate frontend AI contract source change: update `docs/FRONTEND_AI_CONTRACT.md`, keep it subordinate to executable specs, REST Docs, OpenAPI, and `README.md`, and update `README.md`, `docs/WORKING_WITH_AI.md`, `AGENTS.md`, and this guide when its discoverability or ownership changes
 - repo-local skill change: update the skill plus the matching domain guide when the skill wraps a workflow whose rules changed
 - local command-wrapper guidance for AI agents: update `.agents/references/command-wrapper.md`, and update `SETUP.md` only when human setup or troubleshooting behavior changed
 - setup or tooling change: update `SETUP.md`, not `README.md`, `AGENTS.md`, or workflow guides unless their inventories or high-level rules changed
+- deployment or runtime operations runbook change: update `docs/OPERATIONS.md`, not `SETUP.md`, unless local setup steps also changed
 - plan creation or material plan revision: update the concrete `.agents/plans/PLAN_*.md` file and `ROADMAP.md` together so active work points to the plan path and current status
 - roadmap reprioritization: update `ROADMAP.md`, and keep `## Current Project State` aligned when the active release phase, breaking-change policy, or next target version changes
 - post-release deployment or operations signal: use `.agents/references/operations.md` to route rollback, hotfix, patch, backport, deprecation, roadmap, learning, and validation ownership before editing implementation or release artifacts

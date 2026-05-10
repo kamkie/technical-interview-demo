@@ -1,6 +1,6 @@
 # AI Project Instructions
 
-`README.md` is the human-facing counterpart of this file. `SETUP.md` is the environment and onboarding guide. The `docs/` directory contains shared project knowledge, and `.agents/` contains AI workflow support documents. Keep these sources aligned when their scopes overlap, but do not duplicate setup/runbook detail from `SETUP.md` here.
+`README.md` is the human-facing counterpart of this file. `SETUP.md` is the local environment and onboarding guide. The `docs/` directory contains shared project knowledge and human-facing guides, including operations runbooks, and `.agents/` contains AI workflow support documents. Keep these sources aligned when their scopes overlap, but do not duplicate setup or operations runbook detail here.
 
 ## Core Approach: Spec-Driven Development
 
@@ -59,6 +59,7 @@ Add only guides whose domains match the current task.
 - edit shape and repo-local code conventions: `.agents/references/code-style.md`
 - architecture, structural placement, package ownership, or codebase map: `.agents/references/architecture.md`
 - product direction, supported scope, security posture, or roadmap tradeoffs: `docs/DESIGN.md`
+- human-facing documentation index, lifecycle summary, AI collaboration guide, or operations runbook: `docs/README.md`, `docs/DEVELOPMENT_LIFECYCLE.md`, `docs/WORKING_WITH_AI.md`, or `docs/OPERATIONS.md`; use `.agents/references/documentation.md` when ownership or cross-file alignment is unclear
 - local Gradle wrapper and AI command syntax: `.agents/references/command-wrapper.md`
 - validation scope and commands: `.agents/references/testing.md`
 - diagnosis after validation failure: `.agents/references/troubleshooting.md`

@@ -7,8 +7,11 @@ Technical Interview Demo is a small, spec-driven Spring Boot application for int
 Use the human-facing docs deliberately:
 
 - `README.md` for the project overview, implemented scope, and contract map
-- `SETUP.md` for local prerequisites, `.env` loading, run commands, CI reproduction, and troubleshooting
-- `WORKING_WITH_AI.md` for how to use AI across discovery, planning, implementation, verification, and release
+- `docs/README.md` for the human-facing documentation index
+- `SETUP.md` for local prerequisites, `.env` loading, run commands, CI reproduction, and local troubleshooting
+- `docs/DEVELOPMENT_LIFECYCLE.md` for lifecycle and artifact-routing guidance
+- `docs/WORKING_WITH_AI.md` for how to use AI across discovery, planning, implementation, verification, and release
+- `docs/OPERATIONS.md` for deployment, runtime, smoke, rollback, Kubernetes, Helm, monitoring, OAuth, and operations troubleshooting runbooks
 - `ROADMAP.md` for active planned work only
 
 Use the AI-facing docs only when they are the owner for the workflow or rule you are changing:
@@ -31,8 +34,11 @@ Keep these repository constraints intact unless the change explicitly redefines 
 When documentation changes, keep the right human-facing files aligned:
 
 - `README.md` owns the concise project and contract summary
-- `SETUP.md` owns environment, onboarding, runbooks, and troubleshooting
-- `WORKING_WITH_AI.md` owns the human-facing AI collaboration lifecycle
+- `docs/README.md` owns the human-facing documentation index
+- `SETUP.md` owns local environment, onboarding, local commands, and local troubleshooting
+- `docs/DEVELOPMENT_LIFECYCLE.md` owns the human-facing lifecycle and artifact-routing summary
+- `docs/WORKING_WITH_AI.md` owns the human-facing AI collaboration lifecycle
+- `docs/OPERATIONS.md` owns deployment and runtime operations runbooks
 - `CONTRIBUTING.md` owns contributor workflow and maintainer expectations
 
 ## Spec-Driven Development
@@ -63,13 +69,14 @@ Change-routing rules:
 - public API change: update implementation, tests, REST Docs, OpenAPI when intentionally changed, and `README.md` if the supported contract changed; update HTTP convenience files when reviewer workflows should mirror the change
 - internal refactor with no contract change: keep existing specs green and avoid unnecessary OpenAPI or README edits
 - setup or tooling change: update `SETUP.md`
+- deployment or runtime runbook change: update `docs/OPERATIONS.md`
 - AI workflow or AI guidance change: update the owning AI guide and keep `AGENTS.md` aligned when the AI document set or maintenance rules changed
 - roadmap reprioritization: update `ROADMAP.md`
 - released history: update `CHANGELOG.md`
 
 ## Working With AI
 
-If you are using AI in this repository, `WORKING_WITH_AI.md` is the human-facing starting point.
+If you are using AI in this repository, `docs/WORKING_WITH_AI.md` is the human-facing starting point.
 
 Use AI with the same discipline as manual work:
 
@@ -87,7 +94,7 @@ Human responsibilities do not move to the AI. The developer still owns:
 - validation choices and acceptance of the evidence
 - release decisions
 
-For multi-step work, planning should happen before implementation. When the work is large enough to justify a real plan, create or revise an `.agents/plans/PLAN_*.md` file and follow the workflow described in `WORKING_WITH_AI.md` plus the owning `.agents/references/` guides.
+For multi-step work, planning should happen before implementation. When the work is large enough to justify a real plan, create or revise an `.agents/plans/PLAN_*.md` file and follow the workflow described in `docs/WORKING_WITH_AI.md` plus the owning `.agents/references/` guides.
 
 ## Branches And Commit Messages
 
@@ -235,7 +242,7 @@ Additional validation rules:
 
 - keep pull requests green on the `CI` workflow before asking for review
 
-When deployment assets are part of the change, also run the relevant checks from `SETUP.md`, usually including:
+When deployment assets are part of the change, also run the relevant checks from `docs/OPERATIONS.md`, usually including:
 
 - `helm lint infra/helm/technical-interview-demo`
 - `helm template technical-interview-demo infra/helm/technical-interview-demo -f infra/helm/technical-interview-demo/values-local.yaml`
@@ -251,8 +258,11 @@ Documentation is part of the change. Update the owning artifact instead of sprea
 Common routing:
 
 - `README.md` for supported project scope and public contract summary
-- `SETUP.md` for local setup, CI reproduction, deployment runbooks, and troubleshooting
-- `WORKING_WITH_AI.md` for the human-facing AI collaboration lifecycle
+- `docs/README.md` for the human-facing documentation index
+- `SETUP.md` for local setup, CI reproduction, and local troubleshooting
+- `docs/DEVELOPMENT_LIFECYCLE.md` for lifecycle and artifact-routing summaries
+- `docs/WORKING_WITH_AI.md` for the human-facing AI collaboration lifecycle
+- `docs/OPERATIONS.md` for deployment and runtime operations runbooks
 - `AGENTS.md` and the relevant `.agents/references/` guide when AI rules, ownership, workflow, or execution guidance changed
 - `src/docs/asciidoc/` and the related REST Docs tests when public API behavior changed
 - `src/manualTests/http/examples/` when reviewer-facing convenience request examples changed

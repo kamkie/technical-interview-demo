@@ -12,6 +12,7 @@ Use [README.md](../README.md) for the shortest project overview and supported-sc
 | Contributor workflow and PR expectations | [CONTRIBUTING.md](../CONTRIBUTING.md) |
 | Development lifecycle and artifact routing | [DEVELOPMENT_LIFECYCLE.md](DEVELOPMENT_LIFECYCLE.md) |
 | AI collaboration guide | [WORKING_WITH_AI.md](WORKING_WITH_AI.md) |
+| Deployment and runtime operations | [OPERATIONS.md](OPERATIONS.md) |
 | Product intent, non-goals, and contract direction | [DESIGN.md](DESIGN.md) |
 | Active and planned work | [ROADMAP.md](../ROADMAP.md) |
 | Released history | [CHANGELOG.md](../CHANGELOG.md) |
@@ -35,5 +36,4 @@ Use [README.md](../README.md) for the shortest project overview and supported-sc
 
 ## Operations
 
-Deployment and runtime operations runbooks are moving from [SETUP.md](../SETUP.md) to `docs/OPERATIONS.md` as part of the active documentation split.
-Until that split lands, use [SETUP.md](../SETUP.md) for the current deployment, smoke, rollback, Kubernetes, Helm, monitoring, OAuth, and operations troubleshooting material.
+Use [OPERATIONS.md](OPERATIONS.md) for deployment contract, release-artifact verification, Docker image operation, container smoke, post-deploy smoke, healthy runtime expectations, upgrade and rollback, Kubernetes, Helm, monitoring, OAuth runtime setup, and deployment troubleshooting.
