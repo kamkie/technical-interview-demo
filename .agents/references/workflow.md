@@ -14,6 +14,7 @@ Use `.agents/references/plan-execution.md` for whole-plan execution, `.agents/re
 - For planned work, use the execution shape chosen during planning; revise the plan before splitting work if that shape is missing, stale, or contradicted by execution reality.
 - For multiple approved plans selected for one execution run, strongly prefer `M3: parallel`; use a lower mode only when plans must run serially or cannot be safely split, and use `M4: gated` only when sidecar gates are part of the planned workflow.
 - Use delegation only when the current user request, inferred no-plan mode or approved plan, and execution environment allow it.
+- When the runtime requires explicit authorization before spawning sub-agents, such as Codex sessions, treat delegation and parallel agent work as unavailable until the user explicitly asks for it.
 - Keep release sequencing out of workflow execution.
 - Keep `M0` through `M4` as stable identifiers; the readable labels are vocabulary only and do not change the mode semantics.
 

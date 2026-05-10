@@ -67,6 +67,18 @@ Prereq: ensure `gh` is installed and authenticated for the target repo host, the
 8. Recheck status.
    - After changes, suggest re-running the relevant tests and `gh pr checks` to confirm.
 
+## Stop Conditions
+
+- `gh` is missing, unauthenticated, or lacks access to the target PR
+- the failing check is external to GitHub Actions and only exposes a details URL
+- logs are unavailable or still in progress and no actionable failure can be extracted
+- the fix is non-trivial and needs user approval or a formal plan before editing
+- the failure implies contract, security, release, or documentation drift that needs the owning workflow before implementation
+
+## Output
+
+Report failing GitHub Actions checks, run URLs, actionable log snippets, external-check URLs that are out of scope, proposed next step, files changed if a fix was approved, validation run, and remaining risk.
+
 ## Bundled Resources
 
 ### scripts/inspect_pr_checks.py

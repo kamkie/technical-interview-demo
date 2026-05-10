@@ -53,6 +53,7 @@ Use `.agents/references/gradle-task-graph.md` when command choice depends on Gra
 
 - run the standard wrapper build and record whether it performed heavy Gradle validation or took the lightweight-only shortcut
 - repo-local skills under `.agents/skills/` count as lightweight support-file work for classifier purposes unless they accompany a non-lightweight change
+- when repo-local skills change, also run `./scripts/ai/validate-skills.ps1` to verify skill structure without external Python or YAML dependencies
 - skip benchmarks, external smoke, vulnerability scans, and other heavyweight validation unless the user explicitly asks for more
 - if lightweight edits accompany any non-lightweight change, validate based on the non-lightweight artifacts and repo rules; if those non-lightweight edits were already committed, force the final build with `./build.ps1 -FullBuild build`
 

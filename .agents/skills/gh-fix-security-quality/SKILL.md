@@ -63,6 +63,18 @@ Prereq: ensure `gh` is installed and authenticated for the target repo host, the
 6. Recheck status.
    - After changes, rerun the bundled script or the relevant `gh api` calls to confirm the targeted alerts have cleared.
 
+## Stop Conditions
+
+- `gh` is missing, unauthenticated, or lacks permission to read security alerts
+- the alert type is outside GitHub code-scanning or Dependabot scope
+- the requested action would dismiss or close an alert without explicit user approval
+- the fix is non-trivial and needs user approval or a formal plan before editing
+- the alert implies public contract, release, dependency, or security posture changes that need the owning workflow before implementation
+
+## Output
+
+Report actionable alerts, affected files and packages, severity, URLs, proposed next step, files changed if a fix was approved, validation run, recheck status, and remaining risk.
+
 ## Bundled Resources
 
 ### scripts/inspect_security_quality_issues.py

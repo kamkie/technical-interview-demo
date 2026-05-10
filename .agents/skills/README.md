@@ -75,8 +75,9 @@ When adding a skill:
 2. Identify the owner guide under `.agents/references/` and link to it as the policy authority — never inline standing rules.
 3. Use the standard sections: frontmatter, Overview, Read Set, Inputs, Workflow, Stop Conditions, Output.
 4. Keep the Read Set minimal and conditional; do not bulk-load references.
-5. Add the new skill to the catalog table above and, if it belongs in the standard chain, to the diagram and trigger rules.
-6. If the skill needs a Codex/OpenAI manifest, add `agents/openai.yaml`; other runtimes can ignore it.
+5. Run `./scripts/ai/validate-skills.ps1` before handoff.
+6. Add the new skill to the catalog table above and, if it belongs in the standard chain, to the diagram and trigger rules.
+7. If the skill needs a Codex/OpenAI manifest, add `agents/openai.yaml`; other runtimes can ignore it.
 
 ## Junie Sessions
 

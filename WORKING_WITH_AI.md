@@ -41,7 +41,7 @@ Use this guide as a navigation aid, not as a second copy of the AI runbooks.
 | Creating or revising execution plans | `.agents/references/planning.md` |
 | Executing a whole approved plan | `.agents/references/plan-execution.md` |
 | Implementing an ad hoc task or one plan task | `.agents/references/execution.md` |
-| Delegation, worktrees, worker logs, or integration mechanics | `.agents/references/workflow.md` |
+| Delegation, worktrees, workflow state, or integration mechanics | `.agents/references/workflow.md` |
 | Multi-agent modes, roles, read sets, and workflow state | `.agents/references/workflow.md` |
 | Validation scope and review activity | `.agents/references/testing.md` and `.agents/references/reviews.md` |
 | Documentation and artifact routing | `.agents/references/documentation.md` |
@@ -168,7 +168,8 @@ Use AI to run validation, inspect contract impact, and review the change with a 
 ### Integration And Workflow Coordination
 
 Most work should stay in the default linear workflow.
-When you want delegation, worktrees, or later integration of worker output, ask AI to use `.agents/references/workflow.md`; it owns shared-file boundaries, worker logs, and integration mechanics.
+When you want delegation, worktrees, or later integration of worker output, ask AI to use `.agents/references/workflow.md`; it owns shared-file boundaries, workflow state, and integration mechanics.
+In Codex sessions, ask explicitly for sub-agents, delegation, or parallel agent work before expecting `M2` through `M4` execution.
 
 The workflow modes are:
 
