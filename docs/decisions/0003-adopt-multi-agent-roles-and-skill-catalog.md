@@ -12,7 +12,7 @@ Proposed on 2026-05-10
 
 Repository AI guidance already encodes a multi-agent execution model in `.agents/references/workflow.md`:
 
-- Workflow modes `M0: solo`, `M1: sidecar-readonly`, `M2: bounded-worker`, `M3: parallel-sliced`, `M4: full-sidecar`.
+- Workflow modes `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, `M4: gated`.
 - Named roles: `Coordinator`, `Worker`, `Reviewer`, `Verifier`, `Specialist`.
 - Handoff packets and durable workflow state under `.agents/context/handoffs/`, `.agents/context/workers/`, `.agents/context/reviews/`, `.agents/context/verifications/`, and `.agents/context/specialists/`.
 - `M3` and `M4` gates such as `Code Review`, `Verification`, `Security Review?`, `Docs Review?`, and `Release/Operations Gate?`.
@@ -46,11 +46,11 @@ Each role maps to an existing role in `.agents/references/workflow.md` so this A
 | Role | Modes | Tool capability | Owning reference | Responsibility |
 | --- | --- | --- | --- | --- |
 | Coordinator | every mode | read + route; edits only Coordinator-owned shared files | `.agents/references/workflow.md` | Workflow shape, plan routing, shared files, integration order, conflict resolution, final validation, final reporting. |
-| Planner | before `M2+` | read + plan-file edit | `.agents/references/planning.md`, `.agents/references/plan-template.md` | Author or revise `.agents/plans/PLAN_*.md`, decision log, readiness review. |
-| Worker (Coder) | `M2`, `M3` | edit + run validation on its slice | `.agents/references/execution.md`, `.agents/references/code-style.md` | Implement one approved write scope, run smallest sufficient validation, commit, report. |
-| Reviewer (Sidecar) | `M1`, `M4` | read-only | `.agents/references/reviews.md`, `.agents/references/documentation.md` | Diff review, contract drift, gate decision. |
-| Verifier (Sidecar) | `M1`, `M4` | run-only, no file edits | `.agents/references/testing.md`, `.agents/references/troubleshooting.md` | Independent validation, benchmark, contract or compatibility evidence. |
-| Specialist (Sidecar) | `M4` | role-scoped | `.agents/references/reviews.md` (security), `.agents/references/releases.md`, `.agents/references/documentation.md` | Security review, docs review, release readiness, or other specialist gates. |
+| Planner | before `M2: delegated` or higher | read + plan-file edit | `.agents/references/planning.md`, `.agents/references/plan-template.md` | Author or revise `.agents/plans/PLAN_*.md`, decision log, readiness review. |
+| Worker (Coder) | `M2: delegated`, `M3: parallel` | edit + run validation on its slice | `.agents/references/execution.md`, `.agents/references/code-style.md` | Implement one approved write scope, run smallest sufficient validation, commit, report. |
+| Reviewer (Sidecar) | `M1: assisted`, `M4: gated` | read-only | `.agents/references/reviews.md`, `.agents/references/documentation.md` | Diff review, contract drift, gate decision. |
+| Verifier (Sidecar) | `M1: assisted`, `M4: gated` | run-only, no file edits | `.agents/references/testing.md`, `.agents/references/troubleshooting.md` | Independent validation, benchmark, contract or compatibility evidence. |
+| Specialist (Sidecar) | `M4: gated` | role-scoped | `.agents/references/reviews.md` (security), `.agents/references/releases.md`, `.agents/references/documentation.md` | Security review, docs review, release readiness, or other specialist gates. |
 
 The Coordinator owns integration to `main`.
 Reviewer, Verifier, and Specialist sidecars never edit Worker-owned files.
@@ -85,7 +85,7 @@ Use the following default composition when a user request is accepted:
 1. Coordinator classifies the request as bounded task, single plan task, whole plan, or release work.
 2. If product intent or acceptance criteria are unclear, Coordinator invokes the Planner with `repo-plan-author`; the resulting plan is reviewed by a Reviewer sidecar before execution.
 3. For bounded execution, Coordinator hands off to one Worker via `handoff-pack`. Worker uses `repo-task-execute` and `run-validation`. A Reviewer sidecar runs `diff-review`. A Verifier sidecar runs independent validation through `run-validation`.
-4. For multi-slice execution (`M3`), Coordinator issues N independent handoff packets to N Workers on disjoint write scopes, with continuous Reviewer and Verifier sidecars (`M4`) when gates are required.
+4. For multi-slice execution (`M3: parallel`), Coordinator issues N independent handoff packets to N Workers on disjoint write scopes, with continuous Reviewer and Verifier sidecars (`M4: gated`) when gates are required.
 5. Coordinator integrates accepted Worker branches one at a time using `integrate-branch`, runs final validation, and records terminal state in the plan or workflow state.
 6. Release work runs only after integration on `main` and is owned by a release Specialist invoking `release-cut`, gated by Verifier.
 
@@ -93,11 +93,11 @@ Use the following default composition when a user request is accepted:
 
 Pick the lowest mode that keeps gates meaningful:
 
-- documentation-only or trivial fixes -> `M0`
-- a risky single change that benefits from independent diff review -> `M1`
-- a self-contained bounded change -> `M2`
-- multi-package or multi-slice work that is genuinely disjoint -> `M3`
-- release candidates, cross-cutting refactors, or security-sensitive changes -> `M4`
+- documentation-only or trivial fixes -> `M0: direct`
+- a risky single change that benefits from independent diff review -> `M1: assisted`
+- a self-contained bounded change -> `M2: delegated`
+- multi-package or multi-slice work that is genuinely disjoint -> `M3: parallel`
+- release candidates, cross-cutting refactors, or security-sensitive changes -> `M4: gated`
 
 ### Durable State
 
@@ -133,7 +133,7 @@ If accepted, update these artifacts together:
 1. `.agents/references/workflow.md`
    - Add a per-role read-set table.
    - Make the six-role roster explicit as named identities, not only as ownership labels.
-   - Keep `M0`-`M4` definitions and integration rules unchanged.
+   - Keep `M0` through `M4` identifiers, definitions, and integration rules unchanged while using the accepted labels.
 
 2. `.agents/references/documentation.md`
    - Route skill-bundle ownership to `.agents/skills/<skill-name>/SKILL.md`.
@@ -176,7 +176,7 @@ Benefits:
 - per-role context shrinks token usage and improves model quality, especially on long-context models such as Opus 4.7
 - recurring procedures move from session reasoning into durable skills, which makes outputs repeatable across agents and sessions
 - handoff packets and `.agents/context/*` state make multi-agent runs restartable instead of conversation-bound
-- mode escalation defaults prevent over-using `M4` on small work
+- mode escalation defaults prevent over-using `M4: gated` on small work
 - the repository stays platform-neutral: Codex, Junie, and other agents can adopt the same roster and skills
 
 Costs:
@@ -193,7 +193,7 @@ Costs:
 
 Lower coordination overhead and no new infrastructure.
 Loses independent review, mixes contexts, and makes parallel execution unsafe.
-Does not unlock `M3` or `M4` even though `workflow.md` already defines them.
+Does not unlock `M3: parallel` or `M4: gated` even though `workflow.md` already defines them.
 
 ### Add Roles Without A Skill Catalog
 

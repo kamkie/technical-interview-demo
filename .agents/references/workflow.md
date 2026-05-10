@@ -12,17 +12,18 @@ Use `.agents/references/plan-execution.md` for whole-plan execution, `.agents/re
 - Report the selected workflow mode when execution starts and in interim execution updates.
 - For work without a created plan, infer any `M0` through `M4` mode from the request, write-scope boundaries, risk, stop conditions, validation targets, sidecar gates, and execution environment; when those inputs are unclear, route to planning instead of clamping to `M0`.
 - For planned work, use the execution shape chosen during planning; revise the plan before splitting work if that shape is missing, stale, or contradicted by execution reality.
-- For multiple approved plans selected for one execution run, strongly prefer `M3: parallel-sliced`; use a lower mode only when plans must run serially or cannot be safely split, and use `M4` only when sidecar gates are part of the planned workflow.
+- For multiple approved plans selected for one execution run, strongly prefer `M3: parallel`; use a lower mode only when plans must run serially or cannot be safely split, and use `M4: gated` only when sidecar gates are part of the planned workflow.
 - Use delegation only when the current user request, inferred no-plan mode or approved plan, and execution environment allow it.
 - Keep release sequencing out of workflow execution.
+- Keep `M0` through `M4` as stable identifiers; the readable labels are vocabulary only and do not change the mode semantics.
 
 | Mode | Use When | Concurrency |
 | --- | --- | --- |
-| `M0: solo` | Delegation is not useful or not allowed. | One agent. |
-| `M1: sidecar-readonly` | A read-only scan, review, or verification can help without editing files. | Coordinator plus read-only sidecar. |
-| `M2: bounded-worker` | One worker can edit one clear write scope. | Coordinator plus one worker. |
-| `M3: parallel-sliced` | Multiple disjoint edit scopes can run in parallel. | Coordinator plus workers. |
-| `M4: full-sidecar` | M3 plus independent review, verification, or specialist gates. | Coordinator plus workers and sidecars. |
+| `M0: direct` | Delegation is not useful or not allowed. | One agent. |
+| `M1: assisted` | A read-only scan, review, or verification can help without editing files. | Coordinator plus read-only sidecar. |
+| `M2: delegated` | One worker can edit one clear write scope. | Coordinator plus one worker. |
+| `M3: parallel` | Multiple disjoint edit scopes can run in parallel. | Coordinator plus workers. |
+| `M4: gated` | M3 plus independent review, verification, or specialist gates. | Coordinator plus workers and sidecars. |
 
 ## Ownership Boundaries
 
@@ -63,7 +64,7 @@ Workers do not edit canonical `CHANGELOG.md` unless assigned; proposed unrelease
 
 Use sidecars for independent read-only review, verification, or specialist checks.
 Sidecars may inspect active work, but they must not edit worker-owned files unless the plan changes and ownership is reassigned.
-`M4` includes all `M3` requirements plus review, verification, or specialist queues; a gate decision table; conflict handling; sidecar stop conditions; and approval authority for each gate.
+`M4: gated` includes all `M3: parallel` requirements plus review, verification, or specialist queues; a gate decision table; conflict handling; sidecar stop conditions; and approval authority for each gate.
 Common gates are `Code Review`, `Verification`, `Security Review?`, `Docs Review?`, and `Release/Operations Gate?`.
 Sidecar output never replaces coordinator integration responsibility; the coordinator records gate outcomes in the owning plan or state file.
 

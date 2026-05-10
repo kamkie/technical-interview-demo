@@ -42,15 +42,15 @@ It classifies the request, identifies governing specs and docs, decides whether 
 Use the smallest effective number of agents.
 Routine edits should remain solo when delegation adds more coordination cost than value.
 
-Rename the workflow-mode labels without removing the stable `M0` through `M4` identifiers:
+Use these workflow-mode labels without removing the stable `M0` through `M4` identifiers:
 
-| Current | Proposed | Meaning |
-| --- | --- | --- |
-| `M0: solo` | `M0: direct` | One agent handles the work directly. |
-| `M1: sidecar-readonly` | `M1: assisted` | A read-only reviewer, verifier, or specialist helps without editing. |
-| `M2: bounded-worker` | `M2: delegated` | One worker owns one bounded write scope. |
-| `M3: parallel-sliced` | `M3: parallel` | Multiple disjoint slices run in parallel. |
-| `M4: full-sidecar` | `M4: gated` | Independent review, verification, security, docs, release, or specialist gates are part of the workflow. |
+| Mode | Meaning |
+| --- | --- |
+| `M0: direct` | One agent handles the work directly. |
+| `M1: assisted` | A read-only reviewer, verifier, or specialist helps without editing. |
+| `M2: delegated` | One worker owns one bounded write scope. |
+| `M3: parallel` | Multiple disjoint slices run in parallel. |
+| `M4: gated` | Independent review, verification, security, docs, release, or specialist gates are part of the workflow. |
 
 The rename is vocabulary-only.
 It does not change mode ordering, ownership rules, delegation limits, sidecar behavior, integration responsibility, or validation requirements.

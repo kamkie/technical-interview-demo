@@ -48,7 +48,7 @@
 
 ## Current State
 - Phase: Planning. Both ADRs are `Proposed`, dated 2026-05-10, and present each other as competing.
-- `.agents/references/workflow.md` defines `M0: solo`, `M1: sidecar-readonly`, `M2: bounded-worker`, `M3: parallel-sliced`, `M4: full-sidecar` and references `.agents/context/*` directories that do not exist on disk.
+- `.agents/references/workflow.md` now defines `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, `M4: gated` and references `.agents/context/*` directories that do not exist on disk.
 - `.agents/skills/` contains only `gh-fix-ci/` and `gh-fix-security-quality/`.
 - ADR 0004 introduces role names (`Orchestrator`, `Explorer`, `Documentation Agent`, `Release Agent`) not present in `workflow.md`, creating vocabulary drift.
 - No per-role read-set table exists; agents load the union of references.
@@ -94,7 +94,7 @@
 | --- | --- | --- | --- | --- | --- |
 | 1: Resolve Q1–Q3 with user | Done | Coordinator | `docs(plan): unblock multi-agent roles plan` | `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | User accepted both ADRs and authorized implementation if no blockers. |
 | 2: Reconcile ADR 0004 roster + ADR cross-links | Done | Worker | `docs(decisions): align multi-agent ADR relationship` | `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | ADR 0004 now uses the six-role roster and ADR 0003 is the implementation decision. |
-| 3: Rename mode labels in `workflow.md` and update both ADRs | Not Started | Worker | Pending | Pending | Phase A.1. |
+| 3: Rename mode labels in `workflow.md` and update both ADRs | Done | Worker | `docs(workflow): rename multi-agent mode labels` | `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | Mode identifiers and semantics preserved. |
 | 4: Materialize `.agents/context/*` and add per-role read-set table | Not Started | Worker | Pending | Pending | Phase A.2. |
 | 5: Record user acceptance decision for ADR 0004 and ADR 0003 | Not Started | Coordinator | Pending | Pending | Gate before skills. |
 | 6: Add Phase B skill bundles | Not Started | Worker | Pending | Pending | Phase B. |
@@ -134,15 +134,15 @@
 ### Task 3: Rename Mode Labels In `workflow.md` And Update Both ADRs
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Rename mode labels in `workflow.md` to `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, and `M4: gated`; update both ADRs to use the new labels. |
 | Owned Files Or Packages | `.agents/references/workflow.md`, both ADRs. |
 | Coordinator-Owned Shared Files | `.agents/references/workflow.md`. |
 | Context Required | `.agents/references/workflow.md`, both ADRs. |
 | Behavior To Preserve | Mode identifiers, definitions, ordering, integration rules, escalation defaults. |
 | Deliverables | Renamed mode labels; explicit note that the rename is vocabulary-only; both ADRs updated. |
-| Validation Checkpoint | Manual review: `solo`, `sidecar-readonly`, `bounded-worker`, `parallel-sliced`, and `full-sidecar` no longer appear as primary labels in live guidance. |
-| Commit Checkpoint | One commit. |
+| Validation Checkpoint | Passed: manual review confirmed `workflow.md` uses the new primary labels and both ADRs use the accepted labels; old labels remain only as historical alternative text in ADR 0004. |
+| Commit Checkpoint | `docs(workflow): rename multi-agent mode labels` |
 
 ### Task 4: Materialize `.agents/context/*` And Add Per-Role Read-Set Table
 | Field | Value |
@@ -279,6 +279,9 @@
 | 2026-05-10 | `rg -n "\| Orchestrator|\| Explorer|\| Documentation Agent|\| Release Agent|competing|Competing" docs\decisions\0003-adopt-multi-agent-roles-and-skill-catalog.md docs\decisions\0004-adopt-skill-first-multi-agent-workflow.md` | Task 2 ADR relationship update | Passed | No matches; ADR 0004 no longer has the old roles as top-level table rows or competing-proposal wording. |
 | 2026-05-10 | `git diff --check` | Task 2 ADR relationship update | Passed | No whitespace diagnostics. |
 | 2026-05-10 | `./build.ps1 build` | Task 2 ADR relationship update | Passed | Wrapper detected only lightweight uncommitted files and skipped Gradle; manual consistency review is sufficient. |
+| 2026-05-10 | `rg -n "M0: solo|M1: sidecar-readonly|M2: bounded-worker|M3: parallel-sliced|M4: full-sidecar|sidecar-readonly|bounded-worker|parallel-sliced|full-sidecar" .agents\references\workflow.md docs\decisions\0003-adopt-multi-agent-roles-and-skill-catalog.md` | Task 3 mode-label rename | Passed | No matches in the workflow owner or implementation ADR. |
+| 2026-05-10 | `git diff --check` | Task 3 mode-label rename | Passed | No whitespace diagnostics. |
+| 2026-05-10 | `./build.ps1 build` | Task 3 mode-label rename | Passed | Wrapper detected only lightweight uncommitted files and skipped Gradle; manual consistency review is sufficient. |
 
 ## User Validation
 - Confirm `.agents/references/workflow.md` defines `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, and `M4: gated` with unchanged mode semantics.
