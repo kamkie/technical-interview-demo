@@ -32,17 +32,13 @@ When resolving truth, use this order:
 
 Use the smallest task-shaped context that can answer the request. Guidance in `docs/` and `.agents/` helps route work, but it does not outrank executable specs, published contract docs, or the human-facing artifact that owns the topic.
 
-Use `## Documents Map` in two passes: choose the task-shaped starting point, then add only owner guides whose domains match the current task. Do not bulk-load `.agents/references/`, active plans, archived plans, templates, task prompts, reports, or skill bodies as a pre-flight default.
-
 Treat cross-references in loaded guides as conditional pointers, not recursive load requirements. A loaded guide is terminal unless another guide's explicit entry condition applies to the current task. Add more context only when the task exposes a concrete trigger for it.
-
-Once work enters execution, follow `.agents/references/execution.md` or `.agents/references/plan-execution.md` for context switching and checkpoint summaries.
 
 ## Documents Map
 
-Use this map to choose the task-shaped starting point and matching owner guides.
+### Initial Read Scope
 
-Task-shaped starting points:
+Start with the narrowest matching scope. Do not bulk-load `.agents/references/`, active plans, archived plans, templates, task prompts, reports, or skill bodies as a pre-flight default.
 
 - documentation-only edit with clear ownership: target document plus the owning guide
 - `.agents/references/*.md` edit: target reference plus `.agents/references/references-rules.md`
@@ -50,13 +46,15 @@ Task-shaped starting points:
 - whole-plan execution: `.agents/references/plan-execution.md`, the active plan, and only the current milestone's named context
 - release work: `.agents/references/releases.md`; load detailed release references only when their phase begins
 
-Owner guides:
+### Owner Guides
+
+Add only owner guides whose domains match the current task.
 
 - artifact routing, cross-file alignment, AI-document maintenance outside `.agents/references/*.md`, or repository knowledge ownership: `.agents/references/documentation.md`
 - rules for `.agents/references/*.md` documents: `.agents/references/references-rules.md`
 - planning, roadmap intake, plan revision, or readiness review: `.agents/references/planning.md`
-- whole active-plan execution: `.agents/references/plan-execution.md`
-- ad hoc execution or a single plan milestone: `.agents/references/execution.md`
+- whole active-plan execution, milestone context switching, or plan checkpoint summaries: `.agents/references/plan-execution.md`
+- ad hoc execution, single plan milestone, bounded-work context switching, or checkpoint summaries: `.agents/references/execution.md`
 - edit shape and repo-local code conventions: `.agents/references/code-style.md`
 - architecture, structural placement, package ownership, or codebase map: `.agents/references/architecture.md`
 - product direction, supported scope, security posture, or roadmap tradeoffs: `docs/DESIGN.md`
