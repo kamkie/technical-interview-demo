@@ -20,25 +20,22 @@ $zeroSha = "0000000000000000000000000000000000000000"
 $lightweightPatterns = @(
     "*.md",
     "*.http",
+    ".agents/*",
+    "docs/*",
+    ".devcontainer/*",
+    ".idea/*",
+    ".junie/*",
     ".editorconfig",
     ".gitattributes",
-    ".gitignore",
     ".gitmessage",
+    ".gitignore",
     "*/.gitignore",
     ".aiignore",
-    "Default.xml",
-    ".run/*.run.xml",
+    ".run/*",
+    "infra/*",
     ".githooks/*.sample",
     ".env.example",
-    "*/.env.example",
-    "docs/*",
-    ".agents/references/*",
-    ".agents/plans/*",
-    ".agents/reports/*",
-    ".agents/archive/*",
-    ".agents/skills/*",
-    ".agents/tmp/*",
-    ".idea/codeStyles/*.xml"
+    "*/.env.example"
 )
 
 function Invoke-Git
