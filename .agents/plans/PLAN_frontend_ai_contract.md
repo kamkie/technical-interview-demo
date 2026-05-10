@@ -180,7 +180,7 @@
 - The frontend contract is now a generated import document; keep repository-maintenance notes in the plan, documentation ownership guide, roadmap, or changelog instead of the imported file.
 - Keep roadmap detail small; this plan owns milestones and validation history.
 - The deferred external copy is intentional. When the frontend repository is known, use this source file as input to a separate destination-aware task instead of expanding this plan retroactively after local validation is complete.
-- If this source file proves useful beyond one frontend repo, consider a later small task to turn it into a reusable skill or task starter rather than expanding this plan.
+- If this source file proves useful beyond one frontend repo, consider a later small task to turn it into a reusable skill or task prompt rather than expanding this plan.
 
 ## Validation Results
 | Date | Command | Scope | Result | Notes |

@@ -85,7 +85,7 @@ Load descriptive or deep references only when the task needs them:
 - `docs/specs/application-lifecycle-spec.md` and `docs/specs/lifecycle-phase-activities.md` when lifecycle phase, activity, owner-guide mapping, or loop vocabulary changes
 - `.agents/references/LEARNINGS.md` only from a targeted relevance scan, a known recurring repo lesson, or a correction that exposes durable guidance
 - active `.agents/plans/PLAN_*.md` files only when planning, executing, verifying, or releasing that plan
-- task files, templates, detailed workflow references, skill bodies, archived plans, and reports only when directly invoked or required
+- repository task prompts under `.agents/tasks/`, templates, detailed workflow references, skill bodies, archived plans, and reports only when directly invoked or required
 
 Keep working context narrow. Treat the ownership lists above as routing aids, not a standing pre-flight bulk-load list; once work enters execution, follow `.agents/references/execution.md` or `.agents/references/plan-execution.md` for context switching and checkpoint summaries.
 

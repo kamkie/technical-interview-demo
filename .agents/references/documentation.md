@@ -34,7 +34,7 @@ Update the artifact that owns the truth being changed:
 - ad hoc task and single-milestone execution: `.agents/references/execution.md`
 - branch, worktree, delegation, worker-log, integration, and remote-handoff mechanics: `.agents/references/workflow.md`; detailed delegated-work mechanics: `.agents/references/workflow-delegated-plan.md` and `.agents/references/workflow-coordinated-plans.md`
 - release sequencing and tagging: `.agents/references/releases.md`; detailed release checklist and artifact verification: `.agents/references/release-checklist.md` and `.agents/references/release-artifact-verification.md`
-- reusable task starter skill: `.agents/skills/repo-task/`; `references/spec.md` owns the dispatcher, index, and task schema, and each task file owns its title, placeholders, and task text
+- standalone repository task prompts and catalog: `.agents/tasks/README.md`; prompt files live under `.agents/tasks/` and must add task-specific instructions that are not thin wrappers around an existing owner guide
 - repo-local reusable workflow wrappers: `.agents/skills/`; Codex plugin marketplace configuration: `.agents/plugins/marketplace.json` when intentionally introducing a repo-scoped plugin
 - compact codebase map, structural guidance, and business feature ownership: `docs/ARCHITECTURE.md`; deeper references: `.agents/references/`
 - historical AI-analysis reports, evaluations, comparisons, and retired specs: `.agents/archive/`
@@ -55,11 +55,12 @@ Before changing `.agents/references/*.md`, also load `.agents/references/referen
 Rules for maintaining the `.agents/` documents:
 
 - use `.agents/references/references-rules.md` for all rules that govern `.agents/references/*.md` documents
-- keep `.agents/skills/repo-task/` as a task dispatcher and task-reference store, not standing policy; task files may include procedural starters, but durable rules belong in the best owning AI document
-- treat the task files listed in `.agents/skills/repo-task/references/index.md` as reusable commands, following `.agents/skills/repo-task/references/spec.md` for exact-slug, ambiguous-request, placeholder, index, and task-schema rules
+- keep `.agents/tasks/` as standalone reusable prompts, not standing policy; durable rules belong in the best owning AI document
+- keep `.agents/tasks/README.md` current when adding, renaming, moving, or removing task prompts
+- do not keep task prompts that only say to follow a workflow already owned by `.agents/references/*.md`; invoke the owning guide directly instead
 - outside `.agents/references/*.md`, write AI-guidance changes as current-state rules; route any still-useful historical context using this guide
 - keep repo-local skills narrow and workflow-oriented; use them to accelerate repeated entry tasks or focused triage, not to replace the owner guides
-- create `.agents/plugins/marketplace.json` and a plugin bundle only when a workflow needs Codex plugin distribution or install-time discovery; keep ordinary reusable starters in `.agents/skills/repo-task/`
+- create `.agents/plugins/marketplace.json` and a plugin bundle only when a workflow needs Codex plugin distribution or install-time discovery; keep ordinary reusable prompts in `.agents/tasks/`
 - when a repo-local skill wraps a workflow owned by another guide, update the skill and the owning guide together if that workflow changes
 - archive executed `.agents/plans/PLAN_*.md` files under `.agents/archive/` as part of the release cleanup once that work has been released
 - archive retired AI-guidance reports, evaluations, comparisons, and similar analysis artifacts under `.agents/archive/`

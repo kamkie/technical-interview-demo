@@ -7,7 +7,7 @@ Use `docs/specs/application-lifecycle-spec.md` for lifecycle phase vocabulary an
 
 Use this file when the user asks for a plan, milestone breakdown, readiness review, execution-shape decision, or detailed change strategy.
 Use `.agents/references/plan-execution.md` after the user asks to execute a whole active plan, `.agents/references/execution.md` for ad hoc tasks or one plan milestone, `.agents/references/workflow.md` for branch, worktree, delegation, shared-file, or integration mechanics, `.agents/references/documentation.md` for artifact routing, and `.agents/references/testing.md` for validation scope.
-Use `.agents/skills/repo-task/` task titles or slugs when the user wants a reusable task starter instead of direct plan authoring.
+Use `.agents/tasks/` only when the user asks for a named repository-specific task prompt that is more specific than direct plan authoring.
 
 ## Modes And Read Set
 
@@ -33,7 +33,7 @@ Load only what the request needs:
 - product, contract, or package framing: `README.md`, `docs/DESIGN.md`, or `docs/ARCHITECTURE.md` only when directly relevant
 - referenced tickets, PRs, examples, documents, or web pages before planning from them
 
-Do not bulk-load active plans, archived plans, templates, task files, or reference guides as a pre-flight default.
+Do not bulk-load active plans, archived plans, templates, task prompts, or reference guides as a pre-flight default.
 Do not create or retain a separate descriptive companion for plan shape when this guide and the template already cover the behavior.
 
 ## Lifecycle And Readiness

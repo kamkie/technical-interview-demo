@@ -1,7 +1,7 @@
-# Prioritize Open Security And Quality Issues In Roadmap
+# Prioritize Security And Quality Roadmap
 
 Category: Discovery And Roadmap
-Slug: `prioritize-open-security-and-quality-issues-in-roadmap`
+Slug: `prioritize-security-quality-roadmap`
 Placeholders: none
 
 Use the repo-local skill `gh-fix-security-quality` to inspect all open GitHub Security and quality issues for this repository, then update `ROADMAP.md` to capture and prioritize them.

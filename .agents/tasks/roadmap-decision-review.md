@@ -1,7 +1,7 @@
-# Clarify Roadmap Decisions
+# Roadmap Decision Review
 
 Category: Discovery And Roadmap
-Slug: `clarify-roadmap-decisions`
+Slug: `roadmap-decision-review`
 Placeholders: none
 
 Review `ROADMAP.md` for project-framing decisions that must be made before roadmap items can be planned or sequenced confidently.

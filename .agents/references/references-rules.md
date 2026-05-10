@@ -21,7 +21,7 @@ Entry points:
 - write AI-guidance changes as current-state rules, not incident history or narrative reports
 - update the relevant `.agents/references/` file in the same change when architecture, code-style expectations, design intent, documentation ownership, durable engineering guidance, release workflow, review/security review guidance, testing/validation guidance, workflow guidance, planning guidance, or plan-execution guidance materially changes
 - when an agent mistake, user correction, failed assumption, or guidance gap reveals a durable rule, update the focused owning reference document or `.agents/references/LEARNINGS.md` in the same change; write the result as reusable current guidance, not as a mistake log
-- keep standing rules in their focused owning files instead of redistributing them across task starters, plans, templates, skills, worker logs, or final responses
+- keep standing rules in their focused owning files instead of redistributing them across task prompts, plans, templates, skills, worker logs, or final responses
 - keep setup walkthroughs and troubleshooting details out of reference documents unless the reference file specifically owns AI-facing setup or troubleshooting guidance
 - treat reference documents as AI planning and execution aids, not higher-priority truth than executable specs, published contract docs, or the human-facing artifact that owns the topic
 - treat cross-references in owner guides as conditional pointers, not recursive load requirements; a loaded guide is terminal unless the current task matches another guide's explicit entry condition

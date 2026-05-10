@@ -1,7 +1,7 @@
-# Evaluate AI Guidelines
+# Evaluate AI Guidance
 
 Category: Lifecycle And Maintenance
-Slug: `evaluate-ai-guidelines`
+Slug: `evaluate-ai-guidance`
 Placeholders: none
 
 Evaluate the live repository AI guideline set, including deep context-load analysis and full lifecycle conformance against `docs/specs/application-lifecycle-spec.md`, then write a timestamped report under gitignored `temp/`.
@@ -11,8 +11,8 @@ Use this as an evaluation/reporting task, not as permission to implement follow-
 
 These prompts should resolve to this task:
 
-- `evaluate-ai-guidelines`
-- `Evaluate AI Guidelines`
+- `evaluate-ai-guidance`
+- `Evaluate AI Guidance`
 - `Run a deep AI guidelines assessment.`
 - `Grade the current AI guidance against application-lifecycle-spec.md.`
 - `Assess AGENTS.md and .agents guidance for lifecycle conformance and context load.`
@@ -26,8 +26,6 @@ Start with:
 
 - `AGENTS.md`
 - `.agents/references/documentation.md`
-- `.agents/skills/repo-task/references/spec.md`
-- `.agents/skills/repo-task/references/index.md`
 - this task file
 - `docs/specs/application-lifecycle-spec.md`
 
@@ -37,14 +35,14 @@ Then load:
 - `docs/ARCHITECTURE.md` and `docs/DESIGN.md` only for descriptive context needed by lifecycle or owner mapping
 - active `.agents/plans/PLAN_*.md` files only for lifecycle state, active-read-set impact, roadmap cleanup, and stale live references
 - `ROADMAP.md`, `CHANGELOG.md`, `README.md`, `SETUP.md`, `CONTRIBUTING.md`, and `WORKING_WITH_AI.md` when checking ownership, lifecycle routing, human/AI alignment, or release-state truth
-- task files, templates, on-demand references, repo-local skills, archived reports, or archived plans only when targeted searches or measurements identify a concrete reason
+- repository task prompts, templates, on-demand references, repo-local skills, archived reports, or archived plans only when targeted searches or measurements identify a concrete reason
 
 Do not bulk-load `.agents/archive/`.
 
 ## Required Measurements
 
 Generate or reuse a same-session context report when it covers current `HEAD` and relevant uncommitted AI-guidance changes.
-Use `scripts/ai/context-report.ps1` through the `context-report` task method when generating a new report.
+Use `scripts/ai/context-report.ps1` through the `measure-ai-context` task prompt when generating a new report.
 
 Measure or extract:
 
@@ -52,7 +50,7 @@ Measure or extract:
 - standing owner-guide size
 - practical read sets for discovery, planning, implementation, testing, review, integration, and release
 - active-plan inventory and largest active-plan files
-- on-demand references, templates, repo-task tasks, repo-local skill entrypoints, and large skill references
+- on-demand references, templates, `.agents/tasks/` prompts, repo-local skill entrypoints, and large skill references
 - archived inventory size and largest archived contributors
 - total tracked AI instruction inventory
 - context density and bloat factor when the context report provides them
@@ -189,7 +187,7 @@ Grade the live guide set for:
 - lifecycle conformance and activity coverage
 - default-load discipline and practical read-set cost
 - on-demand trigger clarity
-- repo-task index and task-file quality
+- `.agents/tasks/` prompt quality
 - active-plan lifecycle hygiene
 - skill, reference, template, report, and archive containment
 - duplication, contradiction, and stale-reference risk
@@ -201,7 +199,7 @@ Treat archived reports as historical comparison only when they materially answer
 
 ## Required Output
 
-Write `temp/evaluate-ai-guidelines-<timestamp>.md`.
+Write `temp/evaluate-ai-guidance-<timestamp>.md`.
 
 The report must include:
 

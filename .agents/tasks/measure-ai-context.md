@@ -1,7 +1,7 @@
-# Context Report
+# Measure AI Context
 
 Category: Lifecycle And Maintenance
-Slug: `context-report`
+Slug: `measure-ai-context`
 Placeholders: none
 
 Prepare a report measuring how much context the repository AI instructions consume over time.
