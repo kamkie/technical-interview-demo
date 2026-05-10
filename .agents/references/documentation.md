@@ -20,7 +20,7 @@ Update the artifact that owns the truth being changed:
 - generated import-ready backend contract, external skill references, OpenAPI source snapshot, and integration guidance for AI agents working in a separate first-party frontend repository: `docs/FRONTEND_AI_CONTRACT.md`
 - human-facing guide for developers using AI through the application lifecycle: `WORKING_WITH_AI.md`
 - application development lifecycle phase model, activity vocabulary, loops, triggers, and owner-guide mapping: `.agents/references/application-lifecycle.md`
-- AI repository rules, project-specific engineering constraints, authoritative spec locations, required spec-update policy, quality gates, release rules, and owner-guide entry points: `AGENTS.md`
+- AI repository rules, spec priority, required spec-update policy, working AI context, Documents Map, completion rules, and integration/release invariants: `AGENTS.md`
 - repository knowledge layout and artifact ownership: this guide, especially `## Artifact Ownership` and `### AI Document Maintenance`
 - rules for creating, editing, compacting, moving, and retiring `.agents/references/*.md`: `.agents/references/references-rules.md`
 - AI local command wrapper shortcut: `.agents/references/command-wrapper.md`
@@ -34,7 +34,7 @@ Update the artifact that owns the truth being changed:
 - ad hoc task and single-milestone execution: `.agents/references/execution.md`
 - branch, worktree, delegation, multi-agent state, sidecar, integration, and remote-handoff mechanics: `.agents/references/workflow.md`
 - release sequencing and tagging: `.agents/references/releases.md`; detailed release checklist and artifact verification: `.agents/references/release-checklist.md` and `.agents/references/release-artifact-verification.md`
-- standalone repository task prompts and catalog: `.agents/tasks/README.md`; prompt files live under `.agents/tasks/` and must add task-specific instructions that are not thin wrappers around an existing owner guide
+- standalone repository task prompts and catalog: `.agents/tasks/README.md`; prompt files live under `.agents/tasks/` and must add task-specific instructions that are not thin wrappers around an existing domain guide
 - repo-local reusable workflow wrappers: `.agents/skills/`; Codex plugin marketplace configuration: `.agents/plugins/marketplace.json` when intentionally introducing a repo-scoped plugin
 - AI-facing architecture guidance, structural placement, detailed codebase map, and business feature ownership: `.agents/references/architecture.md`
 - historical AI-analysis reports, evaluations, comparisons, and retired specs: `.agents/archive/`
@@ -49,7 +49,7 @@ If ownership is unclear, decide that before editing multiple docs.
 
 ### AI Document Maintenance
 
-Load this section on demand before changing `AGENTS.md`, task-skill files, templates, skills, archived plans or reports, or repository knowledge ownership.
+Load this section on demand before changing `AGENTS.md`, task prompts, templates, skills, archived plans or reports, or repository knowledge ownership.
 Before changing `.agents/references/*.md`, also load `.agents/references/references-rules.md`.
 
 Rules for maintaining the `.agents/` documents:
@@ -57,11 +57,11 @@ Rules for maintaining the `.agents/` documents:
 - use `.agents/references/references-rules.md` for all rules that govern `.agents/references/*.md` documents
 - keep `.agents/tasks/` as standalone reusable prompts, not standing policy; durable rules belong in the best owning AI document
 - keep `.agents/tasks/README.md` current when adding, renaming, moving, or removing task prompts
-- do not keep task prompts that only say to follow a workflow already owned by `.agents/references/*.md`; invoke the owning guide directly instead
+- do not keep task prompts that only say to follow a workflow already owned by `.agents/references/*.md`; invoke the matching domain guide directly instead
 - outside `.agents/references/*.md`, write AI-guidance changes as current-state rules; route any still-useful historical context using this guide
-- keep repo-local skills narrow and workflow-oriented; use them to accelerate repeated entry tasks or focused triage, not to replace the owner guides
+- keep repo-local skills narrow and workflow-oriented; use them to accelerate repeated entry tasks or focused triage, not to replace domain guides
 - create `.agents/plugins/marketplace.json` and a plugin bundle only when a workflow needs Codex plugin distribution or install-time discovery; keep ordinary reusable prompts in `.agents/tasks/`
-- when a repo-local skill wraps a workflow owned by another guide, update the skill and the owning guide together if that workflow changes
+- when a repo-local skill wraps a workflow owned by a domain guide, update the skill and that guide together if the workflow changes
 - archive executed `.agents/plans/PLAN_*.md` files under `.agents/archive/` as part of the release cleanup once that work has been released
 - archive retired AI-guidance reports, evaluations, comparisons, and similar analysis artifacts under `.agents/archive/`
 - treat `docs/DESIGN.md`, `.agents/references/architecture.md`, and `.agents/references/LEARNINGS.md` as descriptive guidance, not executable spec authority
@@ -72,7 +72,7 @@ Rules for maintaining the `.agents/` documents:
 
 ### Architecture, design, or AI guidance change
 
-- update the relevant owner file under `.agents/references/`
+- update the relevant domain guide under `.agents/references/`
 - keep `AGENTS.md` aligned when the role or maintenance rules for `.agents/` documents change
 - do not update `README.md` unless the human-facing contract or project description changed
 
@@ -111,7 +111,7 @@ Update all affected artifacts in the same change:
 ## Alignment Rules
 
 - update overlapping human-facing and AI-facing docs in the same change
-- use `### AI Document Maintenance` in this guide for task-skill files, skills, templates, top-level AI guides, and archived plans; use `.agents/references/references-rules.md` for `.agents/references/*.md`
+- use `### AI Document Maintenance` in this guide for task prompts, skills, templates, top-level AI guides, and archived plans; use `.agents/references/references-rules.md` for `.agents/references/*.md`
 - keep setup detail out of planning, workflow, and release guides
 - keep active or selected work in `ROADMAP.md` and released history in `CHANGELOG.md`
 - keep REST Docs AsciiDoc files formatter-managed; write unordered lists with explicit AsciiDoc marker depth (`*`, `**`) so IntelliJ formatting cannot flatten indentation-only nesting
@@ -121,9 +121,9 @@ Update all affected artifacts in the same change:
 
 - public behavior change: update the governing spec artifacts first, then the published contract artifacts they drive
 - human-facing AI collaboration workflow change: update `WORKING_WITH_AI.md`, and update overlapping AI-facing guides in the same change when the underlying repository workflow also changed
-- workflow or AI-guidance change: update the owning AI guide first; follow `.agents/references/references-rules.md` for reference-document edits; touch `AGENTS.md` only when the AI-document set or maintenance rules changed
+- workflow or AI-guidance change: update the matching domain guide first; follow `.agents/references/references-rules.md` for reference-document edits; touch `AGENTS.md` only when the AI-document set or maintenance rules changed
 - separate frontend AI contract source change: update `docs/FRONTEND_AI_CONTRACT.md`, keep it subordinate to executable specs, REST Docs, OpenAPI, and `README.md`, and update `README.md`, `WORKING_WITH_AI.md`, `AGENTS.md`, and this guide when its discoverability or ownership changes
-- repo-local skill change: update the skill plus the owning AI guide when the skill wraps a workflow whose rules changed
+- repo-local skill change: update the skill plus the matching domain guide when the skill wraps a workflow whose rules changed
 - local command-wrapper guidance for AI agents: update `.agents/references/command-wrapper.md`, and update `SETUP.md` only when human setup or troubleshooting behavior changed
 - setup or tooling change: update `SETUP.md`, not `README.md`, `AGENTS.md`, or workflow guides unless their inventories or high-level rules changed
 - plan creation or material plan revision: update the concrete `.agents/plans/PLAN_*.md` file and `ROADMAP.md` together so active work points to the plan path and current status

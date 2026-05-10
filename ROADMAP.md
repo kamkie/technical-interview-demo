@@ -46,8 +46,9 @@ Use this section for plan-backed work that is ready but not selected as the imme
 
 ## Intake
 
-1. introduce adr to pre-planing workflow https://adr.github.io or https://github.com/adr/madr or https://github.com/architecture-decision-record/architecture-decision-record
-2. rename milestones to tasks or steps in plans
+1. introduce adr to pre-planning workflow https://adr.github.io or https://github.com/adr/madr or https://github.com/architecture-decision-record/architecture-decision-record
+2. formalise adr and spec format C:\Users\kamki\AppData\Roaming\JetBrains\IntelliJIdea2026.1\scratches\desing_how_to_implement_that.md
+3. rename milestones to tasks or steps in plans
 
 ## Deferred Work
 
