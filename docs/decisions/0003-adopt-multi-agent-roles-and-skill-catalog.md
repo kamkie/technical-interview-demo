@@ -231,6 +231,7 @@ Implementation should be verified by manual documentation review that:
 
 ## Links
 
+- Competing lighter proposal: `docs/decisions/0004-adopt-skill-first-multi-agent-workflow.md`
 - `.agents/references/workflow.md`
 - `.agents/references/planning.md`
 - `.agents/references/execution.md`
