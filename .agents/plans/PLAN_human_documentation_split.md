@@ -74,7 +74,7 @@
 | Task | Status | Owner | Commit | Validation | Notes |
 | --- | --- | --- | --- | --- | --- |
 | 1: Documentation Spine And AI Guide Move | Done | Agent | `docs(ai): move human AI guide into docs` | `pwsh ./scripts/docs/audit-docs.ps1` passed | Created the human docs index, lifecycle summary, moved AI collaboration guide, and root compatibility pointer. |
-| 2: Operations And Setup Split | Not Started | Agent | Pending | Pending | Move deployment/runtime runbooks into `docs/OPERATIONS.md` and narrow `SETUP.md`. |
+| 2: Operations And Setup Split | Done | Agent | `docs(operations): split runbooks from setup` | `pwsh ./scripts/docs/audit-docs.ps1` passed | Moved deployment/runtime runbooks into `docs/OPERATIONS.md` and narrowed `SETUP.md` to local setup and local troubleshooting. |
 | 3: Ownership Map And Link Alignment | Not Started | Agent | Pending | Pending | Align top-level docs, AI ownership maps, ADR links, and roadmap/plan tracking. |
 | 4: Final Validation And Review | Not Started | Agent | Pending | Pending | Run docs audit/build, review drift, and close plan tracking for implementation readiness or completion. |
 
@@ -95,7 +95,7 @@
 ### Task 2: Operations And Setup Split
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Make `SETUP.md` a local setup guide and move deployment/runtime material into `docs/OPERATIONS.md`. |
 | Owned Files Or Packages | `SETUP.md`, `docs/OPERATIONS.md` |
 | Coordinator-Owned Shared Files | `README.md`, `CONTRIBUTING.md`, `ROADMAP.md`, this plan |
@@ -169,6 +169,7 @@
 | 2026-05-10 | `pwsh ./scripts/docs/audit-docs.ps1` | Plan creation and roadmap selection checkpoint | Passed | Audited 33 user-facing documents, checked 56 local links, and passed. |
 | 2026-05-10 | `./build.ps1 build` | Plan creation and roadmap selection checkpoint | Passed | Wrapper reported only lightweight uncommitted files changed and skipped Gradle; manual consistency review is sufficient for this checkpoint. |
 | 2026-05-10 | `pwsh ./scripts/docs/audit-docs.ps1` | Task 1 documentation spine and AI guide move | Passed | Audited 33 user-facing documents, checked 79 local links, and passed. |
+| 2026-05-10 | `pwsh ./scripts/docs/audit-docs.ps1` | Task 2 operations and setup split | Passed | Audited 36 user-facing documents, checked 141 local links, and passed. |
 | 2026-05-10 | Pending | Documentation audit and wrapper build for implementation tasks | Pending | Run after implementation tasks complete. |
 
 ## User Validation
