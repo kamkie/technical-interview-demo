@@ -46,7 +46,7 @@ Each role maps to an existing role in `.agents/references/workflow.md` so this A
 | Role | Modes | Tool capability | Owning reference | Responsibility |
 | --- | --- | --- | --- | --- |
 | Coordinator | every mode | read + route; edits only Coordinator-owned shared files | `.agents/references/workflow.md` | Workflow shape, plan routing, shared files, integration order, conflict resolution, final validation, final reporting. |
-| Planner | before `M2: delegated` or higher | read + plan-file edit | `.agents/references/planning.md`, `.agents/references/plan-template.md` | Author or revise `.agents/plans/PLAN_*.md`, decision log, readiness review. |
+| Planner | before `M2: delegated` or higher | read + plan-file edit | `.agents/references/planning.md`, `.agents/plans/PLAN_TEMPLATE.md` | Author or revise `.agents/plans/PLAN_*.md`, decision log, readiness review. |
 | Worker (Coder) | `M2: delegated`, `M3: parallel` | edit + run validation on its slice | `.agents/references/execution.md`, `.agents/references/code-style.md` | Implement one approved write scope, run smallest sufficient validation, commit, report. |
 | Reviewer (Sidecar) | `M1: assisted`, `M4: gated` | read-only | `.agents/references/reviews.md`, `.agents/references/documentation.md` | Diff review, contract drift, gate decision. |
 | Verifier (Sidecar) | `M1: assisted`, `M4: gated` | run-only, no file edits | `.agents/references/testing.md`, `.agents/references/troubleshooting.md` | Independent validation, benchmark, contract or compatibility evidence. |
@@ -67,7 +67,7 @@ Existing `gh-fix-ci` and `gh-fix-security-quality` remain.
 | `run-validation` | Worker, Verifier | Pick the smallest sufficient `./build.ps1` invocation per `testing.md` change-type rules. |
 | `diff-review` | Reviewer (and Worker self-pre-check) | Read diff, check contract drift, name blocking issues, return a gate decision. |
 | `handoff-pack` | Coordinator | Produce a complete handoff packet to `.agents/context/handoffs/` with objective, role, read scope, write scope, expected output, validation target, stop conditions, and reporting format. |
-| `repo-plan-author` | Planner | Author a `PLAN_*.md` from `.agents/references/plan-template.md` and run readiness review. |
+| `repo-plan-author` | Planner | Author a `PLAN_*.md` from `.agents/plans/PLAN_TEMPLATE.md` and run readiness review. |
 | `integrate-branch` | Coordinator | Merge-vs-cherry-pick decision, conflict resolution, post-merge validation. |
 | `security-review` | Specialist | Threat model, dependency, and SAST review; gate decision. |
 | `openapi-contract-check` | Reviewer or Verifier | Re-run OpenAPI compatibility, refresh approved baseline only on intentional contract change. |
@@ -120,7 +120,7 @@ Example shape (authoritative content lives in `workflow.md` after acceptance):
 | Role | Always loaded | Conditional |
 | --- | --- | --- |
 | Coordinator | `AGENTS.md`, `workflow.md`, `documentation.md` | active plan, `releases.md` for release work |
-| Planner | `AGENTS.md`, `planning.md`, `plan-template.md` | `documentation.md`, `architecture.md`, ADR or PRD when referenced |
+| Planner | `AGENTS.md`, `planning.md`, `.agents/plans/PLAN_TEMPLATE.md` | `documentation.md`, `architecture.md`, ADR or PRD when referenced |
 | Worker | `AGENTS.md`, `execution.md`, `code-style.md` | `testing.md` on validation, `documentation.md` on contract artifacts |
 | Reviewer | `AGENTS.md`, `reviews.md`, `documentation.md` | `code-style.md`, contract artifacts |
 | Verifier | `AGENTS.md`, `testing.md`, `troubleshooting.md` | `command-wrapper.md`, `gradle-task-graph.md` |

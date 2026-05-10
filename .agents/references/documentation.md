@@ -38,7 +38,7 @@ Update the artifact that owns the truth being changed:
 - active planned work: `ROADMAP.md`
 - released history: `CHANGELOG.md`
 - commit message template and AI commit rules: `.gitmessage`
-- planning process, plan-file rules, fill guidance, and readiness review shape: `.agents/references/planning.md`; canonical plan skeleton: `.agents/references/plan-template.md`
+- planning process, plan-file rules, fill guidance, and readiness review shape: `.agents/references/planning.md`; canonical plan skeleton: `.agents/plans/PLAN_TEMPLATE.md`
 - whole active-plan execution across plan tasks: `.agents/references/plan-execution.md`
 - ad hoc task and single-plan-task execution: `.agents/references/execution.md`
 - branch, worktree, delegation, multi-agent state, sidecar, integration, and remote-handoff mechanics: `.agents/references/workflow.md`
@@ -52,7 +52,7 @@ Update the artifact that owns the truth being changed:
 - historical AI-analysis reports, evaluations, comparisons, and retired specs: `.agents/archive/`
 - product and contract direction: `docs/DESIGN.md`
 - durable learning decision rules, learning-loop routing, and criteria for recording lessons: `.agents/references/learning-rules.md`
-- durable repo-wide lesson storage: `.agents/references/LEARNINGS.md`
+- durable repo-wide lesson storage: `docs/LEARNINGS.md`
 - edit-shaping rules: `.agents/references/code-style.md`
 - validation scope and commands: `.agents/references/testing.md`
 - review and security-review expectations: `.agents/references/reviews.md`
@@ -78,9 +78,9 @@ Rules for maintaining the `.agents/` documents:
 - keep visible artifact-level provenance in generated ADRs, PRDs, and execution plans; the `## Provenance` section must name the creating AI agent or human author, creation date, source request, and generation context, and AI commit metadata is supplemental rather than a substitute
 - create `.agents/plugins/marketplace.json` and a plugin bundle only when a workflow needs Codex plugin distribution or install-time discovery; keep ordinary reusable prompts in `.agents/tasks/`
 - when a repo-local skill wraps a workflow owned by a domain guide, update the skill and that guide together if the workflow changes
-- archive executed `.agents/plans/PLAN_*.md` files under `.agents/archive/` as part of the release cleanup once that work has been released
+- archive executed concrete `.agents/plans/PLAN_*.md` files under `.agents/archive/` as part of the release cleanup once that work has been released; never archive `.agents/plans/PLAN_TEMPLATE.md` as active work
 - archive retired AI-guidance reports, evaluations, comparisons, and similar analysis artifacts under `.agents/archive/`
-- treat `docs/DESIGN.md`, `.agents/references/architecture.md`, and `.agents/references/LEARNINGS.md` as descriptive guidance, not executable spec authority
+- treat `docs/DESIGN.md`, `.agents/references/architecture.md`, and `docs/LEARNINGS.md` as descriptive guidance, not executable spec authority
 - when moving or renaming non-reference AI documents, update references in `AGENTS.md` and other `.agents/` files in the same change
 - when adding or moving repository knowledge files, use this guide's artifact ownership rules first and update this guide when no existing owner fits
 
@@ -157,7 +157,7 @@ Update all affected artifacts in the same change:
 - environment setup change: update `SETUP.md`, not `README.md`, `AGENTS.md`, or workflow guides unless their inventories or high-level rules changed
 - local development workflow change: update `docs/LOCAL_DEVELOPMENT.md`, not `SETUP.md`, unless environment setup steps also changed
 - deployment or runtime operations runbook change: update `docs/OPERATIONS.md`, not `SETUP.md` or `docs/LOCAL_DEVELOPMENT.md`, unless local environment or local command steps also changed
-- plan creation or material plan revision: update the concrete `.agents/plans/PLAN_*.md` file and `ROADMAP.md` together so active work points to the plan path and current status
+- plan creation or material plan revision: update the concrete `.agents/plans/PLAN_*.md` file and `ROADMAP.md` together so active work points to the plan path and current status; `.agents/plans/PLAN_TEMPLATE.md` is only the skeleton
 - roadmap reprioritization: update `ROADMAP.md`, and keep `## Current Project State` aligned when the active release phase, breaking-change policy, or next target version changes
 - post-release deployment or operations signal: use `.agents/references/operations.md` to route rollback, hotfix, patch, backport, deprecation, roadmap, learning, and validation ownership before editing implementation or release artifacts
 - pre-planning decision record: create or update the relevant ADR under `docs/decisions/`; when an ADR becomes accepted, update the owning standing guidance, templates, roadmap entries, and human-facing docs that the decision changes

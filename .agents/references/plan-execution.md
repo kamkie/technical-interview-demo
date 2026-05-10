@@ -1,7 +1,8 @@
 # Plan Execution Guide For AI Agents
 
 `.agents/references/plan-execution.md` owns execution of a whole active plan across plan tasks.
-Use it when the user asks to implement an entire `.agents/plans/PLAN_*.md` file, run all remaining tasks in a plan, or resume a partially implemented active plan.
+Use it when the user asks to implement an entire concrete `.agents/plans/PLAN_*.md` file, run all remaining tasks in a plan, or resume a partially implemented active plan.
+Do not treat `.agents/plans/PLAN_TEMPLATE.md` as an executable plan.
 
 Use `.agents/references/execution.md` for ad hoc tasks and one-plan-task work.
 Use `.agents/references/workflow.md` only when branch, worktree, delegation, multi-agent state, sidecar, or integration mechanics are needed.

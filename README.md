@@ -44,6 +44,7 @@ See [docs/DESIGN.md](docs/DESIGN.md) for product intent and non-goals.
 - [docs/DESIGN.md](docs/DESIGN.md) — product intent, non-goals, and contract direction
 - [docs/DEVELOPMENT_LIFECYCLE.md](docs/DEVELOPMENT_LIFECYCLE.md) — human-facing lifecycle and artifact-routing summary
 - [docs/WORKING_WITH_AI.md](docs/WORKING_WITH_AI.md) — human-facing AI collaboration guide
+- [docs/LEARNINGS.md](docs/LEARNINGS.md) — curated durable repository lessons
 
 ### Spec-Driven Artifacts
 

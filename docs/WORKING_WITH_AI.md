@@ -60,6 +60,7 @@ Use the smallest owner set that can answer the request:
 | Lifecycle and artifact routing for humans | [Development Lifecycle](DEVELOPMENT_LIFECYCLE.md) |
 | Deployment and runtime operations runbooks | [OPERATIONS.md](OPERATIONS.md) |
 | Active and planned work | [ROADMAP.md](../ROADMAP.md) |
+| Durable lessons | [LEARNINGS.md](LEARNINGS.md) |
 | Product intent and non-goals | [DESIGN.md](DESIGN.md) |
 | Durable decisions | [docs/decisions/](decisions/) |
 | Product requirements | [docs/requirements/](requirements/) |

@@ -20,7 +20,7 @@ Entry points:
 - keep this file expressed as the current reference-document rule set; replace outdated expectations with current expectations instead of appending notes about past changes
 - write AI-guidance changes as current-state rules, not incident history or narrative reports
 - update the relevant `.agents/references/` file in the same change when architecture, code-style expectations, design intent, documentation ownership, durable engineering guidance, release workflow, review/security review guidance, testing/validation guidance, workflow guidance, planning guidance, or plan-execution guidance materially changes
-- when an agent mistake, user correction, failed assumption, or guidance gap may reveal a durable rule, use `.agents/references/learning-rules.md` to route it, then update the focused owning reference document or `.agents/references/LEARNINGS.md` in the same change; write the result as reusable current guidance, not as a mistake log
+- when an agent mistake, user correction, failed assumption, or guidance gap may reveal a durable rule, use `.agents/references/learning-rules.md` to route it, then update the focused owning reference document or `docs/LEARNINGS.md` in the same change; write the result as reusable current guidance, not as a mistake log
 - keep standing rules in their focused owning files instead of redistributing them across task prompts, plans, templates, skills, workflow state files, or final responses
 - treat skills as tactical wrappers around owner guides, not governance; when a skill needs a standing rule, update the owning reference document and have the skill point to it
 - keep setup walkthroughs and troubleshooting details out of reference documents unless the reference file specifically owns AI-facing setup or troubleshooting guidance
@@ -31,12 +31,12 @@ Entry points:
 ## Placement And Naming
 
 - keep AI instruction markdown files under `.agents/references/` by default; `AGENTS.md` is the only standing top-level exception
-- prefer lower-kebab-case names for new reference files unless preserving a deliberate existing name such as `.agents/references/LEARNINGS.md`
+- prefer lower-kebab-case names for new reference files
 - keep current detailed examples and reusable templates in focused reference files instead of expanding standing top-level AI files
 - keep retired report-like AI analysis artifacts under `.agents/archive/`, not `.agents/references/`
 - keep active execution plans under `.agents/plans/`; reference documents must not become task-specific progress logs
 - keep learning-loop rules and lesson-routing criteria in `.agents/references/learning-rules.md`
-- store durable repo-wide lessons in `.agents/references/LEARNINGS.md` only when they should survive refactors
+- store durable repo-wide lessons in `docs/LEARNINGS.md` only when they should survive refactors
 
 ## Editing Rules
 

@@ -2,7 +2,7 @@
 
 `.agents/references/planning.md` owns the standing rules for creating, revising, and reviewing executable plans under `.agents/plans/`.
 It also owns plan fill guidance, readiness review shape, and plan-task quality rules.
-Use `.agents/references/plan-template.md` only when you need the full skeleton.
+Use `.agents/plans/PLAN_TEMPLATE.md` only when you need the full skeleton.
 Use `.agents/references/application-lifecycle.md` for lifecycle phase, activity, and loop vocabulary.
 
 Use this file when the user asks for a plan, plan-task breakdown, readiness review, execution-shape decision, or detailed change strategy.
@@ -22,7 +22,7 @@ Choose the mode that matches the request:
 Load only what the request needs:
 
 - always: `AGENTS.md` and this file
-- new plan or substantial revision: `.agents/references/plan-template.md`
+- new plan or substantial revision: `.agents/plans/PLAN_TEMPLATE.md`
 - plan revision or readiness review: the target `.agents/plans/PLAN_*.md`
 - triage-driven roadmap work or concrete active plans: `ROADMAP.md`
 - lifecycle wording changes: `.agents/references/application-lifecycle.md`
@@ -116,7 +116,8 @@ Route rough idea capture to `Conceptualization`, structured requirements or deci
 
 Create concrete plans under `.agents/plans/` as `PLAN_<topic>.md` with lowercase underscore topic names.
 Prefer one coherent plan unless the work is genuinely disjoint.
-Start new plans from `.agents/references/plan-template.md`.
+Start new plans from `.agents/plans/PLAN_TEMPLATE.md`.
+`PLAN_TEMPLATE.md` is not an active execution plan even though it lives in `.agents/plans/`.
 
 Every concrete plan must identify provenance, the behavior, linked ADRs, PRDs, and standalone specs when they exist, governing executable specs or contract artifacts, scope and non-goals, affected files, compatibility promises, planning readiness, requirement gaps, locked decisions and assumptions, execution shape and shared-file boundaries, per-plan-task context requirements, plan-task checkpoints, progress tracking, validation, and user verification.
 Keep the plan self-contained enough for another agent to execute without inventing missing decisions.

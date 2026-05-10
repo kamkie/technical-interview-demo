@@ -12,7 +12,7 @@ Skills do not own policy. They point back to owner guides under `.agents/referen
 | Skill | Owner Guide | Primary Use |
 | --- | --- | --- |
 | `select-mode-and-skills` | `.agents/references/workflow.md` | Choose `M0`–`M4` mode, role roster, and skill chain for a request or plan |
-| `repo-plan-author` | `.agents/references/planning.md`, `.agents/references/plan-template.md` | Author or revise `.agents/plans/PLAN_*.md` |
+| `repo-plan-author` | `.agents/references/planning.md`, `.agents/plans/PLAN_TEMPLATE.md` | Author or revise `.agents/plans/PLAN_*.md` |
 | `handoff-pack` | `.agents/references/workflow.md` | Produce a durable handoff packet under `.agents/context/*` before delegated work |
 | `repo-task-execute` | `.agents/references/execution.md`, `.agents/references/code-style.md` | Execute one bounded task or one plan task |
 | `run-validation` | `.agents/references/testing.md` | Choose, run, and record the smallest sufficient validation |

@@ -33,7 +33,7 @@ Section ordering follows the lifecycle vocabulary in `.agents/references/applica
 - Keep only active, planned, selected, or intentionally deferred work here.
 - Use `Status` values instead of checkbox semantics.
 - Remove work once it is released, intentionally dropped, or no longer active.
-- Keep detailed active plan tasks, validation notes, and implementation history in `.agents/plans/PLAN_*.md`, not in this file; released plan history belongs under `.agents/archive/`.
+- Keep detailed active plan tasks, validation notes, and implementation history in concrete `.agents/plans/PLAN_*.md` files, not in this file; `PLAN_TEMPLATE.md` is not active work, and released plan history belongs under `.agents/archive/`.
 - Lifecycle phase names follow `.agents/references/application-lifecycle.md`; pre-planning artifact roles (ADR, PRD, spec, plan) follow `docs/decisions/0001-adopt-pre-planning-artifacts.md`.
 
 | Status | Meaning | Typical phase |

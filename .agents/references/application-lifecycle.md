@@ -86,7 +86,7 @@ Activities marked with `?` are conditional.
 
 - `Scan`: what artifacts and code already define this area? Owner: `AGENTS.md` loading map, `.agents/references/architecture.md`. Exit: relevant artifacts identified.
 - `Frame`: what is the actual signal or change candidate? Owner: `AGENTS.md`, `.agents/references/planning.md`. Exit: scope and ambiguity surfaced.
-- `Capture-Idea?`: should a rough idea, TODO, maintenance signal, or link be retained without planning yet? Owner: `ROADMAP.md` for active work, `.agents/references/learning-rules.md` for durable lesson routing, and `.agents/references/LEARNINGS.md` for accepted lesson storage. Exit: signal recorded or declined.
+- `Capture-Idea?`: should a rough idea, TODO, maintenance signal, or link be retained without planning yet? Owner: `ROADMAP.md` for active work, `.agents/references/learning-rules.md` for durable lesson routing, and `docs/LEARNINGS.md` for accepted lesson storage. Exit: signal recorded or declined.
 - `Clarify?`: does the user need to resolve a material ambiguity before the work can leave rough capture? Owner: `.agents/references/planning.md`. Exit: ambiguity resolved or recorded as an accepted fallback.
 
 ### Analysis
@@ -173,7 +173,7 @@ This file owns the vocabulary; `operations.md` owns the operational routing.
 ### Maintenance
 
 - `Retrospect`: review what worked and what did not after a release or major plan.
-- `Capture-Learning`: decide whether to record a durable repo-wide lesson, then store it if accepted. Owner: `.agents/references/learning-rules.md`; storage: `.agents/references/LEARNINGS.md`.
+- `Capture-Learning`: decide whether to record a durable repo-wide lesson, then store it if accepted. Owner: `.agents/references/learning-rules.md`; storage: `docs/LEARNINGS.md`.
 - `Refactor?`: schedule structural improvement work as its own plan.
 - `Tech-Debt-Plan?`: convert recurring pain into a planned roadmap item.
 - `Sync`: feed outcomes back into `ROADMAP.md`.
@@ -185,10 +185,10 @@ This table is descriptive; owner guides still own their specific rules.
 
 | Phase | In-order phase activities | Primary owner guides |
 | --- | --- | --- |
-| Conceptualization | `Scan` -> `Frame` -> `Capture-Idea?` -> `Clarify?` | `AGENTS.md`, `.agents/references/architecture.md`, `.agents/references/learning-rules.md`, `.agents/references/LEARNINGS.md` |
+| Conceptualization | `Scan` -> `Frame` -> `Capture-Idea?` -> `Clarify?` | `AGENTS.md`, `.agents/references/architecture.md`, `.agents/references/learning-rules.md`, `docs/LEARNINGS.md` |
 | Analysis | `Elicit` -> `Analyze` -> `Define-Requirements` -> `Validate-Requirements` -> `Decide-Artifact?` | `.agents/references/documentation.md`, `.agents/references/planning.md`, `docs/requirements/*.md`, `docs/specs/*.md`, `docs/DESIGN.md` |
 | Triage | `Intake` -> `Classify` -> `Prioritize` -> `Sequence` -> `Sync` | `ROADMAP.md`, `.agents/references/documentation.md`, `.agents/references/planning.md` |
-| Planning | `Design` -> `Spec` -> `Decompose` -> `Validate-Plan` -> `Sync` -> `Replan?` | `.agents/references/planning.md`, `docs/DESIGN.md`, `.agents/references/plan-template.md` |
+| Planning | `Design` -> `Spec` -> `Decompose` -> `Validate-Plan` -> `Sync` -> `Replan?` | `.agents/references/planning.md`, `docs/DESIGN.md`, `.agents/plans/PLAN_TEMPLATE.md` |
 | Implementation | `Spec` -> `Code` -> `Docs` -> `Run` -> `Replan?` -> `Self-Review` -> `Code Review` -> `Security Review?` -> `Commit` -> `Handoff` | `.agents/references/execution.md`, `.agents/references/documentation.md`, `.agents/references/code-style.md`, `.agents/references/workflow.md` |
 | Verification | `Plan-Checks` -> `Author-Specs?` -> `Run` -> `Diagnose?` -> `Fix?` -> `Re-run` -> `Record` | `.agents/references/testing.md`, `.agents/references/troubleshooting.md` |
 | Review | `Self-Review` -> `Code Review` -> `Security Review?` -> `Docs Review?` -> `Decide` | `.agents/references/reviews.md` |
@@ -196,7 +196,7 @@ This table is descriptive; owner guides still own their specific rules.
 | Release | `Gate` -> `Tag` -> `Notes` -> `Publish` -> `Post-Release-Cleanup` | `.agents/references/releases.md`, `CHANGELOG.md` |
 | Deployment | `Stage` -> `Smoke` -> `Promote` -> `Verify` -> `Rollback?` | `.agents/references/operations.md` |
 | Operations | `Observe` -> `Operational-Triage` -> `Hotfix?` -> `Patch?` -> `Backport?` -> `Deprecate?` | `.agents/references/operations.md` |
-| Maintenance | `Retrospect` -> `Capture-Learning` -> `Refactor?` -> `Tech-Debt-Plan?` -> `Sync` | `.agents/references/learning-rules.md`, `.agents/references/LEARNINGS.md`, `ROADMAP.md` |
+| Maintenance | `Retrospect` -> `Capture-Learning` -> `Refactor?` -> `Tech-Debt-Plan?` -> `Sync` | `.agents/references/learning-rules.md`, `docs/LEARNINGS.md`, `ROADMAP.md` |
 
 The `Implementation` row deliberately interleaves review and validation activities because `.agents/references/execution.md` runs them in a tight plan-task loop.
 This is not a license to skip dedicated Verification or Review gates for the overall change.
@@ -218,7 +218,7 @@ Outer Product Loop                              [per release]
 
 - Activities: `Sync` -> Conceptualization -> Analysis -> Triage -> Planning -> Implementation -> Verification -> Review -> Integration -> Release -> Deployment -> Operations -> Maintenance -> `Sync`.
 - Cadence: per release.
-- Owner: `ROADMAP.md`, `.agents/references/releases.md`, `.agents/references/operations.md`, `.agents/references/learning-rules.md`, `.agents/references/LEARNINGS.md`.
+- Owner: `ROADMAP.md`, `.agents/references/releases.md`, `.agents/references/operations.md`, `.agents/references/learning-rules.md`, `docs/LEARNINGS.md`.
 - Exit: a release ships, deployment and operations signals are handled, and outcomes feed the next cycle.
 
 ### Plan Loop
@@ -253,7 +253,7 @@ Outer Product Loop                              [per release]
 
 - Activities: `Observe` -> `Operational-Triage` -> (`Hotfix?` or `Patch?`) -> `Capture-Learning` -> `Sync`.
 - Cadence: continuous, post-release.
-- Owner: `.agents/references/operations.md`, `.agents/references/learning-rules.md`, `.agents/references/LEARNINGS.md`, and `ROADMAP.md`.
+- Owner: `.agents/references/operations.md`, `.agents/references/learning-rules.md`, `docs/LEARNINGS.md`, and `ROADMAP.md`.
 - Exit: the signal is resolved or scheduled as planned work.
 
 ## Cross-Cutting Triggers
@@ -264,7 +264,7 @@ These triggers can fire from any phase and force a switch:
 - `Requirements-Analysis`: rough or ambiguous work needs structured product, behavior, or acceptance criteria before planning. Owner: `.agents/references/planning.md`, `.agents/references/documentation.md`, PRDs, and specs.
 - `Security Review`: authentication, authorization, secrets, sensitive data, deployment-facing config, CI permissions, release paths, or publish paths change. Owner: `.agents/references/reviews.md`.
 - `Sync`: active-work tracking or contract artifacts change. Owner: `ROADMAP.md`, `.agents/references/documentation.md`.
-- `Capture-Learning`: recurring repo-wide lesson surfaces. Owner: `.agents/references/learning-rules.md`; storage: `.agents/references/LEARNINGS.md`.
+- `Capture-Learning`: recurring repo-wide lesson surfaces. Owner: `.agents/references/learning-rules.md`; storage: `docs/LEARNINGS.md`.
 - `Docs-Routing`: a contract or maintainer-facing document changes. Owner: `.agents/references/documentation.md`.
 - `Context-Hygiene`: any switch between activities. Owner: `AGENTS.md`.
 - `Rollback`: deployed behavior fails verification. Owner: `.agents/references/operations.md`.
@@ -290,13 +290,13 @@ When a role has no complete owner, record the gap in active-work tracking before
 | Roadmap | active-work tracking, prioritization, sequencing, and current-cycle state | `ROADMAP.md` |
 | Release History | shipped changes per version | `CHANGELOG.md` |
 | Operations Guide | deployment, post-release verification, rollback, incident response, hotfix, patch, backport, and deprecation routing | `.agents/references/operations.md` |
-| Plan | per-task decision-complete execution handoff document | `.agents/plans/PLAN_*.md` |
+| Plan | per-task decision-complete execution handoff document | concrete `.agents/plans/PLAN_*.md`; exclude `.agents/plans/PLAN_TEMPLATE.md` |
 | Executable Spec | behavior verified by automation | tests, contract checks, benchmarks |
 | Published Contract | human-facing API and contract docs | `README.md`, `src/docs/asciidoc/`, `src/test/resources/openapi/approved-openapi.json` |
 | Engineering Rules | spec-driven rules, lifecycle loading, definition of done | `AGENTS.md` plus this file |
 | Phase Owner Guides | per-phase or activity-group guidance | `.agents/references/*.md` |
 | Learning Rules | learning-loop rules and lesson-routing criteria | `.agents/references/learning-rules.md` |
-| Learnings | durable engineering lesson storage | `.agents/references/LEARNINGS.md` |
+| Learnings | durable engineering lesson storage | `docs/LEARNINGS.md` |
 | Architecture Snapshot | current codebase map and structural guidance | `.agents/references/architecture.md` |
 
 ## Spec-Driven Rule
@@ -334,7 +334,7 @@ When this file changes:
 
 - no dedicated Analysis owner guide beyond `.agents/references/planning.md`, `.agents/references/documentation.md`, and the ADR, PRD, and spec templates
 - the `Red-Green Loop` is not named directly in `.agents/references/testing.md`, even though validation work commonly follows it
-- the `Outer Product Loop` is composed from `ROADMAP.md`, `.agents/references/releases.md`, `.agents/references/operations.md`, `.agents/references/learning-rules.md`, and `.agents/references/LEARNINGS.md` rather than owned by a single guide
+- the `Outer Product Loop` is composed from `ROADMAP.md`, `.agents/references/releases.md`, `.agents/references/operations.md`, `.agents/references/learning-rules.md`, and `docs/LEARNINGS.md` rather than owned by a single guide
 - the `Review Loop` exit back into plan-task execution is implicit in `.agents/references/reviews.md` and `.agents/references/execution.md`
 
 ## Non-Goals

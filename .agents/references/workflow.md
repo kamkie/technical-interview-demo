@@ -55,7 +55,7 @@ Load the smallest role-shaped context that can complete the delegated activity:
 | Role | Always loaded | Conditional |
 | --- | --- | --- |
 | Coordinator | `AGENTS.md`, `.agents/references/workflow.md`, `.agents/references/documentation.md` | active plan; `.agents/references/releases.md` only for explicit release work |
-| Planner | `AGENTS.md`, `.agents/references/planning.md`, `.agents/references/plan-template.md` | `.agents/references/documentation.md`, `.agents/references/architecture.md`, linked ADR, PRD, spec, or roadmap item when referenced |
+| Planner | `AGENTS.md`, `.agents/references/planning.md`, `.agents/plans/PLAN_TEMPLATE.md` | `.agents/references/documentation.md`, `.agents/references/architecture.md`, linked ADR, PRD, spec, or roadmap item when referenced |
 | Worker | `AGENTS.md`, `.agents/references/execution.md`, `.agents/references/code-style.md` | `.agents/references/testing.md` on validation; `.agents/references/documentation.md` on docs or contract artifacts |
 | Reviewer | `AGENTS.md`, `.agents/references/reviews.md`, `.agents/references/documentation.md` | `.agents/references/code-style.md`, affected specs, contract docs, or source files |
 | Verifier | `AGENTS.md`, `.agents/references/testing.md`, `.agents/references/troubleshooting.md` | `.agents/references/command-wrapper.md`, `.agents/references/gradle-task-graph.md`, affected test or benchmark docs |

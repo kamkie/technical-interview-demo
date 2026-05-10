@@ -1,6 +1,7 @@
 # Execution Plans
 
 This directory holds active execution plans (`PLAN_*.md`) that break selected work into task-sized implementation checkpoints.
+`PLAN_TEMPLATE.md` is the reusable plan skeleton and is not an active plan.
 
 For the full human-facing documentation map, see [docs/README.md](../../docs/README.md).
 For lifecycle and artifact-routing guidance (ADR vs PRD vs standalone spec vs plan), see [docs/DEVELOPMENT_LIFECYCLE.md](../../docs/DEVELOPMENT_LIFECYCLE.md).
@@ -21,11 +22,13 @@ For canonical behavior or contract truth, use a standalone spec in [docs/specs/]
 ## How To Add A Plan
 
 1. Create a new file named `PLAN_<short_snake_case_title>.md` in this directory.
-2. Follow the structure described in [.agents/references/planning.md](../references/planning.md): provenance, context, scope, ordered tasks with validation, links to governing specs.
+2. Start from [PLAN_TEMPLATE.md](PLAN_TEMPLATE.md) and follow the structure described in [.agents/references/planning.md](../references/planning.md): provenance, context, scope, ordered tasks with validation, links to governing specs.
 3. Link the new plan from any related ADR, PRD, standalone spec, or [ROADMAP.md](../../ROADMAP.md) entry.
 4. Execute the plan using the loop in [.agents/references/plan-execution.md](../references/plan-execution.md); when the plan is complete, move it under [.agents/archive/](../archive/).
 
 ## Active Plans
+
+Do not list [PLAN_TEMPLATE.md](PLAN_TEMPLATE.md) here.
 
 | Plan | Purpose |
 | --- | --- |

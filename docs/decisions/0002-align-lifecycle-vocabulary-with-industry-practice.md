@@ -105,7 +105,7 @@ If accepted, update these files together:
    - Keep `Planning` as the phase for executable `.agents/plans/PLAN_*.md` creation and readiness review.
    - Teach plans to reference PRDs, ADRs, and specs when they exist.
 
-3. `.agents/references/plan-template.md`
+3. `.agents/plans/PLAN_TEMPLATE.md`
    - Update lifecycle placeholder guidance.
    - Add optional rows or prompts for linked ADR, PRD, and spec artifacts.
 

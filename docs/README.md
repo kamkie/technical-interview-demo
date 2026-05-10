@@ -17,6 +17,7 @@ Use [README.md](../README.md) for the shortest project overview and supported-sc
 | Product intent, non-goals, and contract direction | [DESIGN.md](DESIGN.md) |
 | Active and planned work | [ROADMAP.md](../ROADMAP.md) |
 | Released history | [CHANGELOG.md](../CHANGELOG.md) |
+| Durable lessons | [LEARNINGS.md](LEARNINGS.md) |
 
 ## Planning And Decisions
 

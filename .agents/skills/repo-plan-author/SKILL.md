@@ -8,11 +8,11 @@ description: Create or revise repository execution plans under .agents/plans usi
 ## Overview
 
 Use this skill to create or revise an execution plan.
-`.agents/references/planning.md` and `.agents/references/plan-template.md` remain authoritative.
+`.agents/references/planning.md` and `.agents/plans/PLAN_TEMPLATE.md` remain authoritative.
 
 ## Read Set
 
-- always: `AGENTS.md`, `.agents/references/planning.md`, `.agents/references/plan-template.md`
+- always: `AGENTS.md`, `.agents/references/planning.md`, `.agents/plans/PLAN_TEMPLATE.md`
 - when plan-backed work is selected: `ROADMAP.md`
 - when artifact routing matters: `.agents/references/documentation.md`
 - when workflow mode matters: `.agents/references/workflow.md`
@@ -28,7 +28,7 @@ Use this skill to create or revise an execution plan.
 
 1. Identify the behavior or workflow being planned and the governing truth artifact.
 2. Decide lifecycle phase and whether a plan is appropriate.
-3. Start from `.agents/references/plan-template.md` for new plans.
+3. Start from `.agents/plans/PLAN_TEMPLATE.md` for new plans.
 4. Fill readiness, open questions, decisions, execution shape, affected artifacts, tasks, validation, blockers, and user validation.
 5. Choose a concrete `M0: direct` through `M4: gated` workflow mode.
 6. Keep `ROADMAP.md` aligned for concrete active plans.

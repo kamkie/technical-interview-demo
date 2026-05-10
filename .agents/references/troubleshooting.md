@@ -5,7 +5,7 @@ Use it to choose the first recovery step before improvising.
 
 Do not use this file for local install walkthroughs or human environment setup; use `SETUP.md` for that.
 Use `docs/LOCAL_DEVELOPMENT.md` for human-facing local command troubleshooting.
-If a pattern may become a durable repo-wide lesson after repeated incidents, route it through `.agents/references/learning-rules.md`, store accepted lessons in `.agents/references/LEARNINGS.md`, and keep this playbook focused on symptom handling.
+If a pattern may become a durable repo-wide lesson after repeated incidents, route it through `.agents/references/learning-rules.md`, store accepted lessons in `docs/LEARNINGS.md`, and keep this playbook focused on symptom handling.
 
 ## Recovery Rules
 
