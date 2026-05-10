@@ -78,6 +78,7 @@ Do not accumulate per-incident history, one-off mistakes, or temporary workaroun
 - **Sanitize before logging.**
 - **Benchmarks are change detectors, not noise.**
 - **Record skill-validator environment gaps explicitly.** When repo-local skill validation cannot run because the local Python environment lacks validator dependencies such as PyYAML, record the exact blocker and run a deterministic structural fallback instead of treating the skill as fully validator-checked.
+- **`.gitmessage` is the AI commit-format spec.** Load `.gitmessage` and the "Commits" rules in `.agents/references/execution.md` before composing any AI-authored commit; `Co-authored-by` alone is not the full requirement. Include every applicable `Project-*` footer (`Project-Source` is mandatory) plus `Validation`, keep the trailer block contiguous, and build commits non-interactively via `git commit -F <file>` or a single final paragraph — chained `-m` arguments insert blank lines that break the trailer block. Do not pattern-match the format from older commits in `git log`; pre-existing drift is not the spec.
 
 ## Testing Lessons
 

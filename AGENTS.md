@@ -66,6 +66,7 @@ Add only guides whose domains match the current task.
 - branch, worktree, delegation, multi-agent state, sidecar, integration, or remote handoff: `.agents/references/workflow.md`
 - workflow mode labels, multi-agent role roster, per-role read sets, or skill chain selection: `.agents/references/workflow.md`; load `.agents/skills/<skill-name>/SKILL.md` only when a skill is invoked or clearly applies; see `.agents/skills/README.md` for the skill catalog and the standard `M0`–`M4` skill chain
 - release sequencing: `.agents/references/releases.md`
+- commit message format, required AI trailer block, and non-interactive commit construction: `.gitmessage` (authoritative template) plus `.agents/references/execution.md` "Commits" rules
 - application lifecycle phase, activity, owner-guide mapping, or loop vocabulary: `.agents/references/application-lifecycle.md`
 - durable repo-wide lesson: `.agents/references/LEARNINGS.md`
 - active plan content: the relevant `.agents/plans/PLAN_*.md`
@@ -92,7 +93,7 @@ Use these completion rules for AI work in this repository:
 - Treat edits to `.agents/references/*.md` as incomplete until the edited reference documents satisfy `.agents/references/references-rules.md`; keep `references-rules.md` itself as the current rule set that other reference files are measured against, never as a changelog or record of completed edits.
 - Learn from agent mistakes, user corrections, failed assumptions, and avoidable rework; when the correction reveals durable guidance, update the focused owner guide or `.agents/references/LEARNINGS.md` using that file's learning loop.
 - Keep durable status in the owning artifacts; do not rely on final-response memory for plan progress, validation evidence, blockers, roadmap state, or release history.
-- Commit every completed task or plan task that changed tracked files with the required AI commit-message format before handoff or unrelated work starts. During an explicitly ongoing interactive session, uncommitted work remains in progress until the user asks for handoff.
+- Commit every completed task or plan task that changed tracked files with the required AI commit-message format before handoff or unrelated work starts. The format is owned by `.gitmessage` and the "Commits" rules in `.agents/references/execution.md`; load both before composing a commit, include every applicable `Project-*` footer plus `Co-authored-by` and `Validation`, keep the trailer block contiguous, and build the message via a commit message file or a single final paragraph rather than chained `-m` arguments. During an explicitly ongoing interactive session, uncommitted work remains in progress until the user asks for handoff.
 - Leave release work undone unless explicitly requested.
 
 ## Integration And Release Invariants
