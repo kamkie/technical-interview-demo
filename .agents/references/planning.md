@@ -132,10 +132,10 @@ Do not list broad descriptive docs as defensive context.
 For execution shape, make the workflow decision during planning and record a concrete `M0` through `M4` mode.
 Do not leave a concrete active plan's workflow mode for the executor to infer later.
 For one coherent plan, prefer `M0` through `M2` unless the work clearly benefits from explicitly owned parallel worker slices or sidecar gates.
-For a large single plan with plan tasks or slices separated enough for parallel ownership, suggest `M4: full-sidecar` and identify the worker slices plus review, verification, or specialist gates.
+For a large single plan with plan tasks or slices separated enough for parallel ownership, suggest `M4: gated` and identify the worker slices plus review, verification, or specialist gates.
 If delegation may be useful, state which files remain coordinator-owned and which files could be worker-owned.
-If multiple plans must move together, strongly prefer `M3: parallel-sliced`; say which plan coordinates the work and how validation and changelog evidence will be rolled up.
-Use a lower mode for multi-plan execution only when dependencies or shared artifacts force serial work, and use `M4` only when sidecar gates are part of the planned workflow.
+If multiple plans must move together, strongly prefer `M3: parallel`; say which plan coordinates the work and how validation and changelog evidence will be rolled up.
+Use a lower mode for multi-plan execution only when dependencies or shared artifacts force serial work, and use `M4: gated` only when sidecar gates are part of the planned workflow.
 
 Every concrete plan should include a top-level `Progress Tracker` before detailed plan tasks.
 Use plan-task statuses `Not Started`, `In Progress`, `Blocked`, `Done`, and `Skipped`.

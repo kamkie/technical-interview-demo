@@ -53,11 +53,11 @@ Use one lifecycle phase from `.agents/references/application-lifecycle.md`: `Con
 | D1 | User decision, repo-truth decision, or accepted fallback assumption | User/Spec/Code/Agent fallback | YYYY-MM-DD | When this should be reconsidered, or None |
 
 ## Execution Shape And Shared Files
-- Recommended shape: `M0: solo`, `M1: sidecar-readonly`, `M2: bounded-worker`, `M3: parallel-sliced`, or `M4: full-sidecar`
+- Recommended shape: `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, or `M4: gated`
 - Why that planned shape fits best; do not defer the mode decision to execution
 - Coordinator-owned or otherwise shared files if the work is delegated
 - Candidate worker boundaries or plan splits if later delegation becomes necessary
-- If this coordinates multiple selected plans, use `M3: parallel-sliced` unless the decision log explains serial execution or `M4` sidecar gates
+- If this coordinates multiple selected plans, use `M3: parallel` unless the decision log explains serial execution or `M4: gated` sidecar gates
 
 ## Affected Artifacts
 - Pre-planning artifacts

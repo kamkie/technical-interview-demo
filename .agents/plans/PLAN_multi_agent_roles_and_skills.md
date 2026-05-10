@@ -72,7 +72,7 @@
 | D7 | Keep both ADRs: ADR 0004 is the principle decision and ADR 0003 is the implementation decision. | User instruction to accept ADRs and implement if no blockers. | 2026-05-10 | If either ADR is superseded. |
 
 ## Execution Shape And Shared Files
-- Recommended shape: `M0: solo` under the current vocabulary for planning edits; target label after implementation is `M0: direct`.
+- Recommended shape: `M0: direct`.
 - Why: this plan is documentation- and configuration-only with disjoint phase boundaries; it does not benefit from `parallel` because phases must land in order (rename → state dirs → skills → sweep → smoke-test).
 - Coordinator-owned shared files: `.agents/references/workflow.md`, `docs/decisions/0003-adopt-multi-agent-roles-and-skill-catalog.md`, `docs/decisions/0004-adopt-skill-first-multi-agent-workflow.md`, `AGENTS.md`, `.junie/AGENTS.md`, `WORKING_WITH_AI.md`, `ROADMAP.md`, this plan.
 - Candidate worker boundaries if later split: one worker per Phase B skill bundle in Phase B Task 5; one worker per Phase C skill bundle in Phase C Task 7.
@@ -100,7 +100,7 @@
 | 6: Add Phase B skill bundles | Done | Worker | `docs(skills): add phase b multi-agent workflows` | Structural skill check passed; `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | `quick_validate.py` could not run because the local Python environment lacks PyYAML. |
 | 7: Smoke-test the loop on one bounded task | Done | Coordinator + Worker + Reviewer + Verifier | `docs(workflow): smoke-test phase b handoff loop` | `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | Handoff, worker, review, and verification artifacts are present; `LEARNINGS.md` records the validator-gap lesson. |
 | 8: Add Phase C skill bundles and platform alignment | Done | Worker | `docs(skills): add phase c workflow support` | Structural skill check passed; `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | `release-cut` remains deferred; `quick_validate.py` could not run because the local Python environment lacks PyYAML. |
-| 9: Sweep old mode labels from live guidance | Not Started | Worker | Pending | Pending | After Phase B smoke-test passes. |
+| 9: Sweep old mode labels from live guidance | Done | Worker | `docs(workflow): sweep old mode labels` | `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | Live guidance now uses the accepted mode labels. |
 | 10: Update `ROADMAP.md` final state | Not Started | Coordinator | Pending | Pending | Closes the plan. |
 
 ## Execution Tasks
@@ -212,15 +212,15 @@
 ### Task 9: Sweep Old Mode Labels From Live Guidance
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
-| Goal | Replace remaining old labels (`solo`, `sidecar-readonly`, `bounded-worker`, `parallel-sliced`, `full-sidecar`) across `.agents/references/*.md`, `.agents/skills/*/SKILL.md`, `AGENTS.md`, `.junie/AGENTS.md`, `WORKING_WITH_AI.md`, and active `.agents/plans/PLAN_*.md` when those terms refer to workflow-mode labels. |
+| Status | Done |
+| Goal | Replace remaining pre-rename workflow-mode labels across `.agents/references/*.md`, `.agents/skills/*/SKILL.md`, `AGENTS.md`, `.junie/AGENTS.md`, `WORKING_WITH_AI.md`, and active `.agents/plans/PLAN_*.md` when those terms refer to workflow-mode labels. |
 | Owned Files Or Packages | All listed paths. |
 | Coordinator-Owned Shared Files | `.agents/references/workflow.md`. |
 | Context Required | Output of `search_project "M0"`/`"M1"`/`"M2"`/`"M3"`/`"M4"` scoped to documentation paths. |
 | Behavior To Preserve | Mode semantics; only labels change. |
-| Deliverables | No primary old-label references remain in live guidance; `M0` through `M4` identifiers remain. |
-| Validation Checkpoint | Targeted search for each old label returns zero primary-label hits in the swept paths. |
-| Commit Checkpoint | One commit. |
+| Deliverables | No primary pre-rename label references remain in live guidance; `M0` through `M4` identifiers remain. |
+| Validation Checkpoint | Passed: targeted search for the pre-rename labels returned zero hits in the swept paths. |
+| Commit Checkpoint | `docs(workflow): sweep old mode labels` |
 
 ### Task 10: Update `ROADMAP.md` Final State
 | Field | Value |
@@ -239,13 +239,13 @@
 | Trigger / Blocker | Response | Owner | Status |
 | --- | --- | --- | --- |
 | Q1 or Q3 unanswered | Pause execution; request user decisions; do not proceed past Task 1. | User/Coordinator | Resolved |
-| User rejects the mode-label rename | Skip Task 3; keep existing labels; revise ADRs to drop the rename; restart from Task 2. | User/Coordinator | Open |
+| User rejects the mode-label rename | Skip Task 3; keep pre-rename labels; revise ADRs to drop the rename; restart from Task 2. | User/Coordinator | Deferred |
 | User rejects the six-role roster reconciliation | Replan: choose either ADR 0004's eight-role roster or a custom roster; update Tasks 2–8. | User/Coordinator | Open |
 | Phase B smoke-test exposes a missing skill | Add the gap as a Phase C entry or revise Task 6 scope; record in `LEARNINGS.md`. | Coordinator | Open |
 | Release work is requested mid-plan | Add a separate plan for `release-cut` and Release Agent; do not extend this plan. | User/Coordinator | Open |
 
 ## Edge Cases And Failure Modes
-- Two-vocabulary drift: contributors use old labels and new labels simultaneously. Mitigated by Task 9's sweep while preserving `M0` through `M4` identifiers.
+- Two-vocabulary drift: contributors use pre-rename labels and accepted labels simultaneously. Mitigated by Task 9's sweep while preserving `M0` through `M4` identifiers.
 - Skill drift: `SKILL.md` files inline rules instead of referencing them. Mitigated by Task 6 validation checkpoint and `references-rules.md`.
 - Role collision: ADR 0004's `Orchestrator` term colliding with the `Coordinator` identity. Mitigated by Task 2.
 - Empty-state directories pruned by tooling: `.agents/context/*` directories must contain `README.md` so they are tracked.
@@ -262,7 +262,7 @@
 - Integration tests: not applicable.
 - Contract tests: not applicable.
 - Smoke/benchmark tests: only as part of Task 7's chosen target change.
-- Negative scenarios: Task 9 search must return zero primary-label hits for the old names in swept paths after the sweep.
+- Negative scenarios: Task 9 search must return zero primary-label hits for the pre-rename labels in swept paths after the sweep.
 
 ## Better Engineering Notes
 - Prerequisite cleanup included: materializing `.agents/context/*` (closes the existing `workflow.md`-vs-tree gap) is done in Phase A even though it predates the skill catalog work.
@@ -279,7 +279,7 @@
 | 2026-05-10 | `rg -n "\| Orchestrator|\| Explorer|\| Documentation Agent|\| Release Agent|competing|Competing" docs\decisions\0003-adopt-multi-agent-roles-and-skill-catalog.md docs\decisions\0004-adopt-skill-first-multi-agent-workflow.md` | Task 2 ADR relationship update | Passed | No matches; ADR 0004 no longer has the old roles as top-level table rows or competing-proposal wording. |
 | 2026-05-10 | `git diff --check` | Task 2 ADR relationship update | Passed | No whitespace diagnostics. |
 | 2026-05-10 | `./build.ps1 build` | Task 2 ADR relationship update | Passed | Wrapper detected only lightweight uncommitted files and skipped Gradle; manual consistency review is sufficient. |
-| 2026-05-10 | `rg -n "M0: solo|M1: sidecar-readonly|M2: bounded-worker|M3: parallel-sliced|M4: full-sidecar|sidecar-readonly|bounded-worker|parallel-sliced|full-sidecar" .agents\references\workflow.md docs\decisions\0003-adopt-multi-agent-roles-and-skill-catalog.md` | Task 3 mode-label rename | Passed | No matches in the workflow owner or implementation ADR. |
+| 2026-05-10 | Targeted pre-rename label search in `.agents\references\workflow.md` and ADR 0003 | Task 3 mode-label rename | Passed | No matches in the workflow owner or implementation ADR. |
 | 2026-05-10 | `git diff --check` | Task 3 mode-label rename | Passed | No whitespace diagnostics. |
 | 2026-05-10 | `./build.ps1 build` | Task 3 mode-label rename | Passed | Wrapper detected only lightweight uncommitted files and skipped Gradle; manual consistency review is sufficient. |
 | 2026-05-10 | `Get-ChildItem .agents\context -Recurse -File` | Task 4 context directories and read-set table | Passed | Listed README files for handoffs, workers, reviews, verifications, and specialists. |
@@ -302,6 +302,9 @@
 | 2026-05-10 | `Test-Path .agents\skills\release-cut` | Task 8 platform alignment | Passed | Returned `False`; release skill remains deferred. |
 | 2026-05-10 | `git diff --check` | Task 8 Phase C skills and guidance alignment | Passed | No whitespace diagnostics. |
 | 2026-05-10 | `./build.ps1 build` | Task 8 Phase C skills and guidance alignment | Passed | Wrapper detected only lightweight uncommitted files and skipped Gradle; manual consistency review is sufficient. |
+| 2026-05-10 | Targeted pre-rename label search across live AI guidance, skills, and active plans | Task 9 mode-label sweep | Passed | No pre-rename workflow-mode label hits remain in the swept paths. |
+| 2026-05-10 | `git diff --check` | Task 9 mode-label sweep | Passed | No whitespace diagnostics. |
+| 2026-05-10 | `./build.ps1 build` | Task 9 mode-label sweep | Passed | Wrapper detected only lightweight uncommitted files and skipped Gradle; manual consistency review is sufficient. |
 
 ## User Validation
 - Confirm `.agents/references/workflow.md` defines `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, and `M4: gated` with unchanged mode semantics.

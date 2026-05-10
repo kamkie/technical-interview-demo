@@ -72,7 +72,7 @@
 | D6 | During the current interactive documentation session, builds, tests, linters, formatters, and generated documentation checks remain skipped unless the user explicitly re-enables them; manual review and `git diff --check` may be used for documentation-only checkpoints. | Prior interactive-session constraint and current validation request | 2026-05-10 | If the user asks for normal validation or ends the constrained documentation session. |
 
 ## Execution Shape And Shared Files
-- Recommended shape: `M0: solo`.
+- Recommended shape: `M0: direct`.
 - This work touches shared policy and routing files, so a single coordinator should sequence the edits and keep terminology consistent.
 - Optional read-only sidecar review can be added after drafting the lifecycle and planning guide changes, but no worker should edit the same shared files in parallel.
 - Coordinator-owned shared files:
