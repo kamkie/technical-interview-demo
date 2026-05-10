@@ -40,11 +40,11 @@
 - ADR 0001 and ADR 0002 exist under `docs/decisions/` and are accepted as of 2026-05-10.
 - ADR 0001 proposes optional pre-planning artifacts: ADR, PRD, spec, and plan.
 - ADR 0002 proposes one-word lifecycle phase names and maps them to common SDLC and product-delivery terminology.
-- `.agents/references/application-lifecycle.md` is still the live lifecycle vocabulary owner and currently uses `Discovery`, `Roadmap Intake`, `Testing`, and `Continuous Improvement`.
+- `.agents/references/application-lifecycle.md` is the live lifecycle vocabulary owner and now uses the accepted lifecycle vocabulary from ADR 0002.
 - `.agents/references/planning.md` still says valid plan phase values mirror the current eleven-phase lifecycle model.
 - `WORKING_WITH_AI.md` still has human-facing sections for `Discovery`, `Roadmap Intake`, `Testing And Review`, and `Continuous Improvement`.
-- `ROADMAP.md` now tracks this work as plan-backed planned work and no longer keeps the original ADR/spec-format ideas as loose intake bullets.
-- This plan deliberately uses `Phase | Planning` because the current live planning guide still requires the old phase vocabulary until ADR 0002 is accepted and implemented.
+- `ROADMAP.md` now tracks this work as in-progress plan-backed work and no longer keeps the original ADR/spec-format ideas as loose intake bullets.
+- This plan now uses `Phase | Implementation` because the ADRs are accepted and implementation has started.
 
 ## Requirement Gaps And Open Questions
 | ID | Question / Gap | Why It Matters | Owner | Status | Fallback / Decision | Blocks Ready? |
@@ -105,7 +105,7 @@
 | --- | --- | --- | --- | --- | --- |
 | 1: Accept decisions and unlock implementation | Done | User/Agent | `docs(plan): accept pre-planning lifecycle ADRs` | Manual readiness readback passed | Q1 answered by explicit user instruction; plan moved to execution. |
 | 2: Add artifact templates and routing | Done | Agent | `docs(workflow): add pre-planning artifact templates` | Manual template/routing review and `git diff --check` passed | Templates are short and skip-friendly; documentation routing owns ADR, PRD, and spec locations. |
-| 3: Update lifecycle vocabulary owner | Not Started | Agent | Pending | Pending | Requires accepted ADR 0002. |
+| 3: Update lifecycle vocabulary owner | Done | Agent | `docs(lifecycle): adopt accepted phase vocabulary` | Manual lifecycle reference review and `git diff --check` passed | Lifecycle owner now defines the accepted twelve-phase model and artifact roles. |
 | 4: Align planning guidance and plan template | Not Started | Agent | Pending | Pending | Depends on Task 3 terminology. |
 | 5: Align human-facing guidance, indexes, and roadmap | Not Started | Agent | Pending | Pending | Depends on Tasks 2-4. |
 | 6: Review, validate, and close plan implementation | Not Started | Agent | Pending | Pending | Manual review only unless normal validation is re-enabled. |
@@ -140,15 +140,15 @@
 ### Task 3: Update lifecycle vocabulary owner
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Make `.agents/references/application-lifecycle.md` the accepted owner for the new lifecycle phase and activity vocabulary. |
 | Owned Files Or Packages | `.agents/references/application-lifecycle.md` |
 | Coordinator-Owned Shared Files | `.agents/references/planning.md`, `.agents/references/plan-template.md`, `WORKING_WITH_AI.md`, `ROADMAP.md`, this plan |
 | Context Required | `AGENTS.md`, `.agents/references/execution.md`, this plan, `.agents/references/application-lifecycle.md`, `.agents/references/references-rules.md`, ADR 0002 |
 | Behavior To Preserve | The lifecycle guide remains an owner of vocabulary and routing, not a task-specific progress log or replacement for focused owner guides. |
 | Deliverables | Updated phases, entries/exits, activity catalogue, phase activity sequence, loops, cross-cutting triggers, required artifact roles, current gaps, non-goals, and maintenance wording. |
-| Validation Checkpoint | Manual reference-document review against `.agents/references/references-rules.md`; targeted search confirms live lifecycle tables no longer use old phase names except in mapping or historical context. |
-| Commit Checkpoint | Commit after lifecycle owner update. |
+| Validation Checkpoint | Passed: manual reference-document review against `.agents/references/references-rules.md`; targeted search confirms live lifecycle tables no longer use old phase names except in the migration map. |
+| Commit Checkpoint | `docs(lifecycle): adopt accepted phase vocabulary` |
 
 ### Task 4: Align planning guidance and plan template
 | Field | Value |
@@ -240,6 +240,9 @@
 | 2026-05-10 | Not run | Builds, tests, linters, formatters, and generated documentation checks | Skipped | Normal verification remains skipped for the current interactive documentation session. |
 | 2026-05-10 | Manual template and routing review | ADR, PRD, and spec templates plus `.agents/references/documentation.md` routing | Passed | Templates are concise, include skip guidance, and keep ADRs, PRDs, and standalone specs optional unless they resolve real ambiguity. |
 | 2026-05-10 | `git diff --check` | Documentation-only task 2 diff | Passed | No whitespace errors. |
+| 2026-05-10 | Manual lifecycle reference review | `.agents/references/application-lifecycle.md` against ADR 0002 and `.agents/references/references-rules.md` | Passed | Lifecycle owner now has twelve accepted phases, updated activities, loops, triggers, artifact roles, gaps, non-goals, and maintenance wording. |
+| 2026-05-10 | Targeted lifecycle vocabulary search | `.agents/references/application-lifecycle.md` live phase tables and activity headings | Passed | Previous phase labels appear only in the migration map. |
+| 2026-05-10 | `git diff --check` | Documentation-only task 3 diff | Passed | No whitespace errors. |
 
 ## User Validation
 - After implementation, review the updated lifecycle and pre-planning guidance for terminology fit and workflow overhead.
