@@ -5,7 +5,7 @@
 Use this scope ladder when deciding where a new insight belongs:
 
 - **Repo-wide and durable:** put it in `.agents/references/LEARNINGS.md`.
-- **Current structure or ownership:** put it in `docs/ARCHITECTURE.md`.
+- **Current structure or ownership:** put AI-facing guidance in `.agents/references/architecture.md`.
 - **Product or contract direction:** put it in `docs/DESIGN.md`.
 - **Public behavior or payload shape:** put it in the governing specs, published docs, and approved OpenAPI.
 - **Symbol-local behavior:** put it in code near the symbol.
@@ -65,6 +65,7 @@ Do not accumulate per-incident history, one-off mistakes, or temporary workaroun
 
 ## Operational Lessons
 
+- **Use `rg --hidden` when hidden paths matter.** `rg --files` omits dotfiles and hidden directories by default, so searches that need `.agents/`, `.github/`, or other hidden paths must include `--hidden`.
 - **IntelliJ HTTP Client formatting requires an empty line.** Always include an empty line between the request line (or the last header) and a response handler script block (`> {%`). Without it, the client may fail to parse the script or the request correctly.
 - **Manual Cookie headers in IntelliJ HTTP Client override the cookie jar.** If you manually specify a `Cookie` header (e.g., to pass a session token from an environment variable), the automatic cookie management is bypassed. For requests requiring CSRF protection, you must manually include both the session cookie and the `XSRF-TOKEN` cookie in the `Cookie` header for the request to be valid.
 - **Initialize IntelliJ HTTP variables with file-level defaults.** To avoid "unsubstituted variable" errors when running scripts partially or when preceding handlers fail, use `@varname = default` at the top of the `.http` file for all variables used in `{{varname}}` placeholders.

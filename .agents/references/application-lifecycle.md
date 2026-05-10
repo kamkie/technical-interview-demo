@@ -70,7 +70,7 @@ Activities marked with `?` are conditional.
 
 ### Discovery And Framing
 
-- `Scan`: what artifacts and code already define this area? Owner: `AGENTS.md` loading map, `docs/ARCHITECTURE.md`. Exit: relevant artifacts identified.
+- `Scan`: what artifacts and code already define this area? Owner: `AGENTS.md` loading map, `.agents/references/architecture.md`. Exit: relevant artifacts identified.
 - `Frame`: what is the actual change being requested? Owner: `AGENTS.md`, `.agents/references/planning.md`. Exit: scope and ambiguity surfaced.
 - `Clarify?`: does the user need to resolve a material ambiguity? Owner: `.agents/references/planning.md`. Exit: ambiguity resolved or recorded as an accepted fallback.
 - `Capture?`: does this surface a durable repo lesson? Owner: `.agents/references/LEARNINGS.md`. Exit: learning recorded or declined.
@@ -163,7 +163,7 @@ This table is descriptive; owner guides still own their specific rules.
 
 | Phase | In-order phase activities | Primary owner guides |
 | --- | --- | --- |
-| Discovery | `Scan` -> `Frame` -> `Clarify?` -> `Capture?` | `AGENTS.md`, `docs/ARCHITECTURE.md`, `.agents/references/LEARNINGS.md` |
+| Discovery | `Scan` -> `Frame` -> `Clarify?` -> `Capture?` | `AGENTS.md`, `.agents/references/architecture.md`, `.agents/references/LEARNINGS.md` |
 | Roadmap Intake | `Intake` -> `Refine` -> `Prioritize` -> `Sequence` -> `Sync` | `ROADMAP.md`, `docs/DESIGN.md` |
 | Planning | `Frame` -> `Design` -> `Spec` -> `Decompose` -> `Validate-Plan` -> `Sync` -> `Replan?` | `.agents/references/planning.md`, `docs/DESIGN.md`, `.agents/references/plan-template.md` |
 | Implementation | `Spec` -> `Code` -> `Docs` -> `Run` -> `Replan?` -> `Self-Review` -> `Code Review` -> `Security Review?` -> `Commit` -> `Handoff` | `.agents/references/execution.md`, `.agents/references/documentation.md`, `.agents/references/code-style.md`, `.agents/references/workflow.md` |
@@ -263,7 +263,7 @@ When a role has no complete owner, record the gap in active-work tracking before
 | Engineering Rules | spec-driven rules, lifecycle loading, definition of done | `AGENTS.md` plus this file |
 | Phase Owner Guides | per-phase or activity-group guidance | `.agents/references/*.md` |
 | Learnings | durable engineering lessons | `.agents/references/LEARNINGS.md` |
-| Architecture Snapshot | current codebase map and structural guidance | `docs/ARCHITECTURE.md` |
+| Architecture Snapshot | current codebase map and structural guidance | `.agents/references/architecture.md` |
 
 ## Spec-Driven Rule
 

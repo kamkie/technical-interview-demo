@@ -43,7 +43,7 @@ Use these files when you want to work with AI in this repository or understand w
 - [WORKING_WITH_AI.md](WORKING_WITH_AI.md): human-facing guide for using AI across discovery, planning, implementation, verification, and release
 - [AGENTS.md](AGENTS.md): repository-local AI rules, spec priority, required contract updates, and definition of done
 - [docs/FRONTEND_AI_CONTRACT.md](docs/FRONTEND_AI_CONTRACT.md): generated import-ready backend contract, external skill references, OpenAPI source snapshot, and integration constraints for a separate frontend repository's AI agents
-- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): compact codebase map, package boundaries, feature ownership, and current API shape
+- [.agents/references/architecture.md](.agents/references/architecture.md): AI-facing codebase map, package boundaries, feature ownership, and structural guidance
 - [.agents/references/code-style.md](.agents/references/code-style.md): repo-local code style and change-shaping guidance
 - [docs/DESIGN.md](docs/DESIGN.md): product intent, tradeoffs, and non-goals
 - [.agents/references/application-lifecycle.md](.agents/references/application-lifecycle.md): application lifecycle phase, activity, loop, trigger, and owner-guide mapping

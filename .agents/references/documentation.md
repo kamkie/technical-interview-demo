@@ -36,7 +36,7 @@ Update the artifact that owns the truth being changed:
 - release sequencing and tagging: `.agents/references/releases.md`; detailed release checklist and artifact verification: `.agents/references/release-checklist.md` and `.agents/references/release-artifact-verification.md`
 - standalone repository task prompts and catalog: `.agents/tasks/README.md`; prompt files live under `.agents/tasks/` and must add task-specific instructions that are not thin wrappers around an existing owner guide
 - repo-local reusable workflow wrappers: `.agents/skills/`; Codex plugin marketplace configuration: `.agents/plugins/marketplace.json` when intentionally introducing a repo-scoped plugin
-- compact codebase map, structural guidance, and business feature ownership: `docs/ARCHITECTURE.md`; deeper references: `.agents/references/`
+- AI-facing architecture guidance, structural placement, detailed codebase map, and business feature ownership: `.agents/references/architecture.md`
 - historical AI-analysis reports, evaluations, comparisons, and retired specs: `.agents/archive/`
 - product and contract direction: `docs/DESIGN.md`
 - durable repo-wide lessons: `.agents/references/LEARNINGS.md`
@@ -64,7 +64,7 @@ Rules for maintaining the `.agents/` documents:
 - when a repo-local skill wraps a workflow owned by another guide, update the skill and the owning guide together if that workflow changes
 - archive executed `.agents/plans/PLAN_*.md` files under `.agents/archive/` as part of the release cleanup once that work has been released
 - archive retired AI-guidance reports, evaluations, comparisons, and similar analysis artifacts under `.agents/archive/`
-- treat `docs/ARCHITECTURE.md`, `docs/DESIGN.md`, and `.agents/references/LEARNINGS.md` as descriptive guidance, not executable spec authority
+- treat `docs/DESIGN.md`, `.agents/references/architecture.md`, and `.agents/references/LEARNINGS.md` as descriptive guidance, not executable spec authority
 - when moving or renaming non-reference AI documents, update references in `AGENTS.md` and other `.agents/` files in the same change
 - when adding or moving repository knowledge files, use this guide's artifact ownership rules first and update this guide when no existing owner fits
 

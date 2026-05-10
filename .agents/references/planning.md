@@ -30,7 +30,7 @@ Load only what the request needs:
 - validation selection: `.agents/references/testing.md`
 - delegation, branch, worktree, shared-file, or integration planning: `.agents/references/workflow.md`
 - behavior-sensitive work: the governing specs, contract docs, source files, tests, OpenAPI baseline, or HTTP examples named by the task or discovered by targeted search
-- product, contract, or package framing: `README.md`, `docs/DESIGN.md`, or `docs/ARCHITECTURE.md` only when directly relevant
+- product, contract, or package framing: `README.md`, `docs/DESIGN.md`, or `.agents/references/architecture.md` only when directly relevant
 - referenced tickets, PRs, examples, documents, or web pages before planning from them
 
 Do not bulk-load active plans, archived plans, templates, task prompts, or reference guides as a pre-flight default.

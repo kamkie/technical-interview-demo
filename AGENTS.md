@@ -57,7 +57,7 @@ A loaded guide is terminal unless the current task matches another guide's expli
 Start common tasks with these read sets:
 
 - documentation-only edit with clear ownership: `AGENTS.md`, the target document, and the owning guide; for `.agents/references/*.md`, also read `.agents/references/references-rules.md`; load `.agents/references/documentation.md` only when artifact ownership or cross-file alignment is unclear
-- bounded code, test, build, or workflow edit: `AGENTS.md`, `.agents/references/execution.md`, `.agents/references/code-style.md`, and the governing spec or source files; load documentation, testing, and review guides at their checkpoints instead of during initial context loading
+- bounded code, test, build, or workflow edit: `AGENTS.md`, `.agents/references/execution.md`, `.agents/references/code-style.md`, and the governing spec or source files; load architecture, documentation, testing, and review guides at their checkpoints instead of during initial context loading
 - whole-plan execution: `AGENTS.md`, `.agents/references/plan-execution.md`, the active plan, and only the current milestone's named context
 - release work: `AGENTS.md` and `.agents/references/releases.md`; load detailed release references only when their phase begins
 
@@ -68,6 +68,7 @@ Use `.agents/references/documentation.md` only when a task needs artifact routin
 Use workflow guides on demand:
 
 - planning or roadmap intake: `.agents/references/planning.md`
+- architecture or structural placement: `.agents/references/architecture.md`
 - whole-plan execution: `.agents/references/plan-execution.md`
 - ad hoc implementation or a single milestone: `.agents/references/execution.md`
 - local Gradle wrapper and AI command syntax: `.agents/references/command-wrapper.md`
@@ -81,7 +82,7 @@ Use workflow guides on demand:
 
 Load descriptive or deep references only when the task needs them:
 
-- `docs/ARCHITECTURE.md` for structural code reading, architecture-sensitive changes, or package ownership questions
+- `.agents/references/architecture.md` for structural code reading, architecture-sensitive changes, or package ownership questions
 - `docs/DESIGN.md` for user-visible behavior, supported scope, security posture, or roadmap tradeoffs
 - `.agents/references/LEARNINGS.md` only from a targeted relevance scan, a known recurring repo lesson, or a correction that exposes durable guidance
 - active `.agents/plans/PLAN_*.md` files only when planning, executing, verifying, or releasing that plan
