@@ -6,19 +6,20 @@ It does not own plan creation, whole-plan execution loops, ad hoc task execution
 Use this file only when work needs collaboration mechanics beyond one local agent editing one working tree, or when an approved plan names workflow state, delegation, worktrees, sidecars, integration queues, or remote handoff.
 Use `.agents/references/plan-execution.md` for whole-plan execution, `.agents/references/execution.md` for ad hoc or one-milestone work, `.agents/references/testing.md` for validation scope, `.agents/references/reviews.md` for review expectations, and `.agents/references/releases.md` only after implementation is integrated and release work is in scope.
 
-## Defaults
+## Workflow Defaults
 
 - Choose the most optimal workflow that keeps ownership clear.
 - For work without a created plan, infer the mode from the request, write-scope boundaries, risk, and execution environment.
 - For planned work, use the execution shape chosen during planning; revise the plan before splitting work if that shape is missing, stale, or contradicted by execution reality.
 - Use delegation only when the current user request, inferred no-plan mode or approved plan, and execution environment allow it.
+- Report the selected workflow mode when execution starts and in interim execution updates.
 - Keep current work committed or stashed before creating side branches or worktrees.
 - Use unique worker branches, and never check out the same branch in more than one worktree at a time.
 - Name shared files before workers start, and keep them coordinator-owned unless the plan explicitly assigns them.
 - Finish local validation before push or pull-request handoff unless the user explicitly asks for a remote-first diagnostic flow.
 - Keep release sequencing out of workflow execution.
 
-## Roles And Modes
+## Mode Selection
 
 Exactly one **Coordinator** owns workflow shape, plan routing, shared files, integration order, conflict resolution, final validation, and final reporting.
 Each delegated activity has one accountable **Worker**, **Reviewer**, **Verifier**, or **Specialist**.
@@ -37,7 +38,7 @@ When those inputs are unclear, route the work to planning instead of clamping to
 For planned work, do not re-infer the mode at execution time; use the plan's execution shape and route to `Replan?` if it no longer fits.
 When multiple approved plans are selected for one execution run, strongly prefer `M3: parallel-sliced`; choose a lower mode only when the plans must run serially or cannot be safely split, and choose `M4` only when sidecar gates are part of the planned workflow.
 
-## Splitting Work
+## Work Splits
 
 Split work only when the benefit is concrete and the inferred no-plan mode or approved plan allows delegation, parallelism, or a worktree-backed handoff.
 
@@ -50,7 +51,7 @@ Good boundaries follow package, contract, artifact, or plan ownership, for examp
 
 Do not split work when workers would overlap on the same controller, service, integration test, REST Docs or OpenAPI artifact, roadmap row, changelog row, plan status row, unresolved decision, or indivisible milestone.
 
-## State, Handoffs, And Results
+## Handoffs And State
 
 Use `.agents/context/*` for durable workflow state that must survive context switches, integration, or remote handoff; otherwise short-lived handoffs may stay in conversation.
 Use the narrowest useful state file under:
@@ -73,7 +74,7 @@ Failed validation reports include the failing command, summary, and recommended 
 Completed, blocked, failed, and user-cancelled are terminal states; record blocked, failed, or cancelled work in the relevant state file or plan before reporting final status.
 Workers are still active while implementing, validating, pushing, opening a pull request, or waiting on unrecorded follow-up.
 
-## One-Plan Delegation
+## Single-Plan Delegation
 
 Use one-plan delegation when one approved active plan remains the canonical source of truth and worker-safe slices are disjoint.
 
@@ -97,7 +98,7 @@ Coordinator loop:
 6. Update the canonical plan, roadmap, and changelog when applicable.
 7. Report every worker's terminal state before declaring the run complete.
 
-## Coordinated Multi-Plan Work
+## Multi-Plan Coordination
 
 Use coordinated multi-plan work when separate approved active plans move in parallel and later need one integration pass.
 Use `M3: parallel-sliced` as the preferred baseline unless dependencies or shared artifacts force serial execution, or planned sidecar gates require `M4`.
@@ -124,27 +125,28 @@ Sidecars may inspect active work, but they must not edit worker-owned files unle
 Common gates are `Code Review`, `Verification`, `Security Review?`, `Docs Review?`, and `Release/Operations Gate?`.
 Sidecar output never replaces the coordinator's integration responsibility; the coordinator records the gate outcome in the owning plan or state file.
 
-## Branches And Integration
+## Replan Triggers
+
+Route to `Replan?` when two agents need the same write scope; a worker finds missing, stale, or contradictory specs; user-owned changes exist inside a write scope; validation failure cannot be isolated to one scope; integration needs an unplanned design, security, release, architecture, documentation-ownership, or product decision; an agent edits outside scope; outputs conflict; review or verification findings affect another active scope; gate decisions conflict; a shared file must move from coordinator ownership to a worker; or actual work expands beyond the approved plan, milestone, or user request.
+
+## Branch Integration
 
 - `main` remains the integration target for completed work.
 - Worktree branches are temporary execution branches, not release branches.
 - Release-target and tagging preconditions live in `AGENTS.md` and `.agents/references/releases.md`.
 - Start delegated work from a committed or stashed state so branches or worktrees are comparable and reviewable.
-- Prefer merging accepted branches or pull requests into the integration branch.
-- Use cherry-pick only when the user asks for it, when accepting less than the full branch or pull request, or when a normal merge is not viable; record the reason.
-- Remove temporary worktrees and branches only after their changes are integrated and they are no longer needed for review or remote handoff.
+- Prefer merging accepted local branches or worktrees into the integration branch.
+- Use cherry-pick only when the user asks for it, when accepting less than the full branch, or when a normal merge is not viable; record the reason.
+- Remove temporary worktrees and branches only after their changes are integrated and they are no longer needed for local review.
 
-The coordinator reviews every agent result before integration, integrates one result at a time unless outputs are known independent, validates proportional affected surfaces after integration steps, re-briefs affected agents when integration changes assumptions, routes behavior conflicts to `Replan?`, runs final validation from the integrated repository state, and checks `git status --short` before delegation and after integration.
-If no build or test command ran, report the narrow checks that actually ran and why broader validation was skipped.
-Do not give a final success summary while any worker or sidecar is still active.
-
-## Replan Triggers
-
-Route to `Replan?` when two agents need the same write scope; a worker finds missing, stale, or contradictory specs; user-owned changes exist inside a write scope; validation failure cannot be isolated to one scope; integration needs an unplanned design, security, release, architecture, documentation-ownership, or product decision; an agent edits outside scope; outputs conflict; review or verification findings affect another active scope; gate decisions conflict; a shared file must move from coordinator ownership to a worker; or actual work expands beyond the approved plan, milestone, or user request.
+The coordinator reviews every agent result before local integration, integrates one result at a time unless outputs are known independent, validates proportional affected surfaces after integration steps, re-briefs affected agents when integration changes assumptions, routes behavior conflicts to `Replan?`, runs final validation from the integrated repository state, and checks `git status --short` before delegation and after integration.
+If no build or test command ran, record the narrow checks that actually ran and why broader validation was skipped for the later handoff report.
 
 ## Remote Handoff
 
-Before pushing, opening a pull request, or handing work to a remote reviewer, confirm the integrated local state is intended, record skipped/failed/blocked/cancelled slices, record validation evidence and gaps, include workflow state paths when relevant, and avoid release sequencing unless requested.
+Use remote handoff only after local integration has produced the intended handoff state.
+Before pushing, opening a pull request, or handing work to a remote reviewer, confirm the integrated local state, record skipped/failed/blocked/cancelled slices, include validation evidence and gaps, include workflow state paths when relevant, and avoid release sequencing unless requested.
 
 For delegated or integrated work, report the workflow mode, owned plan or slice, changed files, validation run, commit SHA or checkpoint, blockers, and final status or ready-for-integration status.
-Interim progress updates must say they are interim.
+Interim progress updates must say they are interim and include the current workflow mode.
+Do not give a final success summary while any worker or sidecar is still active.
