@@ -24,7 +24,7 @@ Update the artifact that owns the truth being changed:
 - human-facing documentation index: `docs/README.md`
 - human-facing application lifecycle and artifact-routing summary derived from AI owner guides and roadmap rules: `docs/DEVELOPMENT_LIFECYCLE.md`
 - human-facing guide for developers using AI through the application lifecycle: `docs/WORKING_WITH_AI.md`
-- human-facing local development commands, CI reproduction, and local troubleshooting: `docs/LOCAL_DEVELOPMENT.md`
+- human-facing local development commands, wrapper behavior, app run workflow, CI reproduction, local validation, local troubleshooting, and local contract, security, and benchmark workflows: `docs/LOCAL_DEVELOPMENT.md`
 - human-facing deployment and runtime operations runbooks: `docs/OPERATIONS.md`
 - application development lifecycle phase model, activity vocabulary, loops, triggers, and owner-guide mapping: `.agents/references/application-lifecycle.md`
 - AI repository rules, spec priority, required spec-update policy, working AI context, Documents Map, completion rules, and integration/release invariants: `AGENTS.md`
@@ -32,12 +32,11 @@ Update the artifact that owns the truth being changed:
 - rules for creating, editing, compacting, moving, and retiring `.agents/references/*.md`: `.agents/references/references-rules.md`
 - AI local command wrapper shortcut: `.agents/references/command-wrapper.md`
 - local environment setup, dev-container setup, local shell prerequisites, `.env`, IDE baseline, local PostgreSQL environment, and optional Git commit-template setup: `SETUP.md`
-- local development commands, wrapper behavior for humans, local app run workflow, local validation loops, CI reproduction, documentation health workflow, local contract/security/benchmark workflows, and local troubleshooting: `docs/LOCAL_DEVELOPMENT.md`
 - contributor workflow and maintainer expectations: `CONTRIBUTING.md`
 - user-facing documentation health checks, local link checks, stable-version agreement checks, and generated-contract summary drift checks: `scripts/docs/audit-docs.ps1`
 - active planned work: `ROADMAP.md`
 - released history: `CHANGELOG.md`
-- commit message template and AI commit rules: `.gitmessage`
+- commit message template and AI commit workflow: `.gitmessage` for format; `.agents/references/execution.md` for commit rules in AI task execution
 - planning process, plan-file rules, fill guidance, and readiness review shape: `.agents/references/planning.md`; canonical plan skeleton: `.agents/plans/PLAN_TEMPLATE.md`
 - whole active-plan execution across plan tasks: `.agents/references/plan-execution.md`
 - ad hoc task and single-plan-task execution: `.agents/references/execution.md`

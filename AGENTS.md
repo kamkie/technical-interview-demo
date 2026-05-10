@@ -64,8 +64,8 @@ Add only guides whose domains match the current task.
 - validation scope and commands: `.agents/references/testing.md`
 - diagnosis after validation failure: `.agents/references/troubleshooting.md`
 - review or security review: `.agents/references/reviews.md`
-- branch, worktree, delegation, multi-agent state, sidecar, integration, or remote handoff: `.agents/references/workflow.md`
-- workflow mode labels, multi-agent role roster, per-role read sets, or skill chain selection: `.agents/references/workflow.md`; load `.agents/skills/<skill-name>/SKILL.md` only when a skill is invoked or clearly applies; see `.agents/skills/README.md` for the skill catalog and the standard `M0`–`M4` skill chain
+- branch, worktree, delegation, workflow modes, multi-agent roles, role read sets, sidecars, integration, or remote handoff: `.agents/references/workflow.md`
+- repo-local skill catalog and standard skill chain: `.agents/skills/README.md`; load `.agents/skills/<skill-name>/SKILL.md` only when a skill is invoked or clearly applies
 - release sequencing: `.agents/references/releases.md`
 - deployment, post-release verification, rollback, incident response, hotfix, patch, backport, or deprecation routing: `.agents/references/operations.md`
 - commit message format, required AI trailer block, and non-interactive commit construction: `.gitmessage` (authoritative template) plus `.agents/references/execution.md` "Commits" rules
@@ -96,7 +96,7 @@ Use these completion rules for AI work in this repository:
 - Treat edits to `.agents/references/*.md` as incomplete until the edited reference documents satisfy `.agents/references/references-rules.md`; keep `references-rules.md` itself as the current rule set that other reference files are measured against, never as a changelog or record of completed edits.
 - Learn from agent mistakes, user corrections, failed assumptions, and avoidable rework; when the correction may reveal durable guidance, use `.agents/references/learning-rules.md` to route it, then update the focused owner guide or `docs/LEARNINGS.md` as appropriate.
 - Keep durable status in the owning artifacts; do not rely on final-response memory for plan progress, validation evidence, blockers, roadmap state, or release history.
-- Commit every completed task or plan task that changed tracked files with the required AI commit-message format before handoff or unrelated work starts. The format is owned by `.gitmessage` and the "Commits" rules in `.agents/references/execution.md`; load both before composing a commit, include every applicable `Project-*` footer plus `Co-authored-by` and `Validation`, keep the trailer block contiguous, and build the message via a commit message file or a single final paragraph rather than chained `-m` arguments. During an explicitly ongoing interactive session, uncommitted work remains in progress until the user asks for handoff.
+- Commit every completed task or plan task that changed tracked files before handoff or unrelated work starts; follow `.gitmessage` and the commit rules in `.agents/references/execution.md`. During an explicitly ongoing interactive session, uncommitted work remains in progress until the user asks for handoff.
 - Leave release work undone unless explicitly requested.
 
 ## Integration And Release Invariants

@@ -119,18 +119,9 @@ For release or operations:
 
 ## Workflow Modes
 
-Most work should use `M0: direct`: one agent, one working tree, clear task scope.
-
 When you want delegation, sub-agents, worktrees, sidecars, or later integration of worker output, ask for that explicitly.
-The AI workflow guide [workflow.md](../.agents/references/workflow.md) owns the details.
-
-The current mode vocabulary is:
-
-- `M0: direct`: one agent handles the work directly
-- `M1: assisted`: read-only review, verification, or specialist help
-- `M2: delegated`: one Worker owns one bounded write scope
-- `M3: parallel`: multiple disjoint Worker scopes move in parallel
-- `M4: gated`: independent review, verification, security, docs, release, or specialist gates are required
+Most work stays direct: one agent, one working tree, clear task scope.
+The AI workflow guide [workflow.md](../.agents/references/workflow.md) owns the `M0` through `M4` mode vocabulary and delegation details.
 
 ## Developer Habits
 
