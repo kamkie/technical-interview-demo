@@ -70,7 +70,7 @@ Use workflow guides on demand:
 - planning or roadmap intake: `.agents/references/planning.md`
 - whole-plan execution: `.agents/references/plan-execution.md`
 - ad hoc implementation or a single milestone: `.agents/references/execution.md`
-- local Gradle wrapper and AI command syntax: `.agents/references/environment-quick-ref.md`
+- local Gradle wrapper and AI command syntax: `.agents/references/command-wrapper.md`
 - validation: `.agents/references/testing.md`, and `.agents/references/troubleshooting.md` only after a validation failure
 - review: `.agents/references/reviews.md`
 - branch, worktree, delegation, integration, or remote handoff: `.agents/references/workflow.md`

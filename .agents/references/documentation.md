@@ -23,7 +23,7 @@ Update the artifact that owns the truth being changed:
 - AI repository rules, project-specific engineering constraints, authoritative spec locations, required spec-update policy, quality gates, release rules, and owner-guide entry points: `AGENTS.md`
 - repository knowledge layout and artifact ownership: this guide, especially `## Artifact Ownership` and `### AI Document Maintenance`
 - rules for creating, editing, compacting, moving, and retiring `.agents/references/*.md`: `.agents/references/references-rules.md`
-- AI local command wrapper shortcut: `.agents/references/environment-quick-ref.md`
+- AI local command wrapper shortcut: `.agents/references/command-wrapper.md`
 - local setup, tools, IDE walkthroughs, Docker onboarding, troubleshooting, and environment runbooks: `SETUP.md`
 - contributor workflow and maintainer expectations: `CONTRIBUTING.md`
 - active planned work: `ROADMAP.md`
@@ -97,7 +97,7 @@ Update all affected artifacts in the same change:
 ### Setup or environment change
 
 - update `SETUP.md` for human setup, tool, and troubleshooting changes
-- update `.agents/references/environment-quick-ref.md` when AI-facing command-wrapper guidance changes
+- update `.agents/references/command-wrapper.md` when AI-facing command-wrapper guidance changes
 - only touch `README.md` or `AGENTS.md` when the high-level contract or rules changed, not for walkthrough duplication
 
 ### Roadmap change
@@ -124,7 +124,7 @@ Update all affected artifacts in the same change:
 - workflow or AI-guidance change: update the owning AI guide first; follow `.agents/references/references-rules.md` for reference-document edits; touch `AGENTS.md` only when the AI-document set or maintenance rules changed
 - separate frontend AI contract source change: update `docs/FRONTEND_AI_CONTRACT.md`, keep it subordinate to executable specs, REST Docs, OpenAPI, and `README.md`, and update `README.md`, `WORKING_WITH_AI.md`, `AGENTS.md`, and this guide when its discoverability or ownership changes
 - repo-local skill change: update the skill plus the owning AI guide when the skill wraps a workflow whose rules changed
-- local command-wrapper guidance for AI agents: update `.agents/references/environment-quick-ref.md`, and update `SETUP.md` only when human setup or troubleshooting behavior changed
+- local command-wrapper guidance for AI agents: update `.agents/references/command-wrapper.md`, and update `SETUP.md` only when human setup or troubleshooting behavior changed
 - setup or tooling change: update `SETUP.md`, not `README.md`, `AGENTS.md`, or workflow guides unless their inventories or high-level rules changed
 - plan creation or material plan revision: update the concrete `.agents/plans/PLAN_*.md` file and `ROADMAP.md` together so active work points to the plan path and current status
 - roadmap reprioritization: update `ROADMAP.md`, and keep `## Current Project State` aligned when the active release phase, breaking-change policy, or next target version changes

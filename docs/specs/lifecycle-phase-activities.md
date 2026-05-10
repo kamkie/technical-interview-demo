@@ -60,7 +60,7 @@ Each activity lists its question, primary owner guide, and typical exit conditio
 
 - `Plan-Tests` — choose the smallest sufficient validation for this change type. owner: `.agents/references/testing.md`.
 - `Author-Tests` — write or update the executable spec or reproduction. owner: existing test packages.
-- `Run` — execute the chosen validation. owner: `.agents/references/testing.md`, `.agents/references/environment-quick-ref.md`.
+- `Run` — execute the chosen validation. owner: `.agents/references/testing.md`, `.agents/references/command-wrapper.md`.
 - `Diagnose?` — interpret a failure before changing anything. owner: `.agents/references/troubleshooting.md`.
 - `Fix?` — apply the smallest correction to the implementation, test, or spec. owner: `.agents/references/execution.md`.
 - `Re-run` — confirm the previously failing validation now passes. owner: `.agents/references/testing.md`.

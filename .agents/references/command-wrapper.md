@@ -1,6 +1,6 @@
-# AI Environment Quick Reference
+# Command Wrapper Reference
 
-`.agents/references/environment-quick-ref.md` owns the AI-facing shortcut for running local Gradle commands.
+`.agents/references/command-wrapper.md` owns the AI-facing shortcut for running local Gradle commands.
 Use `SETUP.md` for human setup, prerequisites, and troubleshooting detail.
 Use `.agents/references/testing.md` to decide which validation is required.
 Use `.agents/references/gradle-task-graph.md` when choosing between overlapping Gradle tasks.

@@ -24,7 +24,7 @@ When a validation command fails, load `.agents/references/troubleshooting.md` on
 - technical integration tests when the change touches security, caching, metrics, tracing, or other cross-cutting behavior
 - manual consistency review only when the work is documentation-only
 
-Use `.agents/references/environment-quick-ref.md` for the local Gradle wrapper syntax.
+Use `.agents/references/command-wrapper.md` for the local Gradle wrapper syntax.
 Use `.agents/references/gradle-task-graph.md` when command choice depends on Gradle task overlap or prerequisites.
 
 ## Implementation Loop
@@ -70,7 +70,7 @@ Do not use a lightweight-only shortcut as proof for non-lightweight code, contra
 Use `./build.ps1 -FullBuild build` when the validation target is broader than the current uncommitted diff.
 
 Record the wrapper result exactly.
-Use `.agents/references/environment-quick-ref.md` for wrapper behavior, including the lightweight-only shortcut and `-FullBuild`.
+Use `.agents/references/command-wrapper.md` for wrapper behavior, including the lightweight-only shortcut and `-FullBuild`.
 
 ## Additional Rules
 
