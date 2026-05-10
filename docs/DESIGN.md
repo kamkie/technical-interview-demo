@@ -72,10 +72,10 @@ Avoid overloaded endpoints, inconsistent status handling, or letting persistence
 
 Current release-phase intent is explicit:
 
-- the repository is still in the prerelease phase, now on the `v2.0.0-RC*` line rather than the earlier `v2.0.0-M*` milestone line
-- `v2.0.0-RC1` is the contract-freeze milestone that has already been cut from `main`
-- while preparing stable `v2.0.0`, treat breaking published behavior as out of bounds and prefer alignment or bug-fix work over further contract reshaping
-- once `v2.0.0` is released, treat the `2.x` line as stable and do not introduce routine breaking changes without a deliberate next-major-version decision
+- the repository is on the stable `2.x` line after `v2.0.1`
+- breaking published behavior is out of bounds on the stable `2.x` line unless a deliberate next-major-version decision changes that policy
+- prefer alignment, maintenance, and bug-fix work over further contract reshaping
+- release work starts only after intended implementation is integrated on `main` and the release preconditions are met
 
 ## Security And Deployment Direction
 

@@ -12,7 +12,7 @@ Released history belongs in `CHANGELOG.md`.
 | Breaking Change Policy | Disallowed on the stable `2.x` line unless a later major-version plan explicitly changes it |
 | Next Target Version | Not selected; default to `v2.0.2` for maintenance fixes or `v2.1.0` for backward-compatible feature work |
 | Latest Stable Release | `v2.0.1` released on 2026-05-09 from the code review issue fixes plan archived in `.agents/archive/PLAN_code_review_issue_fixes.md` |
-| Immediate Next Action | Review implemented `.agents/plans/PLAN_pre_planning_lifecycle_artifacts.md`; release work remains unrequested. |
+| Immediate Next Action | Review integrated post-`v2.0.1` workstreams; release work remains unrequested. |
 
 ## Roadmap Rules
 

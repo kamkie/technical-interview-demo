@@ -52,17 +52,17 @@ Use these files when you want to work with AI in this repository or understand w
 - [docs/decisions/ADR_TEMPLATE.md](docs/decisions/ADR_TEMPLATE.md), [docs/requirements/PRD_TEMPLATE.md](docs/requirements/PRD_TEMPLATE.md), and [docs/specs/SPEC_TEMPLATE.md](docs/specs/SPEC_TEMPLATE.md): optional pre-planning artifact templates
 - [.agents/references/application-lifecycle.md](.agents/references/application-lifecycle.md): application lifecycle phase, activity, loop, trigger, and owner-guide mapping
 - [.agents/references/documentation.md](.agents/references/documentation.md): documentation ownership and when to update which docs
-- [.agents/references/environment-quick-ref.md](.agents/references/environment-quick-ref.md): AI shortcut for local Gradle wrapper commands
+- [.agents/references/command-wrapper.md](.agents/references/command-wrapper.md): AI shortcut for local Gradle wrapper commands
 - [.agents/references/plan-execution.md](.agents/references/plan-execution.md): how AI should execute a whole active plan across plan tasks
 - [.agents/references/execution.md](.agents/references/execution.md): how AI should execute ad hoc tasks or one plan task
 - [.agents/references/LEARNINGS.md](.agents/references/LEARNINGS.md): durable engineering lessons worth carrying through refactors
 - [.agents/references/planning.md](.agents/references/planning.md): compact guide for creating or revising execution plans
-- [.agents/tasks/README.md](.agents/tasks/README.md): reusable task starters with task titles, placeholders, and task text
+- [.agents/tasks/README.md](.agents/tasks/README.md): reusable task prompts with task titles, placeholders, and task text
 - `.agents/skills/`: repo-local skills
 - [.agents/references/reviews.md](.agents/references/reviews.md): code-review and security-review guidance
 - [.agents/references/releases.md](.agents/references/releases.md): release-preparation and release workflow guidance
 - [.agents/references/testing.md](.agents/references/testing.md): validation rules and change-sensitive checks
-- [.agents/references/workflow.md](.agents/references/workflow.md): branch, worktree, delegation, worker-log, integration, and remote-handoff mechanics
+- [.agents/references/workflow.md](.agents/references/workflow.md): branch, worktree, delegation, workflow state, integration, and remote-handoff mechanics
 - `.agents/plans/PLAN_*.md`: task-specific execution plans for active work
 - `.agents/references/`: on-demand detailed references and reusable plan template
 - `.agents/reports/`: generated AI analysis reports only when a task intentionally creates a tracked report

@@ -37,7 +37,7 @@ Use this guide as a navigation aid, not as a second copy of the AI runbooks.
 | ADRs for durable decisions | `docs/decisions/` and `docs/decisions/ADR_TEMPLATE.md` |
 | PRDs for broad product intent | `docs/requirements/` and `docs/requirements/PRD_TEMPLATE.md` |
 | Standalone behavior specs | `docs/specs/` and `docs/specs/SPEC_TEMPLATE.md` |
-| Reusable task starters | `.agents/tasks/README.md` and `.agents/tasks/` |
+| Reusable task prompts | `.agents/tasks/README.md` and `.agents/tasks/` |
 | Creating or revising execution plans | `.agents/references/planning.md` |
 | Executing a whole approved plan | `.agents/references/plan-execution.md` |
 | Implementing an ad hoc task or one plan task | `.agents/references/execution.md` |

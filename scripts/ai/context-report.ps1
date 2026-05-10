@@ -53,9 +53,11 @@ $scenarioLabels = @{
 }
 
 $standingOwnerGuides = @{
+    ".agents/references/application-lifecycle.md" = $true
+    ".agents/references/architecture.md" = $true
     ".agents/references/code-style.md" = $true
+    ".agents/references/command-wrapper.md" = $true
     ".agents/references/documentation.md" = $true
-    ".agents/references/environment-quick-ref.md" = $true
     ".agents/references/plan-execution.md" = $true
     ".agents/references/execution.md" = $true
     ".agents/references/LEARNINGS.md" = $true
@@ -421,9 +423,9 @@ function Get-BucketName
         return "archived report artifacts"
     }
 
-    if ($Path.StartsWith(".agents/skills/repo-task/references/tasks/"))
+    if ($Path.StartsWith(".agents/tasks/") -or $Path.StartsWith(".agents/skills/repo-task/references/tasks/"))
     {
-        return "on-demand tasks"
+        return "on-demand task prompts"
     }
 
     if ($Path.StartsWith(".agents/references/"))
@@ -840,7 +842,7 @@ function Build-Report
     $growthTokens = $totalDeltaTokens / $commitSteps
 
     $activePlan = if ($newest.BucketMetrics.ContainsKey("active plan files")) { $newest.BucketMetrics["active plan files"] } else { New-Metrics }
-    $onDemandTask = if ($newest.BucketMetrics.ContainsKey("on-demand tasks")) { $newest.BucketMetrics["on-demand tasks"] } else { New-Metrics }
+    $onDemandTask = if ($newest.BucketMetrics.ContainsKey("on-demand task prompts")) { $newest.BucketMetrics["on-demand task prompts"] } else { New-Metrics }
     $bloatChars = $activePlan.Chars + $onDemandTask.Chars
     $defaultChars = $newest.ScenarioMetrics.default.Chars
     $bloatFactor = if ($defaultChars -eq 0) { 0.0 } else { ($bloatChars / $defaultChars) * 100.0 }
@@ -1000,7 +1002,7 @@ function Build-Report
     $lines.Add("")
     $lines.Add("### Bloat Factor")
     $lines.Add("")
-    $lines.Add(([string]::Format($invariantCulture, "- Active plans plus on-demand tasks add {0:N0} chars over a {1:N0}-char default load, or {2:N1}% of default-load size.", $bloatChars, $defaultChars, $bloatFactor)))
+    $lines.Add(([string]::Format($invariantCulture, "- Active plans plus on-demand task prompts add {0:N0} chars over a {1:N0}-char default load, or {2:N1}% of default-load size.", $bloatChars, $defaultChars, $bloatFactor)))
     $lines.Add("")
     $lines.Add("## Interpretation")
     $lines.Add("")
@@ -1031,14 +1033,14 @@ function Build-Report
         $lines.Add(([string]::Format($invariantCulture, "- Largest total inventory increase in this range ($comparisonLabel): ``$($largestIncrease.Previous.Meta.Short)`` -> ``$($largestIncrease.Current.Meta.Short)`` ({0:+#,##0;-#,##0;0} chars).", $largestIncrease.TotalCharsDelta)))
         $lines.Add(([string]::Format($invariantCulture, "- Largest total inventory reduction in this range ($comparisonLabel): ``$($largestReduction.Previous.Meta.Short)`` -> ``$($largestReduction.Current.Meta.Short)`` ({0:+#,##0;-#,##0;0} chars).", $largestReduction.TotalCharsDelta)))
     }
-    $lines.Add("- The repo is moving toward better on-demand loading when default context stays stable while details move into task starters, plans, reports, or on-demand references.")
-    $lines.Add("- Caveats: token counts are approximate, task-load behavior is inferred from the owner map and exact starter text, and archived material is counted in total inventory but not in default or generic task loads.")
+    $lines.Add("- The repo is moving toward better on-demand loading when default context stays stable while details move into task prompts, plans, reports, or on-demand references.")
+    $lines.Add("- Caveats: token counts are approximate, task-load behavior is inferred from the owner map and exact prompt text, and archived material is counted in total inventory but not in default or generic task loads.")
     $lines.Add("")
     $lines.Add("## Recommendations")
     $lines.Add("")
     $lines.Add("- Keep ``AGENTS.md`` stable unless a rule genuinely needs default-load visibility; route detailed workflow rules to ``.agents/references/`` and task bodies.")
     $lines.Add("- Review active plans for archival once released, since ``.agents/plans/`` is a large contributor to implementation task load when a request names active plans generically.")
-    $lines.Add("- Keep repo-task task files compact and self-contained; they can grow unnoticed because they do not affect default load.")
+    $lines.Add("- Keep ``.agents/tasks/`` task prompts compact and self-contained; they can grow unnoticed because they do not affect default load.")
     $lines.Add("- Use stepwise mode when trying to identify the exact commit that introduced context growth; use endpoint mode for routine range summaries.")
     $lines.Add("- Consider adding warning thresholds for default load and total ``.agents/`` inventory when this report becomes part of regular maintenance.")
     $lines.Add("")
@@ -1104,9 +1106,7 @@ function Build-Report
         ".agents/reports/",
         ".agents/references/",
         ".agents/skills/",
-        ".agents/skills/repo-task/",
-        ".agents/skills/repo-task/references/",
-        ".agents/skills/repo-task/references/tasks/"
+        ".agents/tasks/"
     )
     foreach ($directory in $preferredDirectoryRows)
     {

@@ -15,6 +15,7 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 ### Changed
 
 - Aligned AI and human-facing lifecycle guidance around Conceptualization, Analysis, Triage, Planning, Implementation, Verification, Review, Integration, Release, Deployment, Operations, and Maintenance.
+- Aligned AI guidance indexes, context-report buckets, and design release-phase wording with the stable post-`v2.0.1` repository structure.
 - Removed live documentation cross-references to the `1.x` to `2.0` upgrade guide from setup and generated REST Docs source pages.
 
 ## [v2.0.1] - 2026-05-09
