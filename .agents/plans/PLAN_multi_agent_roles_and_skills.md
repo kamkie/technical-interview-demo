@@ -3,16 +3,16 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Planning |
-| Status | Needs Input |
+| Phase | Implementation |
+| Status | In Progress |
 
 ## Planning Readiness
 | Field | Value |
 | --- | --- |
-| Decision Complete | No |
-| Blocking Open Questions | Q1, Q3 |
-| Accepted Fallbacks | None |
-| Ready For Execution | No |
+| Decision Complete | Yes |
+| Blocking Open Questions | None |
+| Accepted Fallbacks | Q1: six-role roster; Q3: keep ADR 0004 and ADR 0003 as separate accepted decisions |
+| Ready For Execution | Yes |
 | Last Updated | 2026-05-10 |
 
 ## Linked Pre-Planning Artifacts
@@ -56,9 +56,9 @@
 ## Requirement Gaps And Open Questions
 | ID | Question / Gap | Why It Matters | Owner | Status | Fallback / Decision | Blocks Ready? |
 | --- | --- | --- | --- | --- | --- | --- |
-| Q1 | Confirm role roster: keep ADR 0003's six identities and fold ADR 0004's extras under Specialist? | Determines vocabulary in `workflow.md`, both ADRs, skills, and `.junie/AGENTS.md`. | User | Open | Adopt the six-role roster; `Explorer`/`Documentation Agent`/`Release Agent` become Specialist variants. | Yes |
+| Q1 | Confirm role roster: keep ADR 0003's six identities and fold ADR 0004's extras under Specialist? | Determines vocabulary in `workflow.md`, both ADRs, skills, and `.junie/AGENTS.md`. | User | Answered | Adopt the six-role roster; `Explorer`/`Documentation Agent`/`Release Agent` become Specialist variants. | No |
 | Q2 | Confirm mode labels: `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, `M4: gated`? | All downstream renames depend on the chosen labels. | User | Answered | Use the listed labels; keep `M0` through `M4` as stable identifiers. | No |
-| Q3 | Should ADR 0004 remain a separate principle ADR or be merged into 0003? | Decides whether we ship two ADRs or consolidate. | User | Open | Keep both; 0004 = principle, 0003 = implementation, with `Refines`/`Implemented by` cross-links. | Yes |
+| Q3 | Should ADR 0004 remain a separate principle ADR or be merged into 0003? | Decides whether we ship two ADRs or consolidate. | User | Answered | Keep both; 0004 = principle, 0003 = implementation, with `Refines`/`Implemented by` cross-links. | No |
 
 ## Decision Log And Assumptions
 | ID | Decision / Assumption | Source | Date | Revisit Trigger |
@@ -68,6 +68,8 @@
 | D3 | `release-cut` and the Release Agent identity are deferred until release work is explicitly requested. | Definition Of Done in repository AI guidelines. | 2026-05-10 | When release work is requested. |
 | D4 | Phase B skill set (`select-mode-and-skills`, `handoff-pack`, `repo-task-execute`, `run-validation`, `diff-review`) covers the orchestrator → worker → reviewer → verifier loop end-to-end. | ADR 0003 starter catalog, prioritized. | 2026-05-10 | If smoke-test reveals an unmet gap. |
 | D5 | Use `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, and `M4: gated`; do not use `M4: agentic`. | User discussion on 2026-05-10. | 2026-05-10 | If the user chooses a different label set before execution. |
+| D6 | Adopt ADR 0003's six-role roster as the implementation vocabulary: Coordinator, Planner, Worker, Reviewer, Verifier, and Specialist. | User instruction to accept ADRs and implement if no blockers. | 2026-05-10 | If a later ADR revises the role roster. |
+| D7 | Keep both ADRs: ADR 0004 is the principle decision and ADR 0003 is the implementation decision. | User instruction to accept ADRs and implement if no blockers. | 2026-05-10 | If either ADR is superseded. |
 
 ## Execution Shape And Shared Files
 - Recommended shape: `M0: solo` under the current vocabulary for planning edits; target label after implementation is `M0: direct`.
@@ -90,7 +92,7 @@
 ## Progress Tracker
 | Task | Status | Owner | Commit | Validation | Notes |
 | --- | --- | --- | --- | --- | --- |
-| 1: Resolve Q1–Q3 with user | Not Started | Coordinator | Pending | Pending | Blocks all execution. |
+| 1: Resolve Q1–Q3 with user | Done | Coordinator | `docs(plan): unblock multi-agent roles plan` | `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | User accepted both ADRs and authorized implementation if no blockers. |
 | 2: Reconcile ADR 0004 roster + ADR cross-links | Not Started | Worker | Pending | Pending | Phase 0. |
 | 3: Rename mode labels in `workflow.md` and update both ADRs | Not Started | Worker | Pending | Pending | Phase A.1. |
 | 4: Materialize `.agents/context/*` and add per-role read-set table | Not Started | Worker | Pending | Pending | Phase A.2. |
@@ -106,15 +108,15 @@
 ### Task 1: Resolve Q1–Q3 With User
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Capture explicit user decisions on roster and ADR consolidation; record in Decision Log. |
 | Owned Files Or Packages | This plan only. |
 | Coordinator-Owned Shared Files | This plan. |
 | Context Required | This plan, ADR 0003, ADR 0004, `.agents/references/workflow.md`. |
 | Behavior To Preserve | None. |
-| Deliverables | Decision Log entries covering Q1 and Q3; Planning Readiness flipped to `Decision Complete: Yes`, `Ready For Execution: Yes`. |
-| Validation Checkpoint | User confirmation in chat or commit message. |
-| Commit Checkpoint | One commit updating this plan. |
+| Deliverables | Decision Log entries D6 and D7 covering Q1 and Q3; Planning Readiness flipped to `Decision Complete: Yes`, `Ready For Execution: Yes`. |
+| Validation Checkpoint | Passed: user accepted both ADRs and authorized implementation if no blockers; `git diff --check` and `./build.ps1 build` passed for the documentation-only diff. |
+| Commit Checkpoint | `docs(plan): unblock multi-agent roles plan` |
 
 ### Task 2: Reconcile ADR 0004 Roster And Cross-Links
 | Field | Value |
@@ -236,7 +238,7 @@
 ## Blockers And Replan Triggers
 | Trigger / Blocker | Response | Owner | Status |
 | --- | --- | --- | --- |
-| Q1 or Q3 unanswered | Pause execution; request user decisions; do not proceed past Task 1. | User/Coordinator | Open |
+| Q1 or Q3 unanswered | Pause execution; request user decisions; do not proceed past Task 1. | User/Coordinator | Resolved |
 | User rejects the mode-label rename | Skip Task 3; keep existing labels; revise ADRs to drop the rename; restart from Task 2. | User/Coordinator | Open |
 | User rejects the six-role roster reconciliation | Replan: choose either ADR 0004's eight-role roster or a custom roster; update Tasks 2–8. | User/Coordinator | Open |
 | Phase B smoke-test exposes a missing skill | Add the gap as a Phase C entry or revise Task 6 scope; record in `LEARNINGS.md`. | Coordinator | Open |
@@ -272,6 +274,8 @@
 | --- | --- | --- | --- | --- |
 | 2026-05-10 | `git diff --check` | ADR 0004, plan, and roadmap documentation diff | Passed | No whitespace diagnostics. |
 | 2026-05-10 | `./build.ps1 build` | Documentation-only wrapper validation | Passed | Wrapper detected only lightweight uncommitted files and skipped Gradle; manual consistency review is sufficient. |
+| 2026-05-10 | `git diff --check` | Task 1 plan-readiness update | Passed | No whitespace diagnostics. |
+| 2026-05-10 | `./build.ps1 build` | Task 1 plan-readiness update | Passed | Wrapper detected only lightweight uncommitted files and skipped Gradle; manual consistency review is sufficient. |
 
 ## User Validation
 - Confirm `.agents/references/workflow.md` defines `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, and `M4: gated` with unchanged mode semantics.
