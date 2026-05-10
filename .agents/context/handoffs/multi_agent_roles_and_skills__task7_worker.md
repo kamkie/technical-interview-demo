@@ -6,7 +6,7 @@ Smoke-test the Phase B workflow loop on one bounded documentation change.
 
 ## Source
 
-- Plan: `.agents/plans/PLAN_multi_agent_roles_and_skills.md`
+- Plan: `.agents/archive/PLAN_multi_agent_roles_and_skills.md`
 - Plan task: `7: Smoke-test the loop on one bounded task`
 - Mode: `M4: gated` for smoke-test coverage of Worker, Reviewer, and Verifier artifacts.
 
@@ -20,7 +20,7 @@ Worker.
 - `.agents/references/execution.md`
 - `.agents/references/workflow.md`
 - `.agents/references/LEARNINGS.md`
-- `.agents/plans/PLAN_multi_agent_roles_and_skills.md`
+- `.agents/archive/PLAN_multi_agent_roles_and_skills.md`
 
 ## Write Scope
 

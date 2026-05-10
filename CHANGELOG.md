@@ -7,6 +7,8 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+## [v2.0.2] - 2026-05-10
+
 ### Added
 
 - Added `docs/FRONTEND_AI_CONTRACT.md` as a generated import-ready backend contract, external security/design skill reference list, approved OpenAPI snapshot, and integration handoff for AI agents working in a separate first-party frontend repository.
@@ -20,6 +22,11 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 - Aligned AI guidance indexes, context-report buckets, and design release-phase wording with the stable post-`v2.0.1` repository structure.
 - Renamed multi-agent workflow mode labels to `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, and `M4: gated` while preserving the stable identifiers and mode semantics.
 - Removed live documentation cross-references to the `1.x` to `2.0` upgrade guide from setup and generated REST Docs source pages.
+- Disabled Gradle parallel execution in `gradle.properties` to stabilize local and CI builds.
+
+### Fixed
+
+- Removed a stray empty `test commit` file accidentally tracked at the repository root.
 
 ## [v2.0.1] - 2026-05-09
 

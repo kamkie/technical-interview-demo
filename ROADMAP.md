@@ -22,11 +22,11 @@ Section ordering follows the lifecycle vocabulary in `.agents/references/applica
 
 | Field | Current |
 | --- | --- |
-| Release Phase | Stable `v2.0.1` |
+| Release Phase | Stable `v2.0.2` |
 | Breaking Change Policy | Disallowed on the stable `2.x` line unless a later major-version plan explicitly changes it |
-| Next Target Version | Not selected; default to `v2.0.2` for maintenance fixes or `v2.1.0` for backward-compatible feature work |
-| Latest Stable Release | `v2.0.1` released on 2026-05-09 from the code review issue fixes plan archived in `.agents/archive/PLAN_code_review_issue_fixes.md` |
-| Immediate Next Action | Review integrated post-`v2.0.1` workstreams; release work remains unrequested. |
+| Next Target Version | Not selected; default to `v2.0.3` for maintenance fixes or `v2.1.0` for backward-compatible feature work |
+| Latest Stable Release | `v2.0.2` released on 2026-05-10 from the AI-guidance and multi-agent workflow plans archived under `.agents/archive/PLAN_frontend_ai_contract.md`, `.agents/archive/PLAN_multi_agent_roles_and_skills.md`, `.agents/archive/PLAN_multi_agent_workflow_consolidation.md`, and `.agents/archive/PLAN_pre_planning_lifecycle_artifacts.md` |
+| Immediate Next Action | Select the next post-`v2.0.2` workstream; release work remains unrequested. |
 
 ## Roadmap Rules
 
@@ -86,10 +86,10 @@ Use this section to surface durable decisions captured in `docs/decisions/`. The
 
 | Status | ADR | Date | Implementation |
 | --- | --- | --- | --- |
-| Accepted | `docs/decisions/0001-adopt-pre-planning-artifacts.md` | 2026-05-10 | `.agents/plans/PLAN_pre_planning_lifecycle_artifacts.md` |
-| Accepted | `docs/decisions/0002-align-lifecycle-vocabulary-with-industry-practice.md` | 2026-05-10 | `.agents/plans/PLAN_pre_planning_lifecycle_artifacts.md` |
-| Accepted | `docs/decisions/0003-adopt-multi-agent-roles-and-skill-catalog.md` | — | `.agents/plans/PLAN_multi_agent_roles_and_skills.md` |
-| Accepted | `docs/decisions/0004-adopt-skill-first-multi-agent-workflow.md` | — | `.agents/plans/PLAN_multi_agent_roles_and_skills.md` |
+| Accepted | `docs/decisions/0001-adopt-pre-planning-artifacts.md` | 2026-05-10 | `.agents/archive/PLAN_pre_planning_lifecycle_artifacts.md` |
+| Accepted | `docs/decisions/0002-align-lifecycle-vocabulary-with-industry-practice.md` | 2026-05-10 | `.agents/archive/PLAN_pre_planning_lifecycle_artifacts.md` |
+| Accepted | `docs/decisions/0003-adopt-multi-agent-roles-and-skill-catalog.md` | — | `.agents/archive/PLAN_multi_agent_roles_and_skills.md` |
+| Accepted | `docs/decisions/0004-adopt-skill-first-multi-agent-workflow.md` | — | `.agents/archive/PLAN_multi_agent_roles_and_skills.md` |
 
 ## Triage
 
@@ -111,10 +111,8 @@ Use this section for plan-backed work that is not selected as the immediate rele
 
 | Status | Workstream | Phase | Plan | Linked ADR/PRD/Spec | Notes |
 | --- | --- | --- | --- | --- | --- |
-| Integrated | Multi-agent roles, skills, and mode labels | Integration | `.agents/plans/PLAN_multi_agent_roles_and_skills.md` | `docs/decisions/0003-adopt-multi-agent-roles-and-skill-catalog.md`; `docs/decisions/0004-adopt-skill-first-multi-agent-workflow.md` | ADRs accepted; workflow labels, role roster, context state, skill catalog, platform guidance, smoke-test evidence, and live guidance sweep are integrated; release/archive cleanup remains out of scope until requested. |
-| Integrated | Pre-planning artifact and lifecycle vocabulary adoption | Integration | `.agents/plans/PLAN_pre_planning_lifecycle_artifacts.md` | `docs/decisions/0001-adopt-pre-planning-artifacts.md`; `docs/decisions/0002-align-lifecycle-vocabulary-with-industry-practice.md` | ADRs, templates, lifecycle guidance, planning guidance, human-facing guidance, roadmap, and unreleased history are aligned; release/archive cleanup remains out of scope until requested. |
-| Integrated | Multi-agent workflow consolidation | Integration | `.agents/plans/PLAN_multi_agent_workflow_consolidation.md` | — | Workflow guidance is consolidated in `.agents/references/workflow.md`, live routing uses `.agents/context/*` workflow state, and release/archive cleanup remains out of scope until requested. |
-| Integrated | Frontend AI contract | Integration | `.agents/plans/PLAN_frontend_ai_contract.md` | — | Backend-owned source contract is implemented; external frontend-repo copy deferred until destination and instruction path are known. |
+
+No active planned work.
 
 ## Deferred Work
 

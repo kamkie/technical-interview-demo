@@ -241,7 +241,7 @@ Implementation should be verified by manual documentation review that:
 - `.agents/references/references-rules.md`
 - `.agents/skills/gh-fix-ci/SKILL.md`
 - `.agents/skills/gh-fix-security-quality/SKILL.md`
-- `.agents/plans/PLAN_multi_agent_workflow_consolidation.md`
+- `.agents/archive/PLAN_multi_agent_workflow_consolidation.md`
 - ADR 0001: `docs/decisions/0001-adopt-pre-planning-artifacts.md`
 - ADR 0002: `docs/decisions/0002-align-lifecycle-vocabulary-with-industry-practice.md`
 - ADR overview: https://adr.github.io/
