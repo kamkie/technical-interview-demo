@@ -2,7 +2,9 @@
 
 ## Status
 
-Proposed on 2026-05-10.
+Archived on 2026-05-10.
+
+Superseded by `docs/decisions/0006-split-human-documentation-and-ai-workflow-guides.md`.
 
 ## Date
 

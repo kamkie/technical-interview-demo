@@ -91,7 +91,7 @@ Use this section to surface durable decisions captured in `docs/decisions/`. The
 | Accepted | `docs/decisions/0003-adopt-multi-agent-roles-and-skill-catalog.md` | — | `.agents/archive/PLAN_multi_agent_roles_and_skills.md` |
 | Accepted | `docs/decisions/0004-adopt-skill-first-multi-agent-workflow.md` | — | `.agents/archive/PLAN_multi_agent_roles_and_skills.md` |
 | Accepted | `docs/decisions/0005-adopt-operations-and-deployment-owner-guide.md` | 2026-05-10 | `.agents/references/operations.md` |
-| Proposed | `docs/decisions/0006-split-human-documentation-and-ai-workflow-guides.md` | 2026-05-10 | Not planned |
+| Accepted | `docs/decisions/0006-split-human-documentation-and-ai-workflow-guides.md` | 2026-05-10 | Not planned |
 
 ## Triage
 
