@@ -33,6 +33,7 @@ This repository is not trying to be:
 - a microservices example
 - a cloud-provider reference architecture
 - a frontend-heavy product
+- a host for a first-party UI; any first-party UI stays in a separate repository
 - an abstraction showcase
 
 If a change pushes the app toward any of those, it needs strong justification.
@@ -41,7 +42,7 @@ If a change pushes the app toward any of those, it needs strong justification.
 
 The application intentionally combines:
 
-- a small externally supported `/api/**` surface plus internal or deployment-scoped validation endpoints
+- a small externally supported `/api/**` surface plus internal or deployment-scoped validation endpoints (see `## Security And Deployment Direction` for the explicit path list)
 - CRUD-style book, category, and localization behavior
 - authenticated account behavior
 - localized errors
@@ -66,16 +67,17 @@ Current preferences:
 - localized error metadata with `messageKey`, localized `message`, and `language`
 - security rules that are visible in docs and tests
 
-Avoid overloaded endpoints, inconsistent status handling, or letting persistence shape harden into the long-term public contract.
+These preferences are binding once an endpoint is published. Avoid overloaded endpoints, inconsistent status handling, or letting persistence shape harden into the long-term public contract.
 
 ## Release Phase Direction
 
 Current release-phase intent is explicit:
 
-- the repository is on the stable `2.x` line after `v2.0.1`
-- breaking published behavior is out of bounds on the stable `2.x` line unless a deliberate next-major-version decision changes that policy
+- breaking published behavior is out of bounds on the current stable line unless a deliberate next-major-version decision changes that policy
 - prefer alignment, maintenance, and bug-fix work over further contract reshaping
 - release work starts only after intended implementation is integrated on `main` and the release preconditions are met
+
+Current release phase, breaking-change policy, and next target version live in `ROADMAP.md` `## Current Project State`; `DESIGN.md` owns the intent, `ROADMAP.md` owns the version-specific facts.
 
 ## Security And Deployment Direction
 
@@ -97,6 +99,8 @@ The supported surface is intentionally narrow:
 - abuse protection for login bootstrap and write-heavy internet-public paths is primarily an edge or deployment concern
 
 Preserve those decisions unless an explicit contract review changes them.
+
+The same supported `/api/**` surface is enumerated in `docs/FRONTEND_AI_CONTRACT.md` for first-party frontend integration; both files must move together when the contract changes.
 
 ## Data, Localization, And Observability Direction
 
@@ -129,9 +133,16 @@ Keep documentation roles distinct:
 
 - executable specs and published contract docs own behavior
 - `README.md`, `CONTRIBUTING.md`, and `SETUP.md` own human workflow
+- `ROADMAP.md` owns active and planned work; `CHANGELOG.md` owns released history
+- `docs/decisions/`, `docs/requirements/`, and `docs/specs/` own durable decisions, product intent, and standalone behavior specs per `docs/decisions/0001-adopt-pre-planning-artifacts.md`
+- `WORKING_WITH_AI.md` owns the human-facing AI guide
 - `AGENTS.md` and the focused `.agents/references/` guides own AI workflow
 
+See `.agents/references/documentation.md` for the full ownership map and routing rules.
+
 ## Roadmap Direction
+
+Lifecycle phase names follow `.agents/references/application-lifecycle.md`; pre-planning artifact roles (ADR, PRD, spec, plan) follow `docs/decisions/0001-adopt-pre-planning-artifacts.md`.
 
 Current design pressure should stay on:
 
@@ -143,10 +154,10 @@ Prefer that over adding major new feature areas.
 
 Longer-term framing remains:
 
-- post-`1.x` evolution keeps browser-oriented auth and session flows instead of pivoting to bearer-token-only public APIs
+- evolution beyond the current stable line keeps browser-oriented auth and session flows instead of pivoting to bearer-token-only public APIs
 - any first-party UI stays in a separate repository
 - supported browser usage assumes one public origin through reverse-proxy deployment
-- moving toward a more production-ready posture is an explicit post-`1.x` contract review, not a silent extension of the `1.x` promise
+- moving toward a more production-ready posture is an explicit next-major-version contract review, not a silent extension of the current stable promise
 
 ## Design Review Questions
 
