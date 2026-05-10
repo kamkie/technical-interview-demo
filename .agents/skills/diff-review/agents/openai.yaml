@@ -1,0 +1,4 @@
+interface:
+  display_name: "Diff Review"
+  short_description: "Review diffs for blocking risks"
+  default_prompt: "Use $diff-review to review a repository diff for correctness, drift, and blocking risks."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Repo Task Execute"
+  short_description: "Execute bounded repo tasks"
+  default_prompt: "Use $repo-task-execute to implement a bounded repository task with validation and tracking."

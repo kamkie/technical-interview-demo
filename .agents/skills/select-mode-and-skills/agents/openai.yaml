@@ -1,0 +1,4 @@
+interface:
+  display_name: "Select Mode And Skills"
+  short_description: "Choose workflow mode and skills"
+  default_prompt: "Use $select-mode-and-skills to choose the workflow mode, role roster, and skills for this task."

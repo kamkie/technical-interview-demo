@@ -1,0 +1,4 @@
+interface:
+  display_name: "Run Validation"
+  short_description: "Select and run validation"
+  default_prompt: "Use $run-validation to choose and run the smallest sufficient validation for this change."

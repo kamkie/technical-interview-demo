@@ -97,7 +97,7 @@
 | 3: Rename mode labels in `workflow.md` and update both ADRs | Done | Worker | `docs(workflow): rename multi-agent mode labels` | `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | Mode identifiers and semantics preserved. |
 | 4: Materialize `.agents/context/*` and add per-role read-set table | Done | Worker | `docs(workflow): add multi-agent state readsets` | `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | Context directories have tracked README files. |
 | 5: Record user acceptance decision for ADR 0004 and ADR 0003 | Done | Coordinator | `docs(decisions): accept multi-agent workflow ADRs` | `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | ADR 0004 and ADR 0003 are accepted as of 2026-05-10. |
-| 6: Add Phase B skill bundles | Not Started | Worker | Pending | Pending | Phase B. |
+| 6: Add Phase B skill bundles | Done | Worker | `docs(skills): add phase b multi-agent workflows` | Structural skill check passed; `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | `quick_validate.py` could not run because the local Python environment lacks PyYAML. |
 | 7: Smoke-test the loop on one bounded task | Not Started | Coordinator + Worker + Reviewer + Verifier | Pending | Pending | Captures `LEARNINGS.md` entry. |
 | 8: Add Phase C skill bundles and platform alignment | Not Started | Worker | Pending | Pending | Phase C. |
 | 9: Sweep old mode labels from live guidance | Not Started | Worker | Pending | Pending | After Phase B smoke-test passes. |
@@ -173,15 +173,15 @@
 ### Task 6: Add Phase B Skill Bundles
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Add `select-mode-and-skills`, `handoff-pack`, `repo-task-execute`, `run-validation`, `diff-review` under `.agents/skills/`, each in `SKILL.md` shape with frontmatter, declared `Read Set`, `Inputs`, `Workflow`, and stop conditions. Each must reference the new mode names and reference repository rules instead of inlining them. |
 | Owned Files Or Packages | `.agents/skills/<skill>/SKILL.md` for each of the five skills (plus optional scripts). |
 | Coordinator-Owned Shared Files | None. |
 | Context Required | `.agents/skills/gh-fix-ci/SKILL.md` (shape reference), `.agents/references/workflow.md`, `.agents/references/execution.md`, `.agents/references/reviews.md`, `.agents/references/testing.md`. |
 | Behavior To Preserve | Existing `gh-fix-ci` and `gh-fix-security-quality` bundles. |
-| Deliverables | Five new `SKILL.md` files. |
-| Validation Checkpoint | Manual check that each `SKILL.md` declares a `Read Set`, references rules without duplicating them, and uses the new mode names. |
-| Commit Checkpoint | One commit per skill or one batched commit. |
+| Deliverables | Five new `SKILL.md` files with `agents/openai.yaml` metadata files. |
+| Validation Checkpoint | Passed: structural check confirmed each skill declares frontmatter, `Read Set`, `Inputs`, `Workflow`, and `Stop Conditions`, has no TODO placeholders, references owner guides, and uses the new mode names. |
+| Commit Checkpoint | `docs(skills): add phase b multi-agent workflows` |
 
 ### Task 7: Smoke-Test The Loop On One Bounded Task
 | Field | Value |
@@ -289,6 +289,10 @@
 | 2026-05-10 | `rg -n "Status|Accepted on 2026-05-10|proposed|not yet accepted|Proposed" docs\decisions\0003-adopt-multi-agent-roles-and-skill-catalog.md docs\decisions\0004-adopt-skill-first-multi-agent-workflow.md .agents\plans\PLAN_multi_agent_roles_and_skills.md` | Task 5 ADR acceptance | Passed | Both ADR status blocks are accepted; remaining lowercase `proposed` text appears only in generic task wording. |
 | 2026-05-10 | `git diff --check` | Task 5 ADR acceptance | Passed | No whitespace diagnostics. |
 | 2026-05-10 | `./build.ps1 build` | Task 5 ADR acceptance | Passed | Wrapper detected only lightweight uncommitted files and skipped Gradle; manual consistency review is sufficient. |
+| 2026-05-10 | `python ...\skill-creator\scripts\quick_validate.py .agents\skills\<skill>` | Task 6 Phase B skill bundles | Skipped | Attempted for each new skill, but the local Python environment lacks the `yaml` module required by the validator. |
+| 2026-05-10 | Phase B skill structural PowerShell check | Task 6 Phase B skill bundles | Passed | Verified required frontmatter, `Read Set`, `Inputs`, `Workflow`, `Stop Conditions`, no TODO placeholders, and `agents/openai.yaml` for all five skills. |
+| 2026-05-10 | `git diff --check` | Task 6 Phase B skill bundles | Passed | No whitespace diagnostics. |
+| 2026-05-10 | `./build.ps1 build` | Task 6 Phase B skill bundles | Passed | Wrapper detected only lightweight uncommitted files and skipped Gradle; manual consistency review is sufficient. |
 
 ## User Validation
 - Confirm `.agents/references/workflow.md` defines `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, and `M4: gated` with unchanged mode semantics.

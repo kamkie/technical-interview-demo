@@ -1,0 +1,4 @@
+interface:
+  display_name: "Handoff Pack"
+  short_description: "Create complete agent handoffs"
+  default_prompt: "Use $handoff-pack to create a complete handoff packet for a delegated workflow activity."
