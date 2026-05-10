@@ -64,7 +64,7 @@ Add only guides whose domains match the current task.
 - diagnosis after validation failure: `.agents/references/troubleshooting.md`
 - review or security review: `.agents/references/reviews.md`
 - branch, worktree, delegation, multi-agent state, sidecar, integration, or remote handoff: `.agents/references/workflow.md`
-- workflow mode labels, multi-agent role roster, per-role read sets, or skill chain selection: `.agents/references/workflow.md`; load `.agents/skills/<skill-name>/SKILL.md` only when a skill is invoked or clearly applies
+- workflow mode labels, multi-agent role roster, per-role read sets, or skill chain selection: `.agents/references/workflow.md`; load `.agents/skills/<skill-name>/SKILL.md` only when a skill is invoked or clearly applies; see `.agents/skills/README.md` for the skill catalog and the standard `M0`–`M4` skill chain
 - release sequencing: `.agents/references/releases.md`
 - application lifecycle phase, activity, owner-guide mapping, or loop vocabulary: `.agents/references/application-lifecycle.md`
 - durable repo-wide lesson: `.agents/references/LEARNINGS.md`
