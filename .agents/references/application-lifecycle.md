@@ -1,7 +1,7 @@
 # Application Lifecycle Reference For AI Agents
 
 `.agents/references/application-lifecycle.md` owns the application development lifecycle phase model, activity vocabulary, loop vocabulary, cross-cutting triggers, and repository owner-guide mapping for AI agents.
-It is the consolidated owner for guidance that previously lived in `docs/specs/application-lifecycle-spec.md` and `docs/specs/lifecycle-phase-activities.md`.
+Lifecycle guidance belongs in this file rather than in separate lifecycle spec or phase-activity companion files.
 
 Use this file when:
 
@@ -290,9 +290,9 @@ When an owner guide adopts activity names from this file:
 
 When this file changes:
 
-- update dependent owner guides only when an activity name they reference was renamed or removed
+- update dependent owner guides only for activity names they reference that are renamed or removed
 - routine vocabulary additions here do not force changes elsewhere
-- record a rename in `CHANGELOG.md` only if at least one owner guide adopted the old name in a released revision
+- add a `CHANGELOG.md` entry only for activity-name renames that affect released owner-guide vocabulary
 
 ## Current Gaps
 
@@ -309,7 +309,7 @@ When this file changes:
 - this file does not replace `.agents/references/workflow.md` for branch, worktree, delegation, integration, or remote-handoff mechanics
 - this file is not a task plan and must not become task-specific progress history
 
-## Compatibility Notes
+## Maintenance
 
-`docs/specs/application-lifecycle-spec.md` and `docs/specs/lifecycle-phase-activities.md` are retained as compatibility pointers to this file.
-Update this file, not those pointers, when lifecycle vocabulary or owner-guide mapping changes.
+Update this file when lifecycle vocabulary, owner-guide mapping, phase rules, activity names, loop names, or cross-cutting triggers change.
+Do not add companion lifecycle files that only restate this reference.
