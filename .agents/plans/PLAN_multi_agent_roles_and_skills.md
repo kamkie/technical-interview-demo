@@ -4,13 +4,13 @@
 | Status | Current |
 | --- | --- |
 | Phase | Planning |
-| Status | Draft |
+| Status | Needs Input |
 
 ## Planning Readiness
 | Field | Value |
 | --- | --- |
 | Decision Complete | No |
-| Blocking Open Questions | Q1, Q2, Q3 |
+| Blocking Open Questions | Q1, Q3 |
 | Accepted Fallbacks | None |
 | Ready For Execution | No |
 | Last Updated | 2026-05-10 |
@@ -24,21 +24,23 @@
 | Spec | None | AI workflow architecture, no runtime contract change | None |
 
 ## Summary
-- Rename workflow modes `M0`–`M4` to `direct`, `assisted`, `delegated`, `parallel`, `gated` and reconcile role rosters between ADRs 0003 and 0004.
-- Accept ADR 0004 as the principle ADR and ADR 0003 as its implementation ADR, then roll out the six-role roster, a minimal skill catalog, and durable `.agents/context/*` state in phases.
+- Rename the readable workflow-mode labels to `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, and `M4: gated` while keeping the `M0` through `M4` identifiers and existing mode semantics.
+- Decide whether ADR 0004 becomes the principle ADR and ADR 0003 becomes its implementation input, then roll out the accepted role roster, a minimal skill catalog, and durable `.agents/context/*` state in phases.
 - Success: `workflow.md` is the single owner of the new mode names and roster, the Phase B skills exist and are usable, and one bounded task has been smoke-tested through the orchestrator/worker/reviewer/verifier loop.
 
 ## Scope
 - In scope:
-  - Rename `M0`–`M4` modes in `.agents/references/workflow.md` (primary owner) and downstream guidance.
+  - Rename the `M0` through `M4` mode labels in `.agents/references/workflow.md` (primary owner) and downstream guidance while keeping the numeric identifiers.
   - Reconcile ADR 0004 role roster onto ADR 0003's six-role roster (Coordinator, Planner, Worker, Reviewer, Verifier, Specialist).
-  - Update both ADRs to use new mode names and cross-link as principle + implementation; move both to `Accepted`.
+  - Update both ADRs to use new mode labels and cross-link as principle + implementation after the user decides how to relate them.
   - Materialize `.agents/context/{handoffs,workers,reviews,verifications,specialists}/` with stub `README.md`.
   - Add a per-role read-set table to `workflow.md`.
   - Add Phase B skill bundles: `select-mode-and-skills`, `handoff-pack`, `repo-task-execute`, `run-validation`, `diff-review`.
   - Add Phase C skill bundles and platform alignment in `.junie/AGENTS.md`, `AGENTS.md`, `WORKING_WITH_AI.md`.
   - One smoke-test of the model on a bounded existing task; capture lessons in `LEARNINGS.md`.
 - Out of scope:
+  - Removing or deprecating the stable `M0` through `M4` identifiers.
+  - Moving ADR 0003 or ADR 0004 to `Accepted` without an explicit user decision.
   - `release-cut` skill and Release Agent identity (Definition of Done: leave release work undone unless requested).
   - Application code, public APIs, runtime behavior.
   - Rewriting archived plans.
@@ -55,19 +57,20 @@
 | ID | Question / Gap | Why It Matters | Owner | Status | Fallback / Decision | Blocks Ready? |
 | --- | --- | --- | --- | --- | --- | --- |
 | Q1 | Confirm role roster: keep ADR 0003's six identities and fold ADR 0004's extras under Specialist? | Determines vocabulary in `workflow.md`, both ADRs, skills, and `.junie/AGENTS.md`. | User | Open | Adopt the six-role roster; `Explorer`/`Documentation Agent`/`Release Agent` become Specialist variants. | Yes |
-| Q2 | Confirm mode names: `direct`/`assisted`/`delegated`/`parallel`/`gated`? | All downstream renames depend on the chosen labels. | User | Open | Use the listed names; keep `M0`–`M4` as deprecated aliases for one release window. | Yes |
+| Q2 | Confirm mode labels: `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, `M4: gated`? | All downstream renames depend on the chosen labels. | User | Answered | Use the listed labels; keep `M0` through `M4` as stable identifiers. | No |
 | Q3 | Should ADR 0004 remain a separate principle ADR or be merged into 0003? | Decides whether we ship two ADRs or consolidate. | User | Open | Keep both; 0004 = principle, 0003 = implementation, with `Refines`/`Implemented by` cross-links. | Yes |
 
 ## Decision Log And Assumptions
 | ID | Decision / Assumption | Source | Date | Revisit Trigger |
 | --- | --- | --- | --- | --- |
 | D1 | `workflow.md` is the standing owner of mode and role vocabulary; ADRs and skills must align to it. | `AI Guidance Maintenance` rule, `references-rules.md` | 2026-05-10 | If a future ADR is accepted that moves ownership. |
-| D2 | Mode rename is a vocabulary change only; mode definitions and integration rules are unchanged. | ADR 0003 follow-up item; preserved on rename. | 2026-05-10 | If a mode's semantics actually change. |
+| D2 | Mode rename is a label change only; `M0` through `M4` identifiers, mode definitions, ordering, and integration rules are unchanged. | User request and ADR 0004 revision. | 2026-05-10 | If a mode's semantics actually change. |
 | D3 | `release-cut` and the Release Agent identity are deferred until release work is explicitly requested. | Definition Of Done in repository AI guidelines. | 2026-05-10 | When release work is requested. |
 | D4 | Phase B skill set (`select-mode-and-skills`, `handoff-pack`, `repo-task-execute`, `run-validation`, `diff-review`) covers the orchestrator → worker → reviewer → verifier loop end-to-end. | ADR 0003 starter catalog, prioritized. | 2026-05-10 | If smoke-test reveals an unmet gap. |
+| D5 | Use `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, and `M4: gated`; do not use `M4: agentic`. | User discussion on 2026-05-10. | 2026-05-10 | If the user chooses a different label set before execution. |
 
 ## Execution Shape And Shared Files
-- Recommended shape: `M2: bounded-worker` (will become `delegated` after Phase A).
+- Recommended shape: `M0: solo` under the current vocabulary for planning edits; target label after implementation is `M0: direct`.
 - Why: this plan is documentation- and configuration-only with disjoint phase boundaries; it does not benefit from `parallel` because phases must land in order (rename → state dirs → skills → sweep → smoke-test).
 - Coordinator-owned shared files: `.agents/references/workflow.md`, `docs/decisions/0003-adopt-multi-agent-roles-and-skill-catalog.md`, `docs/decisions/0004-adopt-skill-first-multi-agent-workflow.md`, `AGENTS.md`, `.junie/AGENTS.md`, `WORKING_WITH_AI.md`, `ROADMAP.md`, this plan.
 - Candidate worker boundaries if later split: one worker per Phase B skill bundle in Phase B Task 5; one worker per Phase C skill bundle in Phase C Task 7.
@@ -89,13 +92,13 @@
 | --- | --- | --- | --- | --- | --- |
 | 1: Resolve Q1–Q3 with user | Not Started | Coordinator | Pending | Pending | Blocks all execution. |
 | 2: Reconcile ADR 0004 roster + ADR cross-links | Not Started | Worker | Pending | Pending | Phase 0. |
-| 3: Rename modes in `workflow.md` and update both ADRs | Not Started | Worker | Pending | Pending | Phase A.1. |
+| 3: Rename mode labels in `workflow.md` and update both ADRs | Not Started | Worker | Pending | Pending | Phase A.1. |
 | 4: Materialize `.agents/context/*` and add per-role read-set table | Not Started | Worker | Pending | Pending | Phase A.2. |
-| 5: Move ADR 0004 then ADR 0003 to Accepted | Not Started | Coordinator | Pending | Pending | Gate before skills. |
+| 5: Record user acceptance decision for ADR 0004 and ADR 0003 | Not Started | Coordinator | Pending | Pending | Gate before skills. |
 | 6: Add Phase B skill bundles | Not Started | Worker | Pending | Pending | Phase B. |
 | 7: Smoke-test the loop on one bounded task | Not Started | Coordinator + Worker + Reviewer + Verifier | Pending | Pending | Captures `LEARNINGS.md` entry. |
 | 8: Add Phase C skill bundles and platform alignment | Not Started | Worker | Pending | Pending | Phase C. |
-| 9: Sweep `M0`–`M4` aliases and remove deprecation note | Not Started | Worker | Pending | Pending | After Phase B smoke-test passes. |
+| 9: Sweep old mode labels from live guidance | Not Started | Worker | Pending | Pending | After Phase B smoke-test passes. |
 | 10: Update `ROADMAP.md` final state | Not Started | Coordinator | Pending | Pending | Closes the plan. |
 
 ## Execution Tasks
@@ -104,12 +107,12 @@
 | Field | Value |
 | --- | --- |
 | Status | Not Started |
-| Goal | Capture explicit user decisions on roster, mode names, and ADR consolidation; record in Decision Log. |
+| Goal | Capture explicit user decisions on roster and ADR consolidation; record in Decision Log. |
 | Owned Files Or Packages | This plan only. |
 | Coordinator-Owned Shared Files | This plan. |
 | Context Required | This plan, ADR 0003, ADR 0004, `.agents/references/workflow.md`. |
 | Behavior To Preserve | None. |
-| Deliverables | Decision Log entries D5–D7 covering Q1–Q3; Planning Readiness flipped to `Decision Complete: Yes`, `Ready For Execution: Yes`. |
+| Deliverables | Decision Log entries covering Q1 and Q3; Planning Readiness flipped to `Decision Complete: Yes`, `Ready For Execution: Yes`. |
 | Validation Checkpoint | User confirmation in chat or commit message. |
 | Commit Checkpoint | One commit updating this plan. |
 
@@ -126,17 +129,17 @@
 | Validation Checkpoint | Manual diff review confirming no role outside the six-role roster remains as a top-level identity. |
 | Commit Checkpoint | One commit. |
 
-### Task 3: Rename Modes In `workflow.md` And Update Both ADRs
+### Task 3: Rename Mode Labels In `workflow.md` And Update Both ADRs
 | Field | Value |
 | --- | --- |
 | Status | Not Started |
-| Goal | Replace `M0`–`M4` with `direct`/`assisted`/`delegated`/`parallel`/`gated` in `workflow.md`; keep `M0`–`M4` as deprecated aliases; add the glossing rule; update both ADRs to use the new names. |
+| Goal | Rename mode labels in `workflow.md` to `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, and `M4: gated`; update both ADRs to use the new labels. |
 | Owned Files Or Packages | `.agents/references/workflow.md`, both ADRs. |
 | Coordinator-Owned Shared Files | `.agents/references/workflow.md`. |
 | Context Required | `.agents/references/workflow.md`, both ADRs. |
-| Behavior To Preserve | Mode definitions, ordering, integration rules, escalation defaults. |
-| Deliverables | Renamed modes; deprecation note for `M0`–`M4`; glossing rule paragraph; both ADRs updated. |
-| Validation Checkpoint | Manual review: every `M0`–`M4` use either appears in the alias note or is replaced. |
+| Behavior To Preserve | Mode identifiers, definitions, ordering, integration rules, escalation defaults. |
+| Deliverables | Renamed mode labels; explicit note that the rename is vocabulary-only; both ADRs updated. |
+| Validation Checkpoint | Manual review: `solo`, `sidecar-readonly`, `bounded-worker`, `parallel-sliced`, and `full-sidecar` no longer appear as primary labels in live guidance. |
 | Commit Checkpoint | One commit. |
 
 ### Task 4: Materialize `.agents/context/*` And Add Per-Role Read-Set Table
@@ -152,17 +155,17 @@
 | Validation Checkpoint | `Get-ChildItem .agents\context -Recurse` lists all five `README.md` files; manual review of read-set table. |
 | Commit Checkpoint | One commit. |
 
-### Task 5: Move ADR 0004 Then ADR 0003 To Accepted
+### Task 5: Record User Acceptance Decision For ADR 0004 And ADR 0003
 | Field | Value |
 | --- | --- |
 | Status | Not Started |
-| Goal | Update `## Status` blocks to `Accepted on YYYY-MM-DD` in the order 0004 then 0003. |
+| Goal | Record the explicit user decision: accept ADR 0004, accept ADR 0003, merge one into the other, or leave either proposed. |
 | Owned Files Or Packages | Both ADRs. |
 | Coordinator-Owned Shared Files | None. |
 | Context Required | Both ADRs after Tasks 2–4. |
 | Behavior To Preserve | ADR content; only status changes. |
-| Deliverables | Two ADRs with `Accepted` status. |
-| Validation Checkpoint | Spec Priority compliance: explicit user decision recorded. |
+| Deliverables | ADR status and relationship updated according to the user decision. |
+| Validation Checkpoint | Spec Priority compliance: explicit user decision recorded before any ADR is marked `Accepted`. |
 | Commit Checkpoint | One commit. |
 
 ### Task 6: Add Phase B Skill Bundles
@@ -204,17 +207,17 @@
 | Validation Checkpoint | Manual review confirming cross-references do not duplicate content and use the new vocabulary. |
 | Commit Checkpoint | One commit per logical group. |
 
-### Task 9: Sweep `M0`–`M4` Aliases And Remove Deprecation Note
+### Task 9: Sweep Old Mode Labels From Live Guidance
 | Field | Value |
 | --- | --- |
 | Status | Not Started |
-| Goal | Replace remaining `M0`–`M4` references across `.agents/references/*.md`, `.agents/skills/*/SKILL.md`, `AGENTS.md`, `.junie/AGENTS.md`, `WORKING_WITH_AI.md`, and active `.agents/plans/PLAN_*.md`. Remove the deprecated alias listing from `workflow.md`. |
+| Goal | Replace remaining old labels (`solo`, `sidecar-readonly`, `bounded-worker`, `parallel-sliced`, `full-sidecar`) across `.agents/references/*.md`, `.agents/skills/*/SKILL.md`, `AGENTS.md`, `.junie/AGENTS.md`, `WORKING_WITH_AI.md`, and active `.agents/plans/PLAN_*.md` when those terms refer to workflow-mode labels. |
 | Owned Files Or Packages | All listed paths. |
 | Coordinator-Owned Shared Files | `.agents/references/workflow.md`. |
 | Context Required | Output of `search_project "M0"`/`"M1"`/`"M2"`/`"M3"`/`"M4"` scoped to documentation paths. |
 | Behavior To Preserve | Mode semantics; only labels change. |
-| Deliverables | No primary `M0`–`M4` references remain; deprecation note removed. |
-| Validation Checkpoint | `search_project` for each code returns zero hits in the swept paths. |
+| Deliverables | No primary old-label references remain in live guidance; `M0` through `M4` identifiers remain. |
+| Validation Checkpoint | Targeted search for each old label returns zero primary-label hits in the swept paths. |
 | Commit Checkpoint | One commit. |
 
 ### Task 10: Update `ROADMAP.md` Final State
@@ -233,14 +236,14 @@
 ## Blockers And Replan Triggers
 | Trigger / Blocker | Response | Owner | Status |
 | --- | --- | --- | --- |
-| Q1–Q3 unanswered | Pause execution; request user decisions; do not proceed past Task 1. | User/Coordinator | Open |
-| User rejects the mode rename | Skip Task 3; keep `M0`–`M4`; revise ADRs to drop the rename; restart from Task 2. | User/Coordinator | Open |
+| Q1 or Q3 unanswered | Pause execution; request user decisions; do not proceed past Task 1. | User/Coordinator | Open |
+| User rejects the mode-label rename | Skip Task 3; keep existing labels; revise ADRs to drop the rename; restart from Task 2. | User/Coordinator | Open |
 | User rejects the six-role roster reconciliation | Replan: choose either ADR 0004's eight-role roster or a custom roster; update Tasks 2–8. | User/Coordinator | Open |
 | Phase B smoke-test exposes a missing skill | Add the gap as a Phase C entry or revise Task 6 scope; record in `LEARNINGS.md`. | Coordinator | Open |
 | Release work is requested mid-plan | Add a separate plan for `release-cut` and Release Agent; do not extend this plan. | User/Coordinator | Open |
 
 ## Edge Cases And Failure Modes
-- Two-vocabulary drift: contributors use `M0`–`M4` and the new names simultaneously. Mitigated by Task 9's sweep and the deprecation window.
+- Two-vocabulary drift: contributors use old labels and new labels simultaneously. Mitigated by Task 9's sweep while preserving `M0` through `M4` identifiers.
 - Skill drift: `SKILL.md` files inline rules instead of referencing them. Mitigated by Task 6 validation checkpoint and `references-rules.md`.
 - Role collision: ADR 0004's `Orchestrator` term colliding with the `Coordinator` identity. Mitigated by Task 2.
 - Empty-state directories pruned by tooling: `.agents/context/*` directories must contain `README.md` so they are tracked.
@@ -248,7 +251,8 @@
 
 ## Validation Plan
 - Documentation-only validation per `.agents/references/testing.md` change-type rules.
-- For each task, the Validation Checkpoint is a manual review (this plan does not change runtime behavior, so no `./build.ps1` invocation is required by `testing.md` for documentation-only diffs).
+- For each task, run `./build.ps1 build`; for documentation-only diffs the wrapper may take the lightweight shortcut and report that manual consistency review is sufficient.
+- Pair the wrapper result with the task's manual review checkpoint.
 - Smoke-test (Task 7) inherits validation from the chosen target change; if it touches code, run the smallest sufficient `./build.ps1` invocation per `testing.md`.
 
 ## Verification Strategy
@@ -256,7 +260,7 @@
 - Integration tests: not applicable.
 - Contract tests: not applicable.
 - Smoke/benchmark tests: only as part of Task 7's chosen target change.
-- Negative scenarios: Task 9 search must return zero `M0`–`M4` hits in swept paths after the sweep.
+- Negative scenarios: Task 9 search must return zero primary-label hits for the old names in swept paths after the sweep.
 
 ## Better Engineering Notes
 - Prerequisite cleanup included: materializing `.agents/context/*` (closes the existing `workflow.md`-vs-tree gap) is done in Phase A even though it predates the skill catalog work.
@@ -266,11 +270,12 @@
 ## Validation Results
 | Date | Command | Scope | Result | Notes |
 | --- | --- | --- | --- | --- |
-| Pending | Pending | Documentation review per task | Pending | Populated as tasks complete. |
+| 2026-05-10 | `git diff --check` | ADR 0004, plan, and roadmap documentation diff | Passed | No whitespace diagnostics. |
+| 2026-05-10 | `./build.ps1 build` | Documentation-only wrapper validation | Passed | Wrapper detected only lightweight uncommitted files and skipped Gradle; manual consistency review is sufficient. |
 
 ## User Validation
-- Confirm `.agents/references/workflow.md` defines `direct`/`assisted`/`delegated`/`parallel`/`gated` and lists `M0`–`M4` only as deprecated aliases (Phase A) then removes them (after Phase B).
-- Confirm both ADRs are `Accepted`, use the new vocabulary, and cross-link as principle (0004) and implementation (0003).
+- Confirm `.agents/references/workflow.md` defines `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, and `M4: gated` with unchanged mode semantics.
+- Confirm both ADRs reflect the user decision, use the new vocabulary, and cross-link as principle (0004) and implementation input (0003) if that relationship is accepted.
 - Confirm `.agents/context/*` exists with `README.md` ownership notes.
 - Confirm Phase B skills exist in `SKILL.md` shape and were used end-to-end on one smoke-test task with artifacts visible under `.agents/context/*`.
 - Confirm `.junie/AGENTS.md`, `AGENTS.md`, and `WORKING_WITH_AI.md` cross-reference the new vocabulary without duplicating `workflow.md` content.

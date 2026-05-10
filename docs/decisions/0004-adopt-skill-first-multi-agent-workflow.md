@@ -15,6 +15,7 @@ It also has workflow guidance for solo execution, sidecars, bounded workers, par
 
 ADR 0003 proposes a concrete multi-agent roster, starter skill catalog, durable state directories, and per-role read sets.
 This ADR records a lighter competing proposal: adopt the skill-first, orchestrator-led operating model first, then implement concrete roles, skills, and state only after the model is accepted.
+It also proposes clearer workflow-mode labels while preserving the existing `M0` through `M4` identifiers and mode semantics.
 
 The repository needs a decision that separates:
 
@@ -40,6 +41,20 @@ It classifies the request, identifies governing specs and docs, decides whether 
 
 Use the smallest effective number of agents.
 Routine edits should remain solo when delegation adds more coordination cost than value.
+
+Rename the workflow-mode labels without removing the stable `M0` through `M4` identifiers:
+
+| Current | Proposed | Meaning |
+| --- | --- | --- |
+| `M0: solo` | `M0: direct` | One agent handles the work directly. |
+| `M1: sidecar-readonly` | `M1: assisted` | A read-only reviewer, verifier, or specialist helps without editing. |
+| `M2: bounded-worker` | `M2: delegated` | One worker owns one bounded write scope. |
+| `M3: parallel-sliced` | `M3: parallel` | Multiple disjoint slices run in parallel. |
+| `M4: full-sidecar` | `M4: gated` | Independent review, verification, security, docs, release, or specialist gates are part of the workflow. |
+
+The rename is vocabulary-only.
+It does not change mode ordering, ownership rules, delegation limits, sidecar behavior, integration responsibility, or validation requirements.
+Use `gated` rather than `agentic` for `M4` because every mode is agentic in some sense; `M4` is distinct because independent gates are required.
 
 Recommended role model:
 
@@ -108,6 +123,7 @@ They differ in how much implementation detail should be accepted now.
 | Best fit | The team is ready to build the supporting skill and state infrastructure now | The team wants to agree on operating principles before committing to exact files and role roster |
 | Strength | More actionable; follow-up work can start immediately | Lower commitment; easier to accept without over-specifying implementation |
 | Risk | May overfit the first implementation and create more upfront work | May leave too many implementation choices undecided |
+| Mode vocabulary | Keeps the current mode labels unless revised during implementation | Renames labels to `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, and `M4: gated` |
 | Skill detail | Names concrete starter skills such as `repo-task-execute`, `run-validation`, `diff-review`, and `handoff-pack` | Names activity categories such as `planning`, `coding`, `testing`, and `review` |
 | Agent detail | Defines Coordinator, Planner, Worker, Reviewer, Verifier, and Specialist as explicit identities | Defines broader roles including Orchestrator, Planner, Explorer, Worker, Tester, Reviewer, Documentation Agent, and Release Agent |
 | State model | Materializes `.agents/context/*` directories | Requires clear handoff/reporting but defers exact state storage |
@@ -145,7 +161,7 @@ Costs and risks:
 Required follow-up changes if accepted:
 
 1. Decide whether ADR 0003 becomes the implementation plan input, is revised, or is rejected.
-2. Update `.agents/references/workflow.md` if its existing `M0` through `M4` modes need to reference this ADR or the skill-first operating model.
+2. Update `.agents/references/workflow.md` to use the proposed mode labels while keeping the `M0` through `M4` identifiers and preserving existing mode semantics.
 3. Add or formalize repo-local skills for the accepted activity set.
 4. Update `.agents/references/documentation.md` if skill ownership or artifact-routing rules change.
 5. Update `WORKING_WITH_AI.md` if human-facing AI collaboration guidance should describe when to request or expect multi-agent workflows.
@@ -170,6 +186,17 @@ It also makes durable lessons harder to preserve.
 
 This maximizes role separation but creates unnecessary process overhead for routine edits, small documentation changes, and narrow fixes.
 The repository should use the smallest effective workflow mode instead.
+
+### Keep Existing Mode Labels
+
+The current labels are precise, but several are implementation-heavy (`sidecar-readonly`, `parallel-sliced`, `full-sidecar`) and harder to explain in human-facing guidance.
+Keeping the `M0` through `M4` identifiers while improving the labels preserves compatibility and makes the progression easier to scan.
+
+### Use `M4: Agentic`
+
+`Agentic` was considered for the highest workflow mode.
+It was not chosen because all modes are agentic in some sense.
+`Gated` better names what makes `M4` distinct: independent review, verification, security, documentation, release, or specialist gates.
 
 ### Use Dedicated Agents Without Dedicated Skills
 
@@ -196,6 +223,7 @@ Before implementation, confirm that:
 - the orchestrator remains accountable for final integration, validation, and handoff
 - multi-agent use is optional and proportional to task complexity
 - skill instructions do not duplicate or contradict the owning `.agents/references/*.md` guides
+- `.agents/references/workflow.md` keeps the `M0` through `M4` identifiers with the accepted labels and unchanged semantics
 - validation requirements continue to come from `.agents/references/testing.md`
 - review requirements continue to come from `.agents/references/reviews.md`
 - release work remains out of scope unless explicitly requested
