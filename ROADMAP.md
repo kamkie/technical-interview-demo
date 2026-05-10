@@ -12,7 +12,7 @@ Released history belongs in `CHANGELOG.md`.
 | Breaking Change Policy | Disallowed on the stable `2.x` line unless a later major-version plan explicitly changes it |
 | Next Target Version | Not selected; default to `v2.0.2` for maintenance fixes or `v2.1.0` for backward-compatible feature work |
 | Latest Stable Release | `v2.0.1` released on 2026-05-09 from the code review issue fixes plan archived in `.agents/archive/PLAN_code_review_issue_fixes.md` |
-| Immediate Next Action | Review implemented `.agents/plans/PLAN_multi_agent_workflow_consolidation.md`; release work remains unrequested. |
+| Immediate Next Action | Implement `.agents/plans/PLAN_pre_planning_lifecycle_artifacts.md`; release work remains unrequested. |
 
 ## Roadmap Rules
 
@@ -37,17 +37,17 @@ Released history belongs in `CHANGELOG.md`.
 
 ## Planned Work
 
-Use this section for plan-backed work that is ready but not selected as the immediate release-track action.
+Use this section for plan-backed work that is not selected as the immediate release-track action. Notes must state when a plan is not ready for execution yet.
 
 | Status | Workstream | Plan Or Artifact | Notes |
 | --- | --- | --- | --- |
+| In Progress | Pre-planning artifact and lifecycle vocabulary adoption | `.agents/plans/PLAN_pre_planning_lifecycle_artifacts.md`; `docs/decisions/0001-adopt-pre-planning-artifacts.md`; `docs/decisions/0002-align-lifecycle-vocabulary-with-industry-practice.md` | ADR 0001 and ADR 0002 are accepted; implementation is underway. |
 | Implemented | Multi-agent workflow consolidation | `.agents/plans/PLAN_multi_agent_workflow_consolidation.md` | Workflow guidance is consolidated in `.agents/references/workflow.md`, live routing uses `.agents/context/*` workflow state, and release/archive cleanup remains out of scope until requested |
 | Implemented | Frontend AI contract | `.agents/plans/PLAN_frontend_ai_contract.md` | Backend-owned source contract is implemented; external frontend-repo copy deferred until destination and instruction path are known |
 
 ## Intake
 
-1. introduce adr to pre-planning workflow https://adr.github.io or https://github.com/adr/madr or https://github.com/architecture-decision-record/architecture-decision-record
-2. formalise adr and spec format C:\Users\kamki\AppData\Roaming\JetBrains\IntelliJIdea2026.1\scratches\desing_how_to_implement_that.md
+No loose intake items are active. The pre-planning artifact and lifecycle vocabulary work is now tracked by `.agents/plans/PLAN_pre_planning_lifecycle_artifacts.md`.
 
 ## Deferred Work
 

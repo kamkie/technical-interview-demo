@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted on 2026-05-10
 
 ## Date
 
@@ -175,8 +175,8 @@ It leaves the early lifecycle half-modernized and keeps `Planning` ambiguous bet
 
 ## Confirmation
 
-This ADR is accepted only when the lifecycle owner guide and overlapping guidance are updated consistently.
-Acceptance should be verified by manual documentation review that:
+This ADR was accepted by explicit user instruction on 2026-05-10.
+Implementation should be verified by manual documentation review that:
 
 - `.agents/references/application-lifecycle.md` is the canonical lifecycle vocabulary owner
 - `.agents/references/planning.md` uses the accepted phase names

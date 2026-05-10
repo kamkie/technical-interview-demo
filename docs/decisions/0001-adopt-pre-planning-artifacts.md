@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted on 2026-05-10
 
 ## Date
 
@@ -83,7 +83,7 @@ For those, ADRs are a better fit.
 
 ## Confirmation
 
-This ADR should be considered accepted only after the repository updates the relevant standing guidance and templates.
+This ADR was accepted by explicit user instruction on 2026-05-10.
 The acceptance implementation should:
 
 1. Add artifact ownership and routing rules for ADRs, PRDs, and standalone specs.
