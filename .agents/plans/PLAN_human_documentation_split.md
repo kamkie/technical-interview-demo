@@ -20,9 +20,9 @@
 | --- | --- |
 | Decision Complete | Yes |
 | Blocking Open Questions | None |
-| Accepted Fallbacks | Operations runbooks moved to `docs/OPERATIONS.md`; root `WORKING_WITH_AI.md` remains a compatibility pointer |
+| Accepted Fallbacks | Operations runbooks moved to `docs/OPERATIONS.md`; current AI collaboration links target `docs/WORKING_WITH_AI.md` with no root compatibility pointer |
 | Ready For Execution | Yes |
-| Last Updated | 2026-05-10 |
+| Last Updated | 2026-05-11 |
 
 ## Linked Pre-Planning Artifacts
 | Artifact | Path | Role | Status |
@@ -33,11 +33,11 @@
 
 ## Summary
 - Split human-facing documentation into a navigable `docs/` tree while keeping `README.md` concise.
-- Move AI collaboration guidance to `docs/WORKING_WITH_AI.md`, keep root compatibility, and move deployment/runbook content out of `SETUP.md`.
+- Move AI collaboration guidance to `docs/WORKING_WITH_AI.md`, migrate current links there, and move deployment/runbook content out of `SETUP.md`.
 - Success is measured by the ADR confirmation checklist, passing documentation audit, and aligned roadmap/AI ownership maps.
 
 ## Scope
-- In scope: `docs/README.md`, `docs/DEVELOPMENT_LIFECYCLE.md`, `docs/WORKING_WITH_AI.md`, `docs/OPERATIONS.md`, root `WORKING_WITH_AI.md` compatibility, `SETUP.md`, `CONTRIBUTING.md`, `README.md`, `docs/DESIGN.md`, `AGENTS.md`, `.agents/references/documentation.md`, `ROADMAP.md`, and this plan.
+- In scope: `docs/README.md`, `docs/DEVELOPMENT_LIFECYCLE.md`, `docs/WORKING_WITH_AI.md`, `docs/OPERATIONS.md`, migration of current links away from root `WORKING_WITH_AI.md`, `SETUP.md`, `CONTRIBUTING.md`, `README.md`, `docs/DESIGN.md`, `AGENTS.md`, `.agents/references/documentation.md`, `ROADMAP.md`, and this plan.
 - In scope: Markdown link migration for moved files and ownership references.
 - In scope: generated-or-derived notices for human-only summaries that derive from owner artifacts.
 - Out of scope: application behavior, public API contracts, release preparation, deployment execution, and changelog updates.
@@ -46,21 +46,21 @@
 - `docs/decisions/0006-split-human-documentation-and-ai-workflow-guides.md` is accepted and now records `docs/OPERATIONS.md` as the selected operations path.
 - `SETUP.md` is focused on local setup, local commands, CI reproduction, and local troubleshooting.
 - `docs/OPERATIONS.md` owns deployment contract, release-artifact verification, image build and smoke, post-deploy smoke, runtime expectations, upgrade and rollback, Kubernetes, Helm, monitoring, OAuth runtime setup, and operations troubleshooting.
-- `docs/WORKING_WITH_AI.md` owns the human-facing AI guide; root `WORKING_WITH_AI.md` remains a compatibility pointer.
+- `docs/WORKING_WITH_AI.md` owns the human-facing AI guide; no root `WORKING_WITH_AI.md` compatibility pointer remains.
 - `docs/README.md` and `docs/DEVELOPMENT_LIFECYCLE.md` exist and link the human-facing documentation tree.
-- `ROADMAP.md` tracks this plan as in-progress implementation work.
+- `ROADMAP.md` tracks this plan as integrated work awaiting any separately requested release work.
 
 ## Requirement Gaps And Open Questions
 | ID | Question / Gap | Why It Matters | Owner | Status | Fallback / Decision | Blocks Ready? |
 | --- | --- | --- | --- | --- | --- | --- |
 | Q1 | Should operations content live at repository root as `OPERATIONS.md` or under `docs/OPERATIONS.md`? | The selected path must be used consistently by human docs, AI ownership maps, and link migration. | Agent | Answered | Use `docs/OPERATIONS.md` so the human documentation index owns design, lifecycle, AI collaboration, operations, and frontend contract material in one tree. | No |
-| Q2 | Should root `WORKING_WITH_AI.md` remain after the move? | Existing links and readers may expect the root path during migration. | Agent | Answered | Keep root `WORKING_WITH_AI.md` as a short compatibility pointer to `docs/WORKING_WITH_AI.md`. | No |
+| Q2 | Should root `WORKING_WITH_AI.md` remain after the move? | Existing links and readers may expect the root path during migration. | Agent | Answered | Remove the root pointer after link migration; current repository links should target `docs/WORKING_WITH_AI.md`. | No |
 
 ## Decision Log And Assumptions
 | ID | Decision / Assumption | Source | Date | Revisit Trigger |
 | --- | --- | --- | --- | --- |
 | D1 | Operations runbooks move to `docs/OPERATIONS.md`, not root `OPERATIONS.md`. | ADR 0006 accepted fallback decision | 2026-05-10 | If maintainers later want operations outside the docs tree for packaging or release distribution. |
-| D2 | Root `WORKING_WITH_AI.md` remains as a short compatibility pointer. | ADR 0006 migration guidance | 2026-05-10 | After downstream links no longer target the root path. |
+| D2 | Root `WORKING_WITH_AI.md` compatibility was temporary during migration; no root pointer remains after current links were migrated to `docs/WORKING_WITH_AI.md`. | ADR 0006 confirmation and current repository state | 2026-05-10 | If downstream consumers require a root compatibility pointer again. |
 | D3 | `docs/DEVELOPMENT_LIFECYCLE.md` is human-facing and summary-level; `.agents/references/application-lifecycle.md` remains the detailed AI owner. | ADR 0006 and `.agents/references/documentation.md` | 2026-05-10 | If lifecycle rules change rather than only the human summary. |
 | D4 | Execute in `M0: direct` mode. | `.agents/references/workflow.md` and no user request for delegation | 2026-05-10 | If the user explicitly asks for parallel agents or the scope expands into disjoint code/doc streams. |
 | D5 | No release, deployment, public API, or changelog work is included. | User request and ADR scope | 2026-05-10 | If the user requests release preparation after integration. |
@@ -68,12 +68,12 @@
 ## Execution Shape And Shared Files
 - Recommended shape: `M0: direct`.
 - The work is documentation-only but touches shared routing files (`README.md`, `CONTRIBUTING.md`, `AGENTS.md`, `.agents/references/documentation.md`, `ROADMAP.md`, and this plan), so a single local agent should keep ordering and link migration coherent.
-- Coordinator-owned shared files if delegation is later requested: `ROADMAP.md`, this plan, `README.md`, `CONTRIBUTING.md`, `AGENTS.md`, `.agents/references/documentation.md`, and root compatibility pointers.
+- Coordinator-owned shared files if delegation is later requested: `ROADMAP.md`, this plan, `README.md`, `CONTRIBUTING.md`, `AGENTS.md`, `.agents/references/documentation.md`, and documentation entry-point links.
 - Candidate worker boundaries if later delegation becomes necessary: one worker could split `SETUP.md` and `docs/OPERATIONS.md`; another could draft `docs/README.md`, `docs/DEVELOPMENT_LIFECYCLE.md`, and `docs/WORKING_WITH_AI.md`; the coordinator would still own link migration, roadmap, validation, and final review.
 
 ## Affected Artifacts
 - Pre-planning artifacts: `docs/decisions/0006-split-human-documentation-and-ai-workflow-guides.md` remains the governing ADR.
-- Docs: `README.md`, `SETUP.md`, `CONTRIBUTING.md`, `WORKING_WITH_AI.md`, `docs/README.md`, `docs/DEVELOPMENT_LIFECYCLE.md`, `docs/WORKING_WITH_AI.md`, `docs/OPERATIONS.md`, `docs/DESIGN.md`, and relevant docs links.
+- Docs: `README.md`, `SETUP.md`, `CONTRIBUTING.md`, `docs/README.md`, `docs/DEVELOPMENT_LIFECYCLE.md`, `docs/WORKING_WITH_AI.md`, `docs/OPERATIONS.md`, `docs/DESIGN.md`, and relevant docs links.
 - AI guidance: `AGENTS.md` and `.agents/references/documentation.md`.
 - Roadmap and plan tracking: `ROADMAP.md` and `.agents/plans/PLAN_human_documentation_split.md`.
 - Tests and source files: none expected.
@@ -82,7 +82,7 @@
 ## Progress Tracker
 | Task | Status | Owner | Commit | Validation | Notes |
 | --- | --- | --- | --- | --- | --- |
-| 1: Documentation Spine And AI Guide Move | Done | Agent | `docs(ai): move human AI guide into docs` | `pwsh ./scripts/docs/audit-docs.ps1` passed | Created the human docs index, lifecycle summary, moved AI collaboration guide, and root compatibility pointer. |
+| 1: Documentation Spine And AI Guide Move | Done | Agent | `docs(ai): move human AI guide into docs` | `pwsh ./scripts/docs/audit-docs.ps1` passed | Created the human docs index, lifecycle summary, moved AI collaboration guide, and later removed the temporary root pointer after link migration. |
 | 2: Operations And Setup Split | Done | Agent | `docs(operations): split runbooks from setup` | `pwsh ./scripts/docs/audit-docs.ps1` passed | Moved deployment/runtime runbooks into `docs/OPERATIONS.md` and narrowed `SETUP.md` to local setup and local troubleshooting. |
 | 3: Ownership Map And Link Alignment | Done | Agent | `docs: align human documentation ownership map` | `pwsh ./scripts/docs/audit-docs.ps1` and `git diff --check` passed | Aligned top-level docs, AI ownership maps, ADR links, roadmap state, and operations/AI guide references. |
 | 4: Final Validation And Review | Done | Agent | `docs(plan): close human documentation split` | `pwsh ./scripts/docs/audit-docs.ps1` and `./build.ps1 -FullBuild build` passed | Final validation and self-review completed; plan is implemented and ready for maintainer review or release work if requested later. |
@@ -93,11 +93,11 @@
 | --- | --- |
 | Status | Done |
 | Goal | Establish the human-facing `docs/` entry points required by ADR 0006. |
-| Owned Files Or Packages | `docs/README.md`, `docs/DEVELOPMENT_LIFECYCLE.md`, `docs/WORKING_WITH_AI.md`, `WORKING_WITH_AI.md` |
+| Owned Files Or Packages | `docs/README.md`, `docs/DEVELOPMENT_LIFECYCLE.md`, `docs/WORKING_WITH_AI.md`, and the temporary root pointer during migration |
 | Coordinator-Owned Shared Files | `README.md`, `CONTRIBUTING.md`, `ROADMAP.md`, this plan |
 | Context Required | `AGENTS.md`, `.agents/references/execution.md`, `.agents/references/code-style.md`, `.agents/references/documentation.md`, `.agents/references/testing.md`, this plan, and `docs/decisions/0006-split-human-documentation-and-ai-workflow-guides.md` |
 | Behavior To Preserve | Keep human-facing guidance concise; do not copy detailed AI runbooks from `.agents/references/*`. |
-| Deliverables | Human docs index, lifecycle summary with derived notice, moved AI collaboration guide, and root compatibility pointer. |
+| Deliverables | Human docs index, lifecycle summary with derived notice, moved AI collaboration guide, link migration, and no remaining root compatibility pointer. |
 | Validation Checkpoint | `pwsh ./scripts/docs/audit-docs.ps1` or targeted link review if the full split is still mid-migration. |
 | Commit Checkpoint | Commit the completed docs spine and AI guide move before starting unrelated implementation work. |
 
@@ -149,7 +149,7 @@
 | User requests release preparation or deployment execution. | Stop this plan scope and route through release or operations guidance. | User | Not Triggered |
 
 ## Edge Cases And Failure Modes
-- Root links to `WORKING_WITH_AI.md` may remain in historical ADRs; update current navigation links and only change historical records where the ADR confirmation checklist requires current targets.
+- Root links to `WORKING_WITH_AI.md` may remain in historical ADRs; current navigation links should target `docs/WORKING_WITH_AI.md`, and the root compatibility pointer is no longer present.
 - Moving troubleshooting content can break anchors; keep section headings stable where practical and rely on documentation audit for local link proof.
 - `docs/DEVELOPMENT_LIFECYCLE.md` can drift from `.agents/references/application-lifecycle.md`; include a derived notice and keep the summary brief.
 - `SETUP.md` still needs local troubleshooting; do not move local Java, Docker, Testcontainers, formatter, or port-conflict guidance into operations.
@@ -158,7 +158,7 @@
 - Run `pwsh ./scripts/docs/audit-docs.ps1` after Markdown moves and final link alignment.
 - Run `./build.ps1 build` for the repository standard validation; for documentation-only diffs, record whether the wrapper takes the lightweight-only path.
 - Manually review the ADR 0006 confirmation checklist against changed files.
-- Use `rg` to confirm no current navigation or ownership references still target root `WORKING_WITH_AI.md` except the compatibility pointer and historical context where intentionally preserved.
+- Use `rg` to confirm no current navigation or ownership references still target root `WORKING_WITH_AI.md` except historical context where intentionally preserved.
 
 ## Verification Strategy
 - Unit tests: not applicable; no code behavior changes.
@@ -184,6 +184,9 @@
 | 2026-05-10 | `pwsh ./scripts/docs/audit-docs.ps1` | Final documentation split validation | Passed | Audited 37 user-facing documents, checked 188 local links, and passed. |
 | 2026-05-10 | `./build.ps1 -FullBuild build` | Whole-plan cumulative validation | Passed | Forced full build for whole-plan signoff; executed 270 tests, docs generation, coverage, dependency scan, SBOM tasks, formatting checks, static/security scans, and Docker image build. |
 | 2026-05-10 | Self-review | Final documentation and reference-guide review | Passed | No unresolved blocking drift, stale current navigation, missing validation, or security-sensitive implementation changes found. Release work remains out of scope. |
+| 2026-05-11 | Targeted `rg` checks | AI-guidance alignment follow-up | Passed | Confirmed no stale current root `WORKING_WITH_AI.md` pointer wording, lifecycle loop-gap wording, or premature plan-archive wording remains in active AI guidance. |
+| 2026-05-11 | `git diff --check` | AI-guidance alignment follow-up | Passed | No whitespace errors. |
+| 2026-05-11 | `./build.ps1 build` | AI-guidance alignment follow-up | Passed | Wrapper reported only lightweight uncommitted files changed and skipped Gradle; manual consistency review is sufficient for this diff. |
 
 ## User Validation
 - Open `README.md` and `docs/README.md`; confirm the project overview and documentation index point to setup, contributing, lifecycle, AI collaboration, operations, design, roadmap, ADRs, PRDs, specs, and frontend contract material.

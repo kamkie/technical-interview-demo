@@ -24,7 +24,7 @@ For canonical behavior or contract truth, use a standalone spec in [docs/specs/]
 1. Create a new file named `PLAN_<short_snake_case_title>.md` in this directory.
 2. Start from [PLAN_TEMPLATE.md](PLAN_TEMPLATE.md) and follow the structure described in [.agents/references/planning.md](../references/planning.md): provenance, context, scope, ordered tasks with validation, links to governing specs.
 3. Link the new plan from any related ADR, PRD, standalone spec, or [ROADMAP.md](../../ROADMAP.md) entry.
-4. Execute the plan using the loop in [.agents/references/plan-execution.md](../references/plan-execution.md); when the plan is complete, move it under [.agents/archive/](../archive/).
+4. Execute the plan using the loop in [.agents/references/plan-execution.md](../references/plan-execution.md); after the related work is released or explicitly retired, move the concrete plan under [.agents/archive/](../archive/) during cleanup.
 
 ## Active Plans
 
@@ -36,4 +36,4 @@ Do not list [PLAN_TEMPLATE.md](PLAN_TEMPLATE.md) here.
 
 ## Archived Plans
 
-Completed or superseded plans live under [.agents/archive/](../archive/).
+Released, superseded, or intentionally retired plans live under [.agents/archive/](../archive/).

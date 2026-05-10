@@ -333,9 +333,7 @@ When this file changes:
 ## Current Gaps
 
 - no dedicated Analysis owner guide beyond `.agents/references/planning.md`, `.agents/references/documentation.md`, and the ADR, PRD, and spec templates
-- the `Red-Green Loop` is not named directly in `.agents/references/testing.md`, even though validation work commonly follows it
 - the `Outer Product Loop` is composed from `ROADMAP.md`, `.agents/references/releases.md`, `.agents/references/operations.md`, `.agents/references/learning-rules.md`, and `docs/LEARNINGS.md` rather than owned by a single guide
-- the `Review Loop` exit back into plan-task execution is implicit in `.agents/references/reviews.md` and `.agents/references/execution.md`
 
 ## Non-Goals
 
