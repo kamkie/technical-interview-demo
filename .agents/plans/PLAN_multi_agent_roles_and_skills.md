@@ -48,10 +48,10 @@
 
 ## Current State
 - Phase: Planning. Both ADRs are `Proposed`, dated 2026-05-10, and present each other as competing.
-- `.agents/references/workflow.md` now defines `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, `M4: gated` and references `.agents/context/*` directories that do not exist on disk.
+- `.agents/references/workflow.md` now defines `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, `M4: gated`, declares the six-role read-set table, and references materialized `.agents/context/*` directories.
 - `.agents/skills/` contains only `gh-fix-ci/` and `gh-fix-security-quality/`.
 - ADR 0004 introduces role names (`Orchestrator`, `Explorer`, `Documentation Agent`, `Release Agent`) not present in `workflow.md`, creating vocabulary drift.
-- No per-role read-set table exists; agents load the union of references.
+- The per-role read-set table now exists in `.agents/references/workflow.md`.
 
 ## Requirement Gaps And Open Questions
 | ID | Question / Gap | Why It Matters | Owner | Status | Fallback / Decision | Blocks Ready? |
@@ -95,7 +95,7 @@
 | 1: Resolve Q1–Q3 with user | Done | Coordinator | `docs(plan): unblock multi-agent roles plan` | `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | User accepted both ADRs and authorized implementation if no blockers. |
 | 2: Reconcile ADR 0004 roster + ADR cross-links | Done | Worker | `docs(decisions): align multi-agent ADR relationship` | `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | ADR 0004 now uses the six-role roster and ADR 0003 is the implementation decision. |
 | 3: Rename mode labels in `workflow.md` and update both ADRs | Done | Worker | `docs(workflow): rename multi-agent mode labels` | `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | Mode identifiers and semantics preserved. |
-| 4: Materialize `.agents/context/*` and add per-role read-set table | Not Started | Worker | Pending | Pending | Phase A.2. |
+| 4: Materialize `.agents/context/*` and add per-role read-set table | Done | Worker | `docs(workflow): add multi-agent state readsets` | `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | Context directories have tracked README files. |
 | 5: Record user acceptance decision for ADR 0004 and ADR 0003 | Not Started | Coordinator | Pending | Pending | Gate before skills. |
 | 6: Add Phase B skill bundles | Not Started | Worker | Pending | Pending | Phase B. |
 | 7: Smoke-test the loop on one bounded task | Not Started | Coordinator + Worker + Reviewer + Verifier | Pending | Pending | Captures `LEARNINGS.md` entry. |
@@ -147,15 +147,15 @@
 ### Task 4: Materialize `.agents/context/*` And Add Per-Role Read-Set Table
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Create the five state directories with stub `README.md` files describing role-to-directory ownership; add the per-role read-set table from ADR 0003 to `workflow.md`. |
 | Owned Files Or Packages | `.agents/context/handoffs/README.md`, `.agents/context/workers/README.md`, `.agents/context/reviews/README.md`, `.agents/context/verifications/README.md`, `.agents/context/specialists/README.md`, `.agents/references/workflow.md`. |
 | Coordinator-Owned Shared Files | `.agents/references/workflow.md`. |
 | Context Required | ADR 0003, `.agents/references/workflow.md`. |
 | Behavior To Preserve | Existing `workflow.md` rules. |
 | Deliverables | Five directories with `README.md`; read-set table merged into `workflow.md`. |
-| Validation Checkpoint | `Get-ChildItem .agents\context -Recurse` lists all five `README.md` files; manual review of read-set table. |
-| Commit Checkpoint | One commit. |
+| Validation Checkpoint | Passed: `Get-ChildItem .agents\context -Recurse` lists all five `README.md` files; manual review confirmed the read-set table is in `workflow.md`. |
+| Commit Checkpoint | `docs(workflow): add multi-agent state readsets` |
 
 ### Task 5: Record User Acceptance Decision For ADR 0004 And ADR 0003
 | Field | Value |
@@ -282,6 +282,10 @@
 | 2026-05-10 | `rg -n "M0: solo|M1: sidecar-readonly|M2: bounded-worker|M3: parallel-sliced|M4: full-sidecar|sidecar-readonly|bounded-worker|parallel-sliced|full-sidecar" .agents\references\workflow.md docs\decisions\0003-adopt-multi-agent-roles-and-skill-catalog.md` | Task 3 mode-label rename | Passed | No matches in the workflow owner or implementation ADR. |
 | 2026-05-10 | `git diff --check` | Task 3 mode-label rename | Passed | No whitespace diagnostics. |
 | 2026-05-10 | `./build.ps1 build` | Task 3 mode-label rename | Passed | Wrapper detected only lightweight uncommitted files and skipped Gradle; manual consistency review is sufficient. |
+| 2026-05-10 | `Get-ChildItem .agents\context -Recurse -File` | Task 4 context directories and read-set table | Passed | Listed README files for handoffs, workers, reviews, verifications, and specialists. |
+| 2026-05-10 | `rg -n "Role Identities And Read Sets|Coordinator|Planner|Worker|Reviewer|Verifier|Specialist" .agents\references\workflow.md` | Task 4 context directories and read-set table | Passed | Read-set table and six role identities are present in `workflow.md`. |
+| 2026-05-10 | `git diff --check` | Task 4 context directories and read-set table | Passed | No whitespace diagnostics. |
+| 2026-05-10 | `./build.ps1 build` | Task 4 context directories and read-set table | Passed | Wrapper detected only lightweight uncommitted files and skipped Gradle; manual consistency review is sufficient. |
 
 ## User Validation
 - Confirm `.agents/references/workflow.md` defines `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, and `M4: gated` with unchanged mode semantics.

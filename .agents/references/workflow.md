@@ -36,6 +36,30 @@ Split work only when the benefit is concrete and the inferred no-plan mode or ap
 Good boundaries follow package, contract, artifact, or plan ownership, such as `business.book`, `business.category`, `business.localization`, `business.user`, `technical.security`, one bounded public API change with its contract artifacts, documentation-only slices that do not overlap source edits, or one approved plan per worker.
 Do not split work when workers would overlap on the same controller, service, integration test, REST Docs or OpenAPI artifact, roadmap row, changelog row, plan status row, unresolved decision, or indivisible plan task.
 
+## Role Identities And Read Sets
+
+Use these role identities for multi-agent execution:
+
+| Role | Responsibility |
+| --- | --- |
+| Coordinator | Owns workflow shape, routing, shared files, integration order, conflict resolution, final validation, and final reporting. |
+| Planner | Authors or revises execution plans, decision logs, readiness reviews, and plan-task boundaries. |
+| Worker | Implements one approved write scope and reports changed files, validation, risks, and integration readiness. |
+| Reviewer | Performs read-only diff, contract, documentation, maintainability, or gate review. |
+| Verifier | Runs validation or independent checks without editing files. |
+| Specialist | Performs role-scoped gates such as security review, documentation review, architecture review, or release readiness when explicitly in scope. |
+
+Load the smallest role-shaped context that can complete the delegated activity:
+
+| Role | Always loaded | Conditional |
+| --- | --- | --- |
+| Coordinator | `AGENTS.md`, `.agents/references/workflow.md`, `.agents/references/documentation.md` | active plan; `.agents/references/releases.md` only for explicit release work |
+| Planner | `AGENTS.md`, `.agents/references/planning.md`, `.agents/references/plan-template.md` | `.agents/references/documentation.md`, `.agents/references/architecture.md`, linked ADR, PRD, spec, or roadmap item when referenced |
+| Worker | `AGENTS.md`, `.agents/references/execution.md`, `.agents/references/code-style.md` | `.agents/references/testing.md` on validation; `.agents/references/documentation.md` on docs or contract artifacts |
+| Reviewer | `AGENTS.md`, `.agents/references/reviews.md`, `.agents/references/documentation.md` | `.agents/references/code-style.md`, affected specs, contract docs, or source files |
+| Verifier | `AGENTS.md`, `.agents/references/testing.md`, `.agents/references/troubleshooting.md` | `.agents/references/command-wrapper.md`, `.agents/references/gradle-task-graph.md`, affected test or benchmark docs |
+| Specialist | `AGENTS.md`, `.agents/references/reviews.md` | `.agents/references/releases.md`, `.agents/references/release-checklist.md`, `.agents/references/documentation.md`, `.agents/references/architecture.md`, or another focused owner guide matching the specialist gate |
+
 ## Delegation Contract
 
 Before delegated work starts, keep current work committed or stashed, use unique worker branches, and never check out the same branch in more than one worktree at a time.
