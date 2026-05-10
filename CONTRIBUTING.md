@@ -2,46 +2,36 @@
 
 Technical Interview Demo is a small, spec-driven Spring Boot application for interview exercises. Contributions should keep it readable, direct, and easy to reason about.
 
+## Quick Checklist
+
+1. Pick or open work in [ROADMAP.md](ROADMAP.md). If intent is unclear, add an ADR, PRD, or standalone spec first — see [docs/DEVELOPMENT_LIFECYCLE.md](docs/DEVELOPMENT_LIFECYCLE.md).
+2. Branch as `<type>/<short-kebab-description>`.
+3. Make spec-first changes (update tests, REST Docs, or OpenAPI alongside the code).
+4. Run `./build.ps1 build`; if user-facing docs changed, also run `pwsh ./scripts/docs/audit-docs.ps1`.
+5. Commit using the [.gitmessage](.gitmessage) shape, open a PR, and address review.
+
 ## Read This First
 
-Use the human-facing docs deliberately:
+Before contributing, skim:
 
-- `README.md` for the project overview, implemented scope, and contract map
-- `docs/README.md` for the human-facing documentation index
-- `SETUP.md` for environment setup through the dev container or local shell
-- `docs/LOCAL_DEVELOPMENT.md` for local run commands, validation loops, CI reproduction, and local troubleshooting
-- `docs/DEVELOPMENT_LIFECYCLE.md` for lifecycle and artifact-routing guidance
-- `docs/WORKING_WITH_AI.md` for how to use AI across discovery, planning, implementation, verification, and release
-- `docs/OPERATIONS.md` for deployment, runtime, smoke, rollback, Kubernetes, Helm, monitoring, OAuth, and operations troubleshooting runbooks
-- `ROADMAP.md` for active planned work only
-
-Use the AI-facing docs only when they are the owner for the workflow or rule you are changing:
-
-- `AGENTS.md` for repository-local AI rules, spec priority, required artifact updates, and definition of done
-- `.agents/references/planning.md`, `.agents/references/plan-execution.md`, `.agents/references/execution.md`, `.agents/references/workflow.md`, `.agents/references/testing.md`, `.agents/references/reviews.md`, and `.agents/references/releases.md` for the AI-side planning, execution, coordination, validation, and release workflow
+- [README.md](README.md) — project overview and supported contract.
+- [docs/README.md](docs/README.md) — human-facing documentation index; start here for any document not linked below.
+- [docs/DEVELOPMENT_LIFECYCLE.md](docs/DEVELOPMENT_LIFECYCLE.md) — when to write an ADR, PRD, standalone spec, or plan, and which artifact owns which change.
+- [AGENTS.md](AGENTS.md) — repository-local AI rules and spec priority (only if you will use AI in this repo).
 
 ## Project Ground Rules
 
 Keep these repository constraints intact unless the change explicitly redefines them:
 
-- keep the demo small, readable, and easy to reason about
-- prefer direct Spring MVC, Spring Data JPA, and `@Service` code over extra abstraction
-- keep package names under `team.jit.technicalinterviewdemo`
-- use PostgreSQL for runtime work and keep the local developer path Docker-friendly
-- keep the public application contract centered on `/api/**`
-- treat `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, and `/actuator/**` as internal or deployment-scoped surfaces unless a reviewed contract change says otherwise
-- treat executable specs, REST Docs, and the approved OpenAPI baseline as product evidence; keep reviewer HTTP examples and suites as convenience tools aligned with that behavior
+- Keep the demo small, readable, and easy to reason about.
+- Prefer direct Spring MVC, Spring Data JPA, and `@Service` code over extra abstraction.
+- Keep package names under `team.jit.technicalinterviewdemo`.
+- Use PostgreSQL for runtime work and keep the local developer path Docker-friendly.
+- Keep the public application contract centered on `/api/**`.
+- Treat `/`, `/hello`, `/docs`, `/v3/api-docs`, `/v3/api-docs.yaml`, and `/actuator/**` as internal or deployment-scoped surfaces unless a reviewed contract change says otherwise.
+- Treat executable specs, REST Docs, and the approved OpenAPI baseline as product evidence; keep reviewer HTTP examples and suites as convenience tools aligned with that behavior.
 
-When documentation changes, keep the right human-facing files aligned:
-
-- `README.md` owns the concise project and contract summary
-- `docs/README.md` owns the human-facing documentation index
-- `SETUP.md` owns environment setup through the dev container or local shell
-- `docs/LOCAL_DEVELOPMENT.md` owns local development commands, validation loops, CI reproduction, and local troubleshooting
-- `docs/DEVELOPMENT_LIFECYCLE.md` owns the human-facing lifecycle and artifact-routing summary
-- `docs/WORKING_WITH_AI.md` owns the human-facing AI collaboration lifecycle
-- `docs/OPERATIONS.md` owns deployment and runtime operations runbooks
-- `CONTRIBUTING.md` owns contributor workflow and maintainer expectations
+When documentation changes, follow the artifact-routing table in [docs/DEVELOPMENT_LIFECYCLE.md](docs/DEVELOPMENT_LIFECYCLE.md).
 
 ## Spec-Driven Development
 
@@ -55,118 +45,44 @@ Normal flow:
 4. Implement the smallest coherent change that satisfies the updated spec.
 5. Verify the executable and published artifacts still agree.
 
-Authoritative artifact map:
-
-- `src/test/java/` for executable behavior specs
-- `src/docs/asciidoc/` for published REST Docs content
-- `src/test/resources/openapi/approved-openapi.json` for the approved machine-readable public contract
-- `src/manualTests/http/examples/` for reviewer-facing convenience request examples
-- `src/manualTests/http/suites/` for semi-automated IntelliJ HTTP Client manual-regression convenience scripts
-- `README.md` for the supported human-facing contract summary
-- `ROADMAP.md` for active work only
-- `CHANGELOG.md` for released history only
-
-Change-routing rules:
-
-- public API change: update implementation, tests, REST Docs, OpenAPI when intentionally changed, and `README.md` if the supported contract changed; update HTTP convenience files when reviewer workflows should mirror the change
-- internal refactor with no contract change: keep existing specs green and avoid unnecessary OpenAPI or README edits
-- setup or tooling change: update `SETUP.md` when the environment setup changes, or `docs/LOCAL_DEVELOPMENT.md` when local command workflows change
-- deployment or runtime runbook change: update `docs/OPERATIONS.md`
-- AI workflow or AI guidance change: update the owning AI guide and keep `AGENTS.md` aligned when the AI document set or maintenance rules changed
-- roadmap reprioritization: update `ROADMAP.md`
-- released history: update `CHANGELOG.md`
-
-## Working With AI
-
-If you are using AI in this repository, `docs/WORKING_WITH_AI.md` is the human-facing starting point.
-
-Use AI with the same discipline as manual work:
-
-- frame the request in terms of behavior, not only code
-- give the AI the correct owner documents for the current lifecycle phase
-- keep work task-sized
-- review the diff, validation, and contract impact yourself
-- keep release work separate from implementation work
-
-Human responsibilities do not move to the AI. The developer still owns:
-
-- scope and product intent
-- approval of assumptions and tradeoffs
-- review of the resulting diff
-- validation choices and acceptance of the evidence
-- release decisions
-
-For multi-step work, planning should happen before implementation. When the work is large enough to justify a real plan, create or revise an `.agents/plans/PLAN_*.md` file and follow the workflow described in `docs/WORKING_WITH_AI.md` plus the owning `.agents/references/` guides.
+For the authoritative artifact map and change-routing rules, see [docs/DEVELOPMENT_LIFECYCLE.md](docs/DEVELOPMENT_LIFECYCLE.md) and [AGENTS.md](AGENTS.md) (Spec Priority).
 
 ## Branches And Commit Messages
 
-Use short, descriptive branch names:
+Use short, descriptive branch names of the form `<type>/<short-kebab-description>`:
 
 - `feat/book-search`
 - `fix/session-bootstrap`
 - `docs/contributing-refresh`
 - `refactor/localization-cache`
 
-Recommended pattern:
+Suggested branch types: `feat`, `fix`, `docs`, `chore`, `refactor`, `test`.
 
-```text
-<type>/<short-kebab-description>
+Commit messages follow Conventional Commits 1.0.0 with the AI trailer block defined in [.gitmessage](.gitmessage). AI-created commits must also follow the rules in [.agents/references/execution.md](.agents/references/execution.md), which owns the full footer schema, validation provenance, and per-source guidance. Enable the local template once with:
+
+```powershell
+git config commit.template .gitmessage
 ```
 
-Suggested branch types:
+Breaking changes are disallowed while [ROADMAP.md](ROADMAP.md) says so.
 
-- `feat`
-- `fix`
-- `docs`
-- `chore`
-- `refactor`
-- `test`
+## Validation Expectations
 
-Use Conventional Commits 1.0.0 style:
+Run the appropriate quality gate before asking for review:
 
-```text
-<type>[optional scope][!]: <description>
-
-[optional body]
-
-[optional footer(s)]
+```powershell
+./build.ps1 build
 ```
 
-Rules:
+`./build.ps1 build` short-circuits to a lightweight check when the diff is documentation-only or otherwise lightweight; use `./build.ps1 -FullBuild build` for cumulative branches, release candidates, or any code change that needs the full gate. CI applies the same classifier.
 
-- use a lowercase type, optional lowercase scope in parentheses, colon, space, and concise imperative description
-- use `feat` for new user-facing or API behavior and `fix` for bug fixes
-- use one of the repo-supported maintenance types when it fits better: `docs`, `test`, `refactor`, `chore`, `build`, `ci`, `perf`, `style`, or `revert`
-- add a body when the motivation, plan path, plan task, or validation context would help reviewers
-- do not use `!` or a `BREAKING CHANGE:` footer while `ROADMAP.md` says breaking changes are disallowed
-- include project metadata footers for AI-created commits so provenance and validation stay machine-readable
+Run [scripts/docs/audit-docs.ps1](scripts/docs/audit-docs.ps1) when user-facing Markdown or AsciiDoc changes.
 
-The repository includes an optional `.gitmessage` template with this structure; enable it locally with `git config commit.template .gitmessage`.
+For the full command catalog (focused tasks, Gatling, OpenAPI baseline refresh, parallel-task warnings, skip flags) see [docs/LOCAL_DEVELOPMENT.md](docs/LOCAL_DEVELOPMENT.md). For Helm and Kubernetes asset checks see [docs/OPERATIONS.md](docs/OPERATIONS.md).
 
-AI-created commit metadata:
+## Formatting Expectations
 
-- AI can generate the full commit message for you.
-- When asking AI to commit or draft a message, tell it to follow `.agents/references/execution.md`; that file owns the full AI-created commit-message rules, including project metadata footers and validation provenance.
-- The optional `.gitmessage` template mirrors the expected footer shape for local use.
-
-Good examples:
-
-```text
-feat(admin): add user management examples
-
-Project-Source: plan-task
-Project-Plan: .agents/plans/PLAN_admin_user_management.md
-Project-Plan-Task: Task 2 - Document admin examples
-Validation: ./build.ps1 build - passed
-```
-
-```text
-docs(release): document post-deploy smoke expectations
-
-Project-Source: prompt
-Project-Prompt: Document post-deploy smoke expectations
-Validation: ./build.ps1 build - lightweight shortcut
-```
+Run `./build.ps1 format` before review and `./build.ps1 checkFormat` to verify. Java formatting is owned by Palantir Java Format (Gradle plus the IntelliJ plugin); Kotlin, Gradle Kotlin DSL, and selected support-file whitespace are handled by Spotless. Full details: [docs/LOCAL_DEVELOPMENT.md](docs/LOCAL_DEVELOPMENT.md).
 
 ## Pull Request Expectations
 
@@ -183,11 +99,11 @@ Opening a PR is the handoff after local execution is complete. It is not a subst
 
 Each PR should include:
 
-- a short summary of what changed
-- the reason for the change
-- the commands you ran to validate it
-- any follow-up work intentionally left out of scope
-- any security-sensitive changes such as auth, secrets, workflow permissions, logging of sensitive data, or container publication behavior
+- A short summary of what changed.
+- The reason for the change.
+- The commands you ran to validate it.
+- Any follow-up work intentionally left out of scope.
+- Any security-sensitive changes such as auth, secrets, workflow permissions, logging of sensitive data, or container publication behavior.
 
 Self-review and reviewer focus should stay on bugs, regressions, spec drift, missing validation, and security-sensitive changes before style-only cleanup.
 
@@ -195,10 +111,18 @@ If the change affects public API behavior, include example requests or responses
 
 Default-branch expectations:
 
-- require the `CI` workflow to pass
-- require at least one reviewer
-- prefer squash merges or another linear-history policy
-- keep release tagging with maintainers who also own release validation
+- Require the `CI` workflow to pass.
+- Require at least one reviewer.
+- Prefer squash merges or another linear-history policy.
+- Keep release tagging with maintainers who also own release validation.
+
+## Documentation Expectations
+
+Documentation is part of the change. Update the owning artifact named in [docs/DEVELOPMENT_LIFECYCLE.md](docs/DEVELOPMENT_LIFECYCLE.md) instead of spreading partial updates across unrelated files. Run `pwsh ./scripts/docs/audit-docs.ps1` when user-facing Markdown or AsciiDoc changes.
+
+## Working With AI
+
+If you use AI in this repository, start with [docs/WORKING_WITH_AI.md](docs/WORKING_WITH_AI.md). The human still owns scope and product intent, assumptions and tradeoffs, diff review, validation choices, and release decisions.
 
 ## Worktrees, Plans, And Integration
 
@@ -206,101 +130,16 @@ Treat `main` as the integration branch for completed work.
 
 If you are executing a multi-step plan in a branch or git worktree:
 
-- keep the work there until the full planned scope is complete
-- push that branch and open a PR instead of trying to release directly from a worktree-only branch tip
-- consider worktree-based execution complete only when the finished branch has been pushed and the PR is open or already merged onto `main`
+- Keep the work there until the full planned scope is complete.
+- Push that branch and open a PR instead of trying to release directly from a worktree-only branch tip.
+- Consider worktree-based execution complete only when the finished branch has been pushed and the PR is open or already merged onto `main`.
 
 Do not cut a release from unmerged worktree state.
 
-## Validation Expectations
-
-Default quality gate before asking for review:
-
-```powershell
-./build.ps1 build
-```
-
-Exception:
-
-- `./build.ps1 build` performs the local uncommitted-change classifier check and exits successfully with manual-review guidance for lightweight-only changes; use `./build.ps1 -FullBuild build` to force the full Gradle build
-- the same classifier also drives the `CI` short-circuit for lightweight-only push and pull-request ranges
-- the lightweight shortcut is valid only when the whole local task or PR scope is lightweight; use `./build.ps1 -FullBuild build` when validating a cumulative branch, whole plan, release candidate, or code changes that were already committed before the final tracking edit
-
-Additional validation rules:
-
-- use `SETUP.md` for JDK 25, Docker, `.env`, and environment prerequisites
-- use `docs/LOCAL_DEVELOPMENT.md` for local command workflows and local troubleshooting
-- run `pwsh ./scripts/docs/audit-docs.ps1` when user-facing Markdown or AsciiDoc changes; CI runs it for both lightweight-only and full validation paths
-- use `./build.ps1 compileJava` or a similarly focused task for fast checks while editing, then use `./build.ps1 build` or `./build.ps1 -FullBuild build` for final verification according to the validation scope
-- use `./build.ps1 -SkipTests build`, `./build.ps1 -SkipChecks build`, or both only for local loops, not final verification
-- `-SkipChecks` skips formatting, PMD, SpotBugs, Error Prone, coverage verification, vulnerability scans, and SBOM checks
-- rerun `./build.ps1 gatlingBenchmark` when changing book list or search behavior, localization lookup behavior, or OAuth or session startup behavior
-- when both `build` and `gatlingBenchmark` are required, prefer one invocation such as `./build.ps1 build gatlingBenchmark --no-daemon` so Gradle reuses the same task graph instead of repeating work in separate runs
-- do not run overlapping Gradle validation tasks in parallel, including `build` with `gatlingBenchmark`, `externalSmokeTest`, `externalDeploymentCheck`, or `scheduledExternalCheck`
-- refresh the approved OpenAPI baseline only after intentional contract review with:
-
-```powershell
-./build.ps1 refreshOpenApiBaseline
-```
-
-- keep pull requests green on the `CI` workflow before asking for review
-
-When deployment assets are part of the change, also run the relevant checks from `docs/OPERATIONS.md`, usually including:
-
-- `helm lint infra/helm/technical-interview-demo`
-- `helm template technical-interview-demo infra/helm/technical-interview-demo -f infra/helm/technical-interview-demo/values-local.yaml`
-- `kubectl kustomize infra/k8s/overlays/local`
-- `kubectl apply --dry-run=client -k infra/k8s/overlays/local`
-- `kubectl kustomize infra/k8s/monitoring`
-- `kubectl kustomize infra/monitoring/grafana`
-
-## Documentation Expectations
-
-Documentation is part of the change. Update the owning artifact instead of spreading partial updates across unrelated files.
-
-Common routing:
-
-- `README.md` for supported project scope and public contract summary
-- `docs/README.md` for the human-facing documentation index
-- `SETUP.md` for environment setup through the dev container or local shell
-- `docs/LOCAL_DEVELOPMENT.md` for local development commands, CI reproduction, and local troubleshooting
-- `docs/DEVELOPMENT_LIFECYCLE.md` for lifecycle and artifact-routing summaries
-- `docs/WORKING_WITH_AI.md` for the human-facing AI collaboration lifecycle
-- `docs/OPERATIONS.md` for deployment and runtime operations runbooks
-- `AGENTS.md` and the relevant `.agents/references/` guide when AI rules, ownership, workflow, or execution guidance changed
-- `src/docs/asciidoc/` and the related REST Docs tests when public API behavior changed
-- `src/manualTests/http/examples/` when reviewer-facing convenience request examples changed
-- `src/manualTests/http/suites/` when semi-automated manual-regression HTTP Client convenience scripts changed
-- `ROADMAP.md` when active work changed
-- `CHANGELOG.md` when preparing or documenting a release
-
-Before review, run the documentation health check for user-facing documentation edits:
-
-```powershell
-pwsh ./scripts/docs/audit-docs.ps1
-```
-
 ## Release And Maintainer Expectations
 
-Release preparation starts only after the approved implementation PR has been merged onto `main`.
+*Maintainers only.*
 
-Use `.agents/references/releases.md` for the detailed release workflow.
+Release preparation starts only after the approved implementation PR has been merged onto `main`. Cut a release only from `main`, never from an unmerged worktree.
 
-At a minimum, release preparation should include:
-
-- reviewing modified Flyway migrations together with their metadata sidecars under `src/main/resources/db/migration/metadata/`
-- classifying the release with `pwsh ./scripts/release/get-release-migration-impact.ps1 -PreviousReleaseTag <previous-tag> -CurrentRef HEAD`
-- capturing restore-drill evidence with `pwsh ./scripts/release/invoke-restore-drill.ps1 ...` for any `restore-sensitive` release
-- confirming the exact release candidate passed `./build.ps1 -FullBuild build`
-- deciding whether `./build.ps1 gatlingBenchmark` is required for the scoped changes
-- running the manual `Post-Deploy Smoke` workflow with the expected build version and short commit id before promotion
-- updating `CHANGELOG.md`, `ROADMAP.md`, and any executed `.agents/plans/PLAN_*.md` files before tagging
-- verifying the remote `Release` workflow published the semantic tag, immutable short-SHA tag, and GitHub Release notes
-
-## Formatting Expectations
-
-`./build.ps1 format` is the formatting entry point.
-
-Java formatting is Gradle-owned through Palantir Java Format. IntelliJ alignment comes from the Palantir Java Format plugin plus the committed project code-style settings for imports and non-Java options.
-
-Use `./build.ps1 checkFormat` to verify formatting and `./build.ps1 format` to normalize formatting before review. Retained Spotless tasks still handle Kotlin, Gradle Kotlin DSL, and selected support-file whitespace normalization. `.properties` files stay outside the generic Spotless misc formatter so intentional blank-line separators survive.
+For the full release workflow (migration classification, restore-drill evidence, full-build gate, post-deploy smoke, `CHANGELOG.md` and `ROADMAP.md` updates, tag verification) follow [.agents/references/releases.md](.agents/references/releases.md). For deployment, post-release verification, rollback, and incident response follow [docs/OPERATIONS.md](docs/OPERATIONS.md) and [.agents/references/operations.md](.agents/references/operations.md).
