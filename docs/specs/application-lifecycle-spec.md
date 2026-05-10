@@ -73,7 +73,7 @@ Phase activities are grouped by the phase that owns them. An activity may appear
 
 - `Design` — decide product or contract behavior.
 - `Spec` — record the decided behavior in a governing executable or published spec artifact.
-- `Decompose` — split into commit-sized milestone checkpoints; pick a workflow mode.
+- `Decompose` — split planned work into commit-sized milestone checkpoints; pick the plan's workflow mode.
 - `Validate-Plan` — run the plan readiness checklist before approval.
 - `Replan?` — revise an approved plan when execution reality disagrees with it. *(cross-cutting)*
 

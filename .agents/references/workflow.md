@@ -10,8 +10,9 @@ Use `.agents/references/plan-execution.md` for whole-plan execution, `.agents/re
 
 Use the smallest workflow that keeps ownership clear:
 
-- `M0: solo` is enough for ordinary work
-- use actual delegation only when the current user request, approved plan, and execution environment allow it
+- for work without a created plan, infer the mode from the current request, write-scope boundaries, risk, and execution environment
+- for planned work, use the execution shape chosen during planning; revise the plan before splitting work if that shape is missing, stale, or contradicted by execution reality
+- use actual delegation only when the current user request, inferred no-plan mode or approved plan, and execution environment allow it
 - keep current work committed or stashed before creating side branches or worktrees
 - use unique worker branches for delegated work
 - never rely on the same checked-out branch in more than one worktree at a time
@@ -46,13 +47,14 @@ Two editing agents must not own the same write scope at the same time.
 | `M3: parallel-sliced` | Multiple disjoint edit scopes can run in parallel. | Coordinator plus workers. |
 | `M4: full-sidecar` | M3 plus independent review, verification, or specialist gates. | Coordinator plus workers and sidecars. |
 
-Use the lowest sufficient mode.
-`M3` and `M4` require an explicit user request or an approved plan that names parallel work, ownership boundaries, queues, gates, and final validation.
-Do not make `M3` or `M4` self-electing just because a task is large.
+For work without a created plan, infer and use the lowest sufficient mode from the current request.
+No-plan inference may select any `M0` through `M4` mode when the request, ownership boundaries, stop conditions, validation targets, and any sidecar gates are clear enough to brief agents without inventing scope; when they are not clear, route the work to planning instead of clamping to `M0`.
+For planned work, do not re-infer the mode at execution time: use the execution shape selected during planning and route to `Replan?` if it no longer fits.
+When multiple approved plans are selected for one execution run, strongly prefer `M3: parallel-sliced`; choose a lower mode only when the selected plans must run serially or cannot be safely split, and choose `M4` only when sidecar gates are part of the planned workflow.
 
 ## When To Split Work
 
-Split work only when the benefit is concrete and delegation, parallelism, or a worktree-backed handoff has been approved.
+Split work only when the benefit is concrete and the inferred no-plan mode or approved plan allows delegation, parallelism, or a worktree-backed handoff.
 
 Good split boundaries usually follow package, contract, or artifact ownership boundaries, for example:
 
@@ -178,6 +180,7 @@ The coordinator loop is:
 ## Coordinated Multi-Plan Work
 
 Use coordinated multi-plan work when separate approved active plans move in parallel and later need one integration pass.
+When multiple plans are selected for execution together, use `M3: parallel-sliced` as the preferred baseline unless dependencies or shared artifacts force serial execution, or planned sidecar gates require `M4`.
 
 Preconditions:
 

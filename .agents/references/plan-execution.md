@@ -37,6 +37,7 @@ Before editing:
 - confirm the user wants the whole plan, not only one named milestone
 - confirm the plan lifecycle is ready enough to execute
 - re-read the plan summary, scope, decision log or locked decisions, non-goals, progress tracker when present, current milestone, and that milestone's context field
+- use the execution shape recorded in the plan; if it is missing, stale, or contradicted by execution reality, revise the plan before delegation, worktrees, or multi-agent workflow
 - if a real requirement gap appears, revise the plan before implementation instead of filling the gap ad hoc
 - if the work shape changes who may edit shared files, update the plan before splitting work
 

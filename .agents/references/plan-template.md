@@ -45,9 +45,10 @@ When creating a concrete plan, replace placeholders and remove this ownership no
 
 ## Execution Shape And Shared Files
 - Recommended shape: `M0: solo`, `M1: sidecar-readonly`, `M2: bounded-worker`, `M3: parallel-sliced`, or `M4: full-sidecar`
-- Why that shape fits best
+- Why that planned shape fits best; do not defer the mode decision to execution
 - Coordinator-owned or otherwise shared files if the work is delegated
 - Candidate worker boundaries or plan splits if later delegation becomes necessary
+- If this coordinates multiple selected plans, use `M3: parallel-sliced` unless the decision log explains serial execution or `M4` sidecar gates
 
 ## Affected Artifacts
 - Tests

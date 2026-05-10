@@ -17,7 +17,7 @@ Choose the mode that matches the request:
 - `Plan From Roadmap`: turn one roadmap item into a plan and keep `ROADMAP.md` aligned
 - `Revise Plan`: update an existing active plan for new information, constraints, or changed scope
 - `Review Readiness`: decide whether a plan is `Ready`, `Needs Input`, `Blocked`, or still draft
-- `Choose Execution Shape`: decide whether `M0: solo`, delegated one-plan work, coordinated multi-plan work, or sidecar gates fit
+- `Choose Execution Shape`: decide which `M0` through `M4` workflow mode fits the planned work before execution starts
 
 Load only what the request needs:
 
@@ -127,9 +127,13 @@ For context requirements, name the smallest useful read set for that milestone.
 Use `none beyond AGENTS.md, .agents/references/execution.md, and this plan` when no extra context is needed.
 Do not list broad descriptive docs as defensive context.
 
-For execution shape, prefer `M0: solo` on a single local branch unless the work clearly benefits from explicitly owned worker slices or sidecar gates.
+For execution shape, make the workflow decision during planning and record a concrete `M0` through `M4` mode.
+Do not leave a concrete active plan's workflow mode for the executor to infer later.
+For one coherent plan, prefer `M0` through `M2` unless the work clearly benefits from explicitly owned parallel worker slices or sidecar gates.
+For a large single plan with tasks, slices, or milestones separated enough for parallel ownership, suggest `M4: full-sidecar` and identify the worker slices plus review, verification, or specialist gates.
 If delegation may be useful, state which files remain coordinator-owned and which files could be worker-owned.
-If multiple plans must move together, say which plan coordinates the work and how validation and changelog evidence will be rolled up.
+If multiple plans must move together, strongly prefer `M3: parallel-sliced`; say which plan coordinates the work and how validation and changelog evidence will be rolled up.
+Use a lower mode for multi-plan execution only when dependencies or shared artifacts force serial work, and use `M4` only when sidecar gates are part of the planned workflow.
 
 Every concrete plan should include a top-level `Progress Tracker` before detailed milestones.
 Use milestone statuses `Not Started`, `In Progress`, `Blocked`, `Done`, and `Skipped`.
@@ -173,7 +177,7 @@ Before presenting a plan, verify that it:
 - keeps `Planning Readiness`, open questions, decisions, progress, blockers, and validation aligned
 - separates scope, non-goals, compatibility promises, unresolved gaps, and accepted fallbacks
 - confirms `ROADMAP.md` reflects the plan path and active-work status when applicable
-- identifies execution shape and shared-file boundaries
+- identifies a concrete execution shape and shared-file boundaries
 - defines commit-sized milestones with narrow context requirements and concrete validation
 - keeps execution-time blockers separate from planning questions
 - respects the demo scope of the application

@@ -45,7 +45,7 @@ Each activity lists its question, primary owner guide, and typical exit conditio
 
 - `Design` — decide product or contract behavior. owner: `docs/DESIGN.md`, governing specs.
 - `Spec` — record the decided behavior in the governing spec artifact. owner: `.agents/references/documentation.md` for routing, individual spec files for content.
-- `Decompose` — split into commit-sized milestone checkpoints; pick a workflow shape. owner: `.agents/references/planning.md`, `.agents/references/workflow.md`.
+- `Decompose` — split planned work into commit-sized milestone checkpoints; pick the plan's workflow shape. owner: `.agents/references/planning.md`, `.agents/references/workflow.md`.
 - `Validate-Plan` — run the plan readiness checklist before approval. owner: `.agents/references/planning.md` `Final Check`.
 - `Replan?` — revise an approved plan when execution reality disagrees with it. owner: `.agents/references/planning.md`. Cross-cutting.
 
