@@ -4,7 +4,7 @@
 Use this file when the user asks for one bounded change, one named milestone from an active plan, or unplanned maintenance work that does not yet need a full plan.
 
 Use `.agents/references/plan-execution.md` when the user asks to execute a whole active plan across milestones.
-Use `.agents/references/workflow.md` only when branch, worktree, delegation, worker-log, or integration mechanics are needed.
+Use `.agents/references/workflow.md` only when branch, worktree, delegation, multi-agent state, sidecar, or integration mechanics are needed.
 Use `.agents/references/planning.md` when the task is not clear enough to execute without first creating or revising a plan.
 Direct prompts and ad hoc user requests still use this guide unless they are read-only questions or are promoted into a concrete plan.
 
@@ -38,7 +38,7 @@ Add only what the task needs:
 - `.agents/references/references-rules.md` when changing `.agents/references/*.md`
 - `.agents/references/testing.md` for validation scope
 - `.agents/references/reviews.md` before finalizing
-- `.agents/references/workflow.md` when worktrees, delegation, worker logs, or integration handoff are in scope
+- `.agents/references/workflow.md` when worktrees, delegation, workflow state, sidecars, or integration handoff are in scope
 
 ## Execution Loop
 
@@ -53,7 +53,7 @@ For ad hoc tasks and single milestones:
 7. Run the smallest sufficient validation from `.agents/references/testing.md`.
 8. If validation fails, load `.agents/references/troubleshooting.md` before choosing the recovery path.
 9. Review the diff using `.agents/references/reviews.md`; apply the security review activity when its triggers match.
-10. Record validation evidence in the plan, worker log, or final response as appropriate.
+10. Record validation evidence in the plan, workflow state file, or final response as appropriate.
 11. If executing a plan milestone, update the milestone detail and `Progress Tracker` with status, commit checkpoint, validation result, and any blocker or skip note.
 12. Commit every completed task or milestone that changed tracked files before handing off or starting unrelated work. Follow the rules in `## AI Commit Message Rules` below.
 
@@ -70,8 +70,8 @@ Keep context efficient:
 - prefer targeted searches and structure checks over opening every file in a package
 - load package, guide, or reference context only when it is needed for the current checkpoint
 - drop files that belonged only to a completed checkpoint
-- summarize long or complex findings into the plan, worker log, validation notes, or final response instead of repeatedly reopening raw logs
-- if contradictions, unstable assumptions, unjustified hedging, or repeated re-derivation appear, write a short current-state summary before continuing; put it in the active plan, worker log, validation notes, or final response as appropriate
+- summarize long or complex findings into the plan, workflow state, validation notes, or final response instead of repeatedly reopening raw logs
+- if contradictions, unstable assumptions, unjustified hedging, or repeated re-derivation appear, write a short current-state summary before continuing; put it in the active plan, workflow state, validation notes, or final response as appropriate
 
 ## Milestone-Only Rules
 

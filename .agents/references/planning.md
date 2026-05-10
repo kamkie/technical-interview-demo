@@ -17,7 +17,7 @@ Choose the mode that matches the request:
 - `Plan From Roadmap`: turn one roadmap item into a plan and keep `ROADMAP.md` aligned
 - `Revise Plan`: update an existing active plan for new information, constraints, or changed scope
 - `Review Readiness`: decide whether a plan is `Ready`, `Needs Input`, `Blocked`, or still draft
-- `Choose Execution Shape`: decide whether one branch, delegated one-plan work, or coordinated multi-plan work fits
+- `Choose Execution Shape`: decide whether `M0: solo`, delegated one-plan work, coordinated multi-plan work, or sidecar gates fit
 
 Load only what the request needs:
 
@@ -127,7 +127,7 @@ For context requirements, name the smallest useful read set for that milestone.
 Use `none beyond AGENTS.md, .agents/references/execution.md, and this plan` when no extra context is needed.
 Do not list broad descriptive docs as defensive context.
 
-For execution shape, prefer a single local branch unless the work clearly benefits from explicitly owned worker slices.
+For execution shape, prefer `M0: solo` on a single local branch unless the work clearly benefits from explicitly owned worker slices or sidecar gates.
 If delegation may be useful, state which files remain coordinator-owned and which files could be worker-owned.
 If multiple plans must move together, say which plan coordinates the work and how validation and changelog evidence will be rolled up.
 

@@ -64,7 +64,7 @@ Each activity lists its question, primary owner guide, and typical exit conditio
 - `Diagnose?` — interpret a failure before changing anything. owner: `.agents/references/troubleshooting.md`.
 - `Fix?` — apply the smallest correction to the implementation, test, or spec. owner: `.agents/references/execution.md`.
 - `Re-run` — confirm the previously failing validation now passes. owner: `.agents/references/testing.md`.
-- `Record` — write the actual outcome into `Validation Results` or worker log. owner: `.agents/references/testing.md` Recording Validation, `.agents/references/workflow.md`.
+- `Record` — write the actual outcome into `Validation Results` or workflow state. owner: `.agents/references/testing.md` Recording Validation, `.agents/references/workflow.md`.
 
 ### Review
 

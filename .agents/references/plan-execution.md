@@ -4,7 +4,7 @@
 Use it when the user asks to implement an entire `.agents/plans/PLAN_*.md` file, run all remaining milestones in a plan, or resume a partially implemented active plan.
 
 Use `.agents/references/execution.md` for ad hoc tasks and one-milestone work.
-Use `.agents/references/workflow.md` only when branch, worktree, delegation, worker-log, or integration mechanics are needed.
+Use `.agents/references/workflow.md` only when branch, worktree, delegation, multi-agent state, sidecar, or integration mechanics are needed.
 Use `.agents/references/releases.md` only for explicit release work after implementation is integrated.
 
 ## Execution Goal
@@ -30,7 +30,7 @@ Load the smallest useful read set:
 - `.agents/references/references-rules.md` when changing `.agents/references/*.md`
 - `.agents/references/testing.md` for validation scope
 - `.agents/references/reviews.md` before finalizing a milestone
-- `.agents/references/workflow.md` only when delegation, worktrees, worker logs, or integration mechanics are in scope
+- `.agents/references/workflow.md` only when delegation, worktrees, workflow state, sidecars, or integration mechanics are in scope
 
 Before editing:
 
@@ -54,7 +54,7 @@ For each milestone:
 8. If validation fails, load `.agents/references/troubleshooting.md` before choosing a recovery path.
 9. Review the validated diff using `.agents/references/reviews.md`.
 10. Re-check the plan's scope, decision log or locked decisions, non-goals, and milestone deliverables.
-11. Record validation evidence, blockers, pivots, or follow-up notes in the plan or worker log owned by the current work shape.
+11. Record validation evidence, blockers, pivots, or follow-up notes in the plan or workflow state owned by the current work shape.
 12. Update the milestone detail and `Progress Tracker` with `Done`, the commit checkpoint, validation result, and any notes.
 13. Commit the completed milestone before starting the next one. Use the AI commit-message rules in `.agents/references/execution.md`.
 
@@ -70,7 +70,7 @@ Keep plan execution context narrow as the work moves:
 - stop referencing milestone-specific files once that milestone is committed
 - use the plan's current state and validation notes as the durable summary instead of re-reading long logs
 - when switching to a new package, doc family, or validation layer, load the owner guide for that slice only when it becomes relevant
-- if contradictions, unstable assumptions, unjustified hedging, or repeated re-derivation appear, write a short current-state checkpoint in the plan or worker log before continuing
+- if contradictions, unstable assumptions, unjustified hedging, or repeated re-derivation appear, write a short current-state checkpoint in the plan or workflow state before continuing
 
 ## Tracking Updates
 
@@ -81,7 +81,7 @@ During whole-plan execution:
 - update `Validation Results` with exact commands and outcomes
 - update `ROADMAP.md` when active-work state changes
 - update `CHANGELOG.md` under `## [Unreleased]` when the plan records unreleased user-facing, maintainer-facing, or AI-guidance changes
-- follow `.agents/references/workflow.md` for worker logs and integration notes only when work has actually been split
+- follow `.agents/references/workflow.md` for workflow state and integration notes only when work has actually been split
 
 ## Completion
 

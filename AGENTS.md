@@ -73,7 +73,7 @@ Use workflow guides on demand:
 - local Gradle wrapper and AI command syntax: `.agents/references/command-wrapper.md`
 - validation: `.agents/references/testing.md`, and `.agents/references/troubleshooting.md` only after a validation failure
 - review: `.agents/references/reviews.md`
-- branch, worktree, delegation, integration, or remote handoff: `.agents/references/workflow.md`
+- branch, worktree, delegation, multi-agent state, sidecar, integration, or remote handoff: `.agents/references/workflow.md`
 - release: `.agents/references/releases.md`
 
 ### Descriptive And Deep References
@@ -98,5 +98,5 @@ When a request introduces or changes requirements for `.agents/references/*.md` 
 ## Integration And Release Invariants
 
 `main` is the integration branch for completed work.
-Use `.agents/references/workflow.md` for branch, worktree, delegation, integration, and remote-handoff mechanics.
+Use `.agents/references/workflow.md` for branch, worktree, delegation, multi-agent state, sidecar, integration, and remote-handoff mechanics.
 Use `.agents/references/releases.md` for release sequencing only after the user requests release work and the candidate is integrated on `main`.

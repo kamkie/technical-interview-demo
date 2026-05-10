@@ -13,7 +13,7 @@ If a pattern becomes a durable repo-wide lesson after repeated incidents, promot
 - Prefer a narrow reproducer such as `./build.ps1 test --tests <class>` only while diagnosing; return to the required command before handoff.
 - Use the fastest faithful troubleshooting loop for the failing surface: run the failing task, check, or external command directly, and skip unrelated build parts only while diagnosing.
 - Diagnostic skips, Gradle exclusions, and wrapper shortcuts are temporary. After the fix, run the full validation required by the target plan, `.agents/references/execution.md`, and `.agents/references/testing.md`.
-- Record failed commands and skipped follow-up validation in the plan, worker log, or final report.
+- Record failed commands and skipped follow-up validation in the plan, workflow state file, or final report.
 
 ## Fast Diagnostic Loops
 

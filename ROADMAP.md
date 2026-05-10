@@ -12,7 +12,7 @@ Released history belongs in `CHANGELOG.md`.
 | Breaking Change Policy | Disallowed on the stable `2.x` line unless a later major-version plan explicitly changes it |
 | Next Target Version | Not selected; default to `v2.0.2` for maintenance fixes or `v2.1.0` for backward-compatible feature work |
 | Latest Stable Release | `v2.0.1` released on 2026-05-09 from the code review issue fixes plan archived in `.agents/archive/PLAN_code_review_issue_fixes.md` |
-| Immediate Next Action | Review implemented `docs/FRONTEND_AI_CONTRACT.md` source and decide whether to open a separate destination-repository copy task. |
+| Immediate Next Action | Review implemented `.agents/plans/PLAN_multi_agent_workflow_consolidation.md`; release work remains unrequested. |
 
 ## Roadmap Rules
 
@@ -41,6 +41,7 @@ Use this section for plan-backed work that is ready but not selected as the imme
 
 | Status | Workstream | Plan Or Artifact | Notes |
 | --- | --- | --- | --- |
+| Implemented | Multi-agent workflow consolidation | `.agents/plans/PLAN_multi_agent_workflow_consolidation.md` | Workflow guidance is consolidated in `.agents/references/workflow.md`, live routing uses `.agents/context/*` workflow state, and release/archive cleanup remains out of scope until requested |
 | Implemented | Frontend AI contract | `.agents/plans/PLAN_frontend_ai_contract.md` | Backend-owned source contract is implemented; external frontend-repo copy deferred until destination and instruction path are known |
 
 ## Intake

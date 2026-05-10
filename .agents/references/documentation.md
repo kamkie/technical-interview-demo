@@ -32,7 +32,7 @@ Update the artifact that owns the truth being changed:
 - planning process, plan-file rules, fill guidance, and readiness review shape: `.agents/references/planning.md`; canonical plan skeleton: `.agents/references/plan-template.md`
 - whole active-plan execution across milestones: `.agents/references/plan-execution.md`
 - ad hoc task and single-milestone execution: `.agents/references/execution.md`
-- branch, worktree, delegation, worker-log, integration, and remote-handoff mechanics: `.agents/references/workflow.md`; detailed delegated-work mechanics: `.agents/references/workflow-delegated-plan.md` and `.agents/references/workflow-coordinated-plans.md`
+- branch, worktree, delegation, multi-agent state, sidecar, integration, and remote-handoff mechanics: `.agents/references/workflow.md`
 - release sequencing and tagging: `.agents/references/releases.md`; detailed release checklist and artifact verification: `.agents/references/release-checklist.md` and `.agents/references/release-artifact-verification.md`
 - standalone repository task prompts and catalog: `.agents/tasks/README.md`; prompt files live under `.agents/tasks/` and must add task-specific instructions that are not thin wrappers around an existing owner guide
 - repo-local reusable workflow wrappers: `.agents/skills/`; Codex plugin marketplace configuration: `.agents/plugins/marketplace.json` when intentionally introducing a repo-scoped plugin

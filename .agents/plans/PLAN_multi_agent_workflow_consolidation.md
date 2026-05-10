@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Implementation |
-| Status | In Progress |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Planning Readiness
 | Field | Value |
@@ -37,11 +37,11 @@
   - Changing Codex platform instructions or model-selection policy outside repo-owned AI guidance.
 
 ## Current State
-- `AGENTS.md` routes branch, worktree, delegation, integration, and remote-handoff mechanics to `.agents/references/workflow.md`.
-- `.agents/references/documentation.md` currently says detailed delegated-work mechanics live in `.agents/references/workflow-delegated-plan.md` and `.agents/references/workflow-coordinated-plans.md`.
-- `.agents/references/workflow.md` owns the shared branch/worktree defaults, split-work criteria, worker-log schema, delegation quality bar, coordinator ownership, and reporting.
-- `.agents/references/workflow-delegated-plan.md` owns one-plan split mechanics.
-- `.agents/references/workflow-coordinated-plans.md` owns multi-plan coordination mechanics.
+- `AGENTS.md` routes branch, worktree, delegation, multi-agent state, sidecar, integration, and remote-handoff mechanics to `.agents/references/workflow.md`.
+- `.agents/references/documentation.md` routes workflow mechanics to `.agents/references/workflow.md` without companion workflow owner files.
+- `.agents/references/workflow.md` owns the shared branch/worktree defaults, M0-M4 workflow modes, `.agents/context/*` state layout, handoff packets, agent results, one-plan and multi-plan delegation, sidecar gates, integration, replan triggers, and remote handoff.
+- `.agents/references/workflow-delegated-plan.md` and `.agents/references/workflow-coordinated-plans.md` have been retired after their still-current mechanics moved into `workflow.md`.
+- Live guidance uses workflow state language instead of the old worker-log shape.
 - The external `multi-agent-execution.md` provides a stronger unified policy model and uses `.agents/context/*` state paths.
 - The user selected `.agents/context/*` as the target state layout for this workflow consolidation.
 - The user constrained this interactive documentation session to documentation-only work focused on `AGENTS.md`, `.agents/references`, and `docs/`, with no tests, builds, or normal verification commands.
@@ -91,6 +91,10 @@
   - `.agents/references/planning.md`
   - `.agents/references/plan-execution.md`
   - `.agents/references/execution.md`
+  - `.agents/references/command-wrapper.md`
+  - `.agents/references/plan-template.md`
+  - `.agents/references/references-rules.md`
+  - `.agents/references/troubleshooting.md`
   - `docs/specs/lifecycle-phase-activities.md`
 - Retired docs:
   - `.agents/references/workflow-delegated-plan.md`
@@ -104,8 +108,8 @@
 ## Progress Tracker
 | Milestone | Status | Owner | Commit | Validation | Notes |
 | --- | --- | --- | --- | --- | --- |
-| 1: Consolidate workflow owner | Done | Agent | Pending | Manual doc consistency review passed | Consolidated `workflow.md`, adopted `.agents/context/*`, preserved branch/worktree rules, and retired companion files. |
-| 2: Align routing references | Not Started | Agent | Pending | Manual stale-reference review only | Update `AGENTS.md`, reference guide routing, and lifecycle owner references. |
+| 1: Consolidate workflow owner | Done | Agent | `232f263` | Manual doc consistency review passed | Consolidated `workflow.md`, adopted `.agents/context/*`, preserved branch/worktree rules, and retired companion files. |
+| 2: Align routing references | Done | Agent | `docs(workflow): align consolidated workflow routing` | Manual stale-reference review passed | Updated routing references, workflow-state terminology, roadmap state, and lifecycle owner references. |
 
 ## Execution Milestones
 ### Milestone 1: Consolidate workflow owner
@@ -124,24 +128,24 @@
 ### Milestone 2: Align routing references
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Update live routing docs so agents load the consolidated workflow owner and no live guidance points to retired companion files. |
-| Owned Files Or Packages | `AGENTS.md`, `.agents/references/documentation.md`, `.agents/references/planning.md`, `.agents/references/plan-execution.md`, `.agents/references/execution.md`, `docs/specs/lifecycle-phase-activities.md`, this plan, `ROADMAP.md` |
+| Owned Files Or Packages | `AGENTS.md`, `.agents/references/documentation.md`, `.agents/references/planning.md`, `.agents/references/plan-execution.md`, `.agents/references/execution.md`, `.agents/references/command-wrapper.md`, `.agents/references/plan-template.md`, `.agents/references/references-rules.md`, `.agents/references/troubleshooting.md`, `docs/specs/lifecycle-phase-activities.md`, this plan, `ROADMAP.md` |
 | Coordinator-Owned Shared Files | `.agents/references/workflow.md` |
 | Context Required | `AGENTS.md`, `.agents/references/execution.md`, `.agents/references/references-rules.md`, `.agents/references/documentation.md`, `.agents/references/planning.md`, `.agents/references/plan-execution.md`, `.agents/references/execution.md`, and `docs/specs/lifecycle-phase-activities.md` |
 | Behavior To Preserve | Owner-guide loading remains narrow; workflow consolidation does not create recursive load requirements or move plan execution, validation, review, release, architecture, or code-style rules into `workflow.md`. |
-| Deliverables | Updated cross-references and plan/roadmap status reflecting the actual non-release state. |
+| Deliverables | Updated cross-references, workflow-state terminology, and plan/roadmap status reflecting the actual non-release state. |
 | Validation Checkpoint | Manual stale-reference review for retired workflow filenames and external-only paths; manual consistency review against `references-rules.md`. No tests, builds, generated-doc checks, or normal verification commands during this interactive session. |
 | Commit Checkpoint | Commit after Milestone 2 if the user requests handoff and the interactive session permits committing; otherwise record remaining uncommitted work explicitly. |
 
 ## Blockers And Replan Triggers
 | Trigger / Blocker | Response | Owner | Status |
 | --- | --- | --- | --- |
-| Consolidated `workflow.md` becomes too broad or unclear for one focused reference owner. | Replan to keep `workflow.md` as router plus one focused companion file, and update `references-rules.md` only if standing reference rules need to change. | Agent | Open |
-| Execution discovers a live cross-reference outside `AGENTS.md`, `.agents/references`, or `docs/` that must change for correctness. | Stop and ask whether to expand scope beyond the current interactive-session focus. | User | Open |
-| External multi-agent rules conflict with local spec-driven development or lifecycle owner mapping. | Prefer local repo guidance and adapt the imported rule; do not raw-copy conflicting text. | Agent | Open |
-| User asks for actual parallel agent work while implementing the workflow guide. | Keep this plan single-coordinator unless the user explicitly revises execution shape and write scopes. | User | Open |
-| Normal validation becomes required before handoff. | Record that it is skipped under the current user constraint, or ask for permission if the user ends the constrained session. | User | Open |
+| Consolidated `workflow.md` becomes too broad or unclear for one focused reference owner. | Replan to keep `workflow.md` as router plus one focused companion file, and update `references-rules.md` only if standing reference rules need to change. | Agent | Not Hit |
+| Execution discovers a live cross-reference outside `AGENTS.md`, `.agents/references`, or `docs/` that must change for correctness. | Stop and ask whether to expand scope beyond the current interactive-session focus. | User | Not Hit |
+| External multi-agent rules conflict with local spec-driven development or lifecycle owner mapping. | Prefer local repo guidance and adapt the imported rule; do not raw-copy conflicting text. | Agent | Not Hit |
+| User asks for actual parallel agent work while implementing the workflow guide. | Keep this plan single-coordinator unless the user explicitly revises execution shape and write scopes. | User | Not Hit |
+| Normal validation becomes required before handoff. | Record that it is skipped under the current user constraint, or ask for permission if the user ends the constrained session. | User | Not Hit |
 
 ## Edge Cases And Failure Modes
 - Accidentally replacing `workflow.md` with external text that references missing `codex-runtime.md`.
@@ -185,6 +189,8 @@
 | 2026-05-10 | Manual planning review | Plan readiness, scope, routing, and validation constraints | Passed | Plan is ready for documentation-only execution; normal validation intentionally skipped under user session constraint. |
 | 2026-05-10 | Manual plan revision readback | `.agents/context/*` state-layout requirement in this plan and `ROADMAP.md` | Passed | Plan now adopts `.agents/context/*`; `.agents/tmp/workflow/` appears only as an obsolete canonical path to retire. |
 | 2026-05-10 | Manual Milestone 1 consistency review | `.agents/references/workflow.md` and retired companion files | Passed | Consolidated guide has one ownership statement, uses `.agents/context/*` state paths, preserves branch/worktree rules, defines M0-M4 without forcing delegation, and contains no live canonical `.agents/tmp/workflow/` state paths or `codex-runtime.md` references. |
+| 2026-05-10 | Manual Milestone 2 stale-reference review | `AGENTS.md`, `.agents/references/*.md`, `docs/specs/lifecycle-phase-activities.md`, `ROADMAP.md` | Passed | Live routing points to consolidated `workflow.md`; retired workflow companion files and old worker-log vocabulary were removed from live guidance. |
+| 2026-05-10 | Not run | Tests, builds, generated documentation checks, and normal validation commands | Skipped | Explicit interactive-session constraint in this plan required manual documentation review only. |
 
 ## User Validation
 - Review the consolidated workflow guide and confirm it preserves the intended local branch/worktree mechanics while adopting the external multi-agent execution model and `.agents/context/*` state layout.

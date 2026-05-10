@@ -44,7 +44,7 @@ When creating a concrete plan, replace placeholders and remove this ownership no
 | D1 | User decision, repo-truth decision, or accepted fallback assumption | User/Spec/Code/Agent fallback | YYYY-MM-DD | When this should be reconsidered, or None |
 
 ## Execution Shape And Shared Files
-- Recommended shape: one local branch, delegated one-plan work, or coordinated multi-plan work
+- Recommended shape: `M0: solo`, `M1: sidecar-readonly`, `M2: bounded-worker`, `M3: parallel-sliced`, or `M4: full-sidecar`
 - Why that shape fits best
 - Coordinator-owned or otherwise shared files if the work is delegated
 - Candidate worker boundaries or plan splits if later delegation becomes necessary
@@ -107,7 +107,7 @@ When creating a concrete plan, replace placeholders and remove this ownership no
 ## Validation Results
 | Date | Command | Scope | Result | Notes |
 | --- | --- | --- | --- | --- |
-| YYYY-MM-DD | Pending | Full build, targeted tests, docs check, or manual verification | Pending/Passed/Failed/Skipped | Worker logs may hold temporary per-milestone detail until the coordinator integrates it when `.agents/references/workflow.md` says so |
+| YYYY-MM-DD | Pending | Full build, targeted tests, docs check, or manual verification | Pending/Passed/Failed/Skipped | Workflow state may hold temporary per-milestone detail until the coordinator integrates it when `.agents/references/workflow.md` says so |
 
 ## User Validation
 - Short walkthrough for the user to verify the delivered behavior

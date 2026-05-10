@@ -53,7 +53,7 @@ pwsh ./build.ps1 gatlingBenchmark
 
 ## Writing Command Instructions
 
-Plans, task prompts, and worker logs should name the wrapper command directly.
+Plans, task prompts, and workflow state files should name the wrapper command directly.
 Do not add preliminary steps to discover `JAVA_HOME`, dot-source `scripts/load-dotenv.ps1`, or inspect local Java paths unless the wrapper command actually fails and the next task is troubleshooting.
 
 Use `.env.example` only as the template for expected local variable names.
