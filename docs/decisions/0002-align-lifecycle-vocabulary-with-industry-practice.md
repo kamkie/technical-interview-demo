@@ -119,7 +119,7 @@ If accepted, update these files together:
    - Update lifecycle phase names only where the repo-level map or completion rules mention changed terms.
    - Keep detailed lifecycle rules in `.agents/references/application-lifecycle.md`.
 
-6. `WORKING_WITH_AI.md`
+6. `docs/WORKING_WITH_AI.md`
    - Update the human-facing lifecycle section names and descriptions.
    - Explain when a developer should add an idea to Conceptualization, ask for Analysis, create an ADR, PRD, spec, or move into Planning.
 
@@ -180,7 +180,7 @@ Implementation should be verified by manual documentation review that:
 
 - `.agents/references/application-lifecycle.md` is the canonical lifecycle vocabulary owner
 - `.agents/references/planning.md` uses the accepted phase names
-- `WORKING_WITH_AI.md` explains the lifecycle in developer-facing terms
+- `docs/WORKING_WITH_AI.md` explains the lifecycle in developer-facing terms
 - `ROADMAP.md` no longer contains unresolved intake items for this vocabulary change
 - templates and artifact routing match ADR 0001 and this ADR
 - historical docs are left unchanged unless they are live guidance

@@ -23,7 +23,7 @@ Update the artifact that owns the truth being changed:
 - standalone behavior, contract, acceptance criteria, and validation mapping when executable specs or published contract docs do not already define the behavior clearly enough: `docs/specs/*.md`; template: `docs/specs/SPEC_TEMPLATE.md`
 - human-facing documentation index: `docs/README.md`
 - human-facing application lifecycle and artifact-routing summary derived from AI owner guides and roadmap rules: `docs/DEVELOPMENT_LIFECYCLE.md`
-- human-facing guide for developers using AI through the application lifecycle: `docs/WORKING_WITH_AI.md`; root `WORKING_WITH_AI.md` is a compatibility pointer only
+- human-facing guide for developers using AI through the application lifecycle: `docs/WORKING_WITH_AI.md`
 - human-facing deployment and runtime operations runbooks: `docs/OPERATIONS.md`
 - application development lifecycle phase model, activity vocabulary, loops, triggers, and owner-guide mapping: `.agents/references/application-lifecycle.md`
 - AI repository rules, spec priority, required spec-update policy, working AI context, Documents Map, completion rules, and integration/release invariants: `AGENTS.md`

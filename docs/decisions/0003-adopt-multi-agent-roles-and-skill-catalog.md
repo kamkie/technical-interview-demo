@@ -158,7 +158,7 @@ If accepted, update these artifacts together:
 7. `.junie/AGENTS.md`
    - Add a brief mode-to-role mapping so Junie selects the right role bundle in `[CHAT]`, `[ADVANCED_CHAT]`, `[FAST_CODE]`, `[CODE]`, `[RUN_VERIFY]`, and `[SETUP]`.
 
-8. `WORKING_WITH_AI.md`
+8. `docs/WORKING_WITH_AI.md`
    - Document the agent roles, the skill catalog, and the multi-agent workflow at developer-facing depth.
    - Reference but do not duplicate `.agents/references/workflow.md`.
 
@@ -225,7 +225,7 @@ Implementation should be verified by manual documentation review that:
 - `.agents/skills/` contains the starter skill bundles in `SKILL.md` shape with declared `Read Set` blocks
 - `.agents/context/` directories exist with a `README.md` describing role-to-directory ownership
 - `AGENTS.md` and `.junie/AGENTS.md` cross-reference the roster and catalog without duplicating their content
-- `WORKING_WITH_AI.md` explains the multi-agent workflow at developer-facing depth
+- `docs/WORKING_WITH_AI.md` explains the multi-agent workflow at developer-facing depth
 - `ROADMAP.md` tracks the rollout until the starter skills land
 
 ## Links

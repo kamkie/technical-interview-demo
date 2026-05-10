@@ -138,7 +138,7 @@ Keep documentation roles distinct:
 - `docs/OPERATIONS.md` owns deployment and runtime operations runbooks
 - `ROADMAP.md` owns active and planned work; `CHANGELOG.md` owns released history
 - `docs/decisions/`, `docs/requirements/`, and `docs/specs/` own durable decisions, product intent, and standalone behavior specs per `docs/decisions/0001-adopt-pre-planning-artifacts.md`
-- `docs/WORKING_WITH_AI.md` owns the human-facing AI guide; root `WORKING_WITH_AI.md` is only a compatibility pointer
+- `docs/WORKING_WITH_AI.md` owns the human-facing AI guide
 - `AGENTS.md` and the focused `.agents/references/` guides own AI workflow
 
 See `.agents/references/documentation.md` for the full ownership map and routing rules.

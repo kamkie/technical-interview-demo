@@ -113,7 +113,7 @@ This decision is reflected in the repository when:
 
 - `docs/README.md` exists and points humans to design, lifecycle, ADRs, PRDs, standalone specs, roadmap, operations, setup, contributing, AI collaboration, and frontend contract material.
 - `docs/DEVELOPMENT_LIFECYCLE.md` explains the lifecycle and artifact routing without copying the detailed AI runbook from `.agents/references/application-lifecycle.md`.
-- `docs/WORKING_WITH_AI.md` owns the human-facing AI collaboration guide; any root-level `WORKING_WITH_AI.md` is only a compatibility pointer.
+- `docs/WORKING_WITH_AI.md` owns the human-facing AI collaboration guide, and there is no root-level compatibility pointer.
 - `SETUP.md` is focused on local setup and local troubleshooting.
 - The selected operations document owns deployment, runtime, smoke, rollback, Kubernetes, Helm, and monitoring runbooks.
 - `CONTRIBUTING.md` and `docs/WORKING_WITH_AI.md` are narrowed to their accepted roles and link to lifecycle and operations docs instead of duplicating them.
@@ -131,7 +131,6 @@ This decision is reflected in the repository when:
 - [docs/DEVELOPMENT_LIFECYCLE.md](../DEVELOPMENT_LIFECYCLE.md)
 - [docs/WORKING_WITH_AI.md](../WORKING_WITH_AI.md)
 - [docs/OPERATIONS.md](../OPERATIONS.md)
-- [WORKING_WITH_AI.md](../../WORKING_WITH_AI.md) compatibility pointer
 - [ROADMAP.md](../../ROADMAP.md)
 - [docs/DESIGN.md](../DESIGN.md)
 - [docs/decisions/0001-adopt-pre-planning-artifacts.md](0001-adopt-pre-planning-artifacts.md)

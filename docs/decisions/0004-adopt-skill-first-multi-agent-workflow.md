@@ -156,7 +156,7 @@ Required follow-up changes if accepted:
 2. Update `.agents/references/workflow.md` to use the accepted mode labels while keeping the `M0` through `M4` identifiers and preserving existing mode semantics.
 3. Add or formalize repo-local skills for the accepted activity set.
 4. Update `.agents/references/documentation.md` if skill ownership or artifact-routing rules change.
-5. Update `WORKING_WITH_AI.md` if human-facing AI collaboration guidance should describe when to request or expect multi-agent workflows.
+5. Update `docs/WORKING_WITH_AI.md` if human-facing AI collaboration guidance should describe when to request or expect multi-agent workflows.
 6. Update `ROADMAP.md` only if this proposal is selected for implementation work.
 7. Keep routine single-agent maintenance explicitly allowed.
 
@@ -224,7 +224,7 @@ If accepted and implemented, confirmation should include:
 
 1. A mapping from each supported agent role to its governing skill or guide.
 2. Updated or created repo-local skills for the accepted activity set.
-3. A documentation review showing that `WORKING_WITH_AI.md`, `.agents/references/workflow.md`, `.agents/references/documentation.md`, and this ADR do not contradict each other.
+3. A documentation review showing that `docs/WORKING_WITH_AI.md`, `.agents/references/workflow.md`, `.agents/references/documentation.md`, and this ADR do not contradict each other.
 4. A validation record for the documentation and support-file changes.
 
 ## Links
@@ -236,4 +236,4 @@ If accepted and implemented, confirmation should include:
 - Documentation guide: `.agents/references/documentation.md`
 - Testing guide: `.agents/references/testing.md`
 - Review guide: `.agents/references/reviews.md`
-- Human-facing AI guide: `WORKING_WITH_AI.md`
+- Human-facing AI guide: `docs/WORKING_WITH_AI.md`

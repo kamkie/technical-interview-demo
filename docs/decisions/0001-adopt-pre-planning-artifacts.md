@@ -61,7 +61,7 @@ Costs:
 
 - new artifact types need routing rules and templates
 - agents and humans need clear skip rules so small changes do not require extra documents
-- accepted ADRs must stay aligned with `.agents/references/planning.md`, `.agents/references/documentation.md`, `WORKING_WITH_AI.md`, and any future templates
+- accepted ADRs must stay aligned with `.agents/references/planning.md`, `.agents/references/documentation.md`, `docs/WORKING_WITH_AI.md`, and any future templates
 
 ## Alternatives Considered
 
