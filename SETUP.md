@@ -2,6 +2,31 @@
 
 This guide is the fastest path to a working local environment for `technical-interview-demo`.
 
+## Table Of Contents
+
+- [Choose A Workflow](#choose-a-workflow)
+- [Prerequisites](#prerequisites)
+- [Quick Start](#quick-start)
+- [Environment Variables](#environment-variables)
+- [Optional Git Commit Template](#optional-git-commit-template)
+- [Deployment Contract](#deployment-contract)
+- [2.0 UI Integration References](#20-ui-integration-references)
+- [IDE Setup](#ide-setup)
+- [Database Modes](#database-modes)
+- [Running The Application](#running-the-application)
+- [Running Tests And Quality Checks](#running-tests-and-quality-checks)
+- [Reproducing CI Locally](#reproducing-ci-locally)
+- [Building Docker Images](#building-docker-images)
+- [Container Smoke Validation](#container-smoke-validation)
+- [Scheduled Post-Deploy Smoke](#scheduled-post-deploy-smoke)
+- [Healthy Runtime Expectations](#healthy-runtime-expectations)
+- [Upgrade And Rollback](#upgrade-and-rollback)
+- [Kubernetes Deployment](#kubernetes-deployment)
+- [Helm Deployment](#helm-deployment)
+- [Monitoring And Alerting](#monitoring-and-alerting)
+- [OAuth Setup](#oauth-setup)
+- [Troubleshooting](#troubleshooting)
+
 ## Choose A Workflow
 
 Use one of these paths:
