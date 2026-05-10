@@ -23,7 +23,6 @@ Frontend repository conventions, design systems, and AI instructions apply only 
 When security or design guidance is needed, load the current skill source by URL reference only:
 
 - https://github.com/agamm/claude-code-owasp/blob/main/.claude/skills/owasp-security/SKILL.md
-- https://github.com/openai/skills/blob/main/skills/.curated/security-best-practices/SKILL.md
 - https://github.com/anthropics/skills/blob/main/skills/frontend-design/SKILL.md
 
 Do not rely on copied skill text embedded in this document.
