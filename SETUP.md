@@ -1,112 +1,124 @@
-# Developer Setup Guide
+# Environment Setup Guide
 
-This guide is the fastest path to a working local environment for `technical-interview-demo`.
+This guide sets up the local environment for `technical-interview-demo`.
+Use one path:
+
+- VS Code dev container
+- local shell without a dev container
+
+After the environment is ready, use [docs/LOCAL_DEVELOPMENT.md](docs/LOCAL_DEVELOPMENT.md) for running the app, tests, CI reproduction, and local troubleshooting.
 
 ## Table Of Contents
 
-- [Choose A Workflow](#choose-a-workflow)
-- [Prerequisites](#prerequisites)
-- [Quick Start](#quick-start)
+- [Choose A Setup Path](#choose-a-setup-path)
+- [Dev Container Setup](#dev-container-setup)
+- [Local Shell Setup](#local-shell-setup)
 - [Environment Variables](#environment-variables)
-- [Optional Git Commit Template](#optional-git-commit-template)
-- [Operations And Deployment Runbooks](#operations-and-deployment-runbooks)
+- [Local PostgreSQL](#local-postgresql)
 - [IDE Setup](#ide-setup)
-- [Database Modes](#database-modes)
-- [Running The Application](#running-the-application)
-- [Running Tests And Quality Checks](#running-tests-and-quality-checks)
-- [Reproducing CI Locally](#reproducing-ci-locally)
-- [Troubleshooting](#troubleshooting)
+- [Optional Git Commit Template](#optional-git-commit-template)
+- [Next Step](#next-step)
 
-## Choose A Workflow
+## Choose A Setup Path
 
-Use one of these paths:
+Use the dev container when you want VS Code to provision the Java toolchain and containerized development environment for you.
+Use the local shell path when you want to run the repository directly from your host machine.
 
-- **Local shell + JDK 25** for the shortest feedback loop
-- **VS Code dev container** if you want a prebuilt toolchain with Docker, PostgreSQL, and Prometheus
+Both paths use the same source tree and Gradle project.
 
-Both paths end up using the same Gradle wrapper and the same application code.
+## Dev Container Setup
 
-## Prerequisites
+Prerequisites:
 
-Install the tools that match your workflow:
+- Git
+- VS Code
+- Docker Desktop, running before the container starts
+- VS Code Dev Containers extension
+
+Install the extension if needed:
+
+```powershell
+code --install-extension ms-vscode-remote.remote-containers
+```
+
+Open the repository in the container:
+
+1. Open this repository folder in VS Code.
+2. Open the command palette.
+3. Run `Dev Containers: Reopen in Container`.
+4. Wait for the first build to finish.
+5. Open a terminal inside the container.
+
+Verify the environment:
+
+```bash
+java -version
+./gradlew --version
+docker ps
+```
+
+The full dev-container reference lives in [.devcontainer/README.md](.devcontainer/README.md).
+The short command card lives in [.devcontainer/QUICK_START.md](.devcontainer/QUICK_START.md).
+
+### Optional Dev-Container Services
+
+The current dev container uses a standalone image.
+Start optional PostgreSQL and Prometheus services from the repository root when you need them inside the dev-container Docker daemon:
+
+```bash
+docker compose -f .devcontainer/docker-compose.yml up -d
+```
+
+Default optional PostgreSQL settings in the dev-container compose file:
+
+- Host: `localhost`
+- Port: `5432`
+- Database: `technical_interview_demo`
+- User: `demo_user`
+- Password: `demo_password`
+
+## Local Shell Setup
+
+Prerequisites:
 
 - Java 25
 - Git
-- PowerShell 7+ (`pwsh`) for the repo wrapper commands
-- Docker Desktop if you want PostgreSQL, container builds, the VS Code dev container, or to run the integration test and build lifecycles
+- PowerShell 7+ (`pwsh`) for repository wrapper commands
+- Docker Desktop when you need local PostgreSQL, Testcontainers, Docker image builds, or the full build lifecycle
 - IntelliJ IDEA or VS Code if you want IDE support
 
-### AI Workflow Helper Tools
-
-AI agents should use the fastest relevant local tool and report expected or useful tools that are unavailable when that affects workflow speed, validation, or fallback quality.
-Agents should not probe every optional tool up front; they should check tools when the current task needs them.
-
-Useful tools by workflow:
-
-- search and navigation: `rg` and `git`
-- shell and wrapper commands: PowerShell 7+ (`pwsh`) and `./build.ps1`
-- build and validation: Java 25, the Gradle wrapper, and Docker Desktop for Testcontainers, image builds, and full build lifecycles
-- skill and AI-guidance checks: `./scripts/ai/validate-skills.ps1`; Python with PyYAML only when using external YAML-based skill validators
-- GitHub diagnostics: `gh` for GitHub Actions, code-scanning, Dependabot, attestation, or release-artifact checks
-- API and contract checks: OpenAPI and REST Docs tasks through `./build.ps1`; `ijhttp` only when manual HTTP regression suites are requested
-- deployment and release checks: Helm, `kubectl`, Cosign, and Trivy-related wrapper tasks only when deployment, image verification, or release work is in scope
-
-Quickly check the local toolchain from the repository root:
+Check the local toolchain from the repository root:
 
 ```powershell
 pwsh ./scripts/check-local-tools.ps1
 ```
 
-The helper loads the root `.env` before Java-sensitive probes, reports required, conditional, recommended, and diagnostic tools, and exits non-zero only when required checks fail. Use `-RequiredOnly` for the fastest core check or `-Strict` when conditional and recommended tool gaps should fail the command.
+Use `-RequiredOnly` for the fastest core check.
+Use `-Strict` when conditional and recommended tool gaps should fail the command.
 
-When a relevant tool is missing, the AI should name the missing command or dependency, name the fallback it used, and state any remaining risk.
-Examples: "`rg` is unavailable, using PowerShell search instead" or "Python with PyYAML is unavailable, so the dependency-free PowerShell skill validator ran instead."
+The helper loads the root `.env` before Java-sensitive probes, reports required, conditional, recommended, and diagnostic tools, and exits non-zero only when required checks fail.
 
-## Quick Start
+Useful local tools by workflow:
 
-### PowerShell
+- search and navigation: `rg` and `git`
+- shell and wrapper commands: PowerShell 7+ (`pwsh`) and `./build.ps1`
+- build and validation: Java 25, the Gradle wrapper, and Docker Desktop
+- GitHub diagnostics: `gh` for GitHub Actions, code-scanning, Dependabot, attestation, or release-artifact checks
+- API and contract checks: OpenAPI and REST Docs tasks through `./build.ps1`; `ijhttp` only when manual HTTP regression suites are requested
+- deployment and release checks: Helm, `kubectl`, Cosign, and Trivy-related wrapper tasks only when deployment, image verification, or release work is in scope
 
-```powershell
-# If Java 25 is not already on PATH, copy .env.example to .env and set JAVA_HOME once.
-
-docker-compose up -d
-./build.ps1 bootRun
-```
-
-The default `local` profile expects PostgreSQL on `localhost:5432`. The included `docker-compose.yml` starts that database for you. After startup, open:
-
-- `http://localhost:8080/`
-- `http://localhost:8080/hello`
-- `http://localhost:8080/api/books`
-- `http://localhost:8080/docs`
-- `http://localhost:8080/actuator/health`
+When a relevant tool is missing, record the missing command or dependency, the fallback used, and any remaining risk.
 
 ## Environment Variables
 
 `.env.example` contains the supported shell variables for local work.
 The repository wrapper script `build.ps1` auto-loads a root `.env` file before invoking Gradle.
-The wrapper also classifies the current uncommitted change set for `./build.ps1 build` and skips Gradle when only lightweight files changed.
-Direct `gradlew` commands, IDE run configurations, and non-Gradle shell commands still need the variables exported in the usual way.
+Direct `gradlew` commands, IDE run configurations, Docker Compose commands, and non-Gradle shell commands still need variables exported in the usual way.
 
 1. Copy `.env.example` to `.env` if you want a private local reference file.
-2. Fill in your actual paths, especially `JAVA_HOME`.
-3. Use `./build.ps1` for Gradle commands, or export the values in your shell, IDE run configuration, or Docker Compose environment when you bypass the wrapper.
-
-**Easiest Gradle path for PowerShell:**
-
-Run the wrapper from the repository root:
-
-```powershell
-./build.ps1 build
-```
-
-Use `./build.ps1 -FullBuild build` when you want to force the full Gradle build even for lightweight-only changes.
-
-**Details:**
-
-- The wrapper uses `scripts/load-dotenv.ps1` internally and works with both normal and escaped Windows paths.
-- For Windows-style paths, the helper accepts both normal forms such as `C:\Users\kamki\.jdks\azul-25.0.3` and escaped forms such as `C:\\Users\\kamki\\.jdks\\azul-25.0.3`.
-- Placeholder values such as `<path-to-jdk-25>` in `.env.example` should be replaced with paths from your own machine.
+2. Fill in actual paths and secrets for your machine.
+3. Set `JAVA_HOME` to a Java 25 JDK path when Java 25 is not already first on `PATH`.
+4. Use `./build.ps1` for Gradle commands, or export the same values in your shell, IDE run configuration, or Docker Compose environment when bypassing the wrapper.
 
 Variables you are most likely to need:
 
@@ -119,50 +131,16 @@ Variables you are most likely to need:
 - `APP_BOOTSTRAP_SEED_DEMO_DATA` when you want to override demo-data seeding for categories, books, and localization messages
 - `SESSION_COOKIE_SECURE` when you want to override the `prod` profile session-cookie default of `true` for local HTTP testing or a specific deployment environment
 
-## Optional Git Commit Template
+Path notes:
 
-The repository includes `.gitmessage` with a Conventional Commits style subject, optional body, required project metadata footers for AI-created commits, and repo-supported type guidance.
-Enable it for this repository if you want Git to prefill commit messages:
+- The wrapper uses `scripts/load-dotenv.ps1` internally and works with both normal and escaped Windows paths.
+- For Windows-style paths, the helper accepts normal forms such as `C:\Users\kamki\.jdks\azul-25.0.3` and escaped forms such as `C:\\Users\\kamki\\.jdks\\azul-25.0.3`.
+- Placeholder values such as `<path-to-jdk-25>` in `.env.example` should be replaced with paths from your own machine.
 
-```powershell
-git config commit.template .gitmessage
-```
+## Local PostgreSQL
 
-## Operations And Deployment Runbooks
-
-This guide focuses on local setup and local troubleshooting.
-Use [docs/OPERATIONS.md](docs/OPERATIONS.md) for deployment contract, runtime environment variables, Docker image operation, container smoke, post-deploy smoke, healthy runtime expectations, upgrade and rollback, Kubernetes, Helm, monitoring, OAuth runtime setup, and deployment troubleshooting.
-
-Use [docs/FRONTEND_AI_CONTRACT.md](docs/FRONTEND_AI_CONTRACT.md) when wiring or reviewing a separate first-party UI against the backend contract.
-
-## IDE Setup
-
-### IntelliJ IDEA
-
-Recommended baseline:
-
-1. Import the project as a Gradle project
-2. Set the project SDK to Java 25
-3. Set Gradle JVM to Java 25
-4. Use `./build.ps1 format` when you want to normalize repository formatting from the same formatter configuration CI uses.
-5. Keep IntelliJ project code-style settings enabled; AsciiDoc sources stay formatter-managed, so nested lists must use explicit AsciiDoc marker depth such as `*` for parents and `**` for children.
-6. Keep Flyway migration SQL under `src/main/resources/db/migration/` hand-formatted; those scripts are excluded from IntelliJ reformatting because SQL formatter churn makes migration review harder.
-
-### VS Code
-
-For local VS Code use:
-
-- Extension Pack for Java
-- Spring Boot Extension Pack
-- Docker
-
-For the containerized path, use the dev container instructions in `.devcontainer/README.md` or the short version in `.devcontainer/QUICK_START.md`.
-
-## Database Modes
-
-### Default Local Mode: PostgreSQL
-
-Use the included `docker-compose.yml` to run PostgreSQL locally.
+The default `local` profile expects PostgreSQL on `localhost:5432`.
+The included root [docker-compose.yml](docker-compose.yml) starts that database for the local shell path.
 
 Start PostgreSQL:
 
@@ -170,13 +148,7 @@ Start PostgreSQL:
 docker-compose up -d
 ```
 
-Run the app with the default local profile:
-
-```powershell
-./build.ps1 bootRun
-```
-
-Default PostgreSQL settings:
+Default local PostgreSQL settings:
 
 - Host: `localhost`
 - Port: `5432`
@@ -190,201 +162,43 @@ Stop PostgreSQL when done:
 docker-compose down
 ```
 
-## Running The Application
+## IDE Setup
 
-Core commands:
+### IntelliJ IDEA
 
-```powershell
-docker-compose up -d
-./build.ps1 bootRun
-./build.ps1 build
-```
+Recommended baseline:
 
-Useful endpoints once the app is running:
+1. Import the project as a Gradle project.
+2. Set the project SDK to Java 25.
+3. Set Gradle JVM to Java 25.
+4. Keep IntelliJ project code-style settings enabled.
+5. Keep Flyway migration SQL under `src/main/resources/db/migration/` hand-formatted; those scripts are excluded from IntelliJ reformatting because SQL formatter churn makes migration review harder.
 
-- `GET /`
-- `GET /hello`
-- `GET /api/books`
-- `GET /api/admin/operator-surface` with an authenticated `ADMIN` session
-- `GET /api/admin/users` with an authenticated `ADMIN` session
-- `GET /docs`
-- `GET /v3/api-docs`
-- `GET /v3/api-docs.yaml`
-- `GET /actuator/info`
-- `GET /actuator/health`
-- `GET /actuator/health/liveness`
-- `GET /actuator/health/readiness`
-- `GET /actuator/prometheus` for trusted local inspection or deployment scraping, not as an internet-public endpoint
+### VS Code
 
-## Running Tests And Quality Checks
+For local VS Code without the dev container, install:
 
-Use the wrapper command from the repository root. Docker Desktop must also be running because the `test` task starts PostgreSQL through Testcontainers and a full `build` now also performs the Docker image build.
+- Extension Pack for Java
+- Spring Boot Extension Pack
+- Docker
 
-Quick implementation-loop checks:
+For the containerized path, use [Dev Container Setup](#dev-container-setup).
+
+## Optional Git Commit Template
+
+The repository includes `.gitmessage` with a Conventional Commits style subject, optional body, required project metadata footers for AI-created commits, and repo-supported type guidance.
+Enable it for this repository if you want Git to prefill commit messages:
 
 ```powershell
-./build.ps1 compileJava
-./build.ps1 -SkipTests -SkipChecks build
+git config commit.template .gitmessage
 ```
 
-Use the full build task for final verification:
+## Next Step
 
-```powershell
-./build.ps1 build
-```
+Use [docs/LOCAL_DEVELOPMENT.md](docs/LOCAL_DEVELOPMENT.md) after setup for:
 
-`./build.ps1 build` first checks the current uncommitted files and exits successfully with manual-review guidance when the change set is lightweight-only. Use `./build.ps1 -FullBuild build` to force the full Gradle build. Use `-SkipTests` and `-SkipChecks` only for local loops, not signoff.
-`-SkipChecks` skips formatting, PMD, SpotBugs, Error Prone, coverage verification, the build-wired dependency vulnerability scan, explicit vulnerability scan tasks, and SBOM checks.
-
-A full `build` covers Palantir/Spotless formatting, PMD, SpotBugs plus FindSecBugs via `staticSecurityScan`, dependency vulnerability scanning, CycloneDX SBOM generation, tests, Asciidoctor generation, boot jar creation, and the Docker image build.
-The container image vulnerability scan is intentionally explicit instead of part of the `build` target; run `./build.ps1 imageVulnerabilityScan` or `./build.ps1 vulnerabilityScan` when image-scan evidence is required.
-Use focused commands such as `test`, `asciidoctor`, or `dockerBuild` only when you intentionally want a narrower loop.
-
-Documentation health workflow:
-
-- run `pwsh ./scripts/docs/audit-docs.ps1` after changing user-facing Markdown or AsciiDoc, especially top-level docs, `docs/`, REST Docs sources, manual-regression README files, edge reference docs, or `.devcontainer` docs
-- the check audits local documentation links, stale generated-document signals, stable-version agreement, frontend-contract OpenAPI summary counts, and supported-language summaries
-- CI runs the same check before either the lightweight-only shortcut or the heavy Gradle validation path
-
-Security scan shortcuts:
-
-- run `./build.ps1 staticSecurityScan` when you want the code-focused SpotBugs plus FindSecBugs gate directly
-- run `./build.ps1 vulnerabilityScan` when you want only the dependency and container image Trivy gates
-- run `./build.ps1 sbom` when you want only the CycloneDX SBOM outputs for the packaged app and image
-- review suppressions in `tooling/security/trivy.ignore`, `tooling/security/spotbugs-security-include.xml`, and `tooling/security/spotbugs-security-exclude.xml`
-
-OpenAPI contract workflow:
-
-- review the live contract at `GET /v3/api-docs` or `GET /v3/api-docs.yaml`
-- the approved baseline is stored at `src/test/resources/openapi/approved-openapi.json`
-- normal `test` and `build` runs execute the compatibility gate and fail on breaking changes
-- refresh the approved baseline intentionally with:
-
-```powershell
-./build.ps1 refreshOpenApiBaseline
-```
-
-Benchmark workflow:
-
-- run `./build.ps1 gatlingBenchmark` when changing book list/search behavior, localization lookup behavior, or OAuth/session startup behavior
-- when both `build` and `gatlingBenchmark` are required, prefer one invocation such as `./build.ps1 build gatlingBenchmark --no-daemon` so Gradle reuses the same task graph instead of repeating the full build in separate runs
-- do not run `build`, `gatlingBenchmark`, `externalSmokeTest`, `externalDeploymentCheck`, `scheduledExternalCheck`, or other overlapping Gradle validation tasks in parallel because they share build outputs and some already depend on packaging or image-build tasks
-- for a docs or support-file-only workflow, the `./build.ps1 build` shortcut handles the local classifier check; run `pwsh ./scripts/classify-changed-files.ps1` directly only for a different diff boundary
-
-## Reproducing CI Locally
-
-The `CI` workflow currently validates the repository with these commands and prerequisites:
-
-```powershell
-docker version
-pwsh ./scripts/docs/audit-docs.ps1
-./build.ps1 -FullBuild build imageVulnerabilityScan
-helm lint infra/helm/technical-interview-demo
-helm template technical-interview-demo infra/helm/technical-interview-demo -f infra/helm/technical-interview-demo/values-local.yaml
-./build.ps1 externalSmokeTest -PexternalSmokeImageName=technical-interview-demo -PdockerImageName=technical-interview-demo
-```
-
-Exception:
-
-- `./build.ps1 build` performs the local uncommitted-change classifier check and exits successfully with manual-review guidance for lightweight-only changes; the remaining heavyweight CI commands are not needed for that local shortcut
-- in hosted CI, the same classifier runs against the push or pull-request range and short-circuits the heavy validation path when it reports `skipHeavyValidation=true`
-
-The hosted `CI` workflow also uploads `build/reports/jacoco/test/jacocoTestReport.xml` to Codecov plus artifact bundles from `build/reports/security/`, `build/reports/pmd/`, `build/reports/security/static/`, and `build/reports/sbom/`. Local reproduction normally stops at generating those files; it does not publish them unless you intentionally run the same GitHub Action path in CI.
-
-## Troubleshooting
-
-Use this section for local setup and local development failures.
-Use [docs/OPERATIONS.md](docs/OPERATIONS.md) for container smoke, deployed OAuth, Kubernetes, Helm, monitoring, rollback, and deployment troubleshooting.
-
-For local PostgreSQL startup, use `docker-compose` plus `./build.ps1 bootRun`.
-
-### Gradle fails because Java 11 is active
-
-Symptom:
-
-- build errors mention an unsupported Java version
-
-Fix:
-
-```powershell
-$env:JAVA_HOME = '<path-to-jdk-25>'
-$env:Path = "$env:JAVA_HOME\bin;$env:Path"
-java -version
-```
-
-### `GET /docs` is missing or stale
-
-Symptom:
-
-- the docs endpoint redirects to missing content
-- generated snippets are out of date
-
-Fix:
-
-```powershell
-./build.ps1 asciidoctor
-```
-
-### OpenAPI baseline needs intentional refresh
-
-Symptom:
-
-- OpenAPI compatibility tests fail after a reviewed API change
-
-Fix:
-
-```powershell
-./build.ps1 refreshOpenApiBaseline
-./build.ps1 test --tests team.jit.technicalinterviewdemo.technical.docs.OpenApiCompatibilityIntegrationTests
-```
-
-### PostgreSQL local profile will not start
-
-Symptom:
-
-- connection refused errors on startup
-
-Fix:
-
-1. Confirm Docker Desktop is running.
-2. Run `docker-compose up -d`.
-3. Verify the database is healthy with `docker ps`.
-4. Re-run the app with `./build.ps1 bootRun`.
-
-### Tests fail because Testcontainers cannot start PostgreSQL
-
-Symptom:
-
-- `./build.ps1 test` fails before the Spring context loads
-- the output mentions Docker, Testcontainers, or PostgreSQL container startup
-
-Fix:
-
-1. Confirm Docker Desktop is running.
-2. Verify Docker is reachable with `docker ps`.
-3. Re-run `./build.ps1 --no-problems-report test`.
-4. If Docker is managed by corporate policy, make sure Linux containers are enabled and the current user can access Docker.
-
-### Java formatting differs from IDE formatting
-
-Symptom:
-
-- IntelliJ reformats Java files differently from `format` or `checkFormat`
-
-Fix:
-
-1. Run `./build.ps1 format` from the repository root.
-2. Keep the Palantir Java Format result as the authoritative Gradle-owned Java format.
-3. Check that IntelliJ is using the Palantir Java Format plugin and the committed project code-style settings.
-
-### Port 8080 or 5432 is already in use
-
-Symptom:
-
-- the app or PostgreSQL container fails to bind
-
-Fix:
-
-1. Stop the conflicting process or container.
-2. Re-run the command.
-3. If needed, override the port locally in your run configuration.
+- running the application
+- running tests and quality checks
+- reproducing CI locally
+- local documentation, contract, security, and benchmark workflows
+- local development troubleshooting

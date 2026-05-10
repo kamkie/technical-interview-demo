@@ -124,7 +124,7 @@ State and platform boundaries:
 - edge or deployment layers own abuse protection for login bootstrap and write-heavy internet-public paths
 - `infra/` owns checked-in Kubernetes, Helm, monitoring, edge, and log-forwarding assets
 - `tooling/` owns PMD, SpotBugs, Trivy, and similar repo verification policy files
-- `SETUP.md` owns local setup, tool walkthroughs, and local troubleshooting; `docs/OPERATIONS.md` owns deployment and runtime runbooks
+- `SETUP.md` owns local environment setup; `docs/LOCAL_DEVELOPMENT.md` owns local command workflows and local troubleshooting; `docs/OPERATIONS.md` owns deployment and runtime runbooks
 
 ### Public Contract Notes
 

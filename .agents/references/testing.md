@@ -67,6 +67,7 @@ This is the `Red-Green Loop` from `.agents/references/application-lifecycle.md`:
 ```
 
 Use `SETUP.md` for environment prerequisites such as Java, Docker, and formatter configuration.
+Use `docs/LOCAL_DEVELOPMENT.md` for human-facing local validation workflows and local troubleshooting.
 Use `src/manualTests/http/suites/README.md` for manual regression suites and `ijhttp` CLI usage.
 
 `./build.ps1 build` classifies only the current uncommitted change set before deciding whether to skip Gradle.

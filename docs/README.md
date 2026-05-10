@@ -8,7 +8,8 @@ Use [README.md](../README.md) for the shortest project overview and supported-sc
 | Need | Document |
 | --- | --- |
 | Project overview and supported scope | [README.md](../README.md) |
-| Local setup, tools, and local troubleshooting | [SETUP.md](../SETUP.md) |
+| Environment setup, dev container, local shell, and `.env` | [SETUP.md](../SETUP.md) |
+| Local development commands, CI reproduction, and local troubleshooting | [LOCAL_DEVELOPMENT.md](LOCAL_DEVELOPMENT.md) |
 | Contributor workflow and PR expectations | [CONTRIBUTING.md](../CONTRIBUTING.md) |
 | Development lifecycle and artifact routing | [DEVELOPMENT_LIFECYCLE.md](DEVELOPMENT_LIFECYCLE.md) |
 | AI collaboration guide | [WORKING_WITH_AI.md](WORKING_WITH_AI.md) |

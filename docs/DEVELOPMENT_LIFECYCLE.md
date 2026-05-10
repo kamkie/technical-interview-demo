@@ -45,7 +45,8 @@ Use the artifact that owns the truth you are changing:
 | Broad user-facing requirements | PRD under [docs/requirements/](requirements/) |
 | Standalone behavior or acceptance criteria not covered elsewhere | Spec under [docs/specs/](specs/) |
 | Active work state | [ROADMAP.md](../ROADMAP.md) and the active plan under [.agents/plans/](../.agents/plans/) |
-| Local setup and local troubleshooting | [SETUP.md](../SETUP.md) |
+| Environment setup | [SETUP.md](../SETUP.md) |
+| Local development and local troubleshooting | [LOCAL_DEVELOPMENT.md](LOCAL_DEVELOPMENT.md) |
 | Contributor workflow | [CONTRIBUTING.md](../CONTRIBUTING.md) |
 | Human AI collaboration guidance | [WORKING_WITH_AI.md](WORKING_WITH_AI.md) |
 | AI execution, workflow, validation, review, release, and operations rules | [AGENTS.md](../AGENTS.md) and [.agents/references/](../.agents/references/) |
@@ -80,7 +81,7 @@ If implementation reveals a real requirement gap, revise the plan or owner artif
 ## Validation And Review
 
 Validation should match the changed surface.
-Documentation-only changes usually need [scripts/docs/audit-docs.ps1](../scripts/docs/audit-docs.ps1) plus the standard wrapper build behavior described in [SETUP.md](../SETUP.md).
+Documentation-only changes usually need [scripts/docs/audit-docs.ps1](../scripts/docs/audit-docs.ps1) plus the standard wrapper build behavior described in [LOCAL_DEVELOPMENT.md](LOCAL_DEVELOPMENT.md).
 Public API changes need the executable specs and published contract artifacts that define the changed behavior.
 
 Review should start with bugs, spec drift, contract drift, missing validation, and security-sensitive impact.

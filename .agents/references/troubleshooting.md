@@ -4,6 +4,7 @@
 Use it to choose the first recovery step before improvising.
 
 Do not use this file for local install walkthroughs or human environment setup; use `SETUP.md` for that.
+Use `docs/LOCAL_DEVELOPMENT.md` for human-facing local command troubleshooting.
 If a pattern becomes a durable repo-wide lesson after repeated incidents, promote the rule to `.agents/references/LEARNINGS.md` and keep this playbook focused on symptom handling.
 
 ## Recovery Rules
@@ -33,7 +34,7 @@ If a pattern becomes a durable repo-wide lesson after repeated incidents, promot
 | PMD, SpotBugs, Error Prone, or static security checks fail. | The change introduced a quality or security finding, or exposed an existing finding in touched code. | Fix the reported finding in the smallest owned scope, then rerun the failing check or `./build.ps1 build`. | Do not use `-SkipChecks` for final signoff. |
 | OpenAPI compatibility fails. | Public API shape changed or generated docs drifted from the approved contract. | Decide whether the contract change is intentional; if yes, update specs and refresh the baseline with `./build.ps1 refreshOpenApiBaseline`, then run validation. | Do not delete or manually rewrite `src/test/resources/openapi/approved-openapi.json`. |
 | REST Docs snippets or Asciidoctor generation fail. | Controller behavior, documented fields, response headers, or snippets no longer match. | Update the REST Docs test and AsciiDoc page together, then rerun the focused documentation test or full build. | Do not edit generated snippets under `build/` as a fix. |
-| Testcontainers or PostgreSQL startup fails. | Docker is stopped, unreachable, or unable to start Linux containers. | Verify Docker with `docker ps`, follow `SETUP.md` Testcontainers guidance, then rerun the same test command. | Do not replace integration tests with mocks to avoid Docker. |
+| Testcontainers or PostgreSQL startup fails. | Docker is stopped, unreachable, or unable to start Linux containers. | Verify Docker with `docker ps`, follow `docs/LOCAL_DEVELOPMENT.md` Testcontainers guidance, then rerun the same test command. | Do not replace integration tests with mocks to avoid Docker. |
 | Docker image build fails. | Dockerfile changes, base-image access, build context, or jar path handling broke image creation. | Reproduce with `./build.ps1 dockerBuild` or an equivalent direct `docker build` using the existing boot jar while diagnosing; rerun the required full validation after the Docker fix. | Do not rebuild the full application on every Dockerfile-only iteration. |
 | Tests fail because a local port is already bound. | A previous app, container, or smoke run is still using the expected port. | Identify the owner process or container, stop the stale local process, and rerun; use documented local port overrides only when the runbook allows it. | Do not change committed default ports for a local conflict. |
 | A focused integration test is flaky or order-dependent. | Shared state, cache, clock, transaction, or seed data assumptions leaked between tests. | Reproduce with the same class repeatedly, inspect isolation and deterministic data, and fix the test or implementation cause. | Do not add `@Disabled`, sleeps, or broad retries as the first fix. |
@@ -49,3 +50,4 @@ If a pattern becomes a durable repo-wide lesson after repeated incidents, promot
 - Do not confuse a successful narrow troubleshooting loop with completion; the plan-required validation still has to pass or be reported as blocked.
 - Do not delete Gradle caches, Docker volumes, or generated directories before identifying why the command failed.
 - Do not broaden the task into environment setup unless the failure is actually environmental and `SETUP.md` is now in scope.
+- Do not broaden the task into local workflow documentation unless the failure reveals durable command guidance that belongs in `docs/LOCAL_DEVELOPMENT.md`.

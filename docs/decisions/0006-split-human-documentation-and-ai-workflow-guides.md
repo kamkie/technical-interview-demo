@@ -29,11 +29,12 @@ Adopt a clearer human-facing documentation split while keeping `README.md` as th
 Target document roles:
 
 - `README.md`: short project summary, supported scope, contract map, and top-level links.
-- `docs/README.md`: human-facing documentation index for design, lifecycle, ADRs, PRDs, standalone specs, roadmap, operations, and frontend contract material.
+- `docs/README.md`: human-facing documentation index for design, lifecycle, local development, ADRs, PRDs, standalone specs, roadmap, operations, and frontend contract material.
 - `docs/DEVELOPMENT_LIFECYCLE.md`: human-facing explanation of the repository lifecycle from Conceptualization through Maintenance, including when to use an ADR, PRD, standalone spec, roadmap entry, or `.agents/plans/PLAN_*.md`.
 - `docs/WORKING_WITH_AI.md`: human-facing guide for asking AI to help with planning, implementation, validation, review, and release preparation. It should link to lifecycle and workflow owner guides instead of restating the full AI runbooks.
 - `docs/DESIGN.md`: product and contract intent, non-goals, public contract direction, security and deployment direction, and roadmap direction.
-- `SETUP.md`: local developer setup only: prerequisites, quick start, environment variables, IDE setup, local database, running the app, running tests, local CI reproduction, and local troubleshooting.
+- `SETUP.md`: local environment setup only: dev-container setup, local-shell prerequisites, environment variables, IDE setup, and local database setup.
+- `docs/LOCAL_DEVELOPMENT.md`: local development commands, local app run workflow, validation loops, CI reproduction, documentation health workflow, contract and benchmark workflows, and local troubleshooting.
 - `docs/OPERATIONS.md`: deployment and operations runbooks: deployment contract, release-artifact verification, image build and smoke, post-deploy smoke, healthy runtime expectations, upgrade and rollback, Kubernetes, Helm, monitoring, OAuth runtime setup, and deployment troubleshooting.
 - `CONTRIBUTING.md`: contributor workflow, spec-driven development expectations, branch and commit rules, PR expectations, validation expectations, documentation expectations, and release handoff expectations.
 - `.agents/references/*`: AI-facing owner guides for detailed lifecycle vocabulary, planning, execution, workflow coordination, validation, review, release, documentation routing, and code style.
@@ -45,15 +46,16 @@ When `WORKING_WITH_AI.md` moves under `docs/`, all repository links should targe
 Human-only documentation that is generated from, derived from, or summarizing owner artifacts should include a short notice that it is generated or derived, name the documents that own its content, and direct maintainers to update those owner documents first.
 Human-targeting Markdown documents should use Markdown links for files, directories, and section references where appropriate so readers can navigate the documentation directly. Use code spans for commands, globs, identifiers, literal values, and examples where linking would reduce clarity.
 
-The implementation plan selected `docs/OPERATIONS.md` for operations content so the human documentation tree owns design, lifecycle, AI collaboration, operations, and frontend contract material together.
+The implementation plan selected `docs/OPERATIONS.md` for operations content and `docs/LOCAL_DEVELOPMENT.md` for local development workflows so the human documentation tree owns design, lifecycle, local development, AI collaboration, operations, and frontend contract material together.
 
 ## Consequences
 
 Benefits:
 
-- Developers get a clear distinction between local setup, contribution workflow, lifecycle/artifact routing, AI collaboration, and deployment operations.
+- Developers get a clear distinction between environment setup, local development, contribution workflow, lifecycle/artifact routing, AI collaboration, and deployment operations.
 - ADR, PRD, standalone spec, and execution-plan roles become visible without requiring readers to open `.agents/references/*` first.
-- `SETUP.md` becomes shorter and more useful for onboarding.
+- `SETUP.md` becomes shorter and more useful for environment setup.
+- Local development commands become easier to find without mixing them into environment setup.
 - `WORKING_WITH_AI.md` becomes easier to use as an AI collaboration guide rather than a broad lifecycle reference.
 - Moving the AI collaboration guide into `docs/` makes the human-facing documentation tree complete without making `.agents/` the first stop for human readers.
 - `.agents/references/*` remains the detailed AI runbook layer instead of leaking into the primary human documentation path.
@@ -61,7 +63,7 @@ Benefits:
 Costs or risks:
 
 - The first split will touch several high-traffic documentation files and can create stale links if not validated.
-- Moving operational sections out of `SETUP.md` may inconvenience users who currently expect every command in one file.
+- Moving operational and local-development command sections out of `SETUP.md` may inconvenience users who currently expect every command in one file.
 - Adding `docs/DEVELOPMENT_LIFECYCLE.md` risks duplicating `.agents/references/application-lifecycle.md` unless it stays human-facing and summary-level.
 - The operations document location must stay aligned so `README.md`, `CONTRIBUTING.md`, `docs/WORKING_WITH_AI.md`, `AGENTS.md`, and `.agents/references/documentation.md` do not point at different owners.
 - Moving `WORKING_WITH_AI.md` requires root-level compatibility and link migration decisions so existing readers are not stranded.
@@ -73,12 +75,13 @@ Required follow-up changes if accepted:
 2. Create `docs/DEVELOPMENT_LIFECYCLE.md` with a concise human-facing lifecycle and artifact-routing explanation.
 3. Move `WORKING_WITH_AI.md` to `docs/WORKING_WITH_AI.md`, update incoming links, and keep a root compatibility pointer only if needed.
 4. Split operations and deployment runbooks out of `SETUP.md` into the selected operations document path.
-5. Narrow `SETUP.md`, `CONTRIBUTING.md`, and `docs/WORKING_WITH_AI.md` to their accepted roles.
-6. Add generated-or-derived notices to human-only summary documents and name the owner documents they summarize.
-7. Use Markdown links for human-facing file, directory, and section references where appropriate.
-8. Update `README.md`, `docs/DESIGN.md`, `AGENTS.md`, and `.agents/references/documentation.md` only where their ownership maps or discoverability links change.
-9. Update `ROADMAP.md` and any active plan created for the documentation split.
-10. Run `pwsh ./scripts/docs/audit-docs.ps1` after the documentation move.
+5. Split local development commands, local validation, CI reproduction, and local troubleshooting out of `SETUP.md` into `docs/LOCAL_DEVELOPMENT.md`.
+6. Narrow `SETUP.md`, `CONTRIBUTING.md`, and `docs/WORKING_WITH_AI.md` to their accepted roles.
+7. Add generated-or-derived notices to human-only summary documents and name the owner documents they summarize.
+8. Use Markdown links for human-facing file, directory, and section references where appropriate.
+9. Update `README.md`, `docs/DESIGN.md`, `AGENTS.md`, and `.agents/references/documentation.md` only where their ownership maps or discoverability links change.
+10. Update `ROADMAP.md` and any active plan created for the documentation split.
+11. Run `pwsh ./scripts/docs/audit-docs.ps1` after the documentation move.
 
 ## Alternatives Considered
 
@@ -105,16 +108,17 @@ It should remain authoritative for AI behavior, while `docs/DEVELOPMENT_LIFECYCL
 ### Put Operations Under `SETUP.md`
 
 Keeping all commands in one setup file is convenient for search, but it makes onboarding harder and blurs local setup with deployment operation.
-The preferred split keeps local setup in `SETUP.md` and deployment or runtime runbooks in an operations document.
+The preferred split keeps environment setup in `SETUP.md`, local development workflows in `docs/LOCAL_DEVELOPMENT.md`, and deployment or runtime runbooks in an operations document.
 
 ## Confirmation
 
 This decision is reflected in the repository when:
 
-- `docs/README.md` exists and points humans to design, lifecycle, ADRs, PRDs, standalone specs, roadmap, operations, setup, contributing, AI collaboration, and frontend contract material.
+- `docs/README.md` exists and points humans to design, lifecycle, local development, ADRs, PRDs, standalone specs, roadmap, operations, setup, contributing, AI collaboration, and frontend contract material.
 - `docs/DEVELOPMENT_LIFECYCLE.md` explains the lifecycle and artifact routing without copying the detailed AI runbook from `.agents/references/application-lifecycle.md`.
 - `docs/WORKING_WITH_AI.md` owns the human-facing AI collaboration guide, and there is no root-level compatibility pointer.
-- `SETUP.md` is focused on local setup and local troubleshooting.
+- `SETUP.md` is focused on local environment setup.
+- `docs/LOCAL_DEVELOPMENT.md` owns local development commands, validation loops, CI reproduction, and local troubleshooting.
 - The selected operations document owns deployment, runtime, smoke, rollback, Kubernetes, Helm, and monitoring runbooks.
 - `CONTRIBUTING.md` and `docs/WORKING_WITH_AI.md` are narrowed to their accepted roles and link to lifecycle and operations docs instead of duplicating them.
 - Human-only generated or derived documents identify themselves as generated or derived and name the owner documents for their content.
@@ -129,6 +133,7 @@ This decision is reflected in the repository when:
 - [CONTRIBUTING.md](../../CONTRIBUTING.md)
 - [docs/README.md](../README.md)
 - [docs/DEVELOPMENT_LIFECYCLE.md](../DEVELOPMENT_LIFECYCLE.md)
+- [docs/LOCAL_DEVELOPMENT.md](../LOCAL_DEVELOPMENT.md)
 - [docs/WORKING_WITH_AI.md](../WORKING_WITH_AI.md)
 - [docs/OPERATIONS.md](../OPERATIONS.md)
 - [ROADMAP.md](../../ROADMAP.md)

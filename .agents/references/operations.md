@@ -1,7 +1,7 @@
 # Operations Guide For AI Agents
 
 `.agents/references/operations.md` owns Deployment and Operations phase activities, plus the cross-cutting `Rollback`, `Hotfix`, `Patch`, `Backport`, and `Deprecate` triggers.
-It does not own release publication, branch mechanics, validation command syntax, review policy, local setup, or incident-specific runbooks.
+It does not own release publication, branch mechanics, validation command syntax, review policy, local environment setup, local development workflows, or incident-specific runbooks.
 
 Use this file only after a released artifact is being staged, promoted, verified, rolled back, observed in runtime, or corrected because of a post-release signal.
 Use `.agents/references/releases.md` for release preparation and publication before promotion starts.
@@ -21,7 +21,7 @@ Load this guide when the task asks for:
 Do not load this guide for:
 
 - release planning, release notes, tagging, publication, or release artifact verification before promotion starts
-- local setup, local `bootRun`, local Docker onboarding, IDE setup, or generic troubleshooting
+- local environment setup, local `bootRun`, local Docker onboarding, IDE setup, local development commands, or generic troubleshooting
 - ordinary implementation, validation, review, or integration work before a release artifact exists
 - speculative deployment policy when the user has not named a target environment or operational signal
 

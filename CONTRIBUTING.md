@@ -8,7 +8,8 @@ Use the human-facing docs deliberately:
 
 - `README.md` for the project overview, implemented scope, and contract map
 - `docs/README.md` for the human-facing documentation index
-- `SETUP.md` for local prerequisites, `.env` loading, run commands, CI reproduction, and local troubleshooting
+- `SETUP.md` for environment setup through the dev container or local shell
+- `docs/LOCAL_DEVELOPMENT.md` for local run commands, validation loops, CI reproduction, and local troubleshooting
 - `docs/DEVELOPMENT_LIFECYCLE.md` for lifecycle and artifact-routing guidance
 - `docs/WORKING_WITH_AI.md` for how to use AI across discovery, planning, implementation, verification, and release
 - `docs/OPERATIONS.md` for deployment, runtime, smoke, rollback, Kubernetes, Helm, monitoring, OAuth, and operations troubleshooting runbooks
@@ -35,7 +36,8 @@ When documentation changes, keep the right human-facing files aligned:
 
 - `README.md` owns the concise project and contract summary
 - `docs/README.md` owns the human-facing documentation index
-- `SETUP.md` owns local environment, onboarding, local commands, and local troubleshooting
+- `SETUP.md` owns environment setup through the dev container or local shell
+- `docs/LOCAL_DEVELOPMENT.md` owns local development commands, validation loops, CI reproduction, and local troubleshooting
 - `docs/DEVELOPMENT_LIFECYCLE.md` owns the human-facing lifecycle and artifact-routing summary
 - `docs/WORKING_WITH_AI.md` owns the human-facing AI collaboration lifecycle
 - `docs/OPERATIONS.md` owns deployment and runtime operations runbooks
@@ -68,7 +70,7 @@ Change-routing rules:
 
 - public API change: update implementation, tests, REST Docs, OpenAPI when intentionally changed, and `README.md` if the supported contract changed; update HTTP convenience files when reviewer workflows should mirror the change
 - internal refactor with no contract change: keep existing specs green and avoid unnecessary OpenAPI or README edits
-- setup or tooling change: update `SETUP.md`
+- setup or tooling change: update `SETUP.md` when the environment setup changes, or `docs/LOCAL_DEVELOPMENT.md` when local command workflows change
 - deployment or runtime runbook change: update `docs/OPERATIONS.md`
 - AI workflow or AI guidance change: update the owning AI guide and keep `AGENTS.md` aligned when the AI document set or maintenance rules changed
 - roadmap reprioritization: update `ROADMAP.md`
@@ -226,7 +228,8 @@ Exception:
 
 Additional validation rules:
 
-- use `SETUP.md` for JDK 25, Docker, `.env`, and command prerequisites
+- use `SETUP.md` for JDK 25, Docker, `.env`, and environment prerequisites
+- use `docs/LOCAL_DEVELOPMENT.md` for local command workflows and local troubleshooting
 - run `pwsh ./scripts/docs/audit-docs.ps1` when user-facing Markdown or AsciiDoc changes; CI runs it for both lightweight-only and full validation paths
 - use `./build.ps1 compileJava` or a similarly focused task for fast checks while editing, then use `./build.ps1 build` or `./build.ps1 -FullBuild build` for final verification according to the validation scope
 - use `./build.ps1 -SkipTests build`, `./build.ps1 -SkipChecks build`, or both only for local loops, not final verification
@@ -259,7 +262,8 @@ Common routing:
 
 - `README.md` for supported project scope and public contract summary
 - `docs/README.md` for the human-facing documentation index
-- `SETUP.md` for local setup, CI reproduction, and local troubleshooting
+- `SETUP.md` for environment setup through the dev container or local shell
+- `docs/LOCAL_DEVELOPMENT.md` for local development commands, CI reproduction, and local troubleshooting
 - `docs/DEVELOPMENT_LIFECYCLE.md` for lifecycle and artifact-routing summaries
 - `docs/WORKING_WITH_AI.md` for the human-facing AI collaboration lifecycle
 - `docs/OPERATIONS.md` for deployment and runtime operations runbooks

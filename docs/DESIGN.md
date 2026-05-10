@@ -132,7 +132,7 @@ Prefer a small number of meaningful metrics and logs over speculative observabil
 Keep documentation roles distinct:
 
 - executable specs and published contract docs own behavior
-- `README.md`, `CONTRIBUTING.md`, and `SETUP.md` own the project summary, contributor workflow, and local setup path
+- `README.md`, `CONTRIBUTING.md`, `SETUP.md`, and `docs/LOCAL_DEVELOPMENT.md` own the project summary, contributor workflow, environment setup path, and local development workflows
 - `docs/README.md` owns the human-facing documentation index
 - `docs/DEVELOPMENT_LIFECYCLE.md` owns the human-facing lifecycle and artifact-routing summary
 - `docs/OPERATIONS.md` owns deployment and runtime operations runbooks

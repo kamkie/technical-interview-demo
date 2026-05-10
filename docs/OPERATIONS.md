@@ -1,7 +1,8 @@
 # Operations Guide
 
 This guide owns the human-facing deployment and runtime runbooks for `technical-interview-demo`.
-Use [SETUP.md](../SETUP.md) for local developer setup, local commands, and local troubleshooting.
+Use [SETUP.md](../SETUP.md) for local environment setup.
+Use [LOCAL_DEVELOPMENT.md](LOCAL_DEVELOPMENT.md) for local commands and local troubleshooting.
 
 ## Table Of Contents
 
@@ -515,7 +516,8 @@ Role behavior:
 
 ## Operations Troubleshooting
 
-Use [SETUP.md](../SETUP.md) for Java, local PostgreSQL, Testcontainers, local docs generation, formatter, and local port-conflict troubleshooting.
+Use [SETUP.md](../SETUP.md) for Java, Docker, `.env`, and local PostgreSQL environment setup.
+Use [LOCAL_DEVELOPMENT.md](LOCAL_DEVELOPMENT.md) for Testcontainers, local docs generation, formatter, and local port-conflict troubleshooting.
 
 ### OAuth login does not start
 

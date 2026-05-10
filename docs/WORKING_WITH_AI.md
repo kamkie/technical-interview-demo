@@ -54,7 +54,8 @@ Use the smallest owner set that can answer the request:
 | Need | Start With |
 | --- | --- |
 | Project overview and implemented scope | [README.md](../README.md) |
-| Local setup, tools, and local troubleshooting | [SETUP.md](../SETUP.md) |
+| Environment setup, dev container, local shell, and `.env` | [SETUP.md](../SETUP.md) |
+| Local development commands, CI reproduction, and local troubleshooting | [LOCAL_DEVELOPMENT.md](LOCAL_DEVELOPMENT.md) |
 | Contributor workflow and PR expectations | [CONTRIBUTING.md](../CONTRIBUTING.md) |
 | Lifecycle and artifact routing for humans | [Development Lifecycle](DEVELOPMENT_LIFECYCLE.md) |
 | Deployment and runtime operations runbooks | [OPERATIONS.md](OPERATIONS.md) |

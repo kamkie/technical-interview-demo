@@ -1,7 +1,8 @@
 # Command Wrapper Reference
 
 `.agents/references/command-wrapper.md` owns the AI-facing shortcut for running local Gradle commands.
-Use `SETUP.md` for human setup, prerequisites, and troubleshooting detail.
+Use `SETUP.md` for human environment setup and prerequisites.
+Use `docs/LOCAL_DEVELOPMENT.md` for human local command workflows and local troubleshooting.
 Use `.agents/references/testing.md` to decide which validation is required.
 Use `.agents/references/gradle-task-graph.md` when choosing between overlapping Gradle tasks.
 

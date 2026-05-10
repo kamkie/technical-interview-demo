@@ -94,7 +94,7 @@ If the plan task exposes a real plan gap, revise the active plan before coding b
 
 - public behavior changes must keep executable specs and published contract artifacts aligned
 - internal refactors should preserve existing specs without contract churn
-- setup and environment changes route through `SETUP.md` and, when AI command guidance changes, `.agents/references/command-wrapper.md`
+- setup, environment, and local-development documentation changes route through `.agents/references/documentation.md`; AI command guidance changes route through `.agents/references/command-wrapper.md`
 - AI-guidance changes route to the owning `.agents/references/` guide through `.agents/references/documentation.md`
 - required validation that cannot run must be recorded explicitly
 - never edit files reserved to another worker or coordinator without first resolving ownership through `.agents/references/workflow.md`

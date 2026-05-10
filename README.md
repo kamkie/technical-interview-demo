@@ -22,7 +22,8 @@ See [docs/DESIGN.md](docs/DESIGN.md) for product intent and non-goals.
 ## Project Map
 
 - [docs/README.md](docs/README.md): human-facing documentation index
-- [SETUP.md](SETUP.md): local environment, prerequisites, and run commands
+- [SETUP.md](SETUP.md): environment setup for the dev container or local shell
+- [docs/LOCAL_DEVELOPMENT.md](docs/LOCAL_DEVELOPMENT.md): local run, test, CI reproduction, and troubleshooting workflows
 - [CONTRIBUTING.md](CONTRIBUTING.md): contributor workflow, validation expectations, and PR or release handoff
 - [ROADMAP.md](ROADMAP.md): active and planned work only
 - [docs/DEVELOPMENT_LIFECYCLE.md](docs/DEVELOPMENT_LIFECYCLE.md): human-facing lifecycle and artifact-routing summary
@@ -40,7 +41,8 @@ See [docs/DESIGN.md](docs/DESIGN.md) for product intent and non-goals.
 
 ## How To Contribute
 
-- start with [SETUP.md](SETUP.md) to get Java 25, Docker, and local commands working
+- start with [SETUP.md](SETUP.md) to set up the dev container or local shell environment
+- use [docs/LOCAL_DEVELOPMENT.md](docs/LOCAL_DEVELOPMENT.md) for local run, test, CI reproduction, and troubleshooting workflows
 - use [CONTRIBUTING.md](CONTRIBUTING.md) for branch, validation, PR, and release expectations
 - make changes spec-first: update the governing tests, docs, or contract artifacts before or alongside implementation
 - use [docs/WORKING_WITH_AI.md](docs/WORKING_WITH_AI.md) when you want AI help with planning, implementation, verification, or release preparation

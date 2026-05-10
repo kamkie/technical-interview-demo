@@ -281,7 +281,8 @@ When a role has no complete owner, record the gap in active-work tracking before
 | Role | Owns | Current artifact |
 | --- | --- | --- |
 | Project Charter | mission, supported scope, public contract summary | `README.md`, `docs/DESIGN.md` |
-| Setup Guide | local environment, tooling, onboarding, and local troubleshooting | `SETUP.md` |
+| Setup Guide | dev-container or local-shell environment setup | `SETUP.md` |
+| Local Development Guide | local commands, validation loops, CI reproduction, and local troubleshooting | `docs/LOCAL_DEVELOPMENT.md` |
 | Human Operations Runbook | deployment, runtime, smoke, rollback, Kubernetes, Helm, monitoring, OAuth runtime setup, and operations troubleshooting | `docs/OPERATIONS.md` |
 | Decision Record | durable architecture, workflow, contract-policy, security, documentation-ownership, or repository-process decision rationale | `docs/decisions/*.md` |
 | Product Requirements | product intent, users, goals, non-goals, requirements, acceptance criteria, and product-scope questions | `docs/requirements/*.md` |
