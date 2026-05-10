@@ -100,6 +100,7 @@ Sidecar output never replaces coordinator integration responsibility; the coordi
 
 `main` remains the integration target for completed work.
 Worktree branches are temporary execution branches, not release branches; release-target and tagging preconditions live in `AGENTS.md` and `.agents/references/releases.md`.
+When `.agents/references/operations.md` routes a hotfix, backport, rollback follow-up, or patch path, this guide owns branch, worktree, integration, and handoff mechanics after that operational route is chosen.
 Prefer merging accepted local branches or worktrees into the integration branch.
 Use cherry-pick only when the user asks for it, when accepting less than the full branch, or when a normal merge is not viable; record the reason.
 Remove temporary worktrees and branches only after their changes are integrated and no longer needed for local review.

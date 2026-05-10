@@ -66,6 +66,7 @@ Add only guides whose domains match the current task.
 - branch, worktree, delegation, multi-agent state, sidecar, integration, or remote handoff: `.agents/references/workflow.md`
 - workflow mode labels, multi-agent role roster, per-role read sets, or skill chain selection: `.agents/references/workflow.md`; load `.agents/skills/<skill-name>/SKILL.md` only when a skill is invoked or clearly applies; see `.agents/skills/README.md` for the skill catalog and the standard `M0`–`M4` skill chain
 - release sequencing: `.agents/references/releases.md`
+- deployment, post-release verification, rollback, incident response, hotfix, patch, backport, or deprecation routing: `.agents/references/operations.md`
 - commit message format, required AI trailer block, and non-interactive commit construction: `.gitmessage` (authoritative template) plus `.agents/references/execution.md` "Commits" rules
 - application lifecycle phase, activity, owner-guide mapping, or loop vocabulary: `.agents/references/application-lifecycle.md`
 - durable repo-wide lesson: `.agents/references/LEARNINGS.md`
@@ -101,3 +102,4 @@ Use these completion rules for AI work in this repository:
 `main` is the integration branch for completed work.
 Use `.agents/references/workflow.md` for branch, worktree, delegation, multi-agent state, sidecar, integration, and remote-handoff mechanics.
 Use `.agents/references/releases.md` for release sequencing only after the user requests release work and the candidate is integrated on `main`.
+Use `.agents/references/operations.md` once a released artifact enters deployment, post-release verification, rollback, incident response, hotfix, patch, backport, or deprecation routing.

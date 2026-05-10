@@ -38,6 +38,7 @@ Update the artifact that owns the truth being changed:
 - ad hoc task and single-plan-task execution: `.agents/references/execution.md`
 - branch, worktree, delegation, multi-agent state, sidecar, integration, and remote-handoff mechanics: `.agents/references/workflow.md`
 - release sequencing and tagging: `.agents/references/releases.md`; detailed release checklist and artifact verification: `.agents/references/release-checklist.md` and `.agents/references/release-artifact-verification.md`
+- deployment, post-release verification, rollback, incident response, hotfix, patch, backport, and deprecation routing after a release artifact exists: `.agents/references/operations.md`
 - standalone repository task prompts, catalog, and task loading rules: `.agents/tasks/README.md`; prompt files live under `.agents/tasks/` and must add task-specific instructions that are not thin wrappers around an existing domain guide
 - repo-local reusable workflow wrappers: `.agents/skills/`; Codex plugin marketplace configuration: `.agents/plugins/marketplace.json` when intentionally introducing a repo-scoped plugin
 - durable multi-agent workflow state: `.agents/context/handoffs/`, `.agents/context/workers/`, `.agents/context/reviews/`, `.agents/context/verifications/`, and `.agents/context/specialists/`; workflow state file shape and role ownership live in `.agents/references/workflow.md`
@@ -146,6 +147,7 @@ Update all affected artifacts in the same change:
 - setup or tooling change: update `SETUP.md`, not `README.md`, `AGENTS.md`, or workflow guides unless their inventories or high-level rules changed
 - plan creation or material plan revision: update the concrete `.agents/plans/PLAN_*.md` file and `ROADMAP.md` together so active work points to the plan path and current status
 - roadmap reprioritization: update `ROADMAP.md`, and keep `## Current Project State` aligned when the active release phase, breaking-change policy, or next target version changes
+- post-release deployment or operations signal: use `.agents/references/operations.md` to route rollback, hotfix, patch, backport, deprecation, roadmap, learning, and validation ownership before editing implementation or release artifacts
 - pre-planning decision record: create or update the relevant ADR under `docs/decisions/`; when an ADR becomes accepted, update the owning standing guidance, templates, roadmap entries, and human-facing docs that the decision changes
 - broad user-facing product intent gap: create or update the relevant PRD under `docs/requirements/` only when goals, users, requirements, non-goals, acceptance criteria, or product questions need their own artifact before planning
 - standalone behavior definition gap: create or update the relevant spec under `docs/specs/` only when executable specs, published contract docs, or the active plan do not already define the intended behavior clearly enough

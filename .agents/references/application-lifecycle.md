@@ -155,20 +155,20 @@ Activities marked with `?` are conditional.
 
 ### Deployment And Operations
 
-These activities are listed for lifecycle completeness.
-They currently have no dedicated AI owner guide in this repository, so treat them as gaps until a guide owns them.
+Use `.agents/references/operations.md` for binding rules when work enters Deployment or Operations activities.
+This file owns the vocabulary; `operations.md` owns the operational routing.
 
-- `Stage`: promote the artifact into a non-production environment.
-- `Smoke`: run smoke or external-verification checks.
-- `Promote`: promote to the next environment.
-- `Verify`: confirm deployed behavior in the target environment.
-- `Rollback?`: back out a failed deployment.
-- `Observe`: read production signals.
-- `Operational-Triage`: classify an incident or defect.
-- `Hotfix?`: produce a minimal fix outside the normal plan flow.
-- `Patch?`: produce a normal-flow corrective change.
-- `Backport?`: apply a fix to an older supported line.
-- `Deprecate?`: schedule removal of a behavior.
+- `Stage`: promote the artifact into a non-production environment. Owner: `.agents/references/operations.md`.
+- `Smoke`: run smoke or external-verification checks. Owner: `.agents/references/operations.md`.
+- `Promote`: promote to the next environment. Owner: `.agents/references/operations.md`.
+- `Verify`: confirm deployed behavior in the target environment. Owner: `.agents/references/operations.md`.
+- `Rollback?`: back out a failed deployment. Owner: `.agents/references/operations.md`.
+- `Observe`: read production signals. Owner: `.agents/references/operations.md`.
+- `Operational-Triage`: classify an incident or defect. Owner: `.agents/references/operations.md`.
+- `Hotfix?`: produce a minimal fix outside the normal plan flow. Owner: `.agents/references/operations.md`.
+- `Patch?`: produce a normal-flow corrective change. Owner: `.agents/references/operations.md`.
+- `Backport?`: apply a fix to an older supported line. Owner: `.agents/references/operations.md`.
+- `Deprecate?`: schedule removal of a behavior. Owner: `.agents/references/operations.md`.
 
 ### Maintenance
 
@@ -194,8 +194,8 @@ This table is descriptive; owner guides still own their specific rules.
 | Review | `Self-Review` -> `Code Review` -> `Security Review?` -> `Docs Review?` -> `Decide` | `.agents/references/reviews.md` |
 | Integration | `Re-validate` -> `Resolve-Conflicts?` -> `Merge` -> `Post-Merge-Verify` | `.agents/references/workflow.md`, `AGENTS.md` |
 | Release | `Gate` -> `Tag` -> `Notes` -> `Publish` -> `Post-Release-Cleanup` | `.agents/references/releases.md`, `CHANGELOG.md` |
-| Deployment | `Stage` -> `Smoke` -> `Promote` -> `Verify` -> `Rollback?` | none yet |
-| Operations | `Observe` -> `Operational-Triage` -> `Hotfix?` -> `Patch?` -> `Backport?` -> `Deprecate?` | partial: `CHANGELOG.md`, `ROADMAP.md` |
+| Deployment | `Stage` -> `Smoke` -> `Promote` -> `Verify` -> `Rollback?` | `.agents/references/operations.md` |
+| Operations | `Observe` -> `Operational-Triage` -> `Hotfix?` -> `Patch?` -> `Backport?` -> `Deprecate?` | `.agents/references/operations.md` |
 | Maintenance | `Retrospect` -> `Capture-Learning` -> `Refactor?` -> `Tech-Debt-Plan?` -> `Sync` | `.agents/references/LEARNINGS.md`, `ROADMAP.md` |
 
 The `Implementation` row deliberately interleaves review and validation activities because `.agents/references/execution.md` runs them in a tight plan-task loop.
@@ -218,7 +218,7 @@ Outer Product Loop                              [per release]
 
 - Activities: `Sync` -> Conceptualization -> Analysis -> Triage -> Planning -> Implementation -> Verification -> Review -> Integration -> Release -> Deployment -> Operations -> Maintenance -> `Sync`.
 - Cadence: per release.
-- Owner: `ROADMAP.md`, `.agents/references/releases.md`, `.agents/references/LEARNINGS.md`.
+- Owner: `ROADMAP.md`, `.agents/references/releases.md`, `.agents/references/operations.md`, `.agents/references/LEARNINGS.md`.
 - Exit: a release ships, deployment and operations signals are handled, and outcomes feed the next cycle.
 
 ### Plan Loop
@@ -253,7 +253,7 @@ Outer Product Loop                              [per release]
 
 - Activities: `Observe` -> `Operational-Triage` -> (`Hotfix?` or `Patch?`) -> `Capture-Learning` -> `Sync`.
 - Cadence: continuous, post-release.
-- Owner: gap; currently scattered across `.agents/references/LEARNINGS.md`, `ROADMAP.md`, and `CHANGELOG.md`.
+- Owner: `.agents/references/operations.md`, `.agents/references/LEARNINGS.md`, and `ROADMAP.md`.
 - Exit: the signal is resolved or scheduled as planned work.
 
 ## Cross-Cutting Triggers
@@ -267,8 +267,11 @@ These triggers can fire from any phase and force a switch:
 - `Capture-Learning`: recurring repo-wide lesson surfaces. Owner: `.agents/references/LEARNINGS.md`.
 - `Docs-Routing`: a contract or maintainer-facing document changes. Owner: `.agents/references/documentation.md`.
 - `Context-Hygiene`: any switch between activities. Owner: `AGENTS.md`.
-- `Rollback`: deployed behavior fails verification. Owner: gap until Deployment guidance exists.
-- `Hotfix`: production incident requires a fix outside normal plan flow. Owner: gap until Operations guidance exists.
+- `Rollback`: deployed behavior fails verification. Owner: `.agents/references/operations.md`.
+- `Hotfix`: production incident requires a fix outside normal plan flow. Owner: `.agents/references/operations.md`.
+- `Patch`: post-release issue should follow normal planned correction. Owner: `.agents/references/operations.md`.
+- `Backport`: a fix may need to apply to an older supported line. Owner: `.agents/references/operations.md`.
+- `Deprecate`: behavior may need scheduled removal or replacement. Owner: `.agents/references/operations.md`.
 
 ## Required Artifact Roles
 
@@ -284,6 +287,7 @@ When a role has no complete owner, record the gap in active-work tracking before
 | Standalone Spec | exact behavior, contract impact, acceptance criteria, and validation mapping when existing executable or published specs are insufficient | `docs/specs/*.md` |
 | Roadmap | active-work tracking, prioritization, sequencing, and current-cycle state | `ROADMAP.md` |
 | Release History | shipped changes per version | `CHANGELOG.md` |
+| Operations Guide | deployment, post-release verification, rollback, incident response, hotfix, patch, backport, and deprecation routing | `.agents/references/operations.md` |
 | Plan | per-task decision-complete execution handoff document | `.agents/plans/PLAN_*.md` |
 | Executable Spec | behavior verified by automation | tests, contract checks, benchmarks |
 | Published Contract | human-facing API and contract docs | `README.md`, `src/docs/asciidoc/`, `src/test/resources/openapi/approved-openapi.json` |
@@ -307,6 +311,8 @@ This file defines lifecycle vocabulary; it does not outrank executable specs, pu
 
 ## Owner-Guide Adoption
 
+`.agents/references/operations.md` is the adopted owner guide for the Deployment and Operations activities listed in this file.
+
 When an owner guide adopts activity names from this file:
 
 - list only the activities that fire in the loop or section the guide actually owns
@@ -323,10 +329,9 @@ When this file changes:
 
 ## Current Gaps
 
-- no AI owner guide for Deployment or Operations phase activities
 - no dedicated Analysis owner guide beyond `.agents/references/planning.md`, `.agents/references/documentation.md`, and the ADR, PRD, and spec templates
 - the `Red-Green Loop` is not named directly in `.agents/references/testing.md`, even though validation work commonly follows it
-- the `Outer Product Loop` is composed from `ROADMAP.md`, `.agents/references/releases.md`, and `.agents/references/LEARNINGS.md` rather than owned by a single guide
+- the `Outer Product Loop` is composed from `ROADMAP.md`, `.agents/references/releases.md`, `.agents/references/operations.md`, and `.agents/references/LEARNINGS.md` rather than owned by a single guide
 - the `Review Loop` exit back into plan-task execution is implicit in `.agents/references/reviews.md` and `.agents/references/execution.md`
 
 ## Non-Goals

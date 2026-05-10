@@ -61,3 +61,8 @@ Before choosing the version:
 - do not start release work from an unmerged PR or side branch
 - do not refresh the OpenAPI baseline unless the contract change was intentional and reviewed
 - do not rewrite release history unless the user explicitly asks for recovery work
+
+## Handoff To Deployment And Operations
+
+Release work ends at publication and release-artifact verification.
+Once a released artifact enters staging, promotion, post-deploy verification, rollback, incident response, hotfix, patch, backport, or deprecation routing, switch to `.agents/references/operations.md`.
