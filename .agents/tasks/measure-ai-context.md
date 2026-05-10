@@ -1,9 +1,5 @@
 # Measure AI Context
 
-Category: Lifecycle And Maintenance
-Slug: `measure-ai-context`
-Placeholders: none
-
 Prepare a report measuring how much context the repository AI instructions consume over time.
 
 Run the checked-in report script:
@@ -14,11 +10,10 @@ Run the checked-in report script:
 
 Use `-Range START..END` when the user provides a range. Otherwise let the script compare the previous first-parent commit with `HEAD`.
 
-Use `-Mode endpoint` for compact oldest-to-newest range summaries. This is the default.
-Use `-Mode stepwise` when the user asks for commit-by-commit or per-commit movement.
+Use `-Mode endpoint` by default and `-Mode stepwise` only when the user asks for commit-by-commit movement.
 
-The script owns the measurement details, scenario file sets, table shape, temporary worktree handling, report format, and warning-only guardrail status.
-Use `-DefaultLoadWarningPercent`, `-TotalInventoryWarningPercent`, and `-GrowthRationale` only when the user asks to tune or explain guardrail thresholds.
+The script owns measurement details, scenario file sets, table shape, temporary worktree handling, report format, and warning-only guardrail status.
+Use guardrail tuning flags only when the user asks to tune or explain thresholds.
 
 Do not run the build, tests, or validation checks.
 

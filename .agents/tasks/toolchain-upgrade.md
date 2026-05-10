@@ -1,9 +1,5 @@
 # Toolchain Upgrade
 
-Category: Planning And Maintenance
-Slug: `toolchain-upgrade`
-Placeholders: none
-
 Create `.agents/plans/PLAN_<topic>.md` for a toolchain upgrade batch.
 
 Scope this task to these owned upgrade surfaces only:
@@ -13,9 +9,9 @@ Scope this task to these owned upgrade surfaces only:
 - Gradle plugins and tools
 - Docker images
 
-Read `AGENTS.md`, `.agents/references/planning.md`, `.agents/references/documentation.md`, `.agents/references/testing.md`, the relevant build files, Dockerfiles, workflow files, and the exact alert, version target, scan, dependency report, or tool output that motivates the upgrade first.
+Read `AGENTS.md`, `.agents/references/planning.md`, `.agents/references/documentation.md`, `.agents/references/testing.md`, relevant build/workflow/Docker files, and the alert, version target, scan, dependency report, or tool output that motivates the upgrade first.
 
-Before writing the plan, identify where each requested version is actually owned, including workflow action pins, direct Java dependencies, transitive constraints or overrides, Gradle plugin versions, Gradle wrapper versions, `buildSrc`, Docker base images, and other checked-in Gradle or packaging tools.
+Before writing the plan, identify where each requested version is owned, including workflow action pins, direct Java dependencies, transitive constraints or overrides, Gradle plugin versions, Gradle wrapper versions, `buildSrc`, Docker base images, and checked-in Gradle or packaging tools.
 Keep the plan narrow enough to review.
 Inventory the owned version surfaces in scope, call out compatibility risk, rollback or migration concerns, resolved-version proof, and validation needed to keep the repository release-ready.
 Say explicitly whether the requested upgrades should stay one batch or split into smaller plans.

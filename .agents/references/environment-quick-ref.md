@@ -51,7 +51,7 @@ pwsh ./build.ps1 gatlingBenchmark
 - keep direct `gradlew` usage available when the shell is already configured
 - let Gradle's toolchain checks report Java misconfiguration clearly
 
-## Instruction-Writing Rule
+## Writing Command Instructions
 
 Plans, task prompts, and worker logs should name the wrapper command directly.
 Do not add preliminary steps to discover `JAVA_HOME`, dot-source `scripts/load-dotenv.ps1`, or inspect local Java paths unless the wrapper command actually fails and the next task is troubleshooting.

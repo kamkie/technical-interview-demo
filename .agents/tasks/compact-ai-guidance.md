@@ -1,45 +1,15 @@
 # Compact AI Guidance
 
-Category: Lifecycle And Maintenance
-Slug: `compact-ai-guidance`
-Placeholders: none
+Compact standing AI instruction files without changing current policy.
 
-Compact the standing AI instruction files.
+Read first: `AGENTS.md`, `.agents/references/documentation.md`, and this task.
+Use targeted `rg` searches and cross-references to choose relevant owner guides.
+Do not bulk-load `.agents/archive/`, `.agents/references/`, `.agents/skills/`, or active plans.
+Check `WORKING_WITH_AI.md` only when human-facing workflow wording overlaps.
 
-#### Scope
+Look for duplicate or overlapping rules, guidance in the wrong owner file, stale references, broken anchors, verbose examples, and accumulated history such as dated decisions or "previously/now" migration prose.
+Keep current rules, move guidance to the single best owner, replace duplicates with short cross-references, and do not touch archive content.
+If ownership is unclear, flag the item instead of deleting it.
 
-- Read `AGENTS.md`, `.agents/references/documentation.md`, and this task file first.
-- Use targeted searches and cross-references to choose the standing owner guides under `.agents/references/` that are relevant to the compaction target.
-- Do not bulk-load `.agents/archive/`, `.agents/references/`, `.agents/skills/`, or active `.agents/plans/PLAN_*.md` files; open them only when a cross-reference or overlapping policy points there.
-- Check `WORKING_WITH_AI.md` only when human-facing workflow wording overlaps with the AI guidance being changed.
-
-#### Compaction Targets
-
-Look for any of the following, not only verbatim duplicates:
-
-- exact or near-duplicate sentences across standing files
-- overlapping or restated policies (same intent, different wording)
-- guidance placed outside its owning file (per `.agents/references/documentation.md` ownership rules)
-- stale references (renamed/moved files, archived plans, retired tasks)
-- verbose phrasing, redundant lists, or examples that belong in `.agents/references/`
-- orphaned cross-references and broken anchors
-- stale workflow references and anchors after delegated-work mechanics move between `.agents/references/workflow.md` and `.agents/references/`, checked with targeted `rg` searches rather than bulk-loading all references
-- accumulated history inside standing guideline files: changelog notes, "previously…/now…" wording, migration narratives, dated decisions, deprecation traces, user-request history, prior directive wording, or rationale about past states rather than current rules
-- misplaced historical context: released history belongs in `CHANGELOG.md`, durable lessons in `.agents/references/LEARNINGS.md`, completed plans in `.agents/archive/`, and still-useful guideline history in an on-demand reference
-
-Use targeted project searches, preferably `rg`, with 1–3 distinctive keywords per policy before opening large files.
-
-#### Rules
-
-- Keep each file role-distinct; do not collapse roles.
-- Move guidance to its single best owning file and replace the other locations with a short cross-reference.
-- Preserve normative wording (MUST/SHOULD-style rules); compact only structure, examples, and restatements.
-- Do not delete guidance whose owner is unclear — flag it in the summary instead.
-- When removing accumulated history, keep only the current rule; relocate any still-useful lesson to `.agents/references/LEARNINGS.md`, released-history wording to `CHANGELOG.md`, and guideline-history context to an on-demand reference instead of dropping it silently.
-- Propose new files only if the current owners cannot stay role-distinct without them.
-- Do not touch `.agents/archive/` content.
-
-#### Deliverables
-
-- Tightened standing files with overlap removed and cross-references updated.
-- A short summary listing: files changed, guidance relocated (from → to), references fixed, and any flagged-but-not-changed items with rationale.
+Move still-useful lessons, release history, or guideline-history context to the owning artifact.
+Summarize changed files, guidance moved, references fixed, and flagged-but-unchanged items.
