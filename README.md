@@ -17,6 +17,8 @@ Technical Interview Demo is a small, spec-driven Spring Boot application for int
 - PostgreSQL runtime profiles, Flyway migrations, and Spring Session JDBC
 - REST Docs, approved OpenAPI baseline checks, and Gatling benchmark coverage
 
+See [docs/DESIGN.md](docs/DESIGN.md) for product intent and non-goals.
+
 ## Project Map
 
 - [SETUP.md](SETUP.md): local environment, prerequisites, and run commands
@@ -31,42 +33,26 @@ Technical Interview Demo is a small, spec-driven Spring Boot application for int
 - `tooling/`: build-tool rules, static-analysis config, and scan suppressions
 - `src/docs/asciidoc/`: published API documentation sources
 - `src/test/resources/openapi/approved-openapi.json`: approved machine-readable API contract
+- `temp/`: throwaway agent and manual-regression artifacts (not part of the released contract)
 
-## How To Contribute To This Repo
+## How To Contribute
 
 - start with [SETUP.md](SETUP.md) to get Java 25, Docker, and local commands working
 - use [CONTRIBUTING.md](CONTRIBUTING.md) for branch, validation, PR, and release expectations
 - make changes spec-first: update the governing tests, docs, or contract artifacts before or alongside implementation
 - use [WORKING_WITH_AI.md](WORKING_WITH_AI.md) when you want AI help with planning, implementation, verification, or release preparation
+- open an ADR ([docs/decisions/](docs/decisions/)) for durable architecture, workflow, contract, security, or process decisions; a PRD ([docs/requirements/](docs/requirements/)) for ambiguous user-facing product intent; or a standalone spec ([docs/specs/](docs/specs/)) when behavior is not already covered by executable specs — see [WORKING_WITH_AI.md](WORKING_WITH_AI.md) and [ROADMAP.md](ROADMAP.md) for lifecycle routing
 
 ## AI Guidance Files
 
-Use these files when you want to work with AI in this repository or understand what the AI is expected to follow:
+Use these entry points when you want to work with AI in this repository or understand what the AI is expected to follow:
 
-- [WORKING_WITH_AI.md](WORKING_WITH_AI.md): human-facing guide for using AI across conceptualization, analysis, triage, planning, implementation, verification, and release
-- [AGENTS.md](AGENTS.md): repository-local AI rules, spec priority, required contract updates, and definition of done
-- [docs/FRONTEND_AI_CONTRACT.md](docs/FRONTEND_AI_CONTRACT.md): generated import-ready backend contract, external skill references, OpenAPI source snapshot, and integration constraints for a separate frontend repository's AI agents
-- [.agents/references/architecture.md](.agents/references/architecture.md): AI-facing codebase map, package boundaries, feature ownership, and structural guidance
-- [.agents/references/code-style.md](.agents/references/code-style.md): repo-local code style and change-shaping guidance
-- [docs/DESIGN.md](docs/DESIGN.md): product intent, tradeoffs, and non-goals
-- [docs/decisions/ADR_TEMPLATE.md](docs/decisions/ADR_TEMPLATE.md), [docs/requirements/PRD_TEMPLATE.md](docs/requirements/PRD_TEMPLATE.md), and [docs/specs/SPEC_TEMPLATE.md](docs/specs/SPEC_TEMPLATE.md): optional pre-planning artifact templates
-- [.agents/references/application-lifecycle.md](.agents/references/application-lifecycle.md): application lifecycle phase, activity, loop, trigger, and owner-guide mapping
-- [.agents/references/documentation.md](.agents/references/documentation.md): documentation ownership and when to update which docs
-- [.agents/references/command-wrapper.md](.agents/references/command-wrapper.md): AI shortcut for local Gradle wrapper commands
-- [.agents/references/plan-execution.md](.agents/references/plan-execution.md): how AI should execute a whole active plan across plan tasks
-- [.agents/references/execution.md](.agents/references/execution.md): how AI should execute ad hoc tasks or one plan task
-- [.agents/references/LEARNINGS.md](.agents/references/LEARNINGS.md): durable engineering lessons worth carrying through refactors
-- [.agents/references/planning.md](.agents/references/planning.md): compact guide for creating or revising execution plans
-- [.agents/tasks/README.md](.agents/tasks/README.md): reusable task prompts with task titles, placeholders, and task text
-- `.agents/skills/`: repo-local skills
-- [.agents/references/reviews.md](.agents/references/reviews.md): code-review and security-review guidance
-- [.agents/references/releases.md](.agents/references/releases.md): release-preparation and release workflow guidance
-- [.agents/references/testing.md](.agents/references/testing.md): validation rules and change-sensitive checks
-- [.agents/references/workflow.md](.agents/references/workflow.md): branch, worktree, delegation, workflow state, integration, and remote-handoff mechanics
-- `.agents/plans/PLAN_*.md`: task-specific execution plans for active work
-- `.agents/references/`: on-demand detailed references and reusable plan template
-- `.agents/reports/`: generated AI analysis reports only when a task intentionally creates a tracked report
-- `.agents/archive/`: archived plan files for completed or released work
+- [WORKING_WITH_AI.md](WORKING_WITH_AI.md): human-facing guide for using AI across the lifecycle
+- [AGENTS.md](AGENTS.md): repository-local AI rules, spec priority, definition of done, and the full Documents Map
+- [.agents/skills/README.md](.agents/skills/README.md): repo-local skills catalog and the standard M0–M4 workflow chain
+- [docs/FRONTEND_AI_CONTRACT.md](docs/FRONTEND_AI_CONTRACT.md): generated import-ready backend contract for a separate first-party frontend repository's AI agents
+
+See [AGENTS.md](AGENTS.md) Documents Map for the full set of `.agents/references/*` guides, plan files, and archived material.
 
 ## Notes
 
