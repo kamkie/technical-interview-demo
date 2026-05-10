@@ -70,6 +70,9 @@ If the handoff cannot name clear inputs, outputs, write scope, and stop conditio
 Use `.agents/context/*` only for durable workflow state that must survive context switches, integration, or remote handoff; otherwise short-lived handoffs may stay in conversation.
 Use the narrowest useful file under `.agents/context/handoffs/`, `.agents/context/workers/`, `.agents/context/reviews/`, `.agents/context/verifications/`, or `.agents/context/specialists/`, with stable names such as `<plan_stem_or_topic>__<agent_name>.md`.
 State records the target plan or topic, role, branch/worktree/sandbox context, read and write scopes, shared exclusions, expected output, validation result, changed files, proposed changelog text when needed, checkpoint or commit SHA, blockers, risks, coordinator decisions, and integration readiness.
+Archive task-specific workflow-state files under `.agents/archive/context/<same-role-directory>/` when the role state is terminal (`completed`, `blocked`, `failed`, or `user-cancelled`), the coordinator has consumed decisions, validation, blockers, and risks into the active plan, commit, handoff, or owning artifact, no active agent needs the file for context switching, integration, review, verification, or remote handoff, and the related work is integrated or explicitly abandoned.
+Keep `.agents/context/*/README.md` files and directory placeholders in active context.
+Delete workflow-state files only when they are pure scratch with no unique decision, validation, blocker, or handoff value.
 
 Each delegated agent reports completed activity, changed files, decisions, validation result, risks, follow-up, and whether it is ready for integration.
 Failed validation reports include the failing command, summary, and recommended next activity: `Diagnose?`, `Fix?`, or `Replan?`.

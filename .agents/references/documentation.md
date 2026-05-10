@@ -40,6 +40,7 @@ Update the artifact that owns the truth being changed:
 - standalone repository task prompts, catalog, and task loading rules: `.agents/tasks/README.md`; prompt files live under `.agents/tasks/` and must add task-specific instructions that are not thin wrappers around an existing domain guide
 - repo-local reusable workflow wrappers: `.agents/skills/`; Codex plugin marketplace configuration: `.agents/plugins/marketplace.json` when intentionally introducing a repo-scoped plugin
 - durable multi-agent workflow state: `.agents/context/handoffs/`, `.agents/context/workers/`, `.agents/context/reviews/`, `.agents/context/verifications/`, and `.agents/context/specialists/`; workflow state file shape and role ownership live in `.agents/references/workflow.md`
+- retired multi-agent workflow state that no active agent needs: `.agents/archive/context/`; archive timing and role-directory shape live in `.agents/references/workflow.md`
 - AI-facing architecture guidance, structural placement, detailed codebase map, and business feature ownership: `.agents/references/architecture.md`
 - historical AI-analysis reports, evaluations, comparisons, and retired specs: `.agents/archive/`
 - product and contract direction: `docs/DESIGN.md`
