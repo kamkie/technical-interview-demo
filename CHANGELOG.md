@@ -11,11 +11,14 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 - Added `docs/FRONTEND_AI_CONTRACT.md` as a generated import-ready backend contract, external security/design skill reference list, approved OpenAPI snapshot, and integration handoff for AI agents working in a separate first-party frontend repository.
 - Added optional ADR, PRD, and standalone spec templates for pre-planning decisions, product intent, and behavior definition.
+- Added accepted ADRs for the skill-first multi-agent workflow and concrete multi-agent roles, skill catalog, durable workflow state, and per-role read sets.
+- Added repo-local workflow skills for mode selection, handoff packets, bounded task execution, validation, diff review, plan authoring, branch integration, security review, OpenAPI contract checks, and flaky-test triage.
 
 ### Changed
 
 - Aligned AI and human-facing lifecycle guidance around Conceptualization, Analysis, Triage, Planning, Implementation, Verification, Review, Integration, Release, Deployment, Operations, and Maintenance.
 - Aligned AI guidance indexes, context-report buckets, and design release-phase wording with the stable post-`v2.0.1` repository structure.
+- Renamed multi-agent workflow mode labels to `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, and `M4: gated` while preserving the stable identifiers and mode semantics.
 - Removed live documentation cross-references to the `1.x` to `2.0` upgrade guide from setup and generated REST Docs source pages.
 
 ## [v2.0.1] - 2026-05-09

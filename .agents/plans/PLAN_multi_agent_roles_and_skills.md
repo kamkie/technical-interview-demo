@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Implementation |
-| Status | In Progress |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Planning Readiness
 | Field | Value |
@@ -101,7 +101,7 @@
 | 7: Smoke-test the loop on one bounded task | Done | Coordinator + Worker + Reviewer + Verifier | `docs(workflow): smoke-test phase b handoff loop` | `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | Handoff, worker, review, and verification artifacts are present; `LEARNINGS.md` records the validator-gap lesson. |
 | 8: Add Phase C skill bundles and platform alignment | Done | Worker | `docs(skills): add phase c workflow support` | Structural skill check passed; `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | `release-cut` remains deferred; `quick_validate.py` could not run because the local Python environment lacks PyYAML. |
 | 9: Sweep old mode labels from live guidance | Done | Worker | `docs(workflow): sweep old mode labels` | `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | Live guidance now uses the accepted mode labels. |
-| 10: Update `ROADMAP.md` final state | Not Started | Coordinator | Pending | Pending | Closes the plan. |
+| 10: Update `ROADMAP.md` final state | Done | Coordinator | `docs(plan): close multi-agent roles rollout` | `git diff --check` passed; `./build.ps1 -FullBuild build` passed (270 tests) | Plan, roadmap, and changelog reflect implemented non-release state. |
 
 ## Execution Tasks
 
@@ -225,15 +225,15 @@
 ### Task 10: Update `ROADMAP.md` Final State
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Record the rollout outcome in `ROADMAP.md` and archive this plan per `.agents/references/plan-execution.md`. |
 | Owned Files Or Packages | `ROADMAP.md`, this plan. |
 | Coordinator-Owned Shared Files | `ROADMAP.md`. |
 | Context Required | This plan, `ROADMAP.md`. |
 | Behavior To Preserve | Existing roadmap structure. |
-| Deliverables | Roadmap entry updated; plan moved to `.agents/archive/` if guidance requires. |
-| Validation Checkpoint | Manual review. |
-| Commit Checkpoint | One commit. |
+| Deliverables | Roadmap entry updated; changelog updated; plan remains active and implemented because release/archive cleanup is out of scope until requested. |
+| Validation Checkpoint | Passed: `git diff --check` passed; `./build.ps1 -FullBuild build` passed, including 270 tests and the full Gradle build. |
+| Commit Checkpoint | `docs(plan): close multi-agent roles rollout` |
 
 ## Blockers And Replan Triggers
 | Trigger / Blocker | Response | Owner | Status |
@@ -305,6 +305,8 @@
 | 2026-05-10 | Targeted pre-rename label search across live AI guidance, skills, and active plans | Task 9 mode-label sweep | Passed | No pre-rename workflow-mode label hits remain in the swept paths. |
 | 2026-05-10 | `git diff --check` | Task 9 mode-label sweep | Passed | No whitespace diagnostics. |
 | 2026-05-10 | `./build.ps1 build` | Task 9 mode-label sweep | Passed | Wrapper detected only lightweight uncommitted files and skipped Gradle; manual consistency review is sufficient. |
+| 2026-05-10 | `git diff --check` | Task 10 final plan, roadmap, and changelog state | Passed | No whitespace diagnostics. |
+| 2026-05-10 | `./build.ps1 -FullBuild build` | Whole multi-agent roles rollout closure | Passed | Full Gradle build completed successfully and executed 270 tests. |
 
 ## User Validation
 - Confirm `.agents/references/workflow.md` defines `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, and `M4: gated` with unchanged mode semantics.
