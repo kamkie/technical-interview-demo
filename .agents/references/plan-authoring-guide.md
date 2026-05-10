@@ -1,24 +1,37 @@
 # Plan Authoring Guide For AI Agents
 
-`.agents/references/plan-authoring-guide.md` owns on-demand companion guidance for creating strong `.agents/plans/PLAN_*.md` files.
+`.agents/references/plan-authoring-guide.md` owns on-demand examples and fill guidance for `.agents/plans/PLAN_*.md` files.
 It does not own planning rules or required plan shape.
 
 Source of truth:
 
-- `.agents/references/planning.md` owns lifecycle vocabulary, readiness rules, milestone rules, roadmap synchronization, and final checks.
+- `.agents/references/planning.md` owns planning modes, read sets, lifecycle vocabulary, readiness rules, roadmap synchronization, milestone rules, routing rules, and final checks.
 - `.agents/templates/plan-template.md` owns the canonical plan skeleton and required sections.
-- `docs/specs/application-lifecycle-spec.md` owns the lifecycle phase model that planning vocabulary must match.
-- `docs/specs/lifecycle-phase-activities.md` owns the activity and loop names used when planning prose names lifecycle activities.
+- `docs/specs/application-lifecycle-spec.md` owns the lifecycle phase model.
+- `docs/specs/lifecycle-phase-activities.md` owns activity and loop names used in planning prose.
 - `.agents/references/documentation.md` owns artifact routing.
 - `.agents/references/testing.md` owns validation scope.
 - `.agents/references/plan-execution.md` and `.agents/references/execution.md` own execution after a plan is approved.
 
-Use this guide only when the compact planning guide and template are not enough to decide how to fill a plan, review readiness, or shape milestones.
+Use this guide only when `planning.md` and the template are not enough to decide how to fill a plan, review readiness, or shape milestones.
 If this guide conflicts with `planning.md` or `plan-template.md`, follow those files and update this guide later.
 
-## Planning Posture
+## How To Use This Guide
 
-A good plan is a handoff document, not a narrative of the agent's research.
+Start with `.agents/references/planning.md`:
+
+- use `Modes And Read Set` to choose the workflow and load only necessary context
+- use `Lifecycle And Readiness` and `Planning Workflow` to decide whether the plan can be `Ready`
+- use `Plan Files` and `Milestones And Tracking` for required plan content
+- use `Routing Rules` for artifact ownership and validation routing
+- use `Final Check` before handoff
+
+Then use this guide for examples of what good plan content looks like.
+Do not copy this guide into a plan; fill the template with task-specific facts.
+
+## Authoring Posture
+
+A good plan is a handoff document, not a research transcript.
 It should let another agent execute without inventing missing product, contract, validation, or ownership decisions.
 
 Prefer plans that are:
@@ -32,44 +45,25 @@ Prefer plans that are:
 Do not use `ROADMAP.md` as a substitute for a plan.
 The roadmap tracks active work at a high level; the plan owns detailed milestones, progress, validation, blockers, and handoff context.
 
-## Planning Flow
-
-Use the Planning phase activity sequence when filling the template:
-
-1. `Frame`: identify the behavior or workflow being changed and surface scope boundaries.
-2. `Design`: decide product, contract, compatibility, and rollout behavior that cannot be left to implementation.
-3. `Spec`: find or update the governing spec or contract artifacts before proposing implementation.
-4. `Decompose`: choose the execution shape, shared-file boundaries, and milestone checkpoints that can each be validated and committed.
-5. `Validate-Plan`: record remaining questions, accepted fallbacks, locked decisions, validation, and user verification in concrete terms.
-6. `Sync`: check that roadmap state, readiness, progress tracking, and required artifacts line up.
-7. `Replan?`: revise the plan when it is not decision-complete or when execution reality later disagrees with a locked decision, milestone, or validation path, then return to `Validate-Plan`.
-
-Ask the user only when ambiguity changes product intent, compatibility, rollout, acceptance criteria, validation, or another material tradeoff.
 For non-blocking preference gaps, pick a conservative fallback and record it.
+For product, compatibility, rollout, acceptance, or validation gaps, ask the user instead of hiding the gap as an assumption.
 
-## Filling The Template
+## Template Fill Notes
 
 ### Lifecycle And Readiness
 
-Use `Lifecycle` for the plan's coarse lifecycle phase and immediate plan status.
-Use `Planning Readiness` to make the decision state scannable.
-`Phase` must use the lifecycle phase names from `.agents/references/planning.md`, which mirror `docs/specs/application-lifecycle-spec.md`.
-`Status` describes the immediate state inside that phase.
-`Closed` is a terminal `Status`, not a `Phase`.
-
-`Status | Ready` means no blocking open question remains unresolved.
-If any open question has `Blocks Ready? | Yes`, the lifecycle status should be `Needs Input`.
-If a blocking question is deferred, the fallback must be explicit in both `Requirement Gaps And Open Questions` and `Decision Log And Assumptions`.
-
-Good readiness rows are mechanical and current:
+Use the exact phase and status vocabulary from `planning.md`.
+The readiness table should be mechanical and current:
 
 ```md
 | Decision Complete | Yes |
 | Blocking Open Questions | None |
 | Accepted Fallbacks | D2 |
 | Ready For Execution | Yes |
-| Last Updated | 2026-05-08 |
+| Last Updated | 2026-05-10 |
 ```
+
+If readiness depends on a fallback, the fallback should appear in both `Requirement Gaps And Open Questions` and `Decision Log And Assumptions`.
 
 ### Summary, Scope, And Current State
 
@@ -78,26 +72,24 @@ Use `Scope` to prevent quiet expansion during implementation.
 Use `Current State` for facts discovered from specs, docs, source, tests, roadmap, or user input.
 
 Avoid implementation guesses in `Current State`.
-If a fact is inferred rather than directly observed, say so and record whether the inference matters to readiness.
+If a fact is inferred rather than directly observed, say so and record whether the inference affects readiness.
 
-### Open Questions
+### Requirement Gaps And Open Questions
 
 Every material question gets a stable `Q` ID.
 Use the table to show what is missing, why it matters, who owns the answer, and whether the plan can proceed.
-
-Example:
 
 ```md
 | ID | Question / Gap | Why It Matters | Owner | Status | Fallback / Decision | Blocks Ready? |
 | --- | --- | --- | --- | --- | --- | --- |
 | Q1 | Should the new filter be public API or internal admin-only behavior? | Changes tests, docs, OpenAPI, and compatibility risk. | User | Open | Pending | Yes |
-| Q2 | Should existing examples be updated? | Affects reviewer workflow but not runtime behavior. | Agent | Deferred | D2: update examples only if contract docs move. | No |
+| Q2 | Should reviewer HTTP examples move? | Affects manual workflow but not runtime behavior. | Agent | Deferred | D2: update examples only if contract docs move. | No |
 ```
 
 Do not delete answered questions during planning.
 Change their status to `Answered` or `Deferred` and point to the decision log.
 
-### Decisions And Assumptions
+### Decision Log And Assumptions
 
 Use `Decision Log And Assumptions` for answers that execution should not reopen casually.
 Good decision rows name the source and revisit trigger:
@@ -105,15 +97,10 @@ Good decision rows name the source and revisit trigger:
 ```md
 | ID | Decision / Assumption | Source | Date | Revisit Trigger |
 | --- | --- | --- | --- | --- |
-| D1 | Preserve existing response shape; add no new error envelope. | Approved OpenAPI baseline and user request | 2026-05-08 | Revisit only if user asks for breaking API cleanup. |
+| D1 | Preserve existing response shape; add no new error envelope. | Approved OpenAPI baseline and user request | 2026-05-10 | Revisit only if user asks for breaking API cleanup. |
 ```
 
-Use decision rows for:
-
-- explicit user decisions
-- repo-truth conclusions
-- accepted fallback assumptions
-- non-obvious compatibility constraints
+Use decision rows for explicit user decisions, repo-truth conclusions, accepted fallback assumptions, and non-obvious compatibility constraints.
 
 ### Execution Shape And Shared Files
 
@@ -123,10 +110,11 @@ Choose coordinated multi-plan work only when separate active plans can move inde
 
 When delegation is realistic, name shared files early.
 Coordinator-owned files commonly include the canonical plan, `ROADMAP.md`, `CHANGELOG.md`, generated contract baselines, and shared docs.
+Worker boundaries should be file or package ownership, not vague responsibility.
 
 ### Affected Artifacts
 
-List likely artifacts by ownership, not by vague area.
+List likely artifacts by ownership and path, not by vague area.
 For example:
 
 - `src/test/java/...BookControllerTest.java`
@@ -143,14 +131,10 @@ For internal refactors, say explicitly that OpenAPI, REST Docs, and README shoul
 The `Progress Tracker` is a dashboard for execution.
 It should mirror the detailed milestone status, validation, blockers, and commit checkpoint.
 
-Use these statuses only: `Not Started`, `In Progress`, `Blocked`, `Done`, `Skipped`.
 Use `Pending` for commit and validation before work starts.
 During planning, do not invent commit SHAs.
 
 ### Milestones
-
-Each milestone should be a commit-sized checkpoint.
-Repeat the template's fixed field set for every milestone.
 
 Strong milestones:
 
@@ -185,9 +169,9 @@ Example milestone:
 | Commit Checkpoint | Commit contract/spec changes before implementation if they are reviewable alone. |
 ```
 
-### Blockers And Replan Triggers
+### Blockers, Edge Cases, And Better Engineering Notes
 
-Use this table for execution-time events, not initial planning questions.
+Use `Blockers And Replan Triggers` for execution-time events, not initial planning questions.
 Examples:
 
 - validation reveals public behavior already differs from docs
@@ -195,11 +179,13 @@ Examples:
 - a worker-owned file becomes a shared-file conflict
 - the smallest coherent milestone is larger than expected
 
-The response should say whether to pause, ask the user, revise the plan, narrow scope, or split work.
+Use `Edge Cases And Failure Modes` for compatibility risks, migration concerns, rollout hazards, negative scenarios, and benchmark risks.
+Use `Better Engineering Notes` for prerequisite cleanup included in scope or deferred follow-up work that should not be hidden.
 
-### Validation Plan And Results
+### Validation Plan, Testing Strategy, And Results
 
 `Validation Plan` names intended proof.
+`Testing Strategy` explains which layers apply and which do not.
 `Validation Results` records actual proof gathered during execution.
 
 Good validation entries are exact:
@@ -207,7 +193,7 @@ Good validation entries are exact:
 ```md
 | Date | Command | Scope | Result | Notes |
 | --- | --- | --- | --- | --- |
-| 2026-05-08 | `./build.ps1 test` | Automated tests | Passed | Contract tests and docs snippets regenerated. |
+| 2026-05-10 | `./build.ps1 test` | Automated tests | Passed | Contract tests and docs snippets regenerated. |
 ```
 
 If a required command cannot run, record the command, result as `Skipped` or `Failed`, and the reason.
@@ -224,7 +210,7 @@ For docs or AI-guidance changes, name the file section to inspect and the expect
 
 A public API plan should:
 
-- start from integration tests, REST Docs tests, and approved OpenAPI baseline
+- start from integration tests, REST Docs tests, and the approved OpenAPI baseline
 - define request, response, error, pagination, sorting, filtering, and compatibility semantics before coding
 - name all published contract artifacts that must move
 - call out benchmark or smoke checks required by `.agents/references/testing.md`
@@ -248,7 +234,7 @@ An AI-guidance plan should:
 - avoid redistributing standing policy across templates, task starters, or archived plans
 - update the template only when the reusable artifact shape changes
 - update execution or workflow guides when a planning change creates new execution duties
-- validate with documentation review and `git diff --check`
+- validate with documentation review, `git diff --check`, and the standard wrapper command
 
 ### Delegated One-Plan Work
 
@@ -263,8 +249,6 @@ A delegated one-plan work shape should:
 ## Readiness Review Shape
 
 When reviewing whether a plan is ready, lead with blockers.
-
-Use this shape:
 
 ```md
 Readiness: Draft / Needs Input / Ready / Blocked
@@ -287,19 +271,13 @@ Execution check:
 
 If there are no blocking gaps, say that clearly and name any residual risk.
 
-## Final Detailed Check
+## Companion Check
 
-Before handing off a plan, confirm:
+Before handing off a plan, compare it with `planning.md` `Final Check`.
+Use this companion check only for fill quality:
 
-- `Lifecycle` and `Planning Readiness` agree with the open-question and decision tables
-- `Lifecycle` uses phase and status values from `.agents/references/planning.md`
-- unresolved questions have owners, status values, fallback or decision fields, and blocking status
-- accepted fallbacks are visible in the decision log
-- scope, non-goals, compatibility promises, and edge cases are explicit
-- affected artifacts follow `.agents/references/documentation.md`
-- milestone context fields name the smallest useful read set
-- milestones are commit-sized and use the template's fixed field set
-- `Progress Tracker` mirrors the milestone list
-- execution-time blockers are separate from planning questions
-- validation plan and user validation are concrete
-- roadmap state is updated only for concrete active plans
+- examples and assumptions are task-specific, not copied placeholder prose
+- open questions and decisions are readable without the agent's private context
+- affected artifacts are concrete enough for an executor to find them
+- milestones are phrased as handoff instructions, not research notes
+- validation and user validation are actionable
