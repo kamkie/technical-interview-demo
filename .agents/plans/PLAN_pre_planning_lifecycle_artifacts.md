@@ -3,8 +3,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Implementation |
-| Status | In Progress |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Planning Readiness
 | Field | Value |
@@ -52,8 +52,9 @@
 - `.agents/references/planning.md` now uses the accepted twelve-phase lifecycle values and routes linked ADR, PRD, and spec inputs during planning.
 - `.agents/references/plan-template.md` now includes linked pre-planning artifacts and a verification strategy section.
 - `WORKING_WITH_AI.md` now explains Conceptualization, Analysis, Triage, Planning, Implementation, Verification and Review, Integration, Release, Deployment and Operations, and Maintenance in developer-facing terms.
-- `ROADMAP.md` now tracks this work as in-progress plan-backed work, uses a `Triage` section for loose candidates, and no longer keeps the original ADR/spec-format ideas as loose intake bullets.
-- This plan now uses `Phase | Implementation` because the ADRs are accepted and implementation has started.
+- `ROADMAP.md` now tracks this work as implemented plan-backed work, uses a `Triage` section for loose candidates, and no longer keeps the original ADR/spec-format ideas as loose intake bullets.
+- `CHANGELOG.md` records the unreleased AI-guidance and pre-planning artifact changes.
+- This plan now uses `Phase | Integration` and `Status | Implemented`; release work remains out of scope until requested.
 
 ## Requirement Gaps And Open Questions
 | ID | Question / Gap | Why It Matters | Owner | Status | Fallback / Decision | Blocks Ready? |
@@ -79,6 +80,7 @@
   - `README.md`
   - `WORKING_WITH_AI.md`
   - `ROADMAP.md`
+  - `CHANGELOG.md`
   - `.agents/plans/PLAN_pre_planning_lifecycle_artifacts.md`
   - `.agents/references/application-lifecycle.md`
   - `.agents/references/planning.md`
@@ -117,7 +119,7 @@
 | 3: Update lifecycle vocabulary owner | Done | Agent | `docs(lifecycle): adopt accepted phase vocabulary` | Manual lifecycle reference review and `git diff --check` passed | Lifecycle owner now defines the accepted twelve-phase model and artifact roles. |
 | 4: Align planning guidance and plan template | Done | Agent | `docs(planning): align plans with lifecycle artifacts` | Manual plan-guidance review and `git diff --check` passed | Planning guide and template now use accepted phases and linked pre-planning artifacts. |
 | 5: Align human-facing guidance, indexes, and roadmap | Done | Agent | `docs(ai): align lifecycle guidance for developers` | Manual docs alignment review, targeted vocabulary search, and `git diff --check` passed | AGENTS, README, WORKING_WITH_AI, and ROADMAP now use accepted lifecycle and artifact roles. |
-| 6: Review, validate, and close plan implementation | Not Started | Agent | Pending | Pending | Manual review only unless normal validation is re-enabled. |
+| 6: Review, validate, and close plan implementation | Done | Agent | `docs(plan): close lifecycle artifact adoption` | Final documentation/process review and `git diff --check` passed | Plan, roadmap, and changelog reflect implemented non-release state. |
 
 ## Execution Tasks
 ### Task 1: Accept decisions and unlock implementation
@@ -188,15 +190,15 @@
 ### Task 6: Review, validate, and close plan implementation
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Verify the documentation-only workflow change is internally consistent and record the result. |
-| Owned Files Or Packages | this plan, `ROADMAP.md` |
+| Owned Files Or Packages | this plan, `ROADMAP.md`, `CHANGELOG.md` |
 | Coordinator-Owned Shared Files | all files touched by Tasks 1-5 |
 | Context Required | `AGENTS.md`, `.agents/references/execution.md`, `.agents/references/testing.md`, `.agents/references/reviews.md`, this plan |
 | Behavior To Preserve | No runtime behavior or published API contract changes. |
 | Deliverables | Updated progress tracker, validation ledger, final roadmap status, and handoff notes. |
-| Validation Checkpoint | Manual documentation/process review during the interactive documentation session; run `./build.ps1 build` only if normal validation is re-enabled before handoff. |
-| Commit Checkpoint | Commit final tracking updates after review and validation. |
+| Validation Checkpoint | Passed: manual documentation/process review during the interactive documentation session; `./build.ps1 build` remains skipped because normal validation was not re-enabled. |
+| Commit Checkpoint | `docs(plan): close lifecycle artifact adoption` |
 
 ## Blockers And Replan Triggers
 | Trigger / Blocker | Response | Owner | Status |
@@ -258,6 +260,9 @@
 | 2026-05-10 | Manual docs alignment review | `AGENTS.md`, `README.md`, `WORKING_WITH_AI.md`, and `ROADMAP.md` | Passed | Human-facing and repo-level AI guidance route to the lifecycle owner, pre-planning artifact templates, `.agents/tasks/`, and the roadmap Triage section. |
 | 2026-05-10 | Targeted live-doc vocabulary search | `AGENTS.md`, `README.md`, `WORKING_WITH_AI.md`, and `ROADMAP.md` | Passed | Removed old lifecycle labels and stale task-starter path references from live human-facing and repo-level guidance. |
 | 2026-05-10 | `git diff --check` | Documentation-only task 5 diff | Passed | No whitespace errors. |
+| 2026-05-10 | Manual documentation/process review | All touched guidance, templates, roadmap, changelog, and this plan | Passed | Review found no unresolved blocking drift; changes remain documentation-only and release work remains unrequested. |
+| 2026-05-10 | Final targeted stale-term search | Live guidance and active tracking files | Passed | Previous lifecycle labels remain only in the lifecycle migration map and historical changelog context. |
+| 2026-05-10 | `git diff --check` | Final documentation-only closeout diff | Passed | No whitespace errors. |
 
 ## User Validation
 - After implementation, review the updated lifecycle and pre-planning guidance for terminology fit and workflow overhead.

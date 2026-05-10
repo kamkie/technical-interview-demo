@@ -10,9 +10,11 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 ### Added
 
 - Added `docs/FRONTEND_AI_CONTRACT.md` as a generated import-ready backend contract, external security/design skill reference list, approved OpenAPI snapshot, and integration handoff for AI agents working in a separate first-party frontend repository.
+- Added optional ADR, PRD, and standalone spec templates for pre-planning decisions, product intent, and behavior definition.
 
 ### Changed
 
+- Aligned AI and human-facing lifecycle guidance around Conceptualization, Analysis, Triage, Planning, Implementation, Verification, Review, Integration, Release, Deployment, Operations, and Maintenance.
 - Removed live documentation cross-references to the `1.x` to `2.0` upgrade guide from setup and generated REST Docs source pages.
 
 ## [v2.0.1] - 2026-05-09
