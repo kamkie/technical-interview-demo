@@ -18,6 +18,7 @@ Use these prompts only for named repository-specific tasks that are more concret
 | Task | Use When |
 | --- | --- |
 | [Roadmap Decision Review](roadmap-decision-review.md) | Roadmap-framing decisions block planning or sequencing. |
+| [Interactive Documentation Session](interactive-documentation-session.md) | An interactive docs-only session should stay focused on `AGENTS.md`, `.agents/references/`, and `docs/` without normal-change verification. |
 | [Compact AI Guidance](compact-ai-guidance.md) | Standing AI instruction files have overlap, stale references, or accumulated history. |
 | [Measure AI Context](measure-ai-context.md) | A context consumption report is needed. |
 | [Evaluate AI Guidance](evaluate-ai-guidance.md) | A lifecycle and context-load assessment report is needed. |
