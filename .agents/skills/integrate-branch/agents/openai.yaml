@@ -1,0 +1,4 @@
+interface:
+  display_name: "Integrate Branch"
+  short_description: "Integrate completed work safely"
+  default_prompt: "Use $integrate-branch to integrate a completed branch or worktree into the repository state."

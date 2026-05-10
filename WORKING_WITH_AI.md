@@ -42,6 +42,7 @@ Use this guide as a navigation aid, not as a second copy of the AI runbooks.
 | Executing a whole approved plan | `.agents/references/plan-execution.md` |
 | Implementing an ad hoc task or one plan task | `.agents/references/execution.md` |
 | Delegation, worktrees, worker logs, or integration mechanics | `.agents/references/workflow.md` |
+| Multi-agent modes, roles, read sets, and workflow state | `.agents/references/workflow.md` |
 | Validation scope and review activity | `.agents/references/testing.md` and `.agents/references/reviews.md` |
 | Documentation and artifact routing | `.agents/references/documentation.md` |
 | Intentional release preparation after integration | `.agents/references/releases.md` |
@@ -167,6 +168,17 @@ Use AI to run validation, inspect contract impact, and review the change with a 
 Most work should stay in the default linear workflow.
 When you want delegation, worktrees, or later integration of worker output, ask AI to use `.agents/references/workflow.md`; it owns shared-file boundaries, worker logs, and integration mechanics.
 
+The workflow modes are:
+
+- `M0: direct`: one agent handles the work directly
+- `M1: assisted`: read-only review, verification, or specialist help
+- `M2: delegated`: one Worker owns one bounded write scope
+- `M3: parallel`: multiple disjoint Worker scopes move in parallel
+- `M4: gated`: independent review, verification, security, docs, release, or specialist gates are required
+
+The role vocabulary is Coordinator, Planner, Worker, Reviewer, Verifier, and Specialist.
+Use `.agents/context/*` only for durable handoffs, worker reports, reviews, verifications, or specialist outputs that must survive context switches.
+
 ### Release
 
 Release preparation is a maintainer step after the intended implementation has landed on `main`.
@@ -194,6 +206,16 @@ Read a skill's `SKILL.md` only when that skill is invoked or clearly applies.
 
 Current focused skills include:
 
+- `select-mode-and-skills`: workflow mode, role, and skill-chain selection
+- `handoff-pack`: complete delegated-work handoff packets
+- `repo-task-execute`: bounded repo task or plan-task execution
+- `run-validation`: validation selection, execution, and evidence recording
+- `diff-review`: diff review and gate decisions
+- `repo-plan-author`: execution plan creation or revision
+- `integrate-branch`: accepted branch or worker-output integration
+- `security-review`: security-sensitive change review
+- `openapi-contract-check`: OpenAPI compatibility and baseline review
+- `triage-flaky-test`: intermittent test failure triage
 - `gh-fix-ci`: GitHub PR-check inspection and CI failure triage
 - `gh-fix-security-quality`: GitHub Security tab, code-scanning, and Dependabot alert triage
 

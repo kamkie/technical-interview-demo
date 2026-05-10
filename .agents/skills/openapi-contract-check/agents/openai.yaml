@@ -1,0 +1,4 @@
+interface:
+  display_name: "OpenAPI Contract Check"
+  short_description: "Check OpenAPI contract changes"
+  default_prompt: "Use $openapi-contract-check to verify OpenAPI compatibility and contract baseline changes."

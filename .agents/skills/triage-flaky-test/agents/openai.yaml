@@ -1,0 +1,4 @@
+interface:
+  display_name: "Triage Flaky Test"
+  short_description: "Triage intermittent test failures"
+  default_prompt: "Use $triage-flaky-test to investigate an intermittent or suspected flaky test failure."

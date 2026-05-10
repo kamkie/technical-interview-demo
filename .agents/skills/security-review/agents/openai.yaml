@@ -1,0 +1,4 @@
+interface:
+  display_name: "Security Review"
+  short_description: "Review security-sensitive changes"
+  default_prompt: "Use $security-review to review a security-sensitive repository change."

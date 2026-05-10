@@ -39,6 +39,7 @@ Update the artifact that owns the truth being changed:
 - release sequencing and tagging: `.agents/references/releases.md`; detailed release checklist and artifact verification: `.agents/references/release-checklist.md` and `.agents/references/release-artifact-verification.md`
 - standalone repository task prompts, catalog, and task loading rules: `.agents/tasks/README.md`; prompt files live under `.agents/tasks/` and must add task-specific instructions that are not thin wrappers around an existing domain guide
 - repo-local reusable workflow wrappers: `.agents/skills/`; Codex plugin marketplace configuration: `.agents/plugins/marketplace.json` when intentionally introducing a repo-scoped plugin
+- durable multi-agent workflow state: `.agents/context/handoffs/`, `.agents/context/workers/`, `.agents/context/reviews/`, `.agents/context/verifications/`, and `.agents/context/specialists/`; workflow state file shape and role ownership live in `.agents/references/workflow.md`
 - AI-facing architecture guidance, structural placement, detailed codebase map, and business feature ownership: `.agents/references/architecture.md`
 - historical AI-analysis reports, evaluations, comparisons, and retired specs: `.agents/archive/`
 - product and contract direction: `docs/DESIGN.md`
@@ -64,6 +65,7 @@ Rules for maintaining the `.agents/` documents:
 - do not keep task prompts that only say to follow a workflow already owned by `.agents/references/*.md`; invoke the matching domain guide directly instead
 - outside `.agents/references/*.md`, write AI-guidance changes as current-state rules; route any still-useful historical context using this guide
 - keep repo-local skills narrow and workflow-oriented; use them to accelerate repeated entry tasks or focused triage, not to replace domain guides
+- keep skills tactical; they must reference owner guides for standing rules instead of becoming governance documents
 - create `.agents/plugins/marketplace.json` and a plugin bundle only when a workflow needs Codex plugin distribution or install-time discovery; keep ordinary reusable prompts in `.agents/tasks/`
 - when a repo-local skill wraps a workflow owned by a domain guide, update the skill and that guide together if the workflow changes
 - archive executed `.agents/plans/PLAN_*.md` files under `.agents/archive/` as part of the release cleanup once that work has been released

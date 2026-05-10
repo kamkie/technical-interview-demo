@@ -99,7 +99,7 @@
 | 5: Record user acceptance decision for ADR 0004 and ADR 0003 | Done | Coordinator | `docs(decisions): accept multi-agent workflow ADRs` | `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | ADR 0004 and ADR 0003 are accepted as of 2026-05-10. |
 | 6: Add Phase B skill bundles | Done | Worker | `docs(skills): add phase b multi-agent workflows` | Structural skill check passed; `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | `quick_validate.py` could not run because the local Python environment lacks PyYAML. |
 | 7: Smoke-test the loop on one bounded task | Done | Coordinator + Worker + Reviewer + Verifier | `docs(workflow): smoke-test phase b handoff loop` | `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | Handoff, worker, review, and verification artifacts are present; `LEARNINGS.md` records the validator-gap lesson. |
-| 8: Add Phase C skill bundles and platform alignment | Not Started | Worker | Pending | Pending | Phase C. |
+| 8: Add Phase C skill bundles and platform alignment | Done | Worker | `docs(skills): add phase c workflow support` | Structural skill check passed; `git diff --check` passed; `./build.ps1 build` lightweight documentation-only shortcut passed | `release-cut` remains deferred; `quick_validate.py` could not run because the local Python environment lacks PyYAML. |
 | 9: Sweep old mode labels from live guidance | Not Started | Worker | Pending | Pending | After Phase B smoke-test passes. |
 | 10: Update `ROADMAP.md` final state | Not Started | Coordinator | Pending | Pending | Closes the plan. |
 
@@ -199,15 +199,15 @@
 ### Task 8: Add Phase C Skill Bundles And Platform Alignment
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Add `repo-plan-author`, `integrate-branch`, `security-review`, `openapi-contract-check`, `triage-flaky-test` skill bundles; add the mode→role mapping section to `.junie/AGENTS.md`; add cross-references in `AGENTS.md` and `WORKING_WITH_AI.md`. Defer `release-cut`. |
 | Owned Files Or Packages | Five new skills under `.agents/skills/`; `.junie/AGENTS.md`; `AGENTS.md`; `WORKING_WITH_AI.md`. |
 | Coordinator-Owned Shared Files | `AGENTS.md`, `.junie/AGENTS.md`, `WORKING_WITH_AI.md`. |
 | Context Required | Phase B skills, `.agents/references/workflow.md`, `.agents/references/documentation.md`. |
 | Behavior To Preserve | Existing developer-facing guidance; do not duplicate `workflow.md` content. |
-| Deliverables | Five new skills; updated three top-level docs. |
-| Validation Checkpoint | Manual review confirming cross-references do not duplicate content and use the new vocabulary. |
-| Commit Checkpoint | One commit per logical group. |
+| Deliverables | Five new skills; updated `.junie/AGENTS.md`, `AGENTS.md`, `WORKING_WITH_AI.md`, `.agents/references/documentation.md`, and `.agents/references/references-rules.md`. |
+| Validation Checkpoint | Passed: structural checks confirmed the five skills have required sections and metadata; targeted search confirmed `release-cut` was not created and `Codex-specific` wording is gone. |
+| Commit Checkpoint | `docs(skills): add phase c workflow support` |
 
 ### Task 9: Sweep Old Mode Labels From Live Guidance
 | Field | Value |
@@ -296,6 +296,12 @@
 | 2026-05-10 | `Get-ChildItem .agents\context\handoffs\multi_agent_roles_and_skills__task7_worker.md, .agents\context\workers\multi_agent_roles_and_skills__task7_worker.md, .agents\context\reviews\multi_agent_roles_and_skills__task7_reviewer.md, .agents\context\verifications\multi_agent_roles_and_skills__task7_verifier.md` | Task 7 smoke test | Passed | Handoff, worker, review, and verification artifacts are present. |
 | 2026-05-10 | `git diff --check` | Task 7 smoke test | Passed | No whitespace diagnostics. |
 | 2026-05-10 | `./build.ps1 build` | Task 7 smoke test | Passed | Wrapper detected only lightweight uncommitted files and skipped Gradle; manual consistency review is sufficient. |
+| 2026-05-10 | `python ...\skill-creator\scripts\quick_validate.py .agents\skills\<skill>` | Task 8 Phase C skills | Skipped | Attempted for each new skill, but the local Python environment lacks the `yaml` module required by the validator. |
+| 2026-05-10 | Phase C skill structural PowerShell check | Task 8 Phase C skills | Passed | Verified required frontmatter, `Read Set`, `Inputs`, `Workflow`, `Stop Conditions`, no TODO placeholders, and `agents/openai.yaml` for all five skills. |
+| 2026-05-10 | `rg -n "Codex-specific|release-cut" AGENTS.md .junie\AGENTS.md WORKING_WITH_AI.md .agents\references\documentation.md .agents\references\references-rules.md .agents\skills` | Task 8 platform alignment | Passed | No matches; the deferred `release-cut` skill was not added. |
+| 2026-05-10 | `Test-Path .agents\skills\release-cut` | Task 8 platform alignment | Passed | Returned `False`; release skill remains deferred. |
+| 2026-05-10 | `git diff --check` | Task 8 Phase C skills and guidance alignment | Passed | No whitespace diagnostics. |
+| 2026-05-10 | `./build.ps1 build` | Task 8 Phase C skills and guidance alignment | Passed | Wrapper detected only lightweight uncommitted files and skipped Gradle; manual consistency review is sufficient. |
 
 ## User Validation
 - Confirm `.agents/references/workflow.md` defines `M0: direct`, `M1: assisted`, `M2: delegated`, `M3: parallel`, and `M4: gated` with unchanged mode semantics.

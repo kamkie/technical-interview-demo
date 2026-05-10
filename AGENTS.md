@@ -1,6 +1,6 @@
 # AI Project Instructions
 
-`README.md` is the human-facing counterpart of this file. `SETUP.md` is the environment and onboarding guide. The `docs/` directory contains shared project knowledge, and `.agents/` contains Codex-specific support documents. Keep these sources aligned when their scopes overlap, but do not duplicate setup/runbook detail from `SETUP.md` here.
+`README.md` is the human-facing counterpart of this file. `SETUP.md` is the environment and onboarding guide. The `docs/` directory contains shared project knowledge, and `.agents/` contains AI workflow support documents. Keep these sources aligned when their scopes overlap, but do not duplicate setup/runbook detail from `SETUP.md` here.
 
 ## Core Approach: Spec-Driven Development
 
@@ -64,6 +64,7 @@ Add only guides whose domains match the current task.
 - diagnosis after validation failure: `.agents/references/troubleshooting.md`
 - review or security review: `.agents/references/reviews.md`
 - branch, worktree, delegation, multi-agent state, sidecar, integration, or remote handoff: `.agents/references/workflow.md`
+- workflow mode labels, multi-agent role roster, per-role read sets, or skill chain selection: `.agents/references/workflow.md`; load `.agents/skills/<skill-name>/SKILL.md` only when a skill is invoked or clearly applies
 - release sequencing: `.agents/references/releases.md`
 - application lifecycle phase, activity, owner-guide mapping, or loop vocabulary: `.agents/references/application-lifecycle.md`
 - durable repo-wide lesson: `.agents/references/LEARNINGS.md`
