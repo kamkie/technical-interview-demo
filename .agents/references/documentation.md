@@ -18,6 +18,7 @@ Update the artifact that owns the truth being changed:
 
 - runtime behavior and public API contract: executable tests, `src/docs/asciidoc/`, `src/test/resources/openapi/approved-openapi.json`, and `README.md`
 - generated import-ready backend contract, external skill references, OpenAPI source snapshot, and integration guidance for AI agents working in a separate first-party frontend repository: `docs/FRONTEND_AI_CONTRACT.md`
+- proposed or accepted durable architecture, workflow, contract-policy, security, documentation-ownership, or repository-process decisions: `docs/decisions/*.md`
 - human-facing guide for developers using AI through the application lifecycle: `WORKING_WITH_AI.md`
 - application development lifecycle phase model, activity vocabulary, loops, triggers, and owner-guide mapping: `.agents/references/application-lifecycle.md`
 - AI repository rules, spec priority, required spec-update policy, working AI context, Documents Map, completion rules, and integration/release invariants: `AGENTS.md`
@@ -129,6 +130,7 @@ Update all affected artifacts in the same change:
 - setup or tooling change: update `SETUP.md`, not `README.md`, `AGENTS.md`, or workflow guides unless their inventories or high-level rules changed
 - plan creation or material plan revision: update the concrete `.agents/plans/PLAN_*.md` file and `ROADMAP.md` together so active work points to the plan path and current status
 - roadmap reprioritization: update `ROADMAP.md`, and keep `## Current Project State` aligned when the active release phase, breaking-change policy, or next target version changes
+- pre-planning decision record: create or update the relevant ADR under `docs/decisions/`; when an ADR becomes accepted, update the owning standing guidance, templates, roadmap entries, and human-facing docs that the decision changes
 - released history: update `CHANGELOG.md`
 
 ## Cross-References
