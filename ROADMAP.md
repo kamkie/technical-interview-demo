@@ -23,7 +23,7 @@ Released history belongs in `CHANGELOG.md`.
 
 | Status | Meaning |
 | --- | --- |
-| Candidate | Rough work that needs refinement before planning |
+| Candidate | Rough work in Conceptualization, Analysis, or Triage that needs refinement before planning |
 | Planned | Known upcoming work, not yet selected for execution |
 | Selected | Approved for current planning or development |
 | In Progress | Execution or validation is underway |
@@ -41,13 +41,13 @@ Use this section for plan-backed work that is not selected as the immediate rele
 
 | Status | Workstream | Plan Or Artifact | Notes |
 | --- | --- | --- | --- |
-| In Progress | Pre-planning artifact and lifecycle vocabulary adoption | `.agents/plans/PLAN_pre_planning_lifecycle_artifacts.md`; `docs/decisions/0001-adopt-pre-planning-artifacts.md`; `docs/decisions/0002-align-lifecycle-vocabulary-with-industry-practice.md` | ADR 0001 and ADR 0002 are accepted; implementation is underway. |
+| In Progress | Pre-planning artifact and lifecycle vocabulary adoption | `.agents/plans/PLAN_pre_planning_lifecycle_artifacts.md`; `docs/decisions/0001-adopt-pre-planning-artifacts.md`; `docs/decisions/0002-align-lifecycle-vocabulary-with-industry-practice.md` | ADRs are accepted; lifecycle owner, planning guide, templates, and human-facing guidance are being aligned. |
 | Implemented | Multi-agent workflow consolidation | `.agents/plans/PLAN_multi_agent_workflow_consolidation.md` | Workflow guidance is consolidated in `.agents/references/workflow.md`, live routing uses `.agents/context/*` workflow state, and release/archive cleanup remains out of scope until requested |
 | Implemented | Frontend AI contract | `.agents/plans/PLAN_frontend_ai_contract.md` | Backend-owned source contract is implemented; external frontend-repo copy deferred until destination and instruction path are known |
 
-## Intake
+## Triage
 
-No loose intake items are active. The pre-planning artifact and lifecycle vocabulary work is now tracked by `.agents/plans/PLAN_pre_planning_lifecycle_artifacts.md`.
+No loose triage items are active. The pre-planning artifact and lifecycle vocabulary work is tracked by `.agents/plans/PLAN_pre_planning_lifecycle_artifacts.md`.
 
 ## Deferred Work
 

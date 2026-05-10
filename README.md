@@ -23,6 +23,9 @@ Technical Interview Demo is a small, spec-driven Spring Boot application for int
 - [CONTRIBUTING.md](CONTRIBUTING.md): contributor workflow, validation expectations, and PR or release handoff
 - [ROADMAP.md](ROADMAP.md): active and planned work only
 - [WORKING_WITH_AI.md](WORKING_WITH_AI.md): how to use AI effectively in this repository
+- [docs/decisions/](docs/decisions/): optional ADRs for durable architecture, workflow, contract-policy, security, documentation-ownership, or process decisions
+- [docs/requirements/](docs/requirements/): optional PRDs for broad or ambiguous user-facing product intent
+- [docs/specs/](docs/specs/): optional standalone specs for behavior or contract truth not already clear in executable specs or published docs
 - [docs/FRONTEND_AI_CONTRACT.md](docs/FRONTEND_AI_CONTRACT.md): generated import-ready backend contract, external skill references, OpenAPI source snapshot, and integration rules for AI agents building a separate first-party frontend
 - `infra/`: checked-in Helm, Kubernetes, and monitoring assets
 - `tooling/`: build-tool rules, static-analysis config, and scan suppressions
@@ -40,12 +43,13 @@ Technical Interview Demo is a small, spec-driven Spring Boot application for int
 
 Use these files when you want to work with AI in this repository or understand what the AI is expected to follow:
 
-- [WORKING_WITH_AI.md](WORKING_WITH_AI.md): human-facing guide for using AI across discovery, planning, implementation, verification, and release
+- [WORKING_WITH_AI.md](WORKING_WITH_AI.md): human-facing guide for using AI across conceptualization, analysis, triage, planning, implementation, verification, and release
 - [AGENTS.md](AGENTS.md): repository-local AI rules, spec priority, required contract updates, and definition of done
 - [docs/FRONTEND_AI_CONTRACT.md](docs/FRONTEND_AI_CONTRACT.md): generated import-ready backend contract, external skill references, OpenAPI source snapshot, and integration constraints for a separate frontend repository's AI agents
 - [.agents/references/architecture.md](.agents/references/architecture.md): AI-facing codebase map, package boundaries, feature ownership, and structural guidance
 - [.agents/references/code-style.md](.agents/references/code-style.md): repo-local code style and change-shaping guidance
 - [docs/DESIGN.md](docs/DESIGN.md): product intent, tradeoffs, and non-goals
+- [docs/decisions/ADR_TEMPLATE.md](docs/decisions/ADR_TEMPLATE.md), [docs/requirements/PRD_TEMPLATE.md](docs/requirements/PRD_TEMPLATE.md), and [docs/specs/SPEC_TEMPLATE.md](docs/specs/SPEC_TEMPLATE.md): optional pre-planning artifact templates
 - [.agents/references/application-lifecycle.md](.agents/references/application-lifecycle.md): application lifecycle phase, activity, loop, trigger, and owner-guide mapping
 - [.agents/references/documentation.md](.agents/references/documentation.md): documentation ownership and when to update which docs
 - [.agents/references/environment-quick-ref.md](.agents/references/environment-quick-ref.md): AI shortcut for local Gradle wrapper commands
@@ -53,7 +57,7 @@ Use these files when you want to work with AI in this repository or understand w
 - [.agents/references/execution.md](.agents/references/execution.md): how AI should execute ad hoc tasks or one plan task
 - [.agents/references/LEARNINGS.md](.agents/references/LEARNINGS.md): durable engineering lessons worth carrying through refactors
 - [.agents/references/planning.md](.agents/references/planning.md): compact guide for creating or revising execution plans
-- [.agents/skills/repo-task/](.agents/skills/repo-task/): reusable task starters with task titles, placeholders, and task text
+- [.agents/tasks/README.md](.agents/tasks/README.md): reusable task starters with task titles, placeholders, and task text
 - `.agents/skills/`: repo-local skills
 - [.agents/references/reviews.md](.agents/references/reviews.md): code-review and security-review guidance
 - [.agents/references/releases.md](.agents/references/releases.md): release-preparation and release workflow guidance

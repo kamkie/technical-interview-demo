@@ -33,8 +33,11 @@ Use this guide as a navigation aid, not as a second copy of the AI runbooks.
 | Local setup, tools, and troubleshooting | `SETUP.md` |
 | Repository-specific AI rules and phase owner map | `AGENTS.md` |
 | Backend contract source for separate frontend AI agents | `docs/FRONTEND_AI_CONTRACT.md` |
-| Lifecycle phase and activity vocabulary | `docs/specs/application-lifecycle-spec.md` and `docs/specs/lifecycle-phase-activities.md` |
-| Reusable task starters | `.agents/skills/repo-task/` |
+| Lifecycle phase and activity vocabulary | `.agents/references/application-lifecycle.md` |
+| ADRs for durable decisions | `docs/decisions/` and `docs/decisions/ADR_TEMPLATE.md` |
+| PRDs for broad product intent | `docs/requirements/` and `docs/requirements/PRD_TEMPLATE.md` |
+| Standalone behavior specs | `docs/specs/` and `docs/specs/SPEC_TEMPLATE.md` |
+| Reusable task starters | `.agents/tasks/README.md` and `.agents/tasks/` |
 | Creating or revising execution plans | `.agents/references/planning.md` |
 | Executing a whole approved plan | `.agents/references/plan-execution.md` |
 | Implementing an ad hoc task or one plan task | `.agents/references/execution.md` |
@@ -93,36 +96,42 @@ change: candidate search filtering API
 To inspect task titles locally:
 
 ```powershell
-Get-Content .agents/skills/repo-task/references/index.md
+Get-Content .agents/tasks/README.md
 ```
 
 To load one task file:
 
 ```powershell
-Get-Content .agents/skills/repo-task/references/tasks/create-plan.md
+Get-Content .agents/tasks/interactive-documentation-session.md
 ```
 
 If the title, placeholder, or target artifact is ambiguous, expect AI to ask a targeted clarification question before it proceeds.
 
 ## Lifecycle Guide
 
-Use the lifecycle phase names from `docs/specs/application-lifecycle-spec.md`.
-Use `docs/specs/lifecycle-phase-activities.md` when you need the activity names such as `Frame`, `Spec`, `Validate-Plan`, `Run`, or `Replan?`.
+Use `.agents/references/application-lifecycle.md` for the accepted phase names and activity names such as `Frame`, `Elicit`, `Define-Requirements`, `Validate-Plan`, `Run`, and `Replan?`.
 
-### Discovery
+### Conceptualization
 
-Use AI to turn rough ideas into concrete candidate work without jumping into implementation too early.
-Useful requests ask AI to inspect `ROADMAP.md`, clarify requirement gaps, or recommend the next workstream while keeping product and contract decisions explicit.
+Use AI to capture rough ideas, TODOs, maintenance signals, links, and early framing without jumping into implementation too early.
+Useful requests ask AI to inspect the relevant owner docs, identify ambiguity, and say whether the work should be rejected, captured, analyzed, or triaged.
 
-### Roadmap Intake
+### Analysis
 
-Use AI to refine a discovery item into active-work tracking before asking for a decision-complete plan.
-The useful output is a sequenced roadmap entry or a clear reason the idea is not ready for active planning.
+Use AI to elicit and validate requirements, product intent, behavior rules, constraints, non-goals, and acceptance criteria before execution planning.
+Create an ADR when a durable architecture, workflow, contract-policy, security, documentation-ownership, or repository-process decision is needed.
+Create a PRD only when broad or ambiguous user-facing scope needs product intent, users, goals, non-goals, requirements, and acceptance criteria in its own artifact.
+Create a standalone spec only when behavior or contract truth is not already clear in executable specs, published contract docs, or the target plan.
+
+### Triage
+
+Use AI to move candidate work into active-work tracking, prioritization, sequencing, or deferral.
+The useful output is a roadmap entry, a selected next artifact, or a clear reason the idea is not ready for active planning.
 
 ### Planning
 
 Use AI to create or revise an execution plan under `.agents/plans/PLAN_*.md`.
-The plan should be decision-complete enough that implementation does not need to invent product behavior, and `ROADMAP.md` should point to active planned work without duplicating the plan.
+The plan should link relevant ADRs, PRDs, and specs, be decision-complete enough that implementation does not need to invent product behavior, and keep `ROADMAP.md` pointed at active planned work without duplicating the plan.
 
 ### Planning Validation
 
@@ -148,7 +157,7 @@ IntelliJ AI Assistant can be aligned with the repository's AI commit-message rul
    "Follow the commit-message rules in `.agents/references/execution.md`; use `.gitmessage` only as the local template shape."
 5. Alternatively, when asking the AI to commit, you can explicitly say: "Write a commit message following `.agents/references/execution.md`."
 
-### Testing And Review
+### Verification And Review
 
 Use AI to run validation, inspect contract impact, and review the change with a code-review mindset.
 `.agents/references/testing.md` owns which command or manual check is sufficient, and `.agents/references/reviews.md` owns how findings should be prioritized.
@@ -166,16 +175,17 @@ Use `.agents/references/releases.md` for release preconditions, versioning, tagg
 ### Deployment And Operations
 
 This repository does not yet have general AI owner guides for Deployment or Operations.
-Use explicit task-specific runbooks, deployment artifacts, and validation guidance, then convert durable gaps or recurring signals into Roadmap Intake.
+Use explicit task-specific runbooks, deployment artifacts, and validation guidance, then convert durable gaps or recurring signals into Triage.
 
-### Continuous Improvement
+### Maintenance
 
 Use AI to capture durable lessons, update active-work tracking after a release or recurring signal, and keep follow-up work separate from completed release history.
 
-## Repo-Local Skills
+## Repo-Local Tasks And Skills
 
+Reusable task prompts live under `.agents/tasks/`.
+Use `.agents/tasks/README.md` to resolve task titles, then load only the matching task file.
 Repo-local workflow skills live under `.agents/skills/`.
-The reusable task starter dispatcher lives under `.agents/skills/repo-task/`; use its compact index to resolve task names and then load only the matching task file.
 Codex-native reusable workflows can be packaged as plugins; `.agents/plugins/marketplace.json` registers a repo-scoped plugin marketplace, and the plugin bundle can contain `skills/<skill-name>/SKILL.md`.
 
 Use skills when you want a narrower workflow wrapper than the owner guides.
@@ -184,7 +194,6 @@ Read a skill's `SKILL.md` only when that skill is invoked or clearly applies.
 
 Current focused skills include:
 
-- `repo-task`: repository reusable task starter dispatch
 - `gh-fix-ci`: GitHub PR-check inspection and CI failure triage
 - `gh-fix-security-quality`: GitHub Security tab, code-scanning, and Dependabot alert triage
 
@@ -196,7 +205,7 @@ Current focused skills include:
 - prefer task-sized requests over long open-ended requests
 - ask for validation and contract impact before approving the result
 - keep release work separate from implementation work
-- use `$repo-task` task slugs or titles as reusable commands when you want a consistent repository-local workflow
+- use `.agents/tasks/README.md` task titles when you want a consistent repository-local workflow
 
 ## When To Slow Down AI
 

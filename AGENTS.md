@@ -53,7 +53,7 @@ Add only guides whose domains match the current task.
 
 - artifact routing, cross-file alignment, AI-document maintenance outside `.agents/references/*.md`, or repository knowledge ownership: `.agents/references/documentation.md`
 - rules for `.agents/references/*.md` documents: `.agents/references/references-rules.md`
-- planning, roadmap intake, plan revision, or readiness review: `.agents/references/planning.md`
+- planning, triage, plan revision, or readiness review: `.agents/references/planning.md`
 - whole active-plan execution, plan-task context switching, or plan checkpoint summaries: `.agents/references/plan-execution.md`
 - ad hoc execution, single plan task, bounded-work context switching, or checkpoint summaries: `.agents/references/execution.md`
 - edit shape and repo-local code conventions: `.agents/references/code-style.md`

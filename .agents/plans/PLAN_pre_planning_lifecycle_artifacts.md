@@ -51,8 +51,8 @@
 - `.agents/references/application-lifecycle.md` is the live lifecycle vocabulary owner and now uses the accepted lifecycle vocabulary from ADR 0002.
 - `.agents/references/planning.md` now uses the accepted twelve-phase lifecycle values and routes linked ADR, PRD, and spec inputs during planning.
 - `.agents/references/plan-template.md` now includes linked pre-planning artifacts and a verification strategy section.
-- `WORKING_WITH_AI.md` still has human-facing sections for `Discovery`, `Roadmap Intake`, `Testing And Review`, and `Continuous Improvement`.
-- `ROADMAP.md` now tracks this work as in-progress plan-backed work and no longer keeps the original ADR/spec-format ideas as loose intake bullets.
+- `WORKING_WITH_AI.md` now explains Conceptualization, Analysis, Triage, Planning, Implementation, Verification and Review, Integration, Release, Deployment and Operations, and Maintenance in developer-facing terms.
+- `ROADMAP.md` now tracks this work as in-progress plan-backed work, uses a `Triage` section for loose candidates, and no longer keeps the original ADR/spec-format ideas as loose intake bullets.
 - This plan now uses `Phase | Implementation` because the ADRs are accepted and implementation has started.
 
 ## Requirement Gaps And Open Questions
@@ -116,7 +116,7 @@
 | 2: Add artifact templates and routing | Done | Agent | `docs(workflow): add pre-planning artifact templates` | Manual template/routing review and `git diff --check` passed | Templates are short and skip-friendly; documentation routing owns ADR, PRD, and spec locations. |
 | 3: Update lifecycle vocabulary owner | Done | Agent | `docs(lifecycle): adopt accepted phase vocabulary` | Manual lifecycle reference review and `git diff --check` passed | Lifecycle owner now defines the accepted twelve-phase model and artifact roles. |
 | 4: Align planning guidance and plan template | Done | Agent | `docs(planning): align plans with lifecycle artifacts` | Manual plan-guidance review and `git diff --check` passed | Planning guide and template now use accepted phases and linked pre-planning artifacts. |
-| 5: Align human-facing guidance, indexes, and roadmap | Not Started | Agent | Pending | Pending | Depends on Tasks 2-4. |
+| 5: Align human-facing guidance, indexes, and roadmap | Done | Agent | `docs(ai): align lifecycle guidance for developers` | Manual docs alignment review, targeted vocabulary search, and `git diff --check` passed | AGENTS, README, WORKING_WITH_AI, and ROADMAP now use accepted lifecycle and artifact roles. |
 | 6: Review, validate, and close plan implementation | Not Started | Agent | Pending | Pending | Manual review only unless normal validation is re-enabled. |
 
 ## Execution Tasks
@@ -175,15 +175,15 @@
 ### Task 5: Align human-facing guidance, indexes, and roadmap
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Make developer-facing docs and active-work tracking use the accepted lifecycle and artifact roles. |
 | Owned Files Or Packages | `AGENTS.md`, `README.md`, `WORKING_WITH_AI.md`, `ROADMAP.md` |
 | Coordinator-Owned Shared Files | `.agents/references/application-lifecycle.md`, `.agents/references/planning.md`, `.agents/references/documentation.md`, this plan |
 | Context Required | `AGENTS.md`, `.agents/references/execution.md`, this plan, `.agents/references/documentation.md`, `README.md`, `WORKING_WITH_AI.md`, `ROADMAP.md`, both ADRs |
 | Behavior To Preserve | `WORKING_WITH_AI.md` stays a navigation guide, `AGENTS.md` stays the repo-level AI entry point, and `ROADMAP.md` keeps active tracking without duplicating plan details. |
 | Deliverables | Updated human-facing lifecycle sections, repo-level document map entries, README discoverability text when needed, roadmap headings/status notes, and confirmation that ADR/spec-format work is tracked only once. |
-| Validation Checkpoint | Manual documentation review confirms AI-facing and human-facing guidance route to the same owners and old names are retained only where intentional. |
-| Commit Checkpoint | Commit after human-facing and roadmap alignment. |
+| Validation Checkpoint | Passed: manual documentation review confirms AI-facing and human-facing guidance route to the same owners and old names are removed from live guidance. |
+| Commit Checkpoint | `docs(ai): align lifecycle guidance for developers` |
 
 ### Task 6: Review, validate, and close plan implementation
 | Field | Value |
@@ -255,6 +255,9 @@
 | 2026-05-10 | Manual plan-guidance review | `.agents/references/planning.md`, `.agents/references/plan-template.md`, and this plan | Passed | Planning readiness, linked artifact prompts, plan-task quality rules, progress tracking, and validation sections remain aligned. |
 | 2026-05-10 | Targeted planning vocabulary search | `.agents/references/planning.md` and `.agents/references/plan-template.md` | Passed | Valid phase values and template placeholders use accepted lifecycle terms; old phase labels were removed from live planning guidance. |
 | 2026-05-10 | `git diff --check` | Documentation-only task 4 diff | Passed | No whitespace errors. |
+| 2026-05-10 | Manual docs alignment review | `AGENTS.md`, `README.md`, `WORKING_WITH_AI.md`, and `ROADMAP.md` | Passed | Human-facing and repo-level AI guidance route to the lifecycle owner, pre-planning artifact templates, `.agents/tasks/`, and the roadmap Triage section. |
+| 2026-05-10 | Targeted live-doc vocabulary search | `AGENTS.md`, `README.md`, `WORKING_WITH_AI.md`, and `ROADMAP.md` | Passed | Removed old lifecycle labels and stale task-starter path references from live human-facing and repo-level guidance. |
+| 2026-05-10 | `git diff --check` | Documentation-only task 5 diff | Passed | No whitespace errors. |
 
 ## User Validation
 - After implementation, review the updated lifecycle and pre-planning guidance for terminology fit and workflow overhead.
