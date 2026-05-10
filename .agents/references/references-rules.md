@@ -51,6 +51,7 @@ Entry points:
 
 - if reference documents accumulate overlap, move duplicated guidance into the single best owning file and update cross-references in the same change
 - use links or brief pointers instead of copying standing rules into multiple reference documents
+- when a workflow has both an owner guide and a template, keep standing rules and fill guidance in the owner guide, keep the template limited to reusable structure and placeholders, and do not keep a separate descriptive companion that only restates either file
 - keep `.agents/references/documentation.md` focused on artifact routing and cross-file alignment, not detailed rules for how reference documents are maintained
 - keep this file focused on rules that govern `.agents/references/*.md`; do not move domain-specific execution, planning, testing, review, release, workflow, architecture, design, code-style, or learning rules here
 - when a rule seems to fit multiple reference documents, choose the file that future agents are already required to load for that decision

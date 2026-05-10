@@ -1,8 +1,8 @@
 # Planning Guide For AI Agents
 
 `.agents/references/planning.md` owns the standing rules for creating, revising, and reviewing executable plans under `.agents/plans/`.
-Detailed examples and fill guidance are on demand in `.agents/references/plan-authoring-guide.md`.
-Use `.agents/references/plan-template.md` when you need the full skeleton.
+It also owns plan fill guidance, readiness review shape, and milestone-quality rules.
+Use `.agents/references/plan-template.md` only when you need the full skeleton.
 Use `docs/specs/application-lifecycle-spec.md` for lifecycle phase vocabulary and `docs/specs/lifecycle-phase-activities.md` for activity and loop names.
 
 Use this file when the user asks for a plan, milestone breakdown, readiness review, execution-shape decision, or detailed change strategy.
@@ -23,7 +23,6 @@ Load only what the request needs:
 
 - always: `AGENTS.md` and this file
 - new plan or substantial revision: `.agents/references/plan-template.md`
-- detailed fill examples or readiness review shape: `.agents/references/plan-authoring-guide.md`
 - plan revision or readiness review: the target `.agents/plans/PLAN_*.md`
 - roadmap-driven work or concrete active plans: `ROADMAP.md`
 - lifecycle wording changes: `docs/specs/application-lifecycle-spec.md` and `docs/specs/lifecycle-phase-activities.md`
@@ -35,6 +34,7 @@ Load only what the request needs:
 - referenced tickets, PRs, examples, documents, or web pages before planning from them
 
 Do not bulk-load active plans, archived plans, templates, task files, or reference guides as a pre-flight default.
+Do not create or retain a separate descriptive companion for plan shape when this guide and the template already cover the behavior.
 
 ## Lifecycle And Readiness
 
@@ -92,6 +92,7 @@ For every plan creation, revision, or readiness pass:
 
 Plan from repo truth first.
 Ask the user only when ambiguity affects product intent, scope, compatibility, rollout, acceptance criteria, validation, or another material tradeoff.
+For non-blocking preference gaps, choose a conservative fallback and record it.
 Do not leave material open questions as loose prose.
 
 ## Plan Files
@@ -102,6 +103,7 @@ Start new plans from `.agents/references/plan-template.md`.
 
 Every concrete plan must identify the behavior, governing specs or contract artifacts, scope and non-goals, affected files, compatibility promises, planning readiness, requirement gaps, locked decisions and assumptions, execution shape and shared-file boundaries, per-milestone context requirements, milestone checkpoints, progress tracking, validation, and user verification.
 Keep the plan self-contained enough for another agent to execute without inventing missing decisions.
+Use `Current State` for observed repo facts; when a fact is inferred, say so and record whether that inference affects readiness.
 
 When revising a plan:
 
@@ -119,6 +121,7 @@ When a plan is later released or no longer active, follow the execution and rele
 
 Milestones should be commit-sized checkpoints.
 Each milestone should use fixed fields from the template and name status, goal, owned files or packages, coordinator-owned shared files if any, context required before execution, behavior to preserve, deliverables, validation checkpoint, and commit checkpoint.
+Avoid vague milestone instructions such as "update tests as needed" or leaving compatibility, rollout, validation, or acceptance decisions for the executor.
 
 For context requirements, name the smallest useful read set for that milestone.
 Use `none beyond AGENTS.md, .agents/references/execution.md, and this plan` when no extra context is needed.

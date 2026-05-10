@@ -29,7 +29,7 @@ Update the artifact that owns the truth being changed:
 - active planned work: `ROADMAP.md`
 - released history: `CHANGELOG.md`
 - commit message template and AI commit rules: `.gitmessage`
-- planning process and plan-file shape: `.agents/references/planning.md`; canonical plan skeleton: `.agents/references/plan-template.md`
+- planning process, plan-file rules, fill guidance, and readiness review shape: `.agents/references/planning.md`; canonical plan skeleton: `.agents/references/plan-template.md`
 - whole active-plan execution across milestones: `.agents/references/plan-execution.md`
 - ad hoc task and single-milestone execution: `.agents/references/execution.md`
 - branch, worktree, delegation, worker-log, integration, and remote-handoff mechanics: `.agents/references/workflow.md`; detailed delegated-work mechanics: `.agents/references/workflow-delegated-plan.md` and `.agents/references/workflow-coordinated-plans.md`
