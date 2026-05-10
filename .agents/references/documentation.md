@@ -18,7 +18,9 @@ Update the artifact that owns the truth being changed:
 
 - runtime behavior and public API contract: executable tests, `src/docs/asciidoc/`, `src/test/resources/openapi/approved-openapi.json`, and `README.md`
 - generated import-ready backend contract, external skill references, OpenAPI source snapshot, and integration guidance for AI agents working in a separate first-party frontend repository: `docs/FRONTEND_AI_CONTRACT.md`
-- proposed or accepted durable architecture, workflow, contract-policy, security, documentation-ownership, or repository-process decisions: `docs/decisions/*.md`
+- proposed or accepted durable architecture, workflow, contract-policy, security, documentation-ownership, or repository-process decisions: `docs/decisions/*.md`; template: `docs/decisions/ADR_TEMPLATE.md`
+- product intent, users, goals, non-goals, requirements, acceptance criteria, and product-scope open questions for broad or ambiguous user-facing work: `docs/requirements/*.md`; template: `docs/requirements/PRD_TEMPLATE.md`
+- standalone behavior, contract, acceptance criteria, and validation mapping when executable specs or published contract docs do not already define the behavior clearly enough: `docs/specs/*.md`; template: `docs/specs/SPEC_TEMPLATE.md`
 - human-facing guide for developers using AI through the application lifecycle: `WORKING_WITH_AI.md`
 - application development lifecycle phase model, activity vocabulary, loops, triggers, and owner-guide mapping: `.agents/references/application-lifecycle.md`
 - AI repository rules, spec priority, required spec-update policy, working AI context, Documents Map, completion rules, and integration/release invariants: `AGENTS.md`
@@ -78,6 +80,14 @@ Rules for maintaining the `.agents/` documents:
 - keep `AGENTS.md` aligned when the role or maintenance rules for `.agents/` documents change
 - do not update `README.md` unless the human-facing contract or project description changed
 
+### Pre-planning artifact change
+
+- use an ADR for durable architecture, workflow, contract-policy, security, documentation-ownership, or repository-process decisions that outlive one plan
+- use a PRD only when broad or ambiguous user-facing work needs its own product intent, goals, non-goals, requirements, acceptance criteria, and open questions
+- use a standalone spec only when behavior or contract truth is not already clear in executable specs, published contract docs, or the target plan
+- keep ADRs, PRDs, and standalone specs optional for routine maintenance where the plan, tests, or existing docs already provide enough truth
+- once a pre-planning artifact becomes active input to execution, keep the concrete plan and `ROADMAP.md` linked to it without copying the artifact's full rationale
+
 ### Public API change
 
 Update all affected artifacts in the same change:
@@ -131,6 +141,8 @@ Update all affected artifacts in the same change:
 - plan creation or material plan revision: update the concrete `.agents/plans/PLAN_*.md` file and `ROADMAP.md` together so active work points to the plan path and current status
 - roadmap reprioritization: update `ROADMAP.md`, and keep `## Current Project State` aligned when the active release phase, breaking-change policy, or next target version changes
 - pre-planning decision record: create or update the relevant ADR under `docs/decisions/`; when an ADR becomes accepted, update the owning standing guidance, templates, roadmap entries, and human-facing docs that the decision changes
+- broad user-facing product intent gap: create or update the relevant PRD under `docs/requirements/` only when goals, users, requirements, non-goals, acceptance criteria, or product questions need their own artifact before planning
+- standalone behavior definition gap: create or update the relevant spec under `docs/specs/` only when executable specs, published contract docs, or the active plan do not already define the intended behavior clearly enough
 - released history: update `CHANGELOG.md`
 
 ## Cross-References

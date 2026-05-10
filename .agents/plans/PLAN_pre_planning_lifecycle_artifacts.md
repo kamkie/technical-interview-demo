@@ -59,7 +59,7 @@
 | D3 | Keep templates short and skip-friendly; the workflow must clarify early decisions without creating mandatory ceremony for routine changes. | ADR 0001 | 2026-05-10 | If implementation guidance starts requiring PRDs/specs for routine maintenance. |
 | D4 | Use the one-word lifecycle labels from ADR 0002 as the target vocabulary after acceptance. | ADR 0002 and user terminology decisions | 2026-05-10 | If ADR 0002 is revised before acceptance. |
 | D5 | Leave historical changelog entries, archived plans, and historical ADR context unchanged unless live guidance points to stale names. | Documentation guide and ADR 0002 confirmation | 2026-05-10 | If a historical reference is actively used as current guidance. |
-| D6 | During the current interactive documentation session, normal builds, tests, linters, formatters, and `git diff --check` remain skipped unless the user explicitly re-enables them. | Prior interactive-session constraint | 2026-05-10 | If the user asks for normal validation or ends the constrained documentation session. |
+| D6 | During the current interactive documentation session, builds, tests, linters, formatters, and generated documentation checks remain skipped unless the user explicitly re-enables them; manual review and `git diff --check` may be used for documentation-only checkpoints. | Prior interactive-session constraint and current validation request | 2026-05-10 | If the user asks for normal validation or ends the constrained documentation session. |
 
 ## Execution Shape And Shared Files
 - Recommended shape: `M0: solo`.
@@ -104,7 +104,7 @@
 | Task | Status | Owner | Commit | Validation | Notes |
 | --- | --- | --- | --- | --- | --- |
 | 1: Accept decisions and unlock implementation | Done | User/Agent | `docs(plan): accept pre-planning lifecycle ADRs` | Manual readiness readback passed | Q1 answered by explicit user instruction; plan moved to execution. |
-| 2: Add artifact templates and routing | Not Started | Agent | Pending | Pending | Requires accepted ADR 0001. |
+| 2: Add artifact templates and routing | Done | Agent | `docs(workflow): add pre-planning artifact templates` | Manual template/routing review and `git diff --check` passed | Templates are short and skip-friendly; documentation routing owns ADR, PRD, and spec locations. |
 | 3: Update lifecycle vocabulary owner | Not Started | Agent | Pending | Pending | Requires accepted ADR 0002. |
 | 4: Align planning guidance and plan template | Not Started | Agent | Pending | Pending | Depends on Task 3 terminology. |
 | 5: Align human-facing guidance, indexes, and roadmap | Not Started | Agent | Pending | Pending | Depends on Tasks 2-4. |
@@ -127,15 +127,15 @@
 ### Task 2: Add artifact templates and routing
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Add compact templates for the accepted pre-planning artifacts and route them through the documentation owner. |
 | Owned Files Or Packages | `docs/decisions/ADR_TEMPLATE.md`, `docs/requirements/PRD_TEMPLATE.md`, `docs/specs/SPEC_TEMPLATE.md`, `.agents/references/documentation.md` |
 | Coordinator-Owned Shared Files | `AGENTS.md`, `WORKING_WITH_AI.md`, `ROADMAP.md`, this plan |
 | Context Required | `AGENTS.md`, `.agents/references/execution.md`, this plan, `.agents/references/documentation.md`, `.agents/references/references-rules.md`, ADR 0001 |
 | Behavior To Preserve | ADRs, PRDs, and specs remain optional and purpose-driven; plans remain the execution handoff artifact. |
 | Deliverables | Minimal templates or skeletons, artifact ownership rules for ADR/PRD/spec locations, and skip rules for routine changes. |
-| Validation Checkpoint | Manual review that templates are short, current-state, and aligned with ADR 0001; no template requires unnecessary ceremony. |
-| Commit Checkpoint | Commit after templates and routing are aligned. |
+| Validation Checkpoint | Passed: templates are short, current-state, and aligned with ADR 0001; no template requires unnecessary ceremony. |
+| Commit Checkpoint | `docs(workflow): add pre-planning artifact templates` |
 
 ### Task 3: Update lifecycle vocabulary owner
 | Field | Value |
@@ -218,7 +218,6 @@
   - builds
   - generated documentation checks
   - linters and formatters
-  - `git diff --check`
 
 ## Testing Strategy
 - Unit tests: not applicable.
@@ -238,7 +237,9 @@
 | --- | --- | --- | --- | --- |
 | 2026-05-10 | Manual planning review | New plan structure, ADR dependency, task sequencing, and roadmap alignment intent | Passed | Initial pre-acceptance review kept the plan `Needs Input` because ADR 0001 and ADR 0002 were still `Proposed`. |
 | 2026-05-10 | Manual readiness readback | ADR acceptance, Q1 resolution, plan readiness, and roadmap status | Passed | ADR 0001 and ADR 0002 are accepted by explicit user instruction; plan is ready and implementation started. |
-| 2026-05-10 | Not run | Builds, tests, linters, formatters, generated documentation checks, and `git diff --check` | Skipped | Normal verification remains skipped for the current interactive documentation session. |
+| 2026-05-10 | Not run | Builds, tests, linters, formatters, and generated documentation checks | Skipped | Normal verification remains skipped for the current interactive documentation session. |
+| 2026-05-10 | Manual template and routing review | ADR, PRD, and spec templates plus `.agents/references/documentation.md` routing | Passed | Templates are concise, include skip guidance, and keep ADRs, PRDs, and standalone specs optional unless they resolve real ambiguity. |
+| 2026-05-10 | `git diff --check` | Documentation-only task 2 diff | Passed | No whitespace errors. |
 
 ## User Validation
 - After implementation, review the updated lifecycle and pre-planning guidance for terminology fit and workflow overhead.
