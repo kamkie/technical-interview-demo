@@ -20,8 +20,7 @@ The current shape creates several discoverability and ownership problems:
 - `docs/DESIGN.md`, ADRs, PRDs, standalone specs, and execution plans are already present, but their relationship is mostly discoverable through `README.md`, `WORKING_WITH_AI.md`, `ROADMAP.md`, and `.agents/references/*` rather than through a concise human-facing docs index.
 - `.agents/references/application-lifecycle.md` and `.agents/references/planning.md` define the detailed AI lifecycle and planning workflow. Those files should remain AI owner guides, not become the first human entry point for understanding the application development lifecycle.
 
-The repository currently uses `PRD`, not `PDR`, for product requirements documents.
-This decision treats `PDR` mentions as a naming ambiguity and keeps `PRD` as the artifact name unless a later decision intentionally introduces a different artifact type.
+The repository uses `PRD` for product requirements documents.
 
 ## Decision
 

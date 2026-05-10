@@ -69,7 +69,8 @@ Use this section for rough ideas, TODOs, maintenance signals, links, and early f
 | Status | Idea | Linked Artifacts | Next Decision |
 | --- | --- | --- | --- |
 
-No active conceptualization items.
+1. split LEARNINGS.md into owner rule file and `LEARNINGS.md` storage file
+2. add a rule that generated adr, pdr, and plans have information/section of what ai agend did created it.
 
 ## Analysis
 
