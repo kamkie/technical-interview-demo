@@ -25,7 +25,7 @@ plugins {
     idea
     id("technical-interview-demo.jacoco-conventions")
     id("technical-interview-demo.external-testing-conventions")
-    id("io.gatling.gradle") version "3.15.0.1"
+    id("io.gatling.gradle") version "3.15.0.2"
     id("com.gorylenko.gradle-git-properties") version "2.5.7"
     id("com.github.spotbugs") version "6.5.4"
     id("com.diffplug.spotless") version "8.4.0"
