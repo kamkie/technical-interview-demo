@@ -28,7 +28,7 @@ plugins {
     id("io.gatling.gradle") version "3.15.0.2"
     id("com.gorylenko.gradle-git-properties") version "2.5.7"
     id("com.github.spotbugs") version "6.5.4"
-    id("com.diffplug.spotless") version "8.4.0"
+    id("com.diffplug.spotless") version "8.5.1"
     id("com.palantir.java-format") version "2.90.0"
     id("com.palantir.java-format-idea") version "2.90.0"
     id("net.ltgt.errorprone") version "5.1.0"
