@@ -25,12 +25,12 @@ plugins {
     idea
     id("technical-interview-demo.jacoco-conventions")
     id("technical-interview-demo.external-testing-conventions")
-    id("io.gatling.gradle") version "3.15.0.2"
-    id("com.gorylenko.gradle-git-properties") version "2.5.7"
-    id("com.github.spotbugs") version "6.5.4"
+    id("io.gatling.gradle") version "3.15.0.3"
+    id("com.gorylenko.gradle-git-properties") version "3.0.2"
+    id("com.github.spotbugs") version "6.5.5"
     id("com.diffplug.spotless") version "8.5.1"
-    id("com.palantir.java-format") version "2.90.0"
-    id("com.palantir.java-format-idea") version "2.90.0"
+    id("com.palantir.java-format") version "2.91.0"
+    id("com.palantir.java-format-idea") version "2.91.0"
     id("net.ltgt.errorprone") version "5.1.0"
     id("org.springframework.boot") version "4.0.6"
     id("io.spring.dependency-management") version "1.1.7"
@@ -58,7 +58,7 @@ val spotbugsVersion = "4.9.8"
 val gradleWrapperVersion = "9.5.0"
 val springdocVersion = "3.0.3"
 val postgresqlVersion = "42.7.11"
-val nettyVersion = "4.2.13.Final"
+val nettyVersion = "4.2.14.Final"
 val asciidoctorJrubyVersion = "10.1.0.0"
 val dockerImageName = providers.gradleProperty("dockerImageName").orElse("technical-interview-demo")
 val snippetsDir = layout.buildDirectory.dir("generated-snippets")
