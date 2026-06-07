@@ -164,6 +164,8 @@ Use:
 - `imageVulnerabilityScan` when only container image scan evidence is required
 - `sbom` for CycloneDX SBOM outputs for the packaged app and image
 
+Trivy vulnerability tasks scan the target once to `report.json`, derive `report.sarif` from that JSON report, and write the reviewer summary beside both reports under `build/reports/security/`.
+
 Review suppressions in `tooling/security/trivy.ignore`, `tooling/security/spotbugs-security-include.xml`, and `tooling/security/spotbugs-security-exclude.xml`.
 
 OpenAPI contract workflow:
