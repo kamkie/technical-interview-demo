@@ -449,9 +449,37 @@ The built-in provider model supports:
 
 - `github` (OAuth app client credentials)
 - `oidc` (issuer-driven OpenID Connect metadata plus client credentials)
+- `smoke` (profile-gated fake provider for local and frontend smoke tests only)
 
 You can also define additional provider registration ids through `app.security.oauth.providers.<registrationId>.*`.
 Expose those choices to the first-party UI through `GET /api/session`, which returns `loginProviders[]` with `registrationId`, `clientName`, and `authorizationPath`.
+
+### Fake Smoke Provider
+
+Use the fake provider when a local first-party frontend smoke test needs to complete the browser OAuth redirect flow without external identity-provider credentials.
+It is activated by the `fake-oauth` profile and exposes the `smoke` registration through `GET /api/session`.
+The provider endpoints live under `/test-support/oauth2/**`, but frontend tests should still start login only from `loginProviders[].authorizationPath`.
+
+Start the app with the fake provider:
+
+```powershell
+$env:SPRING_PROFILES_ACTIVE = 'local,oauth,fake-oauth'
+$env:APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES = 'smoke:smoke-user'
+
+docker-compose up -d
+./build.ps1 bootRun
+```
+
+Default fake identity values are:
+
+- Provider: `smoke`
+- Login: `smoke-user`
+- Display name: `Smoke Test User`
+- Email: `smoke-user@example.test`
+
+Override them with `FAKE_OAUTH_LOGIN`, `FAKE_OAUTH_DISPLAY_NAME`, and `FAKE_OAUTH_EMAIL` only when a smoke scenario needs different account data.
+If the backend does not listen on `http://127.0.0.1:8080`, also override `FAKE_OAUTH_TOKEN_URI` and `FAKE_OAUTH_USER_INFO_URI` to point at that backend's reachable test-support endpoints.
+Do not activate `fake-oauth` with `prod`; startup rejects that profile combination.
 
 ### GitHub Example
 

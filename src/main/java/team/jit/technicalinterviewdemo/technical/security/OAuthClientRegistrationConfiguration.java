@@ -8,6 +8,8 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.ClientRegistrations;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,12 +50,13 @@ public class OAuthClientRegistrationConfiguration {
         SecuritySettingsProperties.OAuth.ProviderType providerType = provider.getType();
         if (providerType == null) {
             throw new IllegalStateException(
-                    "OAuth provider '%s' requires a provider type (GITHUB or OIDC).".formatted(registrationId));
+                    "OAuth provider '%s' requires a provider type (GITHUB, OIDC, or FAKE).".formatted(registrationId));
         }
 
         return switch (providerType) {
             case GITHUB -> githubRegistration(registrationId, provider);
             case OIDC -> oidcRegistration(registrationId, provider);
+            case FAKE -> fakeRegistration(registrationId, provider);
         };
     }
 
@@ -102,5 +105,48 @@ public class OAuthClientRegistrationConfiguration {
         }
 
         return builder.build();
+    }
+
+    private ClientRegistration fakeRegistration(
+            String registrationId, SecuritySettingsProperties.OAuth.Provider provider) {
+        String authorizationUri =
+                requiredProviderUri(registrationId, "authorization-uri", provider.normalizedAuthorizationUri());
+        String tokenUri = requiredProviderUri(registrationId, "token-uri", provider.normalizedTokenUri());
+        String userInfoUri = requiredProviderUri(registrationId, "user-info-uri", provider.normalizedUserInfoUri());
+        String userNameAttribute = provider.normalizedUserNameAttribute();
+
+        ClientRegistration.Builder builder = ClientRegistration.withRegistrationId(registrationId)
+                .clientId(provider.normalizedClientId())
+                .clientSecret(provider.normalizedClientSecret())
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .redirectUri(SecuritySettingsProperties.OAuth.REDIRECT_URI_TEMPLATE)
+                .authorizationUri(authorizationUri)
+                .tokenUri(tokenUri)
+                .userInfoUri(userInfoUri)
+                .userNameAttributeName(userNameAttribute.isBlank() ? "login" : userNameAttribute)
+                .clientName(firstNonBlank(provider.normalizedClientName(), "Smoke OAuth"));
+
+        Set<String> scope = provider.normalizedScope();
+        if (!scope.isEmpty()) {
+            builder.scope(scope);
+        }
+
+        return builder.build();
+    }
+
+    private String requiredProviderUri(String registrationId, String propertyName, String value) {
+        if (value.isBlank()) {
+            throw new IllegalStateException(
+                    "Fake OAuth provider '%s' requires %s.".formatted(registrationId, propertyName));
+        }
+        return value;
+    }
+
+    private String firstNonBlank(String first, String second) {
+        if (first != null && !first.isBlank()) {
+            return first;
+        }
+        return second;
     }
 }

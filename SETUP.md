@@ -127,6 +127,7 @@ Variables you are most likely to need:
 - `DATABASE_*` variables when overriding the default PostgreSQL connection
 - `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` for the built-in GitHub provider when enabling the optional `oauth` profile
 - `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`, and `OIDC_ISSUER_URI` for the built-in issuer-driven OIDC provider when enabling `oauth`
+- `FAKE_OAUTH_*` variables only when overriding the local smoke-test OAuth provider exposed by `SPRING_PROFILES_ACTIVE=local,oauth,fake-oauth`
 - `APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES` when you want to bootstrap the first persisted `ADMIN` role from one or more `provider:externalLogin` identities
 - `APP_BOOTSTRAP_SEED_DEMO_DATA` when you want to override demo-data seeding for categories, books, and localization messages
 - `SESSION_COOKIE_SECURE` when you want to override the `prod` profile session-cookie default of `true` for local HTTP testing or a specific deployment environment

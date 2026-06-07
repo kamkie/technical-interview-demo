@@ -76,6 +76,32 @@ class OAuthProviderConfigurationTests {
     }
 
     @Test
+    void oauthClientRegistrationRepositoryBuildsConfiguredFakeProvider() {
+        SecuritySettingsProperties settings = baseSettings();
+        settings.getOAuth()
+                .setProviders(new LinkedHashMap<>(Map.of("smoke", fakeProvider("smoke-client", "smoke-secret"))));
+
+        OAuthClientRegistrationConfiguration configuration = new OAuthClientRegistrationConfiguration();
+        ClientRegistrationRepository repository = configuration.clientRegistrationRepository(settings);
+
+        assertThat(repository.findByRegistrationId("smoke")).isNotNull();
+    }
+
+    @Test
+    void oauthClientRegistrationRepositoryRejectsFakeProviderWithoutTokenUri() {
+        SecuritySettingsProperties settings = baseSettings();
+        SecuritySettingsProperties.OAuth.Provider provider = fakeProvider("smoke-client", "smoke-secret");
+        provider.setTokenUri("");
+        settings.getOAuth().setProviders(new LinkedHashMap<>(Map.of("smoke", provider)));
+
+        OAuthClientRegistrationConfiguration configuration = new OAuthClientRegistrationConfiguration();
+
+        assertThatThrownBy(() -> configuration.clientRegistrationRepository(settings))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("requires token-uri");
+    }
+
+    @Test
     void productionValidatorAllowsProdWithoutOauthProfile() {
         SecuritySettingsProperties settings = baseSettings();
         MockEnvironment environment = new MockEnvironment().withProperty("spring.profiles.active", "prod");
@@ -146,6 +172,37 @@ class OAuthProviderConfigurationTests {
     }
 
     @Test
+    void productionValidatorRejectsFakeOauthProfile() {
+        SecuritySettingsProperties settings = baseSettings();
+        MockEnvironment environment =
+                new MockEnvironment().withProperty("spring.profiles.active", "prod,oauth,fake-oauth");
+        environment.setActiveProfiles("prod", "oauth", "fake-oauth");
+        environment.setProperty("server.forward-headers-strategy", "framework");
+
+        ProductionSecurityConfigurationValidator validator = validator(settings, environment);
+
+        assertThatThrownBy(validator::afterPropertiesSet)
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("must not run with the fake-oauth");
+    }
+
+    @Test
+    void productionValidatorRejectsFakeProviderType() {
+        SecuritySettingsProperties settings = baseSettings();
+        settings.getOAuth()
+                .setProviders(new LinkedHashMap<>(Map.of("smoke", fakeProvider("smoke-client", "smoke-secret"))));
+        MockEnvironment environment = new MockEnvironment().withProperty("spring.profiles.active", "prod,oauth");
+        environment.setActiveProfiles("prod", "oauth");
+        environment.setProperty("server.forward-headers-strategy", "framework");
+
+        ProductionSecurityConfigurationValidator validator = validator(settings, environment);
+
+        assertThatThrownBy(validator::afterPropertiesSet)
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("must not be configured with the prod profile");
+    }
+
+    @Test
     void productionValidatorAllowsMultipleProvidersWithoutDefaultProvider() {
         SecuritySettingsProperties settings = baseSettings();
         settings.getOAuth()
@@ -213,6 +270,17 @@ class OAuthProviderConfigurationTests {
         provider.setType(type);
         provider.setClientId(clientId);
         provider.setClientSecret(clientSecret);
+        return provider;
+    }
+
+    private SecuritySettingsProperties.OAuth.Provider fakeProvider(String clientId, String clientSecret) {
+        SecuritySettingsProperties.OAuth.Provider provider =
+                provider(SecuritySettingsProperties.OAuth.ProviderType.FAKE, clientId, clientSecret);
+        provider.setClientName("Smoke OAuth");
+        provider.setAuthorizationUri("/test-support/oauth2/authorize");
+        provider.setTokenUri("http://127.0.0.1:8080/test-support/oauth2/token");
+        provider.setUserInfoUri("http://127.0.0.1:8080/test-support/oauth2/userinfo");
+        provider.setUserNameAttribute("login");
         return provider;
     }
 }

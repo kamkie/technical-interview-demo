@@ -133,7 +133,11 @@ public class SecuritySettingsProperties {
             private ProviderType type;
             private String clientId = "";
             private String clientSecret = "";
+            private String clientName = "";
             private String issuerUri = "";
+            private String authorizationUri = "";
+            private String tokenUri = "";
+            private String userInfoUri = "";
             private String userNameAttribute = "";
             private Set<String> scope = new LinkedHashSet<>();
 
@@ -161,12 +165,44 @@ public class SecuritySettingsProperties {
                 this.clientSecret = clientSecret;
             }
 
+            public String getClientName() {
+                return clientName;
+            }
+
+            public void setClientName(String clientName) {
+                this.clientName = clientName;
+            }
+
             public String getIssuerUri() {
                 return issuerUri;
             }
 
             public void setIssuerUri(String issuerUri) {
                 this.issuerUri = issuerUri;
+            }
+
+            public String getAuthorizationUri() {
+                return authorizationUri;
+            }
+
+            public void setAuthorizationUri(String authorizationUri) {
+                this.authorizationUri = authorizationUri;
+            }
+
+            public String getTokenUri() {
+                return tokenUri;
+            }
+
+            public void setTokenUri(String tokenUri) {
+                this.tokenUri = tokenUri;
+            }
+
+            public String getUserInfoUri() {
+                return userInfoUri;
+            }
+
+            public void setUserInfoUri(String userInfoUri) {
+                this.userInfoUri = userInfoUri;
             }
 
             public String getUserNameAttribute() {
@@ -188,7 +224,10 @@ public class SecuritySettingsProperties {
             public boolean hasCredentialMaterial() {
                 return !normalizedClientId().isBlank()
                         || !normalizedClientSecret().isBlank()
-                        || !normalizedIssuerUri().isBlank();
+                        || !normalizedIssuerUri().isBlank()
+                        || !normalizedAuthorizationUri().isBlank()
+                        || !normalizedTokenUri().isBlank()
+                        || !normalizedUserInfoUri().isBlank();
             }
 
             public boolean hasClientCredentials() {
@@ -204,8 +243,24 @@ public class SecuritySettingsProperties {
                 return normalizeString(clientSecret);
             }
 
+            public String normalizedClientName() {
+                return normalizeString(clientName);
+            }
+
             public String normalizedIssuerUri() {
                 return normalizeString(issuerUri);
+            }
+
+            public String normalizedAuthorizationUri() {
+                return normalizeString(authorizationUri);
+            }
+
+            public String normalizedTokenUri() {
+                return normalizeString(tokenUri);
+            }
+
+            public String normalizedUserInfoUri() {
+                return normalizeString(userInfoUri);
             }
 
             public String normalizedUserNameAttribute() {
@@ -229,7 +284,8 @@ public class SecuritySettingsProperties {
 
         public enum ProviderType {
             GITHUB,
-            OIDC
+            OIDC,
+            FAKE
         }
     }
 }

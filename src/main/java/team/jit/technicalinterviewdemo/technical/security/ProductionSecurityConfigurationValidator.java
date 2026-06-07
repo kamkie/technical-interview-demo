@@ -29,10 +29,17 @@ public class ProductionSecurityConfigurationValidator implements InitializingBea
         if (!environment.acceptsProfiles(Profiles.of("prod"))) {
             return;
         }
+        validateFakeOAuthProfileDisabled();
         validateSessionContract();
         validateInitialAdminIdentities();
         validateForwardedHeaderStrategy();
         validateOAuthSettings();
+    }
+
+    private void validateFakeOAuthProfileDisabled() {
+        if (environment.acceptsProfiles(Profiles.of("fake-oauth"))) {
+            throw new IllegalStateException("Prod profile must not run with the fake-oauth smoke-test profile.");
+        }
     }
 
     private void validateSessionContract() {
@@ -129,7 +136,7 @@ public class ProductionSecurityConfigurationValidator implements InitializingBea
             String registrationId, SecuritySettingsProperties.OAuth.Provider provider) {
         if (provider.getType() == null) {
             throw new IllegalStateException(
-                    "OAuth provider '%s' requires a type of GITHUB or OIDC.".formatted(registrationId));
+                    "OAuth provider '%s' requires a prod-supported type of GITHUB or OIDC.".formatted(registrationId));
         }
         if (!provider.hasClientCredentials()) {
             throw new IllegalStateException(
@@ -138,6 +145,9 @@ public class ProductionSecurityConfigurationValidator implements InitializingBea
         switch (provider.getType()) {
             case GITHUB -> validateGithubProvider(registrationId, provider);
             case OIDC -> validateOidcProvider(registrationId, provider);
+            case FAKE ->
+                throw new IllegalStateException("Fake OAuth provider '%s' must not be configured with the prod profile."
+                        .formatted(registrationId));
         }
     }
 

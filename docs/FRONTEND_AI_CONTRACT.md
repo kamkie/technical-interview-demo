@@ -72,6 +72,7 @@ Frontend rules:
 
 - render login choices from `loginProviders[]` and each provider's relative `authorizationPath`
 - do not hard-code `/login`, `/oauth2/authorization/github`, or a single provider assumption
+- frontend smoke environments may expose a `smoke` provider backed by the backend's `fake-oauth` profile; discover and start it through `loginProviders[]`, not by hard-coding `/test-support/oauth2/**`
 - use `GET /api/account` only after the session is established and the UI needs the persisted profile
 - after login success or logout, call `GET /api/session` again before the next unsafe write
 - for unsafe writes with a real current application session, mirror the readable CSRF cookie value into the configured CSRF request header
