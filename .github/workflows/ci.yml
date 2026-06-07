@@ -24,7 +24,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
           fetch-depth: 0
 
@@ -72,7 +72,7 @@ jobs:
           echo "Skipping the Gradle build, Helm validation, and external smoke validation for this CI run." >> "${GITHUB_STEP_SUMMARY}"
 
       - name: Check out repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
           fetch-depth: 0
 
@@ -108,7 +108,7 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: needs.change_detection.outputs.skip_heavy_ci != 'true'
-        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v6
         with:
           use_oidc: true
           files: ./build/reports/jacoco/test/jacocoTestReport.xml
