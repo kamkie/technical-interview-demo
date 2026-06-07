@@ -118,6 +118,17 @@ class ArchitectureHardeningTests {
     }
 
     @Test
+    void caffeineCachesRecordStatsForMicrometerMetrics() {
+        List.of(
+                        CacheNames.CATEGORIES,
+                        CacheNames.CATEGORY_DIRECTORY,
+                        CacheNames.LOCALIZATION_LOOKUPS,
+                        CacheNames.LOCALIZATION_LISTS,
+                        CacheNames.LOCALIZATION_MESSAGE_MAPS)
+                .forEach(this::assertCacheRecordsMissStats);
+    }
+
+    @Test
     void repositoryFindByIdLoadsCategoriesViaEntityGraph() {
         PersistenceUnitUtil persistenceUnitUtil = entityManagerFactory.getPersistenceUnitUtil();
         Book book = bookRepository.findById(effectiveJava.getId()).orElseThrow();
@@ -141,5 +152,18 @@ class ArchitectureHardeningTests {
         assertThat(book.getTitle()).isEqualTo("Effective Java");
         assertThat(persistenceUnitUtil.isLoaded(book, "categories")).isTrue();
         assertThat(book.getCategories()).extracting(Category::getName).containsExactly("Best Practices", "Java");
+    }
+
+    private void assertCacheRecordsMissStats(String cacheName) {
+        org.springframework.cache.Cache springCache = cacheManager.getCache(cacheName);
+
+        assertThat(springCache).isNotNull();
+        assertThat(springCache.getNativeCache()).isInstanceOf(Cache.class);
+        Cache<?, ?> nativeCache = (Cache<?, ?>) springCache.getNativeCache();
+        long missesBefore = nativeCache.stats().missCount();
+
+        springCache.get(new Object());
+
+        assertThat(nativeCache.stats().missCount()).isEqualTo(missesBefore + 1);
     }
 }
