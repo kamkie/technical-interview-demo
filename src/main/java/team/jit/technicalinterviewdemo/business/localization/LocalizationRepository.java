@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,8 @@ public interface LocalizationRepository extends JpaRepository<Localization, Long
     Optional<Localization> findByMessageKeyAndLanguage(String messageKey, String language);
 
     List<Localization> findAllByLanguageOrderByMessageKeyAsc(String language);
+
+    List<Localization> findAllByMessageKeyInAndLanguageIn(Collection<String> messageKeys, Collection<String> languages);
 
     boolean existsByMessageKeyAndLanguage(String messageKey, String language);
 
