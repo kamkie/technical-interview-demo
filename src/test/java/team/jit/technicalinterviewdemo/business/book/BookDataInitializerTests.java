@@ -54,16 +54,18 @@ class BookDataInitializerTests {
         runner.run();
 
         verify(categoryRepository).findAllByNormalizedNames(anyCollection());
-        verify(bookRepository, times(36)).existsByIsbn(anyString());
+        verify(bookRepository, times(1036)).existsByIsbn(anyString());
         ArgumentCaptor<Book> savedBooks = ArgumentCaptor.forClass(Book.class);
-        verify(bookRepository, times(36)).save(savedBooks.capture());
+        verify(bookRepository, times(1036)).save(savedBooks.capture());
         assertThat(savedBooks.getAllValues())
                 .extracting(Book::getTitle)
                 .containsSequence("Clean Code", "Effective Java", "Clean Architecture")
                 .contains(
                         "Designing Data-Intensive Applications",
                         "Observability Engineering",
-                        "Monolith to Microservices");
+                        "Monolith to Microservices",
+                        "Demo Load Book 0001",
+                        "Demo Load Book 1000");
     }
 
     @Test
@@ -80,11 +82,11 @@ class BookDataInitializerTests {
         runner.run();
 
         ArgumentCaptor<Book> savedBooks = ArgumentCaptor.forClass(Book.class);
-        verify(bookRepository, times(35)).save(savedBooks.capture());
+        verify(bookRepository, times(1035)).save(savedBooks.capture());
         assertThat(savedBooks.getAllValues())
                 .extracting(Book::getTitle)
                 .doesNotContain("Clean Code")
-                .contains("Effective Java", "Monolith to Microservices");
+                .contains("Effective Java", "Monolith to Microservices", "Demo Load Book 1000");
     }
 
     private static BootstrapSettingsProperties bootstrapSettings(boolean demoDataEnabled) {

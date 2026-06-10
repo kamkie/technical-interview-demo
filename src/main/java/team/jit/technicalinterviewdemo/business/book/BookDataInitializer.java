@@ -6,9 +6,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import team.jit.technicalinterviewdemo.business.category.Category;
+import team.jit.technicalinterviewdemo.business.category.CategoryDataInitializer;
 import team.jit.technicalinterviewdemo.business.category.CategoryRepository;
 import team.jit.technicalinterviewdemo.technical.bootstrap.BootstrapSettingsProperties;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -22,6 +24,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @Configuration
 public class BookDataInitializer {
+
+    private static final int ADDITIONAL_DEMO_BOOK_COUNT = 1_000;
 
     @Bean
     @Order(20)
@@ -62,6 +66,14 @@ public class BookDataInitializer {
     }
 
     static List<SeedBook> defaultBooks() {
+        List<SeedBook> books = new ArrayList<>(curatedBooks());
+        for (int index = 1; index <= ADDITIONAL_DEMO_BOOK_COUNT; index++) {
+            books.add(generatedBook(index));
+        }
+        return List.copyOf(books);
+    }
+
+    private static List<SeedBook> curatedBooks() {
         return List.of(
                 new SeedBook(
                         "Clean Code",
@@ -251,6 +263,17 @@ public class BookDataInitializer {
                         "9781000000034",
                         2019,
                         List.of("Architecture", "Distributed Systems")));
+    }
+
+    private static SeedBook generatedBook(int index) {
+        List<String> additionalCategoryNames = CategoryDataInitializer.additionalCategoryNames();
+        String categoryName = additionalCategoryNames.get((index - 1) % additionalCategoryNames.size());
+        return new SeedBook(
+                "Demo Load Book %04d".formatted(index),
+                "Demo Author %03d".formatted(((index - 1) % 100) + 1),
+                "9782000%06d".formatted(index),
+                2000 + ((index - 1) % 25),
+                List.of(categoryName));
     }
 
     private static Set<String> defaultCategoryLookupNames(Collection<SeedBook> seedBooks) {
