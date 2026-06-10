@@ -68,8 +68,7 @@ Use this section for rough ideas, TODOs, maintenance signals, links, and early f
 
 | Status | Idea | Linked Artifacts | Next Decision |
 | --- | --- | --- | --- |
-
-No active conceptualization items.
+| Candidate | Admin block/unblock for user accounts: persist an account-status flag (for example `enabled` or `locked`), expose an ADMIN endpoint that changes it with an operator reason, reject sign-ins and active sessions for blocked accounts (the audit action enum already defines `SESSION_REJECTION`), and surface the status plus the action in the admin users API so the first-party frontend can offer a Block action; today the strongest admin sanction is demoting a user to `USER`-only via role replacement | — | Triage whether to accept for a backward-compatible `2.1.0` feature line and pick the next artifact (PRD or spec) |
 
 ## Analysis
 
