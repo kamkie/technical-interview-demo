@@ -34,6 +34,21 @@ public class CategoryDataInitializer {
     }
 
     static List<String> defaultCategoryNames() {
-        return List.of("Best Practices", "Java", "Software Engineering");
+        return List.of(
+                "Best Practices",
+                "Java",
+                "Software Engineering",
+                "Architecture",
+                "Spring",
+                "Testing",
+                "Security",
+                "Databases",
+                "Cloud Native",
+                "DevOps",
+                "Kotlin",
+                "Observability",
+                "Distributed Systems",
+                "APIs",
+                "Performance");
     }
 }

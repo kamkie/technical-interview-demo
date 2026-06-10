@@ -43,10 +43,25 @@ class CategoryDataInitializerTests {
         runner.run();
 
         ArgumentCaptor<Category> savedCategories = ArgumentCaptor.forClass(Category.class);
-        verify(categoryRepository, org.mockito.Mockito.times(3)).save(savedCategories.capture());
+        verify(categoryRepository, org.mockito.Mockito.times(15)).save(savedCategories.capture());
         assertThat(savedCategories.getAllValues())
                 .extracting(Category::getName)
-                .containsExactlyElementsOf(List.of("Best Practices", "Java", "Software Engineering"));
+                .containsExactlyElementsOf(List.of(
+                        "Best Practices",
+                        "Java",
+                        "Software Engineering",
+                        "Architecture",
+                        "Spring",
+                        "Testing",
+                        "Security",
+                        "Databases",
+                        "Cloud Native",
+                        "DevOps",
+                        "Kotlin",
+                        "Observability",
+                        "Distributed Systems",
+                        "APIs",
+                        "Performance"));
     }
 
     private static BootstrapSettingsProperties bootstrapSettings(boolean demoDataEnabled) {
