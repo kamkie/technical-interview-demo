@@ -92,6 +92,42 @@ class FakeOAuthProviderControllerIntegrationTests extends AbstractMockMvcIntegra
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    void fakeProviderRejectsUnsupportedAuthorizationResponseType() throws Exception {
+        mockMvc.perform(get("/test-support/oauth2/authorize")
+                        .queryParam("response_type", "token")
+                        .queryParam("client_id", "technical-interview-demo-smoke")
+                        .queryParam("redirect_uri", "http://localhost/api/session/login/oauth2/code/smoke"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void fakeProviderRejectsUnexpectedClientId() throws Exception {
+        mockMvc.perform(get("/test-support/oauth2/authorize")
+                        .queryParam("response_type", "code")
+                        .queryParam("client_id", "unexpected-client")
+                        .queryParam("redirect_uri", "http://localhost/api/session/login/oauth2/code/smoke"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void fakeProviderRejectsTokenRequestsWithoutValidClientCredentials() throws Exception {
+        mockMvc.perform(post("/test-support/oauth2/token")
+                        .header(HttpHeaders.AUTHORIZATION, "Basic invalid")
+                        .contentType("application/x-www-form-urlencoded")
+                        .content("grant_type=authorization_code&code=missing-code"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void fakeProviderRejectsTokenRequestsWithoutAuthorizationCode() throws Exception {
+        mockMvc.perform(post("/test-support/oauth2/token")
+                        .header(HttpHeaders.AUTHORIZATION, basicAuthorization())
+                        .contentType("application/x-www-form-urlencoded")
+                        .content("grant_type=authorization_code"))
+                .andExpect(status().isBadRequest());
+    }
+
     private String basicAuthorization() {
         String credentials = "technical-interview-demo-smoke:technical-interview-demo-smoke-secret";
         return "Basic " + Base64.getEncoder().encodeToString(credentials.getBytes(StandardCharsets.UTF_8));

@@ -57,7 +57,7 @@ public class FakeOAuthProviderController {
 
         FakeOAuthAuthorizationStore.AuthorizedUser user = new FakeOAuthAuthorizationStore.AuthorizedUser(
                 properties.getLogin(), properties.getDisplayName(), properties.getEmail(), normalizedScope(scope));
-        String authorizationCode = authorizationStore.createAuthorizationCode(user);
+        String authorizationCode = authorizationStore.issueGrantCode(user);
         UriComponentsBuilder redirectBuilder =
                 UriComponentsBuilder.fromUriString(redirectUri).queryParam("code", authorizationCode);
         if (hasText(state)) {
@@ -83,7 +83,7 @@ public class FakeOAuthProviderController {
         }
 
         return authorizationStore
-                .consumeAuthorizationCode(authorizationCode)
+                .consumeGrantCode(authorizationCode)
                 .map(user -> {
                     String accessToken = authorizationStore.createAccessToken(user);
                     return ResponseEntity.ok(Map.<String, Object>of(

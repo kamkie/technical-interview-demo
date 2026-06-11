@@ -16,13 +16,13 @@ class FakeOAuthAuthorizationStore {
     private final ConcurrentMap<String, AuthorizedUser> authorizationCodes = new ConcurrentHashMap<>();
     private final ConcurrentMap<String, AuthorizedUser> accessTokens = new ConcurrentHashMap<>();
 
-    String createAuthorizationCode(AuthorizedUser user) {
+    String issueGrantCode(AuthorizedUser user) {
         String authorizationCode = UUID.randomUUID().toString();
         authorizationCodes.put(authorizationCode, user);
         return authorizationCode;
     }
 
-    Optional<AuthorizedUser> consumeAuthorizationCode(String authorizationCode) {
+    Optional<AuthorizedUser> consumeGrantCode(String authorizationCode) {
         return Optional.ofNullable(authorizationCodes.remove(authorizationCode));
     }
 
