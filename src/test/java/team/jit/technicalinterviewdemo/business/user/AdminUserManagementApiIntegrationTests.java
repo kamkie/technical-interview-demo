@@ -443,8 +443,7 @@ class AdminUserManagementApiIntegrationTests extends AbstractMockMvcIntegrationT
                               "status": "BLOCKED",
                               "reason": "%s"
                             }
-                            """
-                                .formatted("x".repeat(256))))
+                            """.formatted("x".repeat(256))))
                 .andExpect(status().isBadRequest());
 
         mockMvc.perform(put("/api/admin/users/{id}/status", readerUser.getId())

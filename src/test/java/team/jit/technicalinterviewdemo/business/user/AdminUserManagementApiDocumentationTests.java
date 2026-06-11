@@ -101,8 +101,8 @@ class AdminUserManagementApiDocumentationTests extends AbstractDocumentationInte
                                                 + " `ACTIVE` or `BLOCKED`."),
                                 fieldWithPath("[].blockedAt")
                                         .optional()
-                                        .description("UTC instant of the block, or absent when the account is"
-                                                + " active."),
+                                        .description(
+                                                "UTC instant of the block, or absent when the account is" + " active."),
                                 fieldWithPath("[].blockedBy")
                                         .optional()
                                         .description("External login of the ADMIN that performed the block, or"
@@ -134,8 +134,7 @@ class AdminUserManagementApiDocumentationTests extends AbstractDocumentationInte
                         pathParameters(parameterWithName("id").description("Persisted user identifier.")),
                         requestBody(),
                         requestFields(
-                                fieldWithPath("status")
-                                        .description("Requested account status: `ACTIVE` or `BLOCKED`."),
+                                fieldWithPath("status").description("Requested account status: `ACTIVE` or `BLOCKED`."),
                                 fieldWithPath("reason")
                                         .description("Short operator-supplied explanation. Persisted as the block"
                                                 + " reason when blocking; recorded only in the audit entry when"
@@ -150,8 +149,8 @@ class AdminUserManagementApiDocumentationTests extends AbstractDocumentationInte
                                         .description("Account status after the replacement: `ACTIVE` or `BLOCKED`."),
                                 fieldWithPath("blockedAt")
                                         .optional()
-                                        .description("UTC instant of the block, or absent when the account is"
-                                                + " active."),
+                                        .description(
+                                                "UTC instant of the block, or absent when the account is" + " active."),
                                 fieldWithPath("blockedBy")
                                         .optional()
                                         .description("External login of the ADMIN that performed the block, or"

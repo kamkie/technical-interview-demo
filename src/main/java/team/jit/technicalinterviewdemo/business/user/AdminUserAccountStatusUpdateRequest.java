@@ -7,8 +7,7 @@ import jakarta.validation.constraints.Size;
 
 @Schema(description = "Payload for replacing the account status of one persisted user.")
 public record AdminUserAccountStatusUpdateRequest(
-        @Schema(description = "Requested account status.", example = "BLOCKED")
-        @NotNull(message = "status is required")
+        @Schema(description = "Requested account status.", example = "BLOCKED") @NotNull(message = "status is required")
         UserAccountStatus status,
 
         @Schema(
