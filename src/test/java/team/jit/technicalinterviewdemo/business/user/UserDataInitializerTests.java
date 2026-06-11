@@ -7,6 +7,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.CommandLineRunner;
 import team.jit.technicalinterviewdemo.technical.bootstrap.BootstrapSettingsProperties;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
@@ -64,6 +65,33 @@ class UserDataInitializerTests {
             return true;
         }));
         verifyNoMoreInteractions(userAccountRepository);
+    }
+
+    @Test
+    void seedUsersBlocksExactlyOneDemoUserWithDeterministicProvenance() throws Exception {
+        UserDataInitializer initializer = new UserDataInitializer();
+        when(userAccountRepository.existsByProviderAndExternalLogin(anyString(), anyString()))
+                .thenReturn(false);
+        when(userAccountRepository.saveAll(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        CommandLineRunner runner = initializer.seedUsers(userAccountRepository, bootstrapSettings(true));
+        runner.run();
+
+        verify(userAccountRepository).saveAll(argThat(users -> {
+            List<UserAccount> savedUsers =
+                    StreamSupport.stream(users.spliterator(), false).toList();
+            UserAccount blockedUser = savedUsers.stream()
+                    .filter(user -> "demo-user-002".equals(user.getExternalLogin()))
+                    .findFirst()
+                    .orElseThrow();
+            assertThat(blockedUser.isBlocked()).isTrue();
+            assertThat(blockedUser.getBlockedAt()).isEqualTo(Instant.parse("2024-01-15T00:00:00Z"));
+            assertThat(blockedUser.getBlockedReason()).isEqualTo("Seeded demo blocked account.");
+            assertThat(blockedUser.getBlockedByUser()).isNull();
+            assertThat(blockedUser.getRoles()).containsExactly(UserRole.USER);
+            assertThat(savedUsers.stream().filter(UserAccount::isBlocked)).hasSize(1);
+            return true;
+        }));
     }
 
     @Test

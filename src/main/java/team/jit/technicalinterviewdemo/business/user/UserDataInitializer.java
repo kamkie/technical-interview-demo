@@ -20,6 +20,9 @@ public class UserDataInitializer {
     private static final int DEMO_USER_COUNT = 500;
     private static final Instant FIRST_DEMO_LOGIN_AT = Instant.parse("2024-01-01T00:00:00Z");
     private static final String DEMO_PROVIDER = "github";
+    private static final int BLOCKED_DEMO_USER_INDEX = 2;
+    private static final Instant BLOCKED_DEMO_USER_BLOCKED_AT = Instant.parse("2024-01-15T00:00:00Z");
+    private static final String BLOCKED_DEMO_USER_REASON = "Seeded demo blocked account.";
 
     @Bean
     @Order(30)
@@ -54,16 +57,19 @@ public class UserDataInitializer {
 
     private static SeedUser generatedUser(int index) {
         String sequence = "%03d".formatted(index);
+        boolean blocked = index == BLOCKED_DEMO_USER_INDEX;
         return new SeedUser(
                 DEMO_PROVIDER,
                 "demo-user-" + sequence,
                 "Demo User " + sequence,
                 "demo-user-" + sequence + "@example.test",
-                FIRST_DEMO_LOGIN_AT.plus(index - 1L, ChronoUnit.HOURS));
+                FIRST_DEMO_LOGIN_AT.plus(index - 1L, ChronoUnit.HOURS),
+                blocked ? BLOCKED_DEMO_USER_BLOCKED_AT : null,
+                blocked ? BLOCKED_DEMO_USER_REASON : null);
     }
 
     private static UserAccount toUserAccount(SeedUser seedUser) {
-        return new UserAccount(
+        UserAccount userAccount = new UserAccount(
                 seedUser.provider(),
                 seedUser.externalLogin(),
                 seedUser.displayName(),
@@ -71,6 +77,10 @@ public class UserDataInitializer {
                 null,
                 seedUser.lastLoginAt(),
                 Set.of(UserRole.USER));
+        if (seedUser.blockedAt() != null) {
+            userAccount.block(seedUser.blockedAt(), null, seedUser.blockedReason());
+        }
+        return userAccount;
     }
 
     private static void logSavedUser(UserAccount savedUser) {
@@ -81,5 +91,12 @@ public class UserDataInitializer {
                 savedUser.getExternalLogin());
     }
 
-    record SeedUser(String provider, String externalLogin, String displayName, String email, Instant lastLoginAt) {}
+    record SeedUser(
+            String provider,
+            String externalLogin,
+            String displayName,
+            String email,
+            Instant lastLoginAt,
+            Instant blockedAt,
+            String blockedReason) {}
 }

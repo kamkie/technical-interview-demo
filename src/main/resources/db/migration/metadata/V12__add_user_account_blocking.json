@@ -1,0 +1,7 @@
+{
+  "summary": "Adds nullable account-blocking columns to users; a non-null blocked_at is the single source of truth for the blocked state.",
+  "rolloutCategory": "expand",
+  "deploymentOrder": "db-first",
+  "rollingCompatible": true,
+  "rollbackPosture": "image-only"
+}

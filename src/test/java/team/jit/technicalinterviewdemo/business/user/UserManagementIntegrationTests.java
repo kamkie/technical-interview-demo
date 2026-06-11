@@ -158,6 +158,47 @@ class UserManagementIntegrationTests extends AbstractMockMvcIntegrationTest {
     }
 
     @Test
+    void blockAndUnblockPersistProvenanceWithoutTouchingRoleGrants() throws Exception {
+        BrowserSession adminSession = adminSession();
+        BrowserSession readerSession = readerSession();
+        mockMvc.perform(get("/api/account").with(adminSession.authenticatedSession()))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/account").with(readerSession.authenticatedSession()))
+                .andExpect(status().isOk());
+
+        UserAccount admin = userAccountRepository
+                .findByProviderAndExternalLogin("github", "admin-user")
+                .orElseThrow();
+        UserAccount reader = userAccountRepository
+                .findByProviderAndExternalLogin("github", "reader-user")
+                .orElseThrow();
+
+        reader.block(admin, "Abusive API usage pending review.");
+        userAccountRepository.saveAndFlush(reader);
+
+        UserAccount blockedUser = userAccountRepository
+                .findByProviderAndExternalLogin("github", "reader-user")
+                .orElseThrow();
+        assertThat(blockedUser.isBlocked()).isTrue();
+        assertThat(blockedUser.getBlockedAt()).isNotNull();
+        assertThat(blockedUser.getBlockedReason()).isEqualTo("Abusive API usage pending review.");
+        assertThat(blockedUser.getBlockedByUser().getId()).isEqualTo(admin.getId());
+        assertThat(blockedUser.getRoles()).containsExactly(UserRole.USER);
+
+        blockedUser.unblock();
+        userAccountRepository.saveAndFlush(blockedUser);
+
+        UserAccount unblockedUser = userAccountRepository
+                .findByProviderAndExternalLogin("github", "reader-user")
+                .orElseThrow();
+        assertThat(unblockedUser.isBlocked()).isFalse();
+        assertThat(unblockedUser.getBlockedAt()).isNull();
+        assertThat(unblockedUser.getBlockedReason()).isNull();
+        assertThat(unblockedUser.getBlockedByUser()).isNull();
+        assertThat(unblockedUser.getRoles()).containsExactly(UserRole.USER);
+    }
+
+    @Test
     void currentUserEndpointReturnsPersistedProfile() throws Exception {
         BrowserSession readerSession = readerSession();
 

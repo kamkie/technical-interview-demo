@@ -12,8 +12,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Implementation |
+| Status | In Progress |
 
 ## Planning Readiness
 | Field | Value |
@@ -84,7 +84,7 @@
 ## Progress Tracker
 | Task | Status | Owner | Commit | Validation | Notes |
 | --- | --- | --- | --- | --- | --- |
-| 1: Schema, entity, and seed support | Not Started | Agent | Pending | Pending | |
+| 1: Schema, entity, and seed support | Done | Agent | `feat(users): add account blocking schema, entity state, and blocked demo seed` | Passed | 13 tests green including new seed and persistence cases |
 | 2: Status endpoint and admin API surface | Not Started | Agent | Pending | Pending | |
 | 3: Sign-in and active-session rejection | Not Started | Agent | Pending | Pending | |
 | 4: Contract artifacts and docs | Not Started | Agent | Pending | Pending | |
@@ -95,7 +95,7 @@
 ### Task 1: Schema, entity, and seed support
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Persist block state and seed the blocked demo user (spec Persistence and Seed Data sections; AC9, AC11) |
 | Owned Files Or Packages | `V12__add_user_account_blocking.sql` + metadata sidecar, `UserAccount`, `UserDataInitializer`, `UserDataInitializerTests`, `UserManagementIntegrationTests` |
 | Coordinator-Owned Shared Files | None |
@@ -194,7 +194,7 @@
 ## Validation Results
 | Date | Command | Scope | Result | Notes |
 | --- | --- | --- | --- | --- |
-| 2026-06-11 | Pending | — | Pending | Plan created; no execution yet |
+| 2026-06-11 | `./build.ps1 test --tests "team.jit.technicalinterviewdemo.business.user.UserDataInitializerTests" --tests "team.jit.technicalinterviewdemo.business.user.UserManagementIntegrationTests"` | Task 1 | Passed (13 tests) | New seed case and block/unblock persistence case green |
 
 ## User Validation
 1. Start the app with demo data and the fake OAuth provider, sign in as the bootstrap admin.

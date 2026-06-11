@@ -3,9 +3,12 @@ package team.jit.technicalinterviewdemo.business.user;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.PrePersist;
@@ -60,6 +63,16 @@ public class UserAccount {
 
     @Column(name = "last_login_at", nullable = false)
     private Instant lastLoginAt;
+
+    @Column(name = "blocked_at")
+    private Instant blockedAt;
+
+    @Column(name = "blocked_reason", length = 255)
+    private String blockedReason;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "blocked_by_user_id")
+    private UserAccount blockedByUser;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @Setter(AccessLevel.NONE)
@@ -118,6 +131,29 @@ public class UserAccount {
             throw new IllegalArgumentException("lastLoginAt is required");
         }
         this.lastLoginAt = lastLoginAt;
+    }
+
+    public boolean isBlocked() {
+        return blockedAt != null;
+    }
+
+    public void block(UserAccount blockedByUser, String reason) {
+        block(Instant.now(), blockedByUser, reason);
+    }
+
+    public void block(Instant blockedAt, UserAccount blockedByUser, String reason) {
+        if (blockedAt == null) {
+            throw new IllegalArgumentException("blockedAt is required");
+        }
+        this.blockedAt = blockedAt;
+        this.blockedReason = normalizeRequired(reason, "reason");
+        this.blockedByUser = blockedByUser;
+    }
+
+    public void unblock() {
+        this.blockedAt = null;
+        this.blockedReason = null;
+        this.blockedByUser = null;
     }
 
     public Set<UserRole> getRoles() {
