@@ -2,6 +2,10 @@
 
 FROM eclipse-temurin:25-jre-noble@sha256:f9bd8815e73632c22985ebb133ec49b9fc4ad5ffe0657594ac02748ad0431ab7
 
+RUN apt-get update \
+    && apt-get install --no-install-recommends --only-upgrade -y openssl libssl3t64 \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN groupadd --system --gid 10001 app \
     && useradd --system --uid 10001 --gid 10001 --create-home --home-dir /home/app --shell /usr/sbin/nologin app \
     && mkdir -p /opt/app \
