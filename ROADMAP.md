@@ -26,7 +26,7 @@ Section ordering follows the lifecycle vocabulary in `.agents/references/applica
 | Breaking Change Policy | Disallowed on the stable `2.x` line unless a later major-version plan explicitly changes it |
 | Next Target Version | Not selected; default to `v2.0.4` for maintenance fixes or `v2.1.0` for backward-compatible feature work |
 | Latest Stable Release | `v2.0.3` released on 2026-05-11 from the human documentation split and follow-up AI-guidance cleanup archived under `.agents/archive/PLAN_human_documentation_split.md` |
-| Immediate Next Action | Admin account blocking is implemented on `main` (`.agents/plans/PLAN_admin_account_blocking.md` at Phase `Integration`); selecting `v2.1.0` release work is the next call when the user requests it. |
+| Immediate Next Action | Admin account blocking is implemented on `main` and recorded under `CHANGELOG.md` `## [Unreleased]` (executed plan archived at `.agents/archive/PLAN_admin_account_blocking.md`); selecting `v2.1.0` release work is the next call when the user requests it. |
 
 ## Roadmap Rules
 
@@ -115,7 +115,8 @@ Use this section for plan-backed work that is not selected as the immediate rele
 
 | Status | Workstream | Phase | Plan | Linked ADR/PRD/Spec | Notes |
 | --- | --- | --- | --- | --- | --- |
-| Implemented | Admin block/unblock for user accounts | Integration | `.agents/plans/PLAN_admin_account_blocking.md` | `docs/specs/SPEC_admin-account-blocking.md` (Approved 2026-06-11) | Implemented on `main` 2026-06-11 with all five plan tasks done and full verification green; targets the backward-compatible `2.1.0` line; release work not yet requested |
+
+No planned work.
 
 ## Deferred Work
 

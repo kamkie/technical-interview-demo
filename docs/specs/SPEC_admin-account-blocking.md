@@ -187,4 +187,4 @@ Out of scope:
 
 - ADRs: `docs/decisions/0001-adopt-pre-planning-artifacts.md` (artifact routing that selected a standalone spec)
 - PRDs: none (product intent was already clear at triage)
-- Plans: none yet; create `.agents/plans/PLAN_admin_account_blocking.md` once this spec is `Approved`
+- Plans: `.agents/archive/PLAN_admin_account_blocking.md` (executed 2026-06-11; implemented on `main` and archived after implementation, ahead of the `v2.1.0` release)

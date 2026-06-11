@@ -13,7 +13,9 @@
 | Status | Current |
 | --- | --- |
 | Phase | Integration |
-| Status | Implemented |
+| Status | Closed |
+
+Archived on 2026-06-11 by explicit user request after implementation and full verification; the work is integrated on `main` but not yet released, so this archival happened ahead of the `v2.1.0` release cleanup that normally triggers it. Unreleased history lives in `CHANGELOG.md` `## [Unreleased]`.
 
 ## Planning Readiness
 | Field | Value |
