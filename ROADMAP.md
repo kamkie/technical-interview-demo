@@ -68,8 +68,7 @@ Use this section for rough ideas, TODOs, maintenance signals, links, and early f
 
 | Status | Idea | Linked Artifacts | Next Decision |
 | --- | --- | --- | --- |
-
-No active conceptualization items.
+| Candidate | Seed `ui.*` frontend chrome translations in the localization catalog: the first-party frontend (frontend repo milestone `M-I18N-001`, delivered 2026-06-11) renders its UI chrome from public catalog rows with `ui.`-prefixed message keys and falls back to in-code English defaults, so production stays English until rows exist for the supported languages | `docs/FRONTEND_AI_CONTRACT.md` `## Localization And Errors` | Choose the seeding mechanism (Flyway seed data vs operator-entered content through the localization admin API) and translation content ownership |
 
 ## Analysis
 

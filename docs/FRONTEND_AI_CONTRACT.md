@@ -107,3 +107,6 @@ Supported application languages are currently `en`, `es`, `de`, `fr`, `pl`, `uk`
 
 Error payloads use localized `ProblemDetail` data and include `messageKey`, localized `message`, and resolved `language`.
 Render localized feedback, but do not branch on English message text.
+
+The first-party frontend renders its UI chrome from public localization catalog rows using `ui.`-prefixed message keys, such as `ui.nav.catalog`, resolved per language with in-code English defaults as fallback.
+Those chrome rows are operator-managed content through the existing localization endpoints; languages without seeded `ui.*` rows render the English defaults without breaking the page.
