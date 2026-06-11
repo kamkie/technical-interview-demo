@@ -13,6 +13,7 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 - Added additive `accountStatus`, `blockedAt`, `blockedBy`, and `blockedReason` fields to the admin users API responses.
 - Added sign-in rejection and per-request active-session rejection for blocked accounts with `LOGIN_FAILURE` and `SESSION_REJECTION` audit entries carrying `failureReason: "account_blocked"`.
 - Added one seeded blocked demo user (`demo-user-002`) to freshly seeded demo data so the first-party frontend can develop against a visible `BLOCKED` row.
+- Added `ui.*` frontend chrome localization seed data for demo environments: the bootstrap seeder now loads per-language classpath resources (381 keys for each of `en`, `es`, `de`, `fr`, `pl`, `uk`, and `no`) snapshotted from the first-party frontend `UI_MESSAGES` registry, inserting only missing rows so operator-managed content is never overwritten.
 
 ## [v2.0.3] - 2026-05-11
 

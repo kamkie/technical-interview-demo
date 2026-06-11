@@ -26,7 +26,7 @@ Section ordering follows the lifecycle vocabulary in `.agents/references/applica
 | Breaking Change Policy | Disallowed on the stable `2.x` line unless a later major-version plan explicitly changes it |
 | Next Target Version | Not selected; default to `v2.0.4` for maintenance fixes or `v2.1.0` for backward-compatible feature work |
 | Latest Stable Release | `v2.0.3` released on 2026-05-11 from the human documentation split and follow-up AI-guidance cleanup archived under `.agents/archive/PLAN_human_documentation_split.md` |
-| Immediate Next Action | Admin account blocking is implemented on `main` and recorded under `CHANGELOG.md` `## [Unreleased]` (executed plan archived at `.agents/archive/PLAN_admin_account_blocking.md`); `.agents/plans/PLAN_seed_ui_chrome_localizations.md` is triage-accepted and `Ready` when selected; selecting `v2.1.0` release work is the next call when the user requests it. |
+| Immediate Next Action | Admin account blocking and `ui.*` chrome localization seeding are implemented on `main` and recorded under `CHANGELOG.md` `## [Unreleased]` (plans at `.agents/archive/PLAN_admin_account_blocking.md` and `.agents/plans/PLAN_seed_ui_chrome_localizations.md`); selecting `v2.1.0` release work is the next call when the user requests it. |
 
 ## Roadmap Rules
 
@@ -99,7 +99,7 @@ Use this section to record accept/defer/reject/prioritize/sequence decisions and
 
 | Status | Workstream | Source | Decision | Next Artifact |
 | --- | --- | --- | --- | --- |
-| In Progress | Seed `ui.*` frontend chrome localizations | Conceptualization candidate of 2026-06-11; `docs/FRONTEND_AI_CONTRACT.md` `## Localization And Errors` | Accepted 2026-06-11: extend the existing `app.bootstrap.seed.demo-data` bootstrap seeder with resource-backed `ui.*` content (not Flyway); production content remains operator-managed through the localization admin API per the published contract | `.agents/plans/PLAN_seed_ui_chrome_localizations.md` (created) |
+| Integrated | Seed `ui.*` frontend chrome localizations | Conceptualization candidate of 2026-06-11; `docs/FRONTEND_AI_CONTRACT.md` `## Localization And Errors` | Accepted 2026-06-11: extend the existing `app.bootstrap.seed.demo-data` bootstrap seeder with resource-backed `ui.*` content (not Flyway); production content remains operator-managed through the localization admin API per the published contract | `.agents/plans/PLAN_seed_ui_chrome_localizations.md` (created) |
 
 ## Active Release Track
 
@@ -114,7 +114,7 @@ Use this section for plan-backed work that is not selected as the immediate rele
 
 | Status | Workstream | Phase | Plan | Linked ADR/PRD/Spec | Notes |
 | --- | --- | --- | --- | --- | --- |
-| In Progress | Seed `ui.*` frontend chrome localizations | Implementation | `.agents/plans/PLAN_seed_ui_chrome_localizations.md` | `docs/FRONTEND_AI_CONTRACT.md` `## Localization And Errors` | Execution started 2026-06-11; fits a backward-compatible `v2.1.0` feature release |
+| Integrated | Seed `ui.*` frontend chrome localizations | Integration | `.agents/plans/PLAN_seed_ui_chrome_localizations.md` | `docs/FRONTEND_AI_CONTRACT.md` `## Localization And Errors` | Implemented on `main` 2026-06-11 and recorded in `CHANGELOG.md` `## [Unreleased]`; remove after the `v2.1.0` release |
 
 ## Deferred Work
 

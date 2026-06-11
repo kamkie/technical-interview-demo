@@ -12,15 +12,15 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Implementation |
-| Status | In Progress |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Planning Readiness
 | Field | Value |
 | --- | --- |
 | Decision Complete | Yes |
 | Blocking Open Questions | None |
-| Accepted Fallbacks | Q1 (demo-only seeding), Q2 (ASCII transliteration convention), Q3 (AI-authored translations) |
+| Accepted Fallbacks | Q1 (demo-only seeding), Q3 (AI-authored translations); Q2 resolved by explicit user decision (native script) |
 | Ready For Execution | Yes |
 | Last Updated | 2026-06-11 |
 
@@ -53,7 +53,7 @@
 | ID | Question / Gap | Why It Matters | Owner | Status | Fallback / Decision | Blocks Ready? |
 | --- | --- | --- | --- | --- | --- | --- |
 | Q1 | Should production environments receive `ui.*` rows out of the box (e.g. Flyway seed) instead of staying operator-managed? | Determines mechanism and whether production stops rendering English-only chrome without operator action | User | Answered | No — demo-only seeding; the published contract states chrome rows are operator-managed in production, matching the existing `error.*` posture (D1, D2). Revisit if the user asks for production seeding. | No |
-| Q2 | Native-script translations (diacritics, Cyrillic Ukrainian) or the existing ASCII transliteration convention? | Content quality vs consistency with every existing seed row | User | Answered | Follow the existing ASCII transliteration convention for consistency (D6). Switching to native script is a separate content revision. | No |
+| Q2 | Native-script translations (diacritics, Cyrillic Ukrainian) or the existing ASCII transliteration convention? | Content quality vs consistency with every existing seed row | User | Answered | User decision 2026-06-11: use native-script translations (accents, umlauts, Polish diacritics, Cyrillic Ukrainian, Norwegian ae/oe/aa letters). The agent's earlier ASCII fallback was rejected after Task 2 first landed; content was revised in place. | No |
 | Q3 | Is AI-authored translation content acceptable for the 6 non-English languages (~2,184 strings)? | Content ownership and quality bar | User | Answered | Yes for demo seed data, matching how existing `error.*` translations were authored; operators can override any row through the admin API (D2). | No |
 
 ## Decision Log And Assumptions
@@ -64,7 +64,7 @@
 | D3 | Key list source: a snapshot of the frontend `UI_MESSAGES` registry (381 keys); seeded `en` text matches the frontend in-code defaults exactly. Later frontend drift is benign because missing rows fall back to in-code defaults by contract. The revisit trigger fired during execution: the registry gained 17 `ui.admin-users.*` account-status keys mid-task, so `en.json` was regenerated from the live registry before translation authoring (count moved from an earlier 364 estimate to 381). | Frontend `src/i18n/messages.ts` + contract fallback rule | 2026-06-11 | Frontend registry changes materially before Task 2 completes |
 | D4 | Seed all 7 languages including `en`, consistent with `error.*` seeds; complete `en` rows keep the admin coverage view meaningful and let operators edit English chrome without a frontend release. | Code convention | 2026-06-11 | None |
 | D5 | Content format: per-language UTF-8 JSON classpath resources (flat key-to-text maps) under `src/main/resources/localization/seed/ui-chrome/<lang>.json`, loaded by a new `UiChromeSeedData` loader; ~2,548 Java literal builder rows would be unmaintainable and churn-heavy. | Agent fallback | 2026-06-11 | Static-analysis or packaging constraints make resources unworkable |
-| D6 | Translations follow the existing ASCII transliteration convention used by all current seed rows. | Code convention; accepted fallback for Q2 | 2026-06-11 | User requests native-script content |
+| D6 | Revised by user decision: `ui.*` chrome translations use native script (Spanish accents and inverted punctuation, German umlauts and eszett, French accents, Polish diacritics, Cyrillic Ukrainian, Norwegian aa/ae/oe letters). Safe because the seed content lives in UTF-8 JSON resources read by Jackson, not Java literals. The `error.*` seeds in `LocalizationSeedData` keep their ASCII transliteration; converting them is deferred follow-up, not plan scope. | User | 2026-06-11 | None |
 | D7 | `LocalizationSeedData.documentedKeys()` keeps its current `error.*` semantics; `ui.*` seed counts are exposed separately, and count-sensitive tests are updated deliberately rather than weakened. | Test analysis | 2026-06-11 | None |
 | D8 | A malformed or missing seed resource fails startup loudly (fail-fast) when demo seeding is enabled; silent partial seeding is worse than a visible failure in demo environments. | Agent fallback | 2026-06-11 | None |
 
@@ -84,8 +84,8 @@
 | Task | Status | Owner | Commit | Validation | Notes |
 | --- | --- | --- | --- | --- | --- |
 | 1: Seed loader and English chrome resource | Done | Agent | `feat(localization): seed ui chrome rows from classpath resources` | Targeted localization tests (56) passed; `./build.ps1 build` green | Execution findings: (a) existing localization integration tests reset state via `LocalizationTestData.reloadDefaultMessages`, so keeping `defaultMessages()` error-only means no integration-test count updates were needed; test changes narrowed to `LocalizationDataInitializerTests` plus new `UiChromeSeedDataTests`; (b) the frontend registry gained 17 account-status keys mid-task — `en.json` regenerated from the live registry (381 keys) |
-| 2: Non-English chrome seed content | Done | Agent | `feat(localization): add non-english ui chrome seed translations` | Targeted seed tests (14) passed; `./build.ps1 build` green | Six resources with 381 keys each (2,286 strings), ASCII transliteration per D6; parity and token tests strengthened to require every supported language shipped |
-| 3: Docs, changelog, and roadmap alignment | Not Started | Agent | Pending | Pending | |
+| 2: Non-English chrome seed content | Done | Agent | `feat(localization): add non-english ui chrome seed translations` + revision `feat(localization): use native-script ui chrome translations` | Targeted seed tests (14) passed twice; `./build.ps1 build` green for both states | Six resources with 381 keys each (2,286 strings); first landed with ASCII transliteration, then revised to native script after the user rejected the Q2 fallback (revised D6); parity and token tests require every supported language shipped |
+| 3: Docs, changelog, and roadmap alignment | Done | Agent | `docs(localization): record ui chrome seed coverage` | `pwsh ./scripts/docs/audit-docs.ps1` passed; `./build.ps1 -FullBuild build` green | Contract doc notes demo-data pre-seeding; `CHANGELOG.md` `## [Unreleased]` entry added; roadmap rows moved to Integrated |
 
 ## Execution Tasks
 ### Task 1: Seed loader and English chrome resource
@@ -117,7 +117,7 @@
 ### Task 3: Docs, changelog, and roadmap alignment
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Align published docs and trackers with the delivered seeding behavior |
 | Owned Files Or Packages | `docs/FRONTEND_AI_CONTRACT.md`, `CHANGELOG.md`, `ROADMAP.md`, this plan's tracker and validation ledger |
 | Coordinator-Owned Shared Files | None |
@@ -155,7 +155,7 @@
 - Negative: malformed resource fails startup; disabled flag seeds nothing; existing rows are not overwritten.
 
 ## Better Engineering Notes
-- Deferred, not hidden: automated cross-repo key-sync between the frontend registry and backend seed resources; native-script content revision (Q2); production seeding strategy (Q1).
+- Deferred, not hidden: automated cross-repo key-sync between the frontend registry and backend seed resources; native-script revision of the `error.*` seed translations in `LocalizationSeedData` (the `ui.*` resources already use native script per revised D6); production seeding strategy (Q1).
 - No prerequisite cleanup identified; the seed package is small and current.
 
 ## Validation Results
@@ -165,6 +165,13 @@
 | 2026-06-11 | `./build.ps1 build` | Task 1 full build with checks | Passed | Exit code 0; Error Prone `InlineFormatString` warning resolved by inlining the format string |
 | 2026-06-11 | `./build.ps1 test --tests "team.jit.technicalinterviewdemo.business.localization.seed.*"` | Task 2 targeted seed tests | Passed | 14 tests green with strengthened all-languages parity and token checks |
 | 2026-06-11 | `./build.ps1 build` | Task 2 full build with checks | Passed | BUILD SUCCESSFUL in 3m 46s |
+| 2026-06-11 | Node key/token consistency check over `ui-chrome/*.json` | Native-script revision content check | Passed | 381 keys per language, token parity, no blanks; uk fully Cyrillic (379/381 values, remainder `ISBN` and the `{login} (ID {id})` template) |
+| 2026-06-11 | `./build.ps1 test --tests "team.jit.technicalinterviewdemo.business.localization.seed.*"` | Native-script revision targeted seed tests | Passed | 14 tests green |
+| 2026-06-11 | `pwsh ./scripts/docs/audit-docs.ps1` | Task 3 documentation audit | Passed | Documentation health check passed |
+| 2026-06-11 | `./build.ps1 -FullBuild build` | First final-signoff attempt | Stopped | Intentionally cancelled when the user requested the native-script content revision; superseded by the rerun below |
+| 2026-06-11 | `./build.ps1 build` | Native-script revision full build | Passed | Full Gradle build (non-lightweight diff), exit code 0, including `contextLoads()` seeding all 2,667 native-script rows |
+| 2026-06-11 | `./build.ps1 -FullBuild build` | Final whole-plan signoff across committed tasks | Passed | Forced full Gradle build over the cumulative branch after the native-script revision commit |
+| 2026-06-11 | `./build.ps1 gatlingBenchmark` | Localization lookup benchmark | Skipped | Lookup behavior code unchanged; seeding is flag-gated demo content (rationale per plan Validation Plan) |
 
 ## User Validation
 - Start the app locally with the `local` profile (demo seeding enabled) on a fresh database.
