@@ -9,6 +9,7 @@ import team.jit.technicalinterviewdemo.business.localization.Localization;
 import team.jit.technicalinterviewdemo.business.localization.LocalizationRepository;
 import team.jit.technicalinterviewdemo.technical.bootstrap.BootstrapSettingsProperties;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
@@ -49,7 +50,7 @@ class LocalizationDataInitializerTests {
 
         verify(localizationRepository).findAllByMessageKeyInAndLanguageIn(anyCollection(), anyCollection());
         verify(localizationRepository).saveAll(argThat(messages -> {
-            assertThat(messages).hasSize(LocalizationSeedData.defaultMessages().size());
+            assertThat(messages).hasSize(allSeedMessages().size());
             return true;
         }));
         verifyNoMoreInteractions(localizationRepository);
@@ -71,7 +72,7 @@ class LocalizationDataInitializerTests {
             List<Localization> savedMessages =
                     StreamSupport.stream(messages.spliterator(), false).toList();
             assertThat(savedMessages)
-                    .hasSize(LocalizationSeedData.defaultMessages().size() - 1)
+                    .hasSize(allSeedMessages().size() - 1)
                     .noneMatch(message -> sameMessageIdentity(message, existingMessage));
             return true;
         }));
@@ -82,13 +83,19 @@ class LocalizationDataInitializerTests {
     void seedLocalizationsSkipsWriteWhenAllSeedMessagesExist() throws Exception {
         LocalizationDataInitializer initializer = new LocalizationDataInitializer();
         when(localizationRepository.findAllByMessageKeyInAndLanguageIn(anyCollection(), anyCollection()))
-                .thenReturn(LocalizationSeedData.defaultMessages());
+                .thenReturn(allSeedMessages());
 
         CommandLineRunner runner = initializer.seedLocalizations(localizationRepository, bootstrapSettings(true));
         runner.run();
 
         verify(localizationRepository).findAllByMessageKeyInAndLanguageIn(anyCollection(), anyCollection());
         verifyNoMoreInteractions(localizationRepository);
+    }
+
+    private static List<Localization> allSeedMessages() {
+        List<Localization> seedMessages = new ArrayList<>(LocalizationSeedData.defaultMessages());
+        seedMessages.addAll(UiChromeSeedData.chromeMessages());
+        return seedMessages;
     }
 
     private static boolean sameMessageIdentity(Localization left, Localization right) {

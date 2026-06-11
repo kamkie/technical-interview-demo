@@ -8,6 +8,7 @@ import team.jit.technicalinterviewdemo.business.localization.Localization;
 import team.jit.technicalinterviewdemo.business.localization.LocalizationRepository;
 import team.jit.technicalinterviewdemo.technical.bootstrap.BootstrapSettingsProperties;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -26,7 +27,8 @@ public class LocalizationDataInitializer {
                 return;
             }
 
-            List<Localization> seedMessages = LocalizationSeedData.defaultMessages();
+            List<Localization> seedMessages = new ArrayList<>(LocalizationSeedData.defaultMessages());
+            seedMessages.addAll(UiChromeSeedData.chromeMessages());
             Set<MessageIdentity> existingMessageIdentities =
                     existingMessageIdentities(localizationMessageRepository, seedMessages);
             List<Localization> missingMessages = seedMessages.stream()

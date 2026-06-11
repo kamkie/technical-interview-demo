@@ -12,8 +12,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Implementation |
+| Status | In Progress |
 
 ## Planning Readiness
 | Field | Value |
@@ -32,7 +32,7 @@
 | Spec | None | Behavior is covered by the published contract statement in `docs/FRONTEND_AI_CONTRACT.md` `## Localization And Errors` plus the executable seed and localization tests this plan updates | None |
 
 ## Summary
-- Seed the localization catalog with `ui.*` chrome rows for all 7 supported languages in demo-data environments by extending the existing bootstrap seeder with resource-backed content snapshotted from the frontend `UI_MESSAGES` registry (364 keys, 2,548 rows).
+- Seed the localization catalog with `ui.*` chrome rows for all 7 supported languages in demo-data environments by extending the existing bootstrap seeder with resource-backed content snapshotted from the frontend `UI_MESSAGES` registry (381 keys, 2,667 rows).
 - The first-party frontend (frontend milestone `M-I18N-001`) renders UI chrome from public catalog rows with `ui.`-prefixed keys and in-code English fallback; without seeded rows, demo environments render English-only chrome and the admin localization coverage view has no `ui.*` content to manage.
 - Success: on a fresh database with `app.bootstrap.seed.demo-data=true`, the public localization endpoints serve `ui.*` rows for `en`, `es`, `de`, `fr`, `pl`, `uk`, and `no`; existing operator rows are never overwritten; all required validation is green.
 
@@ -43,7 +43,7 @@
 ## Current State
 - `error.*` messages are seeded by `LocalizationSeedData` + `LocalizationDataInitializer` (a `CommandLineRunner` doing an idempotent missing-row bulk insert), gated by `app.bootstrap.seed.demo-data` — `false` by default and in `application-prod.properties`, `true` only in `application-local.properties`. Production catalog content is operator-managed via the localization admin API.
 - `docs/FRONTEND_AI_CONTRACT.md` `## Localization And Errors` (lines 111–112) already publishes the chrome-key contract: `ui.*` rows are operator-managed content; languages without seeded rows fall back to in-code English defaults without breaking the page.
-- The frontend registry `technical-interview-frontend/src/i18n/messages.ts` is the single owner of the key list: 364 `ui.*` keys with English default text, keys following the backend `^[a-z0-9._-]+$` pattern.
+- The frontend registry `technical-interview-frontend/src/i18n/messages.ts` is the single owner of the key list: 381 `ui.*` keys with English default text, keys following the backend `^[a-z0-9._-]+$` pattern.
 - `localization_messages` constraints: unique `(message_key, language)`, `message_key` varchar(150), `message_text` varchar(2000) (`V2__create_localization_messages_table.sql`).
 - `SupportedLanguages` anchors the language list to `LocalizationSeedData.supportedLanguages()` (7 languages).
 - Count-sensitive executable specs: `LocalizationApiIntegrationTests` derives expected totals from `documentedKeys() × supportedLanguages()`; `LocalizationServiceTests` asserts exact seed-sized message maps; `LocalizationDataInitializerTests` covers flag gating and missing-row-only writes.
@@ -61,7 +61,7 @@
 | --- | --- | --- | --- | --- |
 | D1 | Mechanism: extend the existing `app.bootstrap.seed.demo-data` bootstrap seeder with an idempotent missing-row insert; do not add Flyway seed data. The roadmap's "Flyway vs admin API" framing missed this existing third mechanism, which is the established repo pattern and never overwrites operator content. | Code (`LocalizationDataInitializer`, profile properties) | 2026-06-11 | User requests production out-of-the-box seeding |
 | D2 | Content ownership: repo-maintained demo seed defaults (same ownership as `error.*` seeds), operator-overridable through the localization admin API; production content remains operator-entered per the published contract. | `docs/FRONTEND_AI_CONTRACT.md` `## Localization And Errors` | 2026-06-11 | Contract statement changes |
-| D3 | Key list source: a snapshot of the frontend `UI_MESSAGES` registry (364 keys); seeded `en` text matches the frontend in-code defaults exactly. Later frontend drift is benign because missing rows fall back to in-code defaults by contract. | Frontend `src/i18n/messages.ts` + contract fallback rule | 2026-06-11 | Frontend registry changes materially before execution |
+| D3 | Key list source: a snapshot of the frontend `UI_MESSAGES` registry (381 keys); seeded `en` text matches the frontend in-code defaults exactly. Later frontend drift is benign because missing rows fall back to in-code defaults by contract. The revisit trigger fired during execution: the registry gained 17 `ui.admin-users.*` account-status keys mid-task, so `en.json` was regenerated from the live registry before translation authoring (count moved from an earlier 364 estimate to 381). | Frontend `src/i18n/messages.ts` + contract fallback rule | 2026-06-11 | Frontend registry changes materially before Task 2 completes |
 | D4 | Seed all 7 languages including `en`, consistent with `error.*` seeds; complete `en` rows keep the admin coverage view meaningful and let operators edit English chrome without a frontend release. | Code convention | 2026-06-11 | None |
 | D5 | Content format: per-language UTF-8 JSON classpath resources (flat key-to-text maps) under `src/main/resources/localization/seed/ui-chrome/<lang>.json`, loaded by a new `UiChromeSeedData` loader; ~2,548 Java literal builder rows would be unmaintainable and churn-heavy. | Agent fallback | 2026-06-11 | Static-analysis or packaging constraints make resources unworkable |
 | D6 | Translations follow the existing ASCII transliteration convention used by all current seed rows. | Code convention; accepted fallback for Q2 | 2026-06-11 | User requests native-script content |
@@ -83,7 +83,7 @@
 ## Progress Tracker
 | Task | Status | Owner | Commit | Validation | Notes |
 | --- | --- | --- | --- | --- | --- |
-| 1: Seed loader and English chrome resource | Not Started | Agent | Pending | Pending | |
+| 1: Seed loader and English chrome resource | Done | Agent | `feat(localization): seed ui chrome rows from classpath resources` | Targeted localization tests (56) passed; `./build.ps1 build` green | Execution findings: (a) existing localization integration tests reset state via `LocalizationTestData.reloadDefaultMessages`, so keeping `defaultMessages()` error-only means no integration-test count updates were needed; test changes narrowed to `LocalizationDataInitializerTests` plus new `UiChromeSeedDataTests`; (b) the frontend registry gained 17 account-status keys mid-task — `en.json` regenerated from the live registry (381 keys) |
 | 2: Non-English chrome seed content | Not Started | Agent | Pending | Pending | |
 | 3: Docs, changelog, and roadmap alignment | Not Started | Agent | Pending | Pending | |
 
@@ -91,7 +91,7 @@
 ### Task 1: Seed loader and English chrome resource
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Load `ui.*` chrome seed rows from classpath resources and seed them through the existing idempotent initializer, starting with `en` |
 | Owned Files Or Packages | `business/localization/seed` (main + test), `src/main/resources/localization/seed/ui-chrome/en.json`, count-sensitive localization tests |
 | Coordinator-Owned Shared Files | None |
@@ -110,7 +110,7 @@
 | Coordinator-Owned Shared Files | None |
 | Context Required | This plan, `.agents/references/execution.md`, the `en.json` snapshot, existing `LocalizationSeedData` translations as the tone and transliteration reference |
 | Behavior To Preserve | Key-set parity with `en.json` (enforced by `UiChromeSeedDataTests`); ASCII transliteration convention (D6); message-format tokens such as `{count}` preserved verbatim in every translation |
-| Deliverables | Six translation resources, 364 keys each (2,184 strings), AI-authored per Q3 |
+| Deliverables | Six translation resources, 381 keys each (2,286 strings), AI-authored per Q3 |
 | Validation Checkpoint | Targeted seed and localization tests via the wrapper, then `./build.ps1 build` |
 | Commit Checkpoint | `feat(localization): add non-english ui chrome seed translations` with plan-task footers |
 
@@ -161,7 +161,8 @@
 ## Validation Results
 | Date | Command | Scope | Result | Notes |
 | --- | --- | --- | --- | --- |
-| 2026-06-11 | Pending | — | Pending | Plan created; no execution yet |
+| 2026-06-11 | `./build.ps1 test --tests "team.jit.technicalinterviewdemo.business.localization.*"` | Task 1 targeted localization and seed tests | Passed | 56 tests green, including new `UiChromeSeedDataTests` and updated `LocalizationDataInitializerTests` |
+| 2026-06-11 | `./build.ps1 build` | Task 1 full build with checks | Passed | Exit code 0; Error Prone `InlineFormatString` warning resolved by inlining the format string |
 
 ## User Validation
 - Start the app locally with the `local` profile (demo seeding enabled) on a fresh database.

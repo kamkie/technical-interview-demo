@@ -99,7 +99,7 @@ Use this section to record accept/defer/reject/prioritize/sequence decisions and
 
 | Status | Workstream | Source | Decision | Next Artifact |
 | --- | --- | --- | --- | --- |
-| Planned | Seed `ui.*` frontend chrome localizations | Conceptualization candidate of 2026-06-11; `docs/FRONTEND_AI_CONTRACT.md` `## Localization And Errors` | Accepted 2026-06-11: extend the existing `app.bootstrap.seed.demo-data` bootstrap seeder with resource-backed `ui.*` content (not Flyway); production content remains operator-managed through the localization admin API per the published contract | `.agents/plans/PLAN_seed_ui_chrome_localizations.md` (created) |
+| In Progress | Seed `ui.*` frontend chrome localizations | Conceptualization candidate of 2026-06-11; `docs/FRONTEND_AI_CONTRACT.md` `## Localization And Errors` | Accepted 2026-06-11: extend the existing `app.bootstrap.seed.demo-data` bootstrap seeder with resource-backed `ui.*` content (not Flyway); production content remains operator-managed through the localization admin API per the published contract | `.agents/plans/PLAN_seed_ui_chrome_localizations.md` (created) |
 
 ## Active Release Track
 
@@ -114,7 +114,7 @@ Use this section for plan-backed work that is not selected as the immediate rele
 
 | Status | Workstream | Phase | Plan | Linked ADR/PRD/Spec | Notes |
 | --- | --- | --- | --- | --- | --- |
-| Planned | Seed `ui.*` frontend chrome localizations | Planning | `.agents/plans/PLAN_seed_ui_chrome_localizations.md` | `docs/FRONTEND_AI_CONTRACT.md` `## Localization And Errors` | Plan is decision-complete and `Ready`; not selected as the immediate release-track action; fits a backward-compatible `v2.1.0` feature release |
+| In Progress | Seed `ui.*` frontend chrome localizations | Implementation | `.agents/plans/PLAN_seed_ui_chrome_localizations.md` | `docs/FRONTEND_AI_CONTRACT.md` `## Localization And Errors` | Execution started 2026-06-11; fits a backward-compatible `v2.1.0` feature release |
 
 ## Deferred Work
 
