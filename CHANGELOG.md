@@ -7,6 +7,13 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Added
+
+- Added admin account blocking: `PUT /api/admin/users/{id}/status` replaces a persisted user's account status (`ACTIVE` or `BLOCKED`) with an operator reason, self-targeting rejected, and idempotent same-status handling.
+- Added additive `accountStatus`, `blockedAt`, `blockedBy`, and `blockedReason` fields to the admin users API responses.
+- Added sign-in rejection and per-request active-session rejection for blocked accounts with `LOGIN_FAILURE` and `SESSION_REJECTION` audit entries carrying `failureReason: "account_blocked"`.
+- Added one seeded blocked demo user (`demo-user-002`) to freshly seeded demo data so the first-party frontend can develop against a visible `BLOCKED` row.
+
 ## [v2.0.3] - 2026-05-11
 
 ### Added

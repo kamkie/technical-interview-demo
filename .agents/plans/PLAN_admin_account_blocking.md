@@ -12,8 +12,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Implementation |
-| Status | In Progress |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Planning Readiness
 | Field | Value |
@@ -88,7 +88,7 @@
 | 2: Status endpoint and admin API surface | Done | Agent | `feat(users): add admin account status endpoint and api surface` | Passed | 13 tests green covering AC1–AC5 and AC8 |
 | 3: Sign-in and active-session rejection | Done | Agent | `feat(security): reject sign-in and active sessions for blocked accounts` | Passed | 10 tests green; also extended `FakeOAuthLoginFlowIntegrationTests` because only the real servlet session exercises the sync-cache path |
 | 4: Contract artifacts and docs | Done | Agent | `docs(users): publish account-status contract artifacts and examples` | Passed | REST Docs + OpenAPI compatibility green; baseline diff reviewed additive-only; docs audit passed; also refreshed `docs/FRONTEND_AI_CONTRACT.md` counts |
-| 5: Final verification and roadmap sync | Not Started | Agent | Pending | Pending | |
+| 5: Final verification and roadmap sync | Done | Agent | `docs(plan): record admin account-blocking implementation state` | Passed | Full build + benchmark green; one formatting fix commit (`style(users): apply palantir formatting to account-status sources`) during final verification |
 
 ## Execution Tasks
 
@@ -147,7 +147,7 @@
 ### Task 5: Final verification and roadmap sync
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Prove the cumulative change and leave durable status in owning artifacts |
 | Owned Files Or Packages | This plan (tracker, validation ledger), `ROADMAP.md` |
 | Coordinator-Owned Shared Files | None |
@@ -160,10 +160,10 @@
 ## Blockers And Replan Triggers
 | Trigger / Blocker | Response | Owner | Status |
 | --- | --- | --- | --- |
-| OpenAPI baseline diff shows any non-additive change | Stop; do not refresh the baseline; rework the contract shape or return to the spec | Agent | Open |
-| `gatlingBenchmark` regresses session/OAuth scenarios beyond accepted variance | Pause; D6 is invalidated; revisit per-request enforcement mechanics with the user because the spec pins next-request latency | User | Open |
-| Session deletion mechanics do not behave as `SessionService.logoutCurrentSession` suggests for filter-initiated rejection | Adjust implementation within the spec's observable behavior; replan only if 401-plus-deleted-session cannot be met | Agent | Open |
-| Self-target rejection conflicts with an existing admin workflow discovered in tests | Stop and ask; AC4 is a spec invariant | User | Open |
+| OpenAPI baseline diff shows any non-additive change | Stop; do not refresh the baseline; rework the contract shape or return to the spec | Agent | Closed: Task 4 diff review confirmed additive-only changes |
+| `gatlingBenchmark` regresses session/OAuth scenarios beyond accepted variance | Pause; D6 is invalidated; revisit per-request enforcement mechanics with the user because the spec pins next-request latency | User | Closed: all benchmark assertions green with wide margins |
+| Session deletion mechanics do not behave as `SessionService.logoutCurrentSession` suggests for filter-initiated rejection | Adjust implementation within the spec's observable behavior; replan only if 401-plus-deleted-session cannot be met | Agent | Closed: cookie-derived `deleteById` plus session invalidation verified in MockMvc and real-session tests |
+| Self-target rejection conflicts with an existing admin workflow discovered in tests | Stop and ask; AC4 is a spec invariant | User | Closed: no conflicting workflow surfaced in tests |
 
 ## Edge Cases And Failure Modes
 - Block committed while the target has an in-flight request: enforcement applies from the next request; AC7 wording allows this.
@@ -199,6 +199,7 @@
 | 2026-06-11 | `./build.ps1 test --tests "team.jit.technicalinterviewdemo.technical.security.SecurityIntegrationTests" --tests "team.jit.technicalinterviewdemo.technical.security.FakeOAuthLoginFlowIntegrationTests"` | Task 3 | Passed (10 tests) | AC6 handler-level case, AC7 MockMvc case, and end-to-end blocked flow with real session sync cache green |
 | 2026-06-11 | `./build.ps1 refreshOpenApiBaseline` then `./build.ps1 test --tests "team.jit.technicalinterviewdemo.business.user.AdminUserManagementApiDocumentationTests" --tests "team.jit.technicalinterviewdemo.technical.docs.OpenApiCompatibilityIntegrationTests"` | Task 4 | Passed (5 tests) | Baseline diff reviewed: additive-only (new path, new request schema, four response fields); no `AuditAction` enum change |
 | 2026-06-11 | `pwsh ./scripts/docs/audit-docs.ps1` | Task 4 | Passed | Required updating `docs/FRONTEND_AI_CONTRACT.md` OpenAPI summary counts to 15/23/41 |
+| 2026-06-11 | `./build.ps1 -FullBuild build gatlingBenchmark --no-daemon` | Task 5 (cumulative branch) | First run failed on `spotlessJavaCheck` (hand-written line wrapping in three new files); fixed via `./build.ps1 format`, committed, then re-run passed in 5m31s | Benchmark assertions all green with 0 KO: list-books p95 21ms (<800), search-books 15ms (<900), lookup-localization-message 10ms (<500), oauth2-github-redirect 12ms (<700); no session/OAuth regression from the per-request blocked lookup (D6 holds) |
 
 ## User Validation
 1. Start the app with demo data and the fake OAuth provider, sign in as the bootstrap admin.
