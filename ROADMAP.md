@@ -26,7 +26,7 @@ Section ordering follows the lifecycle vocabulary in `.agents/references/applica
 | Breaking Change Policy | Disallowed on the stable `2.x` line unless a later major-version plan explicitly changes it |
 | Next Target Version | Not selected; default to `v2.0.4` for maintenance fixes or `v2.1.0` for backward-compatible feature work |
 | Latest Stable Release | `v2.0.3` released on 2026-05-11 from the human documentation split and follow-up AI-guidance cleanup archived under `.agents/archive/PLAN_human_documentation_split.md` |
-| Immediate Next Action | Admin account blocking is implemented on `main` and recorded under `CHANGELOG.md` `## [Unreleased]` (executed plan archived at `.agents/archive/PLAN_admin_account_blocking.md`); selecting `v2.1.0` release work is the next call when the user requests it. |
+| Immediate Next Action | Admin account blocking is implemented on `main` and recorded under `CHANGELOG.md` `## [Unreleased]` (executed plan archived at `.agents/archive/PLAN_admin_account_blocking.md`); `.agents/plans/PLAN_seed_ui_chrome_localizations.md` is triage-accepted and `Ready` when selected; selecting `v2.1.0` release work is the next call when the user requests it. |
 
 ## Roadmap Rules
 
@@ -68,7 +68,8 @@ Use this section for rough ideas, TODOs, maintenance signals, links, and early f
 
 | Status | Idea | Linked Artifacts | Next Decision |
 | --- | --- | --- | --- |
-| Candidate | Seed `ui.*` frontend chrome translations in the localization catalog: the first-party frontend (frontend repo milestone `M-I18N-001`, delivered 2026-06-11) renders its UI chrome from public catalog rows with `ui.`-prefixed message keys and falls back to in-code English defaults, so production stays English until rows exist for the supported languages | `docs/FRONTEND_AI_CONTRACT.md` `## Localization And Errors` | Choose the seeding mechanism (Flyway seed data vs operator-entered content through the localization admin API) and translation content ownership |
+
+No active conceptualization items.
 
 ## Analysis
 
@@ -98,8 +99,7 @@ Use this section to record accept/defer/reject/prioritize/sequence decisions and
 
 | Status | Workstream | Source | Decision | Next Artifact |
 | --- | --- | --- | --- | --- |
-
-No active triage items.
+| Planned | Seed `ui.*` frontend chrome localizations | Conceptualization candidate of 2026-06-11; `docs/FRONTEND_AI_CONTRACT.md` `## Localization And Errors` | Accepted 2026-06-11: extend the existing `app.bootstrap.seed.demo-data` bootstrap seeder with resource-backed `ui.*` content (not Flyway); production content remains operator-managed through the localization admin API per the published contract | `.agents/plans/PLAN_seed_ui_chrome_localizations.md` (created) |
 
 ## Active Release Track
 
@@ -114,8 +114,7 @@ Use this section for plan-backed work that is not selected as the immediate rele
 
 | Status | Workstream | Phase | Plan | Linked ADR/PRD/Spec | Notes |
 | --- | --- | --- | --- | --- | --- |
-
-No planned work.
+| Planned | Seed `ui.*` frontend chrome localizations | Planning | `.agents/plans/PLAN_seed_ui_chrome_localizations.md` | `docs/FRONTEND_AI_CONTRACT.md` `## Localization And Errors` | Plan is decision-complete and `Ready`; not selected as the immediate release-track action; fits a backward-compatible `v2.1.0` feature release |
 
 ## Deferred Work
 
