@@ -7,6 +7,9 @@
 @originalRoles = []
 @grantedRoles = []
 @roleRoundTripEnabled = false
+@adminAccountId = 0
+@blockTargetUserId = 0
+@blockRoundTripEnabled = false
 @runTag = no-tag
 
 ### Suite 10 — Admin User Management
@@ -183,6 +186,183 @@ Content-Type: application/json
             client.assert([200, 204].includes(response.status), "Response status is not 200 or 204");
         });
     }
+%}
+
+### 10-4 Resolve Admin Account Id
+# @name resolve_admin_account
+GET {{baseUrl}}/api/account
+Cookie: technical-interview-demo-session={{adminSessionCookie}}
+Accept: application/json
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var result = response.status === 200 ? "PASS" : "FAIL";
+    if (response.status === 200 && response.body.id) {
+        client.global.set("adminAccountId", String(response.body.id));
+    }
+    report += "| " + idx + " | resolveAdminAccountId | GET | /api/account | " + response.status + " | " + result + " | admin account id for self-target check |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 200", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+
+### 10-5 Resolve Block Target From User Session
+# @name resolve_block_target
+GET {{baseUrl}}/api/account
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/json
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var adminAccountId = client.global.get("adminAccountId") || "0";
+    var enabled = false;
+    if (response.status === 200 && response.body.id && String(response.body.id) !== String(adminAccountId)) {
+        client.global.set("blockTargetUserId", String(response.body.id));
+        enabled = true;
+    }
+    client.global.set("blockRoundTripEnabled", enabled ? "true" : "false");
+    var note = enabled ? "block round-trip target resolved" : "skipped: sessionCookie user unavailable or same as admin";
+    var result = response.status === 200 ? "PASS" : "SKIP";
+    report += "| " + idx + " | resolveBlockTargetFromUserSession | GET | /api/account | " + response.status + " | " + result + " | " + note + " |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+%}
+
+### 10-6 Block User Account
+# @name block_user_account
+< {%
+    request.variables.set("requestCsrfToken", client.global.get("csrfToken"));
+    request.variables.set("requestBlockTargetUserId", client.global.get("blockTargetUserId") || client.variables.file.get("blockTargetUserId"));
+    request.variables.set("requestRunTag", client.global.get("runTag") || client.variables.file.get("runTag"));
+%}
+PUT {{baseUrl}}/api/admin/users/{{requestBlockTargetUserId}}/status
+Cookie: technical-interview-demo-session={{adminSessionCookie}}; XSRF-TOKEN={{requestCsrfToken}}
+X-XSRF-TOKEN: {{requestCsrfToken}}
+Content-Type: application/json
+
+{
+  "status": "BLOCKED",
+  "reason": "Manual regression block round-trip for {{requestRunTag}}"
+}
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var blockRoundTripEnabled = client.global.get("blockRoundTripEnabled") === "true";
+    if (!blockRoundTripEnabled) {
+        report += "| " + idx + " | blockAndUnblockUserAccount (Block) | SKIP | N/A | N/A | N/A | no block target available |\n";
+    } else {
+        var result = response.status === 200 && response.body.accountStatus === "BLOCKED" ? "PASS" : "FAIL";
+        report += "| " + idx + " | blockAndUnblockUserAccount (Block) | PUT | /api/admin/users/.../status | " + response.status + " | " + result + " | accountStatus=" + (response.body ? response.body.accountStatus : "n/a") + " |\n";
+    }
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    if (blockRoundTripEnabled) {
+        client.test("Status is 200 and account is BLOCKED", function() {
+            client.assert(response.status === 200, "Response status is not 200");
+            client.assert(response.body.accountStatus === "BLOCKED", "accountStatus is not BLOCKED");
+        });
+    }
+%}
+
+### 10-7 Blocked User Session Is Rejected
+# The blocked user's session is invalidated and deleted on this request; a fresh login is required after unblock.
+# @name blocked_session_rejected
+GET {{baseUrl}}/api/account
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/problem+json
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var blockRoundTripEnabled = client.global.get("blockRoundTripEnabled") === "true";
+    if (!blockRoundTripEnabled) {
+        report += "| " + idx + " | blockedUserSessionIsRejected | SKIP | N/A | N/A | N/A | no block target available |\n";
+    } else {
+        var result = response.status === 401 ? "PASS" : "FAIL";
+        report += "| " + idx + " | blockedUserSessionIsRejected | GET | /api/account | " + response.status + " | " + result + " | expects 401 problem+json for blocked session |\n";
+    }
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    if (blockRoundTripEnabled) {
+        client.test("Status is 401", function() {
+            client.assert(response.status === 401, "Response status is not 401");
+        });
+    }
+%}
+
+### 10-8 Unblock User Account
+# @name unblock_user_account
+< {%
+    request.variables.set("requestCsrfToken", client.global.get("csrfToken"));
+    request.variables.set("requestBlockTargetUserId", client.global.get("blockTargetUserId") || client.variables.file.get("blockTargetUserId"));
+    request.variables.set("requestRunTag", client.global.get("runTag") || client.variables.file.get("runTag"));
+%}
+PUT {{baseUrl}}/api/admin/users/{{requestBlockTargetUserId}}/status
+Cookie: technical-interview-demo-session={{adminSessionCookie}}; XSRF-TOKEN={{requestCsrfToken}}
+X-XSRF-TOKEN: {{requestCsrfToken}}
+Content-Type: application/json
+
+{
+  "status": "ACTIVE",
+  "reason": "Manual regression unblock restore for {{requestRunTag}}"
+}
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var blockRoundTripEnabled = client.global.get("blockRoundTripEnabled") === "true";
+    if (!blockRoundTripEnabled) {
+        report += "| " + idx + " | blockAndUnblockUserAccount (Unblock) | SKIP | N/A | N/A | N/A | no block target available |\n";
+    } else {
+        var result = response.status === 200 && response.body.accountStatus === "ACTIVE" ? "PASS" : "FAIL";
+        report += "| " + idx + " | blockAndUnblockUserAccount (Unblock) | PUT | /api/admin/users/.../status | " + response.status + " | " + result + " | accountStatus=" + (response.body ? response.body.accountStatus : "n/a") + "; blocked user needs a fresh login |\n";
+    }
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    if (blockRoundTripEnabled) {
+        client.test("Status is 200 and account is ACTIVE", function() {
+            client.assert(response.status === 200, "Response status is not 200");
+            client.assert(response.body.accountStatus === "ACTIVE", "accountStatus is not ACTIVE");
+        });
+    }
+%}
+
+### 10-9 Self-Target Status Change Is Rejected
+# @name self_target_status_rejected
+< {%
+    request.variables.set("requestCsrfToken", client.global.get("csrfToken"));
+    request.variables.set("requestAdminAccountId", client.global.get("adminAccountId") || client.variables.file.get("adminAccountId"));
+%}
+PUT {{baseUrl}}/api/admin/users/{{requestAdminAccountId}}/status
+Cookie: technical-interview-demo-session={{adminSessionCookie}}; XSRF-TOKEN={{requestCsrfToken}}
+X-XSRF-TOKEN: {{requestCsrfToken}}
+Content-Type: application/json
+
+{
+  "status": "BLOCKED",
+  "reason": "Self-target rejection check"
+}
+
+> {%
+    var idx = client.global.get("test_idx");
+    var report = client.global.get("report");
+    var result = response.status === 400 ? "PASS" : "FAIL";
+    report += "| " + idx + " | selfTargetStatusChangeIsRejected | PUT | /api/admin/users/.../status | " + response.status + " | " + result + " | expects 400 for self-target block |\n";
+    client.global.set("report", report);
+    client.global.set("test_idx", idx + 1);
+
+    client.test("Status is 400", function() {
+        client.assert(response.status === 400, "Response status is not 400");
+    });
 %}
 
 ### Finalize Report

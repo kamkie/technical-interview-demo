@@ -95,7 +95,71 @@ class AdminUserManagementApiDocumentationTests extends AbstractDocumentationInte
                                 fieldWithPath("[].lastLoginAt")
                                         .description("Latest authenticated request as a UTC instant."),
                                 fieldWithPath("[].createdAt").description("Creation timestamp as a UTC instant."),
-                                fieldWithPath("[].updatedAt").description("Last update timestamp as a UTC instant."))));
+                                fieldWithPath("[].updatedAt").description("Last update timestamp as a UTC instant."),
+                                fieldWithPath("[].accountStatus")
+                                        .description("Account status derived from the persisted block state:"
+                                                + " `ACTIVE` or `BLOCKED`."),
+                                fieldWithPath("[].blockedAt")
+                                        .optional()
+                                        .description("UTC instant of the block, or absent when the account is"
+                                                + " active."),
+                                fieldWithPath("[].blockedBy")
+                                        .optional()
+                                        .description("External login of the ADMIN that performed the block, or"
+                                                + " absent when the account is active or the block has no persisted"
+                                                + " operator."),
+                                fieldWithPath("[].blockedReason")
+                                        .optional()
+                                        .description("Operator-supplied reason recorded at block time, or absent"
+                                                + " when the account is active."))));
+    }
+
+    @Test
+    void documentReplaceUserAccountStatusEndpoint() throws Exception {
+        mockMvc.perform(put("/api/admin/users/{id}/status", readerUser.getId())
+                        .with(adminSession.unsafeWrite())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {
+                              "status": "BLOCKED",
+                              "reason": "Abusive API usage pending review."
+                            }
+                            """))
+                .andExpect(status().isOk())
+                .andExpect(header().exists("X-Request-Id"))
+                .andExpect(header().exists("traceparent"))
+                .andExpect(jsonPath("$.accountStatus").value("BLOCKED"))
+                .andDo(documentEndpoint(
+                        "admin-users/replace-user-account-status",
+                        pathParameters(parameterWithName("id").description("Persisted user identifier.")),
+                        requestBody(),
+                        requestFields(
+                                fieldWithPath("status")
+                                        .description("Requested account status: `ACTIVE` or `BLOCKED`."),
+                                fieldWithPath("reason")
+                                        .description("Short operator-supplied explanation. Persisted as the block"
+                                                + " reason when blocking; recorded only in the audit entry when"
+                                                + " unblocking.")),
+                        responseHeaders(commonResponseHeaders()),
+                        relaxedResponseFields(
+                                fieldWithPath("id").description("Persisted user identifier."),
+                                fieldWithPath("provider").description("OAuth provider name."),
+                                fieldWithPath("login").description("External login from the OAuth provider."),
+                                fieldWithPath("roles[]").description("Current roles, unchanged by status changes."),
+                                fieldWithPath("accountStatus")
+                                        .description("Account status after the replacement: `ACTIVE` or `BLOCKED`."),
+                                fieldWithPath("blockedAt")
+                                        .optional()
+                                        .description("UTC instant of the block, or absent when the account is"
+                                                + " active."),
+                                fieldWithPath("blockedBy")
+                                        .optional()
+                                        .description("External login of the ADMIN that performed the block, or"
+                                                + " absent when the account is active."),
+                                fieldWithPath("blockedReason")
+                                        .optional()
+                                        .description("Operator-supplied reason recorded at block time, or absent"
+                                                + " when the account is active."))));
     }
 
     @Test

@@ -31,6 +31,19 @@ include::{snippets}/admin-users/replace-managed-user-roles/http-response.adoc[]
 include::{snippets}/admin-users/replace-managed-user-roles/response-headers.adoc[]
 include::{snippets}/admin-users/replace-managed-user-roles/response-fields.adoc[]
 
+== `PUT /api/admin/users/{id}/status`
+
+Replaces the account status (`ACTIVE` or `BLOCKED`) for one persisted user. A blocked account cannot establish a new authenticated session and loses any existing session on its next authenticated request. Self-targeting is rejected with `400`, requesting the current status is idempotent and preserves existing block provenance, and role grants are never changed by status changes.
+
+include::{snippets}/admin-users/replace-user-account-status/curl-request.adoc[]
+include::{snippets}/admin-users/replace-user-account-status/http-request.adoc[]
+include::{snippets}/admin-users/replace-user-account-status/path-parameters.adoc[]
+include::{snippets}/admin-users/replace-user-account-status/request-body.adoc[]
+include::{snippets}/admin-users/replace-user-account-status/request-fields.adoc[]
+include::{snippets}/admin-users/replace-user-account-status/http-response.adoc[]
+include::{snippets}/admin-users/replace-user-account-status/response-headers.adoc[]
+include::{snippets}/admin-users/replace-user-account-status/response-fields.adoc[]
+
 == Error Response Example
 
 === `GET /api/admin/users` forbidden

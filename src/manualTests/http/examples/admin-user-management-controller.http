@@ -55,3 +55,35 @@ Accept: application/json
     ],
     "reason": "Needs audit review access."
 }
+
+### AdminUserManagementController - block user account (ADMIN + authenticated session)
+# Blocking rejects the target's sign-ins and active sessions; the target must not be your own account (400).
+PUT {{baseUrl}}/api/admin/users/{{managedUserId}}/status
+Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+    "status": "BLOCKED",
+    "reason": "Abusive API usage pending review."
+}
+
+### AdminUserManagementController - authenticated request as the blocked user (401 ProblemDetail)
+# Replace the session cookie with a session belonging to the blocked user; the session is rejected and deleted.
+GET {{baseUrl}}/api/account
+Cookie: technical-interview-demo-session={{sessionCookie}}
+Accept: application/problem+json
+
+### AdminUserManagementController - unblock user account (ADMIN + authenticated session)
+# Restores access without touching role grants; the unblock reason is recorded only in the audit log.
+PUT {{baseUrl}}/api/admin/users/{{managedUserId}}/status
+Cookie: technical-interview-demo-session={{sessionCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+    "status": "ACTIVE",
+    "reason": "Review finished; restoring access."
+}

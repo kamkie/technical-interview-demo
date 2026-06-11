@@ -87,7 +87,7 @@
 | 1: Schema, entity, and seed support | Done | Agent | `feat(users): add account blocking schema, entity state, and blocked demo seed` | Passed | 13 tests green including new seed and persistence cases |
 | 2: Status endpoint and admin API surface | Done | Agent | `feat(users): add admin account status endpoint and api surface` | Passed | 13 tests green covering AC1–AC5 and AC8 |
 | 3: Sign-in and active-session rejection | Done | Agent | `feat(security): reject sign-in and active sessions for blocked accounts` | Passed | 10 tests green; also extended `FakeOAuthLoginFlowIntegrationTests` because only the real servlet session exercises the sync-cache path |
-| 4: Contract artifacts and docs | Not Started | Agent | Pending | Pending | |
+| 4: Contract artifacts and docs | Done | Agent | `docs(users): publish account-status contract artifacts and examples` | Passed | REST Docs + OpenAPI compatibility green; baseline diff reviewed additive-only; docs audit passed; also refreshed `docs/FRONTEND_AI_CONTRACT.md` counts |
 | 5: Final verification and roadmap sync | Not Started | Agent | Pending | Pending | |
 
 ## Execution Tasks
@@ -134,7 +134,7 @@
 ### Task 4: Contract artifacts and docs
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Move the published contract together with the behavior (spec Contract Impact; AC10) |
 | Owned Files Or Packages | `AdminUserManagementApiDocumentationTests`, `src/test/resources/openapi/approved-openapi.json`, `admin-user-management-controller.http`, `suite-10-admin-user-management.http`, `docs/OPERATIONS.md` |
 | Coordinator-Owned Shared Files | None |
@@ -197,6 +197,8 @@
 | 2026-06-11 | `./build.ps1 test --tests "team.jit.technicalinterviewdemo.business.user.UserDataInitializerTests" --tests "team.jit.technicalinterviewdemo.business.user.UserManagementIntegrationTests"` | Task 1 | Passed (13 tests) | New seed case and block/unblock persistence case green |
 | 2026-06-11 | `./build.ps1 test --tests "team.jit.technicalinterviewdemo.business.user.AdminUserManagementApiIntegrationTests"` | Task 2 | Passed (13 tests) | New endpoint cases for AC1–AC5 and AC8 green |
 | 2026-06-11 | `./build.ps1 test --tests "team.jit.technicalinterviewdemo.technical.security.SecurityIntegrationTests" --tests "team.jit.technicalinterviewdemo.technical.security.FakeOAuthLoginFlowIntegrationTests"` | Task 3 | Passed (10 tests) | AC6 handler-level case, AC7 MockMvc case, and end-to-end blocked flow with real session sync cache green |
+| 2026-06-11 | `./build.ps1 refreshOpenApiBaseline` then `./build.ps1 test --tests "team.jit.technicalinterviewdemo.business.user.AdminUserManagementApiDocumentationTests" --tests "team.jit.technicalinterviewdemo.technical.docs.OpenApiCompatibilityIntegrationTests"` | Task 4 | Passed (5 tests) | Baseline diff reviewed: additive-only (new path, new request schema, four response fields); no `AuditAction` enum change |
+| 2026-06-11 | `pwsh ./scripts/docs/audit-docs.ps1` | Task 4 | Passed | Required updating `docs/FRONTEND_AI_CONTRACT.md` OpenAPI summary counts to 15/23/41 |
 
 ## User Validation
 1. Start the app with demo data and the fake OAuth provider, sign in as the bootstrap admin.

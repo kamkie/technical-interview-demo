@@ -380,6 +380,93 @@
         } ]
       }
     },
+    "/api/admin/users/{id}/status" : {
+      "put" : {
+        "tags" : [ "Admin Users" ],
+        "summary" : "Replace user account status",
+        "description" : "Requires an authenticated session with the ADMIN role, a valid same-site CSRF header mirrored from the readable XSRF-TOKEN cookie, and replaces the account status (ACTIVE or BLOCKED) for one persisted user. Self-targeting is rejected.",
+        "operationId" : "replaceStatus",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "X-XSRF-TOKEN",
+          "in" : "header",
+          "description" : "Same-site CSRF header whose value must match the readable XSRF-TOKEN cookie.",
+          "required" : true
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AdminUserAccountStatusUpdateRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AdminUserAccountResponse"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid request payload, or the authenticated ADMIN targets their own account.",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiProblemResponse"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Missing or invalid authenticated session.",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiProblemResponse"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Authenticated user does not have the ADMIN role.",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiProblemResponse"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Persisted user was not found.",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiProblemResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "sessionCookie" : [ ]
+        } ]
+      }
+    },
     "/api/admin/users/{id}/roles" : {
       "put" : {
         "tags" : [ "Admin Users" ],
@@ -1349,31 +1436,25 @@
         },
         "description" : "Book resource returned by the API."
       },
-      "AdminUserRoleUpdateRequest" : {
-        "required" : [ "reason", "roles" ],
+      "AdminUserAccountStatusUpdateRequest" : {
+        "required" : [ "reason", "status" ],
         "type" : "object",
         "properties" : {
-          "roles" : {
-            "minItems" : 1,
-            "uniqueItems" : true,
-            "type" : "array",
-            "description" : "Replacement role set. `USER` must always be present.",
-            "items" : {
-              "type" : "string",
-              "description" : "Role name to keep assigned after replacement.",
-              "example" : "ADMIN",
-              "enum" : [ "USER", "ADMIN" ]
-            }
+          "status" : {
+            "type" : "string",
+            "description" : "Requested account status.",
+            "example" : "BLOCKED",
+            "enum" : [ "ACTIVE", "BLOCKED" ]
           },
           "reason" : {
             "maxLength" : 255,
             "minLength" : 0,
             "type" : "string",
-            "description" : "Short operator-supplied explanation for the role change.",
-            "example" : "Needs audit review access."
+            "description" : "Short operator-supplied explanation for the status change. Persisted as the block reason when blocking; recorded only in the audit entry when unblocking.",
+            "example" : "Abusive API usage pending review."
           }
         },
-        "description" : "Payload for replacing the managed role set of one persisted user."
+        "description" : "Payload for replacing the account status of one persisted user."
       },
       "AdminUserAccountResponse" : {
         "type" : "object",
@@ -1437,6 +1518,25 @@
             "type" : "string",
             "description" : "Last update timestamp as a UTC instant.",
             "format" : "date-time"
+          },
+          "accountStatus" : {
+            "type" : "string",
+            "description" : "Account status derived from the persisted block state.",
+            "example" : "ACTIVE",
+            "enum" : [ "ACTIVE", "BLOCKED" ]
+          },
+          "blockedAt" : {
+            "type" : "string",
+            "description" : "UTC instant of the block; null when the account is active.",
+            "format" : "date-time"
+          },
+          "blockedBy" : {
+            "type" : "string",
+            "description" : "External login of the ADMIN that performed the block; null when the account is active or the block has no persisted operator."
+          },
+          "blockedReason" : {
+            "type" : "string",
+            "description" : "Operator-supplied reason recorded at block time; null when the account is active."
           }
         },
         "description" : "Persisted application user profile plus role-grant provenance for ADMIN review."
@@ -1477,6 +1577,32 @@
           }
         },
         "description" : "Persisted provenance for one granted application role."
+      },
+      "AdminUserRoleUpdateRequest" : {
+        "required" : [ "reason", "roles" ],
+        "type" : "object",
+        "properties" : {
+          "roles" : {
+            "minItems" : 1,
+            "uniqueItems" : true,
+            "type" : "array",
+            "description" : "Replacement role set. `USER` must always be present.",
+            "items" : {
+              "type" : "string",
+              "description" : "Role name to keep assigned after replacement.",
+              "example" : "ADMIN",
+              "enum" : [ "USER", "ADMIN" ]
+            }
+          },
+          "reason" : {
+            "maxLength" : 255,
+            "minLength" : 0,
+            "type" : "string",
+            "description" : "Short operator-supplied explanation for the role change.",
+            "example" : "Needs audit review access."
+          }
+        },
+        "description" : "Payload for replacing the managed role set of one persisted user."
       },
       "UserAccountLanguageRequest" : {
         "type" : "object",
@@ -1733,10 +1859,10 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "first" : {
+          "last" : {
             "type" : "boolean"
           },
-          "last" : {
+          "first" : {
             "type" : "boolean"
           },
           "numberOfElements" : {
@@ -1761,14 +1887,11 @@
             "type" : "integer",
             "format" : "int64"
           },
-          "unpaged" : {
-            "type" : "boolean"
+          "sort" : {
+            "$ref" : "#/components/schemas/SortObject"
           },
           "paged" : {
             "type" : "boolean"
-          },
-          "sort" : {
-            "$ref" : "#/components/schemas/SortObject"
           },
           "pageSize" : {
             "type" : "integer",
@@ -1777,6 +1900,9 @@
           "pageNumber" : {
             "type" : "integer",
             "format" : "int32"
+          },
+          "unpaged" : {
+            "type" : "boolean"
           }
         }
       },
@@ -1786,10 +1912,10 @@
           "empty" : {
             "type" : "boolean"
           },
-          "unsorted" : {
+          "sorted" : {
             "type" : "boolean"
           },
-          "sorted" : {
+          "unsorted" : {
             "type" : "boolean"
           }
         }
@@ -1819,10 +1945,10 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "first" : {
+          "last" : {
             "type" : "boolean"
           },
-          "last" : {
+          "first" : {
             "type" : "boolean"
           },
           "numberOfElements" : {

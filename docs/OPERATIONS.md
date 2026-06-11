@@ -538,6 +538,7 @@ Role behavior:
 - every authenticated provider login is persisted as an application user with the `USER` role
 - a login matching `APP_BOOTSTRAP_INITIAL_ADMIN_IDENTITIES` receives the first persisted `ADMIN` grant only while no admin grant exists yet
 - later role changes go through `GET /api/admin/users` and `PUT /api/admin/users/{id}/roles`
+- account blocking goes through `PUT /api/admin/users/{id}/status` with `ACTIVE` or `BLOCKED` plus an operator reason; a blocked account cannot sign in and loses its active sessions on the next authenticated request, unblocking restores access with prior roles intact, and admins cannot block their own account
 - category creation and localization-message management require `ADMIN`
 - the current persisted user profile is available at `GET /api/account`
 - preferred-language updates are available at `PUT /api/account/language`
