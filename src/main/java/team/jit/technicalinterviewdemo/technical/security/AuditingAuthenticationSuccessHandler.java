@@ -3,6 +3,7 @@ package team.jit.technicalinterviewdemo.technical.security;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,6 +48,12 @@ public class AuditingAuthenticationSuccessHandler implements AuthenticationSucce
         }
 
         try {
+            UserAccount existingUser =
+                    currentUserAccountService.findCurrentUser().orElse(null);
+            if (existingUser != null && existingUser.isBlocked()) {
+                rejectBlockedLogin(request, response, existingUser);
+                return;
+            }
             UserAccount userAccount = currentUserAccountService.getCurrentUserOrSynchronize();
             auditLogService.recordWithActor(
                     AuditTargetType.AUTHENTICATION,
@@ -65,5 +72,28 @@ public class AuditingAuthenticationSuccessHandler implements AuthenticationSucce
                 SecurityContextHolder.setContext(existingContext);
             }
         }
+    }
+
+    private void rejectBlockedLogin(HttpServletRequest request, HttpServletResponse response, UserAccount userAccount)
+            throws IOException {
+        auditLogService.recordWithActor(
+                AuditTargetType.AUTHENTICATION,
+                userAccount.getId(),
+                AuditAction.LOGIN_FAILURE,
+                null,
+                null,
+                "Rejected OAuth login for blocked account '%s'.".formatted(userAccount.getExternalLogin()),
+                Map.of(
+                        "failureReason",
+                        "account_blocked",
+                        "provider",
+                        userAccount.getProvider(),
+                        "login",
+                        userAccount.getExternalLogin()));
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        redirectStrategy.sendRedirect(request, response, AuditingAuthenticationFailureHandler.LOGIN_FAILED_TARGET_URL);
     }
 }

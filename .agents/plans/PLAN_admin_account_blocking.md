@@ -86,7 +86,7 @@
 | --- | --- | --- | --- | --- | --- |
 | 1: Schema, entity, and seed support | Done | Agent | `feat(users): add account blocking schema, entity state, and blocked demo seed` | Passed | 13 tests green including new seed and persistence cases |
 | 2: Status endpoint and admin API surface | Done | Agent | `feat(users): add admin account status endpoint and api surface` | Passed | 13 tests green covering AC1–AC5 and AC8 |
-| 3: Sign-in and active-session rejection | Not Started | Agent | Pending | Pending | |
+| 3: Sign-in and active-session rejection | Done | Agent | `feat(security): reject sign-in and active sessions for blocked accounts` | Passed | 10 tests green; also extended `FakeOAuthLoginFlowIntegrationTests` because only the real servlet session exercises the sync-cache path |
 | 4: Contract artifacts and docs | Not Started | Agent | Pending | Pending | |
 | 5: Final verification and roadmap sync | Not Started | Agent | Pending | Pending | |
 
@@ -121,7 +121,7 @@
 ### Task 3: Sign-in and active-session rejection
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Make blocking effective: no new sessions, no continued sessions (spec Sign-In Rejection and Active-Session Rejection; AC6, AC7) |
 | Owned Files Or Packages | `AuditingAuthenticationSuccessHandler`, `AuthenticatedUserSynchronizationFilter`, `SecurityConfiguration` (wiring only if needed), `SecurityIntegrationTests` |
 | Coordinator-Owned Shared Files | None |
@@ -196,6 +196,7 @@
 | --- | --- | --- | --- | --- |
 | 2026-06-11 | `./build.ps1 test --tests "team.jit.technicalinterviewdemo.business.user.UserDataInitializerTests" --tests "team.jit.technicalinterviewdemo.business.user.UserManagementIntegrationTests"` | Task 1 | Passed (13 tests) | New seed case and block/unblock persistence case green |
 | 2026-06-11 | `./build.ps1 test --tests "team.jit.technicalinterviewdemo.business.user.AdminUserManagementApiIntegrationTests"` | Task 2 | Passed (13 tests) | New endpoint cases for AC1–AC5 and AC8 green |
+| 2026-06-11 | `./build.ps1 test --tests "team.jit.technicalinterviewdemo.technical.security.SecurityIntegrationTests" --tests "team.jit.technicalinterviewdemo.technical.security.FakeOAuthLoginFlowIntegrationTests"` | Task 3 | Passed (10 tests) | AC6 handler-level case, AC7 MockMvc case, and end-to-end blocked flow with real session sync cache green |
 
 ## User Validation
 1. Start the app with demo data and the fake OAuth provider, sign in as the bootstrap admin.

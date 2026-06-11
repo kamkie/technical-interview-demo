@@ -14,7 +14,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.util.UriComponentsBuilder;
+import team.jit.technicalinterviewdemo.business.audit.AuditAction;
+import team.jit.technicalinterviewdemo.business.audit.AuditLog;
 import team.jit.technicalinterviewdemo.business.audit.AuditLogRepository;
+import team.jit.technicalinterviewdemo.business.user.UserAccount;
 import team.jit.technicalinterviewdemo.business.user.UserAccountRepository;
 import team.jit.technicalinterviewdemo.testing.TestcontainersTest;
 
@@ -25,6 +28,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Instant;
 import java.util.stream.StreamSupport;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -105,6 +109,80 @@ class FakeOAuthLoginFlowIntegrationTests {
 
         assertThat(authenticatedSession.path("authenticated").asBoolean()).isTrue();
         assertThat(auditLogRepository.findAll()).hasSize(1);
+    }
+
+    @Test
+    void blockedAccountLosesActiveSessionAndCannotSignInAgain() throws Exception {
+        completeLoginFlow();
+        HttpResponse<String> syncedAccountResponse = get("/api/account");
+        assertThat(syncedAccountResponse.statusCode()).isEqualTo(200);
+
+        UserAccount smokeUser = userAccountRepository
+                .findByProviderAndExternalLogin("smoke", "smoke-user")
+                .orElseThrow();
+        smokeUser.block(null, "Blocked mid-session for testing.");
+        userAccountRepository.saveAndFlush(smokeUser);
+        auditLogRepository.deleteAll();
+
+        HttpResponse<String> rejectedResponse = get("/api/account");
+        assertThat(rejectedResponse.statusCode()).isEqualTo(401);
+        assertThat(rejectedResponse.headers().firstValue("Content-Type").orElse(""))
+                .contains("application/problem+json");
+        assertThat(OBJECT_MAPPER.readTree(rejectedResponse.body()).path("title").asText())
+                .isEqualTo("Unauthorized");
+
+        HttpResponse<String> sessionAfterRejection = get("/api/session");
+        assertThat(OBJECT_MAPPER
+                        .readTree(sessionAfterRejection.body())
+                        .path("authenticated")
+                        .asBoolean())
+                .isFalse();
+        assertThat(auditLogRepository.findAll())
+                .singleElement()
+                .satisfies(auditLog -> assertThat(auditLog.getAction()).isEqualTo(AuditAction.SESSION_REJECTION));
+        Instant lastLoginBeforeRetry = userAccountRepository
+                .findByProviderAndExternalLogin("smoke", "smoke-user")
+                .orElseThrow()
+                .getLastLoginAt();
+        auditLogRepository.deleteAll();
+
+        URI retryRedirect = completeLoginFlowRedirect();
+        assertThat(retryRedirect.getPath()).isEqualTo("/");
+        assertThat(retryRedirect.getQuery()).isEqualTo("login=failed");
+
+        HttpResponse<String> sessionAfterRetry = get("/api/session");
+        assertThat(OBJECT_MAPPER
+                        .readTree(sessionAfterRetry.body())
+                        .path("authenticated")
+                        .asBoolean())
+                .isFalse();
+        assertThat(auditLogRepository.findAll()).hasSize(1);
+        AuditLog loginFailure = auditLogRepository.findAll().getFirst();
+        assertThat(loginFailure.getAction()).isEqualTo(AuditAction.LOGIN_FAILURE);
+        assertThat(loginFailure.getDetails())
+                .containsEntry("failureReason", "account_blocked")
+                .containsEntry("provider", "smoke")
+                .containsEntry("login", "smoke-user");
+        assertThat(userAccountRepository
+                        .findByProviderAndExternalLogin("smoke", "smoke-user")
+                        .orElseThrow()
+                        .getLastLoginAt())
+                .isEqualTo(lastLoginBeforeRetry);
+    }
+
+    private void completeLoginFlow() throws IOException, InterruptedException {
+        URI finalRedirect = completeLoginFlowRedirect();
+        assertThat(finalRedirect.getPath()).isEqualTo("/");
+        assertThat(finalRedirect.getQuery()).isNull();
+    }
+
+    private URI completeLoginFlowRedirect() throws IOException, InterruptedException {
+        HttpResponse<String> authorizationStartResponse = get("/api/session/oauth2/authorization/smoke");
+        URI providerAuthorizeUri = redirectLocation(authorizationStartResponse);
+        HttpResponse<String> providerAuthorizeResponse = get(providerAuthorizeUri);
+        URI callbackUri = redirectLocation(providerAuthorizeResponse);
+        HttpResponse<String> callbackResponse = get(callbackUri);
+        return redirectLocation(callbackResponse);
     }
 
     private HttpResponse<String> get(String path) throws IOException, InterruptedException {

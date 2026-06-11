@@ -23,6 +23,7 @@ import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
 import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.session.Session;
+import org.springframework.session.SessionRepository;
 import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 import team.jit.technicalinterviewdemo.business.audit.AuditLogService;
 import team.jit.technicalinterviewdemo.business.user.CurrentUserAccountService;
@@ -32,8 +33,17 @@ public class SecurityConfiguration {
 
     @Bean
     AuthenticatedUserSynchronizationFilter authenticatedUserSynchronizationFilter(
-            CurrentUserAccountService currentUserAccountService) {
-        return new AuthenticatedUserSynchronizationFilter(currentUserAccountService);
+            CurrentUserAccountService currentUserAccountService,
+            AuditLogService auditLogService,
+            CurrentApplicationSessionResolver currentApplicationSessionResolver,
+            SessionRepository<? extends Session> sessionRepository,
+            ApiAuthenticationEntryPoint apiAuthenticationEntryPoint) {
+        return new AuthenticatedUserSynchronizationFilter(
+                currentUserAccountService,
+                auditLogService,
+                currentApplicationSessionResolver,
+                sessionRepository,
+                apiAuthenticationEntryPoint);
     }
 
     @Bean
