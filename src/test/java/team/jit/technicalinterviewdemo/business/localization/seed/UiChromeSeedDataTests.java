@@ -52,25 +52,23 @@ class UiChromeSeedDataTests {
     }
 
     @Test
-    void shippedLanguagesCoverTheEnglishKeySet() {
+    void everySupportedLanguageShipsTheEnglishKeySet() {
         Map<String, String> englishMessages = UiChromeSeedData.loadLanguage("en", true);
 
         for (String language : LocalizationSeedData.supportedLanguages()) {
-            Map<String, String> translations = UiChromeSeedData.loadLanguage(language, false);
-            if (!translations.isEmpty()) {
-                assertThat(translations.keySet())
-                        .as("ui chrome keys for language '%s'", language)
-                        .isEqualTo(englishMessages.keySet());
-            }
+            Map<String, String> translations = UiChromeSeedData.loadLanguage(language, true);
+            assertThat(translations.keySet())
+                    .as("ui chrome keys for language '%s'", language)
+                    .isEqualTo(englishMessages.keySet());
         }
     }
 
     @Test
-    void shippedLanguagesPreserveMessageFormatTokens() {
+    void everySupportedLanguagePreservesMessageFormatTokens() {
         Map<String, String> englishMessages = UiChromeSeedData.loadLanguage("en", true);
 
         for (String language : LocalizationSeedData.supportedLanguages()) {
-            Map<String, String> translations = UiChromeSeedData.loadLanguage(language, false);
+            Map<String, String> translations = UiChromeSeedData.loadLanguage(language, true);
             translations.forEach((messageKey, messageText) -> assertThat(messageFormatTokens(messageText))
                     .as("message-format tokens for key '%s' in language '%s'", messageKey, language)
                     .isEqualTo(messageFormatTokens(englishMessages.get(messageKey))));

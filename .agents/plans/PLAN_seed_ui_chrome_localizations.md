@@ -84,7 +84,7 @@
 | Task | Status | Owner | Commit | Validation | Notes |
 | --- | --- | --- | --- | --- | --- |
 | 1: Seed loader and English chrome resource | Done | Agent | `feat(localization): seed ui chrome rows from classpath resources` | Targeted localization tests (56) passed; `./build.ps1 build` green | Execution findings: (a) existing localization integration tests reset state via `LocalizationTestData.reloadDefaultMessages`, so keeping `defaultMessages()` error-only means no integration-test count updates were needed; test changes narrowed to `LocalizationDataInitializerTests` plus new `UiChromeSeedDataTests`; (b) the frontend registry gained 17 account-status keys mid-task — `en.json` regenerated from the live registry (381 keys) |
-| 2: Non-English chrome seed content | Not Started | Agent | Pending | Pending | |
+| 2: Non-English chrome seed content | Done | Agent | `feat(localization): add non-english ui chrome seed translations` | Targeted seed tests (14) passed; `./build.ps1 build` green | Six resources with 381 keys each (2,286 strings), ASCII transliteration per D6; parity and token tests strengthened to require every supported language shipped |
 | 3: Docs, changelog, and roadmap alignment | Not Started | Agent | Pending | Pending | |
 
 ## Execution Tasks
@@ -104,7 +104,7 @@
 ### Task 2: Non-English chrome seed content
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Ship full `ui.*` coverage for `es`, `de`, `fr`, `pl`, `uk`, and `no` |
 | Owned Files Or Packages | `src/main/resources/localization/seed/ui-chrome/{es,de,fr,pl,uk,no}.json` |
 | Coordinator-Owned Shared Files | None |
@@ -163,6 +163,8 @@
 | --- | --- | --- | --- | --- |
 | 2026-06-11 | `./build.ps1 test --tests "team.jit.technicalinterviewdemo.business.localization.*"` | Task 1 targeted localization and seed tests | Passed | 56 tests green, including new `UiChromeSeedDataTests` and updated `LocalizationDataInitializerTests` |
 | 2026-06-11 | `./build.ps1 build` | Task 1 full build with checks | Passed | Exit code 0; Error Prone `InlineFormatString` warning resolved by inlining the format string |
+| 2026-06-11 | `./build.ps1 test --tests "team.jit.technicalinterviewdemo.business.localization.seed.*"` | Task 2 targeted seed tests | Passed | 14 tests green with strengthened all-languages parity and token checks |
+| 2026-06-11 | `./build.ps1 build` | Task 2 full build with checks | Passed | BUILD SUCCESSFUL in 3m 46s |
 
 ## User Validation
 - Start the app locally with the `local` profile (demo seeding enabled) on a fresh database.
