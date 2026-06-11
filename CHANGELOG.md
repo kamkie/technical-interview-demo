@@ -7,6 +7,8 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+## [v2.1.0] - 2026-06-12
+
 ### Added
 
 - Added admin account blocking: `PUT /api/admin/users/{id}/status` replaces a persisted user's account status (`ACTIVE` or `BLOCKED`) with an operator reason, self-targeting rejected, and idempotent same-status handling.
