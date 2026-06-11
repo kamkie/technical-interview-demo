@@ -26,6 +26,10 @@ For task-sized implementation checkpoints, use an execution plan under [.agents/
 3. Link the spec from related ADRs, PRDs, execution plans, or executable specs that depend on it.
 4. Update the index below.
 
+## Draft Specs
+
+- [SPEC_admin-account-blocking.md](SPEC_admin-account-blocking.md) — admin block/unblock behavior for persisted user accounts, including sign-in and active-session rejection
+
 ## Accepted Specs
 
 _None yet._
