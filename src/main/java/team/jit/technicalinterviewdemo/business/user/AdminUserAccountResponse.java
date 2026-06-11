@@ -44,7 +44,21 @@ public record AdminUserAccountResponse(
         Instant createdAt,
 
         @Schema(description = "Last update timestamp as a UTC instant.")
-        Instant updatedAt) {
+        Instant updatedAt,
+
+        @Schema(description = "Account status derived from the persisted block state.", example = "ACTIVE")
+        UserAccountStatus accountStatus,
+
+        @Schema(description = "UTC instant of the block; null when the account is active.")
+        Instant blockedAt,
+
+        @Schema(
+                description = "External login of the ADMIN that performed the block; null when the account is"
+                        + " active or the block has no persisted operator.")
+        String blockedBy,
+
+        @Schema(description = "Operator-supplied reason recorded at block time; null when the account is active.")
+        String blockedReason) {
 
     public static AdminUserAccountResponse from(UserAccount userAccount) {
         List<String> roles = userAccount.getRoles().stream()
@@ -54,6 +68,7 @@ public record AdminUserAccountResponse(
         List<AdminUserRoleGrantResponse> roleGrants = userAccount.getRoleGrants().stream()
                 .map(AdminUserRoleGrantResponse::from)
                 .toList();
+        UserAccount blockedByUser = userAccount.getBlockedByUser();
         return new AdminUserAccountResponse(
                 userAccount.getId(),
                 userAccount.getProvider(),
@@ -65,6 +80,10 @@ public record AdminUserAccountResponse(
                 roleGrants,
                 userAccount.getLastLoginAt(),
                 userAccount.getCreatedAt(),
-                userAccount.getUpdatedAt());
+                userAccount.getUpdatedAt(),
+                UserAccountStatus.of(userAccount),
+                userAccount.getBlockedAt(),
+                blockedByUser == null ? null : blockedByUser.getExternalLogin(),
+                userAccount.getBlockedReason());
     }
 }

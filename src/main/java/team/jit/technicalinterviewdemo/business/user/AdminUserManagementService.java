@@ -74,4 +74,51 @@ public class AdminUserManagementService {
                 currentAdmin.getId());
         return AdminUserAccountResponse.from(updatedUser);
     }
+
+    @Transactional
+    public AdminUserAccountResponse replaceStatus(Long userId, AdminUserAccountStatusUpdateRequest request) {
+        currentUserAccountService.requireRole(UserRole.ADMIN, "User management requires the ADMIN role.");
+        UserAccount currentAdmin = currentUserAccountService.getCurrentUserOrSynchronize();
+        UserAccount targetUser =
+                userAccountRepository.findById(userId).orElseThrow(() -> new UserAccountNotFoundException(userId));
+        if (targetUser.getId().equals(currentAdmin.getId())) {
+            throw new InvalidRequestException("Changing the status of your own account is not allowed.");
+        }
+
+        UserAccountStatus previousStatus = UserAccountStatus.of(targetUser);
+        if (previousStatus == request.status()) {
+            return AdminUserAccountResponse.from(targetUser);
+        }
+
+        if (request.status() == UserAccountStatus.BLOCKED) {
+            targetUser.block(currentAdmin, request.reason());
+        } else {
+            targetUser.unblock();
+        }
+
+        UserAccount updatedUser = userAccountRepository.saveAndFlush(targetUser);
+        applicationMetrics.recordUserOperation("replaceAccountStatus");
+        auditLogService.record(
+                AuditTargetType.USER_ACCOUNT,
+                updatedUser.getId(),
+                AuditAction.UPDATE,
+                "Replaced account status for user '%s'.".formatted(updatedUser.getExternalLogin()),
+                Map.of(
+                        "targetProvider",
+                        updatedUser.getProvider(),
+                        "targetLogin",
+                        updatedUser.getExternalLogin(),
+                        "previousStatus",
+                        previousStatus.name(),
+                        "status",
+                        request.status().name(),
+                        "reason",
+                        request.reason()));
+        log.info(
+                "Replaced account status userId={} status={} changedByUserId={}",
+                updatedUser.getId(),
+                request.status(),
+                currentAdmin.getId());
+        return AdminUserAccountResponse.from(updatedUser);
+    }
 }

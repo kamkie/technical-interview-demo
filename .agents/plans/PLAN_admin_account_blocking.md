@@ -85,7 +85,7 @@
 | Task | Status | Owner | Commit | Validation | Notes |
 | --- | --- | --- | --- | --- | --- |
 | 1: Schema, entity, and seed support | Done | Agent | `feat(users): add account blocking schema, entity state, and blocked demo seed` | Passed | 13 tests green including new seed and persistence cases |
-| 2: Status endpoint and admin API surface | Not Started | Agent | Pending | Pending | |
+| 2: Status endpoint and admin API surface | Done | Agent | `feat(users): add admin account status endpoint and api surface` | Passed | 13 tests green covering AC1–AC5 and AC8 |
 | 3: Sign-in and active-session rejection | Not Started | Agent | Pending | Pending | |
 | 4: Contract artifacts and docs | Not Started | Agent | Pending | Pending | |
 | 5: Final verification and roadmap sync | Not Started | Agent | Pending | Pending | |
@@ -108,7 +108,7 @@
 ### Task 2: Status endpoint and admin API surface
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Expose block/unblock to ADMIN operators and surface status in the admin API (spec Status-Change Endpoint, Audit Actions for `USER_ACCOUNT`/`UPDATE`, Admin Users API Surface; AC1–AC5, AC8) |
 | Owned Files Or Packages | `AdminUserManagementController`, `AdminUserManagementService`, `AdminUserAccountResponse`, new `AdminUserAccountStatusUpdateRequest`, `AdminUserManagementApiIntegrationTests` |
 | Coordinator-Owned Shared Files | None |
@@ -195,6 +195,7 @@
 | Date | Command | Scope | Result | Notes |
 | --- | --- | --- | --- | --- |
 | 2026-06-11 | `./build.ps1 test --tests "team.jit.technicalinterviewdemo.business.user.UserDataInitializerTests" --tests "team.jit.technicalinterviewdemo.business.user.UserManagementIntegrationTests"` | Task 1 | Passed (13 tests) | New seed case and block/unblock persistence case green |
+| 2026-06-11 | `./build.ps1 test --tests "team.jit.technicalinterviewdemo.business.user.AdminUserManagementApiIntegrationTests"` | Task 2 | Passed (13 tests) | New endpoint cases for AC1–AC5 and AC8 green |
 
 ## User Validation
 1. Start the app with demo data and the fake OAuth provider, sign in as the bootstrap admin.
