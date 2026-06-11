@@ -173,7 +173,7 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                             {
                               "messageKey": "info.book.created",
                               "language": "fr",
-                              "messageText": "Le livre a ete cree.",
+                              "messageText": "Le livre a été créé.",
                               "description": "French success message for new books."
                             }
                             """))
@@ -204,7 +204,7 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                             {
                               "messageKey": "error.book.not_found_custom",
                               "language": "fr",
-                              "messageText": "Le livre demande est introuvable.",
+                              "messageText": "Le livre demandé est introuvable.",
                               "description": "French message for missing book errors."
                             }
                             """))

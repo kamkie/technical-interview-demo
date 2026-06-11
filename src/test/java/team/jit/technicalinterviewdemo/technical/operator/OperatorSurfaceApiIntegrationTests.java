@@ -7,6 +7,7 @@ import team.jit.technicalinterviewdemo.business.audit.AuditAction;
 import team.jit.technicalinterviewdemo.business.audit.AuditLog;
 import team.jit.technicalinterviewdemo.business.audit.AuditLogRepository;
 import team.jit.technicalinterviewdemo.business.audit.AuditTargetType;
+import team.jit.technicalinterviewdemo.business.user.UserAccountRepository;
 import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
 import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
 
@@ -25,11 +26,15 @@ class OperatorSurfaceApiIntegrationTests extends AbstractMockMvcIntegrationTest 
     @Autowired
     private AuditLogRepository auditLogRepository;
 
+    @Autowired
+    private UserAccountRepository userAccountRepository;
+
     private AuditLog newestAuditLog;
 
     @BeforeEach
     void setUp() {
         auditLogRepository.deleteAll();
+        userAccountRepository.deleteAll();
         auditLogRepository.saveAndFlush(new AuditLog(
                 AuditTargetType.BOOK,
                 101L,

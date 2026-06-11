@@ -19,7 +19,7 @@ class RequestLocalizationIntegrationTests extends AbstractBookCatalogMockMvcInte
                 .andExpect(jsonPath("$.title").value("Book Not Found"))
                 .andExpect(jsonPath("$.detail").value("Book with id 9999 was not found."))
                 .andExpect(jsonPath("$.messageKey").value("error.book.not_found"))
-                .andExpect(jsonPath("$.message").value("No se encontro el libro solicitado."))
+                .andExpect(jsonPath("$.message").value("No se encontró el libro solicitado."))
                 .andExpect(jsonPath("$.language").value("es"));
     }
 
@@ -35,7 +35,7 @@ class RequestLocalizationIntegrationTests extends AbstractBookCatalogMockMvcInte
                 .andExpect(jsonPath("$.detail")
                         .value("Use either 'year' or the 'yearFrom'/'yearTo' range parameters, not both."))
                 .andExpect(jsonPath("$.messageKey").value("error.request.invalid"))
-                .andExpect(jsonPath("$.message").value("Zapyt ye nevalidnym."))
+                .andExpect(jsonPath("$.message").value("Запит є невалідним."))
                 .andExpect(jsonPath("$.language").value("uk"));
     }
 
@@ -61,7 +61,7 @@ class RequestLocalizationIntegrationTests extends AbstractBookCatalogMockMvcInte
                 .andExpect(jsonPath("$.title").value("Book Not Found"))
                 .andExpect(jsonPath("$.detail").value("Book with id 9999 was not found."))
                 .andExpect(jsonPath("$.messageKey").value("error.book.not_found"))
-                .andExpect(jsonPath("$.message").value("Nie znaleziono zadanej ksiazki."))
+                .andExpect(jsonPath("$.message").value("Nie znaleziono żądanej książki."))
                 .andExpect(jsonPath("$.language").value("pl"));
     }
 
@@ -77,7 +77,7 @@ class RequestLocalizationIntegrationTests extends AbstractBookCatalogMockMvcInte
                 .andExpect(jsonPath("$.detail")
                         .value("Use either 'year' or the 'yearFrom'/'yearTo' range parameters, not both."))
                 .andExpect(jsonPath("$.messageKey").value("error.request.invalid"))
-                .andExpect(jsonPath("$.message").value("Foresporselen er ugyldig."))
+                .andExpect(jsonPath("$.message").value("Forespørselen er ugyldig."))
                 .andExpect(jsonPath("$.language").value("no"));
     }
 }

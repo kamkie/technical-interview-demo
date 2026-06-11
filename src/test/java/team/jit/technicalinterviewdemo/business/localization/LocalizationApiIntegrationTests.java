@@ -78,7 +78,7 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .andExpect(jsonPath("$.id").value(bookNotFoundEs.getId()))
                 .andExpect(jsonPath("$.messageKey").value("error.book.not_found"))
                 .andExpect(jsonPath("$.language").value("es"))
-                .andExpect(jsonPath("$.messageText").value("No se encontro el libro solicitado."))
+                .andExpect(jsonPath("$.messageText").value("No se encontró el libro solicitado."))
                 .andExpect(jsonPath("$.createdAt").value(endsWith("Z")))
                 .andExpect(jsonPath("$.updatedAt").value(endsWith("Z")));
     }
@@ -120,7 +120,7 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                             {
                               "messageKey": "info.book.created",
                               "language": "fr",
-                              "messageText": "Le livre a ete cree.",
+                              "messageText": "Le livre a été créé.",
                               "description": "French success message for new books."
                             }
                             """))
@@ -128,7 +128,7 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.messageKey").value("info.book.created"))
                 .andExpect(jsonPath("$.language").value("fr"))
-                .andExpect(jsonPath("$.messageText").value("Le livre a ete cree."))
+                .andExpect(jsonPath("$.messageText").value("Le livre a été créé."))
                 .andExpect(jsonPath("$.description").value("French success message for new books."))
                 .andExpect(jsonPath("$.createdAt").value(endsWith("Z")))
                 .andExpect(jsonPath("$.updatedAt").value(endsWith("Z")));
@@ -142,7 +142,7 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                             {
                               "messageKey": "info.book.created",
                               "language": "fr",
-                              "messageText": "Le livre a ete cree.",
+                              "messageText": "Le livre a été créé.",
                               "description": "French success message for new books."
                             }
                             """))
@@ -233,7 +233,7 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                             {
                               "messageKey": "error.book.not_found_custom",
                               "language": "fr",
-                              "messageText": "Le livre demande est introuvable.",
+                              "messageText": "Le livre demandé est introuvable.",
                               "description": "French message for missing book errors."
                             }
                             """))
@@ -241,7 +241,7 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .andExpect(jsonPath("$.id").value(bookNotFoundEn.getId()))
                 .andExpect(jsonPath("$.messageKey").value("error.book.not_found_custom"))
                 .andExpect(jsonPath("$.language").value("fr"))
-                .andExpect(jsonPath("$.messageText").value("Le livre demande est introuvable."))
+                .andExpect(jsonPath("$.messageText").value("Le livre demandé est introuvable."))
                 .andExpect(jsonPath("$.description").value("French message for missing book errors."))
                 .andExpect(jsonPath("$.createdAt").value(endsWith("Z")))
                 .andExpect(jsonPath("$.updatedAt").value(endsWith("Z")));
@@ -277,7 +277,7 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                             {
                               "messageKey": "info.book.created",
                               "language": "fr",
-                              "messageText": "Le livre a ete cree.",
+                              "messageText": "Le livre a été créé.",
                               "description": "French success message for new books."
                             }
                             """))
@@ -299,7 +299,7 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                             {
                               "messageKey": "info.book.created",
                               "language": "fr",
-                              "messageText": "Le livre a ete cree.",
+                              "messageText": "Le livre a été créé.",
                               "description": "French success message for new books."
                             }
                             """))

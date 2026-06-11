@@ -22,7 +22,7 @@ Keep this file as curated lesson storage: short reusable lessons grouped by doma
 - **PostgreSQL behavior is the truth.**
 - **Cached reads need an eviction story.**
 - **Sanitize before logging.**
-- **New localization content uses native script.** Write translated seed or demo content with proper national characters (diacritics, Cyrillic for Ukrainian); the ASCII transliteration in the older `error.*` Java-literal seeds is a legacy artifact, not a convention to extend. Keep translated content in UTF-8 resources (JSON) rather than Java string literals so script choice never depends on source-file encoding.
+- **New localization content uses native script.** Write translated seed or demo content with proper national characters (diacritics, Cyrillic for Ukrainian); ASCII transliteration was a legacy artifact of the early `error.*` Java-literal seeds and has been fully converted. Keep translated content in UTF-8 resources (JSON) rather than Java string literals so script choice never depends on source-file encoding.
 
 ## Testing Lessons
 

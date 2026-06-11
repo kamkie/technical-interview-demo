@@ -461,6 +461,7 @@ tasks.withType<Test> {
 }
 
 tasks.withType<JavaCompile>().configureEach {
+    options.encoding = "UTF-8"
     options.errorprone.enabled.set(skipChecks.map { !it })
     options.errorprone.disableWarningsInGeneratedCode.set(true)
     options.errorprone.excludedPaths.set(".*/build/generated/.*")

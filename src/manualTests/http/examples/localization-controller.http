@@ -60,7 +60,7 @@ Accept: application/json
 {
     "messageKey": "{{demoMessageKey}}",
     "language": "fr",
-    "messageText": "Le livre a ete cree.",
+    "messageText": "Le livre a été créé.",
     "description": "French success message for demo requests."
 }
 > {%
@@ -79,7 +79,7 @@ Accept: application/json
 {
     "messageKey": "{{demoMessageKey}}",
     "language": "fr",
-    "messageText": "Le livre a ete cree avec succes.",
+    "messageText": "Le livre a été créé avec succès.",
     "description": "Updated French success message for demo requests."
 }
 

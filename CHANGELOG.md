@@ -15,6 +15,10 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 - Added one seeded blocked demo user (`demo-user-002`) to freshly seeded demo data so the first-party frontend can develop against a visible `BLOCKED` row.
 - Added `ui.*` frontend chrome localization seed data for demo environments: the bootstrap seeder now loads per-language classpath resources (381 keys for each of `en`, `es`, `de`, `fr`, `pl`, `uk`, and `no`) snapshotted from the first-party frontend `UI_MESSAGES` registry, inserting only missing rows so operator-managed content is never overwritten.
 
+### Changed
+
+- Converted the seeded `error.*` demo translations to native script (Spanish accents, German umlauts and eszett, French accents, Polish diacritics, Cyrillic Ukrainian, Norwegian å/æ/ø letters) and moved the content from Java string literals into per-language UTF-8 JSON classpath resources under `localization/seed/error-messages/`, matching the `ui.*` chrome seed layout.
+
 ## [v2.0.3] - 2026-05-11
 
 ### Added

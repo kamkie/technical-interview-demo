@@ -3,6 +3,7 @@ package team.jit.technicalinterviewdemo.business.audit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import team.jit.technicalinterviewdemo.business.user.UserAccountRepository;
 import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
 import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
 
@@ -21,12 +22,16 @@ class AuditLogApiIntegrationTests extends AbstractMockMvcIntegrationTest {
     @Autowired
     private AuditLogRepository auditLogRepository;
 
+    @Autowired
+    private UserAccountRepository userAccountRepository;
+
     private AuditLog updateBookLog;
     private AuditLog deleteLocalizationLog;
 
     @BeforeEach
     void setUp() {
         auditLogRepository.deleteAll();
+        userAccountRepository.deleteAll();
         auditLogRepository.saveAndFlush(new AuditLog(
                 AuditTargetType.BOOK,
                 101L,

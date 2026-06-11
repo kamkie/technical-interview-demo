@@ -87,10 +87,10 @@ class LocalizationServiceTests {
                 lookupCache().get(lookupCacheKey("error.book.not_found", "es", "en"), Localization.class);
 
         assertThat(message.getLanguage()).isEqualTo("es");
-        assertThat(message.getMessageText()).isEqualTo("No se encontro el libro solicitado.");
+        assertThat(message.getMessageText()).isEqualTo("No se encontró el libro solicitado.");
         assertThat(cachedMessage).isNotNull();
         assertThat(cachedMessage.getLanguage()).isEqualTo("es");
-        assertThat(cachedMessage.getMessageText()).isEqualTo("No se encontro el libro solicitado.");
+        assertThat(cachedMessage.getMessageText()).isEqualTo("No se encontró el libro solicitado.");
     }
 
     @Test
@@ -101,15 +101,15 @@ class LocalizationServiceTests {
                 localizationService.findByMessageKeyForCurrentLanguageWithFallback("error.request.invalid");
 
         assertThat(message.getLanguage()).isEqualTo("uk");
-        assertThat(message.getMessageText()).isEqualTo("Zapyt ye nevalidnym.");
+        assertThat(message.getMessageText()).isEqualTo("Запит є невалідним.");
     }
 
     @Test
     void getAllMessagesReturnsMessagesForRequestedLanguage() {
         Map<String, String> messages = localizationService.getAllMessages("pl");
 
-        assertThat(messages).containsEntry("error.book.not_found", "Nie znaleziono zadanej ksiazki.");
-        assertThat(messages).containsEntry("error.request.invalid", "Zadanie jest nieprawidlowe.");
+        assertThat(messages).containsEntry("error.book.not_found", "Nie znaleziono żądanej książki.");
+        assertThat(messages).containsEntry("error.request.invalid", "Żądanie jest nieprawidłowe.");
     }
 
     @Test
@@ -177,11 +177,11 @@ class LocalizationServiceTests {
         setAdminAuthenticatedUser();
 
         Localization createdMessage = localizationService.create(new LocalizationRequest(
-                "info.book.created", "fr", "Le livre a ete cree.", "French success message for new books."));
+                "info.book.created", "fr", "Le livre a été créé.", "French success message for new books."));
 
         assertLocalizationCachesCleared();
         assertThat(createdMessage.getMessageKey()).isEqualTo("info.book.created");
-        assertThat(localizationService.getMessage("info.book.created", "fr")).isEqualTo("Le livre a ete cree.");
+        assertThat(localizationService.getMessage("info.book.created", "fr")).isEqualTo("Le livre a été créé.");
     }
 
     @Test
@@ -195,12 +195,12 @@ class LocalizationServiceTests {
                 new LocalizationRequest(
                         "error.book.not_found",
                         "es",
-                        "No se encontro el libro solicitado. Actualizado.",
+                        "No se encontró el libro solicitado. Actualizado.",
                         "Updated Spanish missing-book message."));
 
         assertLocalizationCachesCleared();
         assertThat(localizationService.getMessageWithFallback("error.book.not_found", "es", "en"))
-                .isEqualTo("No se encontro el libro solicitado. Actualizado.");
+                .isEqualTo("No se encontró el libro solicitado. Actualizado.");
     }
 
     @Test
@@ -217,7 +217,7 @@ class LocalizationServiceTests {
 
     private void primeLocalizationCaches() {
         assertThat(localizationService.getMessageWithFallback("error.book.not_found", "es", "en"))
-                .isEqualTo("No se encontro el libro solicitado.");
+                .isEqualTo("No se encontró el libro solicitado.");
         assertThat(localizationService.findAllByLanguage("EN"))
                 .hasSize(LocalizationSeedData.documentedKeys().size());
         assertThat(localizationService.getAllMessages("EN"))

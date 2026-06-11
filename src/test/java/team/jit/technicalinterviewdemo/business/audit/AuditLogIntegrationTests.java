@@ -145,7 +145,7 @@ class AuditLogIntegrationTests extends AbstractMockMvcIntegrationTest {
                             {
                               "messageKey": "%s",
                               "language": "fr",
-                              "messageText": "Le livre a ete cree.",
+                              "messageText": "Le livre a été créé.",
                               "description": "French success message for new books."
                             }
                             """.formatted(CREATED_LOCALIZATION_KEY)))
@@ -162,7 +162,7 @@ class AuditLogIntegrationTests extends AbstractMockMvcIntegrationTest {
                             {
                               "messageKey": "audit.localization.updated",
                               "language": "fr",
-                              "messageText": "Le livre demande est introuvable.",
+                              "messageText": "Le livre demandé est introuvable.",
                               "description": "French message for missing book errors."
                             }
                             """))

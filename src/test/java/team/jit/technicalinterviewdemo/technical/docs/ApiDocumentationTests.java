@@ -533,7 +533,7 @@ class ApiDocumentationTests extends AbstractDocumentationIntegrationTest {
                 .andExpect(header().exists("X-Request-Id"))
                 .andExpect(header().exists("traceparent"))
                 .andExpect(jsonPath("$.title").value("Book Not Found"))
-                .andExpect(jsonPath("$.message").value("No se encontro el libro solicitado."))
+                .andExpect(jsonPath("$.message").value("No se encontró el libro solicitado."))
                 .andDo(documentEndpoint(
                         "errors/get-book-not-found",
                         pathParameters(parameterWithName("id").description("Book identifier that does not exist.")),

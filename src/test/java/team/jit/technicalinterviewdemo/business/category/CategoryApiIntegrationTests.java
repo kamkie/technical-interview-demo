@@ -120,7 +120,7 @@ class CategoryApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                             """))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.messageKey").value("error.request.unauthorized"))
-                .andExpect(jsonPath("$.message").value("Musisz sie uwierzytelnic przed wykonaniem tej operacji."))
+                .andExpect(jsonPath("$.message").value("Musisz się uwierzytelnić przed wykonaniem tej operacji."))
                 .andExpect(jsonPath("$.language").value("pl"));
     }
 
