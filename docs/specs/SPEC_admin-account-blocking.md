@@ -2,7 +2,7 @@
 
 ## Status
 
-Draft
+Approved on 2026-06-11 by explicit user instruction (Q4 resolved as yes in the same instruction)
 
 ## Date
 
@@ -114,6 +114,11 @@ Existing values are reused:
 | `blockedBy` | string, null when active | `external_login` of the ADMIN that performed the block |
 | `blockedReason` | string, null when active | Persisted operator reason |
 
+### Seed Data
+
+When demo seeding is enabled (`app.bootstrap.seed.demo-data`), `UserDataInitializer` seeds exactly one blocked example user so the first-party frontend can develop against a visible `BLOCKED` row: `demo-user-002` is created with `blocked_at` set to a fixed deterministic instant, `blocked_reason` `"Seeded demo blocked account."`, and `blocked_by_user_id` null (no persisted operator performed the block; `blockedBy` is null in the admin API for this row).
+Because seeding skips users that already exist, the blocked state applies only to freshly seeded databases; existing databases keep their current `demo-user-002` row unchanged, which is acceptable for demo data.
+
 ## Scope
 
 In scope:
@@ -122,6 +127,7 @@ In scope:
 - `PUT /api/admin/users/{id}/status` endpoint with validation, self-target rejection, idempotency, and audit
 - sign-in rejection and per-request active-session rejection for blocked accounts, with audit entries
 - additive `AdminUserAccountResponse` fields
+- one seeded blocked example user (`demo-user-002`) in the demo seed data
 - REST Docs, OpenAPI baseline refresh, reviewer HTTP examples, and integration-test coverage for all of the above
 
 Out of scope:
@@ -154,6 +160,7 @@ Out of scope:
 | AC8 | `GET /api/admin/users` includes `accountStatus` for every user and the three nullable block provenance fields | Additive response change only |
 | AC9 | Flyway migration `V12` applies cleanly on an existing `2.0.x` database and carries a metadata sidecar with `rolloutCategory: "expand"`, `rollingCompatible: true` | Old app instances keep working during rollout because all new columns are nullable and unread by `2.0.x` |
 | AC10 | The regenerated OpenAPI baseline diff against `approved-openapi.json` contains only additive changes | No `AuditAction` enum extension |
+| AC11 | On a freshly seeded database with demo data enabled, `demo-user-002` is blocked with the fixed seed reason, a set `blockedAt`, and null `blockedBy`; all other seeded users are `ACTIVE` | Existing databases keep their current `demo-user-002` row because seeding skips existing users |
 
 ## Validation Mapping
 
@@ -164,6 +171,7 @@ Out of scope:
 | AC8 | `AdminUserManagementApiIntegrationTests` list assertion plus REST Docs response-field documentation |
 | AC9 | Integration-test application startup against the migrated schema; metadata sidecar reviewed in change review |
 | AC10 | Existing OpenAPI compatibility test against the refreshed `src/test/resources/openapi/approved-openapi.json` |
+| AC11 | `UserDataInitializerTests` (new case for the seeded blocked user) |
 | Manual verification | `suite-10-admin-user-management.http` extended with block, rejected-request, and unblock steps |
 
 ## Open Questions
@@ -173,7 +181,7 @@ Out of scope:
 | Q1 | Endpoint shape: single `PUT /{id}/status` replacement vs `POST /{id}/block` + `POST /{id}/unblock` action endpoints | Agent | Answered | `PUT /{id}/status`: mirrors the existing `PUT /{id}/roles` full-replacement convention and keeps idempotency trivial |
 | Q2 | Extend `AuditAction` with `ACCOUNT_BLOCKED`/`ACCOUNT_UNBLOCKED` vs reuse existing values | Agent | Answered | Reuse `UPDATE`, `LOGIN_FAILURE`, `SESSION_REJECTION` with distinguishing `details`; extending a response-exposed enum is a needless `2.x` compatibility risk |
 | Q3 | Per-request rejection HTTP status: 401 vs 403 | Agent | Answered | 401: the session is no longer honored, matching the "missing or invalid authenticated session" contract wording and prompting re-authentication, which then fails visibly |
-| Q4 | Should demo seed data include a blocked example user for frontend development | User | Open | Fallback: no seed changes; blocked states are produced via the endpoint |
+| Q4 | Should demo seed data include a blocked example user for frontend development | User | Answered | Yes (user decision, 2026-06-11): seed exactly one blocked example user, `demo-user-002`, on fresh databases; see the Seed Data section |
 
 ## Linked Artifacts
 

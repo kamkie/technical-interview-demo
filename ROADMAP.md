@@ -26,7 +26,7 @@ Section ordering follows the lifecycle vocabulary in `.agents/references/applica
 | Breaking Change Policy | Disallowed on the stable `2.x` line unless a later major-version plan explicitly changes it |
 | Next Target Version | Not selected; default to `v2.0.4` for maintenance fixes or `v2.1.0` for backward-compatible feature work |
 | Latest Stable Release | `v2.0.3` released on 2026-05-11 from the human documentation split and follow-up AI-guidance cleanup archived under `.agents/archive/PLAN_human_documentation_split.md` |
-| Immediate Next Action | No active release-track work is selected. Next pre-planning step: review and approve the draft `docs/specs/SPEC_admin-account-blocking.md` for the triage-accepted admin block/unblock workstream. |
+| Immediate Next Action | No active release-track work is selected. `.agents/plans/PLAN_admin_account_blocking.md` is `Ready`; selecting it for execution is the next call. |
 
 ## Roadmap Rules
 
@@ -77,7 +77,8 @@ Use this section for structured requirements, product intent, behavior rules, co
 
 | Status | Topic | PRD / Spec | Open Questions | Exit Criteria |
 | --- | --- | --- | --- | --- |
-| Planned | Admin block/unblock behavior for persisted user accounts | `docs/specs/SPEC_admin-account-blocking.md` (Draft) | Q4 (seed data; non-blocking, fallback recorded); Q1–Q3 answered in the spec | User reviews the draft, resolves or confirms Q1–Q4, and marks the spec `Approved`; then create `.agents/plans/PLAN_admin_account_blocking.md` |
+
+No active analysis items.
 
 ## Decisions
 
@@ -98,7 +99,8 @@ Use this section to record accept/defer/reject/prioritize/sequence decisions and
 
 | Status | Workstream | Source | Decision | Next Artifact |
 | --- | --- | --- | --- | --- |
-| Planned | Admin block/unblock for user accounts: persist an account-status flag, expose an ADMIN block/unblock endpoint that records an operator reason, reject sign-ins and active sessions for blocked accounts, and surface the status plus the action in the admin users API (today the strongest admin sanction is demoting a user to `USER`-only via role replacement) | Conceptualization candidate captured on 2026-06-11 (commit `8d430fe`) | Accepted on 2026-06-11 for the backward-compatible `2.1.0` feature line; all contract changes must stay additive per the `2.x` breaking-change policy | Standalone spec `docs/specs/SPEC_admin-account-blocking.md` (Draft created 2026-06-11; tracked in `## Analysis`); spec chosen over PRD because product intent is already clear and the open questions are narrow contract-shaped behavior (flag semantics, endpoint shape, session rejection mechanics, audit actions) |
+
+No active triage items.
 
 ## Active Release Track
 
@@ -113,8 +115,7 @@ Use this section for plan-backed work that is not selected as the immediate rele
 
 | Status | Workstream | Phase | Plan | Linked ADR/PRD/Spec | Notes |
 | --- | --- | --- | --- | --- | --- |
-
-No active planned work.
+| Planned | Admin block/unblock for user accounts | Planning | `.agents/plans/PLAN_admin_account_blocking.md` | `docs/specs/SPEC_admin-account-blocking.md` (Approved 2026-06-11) | Plan status `Ready`; decision-complete from the approved spec (triage-accepted 2026-06-11 for the backward-compatible `2.1.0` line); not yet selected as the active release-track action |
 
 ## Deferred Work
 
