@@ -13,4 +13,18 @@ Prefer matching on bug code and class or method instead of broad package-level e
 Delete suppressions when the underlying code or the detector output changes.
 -->
 <FindBugsFilter>
+    <!--
+    why: The container error dispatch replays the failing request's original HTTP method to /error,
+         so the mapping must accept every method, matching Spring Boot's own BasicErrorController.
+         The handler only renders a localized ProblemDetail for an already-failed request and
+         performs no state change, so CSRF protection does not apply to it.
+    owner: technical-interview-demo maintainers
+    reviewed: 2026-06-12
+    revalidate-by: v2.2.0
+    reference: .agents/plans/PLAN_session_attribute_write_race.md Task 2
+    -->
+    <Match>
+        <Class name="team.jit.technicalinterviewdemo.technical.api.ApiErrorController"/>
+        <Bug pattern="SPRING_CSRF_UNRESTRICTED_REQUEST_MAPPING"/>
+    </Match>
 </FindBugsFilter>
