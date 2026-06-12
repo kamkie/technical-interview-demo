@@ -7,6 +7,8 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+## [v2.1.1] - 2026-06-12
+
 ### Fixed
 
 - Fixed intermittent 500s on concurrent first requests: Spring Session JDBC attribute inserts now use a PostgreSQL upsert, so racing session commits that add the same new attribute no longer fail with duplicate-key errors on `spring_session_attributes_pk`.

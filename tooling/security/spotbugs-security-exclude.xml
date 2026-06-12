@@ -21,7 +21,7 @@ Delete suppressions when the underlying code or the detector output changes.
     owner: technical-interview-demo maintainers
     reviewed: 2026-06-12
     revalidate-by: v2.2.0
-    reference: .agents/plans/PLAN_session_attribute_write_race.md Task 2
+    reference: .agents/archive/PLAN_session_attribute_write_race.md Task 2
     -->
     <Match>
         <Class name="team.jit.technicalinterviewdemo.technical.api.ApiErrorController"/>

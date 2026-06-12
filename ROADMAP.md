@@ -22,11 +22,11 @@ Section ordering follows the lifecycle vocabulary in `.agents/references/applica
 
 | Field | Current |
 | --- | --- |
-| Release Phase | Stable `v2.1.0` |
+| Release Phase | Stable `v2.1.1` |
 | Breaking Change Policy | Disallowed on the stable `2.x` line unless a later major-version plan explicitly changes it |
-| Next Target Version | Not selected; default to `v2.1.1` for maintenance fixes or `v2.2.0` for backward-compatible feature work |
-| Latest Stable Release | `v2.1.0` released on 2026-06-12 with admin account blocking and `ui.*` chrome localization seeding, plans archived under `.agents/archive/PLAN_admin_account_blocking.md` and `.agents/archive/PLAN_seed_ui_chrome_localizations.md` |
-| Immediate Next Action | Cut the `v2.1.1` maintenance release for the integrated session attribute write race fix when release work is requested, or take a new user request. |
+| Next Target Version | Not selected; default to `v2.1.2` for maintenance fixes or `v2.2.0` for backward-compatible feature work |
+| Latest Stable Release | `v2.1.1` released on 2026-06-12 with the Spring Session attribute write race fix and localized problem-details rendering for escaped filter-chain failures, plan archived under `.agents/archive/PLAN_session_attribute_write_race.md` |
+| Immediate Next Action | Take a new user request, or triage the `M-COPY-001` chrome localization seed alignment candidate from `## Conceptualization`. |
 
 ## Roadmap Rules
 
@@ -105,7 +105,8 @@ No active triage items.
 
 | Status | Workstream | Phase | Plan | Linked ADR/PRD/Spec | Notes |
 | --- | --- | --- | --- | --- | --- |
-| Integrated | Fix intermittent 500s from the Spring Session attribute write race: PostgreSQL upsert for `SPRING_SESSION_ATTRIBUTES` inserts and localized problem-details rendering for failures that escape the filter chain | Integration | `.agents/plans/PLAN_session_attribute_write_race.md` | None; behavior is specified by integration tests added with the fix | Landed on `main` 2026-06-12 with changelog entries under `## [Unreleased]`; remove once released in the next patch release (`v2.1.1` default) |
+
+No active release-track items.
 
 ## Planned Work
 

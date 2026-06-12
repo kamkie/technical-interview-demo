@@ -12,8 +12,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Integration |
-| Status | Implemented |
+| Phase | Release |
+| Status | Closed |
 
 ## Planning Readiness
 | Field | Value |
