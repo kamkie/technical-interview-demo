@@ -7,6 +7,11 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed intermittent 500s on concurrent first requests: Spring Session JDBC attribute inserts now use a PostgreSQL upsert, so racing session commits that add the same new attribute no longer fail with duplicate-key errors on `spring_session_attributes_pk`.
+- Fixed failures that escape the servlet filter chain rendering the Spring Boot default error body: the error dispatch now returns the same localized `ProblemDetail` field set (stable `messageKey`, localized `message`, resolved `language`) as handler errors, honoring the request's language override.
+
 ## [v2.1.0] - 2026-06-12
 
 ### Added
