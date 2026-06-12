@@ -26,7 +26,7 @@ Section ordering follows the lifecycle vocabulary in `.agents/references/applica
 | Breaking Change Policy | Disallowed on the stable `2.x` line unless a later major-version plan explicitly changes it |
 | Next Target Version | Not selected; default to `v2.1.3` for maintenance fixes or `v2.2.0` for backward-compatible feature work |
 | Latest Stable Release | `v2.1.2` released on 2026-06-12 with the `ui.*` chrome seed alignment to the 384-key frontend registry (8 keys added, 5 orphans removed, English copy fix), plan archived under `.agents/archive/PLAN_align_ui_chrome_seed_content.md` |
-| Immediate Next Action | Take a new user request. |
+| Immediate Next Action | Execute `.agents/plans/PLAN_localization_http_revalidation.md`. |
 
 ## Roadmap Rules
 
@@ -77,7 +77,8 @@ Use this section for structured requirements, product intent, behavior rules, co
 
 | Status | Topic | PRD / Spec | Open Questions | Exit Criteria |
 | --- | --- | --- | --- | --- |
-| Candidate | Conditional-GET revalidation (`ETag` / `If-None-Match`) for public localization reads (`GET /api/localizations`) so the frontend UI catalog (frontend `M-I18N-003` in `technical-interview-frontend/ROADMAP.md`; frontend `PLAN-ux-design-followups` packet T9) revalidates instead of re-downloading every page load and language switch. Bare `Cache-Control: max-age` is ruled out because admin edits must not serve stale bundles; every admin write already funnels through `LocalizationService.evictLocalizationCaches()`, giving a single write-path invalidation hook, and `Localization` already tracks `updatedAt` | None; bounded additive contract change — the contract lands in REST Docs, `src/docs/asciidoc/`, and the approved OpenAPI baseline during planning | Q1: `ETag` source — response-body hash (`ShallowEtagHeaderFilter`, saves bandwidth only) vs a catalog version token bumped alongside `evictLocalizationCaches()` (also skips page recomputation). Q2: endpoint scope — collection `GET` only, or also `GET /api/localizations/{id}`. Q3: contract surface — how `If-None-Match`/`304` behavior is represented in REST Docs and the approved OpenAPI baseline | Q1–Q3 decided and recorded (ADR only if triage treats the caching semantics as a durable contract choice); then move the row to Triage to accept and name the next artifact (plan; additive scope fits `v2.2.0` under the no-breaking-change policy) |
+
+No active analysis items.
 
 ## Decisions
 
@@ -105,8 +106,7 @@ No active triage items.
 
 | Status | Workstream | Phase | Plan | Linked ADR/PRD/Spec | Notes |
 | --- | --- | --- | --- | --- | --- |
-
-No active release-track items.
+| In Progress | Localization HTTP revalidation (`ETag` conditional reads on `GET /api/localizations` and `GET /api/localizations/{id}`) | Implementation | `.agents/plans/PLAN_localization_http_revalidation.md` | None; decisions Q1–Q3 resolved in the plan's decision log; intake from frontend `M-I18N-003` | Additive contract change targeting a future `v2.2.0`; user request "implement that" on 2026-06-12 served as triage acceptance |
 
 ## Planned Work
 
