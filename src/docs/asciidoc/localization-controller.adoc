@@ -21,6 +21,16 @@ include::{snippets}/localization/list-localizations/http-response.adoc[]
 include::{snippets}/localization/list-localizations/response-headers.adoc[]
 include::{snippets}/localization/list-localizations/response-fields.adoc[]
 
+== Conditional Revalidation With `ETag`
+
+Public localization reads return an `ETag` entity tag and `Cache-Control: no-cache`. Clients may cache responses but must revalidate them by replaying the same request with `If-None-Match`. An unchanged representation returns `304 Not Modified` with an empty body; any admin create, update, or delete changes the entity tag, so revalidation immediately serves fresh content.
+
+include::{snippets}/localization/list-localizations-not-modified/curl-request.adoc[]
+include::{snippets}/localization/list-localizations-not-modified/http-request.adoc[]
+include::{snippets}/localization/list-localizations-not-modified/request-headers.adoc[]
+include::{snippets}/localization/list-localizations-not-modified/http-response.adoc[]
+include::{snippets}/localization/list-localizations-not-modified/response-headers.adoc[]
+
 == `GET /api/localizations/{id}`
 
 Returns a single localization by identifier.

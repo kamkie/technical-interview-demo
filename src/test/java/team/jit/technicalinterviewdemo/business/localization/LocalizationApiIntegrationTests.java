@@ -11,11 +11,15 @@ import team.jit.technicalinterviewdemo.testing.AbstractMockMvcIntegrationTest;
 import team.jit.technicalinterviewdemo.testing.MockMvcIntegrationSpringBootTest;
 import team.jit.technicalinterviewdemo.testing.SecurityTestSupport.BrowserSession;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static team.jit.technicalinterviewdemo.testing.SecurityTestSupport.adminBrowserSession;
@@ -59,6 +63,80 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                 .andExpect(jsonPath("$.content[1].language").value("en"))
                 .andExpect(jsonPath("$.totalElements").value(totalSeededLocalizations()))
                 .andExpect(jsonPath("$.totalPages").value(totalPagesForPageSize(2)));
+    }
+
+    @Test
+    void listLocalizationsExposesEtagAndNoCacheCacheControl() throws Exception {
+        mockMvc.perform(get("/api/localizations"))
+                .andExpect(status().isOk())
+                .andExpect(header().exists("ETag"))
+                .andExpect(header().string("Cache-Control", "no-cache"));
+    }
+
+    @Test
+    void listLocalizationsWithMatchingIfNoneMatchReturnsNotModified() throws Exception {
+        String etag = mockMvc.perform(get("/api/localizations"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getHeader("ETag");
+
+        mockMvc.perform(get("/api/localizations").header("If-None-Match", etag))
+                .andExpect(status().isNotModified())
+                .andExpect(header().string("ETag", etag))
+                .andExpect(content().string(""));
+    }
+
+    @Test
+    void listLocalizationsWithStaleIfNoneMatchReturnsFullResponse() throws Exception {
+        mockMvc.perform(get("/api/localizations").header("If-None-Match", "\"stale-entity-tag\""))
+                .andExpect(status().isOk())
+                .andExpect(header().exists("ETag"))
+                .andExpect(jsonPath("$.content").isArray());
+    }
+
+    @Test
+    void listLocalizationsRevalidationAfterAdminUpdateReturnsFreshContent() throws Exception {
+        String filteredListUrl = "/api/localizations?messageKey=error.book.not_found&language=es";
+        String staleEtag = mockMvc.perform(get(filteredListUrl))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getHeader("ETag");
+
+        BrowserSession adminSession = adminSession();
+        mockMvc.perform(put("/api/localizations/{id}", bookNotFoundEs.getId())
+                        .with(adminSession.unsafeWrite())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {
+                              "messageKey": "error.book.not_found",
+                              "language": "es",
+                              "messageText": "El libro solicitado no existe.",
+                              "description": "Updated Spanish message for missing books."
+                            }
+                            """))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get(filteredListUrl).header("If-None-Match", staleEtag))
+                .andExpect(status().isOk())
+                .andExpect(header().string("ETag", not(staleEtag)))
+                .andExpect(jsonPath("$.content[0].messageText").value("El libro solicitado no existe."));
+    }
+
+    @Test
+    void getLocalizationByIdSupportsConditionalRequests() throws Exception {
+        String etag = mockMvc.perform(get("/api/localizations/{id}", bookNotFoundEs.getId()))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Cache-Control", "no-cache"))
+                .andReturn()
+                .getResponse()
+                .getHeader("ETag");
+
+        mockMvc.perform(get("/api/localizations/{id}", bookNotFoundEs.getId()).header("If-None-Match", etag))
+                .andExpect(status().isNotModified())
+                .andExpect(header().string("ETag", etag))
+                .andExpect(content().string(""));
     }
 
     @Test
@@ -125,6 +203,7 @@ class LocalizationApiIntegrationTests extends AbstractMockMvcIntegrationTest {
                             }
                             """))
                 .andExpect(status().isCreated())
+                .andExpect(header().string("Cache-Control", containsString("no-store")))
                 .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.messageKey").value("info.book.created"))
                 .andExpect(jsonPath("$.language").value("fr"))

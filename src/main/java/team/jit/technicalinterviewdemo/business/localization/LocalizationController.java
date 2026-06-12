@@ -3,6 +3,11 @@ package team.jit.technicalinterviewdemo.business.localization;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.headers.Header;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -11,6 +16,7 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,7 +47,33 @@ public class LocalizationController {
     @Operation(
             summary = "List localizations",
             description = "Public endpoint with pageable results. Optional messageKey and language filters narrow the"
-                    + " collection.")
+                    + " collection. Responses carry an ETag and Cache-Control: no-cache so clients revalidate"
+                    + " cached pages with If-None-Match instead of re-downloading them.")
+    @Parameter(
+            name = "If-None-Match",
+            in = ParameterIn.HEADER,
+            description = "Entity tag from a previous response; an unchanged representation returns 304.")
+    @ApiResponses({
+        @ApiResponse(
+                responseCode = "200",
+                description = "OK",
+                useReturnTypeSchema = true,
+                headers = {
+                    @Header(
+                            name = "ETag",
+                            description = "Entity tag of the current response representation.",
+                            schema = @Schema(type = "string")),
+                    @Header(
+                            name = "Cache-Control",
+                            description =
+                                    "Always no-cache: responses may be cached but must be revalidated before reuse.",
+                            schema = @Schema(type = "string"))
+                }),
+        @ApiResponse(
+                responseCode = "304",
+                description = "The representation matches the If-None-Match entity tag; the body is empty.",
+                content = @Content)
+    })
     public ResponseEntity<Page<LocalizationResponse>> findAll(
             @RequestParam(required = false) String messageKey,
             @RequestParam(required = false)
@@ -50,14 +82,43 @@ public class LocalizationController {
             @ParameterObject @PageableDefault(size = 20, sort = "id") Pageable pageable) {
         Page<LocalizationResponse> payload =
                 localizationService.findAll(pageable, messageKey, language).map(LocalizationResponse::from);
-        return ResponseEntity.ok(payload);
+        return ResponseEntity.ok().cacheControl(CacheControl.noCache()).body(payload);
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get a localization by id", description = "Public endpoint for a single localization.")
+    @Operation(
+            summary = "Get a localization by id",
+            description = "Public endpoint for a single localization. Responses carry an ETag and Cache-Control:"
+                    + " no-cache so clients revalidate cached entries with If-None-Match instead of re-downloading"
+                    + " them.")
+    @Parameter(
+            name = "If-None-Match",
+            in = ParameterIn.HEADER,
+            description = "Entity tag from a previous response; an unchanged representation returns 304.")
+    @ApiResponses({
+        @ApiResponse(
+                responseCode = "200",
+                description = "OK",
+                useReturnTypeSchema = true,
+                headers = {
+                    @Header(
+                            name = "ETag",
+                            description = "Entity tag of the current response representation.",
+                            schema = @Schema(type = "string")),
+                    @Header(
+                            name = "Cache-Control",
+                            description =
+                                    "Always no-cache: responses may be cached but must be revalidated before reuse.",
+                            schema = @Schema(type = "string"))
+                }),
+        @ApiResponse(
+                responseCode = "304",
+                description = "The representation matches the If-None-Match entity tag; the body is empty.",
+                content = @Content)
+    })
     public ResponseEntity<LocalizationResponse> findById(@PathVariable Long id) {
         LocalizationResponse payload = LocalizationResponse.from(localizationService.findById(id));
-        return ResponseEntity.ok(payload);
+        return ResponseEntity.ok().cacheControl(CacheControl.noCache()).body(payload);
     }
 
     @PostMapping

@@ -108,7 +108,7 @@ State and platform boundaries:
 
 - `technical.api`: global exception handling, shared request-validation exceptions, `ProblemDetail` creation, and localized error response shape
 - `technical.security`: Spring Security filter chain, session policy, authenticated-user synchronization filter, and OAuth identity bridge
-- `technical.localization`: request-language resolution and request-scoped language context
+- `technical.localization`: request-language resolution, request-scoped language context, and the `ETag` revalidation filter for public localization reads
 - `technical.cache`: cache names and Caffeine cache manager configuration
 - `technical.metrics`: application-specific counters and gauges
 - `technical.logging`: request tracing, request logging, service logging, and sensitive parameter sanitization

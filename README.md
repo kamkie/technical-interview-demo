@@ -24,7 +24,7 @@ Full local workflow (test loops, CI reproduction, troubleshooting): [docs/LOCAL_
 
 ## Included Scope
 
-- public read APIs for books, categories, and localization data
+- public read APIs for books, categories, and localization data; localization reads support `ETag`/`If-None-Match` revalidation
 - authenticated account and session endpoints
 - admin-only audit, operator-surface, and user-management APIs
 - PostgreSQL runtime profiles, Flyway migrations, and Spring Session JDBC

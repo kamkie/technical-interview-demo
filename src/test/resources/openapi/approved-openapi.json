@@ -35,7 +35,7 @@
       "get" : {
         "tags" : [ "Localizations" ],
         "summary" : "Get a localization by id",
-        "description" : "Public endpoint for a single localization.",
+        "description" : "Public endpoint for a single localization. Responses carry an ETag and Cache-Control: no-cache so clients revalidate cached entries with If-None-Match instead of re-downloading them.",
         "operationId" : "findById",
         "parameters" : [ {
           "name" : "id",
@@ -45,10 +45,30 @@
             "type" : "integer",
             "format" : "int64"
           }
+        }, {
+          "name" : "If-None-Match",
+          "in" : "header",
+          "description" : "Entity tag from a previous response; an unchanged representation returns 304."
         } ],
         "responses" : {
           "200" : {
             "description" : "OK",
+            "headers" : {
+              "Cache-Control" : {
+                "description" : "Always no-cache: responses may be cached but must be revalidated before reuse.",
+                "style" : "simple",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "ETag" : {
+                "description" : "Entity tag of the current response representation.",
+                "style" : "simple",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
             "content" : {
               "*/*" : {
                 "schema" : {
@@ -56,6 +76,9 @@
                 }
               }
             }
+          },
+          "304" : {
+            "description" : "The representation matches the If-None-Match entity tag; the body is empty."
           }
         }
       },
@@ -615,7 +638,7 @@
       "get" : {
         "tags" : [ "Localizations" ],
         "summary" : "List localizations",
-        "description" : "Public endpoint with pageable results. Optional messageKey and language filters narrow the collection.",
+        "description" : "Public endpoint with pageable results. Optional messageKey and language filters narrow the collection. Responses carry an ETag and Cache-Control: no-cache so clients revalidate cached pages with If-None-Match instead of re-downloading them.",
         "operationId" : "findAll",
         "parameters" : [ {
           "name" : "messageKey",
@@ -664,10 +687,30 @@
             },
             "default" : [ "id,ASC" ]
           }
+        }, {
+          "name" : "If-None-Match",
+          "in" : "header",
+          "description" : "Entity tag from a previous response; an unchanged representation returns 304."
         } ],
         "responses" : {
           "200" : {
             "description" : "OK",
+            "headers" : {
+              "Cache-Control" : {
+                "description" : "Always no-cache: responses may be cached but must be revalidated before reuse.",
+                "style" : "simple",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "ETag" : {
+                "description" : "Entity tag of the current response representation.",
+                "style" : "simple",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
             "content" : {
               "*/*" : {
                 "schema" : {
@@ -675,6 +718,9 @@
                 }
               }
             }
+          },
+          "304" : {
+            "description" : "The representation matches the If-None-Match entity tag; the body is empty."
           }
         }
       },
@@ -1837,13 +1883,13 @@
       "PageLocalizationResponse" : {
         "type" : "object",
         "properties" : {
-          "totalPages" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
           "totalElements" : {
             "type" : "integer",
             "format" : "int64"
+          },
+          "totalPages" : {
+            "type" : "integer",
+            "format" : "int32"
           },
           "size" : {
             "type" : "integer",
@@ -1869,11 +1915,11 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "sort" : {
-            "$ref" : "#/components/schemas/SortObject"
-          },
           "pageable" : {
             "$ref" : "#/components/schemas/PageableObject"
+          },
+          "sort" : {
+            "$ref" : "#/components/schemas/SortObject"
           },
           "empty" : {
             "type" : "boolean"
@@ -1887,12 +1933,6 @@
             "type" : "integer",
             "format" : "int64"
           },
-          "sort" : {
-            "$ref" : "#/components/schemas/SortObject"
-          },
-          "paged" : {
-            "type" : "boolean"
-          },
           "pageSize" : {
             "type" : "integer",
             "format" : "int32"
@@ -1900,6 +1940,12 @@
           "pageNumber" : {
             "type" : "integer",
             "format" : "int32"
+          },
+          "paged" : {
+            "type" : "boolean"
+          },
+          "sort" : {
+            "$ref" : "#/components/schemas/SortObject"
           },
           "unpaged" : {
             "type" : "boolean"
@@ -1923,13 +1969,13 @@
       "PageBook" : {
         "type" : "object",
         "properties" : {
-          "totalPages" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
           "totalElements" : {
             "type" : "integer",
             "format" : "int64"
+          },
+          "totalPages" : {
+            "type" : "integer",
+            "format" : "int32"
           },
           "size" : {
             "type" : "integer",
@@ -1955,11 +2001,11 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "sort" : {
-            "$ref" : "#/components/schemas/SortObject"
-          },
           "pageable" : {
             "$ref" : "#/components/schemas/PageableObject"
+          },
+          "sort" : {
+            "$ref" : "#/components/schemas/SortObject"
           },
           "empty" : {
             "type" : "boolean"

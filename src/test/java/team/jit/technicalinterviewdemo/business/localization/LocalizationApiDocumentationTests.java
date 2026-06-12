@@ -10,6 +10,8 @@ import team.jit.technicalinterviewdemo.testing.AbstractDocumentationIntegrationT
 import team.jit.technicalinterviewdemo.testing.RestDocsIntegrationSpringBootTest;
 import team.jit.technicalinterviewdemo.testing.SecurityTestSupport.BrowserSession;
 
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.relaxedResponseFields;
@@ -78,7 +80,7 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                                         .description("Sort expression in the form `property,direction`. Repeat the"
                                                 + " parameter for multiple sort fields. Supported properties:"
                                                 + " `id`, `messageKey`, `language`, `createdAt`, `updatedAt`.")),
-                        responseHeaders(commonResponseHeaders()),
+                        responseHeaders(commonResponseHeaders(cacheRevalidationHeaders())),
                         relaxedResponseFields(
                                 fieldWithPath("content[].id").description("Localization identifier."),
                                 fieldWithPath("content[].messageKey").description("Stable localization key."),
@@ -112,7 +114,7 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                 .andDo(documentEndpoint(
                         "localization/get-localization",
                         pathParameters(parameterWithName("id").description("Localization identifier.")),
-                        responseHeaders(commonResponseHeaders()),
+                        responseHeaders(commonResponseHeaders(cacheRevalidationHeaders())),
                         responseFields(responseFieldDescriptors())));
     }
 
@@ -139,7 +141,7 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                                         .description("Sort expression in the form `property,direction`. Repeat the"
                                                 + " parameter for multiple sort fields. Supported properties:"
                                                 + " `id`, `messageKey`, `language`, `createdAt`, `updatedAt`.")),
-                        responseHeaders(commonResponseHeaders()),
+                        responseHeaders(commonResponseHeaders(cacheRevalidationHeaders())),
                         relaxedResponseFields(
                                 fieldWithPath("content[].id").description("Localization identifier."),
                                 fieldWithPath("content[].messageKey").description("Stable localization key."),
@@ -264,7 +266,7 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                                         .description("Sort expression in the form `property,direction`. Repeat the"
                                                 + " parameter for multiple sort fields. Supported properties:"
                                                 + " `id`, `messageKey`, `language`, `createdAt`, `updatedAt`.")),
-                        responseHeaders(commonResponseHeaders()),
+                        responseHeaders(commonResponseHeaders(cacheRevalidationHeaders())),
                         relaxedResponseFields(
                                 fieldWithPath("content[].id").description("Localization identifier."),
                                 fieldWithPath("content[].messageKey").description("Stable localization key."),
@@ -287,6 +289,31 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                                         .description("Number of localizations returned in the current page."),
                                 fieldWithPath("first").description("Whether this page is the first page."),
                                 fieldWithPath("empty").description("Whether the page content is empty."))));
+    }
+
+    @Test
+    void documentListLocalizationsNotModifiedEndpoint() throws Exception {
+        String etag = mockMvc.perform(get("/api/localizations")
+                        .queryParam("page", "0")
+                        .queryParam("size", "2")
+                        .queryParam("sort", "messageKey,asc"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getHeader("ETag");
+
+        mockMvc.perform(get("/api/localizations")
+                        .queryParam("page", "0")
+                        .queryParam("size", "2")
+                        .queryParam("sort", "messageKey,asc")
+                        .header("If-None-Match", etag))
+                .andExpect(status().isNotModified())
+                .andExpect(header().string("ETag", etag))
+                .andDo(documentEndpoint(
+                        "localization/list-localizations-not-modified",
+                        requestHeaders(headerWithName("If-None-Match")
+                                .description("Entity tag from a previous response to the same request.")),
+                        responseHeaders(commonResponseHeaders(cacheRevalidationHeaders()))));
     }
 
     @Test
@@ -370,6 +397,16 @@ class LocalizationApiDocumentationTests extends AbstractDocumentationIntegration
                                 parameterWithName("id").description("Localization identifier that does not exist.")),
                         responseHeaders(commonResponseHeaders()),
                         relaxedResponseFields(problemResponseFields())));
+    }
+
+    private org.springframework.restdocs.headers.HeaderDescriptor[] cacheRevalidationHeaders() {
+        return new org.springframework.restdocs.headers.HeaderDescriptor[] {
+            headerWithName("ETag")
+                    .description("Entity tag of the current response representation; echo it in `If-None-Match` to"
+                            + " revalidate cached content."),
+            headerWithName("Cache-Control")
+                    .description("Always `no-cache`: responses may be cached but must be revalidated before reuse.")
+        };
     }
 
     private org.springframework.restdocs.payload.FieldDescriptor[] responseFieldDescriptors() {
