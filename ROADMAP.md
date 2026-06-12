@@ -22,11 +22,11 @@ Section ordering follows the lifecycle vocabulary in `.agents/references/applica
 
 | Field | Current |
 | --- | --- |
-| Release Phase | Stable `v2.1.1` |
+| Release Phase | Stable `v2.1.2` |
 | Breaking Change Policy | Disallowed on the stable `2.x` line unless a later major-version plan explicitly changes it |
-| Next Target Version | Not selected; default to `v2.1.2` for maintenance fixes or `v2.2.0` for backward-compatible feature work |
-| Latest Stable Release | `v2.1.1` released on 2026-06-12 with the Spring Session attribute write race fix and localized problem-details rendering for escaped filter-chain failures, plan archived under `.agents/archive/PLAN_session_attribute_write_race.md` |
-| Immediate Next Action | Cut the `v2.1.2` maintenance release for the integrated `ui.*` chrome seed alignment when release work is requested, or take a new user request. |
+| Next Target Version | Not selected; default to `v2.1.3` for maintenance fixes or `v2.2.0` for backward-compatible feature work |
+| Latest Stable Release | `v2.1.2` released on 2026-06-12 with the `ui.*` chrome seed alignment to the 384-key frontend registry (8 keys added, 5 orphans removed, English copy fix), plan archived under `.agents/archive/PLAN_align_ui_chrome_seed_content.md` |
+| Immediate Next Action | Take a new user request. |
 
 ## Roadmap Rules
 
@@ -106,7 +106,8 @@ No active triage items.
 
 | Status | Workstream | Phase | Plan | Linked ADR/PRD/Spec | Notes |
 | --- | --- | --- | --- | --- | --- |
-| Integrated | Align `ui.*` chrome localization seed content with the frontend registry: reword the English `ui.admin-localization.rows-status-error` seed, add the 8 missing registry keys (frontend milestones `M-COPY-001` and `M-CATALOG-001` plus newer common/session recovery strings), and remove the 5 refresh keys `M-WORKFLOW-002` dropped, across all 7 languages | Integration | `.agents/plans/PLAN_align_ui_chrome_seed_content.md` | None; behavior follows the published `ui.*` seeding contract and existing seed tests | Landed on `main` 2026-06-12 with changelog entries under `## [Unreleased]`; remove once released in the next patch release (`v2.1.2` default) |
+
+No active release-track items.
 
 ## Planned Work
 

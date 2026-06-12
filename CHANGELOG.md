@@ -7,6 +7,8 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+## [v2.1.2] - 2026-06-12
+
 ### Added
 
 - Added 8 `ui.*` chrome localization seed keys across all 7 supported languages (384 keys per language) to match the current frontend `UI_MESSAGES` registry: catalog category search and unfiltered-empty-state strings from frontend milestones `M-COPY-001` and `M-CATALOG-001`, plus the newer `ui.common.backend-unavailable`, `ui.common.retry`, and `ui.session.bootstrap-failed` recovery strings, with native-script translations.

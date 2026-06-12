@@ -32,7 +32,8 @@ Do not list [PLAN_TEMPLATE.md](PLAN_TEMPLATE.md) here.
 
 | Plan | Purpose |
 | --- | --- |
-| [PLAN_align_ui_chrome_seed_content.md](PLAN_align_ui_chrome_seed_content.md) | Align `ui.*` chrome seed content with the frontend registry: English copy fix plus 8 new keys across all 7 languages |
+
+No active plans.
 
 ## Archived Plans
 
