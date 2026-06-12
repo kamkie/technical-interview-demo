@@ -12,8 +12,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Implementation |
-| Status | In Progress |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Planning Readiness
 | Field | Value |
@@ -86,7 +86,7 @@
 | Task | Status | Owner | Commit | Validation | Notes |
 | --- | --- | --- | --- | --- | --- |
 | 1: Seed content alignment | Done | Agent | `feat(localization): align ui chrome seed content with frontend registry` | Targeted seed tests (22) passed; `./build.ps1 build` green; post-change re-diff exact parity (384/384, drift 0) | Replan trigger fired 2026-06-12: registry re-diff showed `M-WORKFLOW-002` dropped 5 keys (389 → 384); orphan removal folded in per D9 |
-| 2: Changelog, roadmap, final validation | Not Started | Agent | Pending | Pending | |
+| 2: Changelog, roadmap, final validation | Done | Agent | `docs(localization): record ui chrome seed alignment` | Docs audit passed; `./build.ps1 -FullBuild build` green | Changelog records Added/Removed/Fixed entries; roadmap row moved to Integrated |
 
 ## Execution Tasks
 ### Task 1: Seed content alignment
@@ -191,7 +191,7 @@ Translation block (D4 native script, D6 register; merge into each file in alphab
 ### Task 2: Changelog, roadmap, final validation
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Record the unreleased change, close the roadmap loop, and prove the cumulative diff |
 | Owned Files Or Packages | `CHANGELOG.md`, `ROADMAP.md`, this plan |
 | Coordinator-Owned Shared Files | None |
@@ -238,6 +238,9 @@ Translation block (D4 native script, D6 register; merge into each file in alphab
 | 2026-06-12 | Scripted alignment with byte-exact round-trip fidelity check, then registry-vs-seed re-diff | Task 1 content verification | Passed | All 7 resources at 384 keys; missing=0, orphans=0, drift=0 against the live registry |
 | 2026-06-12 | `./build.ps1 test --tests "team.jit.technicalinterviewdemo.business.localization.seed.*"` | Task 1 targeted seed tests | Passed | 22 tests green in 3.3s, including all-language key parity, token preservation, and constraint checks at 384 keys |
 | 2026-06-12 | `./build.ps1 build` | Task 1 full build with checks | Passed | BUILD SUCCESSFUL in 4m 6s |
+| 2026-06-12 | `pwsh ./scripts/docs/audit-docs.ps1` | Task 2 docs audit | Passed | 42 documents, 267 links checked |
+| 2026-06-12 | `./build.ps1 -FullBuild build` | Final whole-plan signoff across committed tasks | Passed | BUILD SUCCESSFUL in 4m 5s |
+| 2026-06-12 | `./build.ps1 gatlingBenchmark` | Localization lookup benchmark | Skipped | No behavior code changes; net +21 seed rows (2,667 → 2,688), flag-gated demo content (rationale per Validation Plan) |
 
 ## User Validation
 - Start the app locally with the `local` profile on a fresh database, open the frontend, and use the catalog category search: the search label, placeholder, and no-match message should render localized after switching the language preference (e.g. Polish).

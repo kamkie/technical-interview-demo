@@ -7,6 +7,18 @@ The Gradle build version is derived from the nearest reachable annotated git tag
 
 ## [Unreleased]
 
+### Added
+
+- Added 8 `ui.*` chrome localization seed keys across all 7 supported languages (384 keys per language) to match the current frontend `UI_MESSAGES` registry: catalog category search and unfiltered-empty-state strings from frontend milestones `M-COPY-001` and `M-CATALOG-001`, plus the newer `ui.common.backend-unavailable`, `ui.common.retry`, and `ui.session.bootstrap-failed` recovery strings, with native-script translations.
+
+### Removed
+
+- Removed the 5 orphaned refresh-button seed keys (`ui.common.refresh`, `ui.admin-users.refresh-label`, `ui.admin-localization.refresh-label`, `ui.admin-catalog.refresh-books-label`, `ui.admin-catalog.refresh-categories-label`) that frontend milestone `M-WORKFLOW-002` dropped from the registry; already-seeded databases keep their existing rows because seeding only inserts missing rows.
+
+### Fixed
+
+- Fixed the English `ui.admin-localization.rows-status-error` seed text from `Localization rows are needs attention.` to `Localization rows need attention.`; the corrected copy reaches freshly seeded databases only, since seeding never updates existing rows.
+
 ## [v2.1.1] - 2026-06-12
 
 ### Fixed

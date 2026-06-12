@@ -26,7 +26,7 @@ Section ordering follows the lifecycle vocabulary in `.agents/references/applica
 | Breaking Change Policy | Disallowed on the stable `2.x` line unless a later major-version plan explicitly changes it |
 | Next Target Version | Not selected; default to `v2.1.2` for maintenance fixes or `v2.2.0` for backward-compatible feature work |
 | Latest Stable Release | `v2.1.1` released on 2026-06-12 with the Spring Session attribute write race fix and localized problem-details rendering for escaped filter-chain failures, plan archived under `.agents/archive/PLAN_session_attribute_write_race.md` |
-| Immediate Next Action | Execute `.agents/plans/PLAN_align_ui_chrome_seed_content.md` when implementation is requested, or take a new user request. |
+| Immediate Next Action | Cut the `v2.1.2` maintenance release for the integrated `ui.*` chrome seed alignment when release work is requested, or take a new user request. |
 
 ## Roadmap Rules
 
@@ -106,7 +106,7 @@ No active triage items.
 
 | Status | Workstream | Phase | Plan | Linked ADR/PRD/Spec | Notes |
 | --- | --- | --- | --- | --- | --- |
-| In Progress | Align `ui.*` chrome localization seed content with the frontend registry: reword the English `ui.admin-localization.rows-status-error` seed, add the 8 missing registry keys (frontend milestones `M-COPY-001` and `M-CATALOG-001` plus newer common/session recovery strings), and remove the 5 refresh keys `M-WORKFLOW-002` dropped, across all 7 languages | Implementation | `.agents/plans/PLAN_align_ui_chrome_seed_content.md` | None; behavior follows the published `ui.*` seeding contract and existing seed tests | Execution started 2026-06-12; folds both former Conceptualization candidates plus the `M-WORKFLOW-002` orphan cleanup (plan D9); targets the next patch release (`v2.1.2` default) |
+| Integrated | Align `ui.*` chrome localization seed content with the frontend registry: reword the English `ui.admin-localization.rows-status-error` seed, add the 8 missing registry keys (frontend milestones `M-COPY-001` and `M-CATALOG-001` plus newer common/session recovery strings), and remove the 5 refresh keys `M-WORKFLOW-002` dropped, across all 7 languages | Integration | `.agents/plans/PLAN_align_ui_chrome_seed_content.md` | None; behavior follows the published `ui.*` seeding contract and existing seed tests | Landed on `main` 2026-06-12 with changelog entries under `## [Unreleased]`; remove once released in the next patch release (`v2.1.2` default) |
 
 ## Planned Work
 
