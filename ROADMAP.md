@@ -26,7 +26,7 @@ Section ordering follows the lifecycle vocabulary in `.agents/references/applica
 | Breaking Change Policy | Disallowed on the stable `2.x` line unless a later major-version plan explicitly changes it |
 | Next Target Version | Not selected; default to `v2.1.1` for maintenance fixes or `v2.2.0` for backward-compatible feature work |
 | Latest Stable Release | `v2.1.0` released on 2026-06-12 with admin account blocking and `ui.*` chrome localization seeding, plans archived under `.agents/archive/PLAN_admin_account_blocking.md` and `.agents/archive/PLAN_seed_ui_chrome_localizations.md` |
-| Immediate Next Action | Select the triage-accepted Spring Session attribute write race fix in `## Triage` for planning, or take a new user request. |
+| Immediate Next Action | Execute `.agents/plans/PLAN_session_attribute_write_race.md` (Spring Session attribute write race fix). |
 
 ## Roadmap Rules
 
@@ -99,14 +99,14 @@ Use this section to record accept/defer/reject/prioritize/sequence decisions and
 
 | Status | Workstream | Source | Decision | Next Artifact |
 | --- | --- | --- | --- | --- |
-| Planned | Fix intermittent 500s from the Spring Session attribute write race: concurrent first requests on a fresh session race `AuthenticatedUserSynchronizationFilter` inserts of the same `SPRING_SESSION_ATTRIBUTES` row (`spring_session_attributes_pk` duplicate-key), and the escaped exception returns the Spring default error body instead of the localized problem-details shape. Fix direction: write the `syncedUser` attribute only when its value changes, make the JDBC attribute insert a PostgreSQL upsert, and keep filter-chain failures on the problem-details contract. | Frontend full-app review 2026-06-12; Postgres container logs show duplicate-key bursts at 09:58:36, 10:07:56, and 10:20:59 UTC, each matching browser 500s on anonymous `/api/session`, `/api/books`, `/api/categories`, `/api/localizations` first loads | Accepted 2026-06-12 as a maintenance fix candidate for the next patch release | Plan `.agents/plans/PLAN_session_attribute_write_race.md` when selected |
+
+No active triage items.
 
 ## Active Release Track
 
 | Status | Workstream | Phase | Plan | Linked ADR/PRD/Spec | Notes |
 | --- | --- | --- | --- | --- | --- |
-
-No active release-track work.
+| In Progress | Fix intermittent 500s from the Spring Session attribute write race: PostgreSQL upsert for `SPRING_SESSION_ATTRIBUTES` inserts and localized problem-details rendering for failures that escape the filter chain | Implementation | `.agents/plans/PLAN_session_attribute_write_race.md` | None; behavior is specified by integration tests added with the fix | Maintenance fix targeting the next patch release (`v2.1.1` default); landing directly on `main`; the `syncedUser` change-only write guard already exists on `main` |
 
 ## Planned Work
 
