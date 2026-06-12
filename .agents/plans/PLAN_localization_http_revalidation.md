@@ -12,8 +12,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Implementation |
-| Status | In Progress |
+| Phase | Integration |
+| Status | Implemented |
 
 ## Planning Readiness
 | Field | Value |
@@ -79,14 +79,14 @@
 ## Progress Tracker
 | Task | Status | Owner | Commit | Validation | Notes |
 | --- | --- | --- | --- | --- | --- |
-| 1: Conditional-GET slice | Not Started | Agent | Pending | Pending | Implementation + executable specs + contract docs in one commit |
-| 2: Verification and closeout | Not Started | Agent | Pending | Pending | Full build + benchmark + docs audit; roadmap/plan closeout |
+| 1: Conditional-GET slice | Done | Agent | `29be223` | `./build.ps1 build` green; docs audit green | Implementation + executable specs + contract docs in one commit |
+| 2: Verification and closeout | Done | Agent | Closeout commit (this change) | `gatlingBenchmark` green; review pass clean | Security review applied: relaxation scoped to public reads; writes keep `no-store` (asserted) |
 
 ## Execution Tasks
 ### Task 1: Conditional-GET slice
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Public localization GETs return `ETag` + `Cache-Control: no-cache` and honor `If-None-Match` with `304`; all contract artifacts move together |
 | Owned Files Or Packages | `technical/localization`, `business/localization/LocalizationController.java`, localization tests, `localization-controller.adoc`, OpenAPI baseline, README, `architecture.md`, manual suite-04 |
 | Coordinator-Owned Shared Files | None |
@@ -99,7 +99,7 @@
 ### Task 2: Verification and closeout
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Prove the committed slice with the benchmark gate and close out tracking |
 | Owned Files Or Packages | `ROADMAP.md`, this plan |
 | Coordinator-Owned Shared Files | None |
@@ -112,9 +112,9 @@
 ## Blockers And Replan Triggers
 | Trigger / Blocker | Response | Owner | Status |
 | --- | --- | --- | --- |
-| Spring Security header writer overrides controller `Cache-Control` despite explicit response header | Replan: disable `cacheControl` writer for localization read matchers in `SecurityConfiguration` and re-run security-sensitive review | Agent | Open |
-| Benchmark regression from response buffering on `lookup-localization-message` | Replan toward D2's version-token alternative | Agent | Open |
-| OpenAPI compatibility check flags the additive change as breaking | Stop; review diff intentionally before `refreshOpenApiBaseline`; never refresh to silence an unexplained failure | Agent | Open |
+| Spring Security header writer overrides controller `Cache-Control` despite explicit response header | Replan: disable `cacheControl` writer for localization read matchers in `SecurityConfiguration` and re-run security-sensitive review | Agent | Resolved (controller header takes precedence; integration tests prove `no-cache` on reads, `no-store` on writes) |
+| Benchmark regression from response buffering on `lookup-localization-message` | Replan toward D2's version-token alternative | Agent | Resolved (p95 11 ms ≤ 15 ms baseline) |
+| OpenAPI compatibility check flags the additive change as breaking | Stop; review diff intentionally before `refreshOpenApiBaseline`; never refresh to silence an unexplained failure | Agent | Resolved (diff reviewed; additive only) |
 
 ## Edge Cases And Failure Modes
 - `304` must include the `ETag` and omit the body; request-id/trace headers still present.
@@ -140,7 +140,10 @@
 ## Validation Results
 | Date | Command | Scope | Result | Notes |
 | --- | --- | --- | --- | --- |
-| 2026-06-12 | Pending | Full build | Pending | |
+| 2026-06-12 | `./build.ps1 build` | Full build incl. localization integration tests, REST Docs, OpenAPI compatibility, static checks | Passed | `BUILD SUCCESSFUL in 4m 21s` |
+| 2026-06-12 | `./build.ps1 refreshOpenApiBaseline` | Approved OpenAPI baseline | Passed | Diff reviewed before approval: additive `If-None-Match` parameter, `200` headers, `304` response on both localization GETs; remaining hunks are non-semantic page-schema property reordering |
+| 2026-06-12 | `pwsh ./scripts/docs/audit-docs.ps1` | User-facing Markdown/AsciiDoc | Passed | 42 documents, 267 links |
+| 2026-06-12 | `./build.ps1 gatlingBenchmark` | Localization read path | Passed | `lookup-localization-message` p95 11 ms ≤ 15 ms baseline, success 100% ≥ 99.5%; global success 100% |
 
 ## User Validation
 - Run the app (`./build.ps1 bootRun`), then `curl -i http://localhost:8080/api/localizations?language=en` — response shows `ETag` and `Cache-Control: no-cache`.

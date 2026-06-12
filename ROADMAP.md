@@ -26,7 +26,7 @@ Section ordering follows the lifecycle vocabulary in `.agents/references/applica
 | Breaking Change Policy | Disallowed on the stable `2.x` line unless a later major-version plan explicitly changes it |
 | Next Target Version | Not selected; default to `v2.1.3` for maintenance fixes or `v2.2.0` for backward-compatible feature work |
 | Latest Stable Release | `v2.1.2` released on 2026-06-12 with the `ui.*` chrome seed alignment to the 384-key frontend registry (8 keys added, 5 orphans removed, English copy fix), plan archived under `.agents/archive/PLAN_align_ui_chrome_seed_content.md` |
-| Immediate Next Action | Execute `.agents/plans/PLAN_localization_http_revalidation.md`. |
+| Immediate Next Action | Take a new user request. |
 
 ## Roadmap Rules
 
@@ -106,7 +106,7 @@ No active triage items.
 
 | Status | Workstream | Phase | Plan | Linked ADR/PRD/Spec | Notes |
 | --- | --- | --- | --- | --- | --- |
-| In Progress | Localization HTTP revalidation (`ETag` conditional reads on `GET /api/localizations` and `GET /api/localizations/{id}`) | Implementation | `.agents/plans/PLAN_localization_http_revalidation.md` | None; decisions Q1–Q3 resolved in the plan's decision log; intake from frontend `M-I18N-003` | Additive contract change targeting a future `v2.2.0`; user request "implement that" on 2026-06-12 served as triage acceptance |
+| Integrated | Localization HTTP revalidation (`ETag` conditional reads on `GET /api/localizations` and `GET /api/localizations/{id}`) | Integration | `.agents/plans/PLAN_localization_http_revalidation.md` | None; decisions Q1–Q3 resolved in the plan's decision log; intake from frontend `M-I18N-003` | Landed on `main` at `29be223` on 2026-06-12; full build, benchmark, and docs audit green; additive contract change awaiting a future `v2.2.0` release |
 
 ## Planned Work
 
