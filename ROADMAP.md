@@ -26,7 +26,7 @@ Section ordering follows the lifecycle vocabulary in `.agents/references/applica
 | Breaking Change Policy | Disallowed on the stable `2.x` line unless a later major-version plan explicitly changes it |
 | Next Target Version | Not selected; default to `v2.1.2` for maintenance fixes or `v2.2.0` for backward-compatible feature work |
 | Latest Stable Release | `v2.1.1` released on 2026-06-12 with the Spring Session attribute write race fix and localized problem-details rendering for escaped filter-chain failures, plan archived under `.agents/archive/PLAN_session_attribute_write_race.md` |
-| Immediate Next Action | Take a new user request, or triage the `M-COPY-001` chrome localization seed alignment candidate from `## Conceptualization`. |
+| Immediate Next Action | Execute `.agents/plans/PLAN_align_ui_chrome_seed_content.md` when implementation is requested, or take a new user request. |
 
 ## Roadmap Rules
 
@@ -68,7 +68,8 @@ Use this section for rough ideas, TODOs, maintenance signals, links, and early f
 
 | Status | Idea | Linked Artifacts | Next Decision |
 | --- | --- | --- | --- |
-| Candidate | Align backend-seeded `ui.*` chrome localization rows with the frontend copy fixes from frontend milestone `M-COPY-001` (2026-06-12): reword the `ui.admin-localization.rows-status-error` English seed to `Localization rows need attention.` and seed the new keys `ui.catalog.empty-unfiltered-title` (`The catalog is empty`) and `ui.catalog.empty-unfiltered-message` (`There are no books in the catalog yet.`) plus their non-English translations | Frontend `technical-interview-frontend` `src/i18n/messages.ts` English defaults; prior seeding plan `.agents/archive/PLAN_seed_ui_chrome_localizations.md` | Triage into the next maintenance or seeding slice |
+
+No active conceptualization items.
 
 ## Analysis
 
@@ -105,8 +106,7 @@ No active triage items.
 
 | Status | Workstream | Phase | Plan | Linked ADR/PRD/Spec | Notes |
 | --- | --- | --- | --- | --- | --- |
-
-No active release-track items.
+| Selected | Align `ui.*` chrome localization seed content with the frontend registry: reword the English `ui.admin-localization.rows-status-error` seed and add the 8 missing registry keys (frontend milestones `M-COPY-001` and `M-CATALOG-001` plus newer common/session recovery strings) across all 7 languages | Planning | `.agents/plans/PLAN_align_ui_chrome_seed_content.md` | None; behavior follows the published `ui.*` seeding contract and existing seed tests | Plan is decision-complete and ready 2026-06-12; batches both former Conceptualization candidates; execution starts when requested, targeting the next patch release (`v2.1.2` default) |
 
 ## Planned Work
 
