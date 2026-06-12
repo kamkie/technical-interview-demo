@@ -106,7 +106,7 @@ No active triage items.
 
 | Status | Workstream | Phase | Plan | Linked ADR/PRD/Spec | Notes |
 | --- | --- | --- | --- | --- | --- |
-| Selected | Align `ui.*` chrome localization seed content with the frontend registry: reword the English `ui.admin-localization.rows-status-error` seed and add the 8 missing registry keys (frontend milestones `M-COPY-001` and `M-CATALOG-001` plus newer common/session recovery strings) across all 7 languages | Planning | `.agents/plans/PLAN_align_ui_chrome_seed_content.md` | None; behavior follows the published `ui.*` seeding contract and existing seed tests | Plan is decision-complete and ready 2026-06-12; batches both former Conceptualization candidates; execution starts when requested, targeting the next patch release (`v2.1.2` default) |
+| In Progress | Align `ui.*` chrome localization seed content with the frontend registry: reword the English `ui.admin-localization.rows-status-error` seed, add the 8 missing registry keys (frontend milestones `M-COPY-001` and `M-CATALOG-001` plus newer common/session recovery strings), and remove the 5 refresh keys `M-WORKFLOW-002` dropped, across all 7 languages | Implementation | `.agents/plans/PLAN_align_ui_chrome_seed_content.md` | None; behavior follows the published `ui.*` seeding contract and existing seed tests | Execution started 2026-06-12; folds both former Conceptualization candidates plus the `M-WORKFLOW-002` orphan cleanup (plan D9); targets the next patch release (`v2.1.2` default) |
 
 ## Planned Work
 
