@@ -12,8 +12,8 @@
 ## Lifecycle
 | Status | Current |
 | --- | --- |
-| Phase | Planning |
-| Status | Ready |
+| Phase | Implementation |
+| Status | In Progress |
 
 ## Planning Readiness
 | Field | Value |
@@ -91,7 +91,7 @@
 ## Progress Tracker
 | Task | Status | Owner | Commit | Validation | Notes |
 | --- | --- | --- | --- | --- | --- |
-| 1: Session attribute upsert | Not Started | Agent | Pending | Pending | |
+| 1: Session attribute upsert | Done | Agent | `fix(security): make session attribute writes idempotent under concurrent saves` | Targeted tests red→green; 10 tests passed | Red phase reproduced the exact production `spring_session_attributes_pk` duplicate key |
 | 2: Problem-details error dispatch | Not Started | Agent | Pending | Pending | |
 | 3: Changelog, roadmap, final validation | Not Started | Agent | Pending | Pending | |
 
@@ -99,7 +99,7 @@
 ### Task 1: Session attribute upsert
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Make the Spring Session JDBC attribute insert idempotent under concurrent saves of the same fresh session |
 | Owned Files Or Packages | `SessionConfiguration.java`; new `SessionAttributeConcurrencyIntegrationTests.java` |
 | Coordinator-Owned Shared Files | None |
@@ -169,7 +169,8 @@
 ## Validation Results
 | Date | Command | Scope | Result | Notes |
 | --- | --- | --- | --- | --- |
-| 2026-06-12 | Pending | Per-task targeted tests, final full build + benchmark, docs audit | Pending | |
+| 2026-06-12 | `./build.ps1 test --tests "*SessionAttributeConcurrencyIntegrationTests"` | Task 1 red phase | Failed as expected | Both new tests failed with `DuplicateKeyException` on `spring_session_attributes_pk`, reproducing the production race |
+| 2026-06-12 | `./build.ps1 test --tests "*SessionAttributeConcurrencyIntegrationTests" --tests "*SecurityIntegrationTests"` | Task 1 green phase | Passed | 10 tests passed in 36.9s; upsert customizer fixes the race without breaking security flows |
 
 ## User Validation
 - Start the app with the SPA, clear cookies, and load the frontend; the parallel first requests (`/api/session`, `/api/books`, `/api/categories`, `/api/localizations`) must all return 200 with no duplicate-key errors in the Postgres logs.
