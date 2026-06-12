@@ -45,6 +45,7 @@ The values below are loaded from `{build-info-path}` during the Asciidoctor buil
 * Error responses use Spring `ProblemDetail` payloads generated from the same MVC and integration tests that produce the success-path snippets.
 * Error payloads include a stable `messageKey`, a localized `message`, and the resolved `language`.
 * Protected API `401` and `403` responses use the same localized `ProblemDetail` field set as validation and domain errors.
+* Failures that escape the MVC layer, such as servlet filter-chain errors, are rendered by the application error dispatch with the same localized `ProblemDetail` field set instead of the Spring Boot default error body.
 * Browser-compatible localization uses `Accept-Language`, the optional `lang` query parameter overrides it with values such as `pl` or `pl-PL`, and cookie `language` is used as fallback.
 * Supported application languages are `en`, `es`, `de`, `fr`, `pl`, `uk`, and `no`.
 * Public supported external endpoints include the read-only book/category/localization lookups, `GET /api/session`, `POST /api/session/logout`, and `GET /api/session/oauth2/authorization/{registrationId}`.

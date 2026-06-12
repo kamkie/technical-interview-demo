@@ -55,7 +55,7 @@
 - Session schema: `src/main/resources/db/migration/V4__create_spring_session_tables.sql` (PK `(SESSION_PRIMARY_ID, ATTRIBUTE_NAME)`, PostgreSQL `BYTEA`, so the schema is already PostgreSQL-specific).
 - Session config: `SessionConfiguration` is `@EnableJdbcHttpSession` with no customizers; `spring.session.store-type=jdbc`.
 - Problem-details contract: `ApiProblemFactory` resolves `messageKey`/`message`/`language` via `LocalizationService`; `error.server.internal`, `error.request.unauthorized`, `error.request.forbidden`, `error.request.resource_not_found`, and `error.request.invalid` are seeded in all seven languages.
-- `RequestLanguageContextFilter` is an `@Order(HIGHEST_PRECEDENCE)` `OncePerRequestFilter` `@Component`; Spring Boot registers `OncePerRequestFilter` beans for all dispatcher types, so the language ThreadLocal is re-populated during the ERROR dispatch and `ApiProblemFactory` localization works there (inference from Spring Boot filter-registration behavior; Task 2's test asserts it, so a wrong inference fails fast without affecting readiness).
+- `RequestLanguageContextFilter` is an `@Order(HIGHEST_PRECEDENCE)` `OncePerRequestFilter` `@Component`. Execution disproved the initial inference that it re-runs on the ERROR dispatch: the language ThreadLocal is empty there (observed via the Task 2 red run on 2026-06-12), so `ApiErrorController` re-resolves the request language itself via `RequestLanguageResolver` and sets/clears `LocalizationContext` around problem creation, mirroring the filter.
 - `/error` is already `permitAll` in `SecurityConfiguration`. Integration tests run against PostgreSQL via Testcontainers (`@TestcontainersTest`), so PostgreSQL-specific SQL is fully testable.
 - Frontend evidence (triage 2026-06-12): duplicate-key bursts in Postgres logs at 09:58:36, 10:07:56, 10:20:59 UTC matching browser 500s on first-load bursts of `/api/session`, `/api/books`, `/api/categories`, `/api/localizations`.
 
@@ -92,7 +92,7 @@
 | Task | Status | Owner | Commit | Validation | Notes |
 | --- | --- | --- | --- | --- | --- |
 | 1: Session attribute upsert | Done | Agent | `fix(security): make session attribute writes idempotent under concurrent saves` | Targeted tests red→green; 10 tests passed | Red phase reproduced the exact production `spring_session_attributes_pk` duplicate key |
-| 2: Problem-details error dispatch | Not Started | Agent | Pending | Pending | |
+| 2: Problem-details error dispatch | Done | Agent | `fix(api): render localized problem details for escaped filter-chain failures` | Targeted tests green; 9 tests passed | Language re-resolution fallback was needed (see resolved blocker row) |
 | 3: Changelog, roadmap, final validation | Not Started | Agent | Pending | Pending | |
 
 ## Execution Tasks
@@ -112,7 +112,7 @@
 ### Task 2: Problem-details error dispatch
 | Field | Value |
 | --- | --- |
-| Status | Not Started |
+| Status | Done |
 | Goal | Keep failures that escape the filter chain on the localized problem-details contract |
 | Owned Files Or Packages | New `ApiErrorController.java`; new `ErrorDispatchProblemDetailsIntegrationTests.java`; `README.md`; `src/docs/asciidoc/index.adoc` |
 | Coordinator-Owned Shared Files | None |
@@ -141,7 +141,7 @@
 | `setCreateSessionAttributeQuery` unavailable or behaves differently in the repo's Spring Session version | Stop, check the dependency version, and replan the upsert mechanism before coding around it | Agent | Open |
 | Task 1 test cannot reproduce the duplicate-key failure without the fix (red phase fails to be red) | Re-examine `JdbcSession` delta tracking assumptions; if the insert path differs, revise `Current State` and the test design before proceeding | Agent | Open |
 | Replacing `BasicErrorController` breaks an existing test or springdoc/OpenAPI output | Revisit D3: narrow the controller to problem-details rendering while restoring any contract the failing spec proves | Agent | Open |
-| Error-dispatch localization does not see the request language (filter not re-run on ERROR dispatch) | Resolve language explicitly in `ApiErrorController` via `RequestLanguageResolver` instead of relying on the ThreadLocal | Agent | Open |
+| Error-dispatch localization does not see the request language (filter not re-run on ERROR dispatch) | Resolve language explicitly in `ApiErrorController` via `RequestLanguageResolver` instead of relying on the ThreadLocal | Agent | Resolved — trigger fired on 2026-06-12 (Task 2 `lang=pl` test was red); fallback implemented in `ApiErrorController` |
 | `gatlingBenchmark` cannot run locally | Record the exact failure and remaining risk in `Validation Results`; do not silently skip | Agent | Open |
 
 ## Edge Cases And Failure Modes
@@ -171,6 +171,8 @@
 | --- | --- | --- | --- | --- |
 | 2026-06-12 | `./build.ps1 test --tests "*SessionAttributeConcurrencyIntegrationTests"` | Task 1 red phase | Failed as expected | Both new tests failed with `DuplicateKeyException` on `spring_session_attributes_pk`, reproducing the production race |
 | 2026-06-12 | `./build.ps1 test --tests "*SessionAttributeConcurrencyIntegrationTests" --tests "*SecurityIntegrationTests"` | Task 1 green phase | Passed | 10 tests passed in 36.9s; upsert customizer fixes the race without breaking security flows |
+| 2026-06-12 | `./build.ps1 test --tests "*ErrorDispatchProblemDetailsIntegrationTests" --tests "*ApiErrorHandlingIntegrationTests"` | Task 2 first run | Failed | 8 of 9 passed; `lang=pl` override was red because the language filter does not run on the ERROR dispatch (planned replan trigger fired) |
+| 2026-06-12 | `./build.ps1 test --tests "*ErrorDispatchProblemDetailsIntegrationTests" --tests "*ApiErrorHandlingIntegrationTests"` | Task 2 after language re-resolution in `ApiErrorController` | Passed | 9 tests passed in 42.7s, including the Polish localized 500 body and the direct `/error` default |
 
 ## User Validation
 - Start the app with the SPA, clear cookies, and load the frontend; the parallel first requests (`/api/session`, `/api/books`, `/api/categories`, `/api/localizations`) must all return 200 with no duplicate-key errors in the Postgres logs.

@@ -15,13 +15,12 @@ public class SessionConfiguration {
      * same {@code SPRING_SESSION_ATTRIBUTES} insert at session commit. The PostgreSQL upsert
      * keeps the losing writers from failing with a duplicate-key error.
      */
-    private static final String CREATE_SESSION_ATTRIBUTE_QUERY =
-            """
-            INSERT INTO %TABLE_NAME%_ATTRIBUTES (SESSION_PRIMARY_ID, ATTRIBUTE_NAME, ATTRIBUTE_BYTES)
-            VALUES (?, ?, ?)
-            ON CONFLICT (SESSION_PRIMARY_ID, ATTRIBUTE_NAME)
-            DO UPDATE SET ATTRIBUTE_BYTES = EXCLUDED.ATTRIBUTE_BYTES
-            """;
+    private static final String CREATE_SESSION_ATTRIBUTE_QUERY = """
+        INSERT INTO %TABLE_NAME%_ATTRIBUTES (SESSION_PRIMARY_ID, ATTRIBUTE_NAME, ATTRIBUTE_BYTES)
+        VALUES (?, ?, ?)
+        ON CONFLICT (SESSION_PRIMARY_ID, ATTRIBUTE_NAME)
+        DO UPDATE SET ATTRIBUTE_BYTES = EXCLUDED.ATTRIBUTE_BYTES
+        """;
 
     @Bean
     SessionRepositoryCustomizer<JdbcIndexedSessionRepository> sessionAttributeUpsertCustomizer() {
