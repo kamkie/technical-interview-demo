@@ -77,8 +77,7 @@ Use this section for structured requirements, product intent, behavior rules, co
 
 | Status | Topic | PRD / Spec | Open Questions | Exit Criteria |
 | --- | --- | --- | --- | --- |
-
-No active analysis items.
+| Candidate | Conditional-GET revalidation (`ETag` / `If-None-Match`) for public localization reads (`GET /api/localizations`) so the frontend UI catalog (frontend `M-I18N-003` in `technical-interview-frontend/ROADMAP.md`; frontend `PLAN-ux-design-followups` packet T9) revalidates instead of re-downloading every page load and language switch. Bare `Cache-Control: max-age` is ruled out because admin edits must not serve stale bundles; every admin write already funnels through `LocalizationService.evictLocalizationCaches()`, giving a single write-path invalidation hook, and `Localization` already tracks `updatedAt` | None; bounded additive contract change — the contract lands in REST Docs, `src/docs/asciidoc/`, and the approved OpenAPI baseline during planning | Q1: `ETag` source — response-body hash (`ShallowEtagHeaderFilter`, saves bandwidth only) vs a catalog version token bumped alongside `evictLocalizationCaches()` (also skips page recomputation). Q2: endpoint scope — collection `GET` only, or also `GET /api/localizations/{id}`. Q3: contract surface — how `If-None-Match`/`304` behavior is represented in REST Docs and the approved OpenAPI baseline | Q1–Q3 decided and recorded (ADR only if triage treats the caching semantics as a durable contract choice); then move the row to Triage to accept and name the next artifact (plan; additive scope fits `v2.2.0` under the no-breaking-change policy) |
 
 ## Decisions
 
