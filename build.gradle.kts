@@ -25,17 +25,17 @@ plugins {
     idea
     id("technical-interview-demo.jacoco-conventions")
     id("technical-interview-demo.external-testing-conventions")
-    id("io.gatling.gradle") version "3.15.1"
+    id("io.gatling.gradle") version "3.15.1.2"
     id("com.gorylenko.gradle-git-properties") version "4.0.1"
-    id("com.github.spotbugs") version "6.5.6"
-    id("com.diffplug.spotless") version "8.6.0"
-    id("com.palantir.java-format") version "2.92.0"
-    id("com.palantir.java-format-idea") version "2.92.0"
+    id("com.github.spotbugs") version "6.5.9"
+    id("com.diffplug.spotless") version "8.9.0"
+    id("com.palantir.java-format") version "2.96.0"
+    id("com.palantir.java-format-idea") version "2.96.0"
     id("net.ltgt.errorprone") version "5.1.0"
     id("org.springframework.boot") version "4.1.0"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.asciidoctor.jvm.convert") version "4.0.5"
-    id("com.github.ben-manes.versions") version "0.54.0"
+    id("com.github.ben-manes.versions") version "0.58.0"
     id("com.palantir.git-version") version "5.0.0"
     id("com.adarshr.test-logger") version "4.0.0"
 }
@@ -54,12 +54,12 @@ description = "technical-interview-demo"
 val errorProneVersion = "2.50.0"
 val findSecBugsVersion = "1.14.0"
 val pmdVersion = "7.22.0"
-val spotbugsVersion = "4.10.2"
+val spotbugsVersion = "4.10.3"
 val gradleWrapperVersion = "9.5.0"
 val springdocVersion = "3.0.3"
-val postgresqlVersion = "42.7.11"
-val nettyVersion = "4.2.15.Final"
-val asciidoctorJrubyVersion = "10.1.0.0"
+val postgresqlVersion = "42.7.13"
+val nettyVersion = "4.2.16.Final"
+val asciidoctorJrubyVersion = "10.1.1.0"
 val dockerImageName = providers.gradleProperty("dockerImageName").orElse("technical-interview-demo")
 val snippetsDir = layout.buildDirectory.dir("generated-snippets")
 val buildInfoPropertiesFile = layout.buildDirectory.file("resources/main/META-INF/build-info.properties")
