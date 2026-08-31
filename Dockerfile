@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.23.0
 
-FROM eclipse-temurin:25-jre-noble@sha256:f9bd8815e73632c22985ebb133ec49b9fc4ad5ffe0657594ac02748ad0431ab7
+FROM eclipse-temurin:25-jre-noble@sha256:b4c93a50fc67612798db73d68ca3b0ee4ebdd51736e59cca370e689b9797037e
 
 RUN apt-get update \
     && apt-get install --no-install-recommends --only-upgrade -y openssl libssl3t64 \
