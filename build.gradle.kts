@@ -138,6 +138,8 @@ dependencyManagement {
     dependencies {
         dependency("org.postgresql:postgresql:$postgresqlVersion")
         dependency("org.jruby:jruby:$asciidoctorJrubyVersion")
+        dependency("org.jruby:jruby-base:$asciidoctorJrubyVersion")
+        dependency("org.jruby:jruby-stdlib:$asciidoctorJrubyVersion")
     }
 }
 
@@ -146,9 +148,12 @@ dependencies {
         withModule("org.asciidoctor:asciidoctorj") {
             allVariants {
                 withDependencies {
-                    // AsciidoctorJ 2.5.7 publishes a stale JRuby dependency; keep dependency reports on the patched line.
+                    // AsciidoctorJ 2.5.7 publishes a stale JRuby dependency, and JRuby 10.1.1.0 relocates
+                    // jruby-complete back to jruby, which collides with org.asciidoctor.jvm.convert's
+                    // jruby -> jruby-complete substitution. Depend directly on jruby-base + jruby-stdlib.
                     removeIf { it.group == "org.jruby" && it.name == "jruby" }
-                    add("org.jruby:jruby:$asciidoctorJrubyVersion")
+                    add("org.jruby:jruby-base:$asciidoctorJrubyVersion")
+                    add("org.jruby:jruby-stdlib:$asciidoctorJrubyVersion")
                 }
             }
         }
@@ -519,7 +524,7 @@ tasks.matching { it.name == "pmdManualTests" || it.name == "spotbugsManualTests"
 }
 
 asciidoctorTask {
-    dependsOn(tasks.named("bootBuildInfo"), tasks.test)
+    dependsOn(tasks.named("bootBuildInfo"), tasks.processResources, tasks.test)
     setExecutionMode("JAVA_EXEC")
     jvm {
         jvmArgs(
