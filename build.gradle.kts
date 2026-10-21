@@ -13,7 +13,7 @@ buildscript {
     configurations.classpath {
         resolutionStrategy.force(
             "org.apache.commons:commons-lang3:3.20.0",
-            "org.codehaus.plexus:plexus-utils:4.0.3",
+            "org.codehaus.plexus:plexus-utils:4.1.0",
         )
     }
 }
@@ -25,18 +25,18 @@ plugins {
     idea
     id("technical-interview-demo.jacoco-conventions")
     id("technical-interview-demo.external-testing-conventions")
-    id("io.gatling.gradle") version "3.15.1"
+    id("io.gatling.gradle") version "3.15.1.3"
     id("com.gorylenko.gradle-git-properties") version "4.0.1"
-    id("com.github.spotbugs") version "6.5.6"
-    id("com.diffplug.spotless") version "8.6.0"
-    id("com.palantir.java-format") version "2.92.0"
-    id("com.palantir.java-format-idea") version "2.92.0"
-    id("net.ltgt.errorprone") version "5.1.0"
-    id("org.springframework.boot") version "4.1.0"
+    id("com.github.spotbugs") version "6.5.11"
+    id("com.diffplug.spotless") version "8.10.1"
+    id("com.palantir.java-format") version "2.97.0"
+    id("com.palantir.java-format-idea") version "2.97.0"
+    id("net.ltgt.errorprone") version "5.1.1"
+    id("org.springframework.boot") version "4.1.1"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.asciidoctor.jvm.convert") version "4.0.5"
-    id("com.github.ben-manes.versions") version "0.54.0"
-    id("com.palantir.git-version") version "5.0.0"
+    id("com.github.ben-manes.versions") version "0.61.0"
+    id("com.palantir.git-version") version "5.1.0"
     id("com.adarshr.test-logger") version "4.0.0"
 }
 
@@ -54,12 +54,15 @@ description = "technical-interview-demo"
 val errorProneVersion = "2.50.0"
 val findSecBugsVersion = "1.14.0"
 val pmdVersion = "7.22.0"
-val spotbugsVersion = "4.10.2"
+val spotbugsVersion = "4.10.4"
 val gradleWrapperVersion = "9.5.0"
-val springdocVersion = "3.0.3"
-val postgresqlVersion = "42.7.12"
-val nettyVersion = "4.2.15.Final"
-val asciidoctorJrubyVersion = "10.1.0.0"
+val springdocVersion = "3.1.0"
+val postgresqlVersion = "42.7.13"
+val nettyVersion = "4.2.17.Final"
+val tomcatVersion = "11.0.25"
+val jackson2BomVersion = "2.21.7"
+val jackson3BomVersion = "3.1.7"
+val asciidoctorJrubyVersion = "10.1.1.0"
 val dockerImageName = providers.gradleProperty("dockerImageName").orElse("technical-interview-demo")
 val snippetsDir = layout.buildDirectory.dir("generated-snippets")
 val buildInfoPropertiesFile = layout.buildDirectory.file("resources/main/META-INF/build-info.properties")
@@ -133,11 +136,18 @@ repositories {
 
 dependencyManagement {
     imports {
+        mavenBom("com.fasterxml.jackson:jackson-bom:$jackson2BomVersion")
         mavenBom("io.netty:netty-bom:$nettyVersion")
+        mavenBom("tools.jackson:jackson-bom:$jackson3BomVersion")
     }
     dependencies {
+        dependency("org.apache.tomcat.embed:tomcat-embed-core:$tomcatVersion")
+        dependency("org.apache.tomcat.embed:tomcat-embed-el:$tomcatVersion")
+        dependency("org.apache.tomcat.embed:tomcat-embed-websocket:$tomcatVersion")
         dependency("org.postgresql:postgresql:$postgresqlVersion")
         dependency("org.jruby:jruby:$asciidoctorJrubyVersion")
+        dependency("org.jruby:jruby-base:$asciidoctorJrubyVersion")
+        dependency("org.jruby:jruby-stdlib:$asciidoctorJrubyVersion")
     }
 }
 
@@ -146,9 +156,12 @@ dependencies {
         withModule("org.asciidoctor:asciidoctorj") {
             allVariants {
                 withDependencies {
-                    // AsciidoctorJ 2.5.7 publishes a stale JRuby dependency; keep dependency reports on the patched line.
+                    // AsciidoctorJ 2.5.7 publishes a stale JRuby dependency, and JRuby 10.1.1.0 relocates
+                    // jruby-complete back to jruby, which collides with org.asciidoctor.jvm.convert's
+                    // jruby -> jruby-complete substitution. Depend directly on jruby-base + jruby-stdlib.
                     removeIf { it.group == "org.jruby" && it.name == "jruby" }
-                    add("org.jruby:jruby:$asciidoctorJrubyVersion")
+                    add("org.jruby:jruby-base:$asciidoctorJrubyVersion")
+                    add("org.jruby:jruby-stdlib:$asciidoctorJrubyVersion")
                 }
             }
         }
@@ -519,7 +532,7 @@ tasks.matching { it.name == "pmdManualTests" || it.name == "spotbugsManualTests"
 }
 
 asciidoctorTask {
-    dependsOn(tasks.named("bootBuildInfo"), tasks.test)
+    dependsOn(tasks.named("bootBuildInfo"), tasks.processResources, tasks.test)
     setExecutionMode("JAVA_EXEC")
     jvm {
         jvmArgs(
