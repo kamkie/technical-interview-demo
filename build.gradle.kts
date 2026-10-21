@@ -59,6 +59,9 @@ val gradleWrapperVersion = "9.5.0"
 val springdocVersion = "3.1.0"
 val postgresqlVersion = "42.7.13"
 val nettyVersion = "4.2.17.Final"
+val tomcatVersion = "11.0.25"
+val jackson2BomVersion = "2.21.7"
+val jackson3BomVersion = "3.1.7"
 val asciidoctorJrubyVersion = "10.1.1.0"
 val dockerImageName = providers.gradleProperty("dockerImageName").orElse("technical-interview-demo")
 val snippetsDir = layout.buildDirectory.dir("generated-snippets")
@@ -133,9 +136,14 @@ repositories {
 
 dependencyManagement {
     imports {
+        mavenBom("com.fasterxml.jackson:jackson-bom:$jackson2BomVersion")
         mavenBom("io.netty:netty-bom:$nettyVersion")
+        mavenBom("tools.jackson:jackson-bom:$jackson3BomVersion")
     }
     dependencies {
+        dependency("org.apache.tomcat.embed:tomcat-embed-core:$tomcatVersion")
+        dependency("org.apache.tomcat.embed:tomcat-embed-el:$tomcatVersion")
+        dependency("org.apache.tomcat.embed:tomcat-embed-websocket:$tomcatVersion")
         dependency("org.postgresql:postgresql:$postgresqlVersion")
         dependency("org.jruby:jruby:$asciidoctorJrubyVersion")
         dependency("org.jruby:jruby-base:$asciidoctorJrubyVersion")
