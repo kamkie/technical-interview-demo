@@ -12,7 +12,7 @@ import java.util.Properties
 buildscript {
     configurations.classpath {
         resolutionStrategy.force(
-            "org.apache.commons:commons-lang3:3.20.0",
+            "org.apache.commons:commons-lang3:3.21.0",
             "org.codehaus.plexus:plexus-utils:4.1.0",
         )
     }
@@ -25,17 +25,17 @@ plugins {
     idea
     id("technical-interview-demo.jacoco-conventions")
     id("technical-interview-demo.external-testing-conventions")
-    id("io.gatling.gradle") version "3.15.1.3"
+    id("io.gatling.gradle") version "3.16.0"
     id("com.gorylenko.gradle-git-properties") version "4.0.1"
-    id("com.github.spotbugs") version "6.5.11"
-    id("com.diffplug.spotless") version "8.10.1"
-    id("com.palantir.java-format") version "2.97.0"
-    id("com.palantir.java-format-idea") version "2.97.0"
+    id("com.github.spotbugs") version "6.5.13"
+    id("com.diffplug.spotless") version "8.10.4"
+    id("com.palantir.java-format") version "2.102.0"
+    id("com.palantir.java-format-idea") version "2.102.0"
     id("net.ltgt.errorprone") version "5.1.1"
-    id("org.springframework.boot") version "4.1.1"
+    id("org.springframework.boot") version "4.1.2"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.asciidoctor.jvm.convert") version "4.0.5"
-    id("com.github.ben-manes.versions") version "0.61.0"
+    id("com.github.ben-manes.versions") version "0.66.0"
     id("com.palantir.git-version") version "5.1.0"
     id("com.adarshr.test-logger") version "4.0.0"
 }
@@ -51,18 +51,18 @@ version = getProjectVersion()
 group = "team.jit"
 description = "technical-interview-demo"
 
-val errorProneVersion = "2.50.0"
+val errorProneVersion = "2.51.0"
 val findSecBugsVersion = "1.14.0"
 val pmdVersion = "7.22.0"
-val spotbugsVersion = "4.10.4"
+val spotbugsVersion = "4.10.5"
 val gradleWrapperVersion = "9.5.0"
-val springdocVersion = "3.1.0"
-val postgresqlVersion = "42.7.13"
-val nettyVersion = "4.2.17.Final"
-val tomcatVersion = "11.0.25"
-val jackson2BomVersion = "2.21.7"
-val jackson3BomVersion = "3.1.7"
-val asciidoctorJrubyVersion = "10.1.1.0"
+val springdocVersion = "3.1.1"
+val postgresqlVersion = "42.7.14"
+val nettyVersion = "4.2.19.Final"
+val tomcatVersion = "11.0.27"
+val jackson2BomVersion = "2.22.4"
+val jackson3BomVersion = "3.2.4"
+val asciidoctorJrubyVersion = "10.1.2.0"
 val dockerImageName = providers.gradleProperty("dockerImageName").orElse("technical-interview-demo")
 val snippetsDir = layout.buildDirectory.dir("generated-snippets")
 val buildInfoPropertiesFile = layout.buildDirectory.file("resources/main/META-INF/build-info.properties")
